@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -61,19 +75,16 @@ directive|include
 file|"btree.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|mswap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|PAGE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * __BT_BPGIN, __BT_BPGOUT --  *	Convert host-specific number layout to/from the host-independent  *	format stored on disk.  *  * Parameters:  *	t:	tree  *	pg:	page number  *	h:	page to convert  */

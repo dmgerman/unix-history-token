@@ -89,45 +89,39 @@ begin_comment
 comment|/*  * WARNING: Don't even consider trying to compile this on a system where  * sizeof(int)< 4.  sizeof(int)> 4 is fine; all the world's not a VAX.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|inet_pton4
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|u_char
-operator|*
+modifier|*
 name|dst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|inet_pton6
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|src
-operator|,
+parameter_list|,
 name|u_char
-operator|*
+modifier|*
 name|dst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* int  * inet_pton(af, src, dst)  *	convert from presentation format (which usually means ASCII printable)  *	to network format (which is usually some kind of binary format).  * return:  *	1 if the address was valid for the specified address family  *	0 if the address wasn't valid (`dst' is untouched in this case)  *	-1 if some other error occurred (`dst' is untouched in this case, too)  * author:  *	Paul Vixie, 1996.  */

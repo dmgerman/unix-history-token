@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -79,31 +93,28 @@ directive|include
 file|"btree.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|EPG
 modifier|*
 name|bt_fast
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BTREE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|DBT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|DBT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * __BT_PUT -- Add a btree item to the tree.  *  * Parameters:  *	dbp:	pointer to access method  *	key:	key  *	data:	data  *	flag:	R_NOOVERWRITE  *  * Returns:  *	RET_ERROR, RET_SUCCESS and RET_SPECIAL if the key is already in the  *	tree and R_NOOVERWRITE specified.  */

@@ -334,25 +334,22 @@ literal|0
 end_if
 
 begin_endif
-unit|static char *strlocase __P((char *));
+unit|static char *strlocase(char *);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|getnettype
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Cache the result of getrlimit(), so we don't have to do an  * expensive call every time.  */

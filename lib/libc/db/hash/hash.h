@@ -231,20 +231,18 @@ decl_stmt|;
 comment|/* Number of extra allocated  					 * segments */
 name|u_int32_t
 comment|/* Hash function */
-argument_list|(
-argument|*hash
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|hash
+function_decl|)
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|int
 name|flags
 decl_stmt|;

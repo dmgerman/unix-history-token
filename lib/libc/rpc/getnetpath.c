@@ -144,21 +144,18 @@ name|NP_INVALID
 value|0
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|_get_next_token
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * A call to setnetpath() establishes a NETPATH "session".  setnetpath()  * must be called before the first call to getnetpath().  A "handle" is  * returned to distinguish the session; this handle should be passed  * subsequently to getnetpath().  (Handles are used to allow for nested calls  * to setnetpath()).  * If setnetpath() is unable to establish a session (due to lack of memory  * resources, or the absence of the /etc/netconfig file), a NULL pointer is  * returned.  */

@@ -97,19 +97,16 @@ directive|include
 file|"btree.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bt_meta
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BTREE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * BT_CLOSE -- Close a btree.  *  * Parameters:  *	dbp:	pointer to access method  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */

@@ -149,45 +149,36 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|byteorder
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|nroot
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BTREE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * __BT_OPEN -- Open a btree.  *  * Creates and fills a DB struct, and calls the routine that actually  * opens the btree.  *  * Parameters:  *	fname:	filename (NULL for in-memory trees)  *	flags:	open flag bits  *	mode:	open permission bits  *	b:	BTREEINFO pointer  *  * Returns:  *	NULL on failure, pointer to DB on success.  *  */

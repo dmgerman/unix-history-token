@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -73,21 +87,18 @@ directive|include
 file|"recno.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rec_rdelete
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BTREE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * __REC_DELETE -- Delete the item(s) referenced by a key.  *  * Parameters:  *	dbp:	pointer to access method  *	key:	key to delete  *	flags:	R_CURSOR if deleting what the cursor references  *  * Returns:  *	RET_ERROR, RET_SUCCESS and RET_SPECIAL if the key not found.  */

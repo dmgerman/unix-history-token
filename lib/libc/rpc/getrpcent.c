@@ -207,25 +207,22 @@ name|rpcdata
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|rpcent
 modifier|*
 name|interpret
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|val
-operator|,
+parameter_list|,
 name|size_t
 name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -270,20 +267,17 @@ name|RPCDB
 value|"/etc/rpc"
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|rpcdata
 modifier|*
 name|_rpcdata
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

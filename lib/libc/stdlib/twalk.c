@@ -110,44 +110,45 @@ begin_comment
 comment|/* Walk the nodes of a tree */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|trecurse
-parameter_list|(
+argument_list|(
 name|root
-parameter_list|,
+argument_list|,
 name|action
-parameter_list|,
+argument_list|,
 name|level
-parameter_list|)
-specifier|const
+argument_list|)
+decl|const
 name|node_t
 modifier|*
 name|root
 decl_stmt|;
-comment|/* Root of the tree to be walked */
-function_decl|void
-parameter_list|(
-function_decl|*action
-end_function_decl
+end_decl_stmt
 
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
+begin_comment
+comment|/* Root of the tree to be walked */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|action
+function_decl|)
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VISIT
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -271,41 +272,42 @@ begin_comment
 comment|/* Walk the nodes of a tree */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|twalk
-parameter_list|(
+argument_list|(
 name|vroot
-parameter_list|,
+argument_list|,
 name|action
-parameter_list|)
-specifier|const
+argument_list|)
+decl|const
 name|void
 modifier|*
 name|vroot
 decl_stmt|;
-comment|/* Root of the tree to be walked */
-function_decl|void
-parameter_list|(
-function_decl|*action
-end_function_decl
+end_decl_stmt
 
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
+begin_comment
+comment|/* Root of the tree to be walked */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|action
+function_decl|)
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VISIT
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_block
 block|{
