@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t8.c	4.3 %G%"
+literal|"@(#)t8.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,9 @@ decl_stmt|,
 name|vspf
 decl_stmt|,
 name|ip
+init|=
+operator|-
+literal|1
 decl_stmt|,
 name|cmidx
 decl_stmt|,
