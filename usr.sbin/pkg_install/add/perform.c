@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.16 1995/04/19 14:01:49 jkh Exp $"
+literal|"$Id: perform.c,v 1.17 1995/04/19 14:54:25 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,9 +413,14 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
+block|{
+name|leave_playpen
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|sanity_check
@@ -423,9 +428,14 @@ argument_list|(
 name|pkg_fullname
 argument_list|)
 condition|)
+block|{
+name|leave_playpen
+argument_list|()
+expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 name|cfile
 operator|=
 name|fopen

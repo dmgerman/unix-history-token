@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.10 1994/12/06 00:51:50 jkh Exp $"
+literal|"$Id: plist.c,v 1.11 1995/04/22 00:14:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,72 @@ name|type
 condition|)
 return|return
 name|p
+return|;
+name|p
+operator|=
+name|p
+operator|->
+name|next
+expr_stmt|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Look for a specific boolean option argument in the list */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|find_plist_option
+parameter_list|(
+name|Package
+modifier|*
+name|pkg
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|PackingList
+name|p
+init|=
+name|pkg
+operator|->
+name|head
+decl_stmt|;
+while|while
+condition|(
+name|p
+condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|type
+operator|==
+name|PLIST_OPTION
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|,
+name|name
+argument_list|)
+condition|)
+return|return
+name|p
+operator|->
+name|name
 return|;
 name|p
 operator|=
@@ -893,6 +959,20 @@ condition|)
 return|return
 name|PLIST_DIR_RM
 return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cmd
+argument_list|,
+literal|"option"
+argument_list|)
+condition|)
+return|return
+name|PLIST_OPTION
+return|;
 else|else
 return|return
 name|FAIL
@@ -1352,6 +1432,23 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PLIST_OPTION
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%coption %s\n"
+argument_list|,
+name|CMD_CHAR
+argument_list|,
+name|plist
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|barf
 argument_list|(
@@ -1379,7 +1476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Delete the results of a package installation, not the packaging itself */
+comment|/*  * Delete the results of a package installation.  *  * This is here rather than in the pkg_delete code because pkg_add needs to  * run it too in cases of failure.  */
 end_comment
 
 begin_function
@@ -1446,7 +1543,9 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"(CWD to %s)\n"
+literal|"Change working directory to %s\n"
+argument_list|,
+name|CMD_CHAR
 argument_list|,
 name|Where
 argument_list|)
@@ -1487,7 +1586,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"unexec command: %s\n"
+literal|"Execute `%s'\n"
 argument_list|,
 name|cmd
 argument_list|)
@@ -1505,7 +1604,7 @@ condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"unexec '%s' failed."
+literal|"unexec command for `%s' failed."
 argument_list|,
 name|cmd
 argument_list|)
@@ -1572,7 +1671,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Delete%s: %s\n"
+literal|"Delete%s %s\n"
 argument_list|,
 name|p
 operator|->
@@ -1747,7 +1846,7 @@ name|ign_err
 condition|)
 name|whinge
 argument_list|(
-literal|"%s '%s' doesn't really exist."
+literal|"%s `%s' doesn't really exist."
 argument_list|,
 name|isdir
 argument_list|(
@@ -1893,7 +1992,7 @@ argument_list|)
 condition|)
 name|whinge
 argument_list|(
-literal|"Directory '%s' doesn't really exist."
+literal|"Directory `%s' doesn't really exist."
 argument_list|,
 name|dir
 argument_list|)
