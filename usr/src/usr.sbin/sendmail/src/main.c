@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.13 (Berkeley) %G%"
+literal|"@(#)main.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,6 +631,10 @@ name|stb
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EOPNOTSUPP
 condition|)
 operator|(
 name|void
@@ -656,6 +660,10 @@ name|stb
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EOPNOTSUPP
 condition|)
 operator|(
 name|void
@@ -681,6 +689,10 @@ name|stb
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EOPNOTSUPP
 condition|)
 operator|(
 name|void
@@ -2900,6 +2912,19 @@ name|MAXCONFIGLEVEL
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|MeToo
+condition|)
+name|BlankEnvelope
+operator|.
+name|e_flags
+operator||=
+name|EF_METOO
+expr_stmt|;
 end_if
 
 begin_ifdef
