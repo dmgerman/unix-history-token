@@ -1006,7 +1006,7 @@ operator|=
 name|tmp
 expr_stmt|;
 block|}
-comment|/* 	 * For security and other reasons, signal handlers cannot 	 * be shared after an exec. The new proces gets a copy of the old 	 * handlers. In execsigs(), the new process wll have its signals 	 * reset. 	 */
+comment|/* 	 * For security and other reasons, signal handlers cannot 	 * be shared after an exec. The new proces gets a copy of the old 	 * handlers. In execsigs(), the new process will have its signals 	 * reset. 	 */
 if|if
 condition|(
 name|p
@@ -1093,7 +1093,7 @@ name|u_sigacts
 condition|)
 name|panic
 argument_list|(
-literal|"shared procsig but private sigacts?\n"
+literal|"shared procsig but private sigacts?"
 argument_list|)
 expr_stmt|;
 name|p
