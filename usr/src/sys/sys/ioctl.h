@@ -18,7 +18,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -399,7 +399,7 @@ name|g
 parameter_list|,
 name|n
 parameter_list|)
-value|_IOC(IOC_VOID,	0, (g), (n))
+value|_IOC(IOC_VOID,	(g), (n), 0)
 end_define
 
 begin_define
@@ -471,6 +471,39 @@ begin_comment
 comment|/*  * tty ioctl commands  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_OLD_TTY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TIOCGETD
+value|_IOR('t', 0, int)
+end_define
+
+begin_comment
+comment|/* get line discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETD
+value|_IOW('t', 1, int)
+end_define
+
+begin_comment
+comment|/* set line discipline */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -492,6 +525,11 @@ end_define
 begin_comment
 comment|/* set line discipline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1305,6 +1343,12 @@ name|TCSETAF
 value|TIOCSETAF
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_OLD_TTY
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1326,6 +1370,11 @@ end_define
 begin_comment
 comment|/* set line discipline */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* locals, from 127 down */
@@ -1885,23 +1934,29 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TTYDISC
+value|0
+end_define
+
+begin_comment
+comment|/* termios tty line discipline */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_OLD_TTY
+end_ifdef
+
+begin_define
+define|#
+directive|define
 name|OTTYDISC
 value|0
 end_define
 
 begin_comment
-comment|/* termios */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTTYDISC
-value|0
-end_define
-
-begin_comment
-comment|/* COMPAT_43 */
+comment|/* COMPAT_43 (alias) */
 end_comment
 
 begin_define
@@ -1914,6 +1969,22 @@ end_define
 begin_comment
 comment|/* line discip for berk net */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NTTYDISC
+value|2
+end_define
+
+begin_comment
+comment|/* COMPAT_43 (alias) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2323,7 +2394,7 @@ begin_define
 define|#
 directive|define
 name|SIOCDIFADDR
-value|_IOW('i',38, struct ifreq)
+value|_IOW('i',25, struct ifreq)
 end_define
 
 begin_comment
@@ -2334,7 +2405,7 @@ begin_define
 define|#
 directive|define
 name|SIOCAIFADDR
-value|_IOW('i',39, struct ifaliasreq)
+value|_IOW('i',26, struct ifaliasreq)
 end_define
 
 begin_comment
