@@ -211,6 +211,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sndbuf_fillsilence
+parameter_list|(
+name|struct
+name|snd_dbuf
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int32_t
 name|sndbuf_getfmt
 parameter_list|(
