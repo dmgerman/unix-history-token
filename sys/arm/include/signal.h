@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_SIGNAL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|long
@@ -22,11 +28,11 @@ name|sig_atomic_t
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -34,6 +40,17 @@ directive|define
 name|MINSIGSTKSZ
 value|(1024 * 4)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_typedef
 typedef|typedef
@@ -60,10 +77,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_ANSI_SOURCE */
-end_comment
 
 begin_endif
 endif|#

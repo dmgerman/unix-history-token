@@ -15,6 +15,18 @@ directive|define
 name|_MACHINE_SIGNAL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_sigset.h>
+end_include
+
 begin_comment
 comment|/*  * Machine-dependent signal definitions  */
 end_comment
@@ -29,17 +41,7 @@ end_typedef
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
+name|__XSI_VISIBLE
 end_if
 
 begin_comment
@@ -52,6 +54,17 @@ directive|define
 name|MINSIGSTKSZ
 value|(512 * 4)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_include
 include|#
@@ -172,7 +185,8 @@ begin_struct
 struct|struct
 name|sigcontext
 block|{
-name|sigset_t
+name|struct
+name|__sigset
 name|sc_mask
 decl_stmt|;
 comment|/* signal mask to restore */
@@ -312,7 +326,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_ANSI_SOURCE&& !_POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_endif

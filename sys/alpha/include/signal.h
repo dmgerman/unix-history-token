@@ -23,6 +23,18 @@ directive|define
 name|_ALPHA_SIGNAL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_sigset.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|long
@@ -30,11 +42,11 @@ name|sig_atomic_t
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Minimum signal stack size. The current signal frame  * for Alpha is 808 bytes large.  */
@@ -46,6 +58,11 @@ directive|define
 name|MINSIGSTKSZ
 value|(1024 * 4)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Only the kernel should need these old type definitions.  */
@@ -165,6 +182,16 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
 comment|/*  * The sequence of the fields should match those in  * mcontext_t. Keep them in sync!  */
 end_comment
 
@@ -172,7 +199,8 @@ begin_struct
 struct|struct
 name|sigcontext
 block|{
-name|sigset_t
+name|struct
+name|__sigset
 name|sc_mask
 decl_stmt|;
 comment|/* signal mask to restore */
@@ -271,7 +299,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_ANSI_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_endif
