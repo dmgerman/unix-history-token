@@ -11833,12 +11833,22 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
 name|guest
 operator|&&
 name|noguestmod
-operator|)
-operator|||
+condition|)
+block|{
+name|reply
+argument_list|(
+literal|550
+argument_list|,
+literal|"Operation not permitted"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|name
