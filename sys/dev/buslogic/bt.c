@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.13 1998/12/11 03:50:35 gibbs Exp $  */
+comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.14 1999/03/08 21:36:33 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -154,6 +154,29 @@ include|#
 directive|include
 file|<dev/buslogic/btreg.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)> (b) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -6754,7 +6777,7 @@ comment|/* 		 * We should never encounter a busy mailbox. 		 * If we do, warn th
 name|printf
 argument_list|(
 literal|"%s: Encountered busy mailbox with %d out of %d "
-literal|"commands active!!!"
+literal|"commands active!!!\n"
 argument_list|,
 name|bt_name
 argument_list|(
@@ -8499,6 +8522,9 @@ name|u_int
 name|status
 decl_stmt|;
 name|u_int
+name|saved_status
+decl_stmt|;
+name|u_int
 name|intstat
 decl_stmt|;
 name|u_int
@@ -8509,6 +8535,9 @@ name|s
 decl_stmt|;
 name|int
 name|cmd_complete
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* No data returned to start */
 name|reply_buf_size
@@ -8527,16 +8556,24 @@ name|cmd_complete
 operator|=
 literal|0
 expr_stmt|;
+name|saved_status
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|bt
 operator|->
 name|command_cmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Wait up to 1 sec. for the adapter to become 	 * ready to accept commands. 	 */
+comment|/* 	 * Wait up to 10 sec. for the adapter to become 	 * ready to accept commands. 	 */
 name|timeout
 operator|=
-literal|10000
+literal|100000
 expr_stmt|;
 while|while
 condition|(
@@ -8572,6 +8609,27 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* 		 * Throw away any pending data which may be 		 * left over from earlier commands that we 		 * timedout on. 		 */
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|DATAIN_REG_READY
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|bt_inb
+argument_list|(
+name|bt
+argument_list|,
+name|DATAIN_REG
+argument_list|)
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100
@@ -8614,7 +8672,7 @@ argument_list|,
 name|opcode
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for up to 1sec to get the parameter list sent 	 */
+comment|/* 	 * Wait for up to 1sec for each byte of the the 	 * parameter list sent to be sent. 	 */
 name|timeout
 operator|=
 literal|10000
@@ -8632,6 +8690,11 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|status
 operator|=
 name|bt_inb
@@ -8648,6 +8711,11 @@ argument_list|(
 name|bt
 argument_list|,
 name|INTSTAT_REG
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -8669,6 +8737,10 @@ name|CMD_COMPLETE
 operator|)
 condition|)
 block|{
+name|saved_status
+operator|=
+name|status
+expr_stmt|;
 name|cmd_complete
 operator|=
 literal|1
@@ -8684,7 +8756,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|status
+name|saved_status
 operator|=
 name|bt
 operator|->
@@ -8732,6 +8804,10 @@ expr_stmt|;
 name|param_len
 operator|--
 expr_stmt|;
+name|timeout
+operator|=
+literal|10000
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -8754,118 +8830,20 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ETIMEDOUT
-operator|)
-return|;
-block|}
-comment|/* 	 * The BOP_MODIFY_IO_ADDR does not issue a CMD_COMPLETE, but 	 * it should update the status register.  So, we wait for 	 * the CMD_REG_BUSY status to clear and check for a command 	 * failure. 	 */
-if|if
-condition|(
 name|cmd_complete
-operator|==
-literal|0
-operator|&&
-name|opcode
-operator|==
-name|BOP_MODIFY_IO_ADDR
-condition|)
-block|{
-while|while
-condition|(
-operator|--
-name|cmd_timeout
-condition|)
-block|{
-name|status
 operator|=
-name|bt_inb
-argument_list|(
-name|bt
-argument_list|,
-name|STATUS_REG
-argument_list|)
+literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|saved_status
+operator|=
 name|status
-operator|&
-name|CMD_REG_BUSY
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|status
-operator|&
-name|CMD_INVALID
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: bt_cmd - Modify I/O Address"
-literal|" invalid\n"
-argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|DELAY
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|timeout
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: bt_cmd: Timeout on Modify I/O Address CMD, "
-literal|"status = 0x%x\n"
-argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ETIMEDOUT
-operator|)
-return|;
+expr_stmt|;
 block|}
-block|}
-comment|/* 	 * For all other commands, we wait for any output data 	 * and the final comand completion interrupt. 	 */
+comment|/* 	 * Wait for the command to complete. 	 */
 while|while
 condition|(
 name|cmd_complete
@@ -8876,6 +8854,11 @@ operator|--
 name|cmd_timeout
 condition|)
 block|{
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|status
 operator|=
 name|bt_inb
@@ -8894,6 +8877,33 @@ argument_list|,
 name|INTSTAT_REG
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bt
+operator|->
+name|command_cmp
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Our interrupt handler saw CMD_COMPLETE 			 * status before we did. 			 */
+name|cmd_complete
+operator|=
+literal|1
+expr_stmt|;
+name|saved_status
+operator|=
+name|bt
+operator|->
+name|latched_status
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -8912,24 +8922,44 @@ operator||
 name|CMD_COMPLETE
 operator|)
 condition|)
-break|break;
+block|{
+comment|/* 			 * Our poll (in case interrupts are blocked) 			 * saw the CMD_COMPLETE interrupt. 			 */
+name|cmd_complete
+operator|=
+literal|1
+expr_stmt|;
+name|saved_status
+operator|=
+name|status
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
-name|bt
-operator|->
-name|command_cmp
-operator|!=
+name|opcode
+operator|==
+name|BOP_MODIFY_IO_ADDR
+operator|&&
+operator|(
+name|status
+operator|&
+name|CMD_REG_BUSY
+operator|)
+operator|==
 literal|0
 condition|)
 block|{
-name|status
+comment|/* 			 * The BOP_MODIFY_IO_ADDR does not issue a CMD_COMPLETE, 			 * but it should update the status register.  So, we 			 * consider this command complete when the CMD_REG_BUSY 			 * status clears. 			 */
+name|saved_status
 operator|=
-name|bt
-operator|->
-name|latched_status
+name|status
 expr_stmt|;
-break|break;
+name|cmd_complete
+operator|=
+literal|1
+expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -8983,10 +9013,21 @@ name|opcode
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Reset timeout to ensure at least a second 			 * between response bytes. 			 */
+name|cmd_timeout
+operator|=
+name|MAX
+argument_list|(
+name|cmd_timeout
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
 name|reply_len
 operator|++
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -9003,7 +9044,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
-break|break;
+block|{
+name|saved_status
+operator|=
+name|status
+expr_stmt|;
+name|cmd_complete
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|DELAY
 argument_list|(
 literal|100
@@ -9012,21 +9062,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|timeout
+name|cmd_timeout
 operator|==
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: bt_cmd: Timeout waiting for reply data and "
-literal|"command complete.\n%s: status = 0x%x, intstat = 0x%x, "
-literal|"reply_len = %d\n"
+literal|"%s: bt_cmd: Timeout waiting for command (%x) "
+literal|"to complete.\n%s: status = 0x%x, intstat = 0x%x, "
+literal|"rlen %d\n"
 argument_list|,
 name|bt_name
 argument_list|(
 name|bt
 argument_list|)
+argument_list|,
+name|opcode
 argument_list|,
 name|bt_name
 argument_list|(
@@ -9040,11 +9092,12 @@ argument_list|,
 name|reply_len
 argument_list|)
 expr_stmt|;
-return|return
+name|error
+operator|=
 operator|(
 name|ETIMEDOUT
 operator|)
-return|;
+expr_stmt|;
 block|}
 comment|/* 	 * Clear any pending interrupts.  Block interrupts so our 	 * interrupt handler is not re-entered. 	 */
 name|s
@@ -9062,11 +9115,22 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * If the command was rejected by the controller, tell the caller. 	 */
 if|if
 condition|(
 operator|(
-name|status
+name|saved_status
 operator|&
 name|CMD_INVALID
 operator|)
@@ -9600,13 +9664,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: btfetchtransinfo - Inquire Setup Info Failed\n"
+literal|"%s: btfetchtransinfo - Inquire Setup Info Failed %x\n"
 argument_list|,
 name|bt_name
 argument_list|(
 name|bt
 argument_list|)
+argument_list|,
+name|error
 argument_list|)
+expr_stmt|;
+name|cts
+operator|->
+name|valid
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -9872,6 +9944,12 @@ argument_list|)
 argument_list|,
 name|error
 argument_list|)
+expr_stmt|;
+name|cts
+operator|->
+name|valid
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
