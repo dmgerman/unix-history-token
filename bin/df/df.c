@@ -1297,6 +1297,24 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Check to make sure the arguments we've been 		 * given are satisfied.  Return an error if we 		 * have been asked to list a mount point that does 		 * not match the other args we've been given (-l, -t, etc.) 		 */
+if|if
+condition|(
+name|checkvfsname
+argument_list|(
+name|statfsbuf
+operator|.
+name|f_fstypename
+argument_list|,
+name|vfslist
+argument_list|)
+condition|)
+block|{
+name|rv
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|argc
