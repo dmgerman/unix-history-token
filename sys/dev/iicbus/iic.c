@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/iic.h>
+file|<dev/iicbus/iic.h>
 end_include
 
 begin_include

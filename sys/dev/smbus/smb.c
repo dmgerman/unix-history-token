@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/smb.h>
+file|<dev/smbus/smb.h>
 end_include
 
 begin_include
