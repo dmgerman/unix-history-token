@@ -6343,7 +6343,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Checks if should do it. */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -6361,7 +6360,13 @@ operator|&
 name|SA_STOP
 condition|)
 block|{
-comment|/* 			 * Already stopped, don't need to stop again 			 * (If we did the shell could get confused). 			 */
+comment|/* 			 * Already stopped, don't need to stop again 			 * (If we did the shell could get confused). 			 * Just make sure the signal STOP bit set. 			 */
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_STOPPED_SGNL
+expr_stmt|;
 name|SIGDELSET
 argument_list|(
 name|p
@@ -6375,7 +6380,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * All other kinds of signals: 		 * If a thread is sleeping interruptibly, simulate a 		 * wakeup so that when it is continued it will be made 		 * runnable and can look at the signal.  However, don't make 		 * the process runnable, leave it stopped. 		 * It may run a bit until it hits a thread_suspend_check(). 		 * 		 * XXXKSE I don't understand this at all. 		 */
+comment|/* 		 * All other kinds of signals: 		 * If a thread is sleeping interruptibly, simulate a 		 * wakeup so that when it is continued it will be made 		 * runnable and can look at the signal.  However, don't make 		 * the PROCESS runnable, leave it stopped. 		 * It may run a bit until it hits a thread_suspend_check(). 		 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -6439,7 +6444,7 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* 		 * XXXKSE  What about threads that are waiting on mutexes? 		 * Shouldn't they abort too? 		 */
+comment|/* 		 * XXXKSE  What about threads that are waiting on mutexes? 		 * Shouldn't they abort too? 		 * No, hopefully mutexes are short lived.. They'll 		 * eventually hit thread_suspend_check(). 		 */
 block|}
 elseif|else
 if|if
@@ -6480,6 +6485,11 @@ operator|&
 name|SA_STOP
 condition|)
 block|{
+name|int
+name|should_signal
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|action
@@ -6523,6 +6533,16 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
+comment|/* XXX un-needed? */
+if|#
+directive|if
+literal|0
+block|FOREACH_THREAD_IN_PROC(p, td) { 				if (td->td_state == TDS_RUNNING) {
+comment|/* 					 * all other states must be in 					 * the kernel 					 */
+block|should_signal = 0; 					break; 				} 			}
+comment|/* don't enable until the equivalent code is in thread_suspend_check() */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -6537,6 +6557,8 @@ name|ps_flag
 operator|&
 name|PS_NOCLDSTOP
 operator|)
+operator|&&
+name|should_signal
 condition|)
 name|psignal
 argument_list|(

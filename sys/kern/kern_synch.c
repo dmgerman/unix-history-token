@@ -3014,6 +3014,21 @@ literal|"mi_switch: kse state?"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_state
+operator|!=
+name|TDS_RUNQ
+operator|)
+argument_list|,
+operator|(
+literal|"mi_switch: called by old code"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -3123,7 +3138,7 @@ comment|/* XXX: we should make a private copy */
 block|rlim->rlim_cur += 5; 			} 		} 	}
 endif|#
 directive|endif
-comment|/* 	 * Pick a new current process and record its start time. 	 */
+comment|/* 	 * Finish up stats for outgoing thread. 	 */
 name|cnt
 operator|.
 name|v_swtch
@@ -3180,17 +3195,18 @@ operator|&=
 operator|~
 name|KEF_NEEDRESCHED
 expr_stmt|;
-comment|/* 	 * At the last moment: if this KSE is not on the run queue, 	 * it needs to be freed correctly and the thread treated accordingly. 	 */
+comment|/* 	 * At the last moment, if this thread is still marked RUNNING, 	 * then put it back on the run queue as it has not been suspended 	 * or stopped or any thing else similar. 	 */
 if|if
 condition|(
-operator|(
 name|td
 operator|->
 name|td_state
 operator|==
 name|TDS_RUNNING
-operator|)
-operator|&&
+condition|)
+block|{
+name|KASSERT
+argument_list|(
 operator|(
 operator|(
 name|ke
@@ -3202,8 +3218,12 @@ operator|)
 operator|==
 literal|0
 operator|)
-condition|)
-block|{
+argument_list|,
+operator|(
+literal|"Idle thread in mi_switch with wrong state"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Put us back on the run queue (kse and all). */
 name|setrunqueue
 argument_list|(
@@ -3214,25 +3234,14 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|td
 operator|->
 name|td_flags
 operator|&
 name|TDF_UNBOUND
-operator|)
-operator|&&
-operator|(
-name|td
-operator|->
-name|td_state
-operator|!=
-name|TDS_RUNQ
-operator|)
 condition|)
 block|{
-comment|/* in case of old code */
-comment|/* 		 * We will not be on the run queue. 		 * Someone else can use the KSE if they need it. 		 */
+comment|/* 		 * We will not be on the run queue. So we must be 		 * sleeping or similar. If it's available, 		 * someone else can use the KSE if they need it. 		 * XXXKSE KSE loaning will change this. 		 */
 name|td
 operator|->
 name|td_kse
@@ -3248,6 +3257,8 @@ block|}
 name|cpu_switch
 argument_list|()
 expr_stmt|;
+comment|/* SHAZAM!!*/
+comment|/*  	 * Start setting up stats etc. for the incoming thread. 	 * Similar code in fork_exit() is returned to by cpu_switch() 	 * in the case of a new thread/process. 	 */
 name|td
 operator|->
 name|td_kse

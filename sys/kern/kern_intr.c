@@ -1756,6 +1756,11 @@ modifier|*
 name|td
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|ctd
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
@@ -1782,6 +1787,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|ctd
+operator|=
+name|curthread
+expr_stmt|;
 comment|/* 	 * If any of the handlers for this ithread claim to be good 	 * sources of entropy, then gather some. 	 */
 if|if
 condition|(
@@ -1808,7 +1817,7 @@ name|entropy
 operator|.
 name|proc
 operator|=
-name|curthread
+name|ctd
 operator|->
 name|td_proc
 expr_stmt|;
@@ -1924,23 +1933,30 @@ condition|(
 name|do_switch
 operator|&&
 operator|(
-name|curthread
+name|ctd
 operator|->
 name|td_critnest
 operator|==
 literal|1
 operator|)
-comment|/*&& 		    (curthread->td_state == TDS_RUNNING) XXXKSE*/
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* not needed in KSE */
-block|if (curthread != PCPU_GET(idlethread)) 				setrunqueue(curthread);
-endif|#
-directive|endif
-name|curthread
+name|KASSERT
+argument_list|(
+operator|(
+name|ctd
+operator|->
+name|td_state
+operator|==
+name|TDS_RUNNING
+operator|)
+argument_list|,
+operator|(
+literal|"ithread_schedule: Bad state for curthread."
+operator|)
+argument_list|)
+expr_stmt|;
+name|ctd
 operator|->
 name|td_proc
 operator|->
@@ -1950,6 +1966,22 @@ name|p_ru
 operator|.
 name|ru_nivcsw
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ctd
+operator|->
+name|td_kse
+operator|->
+name|ke_flags
+operator|&
+name|KEF_IDLEKSE
+condition|)
+name|ctd
+operator|->
+name|td_state
+operator|=
+name|TDS_UNQUEUED
 expr_stmt|;
 name|mi_switch
 argument_list|()

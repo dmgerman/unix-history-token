@@ -466,6 +466,12 @@ operator|.
 name|ru_nvcsw
 operator|++
 expr_stmt|;
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_UNQUEUED
+expr_stmt|;
 name|mi_switch
 argument_list|()
 expr_stmt|;
