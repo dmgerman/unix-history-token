@@ -1363,7 +1363,7 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
-name|FOLLOW
+name|NOFOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -1384,6 +1384,8 @@ argument_list|,
 name|FREAD
 operator||
 name|FWRITE
+operator||
+name|O_NOFOLLOW
 argument_list|,
 literal|0
 argument_list|)
