@@ -4244,7 +4244,7 @@ name|OID_AUTO
 argument_list|,
 name|ipfw
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ether_ipfw
