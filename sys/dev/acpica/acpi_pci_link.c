@@ -769,6 +769,7 @@ operator|->
 name|res_index
 operator|++
 expr_stmt|;
+comment|/* 		 * Only use the current value if there's one IRQ.  Some 		 * systems return multiple IRQs (which is nonsense for _CRS) 		 * when the link hasn't been programmed. 		 */
 if|if
 condition|(
 name|res
@@ -787,29 +788,9 @@ operator|.
 name|Irq
 operator|.
 name|NumberOfInterrupts
-operator|>
-literal|0
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|res
-operator|->
-name|Data
-operator|.
-name|Irq
-operator|.
-name|NumberOfInterrupts
 operator|==
 literal|1
-argument_list|,
-operator|(
-literal|"%s: too many interrupts"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|link
 operator|->
 name|l_irq
@@ -825,7 +806,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -837,29 +817,9 @@ operator|.
 name|ExtendedIrq
 operator|.
 name|NumberOfInterrupts
-operator|>
-literal|0
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|res
-operator|->
-name|Data
-operator|.
-name|ExtendedIrq
-operator|.
-name|NumberOfInterrupts
 operator|==
 literal|1
-argument_list|,
-operator|(
-literal|"%s: too many interrupts"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|link
 operator|->
 name|l_irq
@@ -875,7 +835,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-block|}
 comment|/* 		 * An IRQ of zero means that the link isn't routed. 		 */
 if|if
 condition|(
