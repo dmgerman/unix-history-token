@@ -123,6 +123,17 @@ begin_comment
 comment|/*  * System calls on descriptors.  */
 end_comment
 
+begin_struct
+struct|struct
+name|getdtablesize_args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -148,7 +159,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|args
+name|getdtablesize_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -187,6 +198,17 @@ begin_comment
 comment|/*  * Duplicate a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|dup_args
+block|{
+name|int
+name|i
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -210,18 +232,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|i
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|dup_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -398,6 +415,20 @@ begin_comment
 comment|/*  * Duplicate a file descriptor to a particular value.  */
 end_comment
 
+begin_struct
+struct|struct
+name|dup2_args
+block|{
+name|u_int
+name|from
+decl_stmt|;
+name|u_int
+name|to
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -421,21 +452,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|u_int
-name|from
-decl_stmt|;
-name|u_int
-name|to
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|dup2_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -680,6 +703,23 @@ begin_comment
 comment|/*  * The file control system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fcntl_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -703,25 +743,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|int
-name|arg
-decl_stmt|;
-block|}
+name|struct
+name|fcntl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1677,6 +1706,17 @@ begin_comment
 comment|/*  * Close a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|close_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1700,18 +1740,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|close_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1894,6 +1929,22 @@ begin_comment
 comment|/*  * Return status information about a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ofstat_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|ostat
+modifier|*
+name|sb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1917,24 +1968,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
 name|struct
-name|ostat
-modifier|*
-name|sb
-decl_stmt|;
-block|}
+name|ofstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2123,6 +2164,22 @@ begin_comment
 comment|/*  * Return status information about a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fstat_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|stat
+modifier|*
+name|sb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2146,24 +2203,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
 name|struct
-name|stat
-modifier|*
-name|sb
-decl_stmt|;
-block|}
+name|fstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3885,6 +3932,20 @@ begin_comment
 comment|/*  * Apply an advisory lock on a file descriptor.  *  * Just attempt to get a record lock of the requested type on  * the entire file (l_whence = SEEK_SET, l_start = 0, l_len = 0).  */
 end_comment
 
+begin_struct
+struct|struct
+name|flock_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|how
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -3908,22 +3969,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|how
-decl_stmt|;
-block|}
+name|struct
+name|flock_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

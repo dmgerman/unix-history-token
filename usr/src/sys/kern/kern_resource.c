@@ -43,6 +43,20 @@ begin_comment
 comment|/*  * Resource controls and accounting.  */
 end_comment
 
+begin_struct
+struct|struct
+name|getpriority_args
+block|{
+name|int
+name|which
+decl_stmt|;
+name|int
+name|who
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|getpriority
 argument_list|(
@@ -62,22 +76,14 @@ name|curp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|which
-decl_stmt|;
-name|int
-name|who
-decl_stmt|;
-block|}
+name|struct
+name|getpriority_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -327,6 +333,23 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setpriority_args
+block|{
+name|int
+name|which
+decl_stmt|;
+name|int
+name|who
+decl_stmt|;
+name|int
+name|prio
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -350,25 +373,14 @@ name|curp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|which
-decl_stmt|;
-name|int
-name|who
-decl_stmt|;
-name|int
-name|prio
-decl_stmt|;
-block|}
+name|struct
+name|setpriority_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -787,6 +799,22 @@ name|COMPAT_SUNOS
 argument_list|)
 end_if
 
+begin_struct
+struct|struct
+name|setrlimit_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+name|struct
+name|orlimit
+modifier|*
+name|lim
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -810,24 +838,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
 name|struct
-name|orlimit
-modifier|*
-name|lim
-decl_stmt|;
-block|}
+name|setrlimit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -914,6 +932,22 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|getrlimit_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+name|struct
+name|orlimit
+modifier|*
+name|rlp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -937,24 +971,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
 name|struct
-name|orlimit
-modifier|*
-name|rlp
-decl_stmt|;
-block|}
+name|getrlimit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1078,6 +1102,22 @@ begin_comment
 comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
+begin_struct
+struct|struct
+name|__setrlimit_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+name|struct
+name|rlimit
+modifier|*
+name|lim
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1101,24 +1141,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
 name|struct
-name|rlimit
-modifier|*
-name|lim
-decl_stmt|;
-block|}
+name|__setrlimit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1565,6 +1595,22 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|__getrlimit_args
+block|{
+name|u_int
+name|which
+decl_stmt|;
+name|struct
+name|rlimit
+modifier|*
+name|rlp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1588,24 +1634,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|u_int
-name|which
-decl_stmt|;
 name|struct
-name|rlimit
-modifier|*
-name|rlp
-decl_stmt|;
-block|}
+name|__getrlimit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1971,6 +2007,22 @@ block|}
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|getrusage_args
+block|{
+name|int
+name|who
+decl_stmt|;
+name|struct
+name|rusage
+modifier|*
+name|rusage
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1992,24 +2044,14 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|who
-decl_stmt|;
 name|struct
-name|rusage
-modifier|*
-name|rusage
-decl_stmt|;
-block|}
+name|getrusage_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
