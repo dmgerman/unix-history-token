@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infomap.c -- keymaps for Info.    $Id: infomap.c,v 1.5 2003/01/24 19:04:54 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* infomap.c -- keymaps for Info.    $Id: infomap.c,v 1.7 2003/05/13 16:27:04 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -11061,6 +11061,10 @@ block|{
 if|if
 condition|(
 name|filename
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 name|info_error
@@ -11852,9 +11856,6 @@ name|unsigned
 name|int
 name|seqlen
 decl_stmt|;
-name|KEYMAP_ENTRY
-name|ke
-decl_stmt|;
 enum|enum
 block|{
 name|getseq
@@ -12241,9 +12242,6 @@ name|int
 name|suppress_ea_default_bindings
 init|=
 literal|0
-decl_stmt|;
-name|Keymap
-name|map
 decl_stmt|;
 if|if
 condition|(
