@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: session.c,v 1.12 2000/05/03 18:03:07 markus Exp $"
+literal|"$OpenBSD: session.c,v 1.15 2000/05/30 17:23:37 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1286,14 +1286,12 @@ argument_list|(
 literal|"Received authentication agent forwarding request."
 argument_list|)
 expr_stmt|;
+name|success
+operator|=
 name|auth_input_request_forwarding
 argument_list|(
 name|pw
 argument_list|)
-expr_stmt|;
-name|success
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3208,7 +3206,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Replace the equals sign by nul, and advance value to the value string. */
+comment|/* 		 * Replace the equals sign by nul, and advance value to 		 * the value string. 		 */
 operator|*
 name|value
 operator|=
@@ -4354,10 +4352,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|screen
+init|=
+name|strchr
+argument_list|(
+name|display
+argument_list|,
+literal|':'
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|debug_flag
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -4373,6 +4383,32 @@ argument_list|,
 name|auth_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|screen
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Adding %.*s/unix%s %s %s\n"
+argument_list|,
+name|screen
+operator|-
+name|display
+argument_list|,
+name|display
+argument_list|,
+name|screen
+argument_list|,
+name|auth_proto
+argument_list|,
+name|auth_data
+argument_list|)
+expr_stmt|;
+block|}
 name|f
 operator|=
 name|popen
@@ -4395,6 +4431,31 @@ argument_list|,
 literal|"add %s %s %s\n"
 argument_list|,
 name|display
+argument_list|,
+name|auth_proto
+argument_list|,
+name|auth_data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|screen
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"add %.*s/unix%s %s %s\n"
+argument_list|,
+name|screen
+operator|-
+name|display
+argument_list|,
+name|display
+argument_list|,
+name|screen
 argument_list|,
 name|auth_proto
 argument_list|,
