@@ -534,7 +534,7 @@ literal|1
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|                 YOU                   |"
+literal|"|  Score:   0     YOU                   |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -600,7 +600,7 @@ literal|7
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|                  ME                   |"
+literal|"|  Score:   0      ME                   |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -975,15 +975,6 @@ name|compcrib
 operator|=
 operator|!
 name|compcrib
-expr_stmt|;
-name|msg
-argument_list|(
-literal|"You have %d points, I have %d."
-argument_list|,
-name|pscore
-argument_list|,
-name|cscore
-argument_list|)
 expr_stmt|;
 block|}
 do|while

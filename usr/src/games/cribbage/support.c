@@ -932,7 +932,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * prpeg:  *	put out the peg character on the score board  */
+comment|/*  * prpeg:  *	Put out the peg character on the score board and put the  *	score up on the board.  */
 end_comment
 
 begin_expr_stmt
@@ -1093,6 +1093,27 @@ argument_list|,
 name|x
 argument_list|,
 name|peg
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|SCORE_Y
+operator|+
+operator|(
+name|myturn
+condition|?
+literal|7
+else|:
+literal|1
+operator|)
+argument_list|,
+name|SCORE_X
+operator|+
+literal|10
+argument_list|,
+literal|"%3d"
+argument_list|,
+name|score
 argument_list|)
 expr_stmt|;
 block|}
