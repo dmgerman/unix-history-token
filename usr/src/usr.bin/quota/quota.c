@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	5.11 (Berkeley) %G%"
+literal|"@(#)quota.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,25 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfname
+init|=
+name|QUOTAFILENAME
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfextension
+index|[]
+init|=
+name|INITQFNAMES
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	5.14 (Berkeley) %G%"
+literal|"@(#)edquota.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,34 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfname
+init|=
+name|QUOTAFILENAME
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfextension
+index|[]
+init|=
+name|INITQFNAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|quotagroup
+init|=
+name|QUOTAGROUP
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char

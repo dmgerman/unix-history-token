@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.14 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,34 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfname
+init|=
+name|QUOTAFILENAME
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qfextension
+index|[]
+init|=
+name|INITQFNAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|quotagroup
+init|=
+name|QUOTAGROUP
+decl_stmt|;
+end_decl_stmt
 
 begin_union
 union|union
