@@ -1878,8 +1878,7 @@ name|struct
 name|ia64_itir
 name|itir
 decl_stmt|;
-name|struct
-name|ia64_ifa
+name|uint64_t
 name|ifa
 decl_stmt|;
 name|struct
@@ -1985,7 +1984,7 @@ block|,
 literal|"WC"
 block|,
 literal|"NaT"
-block|, 		 	}
+block|, 	}
 decl_stmt|;
 name|res
 operator|=
@@ -2134,8 +2133,6 @@ operator|(
 name|buf
 operator|.
 name|ifa
-operator|.
-name|ifa_ig
 operator|&
 literal|1
 operator|)
@@ -2248,8 +2245,8 @@ argument_list|,
 name|buf
 operator|.
 name|ifa
-operator|.
-name|ifa_vpn
+operator|>>
+literal|12
 argument_list|,
 name|buf
 operator|.
