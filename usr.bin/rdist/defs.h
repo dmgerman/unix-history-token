@@ -502,6 +502,12 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 name|char
+name|src
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|char
 name|target
 index|[
 name|BUFSIZ

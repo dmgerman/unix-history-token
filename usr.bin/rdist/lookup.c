@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lookup.c,v 1.4 1998/04/06 06:18:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,7 +424,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|256
+name|BUFSIZ
 index|]
 decl_stmt|;
 if|if
