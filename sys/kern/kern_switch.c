@@ -864,6 +864,12 @@ literal|0
 condition|)
 block|{
 comment|/* We only care about the kse in the run queue. */
+name|td
+operator|->
+name|td_priority
+operator|=
+name|newpri
+expr_stmt|;
 if|if
 condition|(
 name|ke
@@ -881,12 +887,6 @@ name|sched_rem
 argument_list|(
 name|ke
 argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_priority
-operator|=
-name|newpri
 expr_stmt|;
 name|sched_add
 argument_list|(
