@@ -868,8 +868,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VADMIN
+value|010000
+end_define
+
+begin_comment
+comment|/* permission to administer vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VSUID
-value|04000
+value|004000
 end_define
 
 begin_comment
@@ -880,7 +891,7 @@ begin_define
 define|#
 directive|define
 name|VSGID
-value|02000
+value|002000
 end_define
 
 begin_comment
@@ -891,7 +902,7 @@ begin_define
 define|#
 directive|define
 name|VSVTX
-value|01000
+value|001000
 end_define
 
 begin_comment
@@ -902,7 +913,7 @@ begin_define
 define|#
 directive|define
 name|VREAD
-value|00400
+value|000400
 end_define
 
 begin_comment
@@ -913,14 +924,14 @@ begin_define
 define|#
 directive|define
 name|VWRITE
-value|00200
+value|000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|VEXEC
-value|00100
+value|000100
 end_define
 
 begin_comment
