@@ -51,7 +51,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fnmatch.h"
+file|<fnmatch.h>
 end_include
 
 begin_ifndef
@@ -1425,7 +1425,7 @@ name|void
 operator|)
 name|setlocale
 argument_list|(
-name|LC_CTYPE
+name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
