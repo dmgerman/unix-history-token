@@ -2845,6 +2845,41 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__i386__
+if|if
+condition|(
+name|checkLoaderACPI
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgNoYes
+argument_list|(
+literal|"ACPI was disabled during boot.\n"
+literal|"Would you like to disable it permanently?"
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|configLoaderACPI
+argument_list|(
+literal|1
+comment|/*disable*/
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Now would be a good time to checkpoint the configuration data */
 name|configRC_conf
 argument_list|()
