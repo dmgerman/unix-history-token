@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prof.c	6.2	84/07/28	*/
+comment|/*	subr_prof.c	6.3	84/08/12	*/
 end_comment
 
 begin_comment
@@ -555,6 +555,10 @@ name|long
 name|toindex
 decl_stmt|;
 comment|/* r7  => r1 */
+specifier|static
+name|int
+name|s
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -583,7 +587,7 @@ comment|/* frompcindex =     (calls frame) */
 endif|#
 directive|endif
 endif|not lint
-comment|/* 	 *	check that we are profiling 	 *	and that we aren't recursively invoked. 	 */
+comment|/* 	 *	check that we are profiling 	 */
 if|if
 condition|(
 name|profiling
@@ -593,8 +597,11 @@ goto|goto
 name|out
 goto|;
 block|}
-name|profiling
-operator|++
+comment|/* 	 *	insure that we cannot be recursively invoked. 	 *	this requires that splhigh() and splx() below 	 *	do NOT call mcount! 	 */
+name|s
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 comment|/* 	 *	check that frompcindex is a reasonable pc value. 	 *	for example:	signal catchers get called from the stack, 	 *			not from text space.  too bad. 	 */
 name|frompcindex
@@ -888,8 +895,10 @@ block|}
 block|}
 name|done
 label|:
-name|profiling
-operator|--
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* and fall through */
 name|out
