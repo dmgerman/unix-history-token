@@ -29,6 +29,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -147,12 +164,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
 
 begin_ifndef
 ifndef|#
@@ -405,12 +416,6 @@ begin_include
 include|#
 directive|include
 file|"netinet/ip_fil.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"netinet/ip_proxy.h"
 end_include
 
 begin_include
@@ -2596,12 +2601,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_function
 name|void
 name|ipfr_fragexpire
@@ -2891,6 +2890,12 @@ begin_comment
 comment|/*  * Slowly expire held state for fragments.  Timeouts are set * in expectation  * of this being called twice per second.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -2944,6 +2949,13 @@ name|ipfr_slowtimer
 argument_list|()
 endif|#
 directive|endif
+else|#
+directive|else
+name|void
+name|ipfr_slowtimer
+argument_list|()
+endif|#
+directive|endif
 block|{
 if|#
 directive|if
@@ -2974,11 +2986,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_expr_stmt
 name|ipfilter_sgi_intfsync
@@ -3014,6 +3034,15 @@ name|fr_authexpire
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -3125,7 +3154,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__OpenBSD_
+name|__OpenBSD__
 argument_list|)
 end_if
 
@@ -3138,10 +3167,6 @@ argument_list|,
 name|hz
 operator|/
 literal|2
-argument_list|,
-name|ipfr_slowtimer
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3225,7 +3250,6 @@ comment|/* SOLARIS */
 end_comment
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -3234,5 +3258,6 @@ begin_comment
 comment|/* defined(_KERNEL) */
 end_comment
 
+unit|}
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.4 2000/11/12 11:54:53 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.4 2000/11/12 11:54:53 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -125,6 +125,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|offsetof
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|t
+parameter_list|,
+name|m
+parameter_list|)
+value|(int)((&((t *)0L)->m))
+end_define
 
 begin_endif
 endif|#
@@ -261,14 +284,14 @@ begin_define
 define|#
 directive|define
 name|SIOCAUTHW
-value|_IOWR('r', 76, struct fr_info *)
+value|_IOWR('r', 76, struct frauth_t *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHR
-value|_IOWR('r', 77, struct fr_info *)
+value|_IOWR('r', 77, struct frauth_t *)
 end_define
 
 begin_define
@@ -434,14 +457,14 @@ begin_define
 define|#
 directive|define
 name|SIOCAUTHW
-value|_IOWR(r, 76, struct fr_info *)
+value|_IOWR(r, 76, struct frauth_t *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHR
-value|_IOWR(r, 77, struct fr_info *)
+value|_IOWR(r, 77, struct frauth_t *)
 end_define
 
 begin_define
@@ -680,6 +703,32 @@ name|FI_NEWFR
 value|0x00001000
 end_define
 
+begin_comment
+comment|/* Create a filter rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FI_IGNOREPKT
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Do not treat as a real packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FI_NORULE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Not direct a result of a rule */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -723,7 +772,7 @@ name|u_char
 name|fin_icode
 decl_stmt|;
 comment|/* ICMP error to return */
-name|u_short
+name|u_32_t
 name|fin_rule
 decl_stmt|;
 comment|/* rule # last matched */
@@ -742,6 +791,12 @@ modifier|*
 name|fin_dp
 decl_stmt|;
 comment|/* start of data past IP header */
+name|u_short
+name|fin_plen
+decl_stmt|;
+name|u_short
+name|fin_off
+decl_stmt|;
 name|u_short
 name|fin_dlen
 decl_stmt|;
@@ -769,12 +824,6 @@ name|fin_qif
 decl_stmt|;
 endif|#
 directive|endif
-name|u_short
-name|fin_plen
-decl_stmt|;
-name|u_short
-name|fin_off
-decl_stmt|;
 block|}
 name|fr_info_t
 typedef|;
@@ -790,6 +839,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|fin_p
+value|fin_fi.fi_p
+end_define
+
+begin_define
+define|#
+directive|define
 name|fin_saddr
 value|fin_fi.fi_saddr
 end_define
@@ -797,8 +853,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|fin_src
+value|fin_fi.fi_src.in4
+end_define
+
+begin_define
+define|#
+directive|define
 name|fin_daddr
 value|fin_fi.fi_daddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|fin_dst
+value|fin_fi.fi_dst.in4
 end_define
 
 begin_define
@@ -817,6 +887,13 @@ define|#
 directive|define
 name|FI_CSIZE
 value|offsetof(fr_info_t, fin_icode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_LCSIZE
+value|offsetof(fr_info_t, fin_dp)
 end_define
 
 begin_comment
@@ -839,14 +916,14 @@ name|void
 modifier|*
 name|fd_ifp
 decl_stmt|;
-name|struct
-name|in_addr
-name|fd_ip
+name|union
+name|i6addr
+name|fd_ip6
 decl_stmt|;
 name|char
 name|fd_ifname
 index|[
-name|IFNAMSIZ
+name|LIFNAMSIZ
 index|]
 decl_stmt|;
 if|#
@@ -863,6 +940,13 @@ block|}
 name|frdest_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|fd_ip
+value|fd_ip6.in4
+end_define
 
 begin_typedef
 typedef|typedef
@@ -973,19 +1057,11 @@ decl_stmt|;
 comment|/* reference count - for grouping */
 name|void
 modifier|*
-name|fr_ifa
+name|fr_ifas
+index|[
+literal|4
+index|]
 decl_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199306
-name|void
-modifier|*
-name|fr_oifa
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * These are only incremented when a packet  matches this rule and 	 * it is the last match 	 */
 name|U_QUAD_T
 name|fr_hits
@@ -1010,6 +1086,13 @@ comment|/* data for ICMP packets (mask) */
 name|u_short
 name|fr_icmp
 decl_stmt|;
+name|u_int
+name|fr_age
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* aging for state */
 name|frtuc_t
 name|fr_tuc
 decl_stmt|;
@@ -1060,24 +1143,14 @@ name|fr_icode
 decl_stmt|;
 comment|/* return ICMP code */
 name|char
-name|fr_ifname
+name|fr_ifnames
 index|[
-name|IFNAMSIZ
+literal|4
+index|]
+index|[
+name|LIFNAMSIZ
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199306
-name|char
-name|fr_oifname
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|frdest
 name|fr_tif
@@ -1209,28 +1282,33 @@ name|fr_smsk
 value|fr_mip.fi_src.in4
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|offsetof
-end_ifndef
+begin_define
+define|#
+directive|define
+name|fr_ifname
+value|fr_ifnames[0]
+end_define
 
 begin_define
 define|#
 directive|define
-name|offsetof
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|)
-value|(int)((&((t *)0L)->m))
+name|fr_oifname
+value|fr_ifnames[2]
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|fr_ifa
+value|fr_ifas[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_oifa
+value|fr_ifas[2]
+end_define
 
 begin_define
 define|#
@@ -1323,23 +1401,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FR_LOGBODY
+name|FR_NOTSRCIP
 value|0x00020
 end_define
 
 begin_comment
-comment|/* Log the body */
+comment|/* not the src IP# */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FR_LOGFIRST
+name|FR_NOTDSTIP
 value|0x00040
 end_define
 
 begin_comment
-comment|/* Log the first byte if state held */
+comment|/* not the dst IP# */
 end_comment
 
 begin_define
@@ -1484,23 +1562,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FR_NOTSRCIP
+name|FR_LOGBODY
 value|0x80000
 end_define
 
 begin_comment
-comment|/* not the src IP# */
+comment|/* Log the body */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FR_NOTDSTIP
+name|FR_LOGFIRST
 value|0x100000
 end_define
 
 begin_comment
-comment|/* not the dst IP# */
+comment|/* Log the first byte if state held */
 end_comment
 
 begin_define
@@ -2051,6 +2129,13 @@ begin_comment
 comment|/* 'IPLM' */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPLOG_SIZE
+value|sizeof(iplog_t)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2093,7 +2178,7 @@ operator|)
 name|u_char
 name|fl_ifname
 index|[
-name|IFNAMSIZ
+name|LIFNAMSIZ
 index|]
 decl_stmt|;
 else|#
@@ -2104,7 +2189,7 @@ decl_stmt|;
 name|u_char
 name|fl_ifname
 index|[
-literal|4
+name|LIFNAMSIZ
 index|]
 decl_stmt|;
 endif|#
@@ -2130,8 +2215,14 @@ decl_stmt|;
 name|u_32_t
 name|fl_flags
 decl_stmt|;
-name|u_32_t
-name|fl_lflags
+name|u_char
+name|fl_dir
+decl_stmt|;
+name|u_char
+name|fl_pad
+index|[
+literal|3
+index|]
 decl_stmt|;
 block|}
 name|ipflog_t
@@ -2463,11 +2554,21 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_struct_decl
-struct_decl|struct
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|get_ifname
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|ifnet
-struct_decl|;
-end_struct_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2531,8 +2632,7 @@ operator|(
 name|ip_t
 operator|*
 operator|,
-expr|struct
-name|ifnet
+name|fr_info_t
 operator|*
 operator|)
 argument_list|)
@@ -2542,16 +2642,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|icmp_error
+name|send_icmp_err
 name|__P
 argument_list|(
 operator|(
 name|ip_t
 operator|*
 operator|,
-expr|struct
-name|ifnet
+name|int
+operator|,
+name|fr_info_t
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2768,99 +2871,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ipflog_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipflog_clear
-name|__P
-argument_list|(
-operator|(
-name|minor_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipflog_read
-name|__P
-argument_list|(
-operator|(
-name|minor_t
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipflog
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|,
-name|ip_t
-operator|*
-operator|,
-name|fr_info_t
-operator|*
-operator|,
-name|mb_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipllog
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|fr_info_t
-operator|*
-operator|,
-name|void
-operator|*
-operator|*
-operator|,
-name|size_t
-operator|*
-operator|,
-name|int
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4030,6 +4040,99 @@ name|void
 operator|*
 operator|,
 name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipflog_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipflog_clear
+name|__P
+argument_list|(
+operator|(
+name|minor_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipflog
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|,
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|,
+name|mb_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipllog
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|fr_info_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|*
+operator|,
+name|size_t
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipflog_read
+name|__P
+argument_list|(
+operator|(
+name|minor_t
+operator|,
+expr|struct
+name|uio
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
