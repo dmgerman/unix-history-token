@@ -2217,13 +2217,22 @@ name|val
 operator|&
 literal|0xff
 expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|printf
 argument_list|(
-literal|"lun %d found\n"
+literal|"target %d lun %d found\n"
+argument_list|,
+name|target
+operator|->
+name|target_id
 argument_list|,
 name|lun
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 if|if
 condition|(
 name|maxlun
