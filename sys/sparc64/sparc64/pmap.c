@@ -746,6 +746,9 @@ decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
+name|vm_size_t
+name|physsz
+decl_stmt|;
 name|ihandle_t
 name|pmem
 decl_stmt|;
@@ -918,6 +921,10 @@ argument_list|,
 name|mr_cmp
 argument_list|)
 expr_stmt|;
+name|physsz
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -994,7 +1001,23 @@ index|]
 operator|.
 name|mr_size
 expr_stmt|;
+name|physsz
+operator|+=
+name|mra
+index|[
+name|i
+index|]
+operator|.
+name|mr_size
+expr_stmt|;
 block|}
+name|physmem
+operator|=
+name|btoc
+argument_list|(
+name|physsz
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate the kernel tsb and lock it in the tlb. 	 */
 name|pa
 operator|=
