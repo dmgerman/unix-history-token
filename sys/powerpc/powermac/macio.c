@@ -577,12 +577,6 @@ index|[]
 init|=
 block|{
 block|{
-literal|"interrupt-controller"
-block|,
-name|MACIO_QUIRK_IGNORE
-block|}
-block|,
-block|{
 literal|"escc-legacy"
 block|,
 name|MACIO_QUIRK_IGNORE
