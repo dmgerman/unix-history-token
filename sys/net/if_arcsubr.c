@@ -1342,7 +1342,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m_free
+name|m_freem
 argument_list|(
 name|m
 argument_list|)
@@ -1367,7 +1367,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m_free
+name|m_freem
 argument_list|(
 name|ac
 operator|->
@@ -1379,11 +1379,6 @@ operator|->
 name|curr_frag
 operator|=
 literal|0
-expr_stmt|;
-name|m_free
-argument_list|(
-name|m
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
