@@ -70,7 +70,7 @@ comment|/*  * lptest -- line printer test program (and other devices).  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
