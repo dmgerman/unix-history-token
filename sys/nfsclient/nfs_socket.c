@@ -3804,7 +3804,7 @@ decl_stmt|;
 name|u_int32_t
 name|xid
 decl_stmt|;
-comment|/* Reject requests while attempting to unmount. */
+comment|/* Reject requests while attempting a forced unmount. */
 if|if
 condition|(
 name|vp
@@ -3813,7 +3813,7 @@ name|v_mount
 operator|->
 name|mnt_kern_flag
 operator|&
-name|MNTK_UNMOUNT
+name|MNTK_UNMOUNTF
 condition|)
 block|{
 name|m_freem
@@ -5652,7 +5652,7 @@ operator|(
 name|EINTR
 operator|)
 return|;
-comment|/* Terminate all requests while attempting to unmount. */
+comment|/* Terminate all requests while attempting a forced unmount. */
 if|if
 condition|(
 name|nmp
@@ -5661,7 +5661,7 @@ name|nm_mountp
 operator|->
 name|mnt_kern_flag
 operator|&
-name|MNTK_UNMOUNT
+name|MNTK_UNMOUNTF
 condition|)
 return|return
 operator|(
