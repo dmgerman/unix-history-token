@@ -1882,5 +1882,45 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Default object functions */
+end_comment
+
+begin_function
+name|void
+name|draw_box
+parameter_list|(
+name|OBJECT
+modifier|*
+name|object
+parameter_list|)
+block|{
+comment|/* Gross hack for now */
+name|ncurses_draw_box
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|draw_shadow
+parameter_list|(
+name|OBJECT
+modifier|*
+name|object
+parameter_list|)
+block|{
+comment|/* Gross hack for now */
+name|ncurses_draw_shadow
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
