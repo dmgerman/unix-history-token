@@ -569,6 +569,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_PDC20621
+value|0x6621105a
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SERVERWORKS_ID
 value|0x1166
 end_define
@@ -1098,8 +1105,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRTX2
+name|PRTX
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRCH
+value|3
 end_define
 
 begin_define

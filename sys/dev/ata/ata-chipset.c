@@ -5946,7 +5946,7 @@ name|ATA_PDC20268
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 name|PRTX4
 block|,
@@ -5960,7 +5960,7 @@ name|ATA_PDC20268R
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 name|PRTX4
 block|,
@@ -5974,7 +5974,7 @@ name|ATA_PDC20269
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 literal|0x00
 block|,
@@ -5988,7 +5988,7 @@ name|ATA_PDC20271
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 literal|0x00
 block|,
@@ -6002,7 +6002,7 @@ name|ATA_PDC20275
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 literal|0x00
 block|,
@@ -6016,7 +6016,7 @@ name|ATA_PDC20276
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 name|PRSX6K
 block|,
@@ -6030,7 +6030,7 @@ name|ATA_PDC20277
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRTX
 block|,
 literal|0x00
 block|,
@@ -6039,12 +6039,15 @@ block|,
 literal|"Promise TX2"
 block|}
 block|,
+if|#
+directive|if
+name|notyet
 block|{
 name|ATA_PDC20376
 block|,
 literal|0
 block|,
-name|PRTX2
+name|PRCH
 block|,
 literal|0x00
 block|,
@@ -6053,6 +6056,22 @@ block|,
 literal|"Promise SATA"
 block|}
 block|,
+block|{
+name|ATA_PDC20621
+block|,
+literal|0
+block|,
+name|PRCH
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA6
+block|,
+literal|"Promise SX4000"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
@@ -6102,11 +6121,23 @@ return|;
 comment|/* if we are on a SuperTrak SX6000 dont attach */
 if|if
 condition|(
+operator|(
 name|idx
 operator|->
 name|cfg2
 operator|&
 name|PRSX6K
+operator|)
+operator|&&
+name|pci_get_class
+argument_list|(
+name|GRANDPARENT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|==
+name|PCIC_BRIDGE
 operator|&&
 operator|!
 name|BUS_READ_IVAR
@@ -6133,6 +6164,20 @@ operator|&&
 name|devid
 operator|==
 name|ATA_I960RM
+condition|)
+return|return
+name|ENXIO
+return|;
+comment|/* if we are on a FastTrak TX4, adjust the interrupt resource */
+if|if
+condition|(
+operator|(
+name|idx
+operator|->
+name|cfg2
+operator|&
+name|PRTX4
+operator|)
 operator|&&
 name|pci_get_class
 argument_list|(
@@ -6143,17 +6188,6 @@ argument_list|)
 argument_list|)
 operator|==
 name|PCIC_BRIDGE
-condition|)
-return|return
-name|ENXIO
-return|;
-if|if
-condition|(
-name|idx
-operator|->
-name|cfg2
-operator|&
-name|PRTX4
 operator|&&
 operator|!
 name|BUS_READ_IVAR
@@ -6180,16 +6214,6 @@ operator|&&
 name|devid
 operator|==
 name|ATA_DEC_21150
-operator|&&
-name|pci_get_class
-argument_list|(
-name|GRANDPARENT
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-operator|==
-name|PCIC_BRIDGE
 condition|)
 block|{
 specifier|static
@@ -6202,7 +6226,6 @@ name|end
 init|=
 literal|0
 decl_stmt|;
-comment|/* we belive we are on a TX4, now do our (simple) magic */
 if|if
 condition|(
 name|pci_get_slot
@@ -6421,7 +6444,7 @@ name|chip
 operator|->
 name|cfg1
 operator|==
-name|PRTX2
+name|PRTX
 condition|?
 name|ata_promise_tx2_intr
 else|:
@@ -6983,7 +7006,7 @@ name|chip
 operator|->
 name|cfg1
 operator|>=
-name|PRTX2
+name|PRTX
 condition|)
 block|{
 name|ATA_OUTB
@@ -7164,7 +7187,7 @@ name|chip
 operator|->
 name|cfg1
 operator|<
-name|PRTX2
+name|PRTX
 condition|)
 name|pci_write_config
 argument_list|(
