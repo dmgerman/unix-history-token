@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -195,20 +195,21 @@ directive|include
 file|<netccitt/x25.h>
 end_include
 
-begin_extern
-extern|extern llc_ctlinput(
-end_extern
+begin_function_decl
+specifier|extern
+name|int
+name|llc_ctlinput
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_operator
-unit|)
-operator|,
-end_operator
-
-begin_expr_stmt
+begin_function_decl
+specifier|extern
+name|void
 name|cons_rtrequest
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
