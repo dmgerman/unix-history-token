@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.1	83/08/20	*/
+comment|/*	kern_sig.c	6.2	83/09/08	*/
 end_comment
 
 begin_include
@@ -1121,7 +1121,14 @@ condition|(
 name|p
 operator|==
 literal|0
-operator|||
+condition|)
+return|return
+operator|(
+name|ESRCH
+operator|)
+return|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_uid
@@ -1136,7 +1143,7 @@ name|p_uid
 condition|)
 return|return
 operator|(
-name|ESRCH
+name|EPERM
 operator|)
 return|;
 if|if
