@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1990 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.27 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,18 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -907,6 +919,8 @@ begin_block
 block|{
 name|int
 name|i
+decl_stmt|,
+name|tos
 decl_stmt|;
 name|char
 modifier|*
@@ -1404,6 +1418,40 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|tos
+operator|=
+name|IPTOS_THROUGHPUT
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|rem
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"Notice: set type-of-service failed: %m"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|response
@@ -1474,6 +1522,8 @@ begin_block
 block|{
 name|int
 name|i
+decl_stmt|,
+name|tos
 decl_stmt|;
 name|char
 modifier|*
@@ -1819,11 +1869,43 @@ continue|continue;
 operator|(
 name|void
 operator|)
-name|setreuid
+name|seteuid
 argument_list|(
-literal|0
-argument_list|,
 name|userid
+argument_list|)
+expr_stmt|;
+name|tos
+operator|=
+name|IPTOS_THROUGHPUT
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|rem
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"Notice: set type-of-service failed: %m"
 argument_list|)
 expr_stmt|;
 name|sink
@@ -1840,10 +1922,8 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|setreuid
+name|seteuid
 argument_list|(
-name|userid
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
