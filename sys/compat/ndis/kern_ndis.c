@@ -468,6 +468,13 @@ name|ndis_thr_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|ndis_req_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|STAILQ_HEAD
@@ -950,6 +957,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ndis_req_mtx
+argument_list|,
+literal|"NDIS request lock"
+argument_list|,
+name|MTX_NDIS_LOCK
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -1209,6 +1228,12 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_destroy
+argument_list|(
+operator|&
+name|ndis_req_mtx
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -2238,7 +2263,7 @@ argument_list|(
 operator|&
 name|block
 operator|->
-name|nmb_wkupdpctimer
+name|nmb_setstat
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2281,7 +2306,7 @@ argument_list|(
 operator|&
 name|block
 operator|->
-name|nmb_wkupdpctimer
+name|nmb_getstat
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2689,7 +2714,7 @@ argument|); }  int ndis_set_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid	
 literal|0
 argument|, bytesneeded =
 literal|0
-argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	setfunc = sc->ndis_chars.nmc_setinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || setfunc == NULL) 		return(ENXIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = setfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	ntoskrnl_lower_irql(irql);  	if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		error = msleep(&sc->ndis_block.nmb_wkupdpctimer,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
+argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	setfunc = sc->ndis_chars.nmc_setinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || setfunc == NULL) 		return(ENXIO);  	ntoskrnl_acquire_spinlock(&sc->ndis_block.nmb_lock,&irql); 	rval = setfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	ntoskrnl_release_spinlock(&sc->ndis_block.nmb_lock, irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block.nmb_setstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisset"
 argument|,
 literal|5
@@ -2717,7 +2742,7 @@ argument|; i< sc->ndis_maxpkts; i++) { 		if (sc->ndis_txarray[i] != NULL) { 			p
 literal|1
 argument|]; 			if (m != NULL) 				m_freem(m); 			ndis_free_packet(sc->ndis_txarray[i]); 		} 		bus_dmamap_destroy(sc->ndis_ttag, sc->ndis_tmaps[i]); 	}  	free(sc->ndis_tmaps, M_DEVBUF);  	bus_dma_tag_destroy(sc->ndis_ttag);  	return(
 literal|0
-argument|); }  int ndis_reset_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_reset_handler	resetfunc; 	uint8_t			addressing_reset; 	struct ifnet		*ifp; 	int			rval; 	uint8_t			irql;  	sc = arg; 	ifp =&sc->arpcom.ac_if; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	resetfunc = sc->ndis_chars.nmc_reset_func; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || resetfunc == NULL) 		return(EIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = resetfunc(&addressing_reset, adapter); 	ntoskrnl_lower_irql(irql);  	if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		msleep(sc,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
+argument|); }  int ndis_reset_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_reset_handler	resetfunc; 	uint8_t			addressing_reset; 	struct ifnet		*ifp; 	int			rval; 	uint8_t			irql;  	sc = arg; 	ifp =&sc->arpcom.ac_if; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	resetfunc = sc->ndis_chars.nmc_reset_func; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || resetfunc == NULL) 		return(EIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = resetfunc(&addressing_reset, adapter); 	ntoskrnl_lower_irql(irql);  	if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		msleep(sc,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisrst"
 argument|,
 literal|0
@@ -2747,9 +2772,9 @@ argument|); }  int ndis_get_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid	
 literal|0
 argument|, bytesneeded =
 literal|0
-argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	queryfunc = sc->ndis_chars.nmc_queryinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || queryfunc == NULL) 		return(ENXIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = queryfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	ntoskrnl_lower_irql(irql);
+argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	queryfunc = sc->ndis_chars.nmc_queryinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || queryfunc == NULL) 		return(ENXIO);  	ntoskrnl_acquire_spinlock(&sc->ndis_block.nmb_lock,&irql); 	rval = queryfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	ntoskrnl_release_spinlock(&sc->ndis_block.nmb_lock, irql);
 comment|/* Wait for requests that block. */
-argument|if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		error = msleep(&sc->ndis_block.nmb_wkupdpctimer,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
+argument|if (rval == NDIS_STATUS_PENDING) { 		mtx_lock(&ndis_req_mtx); 		error = msleep(&sc->ndis_block.nmb_getstat,&ndis_req_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisget"
 argument|,
 literal|5
@@ -2806,7 +2831,7 @@ argument|; 	block->nmb_setdone_func = ndis_setdone_func; 	block->nmb_querydone_f
 comment|/* 	 * Now call the DriverEntry() routine. This will cause 	 * a callout to the NdisInitializeWrapper() and 	 * NdisMRegisterMiniport() routines. 	 */
 argument|status = entry(&block->nmb_devobj,&dummystr);  	free (dummystr.nus_buf, M_DEVBUF);  	if (status != NDIS_STATUS_SUCCESS) 		return(ENODEV);  	ndis_enlarge_thrqueue(
 literal|8
-argument|);  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return(
+argument|);  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link); 	ntoskrnl_init_lock(&block->nmb_lock);  	return(
 literal|0
 argument|); }
 end_function

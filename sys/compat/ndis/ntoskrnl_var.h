@@ -1746,6 +1746,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|void
+name|ntoskrnl_init_lock
+parameter_list|(
+name|kspin_lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|__fastcall
 specifier|extern
