@@ -5110,6 +5110,15 @@ index|[
 name|nlx
 index|]
 operator|.
+name|n_type
+operator|==
+literal|0
+operator|||
+name|namelist
+index|[
+name|nlx
+index|]
+operator|.
 name|n_value
 operator|==
 literal|0
