@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,6 +19,18 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -194,6 +206,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* lint */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -207,6 +222,8 @@ argument_list|(
 literal|"nfs_read mode"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|uio
@@ -309,6 +326,10 @@ argument_list|,
 name|cred
 argument_list|,
 literal|1
+argument_list|,
+name|uio
+operator|->
+name|uio_procp
 argument_list|)
 condition|)
 return|return
@@ -343,6 +364,10 @@ argument_list|,
 name|cred
 argument_list|,
 literal|1
+argument_list|,
+name|uio
+operator|->
+name|uio_procp
 argument_list|)
 condition|)
 return|return
@@ -675,7 +700,7 @@ name|uio
 operator|->
 name|uio_offset
 argument_list|,
-name|DIRBLKSIZ
+name|NFS_DIRBLKSIZ
 argument_list|,
 name|cred
 argument_list|,
@@ -691,7 +716,7 @@ name|uio
 operator|->
 name|uio_resid
 argument_list|,
-name|DIRBLKSIZ
+name|NFS_DIRBLKSIZ
 operator|-
 name|bp
 operator|->
@@ -882,9 +907,10 @@ name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|uio
+operator|->
+name|uio_procp
 decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|int
 name|biosize
@@ -922,6 +948,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -935,6 +964,27 @@ argument_list|(
 literal|"nfs_write mode"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+operator|&&
+name|uio
+operator|->
+name|uio_procp
+operator|!=
+name|curproc
+condition|)
+name|panic
+argument_list|(
+literal|"nfs_write proc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vp
@@ -1011,6 +1061,8 @@ argument_list|,
 name|cred
 argument_list|,
 literal|1
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1036,8 +1088,6 @@ argument_list|,
 name|uio
 argument_list|,
 name|cred
-argument_list|,
-name|p
 argument_list|)
 operator|)
 return|;
