@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -70,6 +59,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -77,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -167,6 +176,13 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* handle obsolete syntax */
 while|while
 condition|(
@@ -186,6 +202,10 @@ literal|'-'
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|argv
 index|[
 literal|1
@@ -503,6 +523,13 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isprint
+argument_list|(
+name|c
+argument_list|)
+condition|)
 name|column
 operator|++
 expr_stmt|;
@@ -673,10 +700,16 @@ name|cp
 operator|!=
 literal|','
 operator|&&
+operator|!
+name|isblank
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
-operator|!=
-literal|' '
+argument_list|)
 condition|)
 name|errx
 argument_list|(
