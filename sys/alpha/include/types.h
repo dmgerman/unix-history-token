@@ -102,6 +102,14 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
+name|vm_paddr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
 name|vm_pindex_t
 typedef|;
 end_typedef
