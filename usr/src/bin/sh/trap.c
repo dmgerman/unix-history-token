@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	8.4 (Berkeley) %G%"
+literal|"@(#)trap.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +253,22 @@ end_decl_stmt
 begin_comment
 comment|/* indicates some signal received */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|getsigaction
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|sig_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The trap builtin.  */
@@ -560,11 +576,6 @@ name|void
 name|onsig
 parameter_list|()
 function_decl|;
-specifier|extern
-name|sig_t
-name|getsigaction
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -679,16 +690,6 @@ endif|#
 directive|endif
 block|}
 block|}
-if|if
-condition|(
-name|signo
-operator|==
-name|SIGKILL
-condition|)
-comment|/* Pretend it worked */
-return|return
-literal|0
-return|;
 name|t
 operator|=
 operator|&
@@ -708,13 +709,23 @@ literal|0
 condition|)
 block|{
 comment|/*  		 * current setting unknown  		 */
-name|sigact
-operator|=
+if|if
+condition|(
+operator|!
 name|getsigaction
 argument_list|(
 name|signo
+argument_list|,
+operator|&
+name|sigact
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* 			 * Pretend it worked; maybe we should give a warning 			 * here, but other shells don't. We don't alter 			 * sigmode, so that we retry every time. 			 */
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|sigact
@@ -834,13 +845,20 @@ comment|/*  * Return the current setting for sig w/o changing it.  */
 end_comment
 
 begin_function
-name|sig_t
+specifier|static
+name|int
 name|getsigaction
 parameter_list|(
 name|signo
+parameter_list|,
+name|sigact
 parameter_list|)
 name|int
 name|signo
+decl_stmt|;
+name|sig_t
+modifier|*
+name|sigact
 decl_stmt|;
 block|{
 name|struct
@@ -867,18 +885,21 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
-argument_list|(
-literal|"Sigaction system call failed"
-argument_list|)
-expr_stmt|;
 return|return
+literal|0
+return|;
+operator|*
+name|sigact
+operator|=
 operator|(
 name|sig_t
 operator|)
 name|sa
 operator|.
 name|sa_handler
+expr_stmt|;
+return|return
+literal|1
 return|;
 block|}
 end_function
