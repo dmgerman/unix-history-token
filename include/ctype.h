@@ -16,7 +16,7 @@ name|_CTYPE_H_
 end_define
 
 begin_comment
-comment|/*  * XXX<runetype.h> brings massive namespace pollution (rune_t and struct  * member names).  */
+comment|/*  * XXX<runetype.h> brings namespace pollution (struct member names).  */
 end_comment
 
 begin_include
@@ -344,22 +344,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
+name|__XSI_VISIBLE
 end_if
 
 begin_function_decl
 name|int
-name|digittoint
+name|_tolower
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_toupper
 parameter_list|(
 name|int
 parameter_list|)
@@ -369,6 +368,35 @@ end_function_decl
 begin_function_decl
 name|int
 name|isascii
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|toascii
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_function_decl
+name|int
+name|digittoint
 parameter_list|(
 name|int
 parameter_list|)
@@ -432,15 +460,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|isspecial
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|toascii
 parameter_list|(
 name|int
 parameter_list|)
@@ -549,24 +568,22 @@ parameter_list|)
 value|__toupper(c)
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
+name|__XSI_VISIBLE
+comment|/*  * POSIX.1-2001 specifies _tolower() and _toupper() to be macros equivalent to  * tolower() and toupper() respectively, minus extra checking to ensure that  * the argument is a lower or uppercase letter respectively.  We've chosen to  * implement these macros with the same error checking as tolower() and  * toupper() since this doesn't violate the specification itself, only its  * intent.  We purposely leave _tolower() and _toupper() undocumented to  * discourage their use.  *  * XXX isascii() and toascii() should similarly be undocumented.  */
 define|#
 directive|define
-name|digittoint
+name|_tolower
 parameter_list|(
 name|c
 parameter_list|)
-value|__maskrune((c), 0xFF)
+value|__tolower(c)
+define|#
+directive|define
+name|_toupper
+parameter_list|(
+name|c
+parameter_list|)
+value|__toupper(c)
 define|#
 directive|define
 name|isascii
@@ -574,6 +591,25 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(((c)& ~0x7F) == 0)
+define|#
+directive|define
+name|toascii
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& 0x7F)
+endif|#
+directive|endif
+if|#
+directive|if
+name|__BSD_VISIBLE
+define|#
+directive|define
+name|digittoint
+parameter_list|(
+name|c
+parameter_list|)
+value|__maskrune((c), 0xFF)
 define|#
 directive|define
 name|isblank
@@ -623,16 +659,9 @@ parameter_list|(
 name|c
 parameter_list|)
 value|__istype((c), _CTYPE_T)
-define|#
-directive|define
-name|toascii
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)& 0x7F)
 endif|#
 directive|endif
-comment|/* See comments in<machine/_types.h> about __ct_rune_t. */
+comment|/* See comments in<sys/_types.h> about __ct_rune_t. */
 name|__BEGIN_DECLS
 name|unsigned
 name|long
