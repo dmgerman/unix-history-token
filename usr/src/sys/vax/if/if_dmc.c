@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.24	83/02/20	*/
+comment|/*	if_dmc.c	4.25	83/02/21	*/
 end_comment
 
 begin_include
@@ -1653,7 +1653,7 @@ name|DMC_IEI
 expr_stmt|;
 name|out
 label|:
-name|dmxint
+name|dmcxint
 argument_list|(
 name|unit
 argument_list|)
