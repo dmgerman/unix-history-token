@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.11 (Berkeley) %G%"
+literal|"@(#)util.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1705,24 +1705,6 @@ name|CtxReadTimeout
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETIMEDOUT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ETIMEDOUT
-value|EINTR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|char
 modifier|*
@@ -1785,13 +1767,22 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"timeout waiting for input from %s\n"
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
-name|ETIMEDOUT
+literal|0
 expr_stmt|;
-name|syserr
+name|usrerr
 argument_list|(
-literal|"net timeout"
+literal|"timeout waiting for input"
 argument_list|)
 expr_stmt|;
 name|buf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.10 (Berkeley) %G%"
+literal|"@(#)headers.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1657,11 +1657,66 @@ operator|>
 literal|1
 condition|)
 block|{
+name|char
+name|hbuf
+index|[
+literal|100
+index|]
+decl_stmt|,
+modifier|*
+name|name
+init|=
+name|hbuf
+decl_stmt|;
+if|if
+condition|(
+name|RealHostName
+operator|==
+name|NULL
+condition|)
+name|name
+operator|=
+literal|"local"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|RealHostName
+index|[
+literal|0
+index|]
+operator|==
+literal|'['
+condition|)
+name|name
+operator|=
+name|RealHostName
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|hbuf
+argument_list|,
+literal|"%.90s (%s)"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|RealHostAddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: from=%s, size=%ld, class=%d\n"
+literal|"%s: from=%s, size=%ld, class=%d, received from %s\n"
 argument_list|,
 name|CurEnv
 operator|->
@@ -1680,6 +1735,8 @@ argument_list|,
 name|CurEnv
 operator|->
 name|e_class
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}

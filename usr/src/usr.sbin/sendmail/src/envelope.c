@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.15 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,28 +1576,12 @@ argument_list|(
 name|realname
 argument_list|)
 operator|&&
-ifdef|#
-directive|ifdef
-name|DEBUG
-operator|(
-operator|!
-name|tTd
-argument_list|(
-literal|1
-argument_list|,
-literal|9
-argument_list|)
-operator|||
 name|getuid
 argument_list|()
 operator|!=
 name|geteuid
 argument_list|()
-operator|)
 operator|&&
-endif|#
-directive|endif
-endif|DEBUG
 name|index
 argument_list|(
 name|from
@@ -1665,11 +1649,33 @@ name|LogLevel
 operator|>=
 literal|1
 condition|)
+if|if
+condition|(
+name|realname
+operator|==
+name|from
+operator|&&
+name|RealHostName
+operator|!=
+name|NULL
+condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"Unparseable user %s wants to be %s"
+literal|"from=%s unparseable, received from %s"
+argument_list|,
+name|from
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Unparseable username %s wants from=%s"
 argument_list|,
 name|realname
 argument_list|,
@@ -2028,7 +2034,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syserr
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"cannot prescan from (%s)"
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
+name|usrerr
 argument_list|(
 literal|"cannot prescan from (%s)"
 argument_list|,

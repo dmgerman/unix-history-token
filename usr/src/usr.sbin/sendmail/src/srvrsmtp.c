@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.23 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.24 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.23 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.24 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,19 +227,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDDBGQSHOW
+name|CMDONEX
 value|10
 end_define
 
 begin_comment
-comment|/* showq -- show send queue (DEBUG) */
+comment|/* onex -- sending one transaction only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDVERB
+value|11
+end_define
+
+begin_comment
+comment|/* verb -- go into verbose mode */
+end_comment
+
+begin_comment
+comment|/* debugging-only commands, only enabled if SMTPDEBUG is defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDDBGQSHOW
+value|12
+end_define
+
+begin_comment
+comment|/* showq -- show send queue */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CMDDBGDEBUG
-value|11
+value|13
 end_define
 
 begin_comment
@@ -249,19 +275,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDVERB
-value|12
-end_define
-
-begin_comment
-comment|/* verb -- go into verbose mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CMDDBGKILL
-value|13
+value|14
 end_define
 
 begin_comment
@@ -272,22 +287,11 @@ begin_define
 define|#
 directive|define
 name|CMDDBGWIZ
-value|14
-end_define
-
-begin_comment
-comment|/* wiz -- become a wizard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDONEX
 value|15
 end_define
 
 begin_comment
-comment|/* onex -- sending one transaction only */
+comment|/* wiz -- become a wizard */
 end_comment
 
 begin_decl_stmt
@@ -354,36 +358,19 @@ literal|"hops"
 block|,
 name|CMDHOPS
 block|,
-ifdef|#
-directive|ifdef
-name|DEBUG
+comment|/* 	 * remaining commands are here only 	 * to trap and log attempts to use them 	 */
 literal|"showq"
 block|,
 name|CMDDBGQSHOW
 block|,
-endif|#
-directive|endif
-endif|DEBUG
-ifdef|#
-directive|ifdef
-name|notdef
 literal|"debug"
 block|,
 name|CMDDBGDEBUG
 block|,
-endif|#
-directive|endif
-endif|notdef
-ifdef|#
-directive|ifdef
-name|WIZ
 literal|"kill"
 block|,
 name|CMDDBGKILL
 block|,
-endif|#
-directive|endif
-endif|WIZ
 literal|"wiz"
 block|,
 name|CMDDBGWIZ
@@ -413,12 +400,6 @@ begin_comment
 comment|/* set if we are a wizard */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-endif|WIZ
-end_endif
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -429,6 +410,12 @@ end_decl_stmt
 begin_comment
 comment|/* the wizard word to compare against */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|WIZ
+end_endif
 
 begin_decl_stmt
 name|bool
@@ -674,7 +661,7 @@ name|message
 argument_list|(
 literal|"421"
 argument_list|,
-literal|"%s Lost input channel to %s"
+literal|"%s Lost input channel from %s"
 argument_list|,
 name|MyHostName
 argument_list|,
@@ -845,14 +832,12 @@ name|MyHostName
 argument_list|)
 condition|)
 block|{
-comment|/* connected to an echo server */
+comment|/* 				 * didn't know about alias, 				 * or connected to an echo server 				 */
 name|message
 argument_list|(
 literal|"553"
 argument_list|,
-literal|"%s I refuse to talk to myself"
-argument_list|,
-name|MyHostName
+literal|"Local configuration error, hostname not recognized as local"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -967,6 +952,10 @@ condition|(
 name|InChild
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"Nested MAIL command"
@@ -1560,7 +1549,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|SMTPDEBUG
 case|case
 name|CMDDBGQSHOW
 case|:
@@ -1607,9 +1596,6 @@ literal|"Debug set"
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-endif|DEBUG
 ifdef|#
 directive|ifdef
 name|WIZ
@@ -1743,6 +1729,53 @@ break|break;
 endif|#
 directive|endif
 endif|WIZ
+else|#
+directive|else
+comment|/* not SMTPDEBUG */
+case|case
+name|CMDDBGQSHOW
+case|:
+comment|/* show queues */
+case|case
+name|CMDDBGDEBUG
+case|:
+comment|/* set debug mode */
+case|case
+name|CMDDBGKILL
+case|:
+comment|/* kill the parent */
+case|case
+name|CMDDBGWIZ
+case|:
+comment|/* become a wizard */
+if|if
+condition|(
+name|RealHostName
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"\"%s\" command from %s (%s)\n"
+argument_list|,
+name|c
+operator|->
+name|cmdname
+argument_list|,
+name|RealHostName
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|RealHostAddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* FALL THROUGH */
+endif|#
+directive|endif
+comment|/* SMTPDEBUG */
 case|case
 name|CMDERROR
 case|:
@@ -1756,6 +1789,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"smtp: unknown code %d"
