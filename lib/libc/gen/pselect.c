@@ -130,10 +130,6 @@ return|return
 name|rv
 return|;
 block|}
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|rv
 operator|=
 name|select
@@ -174,10 +170,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sverrno
-condition|)
 name|errno
 operator|=
 name|sverrno
