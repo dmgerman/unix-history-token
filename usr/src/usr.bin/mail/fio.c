@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.8 %G%"
+literal|"@(#)fio.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2019,28 +2019,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|SaveSigs
-index|[
-literal|32
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
-
 begin_comment
 comment|/*  * Hold signals SIGHUP - SIGQUIT.  */
 end_comment
@@ -2069,30 +2047,11 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|sighold
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|SaveSigs
-index|[
-name|i
-index|]
-operator|=
-name|signal
-argument_list|(
-name|i
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -2124,28 +2083,11 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|VMUNIX
 name|sigrelse
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|signal
-argument_list|(
-name|i
-argument_list|,
-name|SaveSigs
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -2533,6 +2475,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 name|Shell
 operator|=
 name|value
