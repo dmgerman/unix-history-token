@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.13 1996/03/11 22:14:52 markm Exp $"
+literal|"$Id: su.c,v 1.14 1996/10/07 10:00:58 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,17 @@ name|gid_t
 operator|)
 literal|0
 argument_list|)
+operator|)
+operator|&&
+name|gr
+operator|->
+name|gr_mem
+operator|&&
+operator|*
+operator|(
+name|gr
+operator|->
+name|gr_mem
 operator|)
 condition|)
 for|for
