@@ -382,6 +382,14 @@ argument_list|,
 name|ARCHIVE_STATE_NEW
 argument_list|)
 expr_stmt|;
+name|archive_string_empty
+argument_list|(
+operator|&
+name|a
+operator|->
+name|error_string
+argument_list|)
+expr_stmt|;
 name|a
 operator|->
 name|state
@@ -656,6 +664,14 @@ operator||
 name|ARCHIVE_STATE_DATA
 argument_list|)
 expr_stmt|;
+name|archive_string_empty
+argument_list|(
+operator|&
+name|a
+operator|->
+name|error_string
+argument_list|)
+expr_stmt|;
 comment|/* Finish last entry. */
 if|if
 condition|(
@@ -778,6 +794,14 @@ argument_list|,
 name|ARCHIVE_WRITE_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_DATA
+argument_list|)
+expr_stmt|;
+name|archive_string_empty
+argument_list|(
+operator|&
+name|a
+operator|->
+name|error_string
 argument_list|)
 expr_stmt|;
 name|ret
