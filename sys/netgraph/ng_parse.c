@@ -8361,6 +8361,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|FREE
+argument_list|(
+name|cbuf
+argument_list|,
+name|M_NETGRAPH_PARSE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
