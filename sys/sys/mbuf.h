@@ -932,7 +932,7 @@ name|MCLFREE1
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
+value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	KASSERT(mclrefcnt[mtocl(_mp)]> 0, ("freeing free cluster"));	\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -978,7 +978,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	mbstat.m_mtypes[_mm->m_type]--;					\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbstat.m_mtypes[MT_FREE]++;					\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
+value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	mbstat.m_mtypes[_mm->m_type]--;					\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbstat.m_mtypes[MT_FREE]++;					\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
 end_define
 
 begin_comment
@@ -1076,7 +1076,7 @@ name|plen
 parameter_list|,
 name|how
 parameter_list|)
-value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	if (_mm == NULL) {						\ 		MGET(_mm, __mhow, MT_DATA);				\ 		if (_mm == NULL)					\ 			break;						\ 	}								\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
 end_define
 
 begin_comment
