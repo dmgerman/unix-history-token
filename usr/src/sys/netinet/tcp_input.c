@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.45	81/12/23	*/
+comment|/*	tcp_input.c	1.46	82/01/07	*/
 end_comment
 
 begin_include
@@ -916,6 +916,27 @@ name|ti
 operator|->
 name|ti_ack
 expr_stmt|;
+if|if
+condition|(
+name|SEQ_LT
+argument_list|(
+name|tp
+operator|->
+name|snd_nxt
+argument_list|,
+name|tp
+operator|->
+name|snd_una
+argument_list|)
+condition|)
+name|tp
+operator|->
+name|snd_nxt
+operator|=
+name|tp
+operator|->
+name|snd_una
+expr_stmt|;
 name|tp
 operator|->
 name|t_timer
@@ -1529,6 +1550,27 @@ name|snd_una
 operator|++
 expr_stmt|;
 comment|/* SYN acked */
+if|if
+condition|(
+name|SEQ_LT
+argument_list|(
+name|tp
+operator|->
+name|snd_nxt
+argument_list|,
+name|tp
+operator|->
+name|snd_una
+argument_list|)
+condition|)
+name|tp
+operator|->
+name|snd_nxt
+operator|=
+name|tp
+operator|->
+name|snd_una
+expr_stmt|;
 name|tp
 operator|->
 name|t_timer
@@ -1784,6 +1826,27 @@ operator|=
 name|ti
 operator|->
 name|ti_ack
+expr_stmt|;
+if|if
+condition|(
+name|SEQ_LT
+argument_list|(
+name|tp
+operator|->
+name|snd_nxt
+argument_list|,
+name|tp
+operator|->
+name|snd_una
+argument_list|)
+condition|)
+name|tp
+operator|->
+name|snd_nxt
+operator|=
+name|tp
+operator|->
+name|snd_una
 expr_stmt|;
 comment|/* 		 * If transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 */
 if|if
