@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)icondata.c	1.1	%G%  *  * Definitions for icons used in the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)icondata.c	1.2	%G%  *  * Definitions for icons used in the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -465,6 +465,16 @@ begin_include
 include|#
 directive|include
 file|"../icons/icon.dot"
+end_include
+
+begin_comment
+comment|/*************  gremlin tool icon   **************/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../icons/gremlin.icon"
 end_include
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)short.c	1.1	%G%  *  * Routines for the "short" commands of the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)short.c	1.2	%G%  *  * Routines for the "short" commands of the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -370,6 +370,15 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_extern
+extern|extern text_restorebuf(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/* imports from C */
 end_comment
@@ -515,6 +524,28 @@ begin_comment
 comment|/* current set displayed on	     */
 end_comment
 
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|lastcommand
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* previous command */
+end_comment
+
+begin_extern
+extern|extern lasttext;
+end_extern
+
+begin_comment
+comment|/* TRUE if previous command wants text */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -534,6 +565,9 @@ operator|,
 end_operator
 
 begin_expr_stmt
+name|SHAgain
+argument_list|()
+operator|,
 name|SHDrawArc
 argument_list|()
 operator|,
@@ -646,6 +680,8 @@ init|=
 block|{
 literal|'\14'
 block|,
+literal|'.'
+block|,
 literal|'1'
 block|,
 literal|'2'
@@ -709,6 +745,9 @@ block|{
 name|SHUpdate
 block|,
 comment|/* redraw screen */
+name|SHAgain
+block|,
+comment|/* repeat last command */
 name|SHSave1
 block|,
 comment|/* save user symbol */
@@ -944,6 +983,9 @@ block|{
 name|GRCurrentSetOn
 argument_list|()
 expr_stmt|;
+name|TxMsgOK
+argument_list|()
+expr_stmt|;
 operator|(
 operator|*
 operator|(
@@ -969,6 +1011,33 @@ end_block
 begin_comment
 comment|/* end SHCommand */
 end_comment
+
+begin_comment
+comment|/*  * Repeat previous command.  */
+end_comment
+
+begin_macro
+name|SHAgain
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|lasttext
+condition|)
+name|text_restorebuf
+argument_list|()
+expr_stmt|;
+call|(
+modifier|*
+name|lastcommand
+call|)
+argument_list|()
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * This routine creates and displays a VECTOR element from the  * points previously specified.  */
@@ -1653,7 +1722,7 @@ comment|/* end SHDrawARc */
 end_comment
 
 begin_comment
-comment|/*  * mro 8/20/84  */
+comment|/*  * Draw curve object.  */
 end_comment
 
 begin_macro
@@ -1946,7 +2015,7 @@ comment|/* End GravityOn */
 end_comment
 
 begin_comment
-comment|/*  * This routine toggles the display of the grid   * mro 7/19/84  */
+comment|/*  * This routine toggles the display of the grid.  */
 end_comment
 
 begin_macro
@@ -1978,7 +2047,7 @@ comment|/* end SHGrid */
 end_comment
 
 begin_comment
-comment|/*  * Manhattan Adjust -  * This routine toggles the adjustment mode.  * mro 7/23/84  */
+comment|/*  * Manhattan Adjust -  * This routine toggles the adjustment mode.  */
 end_comment
 
 begin_macro
@@ -3487,7 +3556,7 @@ comment|/* end SHScale */
 end_comment
 
 begin_comment
-comment|/*  * This routine redraws the graphics screen by clearing the screen ,  * redisplaying the menu and adding each element back to the display.  * mro 7/18/84  */
+comment|/*  * This routine redraws the graphics screen by clearing the screen ,  * redisplaying the menu and adding each element back to the display.  */
 end_comment
 
 begin_macro

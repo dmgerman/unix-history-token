@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)main.c	1.1	%G%  *  * Main program for the SUN Gremlin picture editor.  *  * Many of the routines in SUN Gremlin are direct descendants of  * their counterparts in the original Gremlin written for the AED  * by Barry Roitblat.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)main.c	1.2	%G%  *  * Main program for the SUN Gremlin picture editor.  *  * Many of the routines in SUN Gremlin are direct descendants of  * their counterparts in the original Gremlin written for the AED  * by Barry Roitblat.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -296,6 +296,15 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
+begin_extern
+extern|extern nop(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/* imports from short.c */
 end_comment
@@ -565,9 +574,13 @@ begin_decl_stmt
 name|int
 name|newfileformat
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 1=sungremlinfile, 0=gremlinfile */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -576,6 +589,32 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|lastcommand
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* last command's routine pointer */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lasttext
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE if last command uses text */
+end_comment
 
 begin_decl_stmt
 name|float
@@ -710,7 +749,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.1   (Berkeley)      %G%"
+literal|"@(#)main.c	1.2   (Berkeley)      %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -936,6 +975,51 @@ name|PIX_DST
 block|,
 operator|&
 name|diamond_pr
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|icon
+name|gremlin_icon
+init|=
+block|{
+name|TOOL_ICONWIDTH
+block|,
+name|TOOL_ICONHEIGHT
+block|,
+name|NULL
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+name|TOOL_ICONWIDTH
+block|,
+name|TOOL_ICONHEIGHT
+block|}
+block|,
+operator|&
+name|gremlin_icon_pr
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1292,7 +1376,7 @@ literal|""
 expr_stmt|;
 name|usage
 operator|=
-literal|"usage: gremlin -s<.gremlinrc> [file]\n"
+literal|"usage: gremlin [-o] [-s<.gremlinrc>] [file]\n"
 expr_stmt|;
 while|while
 condition|(
@@ -1378,11 +1462,11 @@ name|arg
 expr_stmt|;
 break|break;
 case|case
-literal|'+'
+literal|'o'
 case|:
 name|newfileformat
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -1423,12 +1507,9 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|icon
-operator|*
-operator|)
-name|NULL
+operator|&
+name|gremlin_icon
+comment|/*(struct icon *) NULL*/
 argument_list|)
 expr_stmt|;
 if|if
@@ -1786,7 +1867,10 @@ begin_expr_stmt
 unit|fix_tool_size
 operator|(
 operator|)
-block|{
+block|{     struct
+name|rect
+name|icon_rect
+block|;
 if|if
 condition|(
 name|wmgr_iswindowopen
@@ -1908,6 +1992,46 @@ literal|699
 expr_stmt|;
 end_if
 
+begin_comment
+comment|/* land icon near upper left corner */
+end_comment
+
+begin_expr_stmt
+name|icon_rect
+operator|.
+name|r_left
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|icon_rect
+operator|.
+name|r_top
+operator|=
+literal|64
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|icon_rect
+operator|.
+name|r_width
+operator|=
+literal|64
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|icon_rect
+operator|.
+name|r_height
+operator|=
+literal|64
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
@@ -1916,6 +2040,7 @@ argument_list|(
 name|tool_fd
 argument_list|)
 condition|)
+block|{
 name|win_setrect
 argument_list|(
 name|tool_fd
@@ -1924,7 +2049,25 @@ operator|&
 name|tool_size
 argument_list|)
 expr_stmt|;
+name|win_setsavedrect
+argument_list|(
+name|tool_fd
+argument_list|,
+operator|&
+name|icon_rect
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
+name|win_setrect
+argument_list|(
+name|tool_fd
+argument_list|,
+operator|&
+name|icon_rect
+argument_list|)
+expr_stmt|;
 name|win_setsavedrect
 argument_list|(
 name|tool_fd
@@ -1933,6 +2076,7 @@ operator|&
 name|tool_size
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_macro
@@ -2659,7 +2803,7 @@ end_endif
 
 begin_comment
 unit|}
-comment|/*   * This routine catches the normal tool manager quit menuitem  * and handles it slightly differently if no write has occurred  * since the last change to the picture.  * WARNING: this routine depends upon menu_display() returning  * mi->mi_data = 2 for the QUIT menuitem.  */
+comment|/*   * This routine catches the normal tool manager quit menuitem  * and handles it slightly differently if no write has occurred  * since the last change to the picture.  * WARNING: this routine depends upon menu_display() returning  * mi->mi_data = 2 for the QUIT menuitem and  * mi->mi_data = 1 for the REDISPLAY menuitem.  */
 end_comment
 
 begin_macro
@@ -2877,6 +3021,29 @@ break|break;
 if|if
 condition|(
 operator|(
+operator|(
+name|int
+operator|)
+name|mi
+operator|->
+name|mi_data
+operator|==
+literal|1
+operator|)
+comment|/* REDISPLAY !! */
+operator|&&
+name|wmgr_iswindowopen
+argument_list|(
+name|tool_fd
+argument_list|)
+condition|)
+name|SHUpdate
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
 name|int
 operator|)
 name|mi
@@ -2887,9 +3054,7 @@ literal|2
 condition|)
 comment|/* QUIT !! */
 name|LGQuit
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 else|else
 name|wmgr_handletoolmenuitem
@@ -3008,11 +3173,21 @@ break|break;
 case|case
 name|MS_LEFT
 case|:
+name|text_left
+argument_list|(
+operator|&
+name|ie
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|MS_MIDDLE
 case|:
-name|nop
-argument_list|()
+name|text_middle
+argument_list|(
+operator|&
+name|ie
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3235,6 +3410,9 @@ name|ASCII_FIRST
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|shcmd
 index|[
 literal|0
@@ -3243,6 +3421,13 @@ operator|=
 name|ie
 operator|.
 name|ie_code
+operator|)
+operator|!=
+literal|'.'
+condition|)
+name|lasttext
+operator|=
+name|FALSE
 expr_stmt|;
 name|shcmd
 index|[
@@ -3421,6 +3606,9 @@ name|ASCII_FIRST
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|shcmd
 index|[
 literal|0
@@ -3429,6 +3617,13 @@ operator|=
 name|ie
 operator|.
 name|ie_code
+operator|)
+operator|!=
+literal|'.'
+condition|)
+name|lasttext
+operator|=
+name|FALSE
 expr_stmt|;
 name|shcmd
 index|[
@@ -3768,6 +3963,11 @@ name|make_arrowhead
 argument_list|()
 expr_stmt|;
 comment|/* for> command */
+name|lastcommand
+operator|=
+name|nop
+expr_stmt|;
+comment|/* no last command yet */
 name|STgremlinrc
 argument_list|(
 name|gremlinrc
@@ -4061,6 +4261,7 @@ block|{
 if|if
 condition|(
 name|FLASH_READY
+comment|/*&& wmgr_iswindowopen(tool_fd) */
 condition|)
 block|{
 name|GRCurrentSet

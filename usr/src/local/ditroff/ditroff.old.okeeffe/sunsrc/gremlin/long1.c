@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)long1.c	1.1	%G%  *  * Routines to implement "long" commands in the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)long1.c	1.2	%G%  *  * Routines to implement "long" commands in the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_comment
@@ -2265,7 +2265,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This routine causes text elements in the current set  * to be redrawn using the new justification mode.  * mode is 1 - 9 for tl, tc, tr, cl, cc, cl, bl, bc, br  * mro 8/22/84  */
+comment|/*  * This routine causes text elements in the current set  * to be redrawn using the new justification mode.  * mode is 1 - 9 for tl, tc, tr, cl, cc, cl, bl, bc, br  */
 end_comment
 
 begin_macro
@@ -4159,7 +4159,6 @@ name|CP
 argument_list|()
 expr_stmt|;
 comment|/* eat points first */
-comment|/* printf("wx=%5.2f  wy=%5.2f  ", wx, wy); */
 name|cx
 operator|=
 name|SUN_XORIGIN
@@ -4186,7 +4185,6 @@ literal|1
 operator|)
 expr_stmt|;
 comment|/* window y center */
-comment|/* printf("cx=%5.2f  cy=%5.2f  ", cx, cy); */
 name|tx
 operator|=
 call|(
@@ -4258,7 +4256,6 @@ operator|)
 operator|*
 name|Gridsize
 expr_stmt|;
-comment|/* printf("XORIGIN=%d  YORIGIN=%d\n", SUN_XORIGIN, SUN_YORIGIN); */
 name|SHUpdate
 argument_list|()
 expr_stmt|;

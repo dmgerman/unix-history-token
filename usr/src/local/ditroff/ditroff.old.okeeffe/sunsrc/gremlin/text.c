@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)text.c	1.1	%G%  *  * Text subwindow routines for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)text.c	1.2	%G%  *  * Text subwindow routines for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -50,6 +50,20 @@ end_decl_stmt
 
 begin_extern
 extern|extern TOOLINSTALLED;
+end_extern
+
+begin_function_decl
+specifier|extern
+function_decl|(
+modifier|*
+name|lastcommand
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_extern
+extern|extern lasttext;
 end_extern
 
 begin_comment
@@ -179,6 +193,8 @@ name|text_buf
 index|[
 name|TEXT_BUFMAX
 index|]
+init|=
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +205,20 @@ name|mesg_buf
 index|[
 name|TEXT_BUFMAX
 index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|save_buf
+index|[
+name|TEXT_BUFMAX
+index|]
+init|=
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -575,10 +605,20 @@ name|c
 operator|==
 name|RETURN
 condition|)
+block|{
 comment|/* new text entry method */
+name|lastcommand
+operator|=
+name|LGTextSW
+expr_stmt|;
+name|lasttext
+operator|=
+name|TRUE
+expr_stmt|;
 name|LGTextSW
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -612,6 +652,20 @@ literal|' '
 condition|)
 name|i
 operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|save_buf
+argument_list|,
+operator|&
+name|text_buf
+index|[
+name|i
+index|]
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -695,6 +749,40 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|text_restorebuf
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|TxKillLine
+argument_list|()
+expr_stmt|;
+name|s
+operator|=
+name|save_buf
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|text_output
+argument_list|(
+operator|*
+name|s
+operator|++
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_expr_stmt
 name|text_left
 argument_list|(
@@ -732,6 +820,9 @@ end_expr_stmt
 begin_block
 block|{
 name|TxMsgOK
+argument_list|()
+expr_stmt|;
+name|text_restorebuf
 argument_list|()
 expr_stmt|;
 block|}
@@ -907,7 +998,7 @@ comment|/* end TxInit */
 end_comment
 
 begin_comment
-comment|/*  * This routine marks it OK to output messages again  * just as if a button had been pressed.  * mro 7/14/84  */
+comment|/*  * This routine marks it OK to output messages again  * just as if a button had been pressed.  */
 end_comment
 
 begin_macro
@@ -939,7 +1030,7 @@ comment|/* end TxMsgOK */
 end_comment
 
 begin_comment
-comment|/*  * TPutMsg outputs a one line message into the text subwindow.  * If the message follows another without intervening user input,  * the prompt "More" is output and we wait for a button input event  * before displaying the new message.  * mro 9/10/84  */
+comment|/*  * Output a one line message into the text subwindow.  * If the message follows another without intervening user input,  * the prompt "More" is output and we wait for a button input event  * before displaying the new message.  */
 end_comment
 
 begin_expr_stmt

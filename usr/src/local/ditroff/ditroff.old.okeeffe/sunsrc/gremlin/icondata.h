@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)icondata.h	1.1	%G%  *  * References to memory pixrects used primarily as menu icons in  * the SUN Gremlin picture editor.  This file must be maintained  * consistently with icondata.c where the pixrects are actually  * defined.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)icondata.h	1.2	%G%  *  * References to memory pixrects used primarily as menu icons in  * the SUN Gremlin picture editor.  This file must be maintained  * consistently with icondata.c where the pixrects are actually  * defined.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_decl_stmt
@@ -200,6 +200,18 @@ decl_stmt|,
 name|pan_pr
 decl_stmt|,
 name|dot_pr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*************  gremlin tool icon   **************/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pixrect
+name|gremlin_icon_pr
 decl_stmt|;
 end_decl_stmt
 

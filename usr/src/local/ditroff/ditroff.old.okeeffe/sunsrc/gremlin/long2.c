@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)long2.c	1.1	%G%  *  * More routines to implement "long" commands for the SUN Gremlin  * picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)long2.c	1.2	%G%  *  * More routines to implement "long" commands for the SUN Gremlin  * picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -712,57 +712,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|nowextern
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|prompt
-name|prt
-init|=
-block|{
-block|{
-name|PROMPT_FLEXIBLE
-block|,
-name|PROMPT_FLEXIBLE
-block|,
-name|PROMPT_FLEXIBLE
-block|,
-name|PROMPT_FLEXIBLE
-block|}
-block|,
-literal|0
-block|,
-operator|(
-expr|struct
-name|pixfont
-operator|*
-operator|)
-name|NULL
-block|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|char
 name|nowrite_msg
 index|[]
 init|=
-literal|"NO WRITE SINCE LAST CHANGE!       Press left button to edit new file, middle or right button to cancel."
+literal|"NO WRITE SINCE LAST CHANGE!       Press left button to \ edit new file, middle or right button to cancel."
 decl_stmt|;
 end_decl_stmt
 
@@ -771,7 +726,7 @@ name|char
 name|filexists_msg
 index|[]
 init|=
-literal|"FILE EXISTS!  Press left button to overwrite, middle or right button to cancel."
+literal|"FILE EXISTS!  Press left button to overwrite, middle \ or right button to cancel."
 decl_stmt|;
 end_decl_stmt
 
@@ -781,7 +736,7 @@ name|char
 name|quit_msg
 index|[]
 init|=
-literal|"NO WRITE SINCE LAST CHANGE!       Press left button to confirm quit, middle or right button to cancel."
+literal|"NO WRITE SINCE LAST CHANGE!       Press left button \ to confirm quit, middle or right button to cancel."
 decl_stmt|;
 end_decl_stmt
 
@@ -791,7 +746,7 @@ name|char
 name|quit2_msg
 index|[]
 init|=
-literal|"Press left button to confirm quit, middle or right button to cancel."
+literal|"Press left button to confirm quit, middle or right \ button to cancel."
 decl_stmt|;
 end_decl_stmt
 
@@ -2390,277 +2345,6 @@ begin_comment
 comment|/* end LGRead */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|nowextern
-end_ifdef
-
-begin_comment
-comment|/*  * Flush all input events for a window.  */
-end_comment
-
-begin_macro
-name|flush_window_input
-argument_list|(
-argument|windowfd
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|windowfd
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|nfds
-decl_stmt|,
-name|readfds
-decl_stmt|,
-name|writefds
-decl_stmt|,
-name|exceptfds
-decl_stmt|;
-name|struct
-name|timeval
-name|timeout
-decl_stmt|;
-name|struct
-name|inputevent
-name|ie
-decl_stmt|;
-do|do
-block|{
-name|readfds
-operator|=
-literal|1
-operator|<<
-name|windowfd
-expr_stmt|;
-name|writefds
-operator|=
-literal|0
-expr_stmt|;
-name|exceptfds
-operator|=
-literal|0
-expr_stmt|;
-name|timeout
-operator|.
-name|tv_sec
-operator|=
-literal|0L
-expr_stmt|;
-name|timeout
-operator|.
-name|tv_usec
-operator|=
-literal|0L
-expr_stmt|;
-name|nfds
-operator|=
-name|select
-argument_list|(
-literal|20
-argument_list|,
-operator|&
-name|readfds
-argument_list|,
-operator|&
-name|writefds
-argument_list|,
-operator|&
-name|exceptfds
-argument_list|,
-operator|&
-name|timeout
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nfds
-operator|>
-literal|0
-condition|)
-name|input_readevent
-argument_list|(
-name|windowfd
-argument_list|,
-operator|&
-name|ie
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|nfds
-operator|>
-literal|0
-condition|)
-do|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Display user prompt and wait for affirmative (MS_LEFT)  * or negative (MS_MIDDLE or MS_RIGHT) input event.  * Return TRUE if OK to do it, FALSE if not OK.  * This routine flushes the input event queue for the windowfd  * handling the prompt.  */
-end_comment
-
-begin_macro
-name|prompt_ok
-argument_list|(
-argument|windowfd
-argument_list|,
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|windowfd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|struct
-name|inputmask
-name|im
-decl_stmt|,
-name|button_im
-decl_stmt|;
-name|struct
-name|inputevent
-name|ie
-decl_stmt|;
-name|int
-name|designee
-decl_stmt|;
-name|win_getinputmask
-argument_list|(
-name|windowfd
-argument_list|,
-operator|&
-name|im
-argument_list|,
-operator|&
-name|designee
-argument_list|)
-expr_stmt|;
-name|input_imnull
-argument_list|(
-operator|&
-name|button_im
-argument_list|)
-expr_stmt|;
-name|win_setinputcodebit
-argument_list|(
-operator|&
-name|button_im
-argument_list|,
-name|MS_LEFT
-argument_list|)
-expr_stmt|;
-name|win_setinputcodebit
-argument_list|(
-operator|&
-name|button_im
-argument_list|,
-name|MS_MIDDLE
-argument_list|)
-expr_stmt|;
-name|win_setinputcodebit
-argument_list|(
-operator|&
-name|button_im
-argument_list|,
-name|MS_RIGHT
-argument_list|)
-expr_stmt|;
-name|win_setinputmask
-argument_list|(
-name|windowfd
-argument_list|,
-operator|&
-name|button_im
-argument_list|,
-name|NULL
-argument_list|,
-name|WIN_NULLLINK
-argument_list|)
-expr_stmt|;
-name|prt
-operator|.
-name|prt_font
-operator|=
-name|text_pf
-expr_stmt|;
-name|prt
-operator|.
-name|prt_windowfd
-operator|=
-name|windowfd
-expr_stmt|;
-name|prt
-operator|.
-name|prt_text
-operator|=
-name|msg
-expr_stmt|;
-name|flush_window_input
-argument_list|(
-name|windowfd
-argument_list|)
-expr_stmt|;
-name|menu_prompt
-argument_list|(
-operator|&
-name|prt
-argument_list|,
-operator|&
-name|ie
-argument_list|,
-name|windowfd
-argument_list|)
-expr_stmt|;
-name|win_setinputmask
-argument_list|(
-name|windowfd
-argument_list|,
-operator|&
-name|im
-argument_list|,
-name|NULL
-argument_list|,
-name|designee
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ie
-operator|.
-name|ie_code
-operator|==
-name|MS_LEFT
-operator|)
-return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * This routine reads in a new PICTURE for editing  */
 end_comment
@@ -4219,7 +3903,7 @@ comment|/* end LGQuit */
 end_comment
 
 begin_comment
-comment|/*  * Horizontal Adjust -  * This routine toggles the adjustment mode.  * mro 7/23/84  */
+comment|/*  * Horizontal Adjust -  * This routine toggles the adjustment mode.  */
 end_comment
 
 begin_macro
@@ -4295,7 +3979,7 @@ comment|/* end LGHAdjust */
 end_comment
 
 begin_comment
-comment|/*  * Vertical Adjust -  * This routine toggles the adjustment mode.  * mro 7/23/84  */
+comment|/*  * Vertical Adjust -  * This routine toggles the adjustment mode.  */
 end_comment
 
 begin_macro
@@ -4371,7 +4055,7 @@ comment|/* end LGVAdjust */
 end_comment
 
 begin_comment
-comment|/*  * This local routine returns 1 if x>= 0  * otherwise returns -1  * mro 7/25/84  */
+comment|/*  * This local routine returns 1 if x>= 0  * otherwise returns -1  */
 end_comment
 
 begin_expr_stmt
@@ -4405,7 +4089,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This routine is called by all mirroring routines to effect the  * transformation specified by xmat.  * mro 7/25/84  */
+comment|/*  * This routine is called by all mirroring routines to effect the  * transformation specified by xmat.  */
 end_comment
 
 begin_expr_stmt
@@ -4699,7 +4383,7 @@ comment|/* end mirror */
 end_comment
 
 begin_comment
-comment|/*  * This routine mirrors the elements in the current set VERTICALLY  * The mirroring is accomplished by defining a transformation  * matrix and calling DBXform.  * mro 7/25/84  */
+comment|/*  * This routine mirrors the elements in the current set VERTICALLY  * The mirroring is accomplished by defining a transformation  * matrix and calling DBXform.  */
 end_comment
 
 begin_macro
@@ -4827,7 +4511,7 @@ comment|/* end LGVMirror */
 end_comment
 
 begin_comment
-comment|/*  * This routine mirrors the elements in the current set HORIZONTALLY  * The mirroring is accomplished by defining a transformation  * matrix and calling DBXform.  * mro 7/25/84  */
+comment|/*  * This routine mirrors the elements in the current set HORIZONTALLY  * The mirroring is accomplished by defining a transformation  * matrix and calling DBXform.  */
 end_comment
 
 begin_macro
@@ -5070,6 +4754,10 @@ end_block
 
 begin_comment
 comment|/* end LGPath */
+end_comment
+
+begin_comment
+comment|/*  * Sometimes it's important to do nothing.  */
 end_comment
 
 begin_macro

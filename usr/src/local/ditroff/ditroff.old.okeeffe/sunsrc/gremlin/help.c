@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)help.c	1.1	%G%  *  * Routines to provide help screens for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
+comment|/*  * @(#)help.c	1.2	%G%  *  * Routines to provide help screens for the SUN Gremlin picture editor.  *  * Mark Opperman (opcode@monet.BERKELEY)  *  */
 end_comment
 
 begin_include
@@ -1256,7 +1256,7 @@ name|char
 name|boxinc_HELP
 index|[]
 init|=
-literal|"\ Two points must be specified which define a rectangular area\n\ (the endpoints of the diagonal of the rectangle).\n\ \n\ With the left mouse button, all elements contained within the\n\ the rectangle become the current set.\n\ \n\ With the middle mouse button, those same elements are ADDED\n\ to the current set."
+literal|"\ Two points must be placed that define a rectangular area\n\ (the endpoints of the diagonal of the rectangle).\n\ \n\ With the left mouse button, all elements contained within the\n\ the rectangle become the current set.\n\ \n\ With the middle mouse button, those same elements are ADDED\n\ to the current set."
 decl_stmt|;
 end_decl_stmt
 
@@ -2076,7 +2076,7 @@ name|char
 name|polygon_HELP
 index|[]
 init|=
-literal|"\ Polygons can be drawn either bordered or unbordered.  At\n\ least three points are required to draw a polygon.  If the\n\ first and the last points are not the same, that line\n\ segment will be added automatically.  With the left mouse\n\ button, a filled polygon will be added to the display in the\n\ current stipple style.  If a border is to be drawn, this\n\ will be added in the current brush style.\n\ \n\ The middle mouse button is used to modify curves, vectors and\n\ other polygons in the current set to be polygons of the\n\ selected type (bordered or unbordered)."
+literal|"\ Polygons can be drawn either bordered or unbordered.  At\n\ least three points are required to draw a polygon.  If the\n\ first and the last points are not the same, that line\n\ segment will be added automatically.  With the left mouse\n\ button, a filled polygon will be added to the display in the\n\ current stipple style.  If a border is to be drawn, this\n\ will be added in the current line style.\n\ \n\ The middle mouse button is used to modify curves, vectors and\n\ other polygons in the current set to be polygons of the\n\ selected type (bordered or unbordered)."
 decl_stmt|;
 end_decl_stmt
 
@@ -2126,7 +2126,7 @@ name|char
 name|textsw_HELP
 index|[]
 init|=
-literal|"\ Command arguments (when required) are entered here from the\n\ keyboard.  Arguments must be entered before the command is\n\ selected.  Simple editing commands (backspace, line and word\n\ delete) can be used to modify the argument.\n\ \n\ The quick form of the TEXT command is invoked by pressing\n\ RETURN after entering a string to be displayed in the picture.\n\ The string is displayed at the LAST point layed down (using\n\ the current justification mode), and this point is removed\n\ from the display."
+literal|"\ Command arguments (when required) are entered here from the\n\ keyboard.  Arguments must be entered before the command is\n\ selected.  Simple editing commands (backspace, line and word\n\ delete) can be used to modify the argument.  The middle mouse\n\ button is used to display the previous text string.\n\ \n\ The quick form of the TEXT command is invoked by pressing\n\ RETURN after entering a string to be displayed in the picture.\n\ The string is displayed at the LAST point layed down (using\n\ the current justification mode), and this point is removed\n\ from the display."
 decl_stmt|;
 end_decl_stmt
 
