@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.108
+literal|3.109
 operator|%
 name|G
 operator|%
@@ -1299,7 +1299,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|8
+literal|10
 condition|)
 name|syslog
 argument_list|(
