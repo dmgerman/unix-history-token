@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ka630.h	7.2 (Berkeley) %G%  *  * Definitions specific to the ka630 uvax2 cpu card. Includes the tod  * clock chip and the cpu registers.  */
+comment|/*  * Copyright (c) 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ka630.h	7.3 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Definitions specific to the ka630 uvax2 cpu card. Includes the tod  * clock chip and the cpu registers.  */
 end_comment
 
 begin_ifdef
