@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_message.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_parse.h>
 end_include
 
 begin_include
@@ -132,6 +144,84 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Parse type for struct ngxxxstat */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_struct_info
+name|ng_xxx_stat_type_info
+init|=
+name|NG_XXX_STATS_TYPE_INFO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_xxx_stat_type
+init|=
+block|{
+operator|&
+name|ng_parse_struct_type
+block|,
+operator|&
+name|ng_xxx_stat_type_info
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* List of commands and how to convert arguments to/from ASCII */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_cmdlist
+name|ng_xxx_cmdlist
+index|[]
+init|=
+block|{
+block|{
+name|NGM_XXX_COOKIE
+block|,
+name|NGM_XXX_GET_STATUS
+block|,
+literal|"getstatus"
+block|,
+name|NULL
+block|,
+operator|&
+name|ng_xxx_stat_type
+block|, 	}
+block|,
+block|{
+name|NGM_XXX_COOKIE
+block|,
+name|NGM_XXX_SET_FLAG
+block|,
+literal|"setflag"
+block|,
+operator|&
+name|ng_parse_int32_type
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Netgraph node type descriptor */
 end_comment
 
@@ -166,7 +256,7 @@ name|ng_xxx_rcvdataq
 block|,
 name|ng_xxx_disconnect
 block|,
-name|NULL
+name|ng_xxx_cmdlist
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -442,16 +532,6 @@ specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-name|char
-name|c
-init|=
-literal|'\0'
-decl_stmt|;
-name|int
-name|digits
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|dlci
@@ -1016,9 +1096,6 @@ init|=
 operator|-
 literal|2
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|hook
@@ -1026,7 +1103,7 @@ operator|->
 name|private
 condition|)
 block|{
-comment|/*  		 * If it's dlci 1023, requeue it so that it's handled at a lower priority. 		 * This is how a node decides to defer a data message. 		 */
+comment|/*  		 * If it's dlci 1023, requeue it so that it's handled 		 * at a lower priority. This is how a node decides to 		 * defer a data message. 		 */
 name|dlci
 operator|=
 operator|(
@@ -1488,7 +1565,7 @@ operator|)
 operator|)
 operator|->
 name|hook
-operator|==
+operator|=
 name|NULL
 expr_stmt|;
 if|if

@@ -1121,7 +1121,7 @@ decl_stmt|;
 comment|/* Copy packet */
 name|m2
 operator|=
-name|m_copypacket
+name|m_dup
 argument_list|(
 name|m
 argument_list|,
