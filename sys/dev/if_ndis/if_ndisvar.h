@@ -257,6 +257,9 @@ decl_stmt|;
 name|int
 name|ndis_if_flags
 decl_stmt|;
+name|int
+name|ndis_skip
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|ndis_ctx
