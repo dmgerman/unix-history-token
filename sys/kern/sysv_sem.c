@@ -2529,7 +2529,7 @@ name|semid
 operator|>=
 name|seminfo
 operator|.
-name|semnmi
+name|semmni
 condition|)
 name|UGAR
 argument_list|(
