@@ -3416,17 +3416,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|trace_req
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|cpu_wait
 parameter_list|(

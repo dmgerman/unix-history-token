@@ -2511,24 +2511,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|trace_req
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Stop a process because of a debugging event;  * stay stopped until p->p_step is cleared  * (cleared by PIOCCONT in procfs).  */
 end_comment

@@ -7073,7 +7073,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * If traced, always stop, and stay 			 * stopped until released by the parent. 			 */
+comment|/* 			 * If traced, always stop. 			 */
 name|p
 operator|->
 name|p_xstat
@@ -7103,8 +7103,6 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -7150,22 +7148,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-operator|!
-name|trace_req
-argument_list|(
-name|p
-argument_list|)
-operator|&&
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-condition|)
-do|;
 comment|/* 			 * If the traced bit got turned off, go back up 			 * to the top to rescan signals.  This ensures 			 * that p_sig* and ps_sigact are consistent. 			 */
 if|if
 condition|(
