@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1689,22 +1689,10 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* Do things MY way, not MAKE's */
-ifdef|#
-directive|ifdef
-name|DEF_OLD_VARS
 name|oldVars
 operator|=
 name|TRUE
 expr_stmt|;
-else|#
-directive|else
-name|oldVars
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* don't substitute for undefined variables */
-endif|#
-directive|endif
 block|}
 comment|/*      * Initialize the parsing, directory and variable modules to prepare      * for the reading of inclusion paths and variable settings on the      * command line       */
 name|Dir_Init

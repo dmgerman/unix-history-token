@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.3 (Berkeley) %G%"
+literal|"@(#)var.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6145,37 +6145,6 @@ condition|(
 name|oldVars
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|DEF_OLD_VARS
-if|if
-condition|(
-operator|!
-name|sysVmake
-operator|&&
-operator|!
-name|amMake
-operator|&&
-name|undefErr
-operator|&&
-operator|!
-name|errorReported
-condition|)
-block|{
-name|Parse_Error
-argument_list|(
-name|PARSE_WARNING
-argument_list|,
-literal|"Undefined variable \"%.*s\""
-argument_list|,
-name|length
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|str
 operator|+=
 name|length
