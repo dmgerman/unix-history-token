@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<timeconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -4650,10 +4656,6 @@ name|arg
 argument_list|)
 condition|)
 block|{
-name|char
-modifier|*
-name|q
-decl_stmt|;
 operator|*
 name|byname
 operator|=
