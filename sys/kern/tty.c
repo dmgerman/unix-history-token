@@ -17012,7 +17012,7 @@ name|t_init_in
 operator|.
 name|c_lflag
 operator|=
-name|TTYDEF_LFLAG
+name|TTYDEF_LFLAG_NOECHO
 expr_stmt|;
 name|tp
 operator|->

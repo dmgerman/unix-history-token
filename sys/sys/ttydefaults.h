@@ -40,7 +40,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TTYDEF_LFLAG
+name|TTYDEF_LFLAG_NOECHO
 value|(ICANON | ISIG | IEXTEN)
 end_define
 
@@ -48,7 +48,14 @@ begin_define
 define|#
 directive|define
 name|TTYDEF_LFLAG_ECHO
-value|(TTYDEF_LFLAG | ECHO | ECHOE | ECHOKE | ECHOCTL)
+value|(TTYDEF_LFLAG_NOECHO \ 	| ECHO | ECHOE | ECHOKE | ECHOCTL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYDEF_LFLAG
+value|TTYDEF_LFLAG_ECHO
 end_define
 
 begin_define
