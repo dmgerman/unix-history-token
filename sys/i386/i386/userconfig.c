@@ -1341,6 +1341,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"cue"
+block|,
+literal|"CATC USB ethernet adapter"
+block|,
+name|FLG_FIXED
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"kue"
 block|,
 literal|"Kawasaki LSI USB ethernet adapter"

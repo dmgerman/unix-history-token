@@ -543,6 +543,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"cue"
+block|,
+literal|"CATC USB ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"fpa"
 block|,
 literal|"DEC DEFPA PCI FDDI card"
