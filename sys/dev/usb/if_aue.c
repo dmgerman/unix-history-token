@@ -2556,7 +2556,7 @@ operator|<<
 operator|(
 name|h
 operator|&
-literal|0xF
+literal|0x7
 operator|)
 argument_list|)
 expr_stmt|;
