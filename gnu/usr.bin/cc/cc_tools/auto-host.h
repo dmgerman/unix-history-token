@@ -1173,12 +1173,36 @@ begin_comment
 comment|/* Define if you have a working<stdbool.h> header file. */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|440003
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+operator|||
+expr|\
+name|__FreeBSD_version
+operator|>=
+literal|500014
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_STDBOOL_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if you can safely include both<string.h> and<strings.h>. */
