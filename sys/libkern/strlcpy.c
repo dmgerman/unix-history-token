@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: strlcpy.c,v 1.2 1998/11/06 04:33:16 wvdputte Exp $	*/
+comment|/*	$OpenBSD: strlcpy.c,v 1.4 1999/05/01 18:56:41 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$OpenBSD: strlcpy.c,v 1.2 1998/11/06 04:33:16 wvdputte Exp $"
+literal|"$OpenBSD: strlcpy.c,v 1.4 1999/05/01 18:56:41 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,60 +101,81 @@ name|n
 init|=
 name|siz
 decl_stmt|;
+comment|/* Copy as many bytes as will fit */
+if|if
+condition|(
+name|n
+operator|!=
+literal|0
+operator|&&
+operator|--
+name|n
+operator|!=
+literal|0
+condition|)
+block|{
+do|do
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|d
+operator|++
+operator|=
+operator|*
+name|s
+operator|++
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+do|while
+condition|(
+operator|--
+name|n
+operator|!=
+literal|0
+condition|)
+do|;
+block|}
+comment|/* Not enough room in dst, add NUL and traverse rest of src */
 if|if
 condition|(
 name|n
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-operator|)
-return|;
+block|{
+if|if
+condition|(
+name|siz
+operator|!=
+literal|0
+condition|)
+operator|*
+name|d
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* NUL-terminate dst */
 while|while
 condition|(
 operator|*
 name|s
-operator|!=
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|!=
-literal|1
-condition|)
-block|{
-operator|*
-name|d
 operator|++
-operator|=
-operator|*
-name|s
-expr_stmt|;
-name|n
-operator|--
-expr_stmt|;
+condition|)
+empty_stmt|;
 block|}
-name|s
-operator|++
-expr_stmt|;
-block|}
-operator|*
-name|d
-operator|=
-literal|'\0'
-expr_stmt|;
 return|return
 operator|(
 name|s
 operator|-
 name|src
+operator|-
+literal|1
 operator|)
 return|;
 comment|/* count does not include NUL */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: strlcat.c,v 1.1 1998/07/01 01:29:45 millert Exp $	*/
+comment|/*	$OpenBSD: strlcat.c,v 1.2 1999/06/17 16:28:58 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$OpenBSD: strlcat.c,v 1.1 1998/07/01 01:29:45 millert Exp $"
+literal|"$OpenBSD: strlcat.c,v 1.2 1999/06/17 16:28:58 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +104,7 @@ decl_stmt|;
 name|size_t
 name|dlen
 decl_stmt|;
-comment|/* Find the end of dst and adjust bytes left */
+comment|/* Find the end of dst and adjust bytes left but don't go past end */
 while|while
 condition|(
 operator|*
@@ -113,6 +113,7 @@ operator|!=
 literal|'\0'
 operator|&&
 name|n
+operator|--
 operator|!=
 literal|0
 condition|)
@@ -126,7 +127,9 @@ operator|-
 name|dst
 expr_stmt|;
 name|n
-operator|-=
+operator|=
+name|siz
+operator|-
 name|dlen
 expr_stmt|;
 if|if
