@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ipr.c - isdn4bsd IP over raw HDLC ISDN network driver  *	---------------------------------------------------------  *  *	$Id: i4b_ipr.c,v 1.55 1999/12/13 21:25:24 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Mon Dec 13 21:38:51 1999]  *  *---------------------------------------------------------------------------*  *  *	statistics counter usage (interface lifetime):  *	----------------------------------------------  *	sc->sc_if.if_ipackets	# of received packets  *	sc->sc_if.if_ierrors	# of error packets not going to upper layers  *	sc->sc_if.if_opackets	# of transmitted packets  *	sc->sc_if.if_oerrors	# of error packets not being transmitted  *	sc->sc_if.if_collisions	# of invalid ip packets after VJ decompression  *	sc->sc_if.if_ibytes	# of bytes coming in from the line (before VJ)  *	sc->sc_if.if_obytes	# of bytes going out to the line (after VJ)  *	sc->sc_if.if_imcasts	  (currently unused)  *	sc->sc_if.if_omcasts	# of frames sent out of the fastqueue  *	sc->sc_if.if_iqdrops	# of frames dropped on input because queue full  *	sc->sc_if.if_noproto	# of frames dropped on output because !AF_INET  *  *	statistics counter usage (connection lifetime):  *	-----------------------------------------------  *	sc->sc_iinb		# of ISDN incoming bytes from HSCX  *	sc->sc_ioutb		# of ISDN outgoing bytes from HSCX  *	sc->sc_inb		# of incoming bytes after decompression  *	sc->sc_outb		# of outgoing bytes before compression  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ipr.c - isdn4bsd IP over raw HDLC ISDN network driver  *	---------------------------------------------------------  *  *	$Id: i4b_ipr.c,v 1.59 2000/08/28 07:24:58 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Fri Aug 25 20:25:21 2000]  *  *---------------------------------------------------------------------------*  *  *	statistics counter usage (interface lifetime):  *	----------------------------------------------  *	sc->sc_if.if_ipackets	# of received packets  *	sc->sc_if.if_ierrors	# of error packets not going to upper layers  *	sc->sc_if.if_opackets	# of transmitted packets  *	sc->sc_if.if_oerrors	# of error packets not being transmitted  *	sc->sc_if.if_collisions	# of invalid ip packets after VJ decompression  *	sc->sc_if.if_ibytes	# of bytes coming in from the line (before VJ)  *	sc->sc_if.if_obytes	# of bytes going out to the line (after VJ)  *	sc->sc_if.if_imcasts	  (currently unused)  *	sc->sc_if.if_omcasts	# of frames sent out of the fastqueue  *	sc->sc_if.if_iqdrops	# of frames dropped on input because queue full  *	sc->sc_if.if_noproto	# of frames dropped on output because !AF_INET  *  *	statistics counter usage (connection lifetime):  *	-----------------------------------------------  *	sc->sc_iinb		# of ISDN incoming bytes from HSCX  *	sc->sc_ioutb		# of ISDN outgoing bytes from HSCX  *	sc->sc_inb		# of incoming bytes after decompression  *	sc->sc_outb		# of outgoing bytes before compression  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -115,6 +115,30 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
 end_include
 
 begin_endif
@@ -674,6 +698,34 @@ decl_stmt|;
 comment|/* flag, first null acct	*/
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+name|struct
+name|callout
+name|sc_callout
+decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|struct
+name|callout_handle
+name|sc_callout
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|I4BIPRADJFRXP
@@ -1114,15 +1166,11 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_DIALST
 argument_list|,
-literal|"i4biprattach"
-argument_list|,
-operator|(
-literal|"setting dial state to ST_IDLE\n"
-operator|)
+literal|"setting dial state to ST_IDLE"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1244,6 +1292,26 @@ operator|=
 name|IFF_POINTOPOINT
 operator||
 name|IFF_SIMPLEX
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+name|callout_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_callout
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1548,6 +1616,43 @@ name|sc_lastdialresp
 operator|=
 name|DSTAT_NONE
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500009
+operator|)
+operator|||
+operator|(
+literal|410000
+operator|<=
+name|__FreeBSD_version
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+operator|)
+comment|/* do not call bpfattach in ether_ifattach */
+name|ether_ifattach
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_if
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|if_attach
 argument_list|(
 operator|&
@@ -1556,6 +1661,8 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|NBPFILTER
@@ -1780,17 +1887,13 @@ name|IFF_UP
 operator|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: interface is DOWN!"
 argument_list|,
-operator|(
-literal|"ipr%d: interface is DOWN!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1846,17 +1949,13 @@ case|case
 name|DSTAT_TFAIL
 case|:
 comment|/* transient failure */
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: transient dial failure!"
 argument_list|,
-operator|(
-literal|"ipr%d: transient dial failure!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1897,17 +1996,13 @@ case|case
 name|DSTAT_PFAIL
 case|:
 comment|/* permanent failure */
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: permanent dial failure!"
 argument_list|,
-operator|(
-literal|"ipr%d: permanent dial failure!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1948,17 +2043,13 @@ case|case
 name|DSTAT_INONLY
 case|:
 comment|/* no dialout allowed*/
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: dialout not allowed failure!"
 argument_list|,
-operator|(
-literal|"ipr%d: dialout not allowed failure!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1998,30 +2089,22 @@ break|break;
 block|}
 endif|#
 directive|endif
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: send dial request message!"
 argument_list|,
-operator|(
-literal|"ipr%d: send dial request message!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_DIALST
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: setting dial state to ST_DIALING"
 argument_list|,
-operator|(
-literal|"ipr%d: setting dial state to ST_DIALING\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l4_dialout
@@ -2129,17 +2212,13 @@ name|ifq
 argument_list|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: send queue full!"
 argument_list|,
-operator|(
-literal|"ipr%d: send queue full!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|IF_DROP
@@ -2170,17 +2249,13 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"i4biproutput"
+literal|"ipr%d: add packet to send queue!"
 argument_list|,
-operator|(
-literal|"ipr%d: add packet to send queue!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|IF_ENQUEUE
@@ -3104,17 +3179,13 @@ operator|=
 name|SPLI4B
 argument_list|()
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_DIALST
 argument_list|,
-literal|"ipr_connect"
+literal|"ipr%d: setting dial state to ST_CONNECTED"
 argument_list|,
-operator|(
-literal|"ipr%d: setting dial state to ST_CONNECTED\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3215,8 +3286,49 @@ operator|>
 literal|0
 condition|)
 block|{
-name|timeout
+name|int
+name|delay
+decl_stmt|;
+if|if
+condition|(
+name|hz
+operator|==
+literal|100
+condition|)
+block|{
+name|delay
+operator|=
+name|sc
+operator|->
+name|sc_cdp
+operator|->
+name|isdntxdelay
+expr_stmt|;
+comment|/* avoid any rounding */
+block|}
+else|else
+block|{
+name|delay
+operator|=
+name|sc
+operator|->
+name|sc_cdp
+operator|->
+name|isdntxdelay
+operator|*
+name|hz
+expr_stmt|;
+name|delay
+operator|/=
+literal|100
+expr_stmt|;
+block|}
+name|START_TIMER
 argument_list|(
+name|sc
+operator|->
+name|sc_callout
+argument_list|,
 operator|(
 name|TIMEOUT_FUNC_T
 operator|)
@@ -3228,12 +3340,7 @@ operator|*
 operator|)
 name|sc
 argument_list|,
-name|sc
-operator|->
-name|sc_cdp
-operator|->
-name|isdntxdelay
-comment|/* hz*1 */
+name|delay
 argument_list|)
 expr_stmt|;
 block|}
@@ -3309,23 +3416,19 @@ operator|->
 name|sc_cdp
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"ipr_disconnect"
+literal|"ipr%d: channel %d not active"
 argument_list|,
-operator|(
-literal|"ipr%d: channel %d not active\n"
-operator|,
 name|cd
 operator|->
 name|driver_unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|channelid
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3396,15 +3499,11 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_DIALST
 argument_list|,
-literal|"ipr_disconnect"
-argument_list|,
-operator|(
-literal|"setting dial state to ST_IDLE\n"
-operator|)
+literal|"setting dial state to ST_IDLE"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3467,25 +3566,21 @@ name|sc_dialresp
 operator|=
 name|status
 expr_stmt|;
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"ipr_dialresponse"
+literal|"ipr%d: last=%d, this=%d"
 argument_list|,
-operator|(
-literal|"ipr%d: last=%d, this=%d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_lastdialresp
-operator|,
+argument_list|,
 name|sc
 operator|->
 name|sc_dialresp
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3495,17 +3590,13 @@ operator|!=
 name|DSTAT_NONE
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"ipr_dialresponse"
+literal|"ipr%d: clearing queues"
 argument_list|,
-operator|(
-literal|"ipr%d: clearing queues\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|iprclearqueues
@@ -4267,17 +4358,13 @@ name|ipintrq
 argument_list|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"ipr_rx_data_rdy"
+literal|"ipr%d: ipintrq full!"
 argument_list|,
-operator|(
-literal|"ipr%d: ipintrq full!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|IF_DROP
@@ -4614,17 +4701,13 @@ name|tx_queue
 argument_list|)
 condition|)
 block|{
-name|DBGL4
+name|NDBGL4
 argument_list|(
 name|L4_IPRDBG
 argument_list|,
-literal|"ipr_rx_data_rdy"
+literal|"ipr%d: tx queue full!"
 argument_list|,
-operator|(
-literal|"ipr%d: tx queue full!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_freem

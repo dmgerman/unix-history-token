@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l4if.c - Layer 3 interface to Layer 4  *	-------------------------------------------  *  *	$Id: i4b_l4if.c,v 1.22 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:05:25 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l4if.c - Layer 3 interface to Layer 4  *	-------------------------------------------  *  *	$Id: i4b_l4if.c,v 1.27 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Fri Jun  2 14:32:19 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,30 +46,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/kernel.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -94,6 +75,30 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -298,7 +303,8 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
-name|int
+name|void
+modifier|*
 name|parm
 parameter_list|)
 function_decl|;
@@ -328,21 +334,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"unit = %d, status = %d, parm = %d"
 argument_list|,
-operator|(
-literal|"unit = %d, status = %d, parm = %d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|status
-operator|,
+argument_list|,
 name|parm
-operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -353,19 +355,15 @@ block|{
 case|case
 name|STI_ATTACH
 case|:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"STI_ATTACH: attaching unit %d to controller %d"
 argument_list|,
-operator|(
-literal|"STI_ATTACH: attaching unit %d to controller %d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|nctrl
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* init function pointers */
@@ -404,24 +402,6 @@ operator|.
 name|N_ALERT_REQUEST
 operator|=
 name|n_alert_request
-expr_stmt|;
-name|ctrl_desc
-index|[
-name|nctrl
-index|]
-operator|.
-name|N_SET_TRACE
-operator|=
-name|isic_settrace
-expr_stmt|;
-name|ctrl_desc
-index|[
-name|nctrl
-index|]
-operator|.
-name|N_GET_TRACE
-operator|=
-name|isic_gettrace
 expr_stmt|;
 name|ctrl_desc
 index|[
@@ -549,23 +529,19 @@ argument_list|,
 name|parm
 argument_list|)
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"STI_L1STAT: unit %d layer 1 = %s"
 argument_list|,
-operator|(
-literal|"STI_L1STAT: unit %d layer 1 = %s\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|status
 condition|?
 literal|"up"
 else|:
 literal|"down"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -581,23 +557,19 @@ argument_list|,
 name|parm
 argument_list|)
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"STI_L2STAT: unit %d layer 2 = %s"
 argument_list|,
-operator|(
-literal|"STI_L2STAT: unit %d layer 2 = %s\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|status
 condition|?
 literal|"up"
 else|:
 literal|"down"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -620,21 +592,17 @@ argument_list|,
 name|parm
 argument_list|)
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"STI_TEIASG: unit %d TEI = %d = 0x%02x"
 argument_list|,
-operator|(
-literal|"STI_TEIASG: unit %d TEI = %d = 0x%02x\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|parm
-operator|,
+argument_list|,
 name|parm
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -642,21 +610,17 @@ case|case
 name|STI_PDEACT
 case|:
 comment|/* L1 T4 timeout */
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"STI_PDEACT: unit %d TEI = %d = 0x%02x"
 argument_list|,
-operator|(
-literal|"STI_PDEACT: unit %d TEI = %d = 0x%02x\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|parm
-operator|,
+argument_list|,
 name|parm
-operator|)
 argument_list|)
 expr_stmt|;
 name|sendup
@@ -821,17 +785,13 @@ case|case
 name|STI_NOL1ACC
 case|:
 comment|/* no outgoing access to S0 */
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"STI_NOL1ACC: unit %d no outgoing access to S0"
 argument_list|,
-operator|(
-literal|"STI_NOL1ACC: unit %d no outgoing access to S0\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -990,19 +950,15 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_mdl_status_ind"
+literal|"ERROR, unit %d, unknown status value %d!"
 argument_list|,
-operator|(
-literal|"ERROR, unit %d, unknown status value %d!\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|status
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1030,7 +986,8 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
-name|int
+name|void
+modifier|*
 name|parm
 parameter_list|)
 block|{
@@ -1045,17 +1002,13 @@ block|{
 case|case
 name|CMR_DOPEN
 case|:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"n_mgmt_command"
+literal|"CMR_DOPEN for unit %d"
 argument_list|,
-operator|(
-literal|"CMR_DOPEN for unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1177,21 +1130,41 @@ break|break;
 case|case
 name|CMR_DCLOSE
 case|:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"n_mgmt_command"
+literal|"CMR_DCLOSE for unit %d"
 argument_list|,
-operator|(
-literal|"CMR_DCLOSE for unit %d\n"
-operator|,
 name|unit
-operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMR_SETTRACE
+case|:
+name|NDBGL3
+argument_list|(
+name|L3_MSG
+argument_list|,
+literal|"CMR_SETTRACE for unit %d"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|NDBGL3
+argument_list|(
+name|L3_MSG
+argument_list|,
+literal|"unknown cmd %d for unit %d"
+argument_list|,
+name|cmd
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|MDL_Command_Req
@@ -1353,15 +1326,11 @@ name|chstate
 operator|=
 name|BCH_ST_FREE
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"n_connect_response"
-argument_list|,
-operator|(
 literal|"unknown response, doing SETUP_RESP_DNTCRE"
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1404,21 +1373,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"n_connect_response"
-argument_list|,
-operator|(
 literal|"Warning, invalid channelid %d, response = %d\n"
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|channelid
-operator|,
+argument_list|,
 name|response
-operator|)
 argument_list|)
 expr_stmt|;
 block|}

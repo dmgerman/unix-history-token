@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_util.c - layer 2 utility routines  *	-------------------------------------  *  *	$Id: i4b_util.c,v 1.22 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:04:37 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_util.c - layer 2 utility routines  *	-------------------------------------  *  *	$Id: i4b_util.c,v 1.26 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:55:35 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,30 +46,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/kernel.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -94,6 +75,30 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -453,17 +458,13 @@ name|CRIT_VAR
 expr_stmt|;
 name|CRIT_BEG
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_invoke_retransmission"
+literal|"nr = %d"
 argument_list|,
-operator|(
-literal|"nr = %d\n"
-operator|,
 name|nr
-operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -475,21 +476,17 @@ operator|!=
 name|nr
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_invoke_retransmission"
+literal|"nr(%d) != vs(%d)"
 argument_list|,
-operator|(
-literal|"nr(%d) != vs(%d)\n"
-operator|,
 name|nr
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|vs
-operator|)
 argument_list|)
 expr_stmt|;
 name|M128DEC
@@ -532,15 +529,11 @@ name|i_queue
 argument_list|)
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_invoke_retransmission"
-argument_list|,
-operator|(
-literal|"ERROR, I-queue full!\n"
-operator|)
+literal|"ERROR, I-queue full!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -568,23 +561,19 @@ block|}
 block|}
 else|else
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_invoke_retransmission"
+literal|"ERROR, l2sc->vs = %d, l2sc->ua_num = %d "
 argument_list|,
-operator|(
-literal|"ERROR, l2sc->vs = %d, l2sc->ua_num = %d \n"
-operator|,
 name|l2sc
 operator|->
 name|vs
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|ua_num
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -653,8 +642,8 @@ modifier|*
 name|buf
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DO_I4B_DEBUG
 name|int
 name|i
@@ -716,43 +705,39 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_print_l2var"
+literal|"unit%d V(R)=%d, V(S)=%d, V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d"
 argument_list|,
-operator|(
-literal|"unit%d V(R)=%d, V(S)=%d, V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d\n"
-operator|,
 name|l2sc
 operator|->
 name|unit
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|vr
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|vs
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|va
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|ack_pend
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|peer_busy
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|own_busy
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -777,33 +762,29 @@ block|{
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_rxd_ack"
+literal|"N(R)=%d, UA=%d, V(R)=%d, V(S)=%d, V(A)=%d"
 argument_list|,
-operator|(
-literal|"N(R)=%d, UA=%d, V(R)=%d, V(S)=%d, V(A)=%d\n"
-operator|,
 name|nr
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|ua_num
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|vr
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|vs
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|va
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -834,21 +815,17 @@ name|ua_num
 operator|!=
 name|nr
 condition|)
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_rxd_ack"
+literal|"((N(R)-1)=%d) != (UA=%d) !!!"
 argument_list|,
-operator|(
-literal|"((N(R)-1)=%d) != (UA=%d) !!!\n"
-operator|,
 name|nr
-operator|,
+argument_list|,
 name|l2sc
 operator|->
 name|ua_num
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -954,21 +931,17 @@ operator|)
 operator|)
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_l2_nr_ok"
+literal|"ERROR, va = %d, nr = %d, vs = %d [1]"
 argument_list|,
-operator|(
-literal|"ERROR, va = %d, nr = %d, vs = %d [1]\n"
-operator|,
 name|va
-operator|,
+argument_list|,
 name|nr
-operator|,
+argument_list|,
 name|vs
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -999,21 +972,17 @@ operator|)
 operator|)
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_ERROR
 argument_list|,
-literal|"i4b_l2_nr_ok"
+literal|"ERROR, va = %d, nr = %d, vs = %d [2]"
 argument_list|,
-operator|(
-literal|"ERROR, va = %d, nr = %d, vs = %d [2]\n"
-operator|,
 name|va
-operator|,
+argument_list|,
 name|nr
-operator|,
+argument_list|,
 name|vs
-operator|)
 argument_list|)
 expr_stmt|;
 return|return

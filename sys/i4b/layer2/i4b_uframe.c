@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_uframe.c - routines for handling U-frames  *	-----------------------------------------------  *  *	$Id: i4b_uframe.c,v 1.10 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:04:30 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_uframe.c - routines for handling U-frames  *	-----------------------------------------------  *  *	$Id: i4b_uframe.c,v 1.13 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:55:30 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,30 +46,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/kernel.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -94,6 +75,30 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -296,19 +301,15 @@ operator|.
 name|rx_sabme
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_rxd_u_frame"
+literal|"SABME, sapi = %d, tei = %d"
 argument_list|,
-operator|(
-literal|"SABME, sapi = %d, tei = %d\n"
-operator|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -416,15 +417,11 @@ operator|.
 name|err_rx_badui
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_ERR
 argument_list|,
-literal|"i4b_rxd_u_frame"
-argument_list|,
-operator|(
-literal|"unknown UI frame!\n"
-operator|)
+literal|"unknown UI frame!"
 argument_list|)
 expr_stmt|;
 name|i4b_Dfreembuf
@@ -471,19 +468,15 @@ operator|.
 name|rx_disc
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_rxd_u_frame"
+literal|"DISC, sapi = %d, tei = %d"
 argument_list|,
-operator|(
-literal|"DISC, sapi = %d, tei = %d\n"
-operator|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -543,19 +536,15 @@ operator|.
 name|rx_xid
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_rxd_u_frame"
+literal|"XID, sapi = %d, tei = %d"
 argument_list|,
-operator|(
-literal|"XID, sapi = %d, tei = %d\n"
-operator|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -603,19 +592,15 @@ operator|.
 name|rx_dm
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_rxd_u_frame"
+literal|"DM, sapi = %d, tei = %d"
 argument_list|,
-operator|(
-literal|"DM, sapi = %d, tei = %d\n"
-operator|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_print_frame
@@ -686,19 +671,15 @@ operator|.
 name|rx_ua
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_rxd_u_frame"
+literal|"UA, sapi = %d, tei = %d"
 argument_list|,
-operator|(
-literal|"UA, sapi = %d, tei = %d\n"
-operator|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -758,19 +739,15 @@ operator|.
 name|rx_frmr
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_rxd_u_frame"
+literal|"FRMR, sapi = %d, tei = %d"
 argument_list|,
-operator|(
-literal|"FRMR, sapi = %d, tei = %d\n"
-operator|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -821,19 +798,15 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_ERR
 argument_list|,
-literal|"i4b_rxd_u_frame"
-argument_list|,
-operator|(
 literal|"UNKNOWN TYPE ERROR, sapi = %d, tei = %d, frame = "
-operator|,
+argument_list|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_print_frame
@@ -850,19 +823,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_ERR
 argument_list|,
-literal|"i4b_rxd_u_frame"
-argument_list|,
-operator|(
 literal|"not mine -  UNKNOWN TYPE ERROR, sapi = %d, tei = %d, frame = "
-operator|,
+argument_list|,
 name|sapi
-operator|,
+argument_list|,
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_print_frame
@@ -1033,19 +1002,15 @@ operator|.
 name|tx_sabme
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_tx_sabme"
+literal|"tx SABME, tei = %d"
 argument_list|,
-operator|(
-literal|"tx SABME, tei = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1103,19 +1068,15 @@ operator|.
 name|tx_dm
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_tx_dm"
+literal|"tx DM, tei = %d"
 argument_list|,
-operator|(
-literal|"tx DM, tei = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1173,19 +1134,15 @@ operator|.
 name|tx_disc
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_tx_disc"
+literal|"tx DISC, tei = %d"
 argument_list|,
-operator|(
-literal|"tx DISC, tei = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1243,19 +1200,15 @@ operator|.
 name|tx_ua
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_tx_ua"
+literal|"tx UA, tei = %d"
 argument_list|,
-operator|(
-literal|"tx UA, tei = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -1313,19 +1266,15 @@ operator|.
 name|tx_frmr
 operator|++
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_U_MSG
 argument_list|,
-literal|"i4b_tx_frmr"
+literal|"tx FRMR, tei = %d"
 argument_list|,
-operator|(
-literal|"tx FRMR, tei = %d\n"
-operator|,
 name|l2sc
 operator|->
 name|tei
-operator|)
 argument_list|)
 expr_stmt|;
 name|m

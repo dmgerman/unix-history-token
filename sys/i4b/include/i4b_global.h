@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_global.h - i4b global include file  *	--------------------------------------  *  *	$Id: i4b_global.h,v 1.23 1999/12/13 21:25:24 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Mon Dec 13 21:44:17 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_global.h - i4b global include file  *	--------------------------------------  *  *	$Id: i4b_global.h,v 1.27 2000/08/28 07:24:58 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Thu Aug 24 12:38:50 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -218,6 +218,175 @@ comment|/* __NetBSD__ */
 end_comment
 
 begin_comment
+comment|/*----------------*/
+end_comment
+
+begin_comment
+comment|/* timer handling */
+end_comment
+
+begin_comment
+comment|/*----------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_define
+define|#
+directive|define
+name|START_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|,
+name|XTIME
+parameter_list|)
+value|callout_reset(&XHANDLE, XTIME, (TIMEOUT_FUNC_T)XF, (void*)XSC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STOP_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|)
+value|callout_stop(&XHANDLE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|START_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|,
+name|XTIME
+parameter_list|)
+value|timeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XTIME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STOP_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|)
+value|untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|START_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|,
+name|XTIME
+parameter_list|)
+value|XHANDLE = timeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XTIME)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|STOP_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|)
+value|untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XHANDLE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STOP_TIMER
+parameter_list|(
+name|XHANDLE
+parameter_list|,
+name|XF
+parameter_list|,
+name|XSC
+parameter_list|)
+value|untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*----------------------*/
 end_comment
 
@@ -383,7 +552,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* attach at boot time	*/
+comment|/* attach at boot time			*/
 end_comment
 
 begin_define
@@ -394,7 +563,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* layer 1 status	*/
+comment|/* layer 1 status			*/
 end_comment
 
 begin_define
@@ -405,7 +574,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* layer 2 status	*/
+comment|/* layer 2 status			*/
 end_comment
 
 begin_define
@@ -416,7 +585,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* TEI assignments	*/
+comment|/* TEI assignments			*/
 end_comment
 
 begin_define
@@ -438,7 +607,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* no outgoing L1 access possible */
+comment|/* no outgoing L1 access possible	*/
 end_comment
 
 begin_comment
@@ -453,7 +622,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* daemon opened /dev/i4b */
+comment|/* daemon opened /dev/i4b		*/
 end_comment
 
 begin_define
@@ -464,22 +633,40 @@ value|1
 end_define
 
 begin_comment
-comment|/* daemon closed /dev/i4b */
-end_comment
-
-begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	Number of max supported passive card units  *  *	Teles/Creatix/Neuhaus cards have a hardware limitation  *	as one is able to set 3 (sometimes 4) different configurations by  *      jumpers so a maximum of 3 (4) cards per ISA bus is possible.  *      (Note: there are multiple ISA buses on some architectures)  *  *---------------------------------------------------------------------------*/
+comment|/* daemon closed /dev/i4b		*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ISIC_MAXUNIT
+name|CMR_SETTRACE
+value|2
+end_define
+
+begin_comment
+comment|/* set D-channel and B-channel trace	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMR_GCST
 value|3
 end_define
 
 begin_comment
-comment|/* max no of supported units 0..3 */
+comment|/* get chipset statistics		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMR_CCST
+value|4
+end_define
+
+begin_comment
+comment|/* clear chipset statistics		*/
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_q932fac.c - Q932 facility handling  *	--------------------------------------  *  *	$Id: i4b_q932fac.c,v 1.8 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:05:51 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_q932fac.c - Q932 facility handling  *	--------------------------------------  *  *	$Id: i4b_q932fac.c,v 1.11 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:57:04 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,30 +46,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/kernel.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -94,6 +75,30 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -319,15 +324,11 @@ break|break;
 case|case
 name|FAC_PROTO_CMIP
 case|:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
-argument_list|,
-operator|(
-literal|"CMIP Protocol (Q.941), UNSUPPORTED\n"
-operator|)
+literal|"CMIP Protocol (Q.941), UNSUPPORTED"
 argument_list|)
 expr_stmt|;
 return|return
@@ -340,15 +341,11 @@ break|break;
 case|case
 name|FAC_PROTO_ACSE
 case|:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
-argument_list|,
-operator|(
-literal|"ACSE Protocol (X.217/X.227), UNSUPPORTED!\n"
-operator|)
+literal|"ACSE Protocol (X.217/X.227), UNSUPPORTED!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -359,15 +356,11 @@ operator|)
 return|;
 break|break;
 default|default:
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_ERR
 argument_list|,
-literal|"i4b_facility"
-argument_list|,
-operator|(
-literal|"Unknown Protocol, UNSUPPORTED!\n"
-operator|)
+literal|"Unknown Protocol, UNSUPPORTED!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -378,15 +371,11 @@ operator|)
 return|;
 break|break;
 block|}
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
-argument_list|,
-operator|(
-literal|"Remote Operations Protocol\n"
-operator|)
+literal|"Remote Operations Protocol"
 argument_list|)
 expr_stmt|;
 comment|/* next byte */
@@ -1112,17 +1101,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
+literal|"Invoke ID = %d"
 argument_list|,
-operator|(
-literal|"Invoke ID = %d\n"
-operator|,
 name|val
-operator|)
 argument_list|)
 expr_stmt|;
 name|state
@@ -1154,17 +1139,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
+literal|"Operation Value = %d"
 argument_list|,
-operator|(
-literal|"Operation Value = %d\n"
-operator|,
 name|val
-operator|)
 argument_list|)
 expr_stmt|;
 name|operation_value
@@ -1254,15 +1235,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
-argument_list|,
-operator|(
-literal|"Free of Charge\n"
-operator|)
+literal|"Free of Charge"
 argument_list|)
 expr_stmt|;
 comment|/* units = 0; XXXX */
@@ -1295,15 +1272,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
-argument_list|,
-operator|(
-literal|"Charge not available\n"
-operator|)
+literal|"Charge not available"
 argument_list|)
 expr_stmt|;
 comment|/* units = -1; 	XXXXXX ??? */
@@ -1390,17 +1363,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
+literal|"Number of Units = %d"
 argument_list|,
-operator|(
-literal|"Number of Units = %d\n"
-operator|,
 name|val
-operator|)
 argument_list|)
 expr_stmt|;
 name|units
@@ -1436,17 +1405,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
+literal|"Subtotal/Total = %d"
 argument_list|,
-operator|(
-literal|"Subtotal/Total = %d\n"
-operator|,
 name|val
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* type_of_charge = val; */
@@ -1479,17 +1444,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_A_MSG
 argument_list|,
-literal|"i4b_facility"
+literal|"Billing ID = %d"
 argument_list|,
-operator|(
-literal|"Billing ID = %d\n"
-operator|,
 name|val
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* billing_id = val; */

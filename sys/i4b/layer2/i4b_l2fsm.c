@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l2fsm.c - layer 2 FSM  *	-------------------------  *  *	$Id: i4b_l2fsm.c,v 1.17 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:03:36 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l2fsm.c - layer 2 FSM  *	-------------------------  *  *	$Id: i4b_l2fsm.c,v 1.22 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Tue May 30 15:48:20 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,30 +46,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/kernel.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -94,6 +75,30 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -181,10 +186,16 @@ begin_decl_stmt
 name|l2_softc_t
 name|l2_softc
 index|[
-name|ISIC_MAXUNIT
+name|MAXL1UNITS
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|DO_I4B_DEBUG
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -273,6 +284,11 @@ literal|"Illegal Event"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1226,15 +1242,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_ERR
 argument_list|,
-literal|"F_ILL"
-argument_list|,
-operator|(
-literal|"FSM function F_ILL executing\n"
-operator|)
+literal|"FSM function F_ILL executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1254,15 +1266,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_NCNA"
-argument_list|,
-operator|(
-literal|"FSM function F_NCNA executing\n"
-operator|)
+literal|"FSM function F_NCNA executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2726,34 +2734,30 @@ name|ST_SUBSET
 condition|)
 block|{
 comment|/* state function does NOT set new state */
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"i4b_next_l2state"
+literal|"FSM event [%s]: [%s/%d => %s/%d]"
 argument_list|,
-operator|(
-literal|"FSM event [%s]: [%s/%d => %s/%d]\n"
-operator|,
 name|l2event_text
 index|[
 name|event
 index|]
-operator|,
+argument_list|,
 name|l2state_text
 index|[
 name|currstate
 index|]
-operator|,
+argument_list|,
 name|currstate
-operator|,
+argument_list|,
 name|l2state_text
 index|[
 name|newstate
 index|]
-operator|,
+argument_list|,
 name|newstate
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2782,32 +2786,28 @@ name|ST_SUBSET
 condition|)
 block|{
 comment|/* state function DOES set new state */
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"i4b_next_l2state"
+literal|"FSM S-event [%s]: [%s => %s]"
 argument_list|,
-operator|(
-literal|"FSM S-event [%s]: [%s => %s]\n"
-operator|,
 name|l2event_text
 index|[
 name|event
 index|]
-operator|,
+argument_list|,
 name|l2state_text
 index|[
 name|currstate
 index|]
-operator|,
+argument_list|,
 name|l2state_text
 index|[
 name|l2sc
 operator|->
 name|Q921_state
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2823,25 +2823,21 @@ name|newstate
 operator|=
 name|currstate
 expr_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_ERR
 argument_list|,
-literal|"i4b_next_l2state"
+literal|"FSM illegal state, state = %s, event = %s!"
 argument_list|,
-operator|(
-literal|"FSM illegal state, state = %s, event = %s!\n"
-operator|,
 name|l2state_text
 index|[
 name|currstate
 index|]
-operator|,
+argument_list|,
 name|l2event_text
 index|[
 name|event
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2868,15 +2864,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"i4b_next_l2state"
-argument_list|,
-operator|(
-literal|"FSM executing postfsmfunc!\n"
-operator|)
+literal|"FSM executing postfsmfunc!"
 argument_list|)
 expr_stmt|;
 comment|/* try to avoid an endless loop */
@@ -2905,6 +2897,12 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|DO_I4B_DEBUG
+end_if
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	return pointer to current state description  *---------------------------------------------------------------------------*/
@@ -2937,6 +2935,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	FSM state ST_TEI_UNAS event dl establish request  *---------------------------------------------------------------------------*/
 end_comment
@@ -2951,15 +2954,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TU01"
-argument_list|,
-operator|(
-literal|"FSM function F_TU01 executing\n"
-operator|)
+literal|"FSM function F_TU01 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_mdl_assign_ind
@@ -2984,15 +2983,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TU03"
-argument_list|,
-operator|(
-literal|"FSM function F_TU03 executing\n"
-operator|)
+literal|"FSM function F_TU03 executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3012,15 +3007,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TA03"
-argument_list|,
-operator|(
-literal|"FSM function F_TA03 executing\n"
-operator|)
+literal|"FSM function F_TA03 executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3040,15 +3031,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TA04"
-argument_list|,
-operator|(
-literal|"FSM function F_TA04 executing\n"
-operator|)
+literal|"FSM function F_TA04 executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3068,15 +3055,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TA05"
-argument_list|,
-operator|(
-literal|"FSM function F_TA05 executing\n"
-operator|)
+literal|"FSM function F_TA05 executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3096,15 +3079,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TE03"
-argument_list|,
-operator|(
-literal|"FSM function F_TE03 executing\n"
-operator|)
+literal|"FSM function F_TE03 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_establish_data_link
@@ -3135,15 +3114,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TE04"
-argument_list|,
-operator|(
-literal|"FSM function F_TE04 executing\n"
-operator|)
+literal|"FSM function F_TE04 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -3177,15 +3152,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TE05"
-argument_list|,
-operator|(
-literal|"FSM function F_TE05 executing\n"
-operator|)
+literal|"FSM function F_TE05 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -3219,15 +3190,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T01"
-argument_list|,
-operator|(
-literal|"FSM function F_T01 executing\n"
-operator|)
+literal|"FSM function F_T01 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_establish_data_link
@@ -3258,15 +3225,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T05"
-argument_list|,
-operator|(
-literal|"FSM function F_T05 executing\n"
-operator|)
+literal|"FSM function F_T05 executing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3286,15 +3249,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T06"
-argument_list|,
-operator|(
-literal|"FSM function F_T06 executing\n"
-operator|)
+literal|"FSM function F_T06 executing"
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
@@ -3320,15 +3279,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T07"
-argument_list|,
-operator|(
-literal|"FSM function F_T07 executing\n"
-operator|)
+literal|"FSM function F_T07 executing"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -3447,15 +3402,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T08"
-argument_list|,
-operator|(
-literal|"FSM function F_T08 executing\n"
-operator|)
+literal|"FSM function F_T08 executing"
 argument_list|)
 expr_stmt|;
 name|MDL_Status_Ind
@@ -3495,15 +3446,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T09"
-argument_list|,
-operator|(
-literal|"FSM function F_T09 executing\n"
-operator|)
+literal|"FSM function F_T09 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_mdl_error_ind
@@ -3541,15 +3488,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T10"
-argument_list|,
-operator|(
-literal|"FSM function F_T10 executing\n"
-operator|)
+literal|"FSM function F_T10 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3622,15 +3565,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_T13"
-argument_list|,
-operator|(
-literal|"FSM function F_T13 executing\n"
-operator|)
+literal|"FSM function F_T13 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -3664,15 +3603,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE01"
-argument_list|,
-operator|(
-literal|"FSM function F_AE01 executing\n"
-operator|)
+literal|"FSM function F_AE01 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -3706,15 +3641,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE05"
-argument_list|,
-operator|(
-literal|"FSM function F_AE05 executing\n"
-operator|)
+literal|"FSM function F_AE05 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -3761,15 +3692,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE06"
-argument_list|,
-operator|(
-literal|"FSM function F_AE06 executing\n"
-operator|)
+literal|"FSM function F_AE06 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -3822,15 +3749,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE07"
-argument_list|,
-operator|(
-literal|"FSM function F_AE07 executing\n"
-operator|)
+literal|"FSM function F_AE07 executing"
 argument_list|)
 expr_stmt|;
 name|MDL_Status_Ind
@@ -3870,15 +3793,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE08"
-argument_list|,
-operator|(
-literal|"FSM function F_AE08 executing\n"
-operator|)
+literal|"FSM function F_AE08 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_tx_dm
@@ -3907,15 +3826,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE09"
-argument_list|,
-operator|(
-literal|"FSM function F_AE09 executing\n"
-operator|)
+literal|"FSM function F_AE09 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4073,15 +3988,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE10"
-argument_list|,
-operator|(
-literal|"FSM function F_AE10 executing\n"
-operator|)
+literal|"FSM function F_AE10 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4153,15 +4064,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE11"
-argument_list|,
-operator|(
-literal|"FSM function F_AE11 executing\n"
-operator|)
+literal|"FSM function F_AE11 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4254,15 +4161,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AE12"
-argument_list|,
-operator|(
-literal|"FSM function F_AE12 executing\n"
-operator|)
+literal|"FSM function F_AE12 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4297,15 +4200,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR05"
-argument_list|,
-operator|(
-literal|"FSM function F_AR05 executing\n"
-operator|)
+literal|"FSM function F_AR05 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -4344,15 +4243,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR06"
-argument_list|,
-operator|(
-literal|"FSM function F_AR06 executing\n"
-operator|)
+literal|"FSM function F_AR06 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -4397,15 +4292,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR07"
-argument_list|,
-operator|(
-literal|"FSM function F_AR07 executing\n"
-operator|)
+literal|"FSM function F_AR07 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_tx_dm
@@ -4434,15 +4325,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR08"
-argument_list|,
-operator|(
-literal|"FSM function F_AR08 executing\n"
-operator|)
+literal|"FSM function F_AR08 executing"
 argument_list|)
 expr_stmt|;
 name|MDL_Status_Ind
@@ -4482,15 +4369,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR09"
-argument_list|,
-operator|(
-literal|"FSM function F_AR09 executing\n"
-operator|)
+literal|"FSM function F_AR09 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4561,15 +4444,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR10"
-argument_list|,
-operator|(
-literal|"FSM function F_AR10 executing\n"
-operator|)
+literal|"FSM function F_AR10 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4631,15 +4510,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_AR11"
-argument_list|,
-operator|(
-literal|"FSM function F_AR11 executing\n"
-operator|)
+literal|"FSM function F_AR11 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4724,15 +4599,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF01"
-argument_list|,
-operator|(
-literal|"FSM function F_MF01 executing\n"
-operator|)
+literal|"FSM function F_MF01 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -4771,15 +4642,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF05"
-argument_list|,
-operator|(
-literal|"FSM function F_MF05 executing\n"
-operator|)
+literal|"FSM function F_MF05 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -4831,15 +4698,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF06"
-argument_list|,
-operator|(
-literal|"FSM function F_MF06 executing\n"
-operator|)
+literal|"FSM function F_MF06 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -4897,15 +4760,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF07"
-argument_list|,
-operator|(
-literal|"FSM function F_MF07 executing\n"
-operator|)
+literal|"FSM function F_MF07 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_clear_exception_conditions
@@ -5021,15 +4880,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF08"
-argument_list|,
-operator|(
-literal|"FSM function F_MF08 executing\n"
-operator|)
+literal|"FSM function F_MF08 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -5101,15 +4956,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF09"
-argument_list|,
-operator|(
-literal|"FSM function F_MF09 executing\n"
-operator|)
+literal|"FSM function F_MF09 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5154,15 +5005,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF10"
-argument_list|,
-operator|(
-literal|"FSM function F_MF10 executing\n"
-operator|)
+literal|"FSM function F_MF10 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5234,15 +5081,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF11"
-argument_list|,
-operator|(
-literal|"FSM function F_MF11 executing\n"
-operator|)
+literal|"FSM function F_MF11 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -5278,15 +5121,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF12"
-argument_list|,
-operator|(
-literal|"FSM function F_MF12 executing\n"
-operator|)
+literal|"FSM function F_MF12 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_i_frame_queued_up
@@ -5311,15 +5150,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF13"
-argument_list|,
-operator|(
-literal|"FSM function F_MF13 executing\n"
-operator|)
+literal|"FSM function F_MF13 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -5370,15 +5205,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF14"
-argument_list|,
-operator|(
-literal|"FSM function F_MF14 executing\n"
-operator|)
+literal|"FSM function F_MF14 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_transmit_enquire
@@ -5409,15 +5240,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF15"
-argument_list|,
-operator|(
-literal|"FSM function F_MF15 executing\n"
-operator|)
+literal|"FSM function F_MF15 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5467,15 +5294,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF16"
-argument_list|,
-operator|(
-literal|"FSM function F_MF16 executing\n"
-operator|)
+literal|"FSM function F_MF16 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5525,15 +5348,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF17"
-argument_list|,
-operator|(
-literal|"FSM function F_MF17 executing\n"
-operator|)
+literal|"FSM function F_MF17 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -5701,15 +5520,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF18"
-argument_list|,
-operator|(
-literal|"FSM function F_MF18 executing\n"
-operator|)
+literal|"FSM function F_MF18 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -5848,15 +5663,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF19"
-argument_list|,
-operator|(
-literal|"FSM function F_MF19 executing\n"
-operator|)
+literal|"FSM function F_MF19 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -5986,15 +5797,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_MF20"
-argument_list|,
-operator|(
-literal|"FSM function F_MF20 executing\n"
-operator|)
+literal|"FSM function F_MF20 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_mdl_error_ind
@@ -6034,15 +5841,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR01"
-argument_list|,
-operator|(
-literal|"FSM function F_TR01 executing\n"
-operator|)
+literal|"FSM function F_TR01 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -6081,15 +5884,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR05"
-argument_list|,
-operator|(
-literal|"FSM function F_TR05 executing\n"
-operator|)
+literal|"FSM function F_TR05 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -6136,15 +5935,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR06"
-argument_list|,
-operator|(
-literal|"FSM function F_TR06 executing\n"
-operator|)
+literal|"FSM function F_TR06 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -6197,15 +5992,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR07"
-argument_list|,
-operator|(
-literal|"FSM function F_TR07 executing\n"
-operator|)
+literal|"FSM function F_TR07 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_clear_exception_conditions
@@ -6321,15 +6112,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR08"
-argument_list|,
-operator|(
-literal|"FSM function F_TR08 executing\n"
-operator|)
+literal|"FSM function F_TR08 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -6396,15 +6183,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR09"
-argument_list|,
-operator|(
-literal|"FSM function F_TR09 executing\n"
-operator|)
+literal|"FSM function F_TR09 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6449,15 +6232,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR10"
-argument_list|,
-operator|(
-literal|"FSM function F_TR10 executing\n"
-operator|)
+literal|"FSM function F_TR10 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6517,15 +6296,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR11"
-argument_list|,
-operator|(
-literal|"FSM function F_TR11 executing\n"
-operator|)
+literal|"FSM function F_TR11 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6600,15 +6375,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR12"
-argument_list|,
-operator|(
-literal|"FSM function F_TR12 executing\n"
-operator|)
+literal|"FSM function F_TR12 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_i_frame_queued_up
@@ -6633,15 +6404,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR13"
-argument_list|,
-operator|(
-literal|"FSM function F_TR13 executing\n"
-operator|)
+literal|"FSM function F_TR13 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_Dcleanifq
@@ -6687,15 +6454,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR15"
-argument_list|,
-operator|(
-literal|"FSM function F_TR15 executing\n"
-operator|)
+literal|"FSM function F_TR15 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6744,15 +6507,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR16"
-argument_list|,
-operator|(
-literal|"FSM function F_TR16 executing\n"
-operator|)
+literal|"FSM function F_TR16 executing"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6803,15 +6562,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR17"
-argument_list|,
-operator|(
-literal|"FSM function F_TR17 executing\n"
-operator|)
+literal|"FSM function F_TR17 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -6990,15 +6745,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR18"
-argument_list|,
-operator|(
-literal|"FSM function F_TR18 executing\n"
-operator|)
+literal|"FSM function F_TR18 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -7177,15 +6928,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR19"
-argument_list|,
-operator|(
-literal|"FSM function F_TR19 executing\n"
-operator|)
+literal|"FSM function F_TR19 executing"
 argument_list|)
 expr_stmt|;
 name|l2sc
@@ -7359,15 +7106,11 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_F_MSG
 argument_list|,
-literal|"F_TR20"
-argument_list|,
-operator|(
-literal|"FSM function F_TR20 executing\n"
-operator|)
+literal|"FSM function F_TR20 executing"
 argument_list|)
 expr_stmt|;
 name|i4b_mdl_error_ind

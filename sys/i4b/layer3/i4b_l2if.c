@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l2if.c - Layer 3 interface to Layer 2  *	-------------------------------------------  *  *	$Id: i4b_l2if.c,v 1.18 1999/12/13 21:25:27 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 22:04:48 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l2if.c - Layer 3 interface to Layer 2  *	-------------------------------------------  *  *	$Id: i4b_l2if.c,v 1.23 2000/08/24 11:48:58 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon May 29 16:56:22 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -46,30 +46,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/kernel.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -94,6 +75,30 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104230000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -389,17 +394,13 @@ name|found
 init|=
 literal|0
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-ESTABLISH-IND"
+literal|"DL-ESTABLISH-IND unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* first set DL up in controller descriptor */
@@ -442,17 +443,13 @@ name|unit
 operator|)
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_establish_ind"
+literal|"unit=%d DL established!"
 argument_list|,
-operator|(
-literal|"unit=%d DL established!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|ctrl_desc
@@ -477,17 +474,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_dl_establish_ind"
+literal|"ERROR, controller not found for unit=%d!"
 argument_list|,
-operator|(
-literal|"ERROR, controller not found for unit=%d!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -562,33 +555,29 @@ name|unit
 operator|)
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_establish_ind"
+literal|"unit=%d, index=%d cdid=%u cr=%d"
 argument_list|,
-operator|(
-literal|"unit=%d, index=%d cdid=%u cr=%d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|call_desc
 index|[
 name|i
 index|]
 operator|.
 name|cdid
-operator|,
+argument_list|,
 name|call_desc
 index|[
 name|i
 index|]
 operator|.
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 name|next_l3state
@@ -614,17 +603,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_dl_establish_ind"
+literal|"ERROR, no cdid for unit %d found!"
 argument_list|,
-operator|(
-literal|"ERROR, no cdid for unit %d found!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -665,17 +650,13 @@ name|found
 init|=
 literal|0
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-ESTABLISH-CONF"
+literal|"DL-ESTABLISH-CONF unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -752,33 +733,29 @@ name|dl_est
 operator|=
 name|DL_UP
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_establish_cnf"
+literal|"unit=%d, index=%d cdid=%u cr=%d"
 argument_list|,
-operator|(
-literal|"unit=%d, index=%d cdid=%u cr=%d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|call_desc
 index|[
 name|i
 index|]
 operator|.
 name|cdid
-operator|,
+argument_list|,
 name|call_desc
 index|[
 name|i
 index|]
 operator|.
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 name|next_l3state
@@ -804,17 +781,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_dl_establish_cnf"
+literal|"ERROR, no cdid for unit %d found!"
 argument_list|,
-operator|(
-literal|"ERROR, no cdid for unit %d found!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -855,17 +828,13 @@ name|found
 init|=
 literal|0
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-RELEASE-IND"
+literal|"DL-RELEASE-IND unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* first set controller to down */
@@ -908,17 +877,13 @@ name|unit
 operator|)
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_release_ind"
+literal|"unit=%d DL released!"
 argument_list|,
-operator|(
-literal|"unit=%d DL released!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|ctrl_desc
@@ -943,17 +908,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_dl_release_ind"
+literal|"ERROR, controller not found for unit=%d!"
 argument_list|,
-operator|(
-literal|"ERROR, controller not found for unit=%d!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1028,33 +989,29 @@ name|unit
 operator|)
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_release_ind"
+literal|"unit=%d, index=%d cdid=%u cr=%d"
 argument_list|,
-operator|(
-literal|"unit=%d, index=%d cdid=%u cr=%d\n"
-operator|,
 name|unit
-operator|,
+argument_list|,
 name|i
-operator|,
+argument_list|,
 name|call_desc
 index|[
 name|i
 index|]
 operator|.
 name|cdid
-operator|,
+argument_list|,
 name|call_desc
 index|[
 name|i
 index|]
 operator|.
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 name|next_l3state
@@ -1081,17 +1038,13 @@ literal|0
 condition|)
 block|{
 comment|/* this is not an error since it might be a normal call end */
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_release_ind"
+literal|"no cdid for unit %d found"
 argument_list|,
-operator|(
-literal|"no cdid for unit %d found\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1118,17 +1071,13 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-RELEASE-CONF"
+literal|"DL-RELEASE-CONF unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1170,17 +1119,13 @@ name|unit
 operator|)
 condition|)
 block|{
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_MSG
 argument_list|,
-literal|"i4b_dl_release_cnf"
+literal|"unit=%d DL released!"
 argument_list|,
-operator|(
-literal|"unit=%d DL released!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 name|ctrl_desc
@@ -1199,17 +1144,13 @@ operator|)
 return|;
 block|}
 block|}
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_ERR
 argument_list|,
-literal|"i4b_dl_release_cnf"
+literal|"ERROR, controller not found for unit=%d!"
 argument_list|,
-operator|(
-literal|"ERROR, controller not found for unit=%d!\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1241,17 +1182,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-DATA-IND"
+literal|"DL-DATA-IND unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1302,17 +1239,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|DBGL2
+name|NDBGL2
 argument_list|(
 name|L2_PRIM
 argument_list|,
-literal|"DL-UNIT-DATA-IND"
+literal|"DL-UNIT-DATA-IND unit %d"
 argument_list|,
-operator|(
-literal|"unit %d\n"
-operator|,
 name|unit
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1365,15 +1298,12 @@ name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx CONNECT"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -1382,11 +1312,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1501,15 +1430,23 @@ name|I_FRAME_HDRLEN
 operator|+
 name|MSG_RELEASE_COMPLETE_LEN
 decl_stmt|;
-name|DBGL3
+if|if
+condition|(
+name|send_cause_flag
+operator|==
+literal|0
+condition|)
+block|{
+name|len
+operator|-=
+literal|4
+expr_stmt|;
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx RELEASE-COMPLETE"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -1518,23 +1455,40 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|send_cause_flag
-operator|==
-literal|0
-condition|)
-name|len
-operator|-=
-literal|4
+block|}
+else|else
+block|{
+name|NDBGL3
+argument_list|(
+name|L3_PRIM
+argument_list|,
+literal|"unit=%d, cr=0x%02x, cause=0x%x"
+argument_list|,
+name|ctrl_desc
+index|[
+name|cd
+operator|->
+name|controller
+index|]
+operator|.
+name|unit
+argument_list|,
+name|cd
+operator|->
+name|cr
+argument_list|,
+name|cd
+operator|->
+name|cause_out
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1671,15 +1625,12 @@ name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx DISCONNECT"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -1688,11 +1639,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1848,15 +1798,12 @@ name|dst_telno
 argument_list|)
 decl_stmt|;
 comment|/* 	 * there is one additional octet if cd->bprot == BPROT_NONE 	 * NOTE: the selection of a bearer capability by a B L1 	 *       protocol is highly questionable and a better 	 *       mechanism should be used in future. (-hm) 	 */
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx SETUP"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -1865,11 +1812,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2222,15 +2168,12 @@ name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx CONNECT-ACK"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -2239,11 +2182,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2351,15 +2293,12 @@ name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx STATUS"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -2368,11 +2307,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2538,15 +2476,12 @@ name|I_FRAME_HDRLEN
 operator|+
 name|MSG_RELEASE_LEN
 decl_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx RELEASE"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -2555,11 +2490,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2728,15 +2662,12 @@ argument_list|(
 literal|"i4b_l3_tx_alert: can't allocate mbuf\n"
 argument_list|)
 expr_stmt|;
-name|DBGL3
+name|NDBGL3
 argument_list|(
 name|L3_PRIM
 argument_list|,
-literal|"tx ALERT"
+literal|"unit %d, cr = 0x%02x"
 argument_list|,
-operator|(
-literal|"unit %d, cr = 0x%02x\n"
-operator|,
 name|ctrl_desc
 index|[
 name|cd
@@ -2745,11 +2676,10 @@ name|controller
 index|]
 operator|.
 name|unit
-operator|,
+argument_list|,
 name|cd
 operator|->
 name|cr
-operator|)
 argument_list|)
 expr_stmt|;
 name|ptr
