@@ -1010,6 +1010,27 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
+literal|"# See the fstab(5) manual page for important information on automatic mounts\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"# of network filesystems before modifying this file.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"#\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
 literal|"# Device\t\tMountpoint\tFStype\tOptions\t\tDump\tPass#\n"
 argument_list|)
 expr_stmt|;
