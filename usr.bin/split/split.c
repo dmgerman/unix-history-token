@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,15 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)split.c	8.2 (Berkeley) 4/16/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)split.c	8.2 (Berkeley) 4/16/94";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -223,6 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -396,7 +400,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: illegal line count."
+literal|"%s: illegal line count"
 argument_list|,
 name|optarg
 argument_list|)
@@ -444,6 +448,7 @@ operator|)
 operator|<=
 literal|0
 operator|||
+operator|(
 operator|*
 name|ep
 operator|!=
@@ -458,12 +463,13 @@ operator|*
 name|ep
 operator|!=
 literal|'m'
+operator|)
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: illegal byte count."
+literal|"%s: illegal byte count"
 argument_list|,
 name|optarg
 argument_list|)
@@ -530,7 +536,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: illegal line count."
+literal|"%s: illegal line count"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1224,7 +1230,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"too many files."
+literal|"too many files"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1288,6 +1294,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
