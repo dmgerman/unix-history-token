@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	necf.c	1.3	81/06/01	*/
+comment|/*	necf.c	1.4	81/08/24	*/
 end_comment
 
 begin_include
@@ -28,12 +28,41 @@ name|PAGESIZE
 value|66
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TTY
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BAUDRATE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BAUDRATE
+value|B300
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|sgttyb
 name|tty
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|main
@@ -89,6 +118,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TTY
 name|tty
 operator|.
 name|sg_ispeed
@@ -97,7 +129,7 @@ name|tty
 operator|.
 name|sg_ospeed
 operator|=
-name|B9600
+name|BAUDRATE
 expr_stmt|;
 name|tty
 operator|.
@@ -145,6 +177,8 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|setbuf
 argument_list|(
 name|stdout
@@ -221,6 +255,9 @@ condition|)
 block|{
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|TTY
 if|if
 condition|(
 operator|(
@@ -241,6 +278,8 @@ name|cp
 operator|=
 literal|'\r'
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"%s"
