@@ -998,6 +998,10 @@ expr_stmt|;
 if|if
 condition|(
 name|rptr
+operator|&&
+name|mc_received
+operator|==
+literal|0
 condition|)
 block|{
 switch|switch
