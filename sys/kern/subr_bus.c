@@ -8117,6 +8117,13 @@ block|{
 if|if
 condition|(
 name|bootverbose
+operator|&&
+name|device_get_name
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|device_print_prettyname
