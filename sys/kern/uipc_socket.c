@@ -4025,7 +4025,7 @@ condition|)
 operator|*
 name|psa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -4036,7 +4036,7 @@ condition|)
 operator|*
 name|controlp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
