@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.154 (Berkeley) %G%"
+literal|"@(#)conf.c	8.155 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4093,6 +4093,12 @@ ifdef|#
 directive|ifdef
 name|__hpux
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|pst_dynamic
+struct_decl|;
+end_struct_decl
 
 begin_include
 include|#
