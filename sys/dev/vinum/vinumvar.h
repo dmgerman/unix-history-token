@@ -819,6 +819,21 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/*  * When doing round-robin reads from a multi-plex volume, switch to the  * next plex if the difference of the last read sector and the next sector  * to be read is this many sectors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ROUNDROBIN_SWITCH
+value|128
+end_define
+
+begin_comment
+comment|/* 64k */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

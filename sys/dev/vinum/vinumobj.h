@@ -785,6 +785,10 @@ modifier|*
 name|lockmtx
 decl_stmt|;
 comment|/* lock mutex, one of plexmutex [] */
+name|daddr_t
+name|last_addr
+decl_stmt|;
+comment|/* last address read from this plex */
 name|dev_t
 name|dev
 decl_stmt|;
