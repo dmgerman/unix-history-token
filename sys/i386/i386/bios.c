@@ -2203,6 +2203,11 @@ operator|.
 name|eax
 argument_list|)
 expr_stmt|;
+name|ndevs
+operator|&=
+literal|0xff
+expr_stmt|;
+comment|/* clear high byte garbage */
 if|if
 condition|(
 name|bootverbose
