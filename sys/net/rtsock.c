@@ -482,11 +482,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
 name|rtsintrq
-operator|.
-name|ifq_maxlen
-operator|=
+argument_list|,
 name|IFQ_MAXLEN
+argument_list|)
 expr_stmt|;
 name|mtx_init
 argument_list|(
