@@ -5,6 +5,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
+end_include
+
 begin_comment
 comment|/* XXX There should be a way for a type driver to have its own  *     private senses and add them when it is added.  */
 end_comment
