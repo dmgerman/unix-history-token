@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkdate.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkdate.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,11 @@ argument_list|)
 expr_stmt|;
 name|DoVersionNumber
 argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
