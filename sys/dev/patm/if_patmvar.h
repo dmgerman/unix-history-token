@@ -1411,6 +1411,30 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* enable the vcc */
+end_comment
+
+begin_function_decl
+name|void
+name|patm_load_vc
+parameter_list|(
+name|struct
+name|patm_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|patm_vcc
+modifier|*
+name|vcc
+parameter_list|,
+name|int
+name|reload
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* close the given vcc for transmission */
 end_comment
 
