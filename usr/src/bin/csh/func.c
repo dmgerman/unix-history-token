@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.9 (Berkeley) %G%"
+literal|"@(#)func.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5289,6 +5289,16 @@ block|}
 operator|(
 name|void
 operator|)
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+name|shpgrp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FSHTTY
@@ -5300,16 +5310,6 @@ name|char
 operator|*
 operator|)
 operator|&
-name|shpgrp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setpgrp
-argument_list|(
-literal|0
-argument_list|,
 name|shpgrp
 argument_list|)
 expr_stmt|;

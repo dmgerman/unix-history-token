@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.10 (Berkeley) %G%"
+literal|"@(#)proc.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -622,15 +622,6 @@ operator||
 name|PPTIME
 operator|)
 operator|||
-ifdef|#
-directive|ifdef
-name|IIASA
-name|jobflags
-operator|&
-name|PAEXITED
-operator|||
-endif|#
-directive|endif
 operator|!
 name|eq
 argument_list|(
@@ -5672,6 +5663,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|wanttty
+operator|>=
+literal|0
+operator|&&
+name|tpgrp
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|(
+name|pid
+argument_list|,
+name|pcurrjob
+condition|?
+name|pcurrjob
+operator|->
+name|p_jobid
+else|:
+name|pid
+argument_list|)
+expr_stmt|;
 name|palloc
 argument_list|(
 name|pid
