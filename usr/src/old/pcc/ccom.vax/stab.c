@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.4 (Berkeley) %G%"
+literal|"@(#)stab.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -742,8 +742,6 @@ block|{
 name|tword
 operator|=
 name|type
-operator|>>
-name|TSHIFT
 expr_stmt|;
 name|i1
 operator|=
