@@ -4672,7 +4672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a given length worth of mbufs and/or clusters (whatever fits  * best) and return a pointer to the top of the allocated chain.  If an  * existing mbuf chain is provided, then we will append the new chain  * to the existing one and return the top of the provided (existing)  * chain.  NULL is returned on failure, in which case the [optional]  * provided chain is left untouched, and any memory already allocated  * is freed.  *  * Arguments:  *  - m: existing chain to which to append new chain (optional).  *  - len: total length of data to append, either in mbufs or clusters  *    (we allocate whatever combination yields the best fit).  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
+comment|/*  * Allocate a given length worth of mbufs and/or clusters (whatever fits  * best) and return a pointer to the top of the allocated chain.  If an  * existing mbuf chain is provided, then we will append the new chain  * to the existing one but still return the top of the newly allocated  * chain.  NULL is returned on failure, in which case the [optional]  * provided chain is left untouched, and any memory already allocated  * is freed.  *  * Arguments:  *  - m: existing chain to which to append new chain (optional).  *  - len: total length of data to append, either in mbufs or clusters  *    (we allocate whatever combination yields the best fit).  *  - how: 0 to try to block for kern.ipc.mbuf_wait number of ticks  *    if really starved for memory.  M_NOWAIT to never block.  *  - type: the type of the mbuf being allocated.  */
 end_comment
 
 begin_function
@@ -5106,13 +5106,8 @@ name|m_next
 operator|=
 name|top
 expr_stmt|;
-else|else
-name|mtail
-operator|=
-name|top
-expr_stmt|;
 return|return
-name|mtail
+name|top
 return|;
 name|failed
 label|:

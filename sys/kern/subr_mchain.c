@@ -812,12 +812,6 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-name|m
-operator|=
-name|m
-operator|->
-name|m_next
-expr_stmt|;
 name|mleft
 operator|=
 name|M_TRAILINGSPACE
