@@ -225,17 +225,50 @@ name|_MCOUNT_DECL
 value|static __inline void _mcount
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|MCOUNT
 define|\
-value|void \ mcount() \ { \ 	uintfptr_t selfpc, frompc; \
-comment|/* \ 	 * Find the return address for mcount, \ 	 * and the return address for mcount's caller. \ 	 * \ 	 * selfpc = pc pushed by call to mcount \ 	 */
-value|\ 	asm("movl 4(%%ebp),%0" : "=r" (selfpc)); \
-comment|/* \ 	 * frompc = pc pushed by call to mcount's caller. \ 	 * The caller's stack frame has already been built, so %ebp is \ 	 * the caller's frame pointer.  The caller's raddr is in the \ 	 * caller's frame following the caller's caller's frame pointer. \ 	 */
-value|\ 	asm("movl (%%ebp),%0" : "=r" (frompc)); \ 	frompc = ((uintfptr_t *)frompc)[1]; \ 	_mcount(frompc, selfpc); \ }
+value|void									\ mcount()								\ {									\ 	uintfptr_t selfpc, frompc;					\
+comment|/*								\ 	 * Find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * selfpc = pc pushed by call to mcount				\ 	 */
+value|\ 	asm("movl 4(%%ebp),%0" : "=r" (selfpc));			\
+comment|/*								\ 	 * frompc = pc pushed by call to mcount's caller.		\ 	 * The caller's stack frame has already been built, so %ebp is	\ 	 * the caller's frame pointer.  The caller's raddr is in the	\ 	 * caller's frame following the caller's caller's frame pointer.\ 	 */
+value|\ 	asm("movl (%%ebp),%0" : "=r" (frompc));				\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
+
+begin_function
+name|void
+function|\
+name|mcount
+parameter_list|()
+function|\
+block|{			\ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_typedef
 typedef|typedef
