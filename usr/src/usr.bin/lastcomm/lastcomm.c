@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastcomm.c	5.13 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,21 +129,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-name|devname
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-operator|,
-name|mode_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|time_t
