@@ -4605,7 +4605,7 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
-name|ASSERT_VNODE_LABEL
+name|ASSERT_CRED_LABEL
 argument_list|(
 name|newlabel
 argument_list|)
