@@ -101,10 +101,9 @@ name|elf64_freebsd_fixup
 block|,
 name|sendsig
 block|,
-name|sigcode
+name|NULL
 block|,
-operator|&
-name|szsigcode
+name|NULL
 block|,
 literal|0
 block|,
