@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.12	82/07/17	*/
+comment|/*	proc.h	4.13	82/09/04	*/
 end_comment
 
 begin_include
@@ -107,9 +107,19 @@ name|p_ppid
 decl_stmt|;
 comment|/* process id of parent */
 name|short
+name|p_xstat
+decl_stmt|;
+comment|/* Exit status for wait */
+name|struct
+name|rusage
+modifier|*
+name|p_ru
+decl_stmt|;
+comment|/* mbuf holding exit information */
+name|short
 name|p_poip
 decl_stmt|;
-comment|/* count of page outs in progress */
+comment|/* page outs in progress */
 name|short
 name|p_szpt
 decl_stmt|;
@@ -152,10 +162,6 @@ modifier|*
 name|p_textp
 decl_stmt|;
 comment|/* pointer to text structure */
-name|int
-name|p_clktim
-decl_stmt|;
-comment|/* time to alarm clock signal */
 name|struct
 name|pte
 modifier|*
@@ -222,6 +228,14 @@ name|int
 name|p_msgflgs
 decl_stmt|;
 comment|/* message flags */
+name|struct
+name|itimerval
+name|p_realtimer
+decl_stmt|;
+name|struct
+name|timeval
+name|p_seltimer
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -646,15 +660,8 @@ begin_comment
 comment|/* using new signal mechanism */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SOWEUPC
-value|0x0200000
-end_define
-
 begin_comment
-comment|/* owe process an addupc() call at next ast */
+comment|/* unused */
 end_comment
 
 begin_define
@@ -678,98 +685,6 @@ end_define
 begin_comment
 comment|/* a login process (legit child of init) */
 end_comment
-
-begin_comment
-comment|/*  * parallel proc structure  * to replace part with times  * to be passed to parent process  * in ZOMBIE state.  *  * THIS SHOULD BE DONE WITH A union() CONSTRUCTION  */
-end_comment
-
-begin_struct
-struct|struct
-name|xproc
-block|{
-name|struct
-name|proc
-modifier|*
-name|xp_link
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|xp_rlink
-decl_stmt|;
-name|struct
-name|pte
-modifier|*
-name|xp_addr
-decl_stmt|;
-name|char
-name|xp_usrpri
-decl_stmt|;
-name|char
-name|xp_pri
-decl_stmt|;
-comment|/* priority, negative is high */
-name|char
-name|xp_cpu
-decl_stmt|;
-comment|/* cpu usage for scheduling */
-name|char
-name|xp_stat
-decl_stmt|;
-name|char
-name|xp_time
-decl_stmt|;
-comment|/* resident time for scheduling */
-name|char
-name|xp_nice
-decl_stmt|;
-comment|/* nice for cpu usage */
-name|char
-name|xp_slptime
-decl_stmt|;
-name|char
-name|p_cursig
-decl_stmt|;
-name|int
-name|xp_sig
-decl_stmt|;
-comment|/* signals pending to this process */
-name|int
-name|xp_siga0
-decl_stmt|;
-name|int
-name|xp_siga1
-decl_stmt|;
-name|int
-name|xp_flag
-decl_stmt|;
-name|short
-name|xp_uid
-decl_stmt|;
-comment|/* user id, used to direct tty signals */
-name|short
-name|xp_pgrp
-decl_stmt|;
-comment|/* name of process group leader */
-name|short
-name|xp_pid
-decl_stmt|;
-comment|/* unique process id */
-name|short
-name|xp_ppid
-decl_stmt|;
-comment|/* process id of parent */
-name|short
-name|xp_xstat
-decl_stmt|;
-comment|/* Exit status for wait */
-name|struct
-name|vtimes
-name|xp_vm
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 end_unit
 
