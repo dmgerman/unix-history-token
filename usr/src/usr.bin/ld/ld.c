@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.11 (Berkeley) %G%"
+literal|"@(#)ld.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,25 @@ define|#
 directive|define
 name|INITIALIZE_HEADER
 value|outheader.a_mid = MID_HP300
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sparc
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_HEADER
+define|\
+value|(outheader.a_mid = MID_SUN_SPARC, outheader.a_toolversion = 1)
 end_define
 
 begin_endif
@@ -1851,6 +1870,16 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Do we want to pad the text to a page boundary? */
+end_comment
+
+begin_decl_stmt
+name|int
+name|padtext
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* 1 => write load map.  */
 end_comment
 
@@ -2371,6 +2400,10 @@ expr_stmt|;
 name|discard_locals
 operator|=
 name|DISCARD_NONE
+expr_stmt|;
+name|padtext
+operator|=
+literal|0
 expr_stmt|;
 name|entry_symbol
 operator|=
@@ -3875,6 +3908,14 @@ case|:
 name|output_filename
 operator|=
 name|arg
+expr_stmt|;
+return|return;
+case|case
+literal|'p'
+case|:
+name|padtext
+operator|=
+literal|1
 expr_stmt|;
 return|return;
 case|case
@@ -8425,6 +8466,40 @@ operator|+=
 name|text_pad
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|padtext
+condition|)
+block|{
+name|int
+name|text_end
+init|=
+name|text_size
+decl_stmt|;
+name|text_pad
+operator|=
+operator|(
+operator|(
+name|text_end
+operator|+
+name|page_size
+operator|-
+literal|1
+operator|)
+operator|&
+operator|(
+operator|-
+name|page_size
+operator|)
+operator|)
+operator|-
+name|text_end
+expr_stmt|;
+name|text_size
+operator|+=
+name|text_pad
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|_N_BASEADDR
@@ -11996,15 +12071,32 @@ argument_list|(
 name|output_filename
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fchflags
+argument_list|(
+name|outdesc
+argument_list|,
+name|statbuf
+operator|.
+name|st_flags
+operator||
+name|NODUMP
+argument_list|)
+expr_stmt|;
 name|filemode
 operator|=
 name|statbuf
 operator|.
 name|st_mode
 expr_stmt|;
-name|chmod
+operator|(
+name|void
+operator|)
+name|fchmod
 argument_list|(
-name|output_filename
+name|outdesc
 argument_list|,
 name|filemode
 operator|&
@@ -12039,16 +12131,11 @@ comment|/* Copy any GDB symbol segments from input files.  */
 name|write_symsegs
 argument_list|()
 expr_stmt|;
-name|close
-argument_list|(
-name|outdesc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|chmod
+name|fchmod
 argument_list|(
-name|output_filename
+name|outdesc
 argument_list|,
 name|filemode
 operator||
@@ -12061,6 +12148,11 @@ condition|)
 name|perror_name
 argument_list|(
 name|output_filename
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|outdesc
 argument_list|)
 expr_stmt|;
 block|}
