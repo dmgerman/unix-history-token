@@ -230,6 +230,8 @@ operator|->
 name|ports
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -307,6 +309,8 @@ operator|->
 name|memory
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -380,6 +384,8 @@ operator|->
 name|drq
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -455,6 +461,8 @@ operator|->
 name|irq
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
