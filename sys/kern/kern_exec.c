@@ -1140,18 +1140,6 @@ argument_list|(
 name|imgp
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_vmspace
-operator|->
-name|vm_minsaddr
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|stack_base
-expr_stmt|;
 comment|/* 	 * If custom stack fixup routine present for this process 	 * let it do the stack setup. 	 * Else stuff argument count as first item on stack 	 */
 if|if
 condition|(

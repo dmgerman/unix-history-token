@@ -449,7 +449,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*   * Shareable process virtual address space.  * May eventually be merged with vm_map.  * Several fields are temporary (text, data stuff).  */
+comment|/*   * Shareable process virtual address space.  *  * List of locks  *	(c)	const until freed  */
 end_comment
 
 begin_struct
@@ -502,17 +502,13 @@ comment|/* stack size (pages) */
 name|caddr_t
 name|vm_taddr
 decl_stmt|;
-comment|/* user virtual address of text XXX */
+comment|/* (c) user virtual address of text */
 name|caddr_t
 name|vm_daddr
 decl_stmt|;
-comment|/* user virtual address of data XXX */
+comment|/* (c) user virtual address of data */
 name|caddr_t
 name|vm_maxsaddr
-decl_stmt|;
-comment|/* user VA at max stack growth */
-name|caddr_t
-name|vm_minsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
 define|#
