@@ -347,7 +347,9 @@ expr_stmt|;
 default|default:
 name|printf
 argument_list|(
-literal|"\n???=%0x\n"
+literal|"\n?%c?=%0x\n"
+argument_list|,
+literal|'?'
 argument_list|,
 name|rcode
 argument_list|)
