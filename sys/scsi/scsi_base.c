@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.38 1996/05/03 21:01:42 phk Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.39 1996/07/14 10:46:48 joerg Exp $  */
 end_comment
 
 begin_include
@@ -3674,6 +3674,11 @@ modifier|*
 name|sense
 decl_stmt|;
 name|struct
+name|scsi_sense_extended
+modifier|*
+name|ext
+decl_stmt|;
+name|struct
 name|scsi_link
 modifier|*
 name|sc_link
@@ -3693,6 +3698,10 @@ name|errcode
 decl_stmt|;
 name|int
 name|error_code
+decl_stmt|,
+name|asc
+decl_stmt|,
+name|ascq
 decl_stmt|;
 comment|/* 	 * If the flags say errs are ok, then always return ok. 	 * XXX: What if it is a deferred error? 	 */
 if|if
@@ -3715,6 +3724,17 @@ operator|(
 name|xs
 operator|->
 name|sense
+operator|)
+expr_stmt|;
+name|ext
+operator|=
+operator|&
+operator|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
 operator|)
 expr_stmt|;
 ifdef|#
@@ -4092,22 +4112,16 @@ block|}
 comment|/* otherwise use the default */
 name|silent
 operator|=
-operator|(
 name|xs
 operator|->
 name|flags
 operator|&
 name|SCSI_SILENT
-operator|)
 expr_stmt|;
 name|key
 operator|=
-name|sense
-operator|->
 name|ext
-operator|.
-name|extended
-operator|.
+operator|->
 name|flags
 operator|&
 name|SSD_KEY
@@ -4120,6 +4134,68 @@ name|error_code
 operator|&
 name|SSD_ERRCODE
 expr_stmt|;
+name|asc
+operator|=
+operator|(
+name|ext
+operator|->
+name|extra_len
+operator|>=
+literal|5
+operator|)
+condition|?
+name|ext
+operator|->
+name|add_sense_code
+else|:
+literal|0
+expr_stmt|;
+name|ascq
+operator|=
+operator|(
+name|ext
+operator|->
+name|extra_len
+operator|>=
+literal|6
+operator|)
+condition|?
+name|ext
+operator|->
+name|add_sense_code_qual
+else|:
+literal|0
+expr_stmt|;
+comment|/* 	 * Retry while the device is returning a ``Logical unit 	 * is in the process of becoming ready.'' (until it either 	 * eventually yields an error, or finally succeeds). 	 */
+if|if
+condition|(
+name|error_code
+operator|==
+literal|0x70
+comment|/* current error */
+operator|&&
+operator|(
+name|int
+operator|)
+name|key
+operator|==
+literal|0x2
+comment|/* not ready */
+operator|&&
+name|asc
+operator|==
+literal|4
+operator|&&
+name|ascq
+operator|==
+literal|1
+comment|/* logical unit i i t p o b r */
+condition|)
+return|return
+operator|(
+name|SCSIRET_DO_RETRY
+operator|)
+return|;
 if|if
 condition|(
 operator|!
