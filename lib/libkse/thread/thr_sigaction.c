@@ -61,6 +61,11 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|sigaction
 name|newact
@@ -129,15 +134,6 @@ operator|&
 name|_thread_signal_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check if the existing signal action structure contents are 		 * to be returned:  		 */
-if|if
-condition|(
-name|oact
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Return the existing signal action contents: */
 name|oldact
 operator|=
 name|_thread_sigact
@@ -147,7 +143,6 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 comment|/* Check if a signal action was supplied: */
 if|if
 condition|(
@@ -231,11 +226,27 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|=
+name|oldact
+expr_stmt|;
+comment|/* errno is in kse, will copy it to thread */
+name|err
+operator|=
+name|errno
+expr_stmt|;
 name|ret
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|KSE_LOCK_RELEASE
 argument_list|(
@@ -252,17 +263,34 @@ argument_list|(
 name|crit
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Check if the existing signal action structure contents are 		 * to be returned:  		*/
 if|if
 condition|(
 name|oact
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* Return the existing signal action contents: */
 operator|*
 name|oact
 operator|=
 name|oldact
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Return errno to thread */
+name|errno
+operator|=
+name|err
+expr_stmt|;
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return
