@@ -435,7 +435,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* firmware resrart */
+comment|/* firmware restart */
 end_comment
 
 begin_define
