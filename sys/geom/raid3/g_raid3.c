@@ -13010,12 +13010,6 @@ name|sc
 expr_stmt|;
 name|gp
 operator|->
-name|spoiled
-operator|=
-name|g_raid3_spoiled
-expr_stmt|;
-name|gp
-operator|->
 name|orphan
 operator|=
 name|g_raid3_orphan
