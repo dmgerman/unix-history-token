@@ -935,6 +935,7 @@ expr_stmt|;
 comment|/* should be 1 ?? KB */
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strrchr
@@ -943,6 +944,7 @@ name|file
 argument_list|,
 literal|'.'
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if

@@ -220,6 +220,7 @@ if|if
 condition|(
 name|in_rule
 operator|||
+operator|(
 operator|!
 name|isalpha
 argument_list|(
@@ -233,6 +234,7 @@ operator|&&
 name|c
 operator|!=
 literal|'_'
+operator|)
 condition|)
 break|break;
 name|sp
