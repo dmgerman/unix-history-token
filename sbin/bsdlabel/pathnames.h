@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_BOOTDIR
-value|"/usr/mdec"
+value|"/boot"
 end_define
 
 begin_undef
