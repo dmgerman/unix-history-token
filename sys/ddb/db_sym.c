@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.26 1998/07/08 10:53:51 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.27 1998/12/04 22:54:43 archie Exp $  */
 end_comment
 
 begin_comment
@@ -101,6 +101,7 @@ name|db_lookup
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|symstr
@@ -282,6 +283,7 @@ modifier|*
 name|symtabname
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|symname
@@ -400,6 +402,7 @@ name|name
 parameter_list|,
 name|valuep
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -459,6 +462,7 @@ name|db_lookup
 parameter_list|(
 name|symstr
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|symstr
@@ -482,6 +486,7 @@ init|=
 name|db_nsymtab
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -508,11 +513,6 @@ operator|==
 literal|':'
 condition|)
 block|{
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -527,10 +527,30 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|n
+init|=
+name|strlen
+argument_list|(
+name|db_symtabs
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-operator|!
-name|strcmp
+name|n
+operator|==
+operator|(
+name|cp
+operator|-
+name|symstr
+operator|)
+operator|&&
+name|strncmp
 argument_list|(
 name|symstr
 argument_list|,
@@ -540,7 +560,11 @@ name|i
 index|]
 operator|.
 name|name
+argument_list|,
+name|n
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|symtab_start
@@ -556,11 +580,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-operator|*
-name|cp
-operator|=
-literal|':'
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -663,6 +682,7 @@ name|db_sym_t
 name|sym
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|sym_name
@@ -883,6 +903,7 @@ parameter_list|)
 name|db_sym_t
 name|sym
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -987,6 +1008,7 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
