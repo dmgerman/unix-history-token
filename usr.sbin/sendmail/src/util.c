@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.39.1.2 (Berkeley) 2/10/95"
+literal|"@(#)util.c	8.39.1.5 (Berkeley) 3/5/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -5270,6 +5270,10 @@ operator|)
 name|denlstring
 argument_list|(
 name|f
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5343,7 +5347,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DENLSTRING -- convert newlines in a string to spaces ** **	Parameters: **		s -- the input string ** **	Returns: **		A pointer to a version of the string with newlines **		mapped to spaces.  This should be copied. */
+comment|/* **  DENLSTRING -- convert newlines in a string to spaces ** **	Parameters: **		s -- the input string **		strict -- if set, don't permit continuation lines. **		logattacks -- if set, log attempted attacks. ** **	Returns: **		A pointer to a version of the string with newlines **		mapped to spaces.  This should be copied. */
 end_comment
 
 begin_function
@@ -5352,10 +5356,20 @@ modifier|*
 name|denlstring
 parameter_list|(
 name|s
+parameter_list|,
+name|strict
+parameter_list|,
+name|logattacks
 parameter_list|)
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|int
+name|strict
+decl_stmt|;
+name|int
+name|logattacks
 decl_stmt|;
 block|{
 specifier|register
@@ -5379,14 +5393,46 @@ name|bl
 init|=
 literal|0
 decl_stmt|;
-if|if
+name|p
+operator|=
+name|s
+expr_stmt|;
+while|while
 condition|(
+operator|(
+name|p
+operator|=
 name|strchr
 argument_list|(
-name|s
+name|p
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|strict
+operator|||
+operator|(
+operator|*
+operator|++
+name|p
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\t'
+operator|)
+condition|)
+break|break;
+if|if
+condition|(
+name|p
 operator|==
 name|NULL
 condition|)
@@ -5469,32 +5515,34 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
-name|p
-operator|=
-name|macvalue
-argument_list|(
-literal|'_'
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|logattacks
+condition|)
+block|{
 name|syslog
 argument_list|(
-name|LOG_ALERT
+name|LOG_NOTICE
 argument_list|,
 literal|"POSSIBLE ATTACK from %s: newline in string \"%s\""
 argument_list|,
-name|p
+name|RealHostName
 operator|==
 name|NULL
 condition|?
 literal|"[UNKNOWN]"
 else|:
-name|p
+name|RealHostName
 argument_list|,
+name|shortenstring
+argument_list|(
 name|bp
+argument_list|,
+literal|80
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.55.1.3 (Berkeley) 2/10/95"
+literal|"@(#)main.c	8.55.1.7 (Berkeley) 3/5/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1324,9 +1324,9 @@ name|strncmp
 argument_list|(
 name|p
 argument_list|,
-literal|"FS="
+literal|"IFS="
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|==
 literal|0
@@ -1565,12 +1565,17 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
+block|{
+name|res_init
+argument_list|()
+expr_stmt|;
 name|_res
 operator|.
 name|options
 operator||=
 name|RES_DEBUG
 expr_stmt|;
+block|}
 end_if
 
 begin_endif
@@ -2363,6 +2368,10 @@ argument_list|(
 name|denlstring
 argument_list|(
 name|optarg
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2685,6 +2694,11 @@ case|case
 literal|'X'
 case|:
 comment|/* traffic log file */
+name|setgid
+argument_list|(
+name|RealGid
+argument_list|)
+expr_stmt|;
 name|setuid
 argument_list|(
 name|RealUid
@@ -3007,6 +3021,39 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_comment
+comment|/* 	**  Initialize name server if it is going to be used. 	*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NAMED_BIND
+end_if
+
+begin_if
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|RES_INIT
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
+condition|)
+name|res_init
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	**  Process authorization warnings from command line. 	*/
@@ -3332,6 +3379,10 @@ argument_list|(
 name|denlstring
 argument_list|(
 name|FullName
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
