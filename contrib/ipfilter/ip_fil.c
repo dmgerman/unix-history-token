@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.42.2.14 2000/07/18 13:57:55 darrenr Exp $"
+literal|"@(#)$Id: ip_fil.c,v 2.42.2.15 2000/08/05 14:49:08 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6705,12 +6705,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+operator|)
+operator|==
+literal|0
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOBUFS
 return|;
+block|}
 name|avail
 operator|=
 operator|(

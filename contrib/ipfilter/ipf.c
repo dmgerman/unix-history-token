@@ -250,7 +250,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.1 2000/07/08 02:19:46 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.3 2000/08/07 14:54:05 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2925,6 +2925,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|int
+name|vfd
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"ipf: %s (%d)\n"
@@ -2942,17 +2945,33 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|opendevice
+operator|(
+name|vfd
+operator|=
+name|open
 argument_list|(
 name|ipfname
+argument_list|,
+name|O_RDONLY
 argument_list|)
-operator|!=
+operator|)
+operator|==
 operator|-
-literal|2
-operator|&&
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"open device"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|ioctl
 argument_list|(
-name|fd
+name|vfd
 argument_list|,
 name|SIOCGETFS
 argument_list|,
@@ -2966,8 +2985,18 @@ argument_list|(
 literal|"ioctl(SIOCGETFS"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|vfd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|close
+argument_list|(
+name|vfd
+argument_list|)
+expr_stmt|;
 name|flags
 operator|=
 name|get_flags
