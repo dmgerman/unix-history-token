@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)service.c	4.2 %G%"
+literal|"@(#)service.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1132,6 +1132,20 @@ name|pw
 init|=
 name|pwlist
 decl_stmt|;
+name|IF
+name|setjmp
+argument_list|(
+name|INTbuf
+argument_list|)
+decl|== 0
+name|THEN
+name|trapjmp
+index|[
+name|INTR
+index|]
+init|=
+literal|1
+decl_stmt|;
 name|p
 operator|=
 name|wait
@@ -1140,6 +1154,20 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
+name|ELSE
+name|p
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|FI
+name|trapjmp
+index|[
+name|INTR
+index|]
+init|=
+literal|0
+decl_stmt|;
 name|WHILE
 name|pw
 operator|<=
