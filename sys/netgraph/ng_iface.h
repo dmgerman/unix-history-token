@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_IFACE_COOKIE
-value|858821772
+value|858821773
 end_define
 
 begin_comment
@@ -65,6 +65,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NG_IFACE_HOOK_INET6
+value|"inet6"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_IFACE_HOOK_ATALK
 value|"atalk"
 end_define
@@ -78,6 +85,20 @@ define|#
 directive|define
 name|NG_IFACE_HOOK_IPX
 value|"ipx"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_IFACE_HOOK_ATM
+value|"atm"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_IFACE_HOOK_NATM
+value|"natm"
 end_define
 
 begin_define
@@ -124,10 +145,10 @@ init|=
 literal|1
 block|,
 comment|/* returns struct ng_iface_ifname */
-name|NGM_IFACE_GET_IFADDRS
+name|NGM_IFACE_POINT2POINT
 block|,
-comment|/* returns list of addresses */
-block|}
+name|NGM_IFACE_BROADCAST
+block|, }
 enum|;
 end_enum
 
