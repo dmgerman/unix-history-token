@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)termios.h	8.2 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  *  termios structure  */
+comment|/*  * Copyright (c) 1988, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)termios.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1256,6 +1252,55 @@ end_ifndef
 begin_define
 define|#
 directive|define
+name|B7200
+value|7200
+end_define
+
+begin_define
+define|#
+directive|define
+name|B14400
+value|14400
+end_define
+
+begin_define
+define|#
+directive|define
+name|B28800
+value|28800
+end_define
+
+begin_define
+define|#
+directive|define
+name|B57600
+value|57600
+end_define
+
+begin_define
+define|#
+directive|define
+name|B76800
+value|76800
+end_define
+
+begin_define
+define|#
+directive|define
+name|B115200
+value|115200
+end_define
+
+begin_define
+define|#
+directive|define
+name|B230400
+value|230400
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXTA
 value|19200
 end_define
@@ -1547,6 +1592,27 @@ begin_comment
 comment|/* !KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_comment
+comment|/*  * Include tty ioctl's that aren't just for backwards compatibility  * with the old tty driver.  These ioctl definitions were previously  * in<sys/ioctl.h>.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ttycom.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * END OF PROTECTED INCLUDE.  */
 end_comment
@@ -1566,33 +1632,11 @@ directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"ttydefaults.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/ttydefaults.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
