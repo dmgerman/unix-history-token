@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: netstat.c,v 1.5 1996/10/28 19:08:13 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2062,8 +2062,10 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-operator|*
-name|cp
+name|line
+index|[
+literal|22
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
