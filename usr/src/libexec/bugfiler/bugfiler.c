@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.13 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2120,7 +2120,7 @@ operator|->
 name|h_info
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Strip of leading "/", "usr/", or "src/". 	 */
+comment|/* 	 * Strip of leading "/", ".", "usr/", or "src/". 	 */
 name|cp1
 operator|=
 name|hp
@@ -2133,6 +2133,11 @@ operator|*
 name|cp1
 operator|==
 literal|'/'
+operator|||
+operator|*
+name|cp1
+operator|==
+literal|'.'
 condition|)
 name|cp1
 operator|++
