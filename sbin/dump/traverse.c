@@ -528,7 +528,14 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * All dirs go in dumpdirmap; only inodes that are to 		 * be dumped go in usedinomap and dumpinomap, however. 		 */
+comment|/* 		 * Everything must go in usedinomap so that a check 		 * for "in dumpdirmap but not in usedinomap" to detect 		 * dirs with nodump set has a chance of succeeding 		 * (this is used in mapdirs()). 		 */
+name|SETINO
+argument_list|(
+name|ino
+argument_list|,
+name|usedinomap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -550,13 +557,6 @@ name|dp
 argument_list|)
 condition|)
 block|{
-name|SETINO
-argument_list|(
-name|ino
-argument_list|,
-name|usedinomap
-argument_list|)
-expr_stmt|;
 name|SETINO
 argument_list|(
 name|ino
@@ -600,10 +600,32 @@ name|mode
 operator|==
 name|IFDIR
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|nonodump
+operator|&&
+operator|(
+name|dp
+operator|->
+name|di_flags
+operator|&
+name|UF_NODUMP
+operator|)
+condition|)
+name|CLRINO
+argument_list|(
+name|ino
+argument_list|,
+name|usedinomap
+argument_list|)
+expr_stmt|;
 name|anydirskipped
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Restore gets very upset if the root is not dumped, 	 * so ensure that it always is dumped. 	 */
 name|SETINO
@@ -730,6 +752,9 @@ expr_stmt|;
 comment|/* 		 * If a directory has been removed from usedinomap, it 		 * either has the nodump flag set, or has inherited 		 * it.  Although a directory can't be in dumpinomap if 		 * it isn't in usedinomap, we have to go through it to 		 * propagate the nodump flag. 		 */
 name|nodump
 operator|=
+operator|!
+name|nonodump
+operator|&&
 operator|(
 name|TSTINO
 argument_list|(
