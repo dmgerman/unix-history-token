@@ -1897,20 +1897,6 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-comment|/* Berkeley packet filter */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_mtap
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 name|eh
 operator|=
 name|mtod
