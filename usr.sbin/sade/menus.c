@@ -6424,7 +6424,7 @@ block|,
 block|{
 literal|"2 KDE"
 block|,
-literal|"The K Desktop Environment."
+literal|"The K Desktop Environment"
 block|,
 name|NULL
 block|,
@@ -6437,24 +6437,9 @@ literal|"=kde"
 block|}
 block|,
 block|{
-literal|"3 GNOME + Sawfish"
+literal|"3 GNOME 2"
 block|,
-literal|"GNOME + Sawfish window manager."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=gnome"
-block|}
-block|,
-block|{
-literal|"4 GNOME + Enlightenment"
-block|,
-literal|"GNOME + The E window manager"
+literal|"The GNOME 2 Desktop Environment"
 block|,
 name|NULL
 block|,
@@ -6463,11 +6448,11 @@ block|,
 name|NULL
 block|,
 name|VAR_DESKSTYLE
-literal|"=enlightenment"
+literal|"=gnome2"
 block|}
 block|,
 block|{
-literal|"5 Afterstep"
+literal|"4 Afterstep"
 block|,
 literal|"The Afterstep window manager"
 block|,
@@ -6482,7 +6467,7 @@ literal|"=afterstep"
 block|}
 block|,
 block|{
-literal|"6 Windowmaker"
+literal|"5 Windowmaker"
 block|,
 literal|"The Windowmaker window manager"
 block|,
@@ -6497,7 +6482,7 @@ literal|"=windowmaker"
 block|}
 block|,
 block|{
-literal|"7 fvwm"
+literal|"6 fvwm"
 block|,
 literal|"The fvwm window manager"
 block|,
