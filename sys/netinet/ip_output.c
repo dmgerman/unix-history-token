@@ -2014,6 +2014,33 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX 			 * delayed checksums are not currently compatible 			 * with divert sockets. 			 */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_DELAY_DATA
+condition|)
+block|{
+name|in_delayed_cksum
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&=
+operator|~
+name|CSUM_DELAY_DATA
+expr_stmt|;
+block|}
 comment|/* Restore packet header fields to original values */
 name|HTONS
 argument_list|(
