@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.2	%G%	*/
+comment|/*	vm_meter.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -1554,19 +1554,11 @@ for|for
 control|(
 name|xp
 operator|=
-operator|&
 name|text
-index|[
-literal|0
-index|]
 init|;
 name|xp
 operator|<
-operator|&
-name|text
-index|[
-name|NTEXT
-index|]
+name|textNTEXT
 condition|;
 name|xp
 operator|++
