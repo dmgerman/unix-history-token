@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.7.2.3 1999/01/29 01:13:41 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.7.2.4 1999/02/11 05:31:02 grog Exp $  */
 end_comment
 
 begin_define
@@ -2359,7 +2359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check a drive for a vinum header.  If found,   * read configuration information from the drive and  * incorporate the data into the configuration.  *  * Return   */
+comment|/*  * Check a drive for a vinum header.  If found,   * read configuration information from the drive and  * incorporate the data into the configuration.  *  * Return drive number.  */
 end_comment
 
 begin_function
@@ -2375,6 +2375,9 @@ parameter_list|)
 block|{
 name|int
 name|driveno
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|struct
 name|drive
@@ -2440,6 +2443,81 @@ argument_list|,
 name|setstate_force
 argument_list|)
 expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|vinum_conf
+operator|.
+name|drives_allocated
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* see if the name already exists */
+if|if
+condition|(
+operator|(
+name|i
+operator|!=
+name|driveno
+operator|)
+comment|/* not this drive */
+operator|&&
+operator|(
+name|DRIVE
+index|[
+name|i
+index|]
+operator|.
+name|state
+operator|!=
+name|drive_unallocated
+operator|)
+comment|/* and it's allocated */
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|DRIVE
+index|[
+name|i
+index|]
+operator|.
+name|label
+operator|.
+name|name
+argument_list|,
+name|DRIVE
+index|[
+name|driveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* and it has the same name */
+comment|/* 	     * set an error, but don't take the drive down: 	     * that would cause unneeded error messages. 	     */
+name|drive
+operator|->
+name|lasterror
+operator|=
+name|EEXIST
+expr_stmt|;
+break|break;
+block|}
 block|}
 return|return
 name|drive
@@ -4376,13 +4454,12 @@ specifier|volatile
 name|int
 name|status
 decl_stmt|;
-name|struct
-name|drive
-modifier|*
+name|int
 modifier|*
 specifier|volatile
 name|drivelist
 decl_stmt|;
+comment|/* list of drive indices */
 define|#
 directive|define
 name|DRIVENAMELEN
@@ -4438,9 +4515,7 @@ comment|/* allocate a drive pointer list */
 name|drivelist
 operator|=
 operator|(
-expr|struct
-name|drive
-operator|*
+name|int
 operator|*
 operator|)
 name|Malloc
@@ -4451,9 +4526,7 @@ name|DRIVEPARTS
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|drive
-operator|*
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4584,8 +4657,10 @@ name|gooddrives
 index|]
 operator|=
 name|drive
+operator|->
+name|driveno
 expr_stmt|;
-comment|/* keep a pointer to the drive */
+comment|/* keep the drive index */
 name|drive
 operator|->
 name|flags
@@ -4623,9 +4698,7 @@ name|gooddrives
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|drive
-operator|*
+name|int
 argument_list|)
 argument_list|,
 name|drivecmp
@@ -4690,11 +4763,16 @@ block|{
 comment|/* now include the config */
 name|drive
 operator|=
+operator|&
+name|DRIVE
+index|[
 name|drivelist
 index|[
 name|driveno
 index|]
+index|]
 expr_stmt|;
+comment|/* point to the drive */
 if|if
 condition|(
 name|firsttime
@@ -4871,7 +4949,7 @@ literal|0
 condition|)
 block|{
 comment|/* error in config */
-comment|/* 			 * This config should have been parsed in user 			 * space.  If we run into problems here, something 			 * serious is afoot.  Complain and let the user 			 * snarf the config to see what's wrong  			 */
+comment|/* 			   * This config should have been parsed in user 			   * space.  If we run into problems here, something 			   * serious is afoot.  Complain and let the user 			   * snarf the config to see what's wrong  			 */
 name|printf
 argument_list|(
 literal|"vinum: Config error on drive %s, aborting integration\n"
@@ -4992,15 +5070,17 @@ name|drive
 modifier|*
 name|a
 init|=
+operator|&
+name|DRIVE
+index|[
 operator|*
 operator|(
 specifier|const
-expr|struct
-name|drive
-operator|*
+name|int
 operator|*
 operator|)
 name|va
+index|]
 decl_stmt|;
 specifier|const
 name|struct
@@ -5008,15 +5088,17 @@ name|drive
 modifier|*
 name|b
 init|=
+operator|&
+name|DRIVE
+index|[
 operator|*
 operator|(
 specifier|const
-expr|struct
-name|drive
-operator|*
+name|int
 operator|*
 operator|)
 name|vb
+index|]
 decl_stmt|;
 if|if
 condition|(
