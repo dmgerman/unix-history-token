@@ -2756,6 +2756,9 @@ decl_stmt|;
 name|WINDOW
 modifier|*
 name|w
+init|=
+name|savescr
+argument_list|()
 decl_stmt|;
 name|setenv
 argument_list|(
@@ -2768,11 +2771,6 @@ argument_list|)
 expr_stmt|;
 name|tryagain
 label|:
-name|w
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
 name|variable_unset
 argument_list|(
 name|VAR_DESKSTYLE
