@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	8.4 (Berkeley) 4/21/95"
+literal|"@(#)arpadate.c	8.4.1.1 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,6 +758,17 @@ operator|*
 name|tz
 operator|!=
 literal|'\0'
+operator|&&
+name|q
+operator|<
+operator|&
+name|b
+index|[
+sizeof|sizeof
+name|b
+operator|-
+literal|3
+index|]
 condition|)
 operator|*
 name|q

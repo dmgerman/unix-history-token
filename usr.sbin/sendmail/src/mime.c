@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.30 (Berkeley) 10/31/95"
+literal|"@(#)mime.c	8.30.1.1 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,8 +715,11 @@ operator|~
 name|M87F_DIGEST
 expr_stmt|;
 comment|/* 	**  Check for cases that can not be encoded. 	** 	**	For example, you can't encode certain kinds of types 	**	or already-encoded messages.  If we find this case, 	**	just copy it through. 	*/
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%.100s/%.100s"
@@ -1079,8 +1082,11 @@ name|hdr
 init|=
 name|NULL
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"--%s"
@@ -1184,8 +1190,11 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"--%s--"
@@ -1709,8 +1718,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Content-Transfer-Encoding: %.200s"
