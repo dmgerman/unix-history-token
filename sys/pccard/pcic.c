@@ -267,16 +267,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|pcic_reset
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|slot
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +751,11 @@ expr_stmt|;
 name|err
 operator|=
 name|pcic_unload
-argument_list|()
+argument_list|(
+name|lkmtp
+argument_list|,
+name|cmd
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* Success*/
@@ -780,7 +776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "nosys".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "lkm_nullcmd".  * If called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
 end_comment
 
 begin_function
@@ -801,18 +797,19 @@ parameter_list|)
 block|{
 name|DISPATCH
 argument_list|(
-argument|lkmtp
+name|lkmtp
 argument_list|,
-argument|cmd
+name|cmd
 argument_list|,
-argument|ver
+name|ver
 argument_list|,
-argument|pcic_handle
+name|pcic_handle
 argument_list|,
-argument|pcic_handle
+name|pcic_handle
 argument_list|,
-argument|nosys
+name|lkm_nullcmd
 argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -824,7 +821,15 @@ begin_function
 specifier|static
 name|int
 name|pcic_unload
-parameter_list|()
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|)
 block|{
 name|int
 name|slot
@@ -2742,12 +2747,18 @@ specifier|static
 name|void
 name|pcic_reset
 parameter_list|(
+name|void
+modifier|*
+name|chan
+parameter_list|)
+block|{
 name|struct
 name|slot
 modifier|*
 name|slotp
-parameter_list|)
-block|{
+init|=
+name|chan
+decl_stmt|;
 name|struct
 name|pcic_slot
 modifier|*
