@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -199,7 +199,7 @@ block|{
 define|#
 directive|define
 name|LFS_MAGIC
-value|0xbedead
+value|0x070162
 name|u_long
 name|lfs_magic
 decl_stmt|;
