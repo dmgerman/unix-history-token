@@ -237,7 +237,7 @@ operator|*
 name|idx
 index|]
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -378,7 +378,7 @@ operator|*
 name|idx
 index|]
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -507,7 +507,7 @@ operator|*
 name|idx
 index|]
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
