@@ -367,6 +367,35 @@ value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();		
 end_define
 
 begin_comment
+comment|/* This says how to output assembler code to declare an    uninitialized external linkage data object.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGNED_BSS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_BSS
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|do {									\   ASM_GLOBALIZE_LABEL (FILE, NAME);					\   ASM_OUTPUT_ALIGNED_LOCAL (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+end_define
+
+begin_comment
 comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.      This value is really 2^63.  Since gcc figures the alignment in bits,    we could only potentially get to 2^60 on suitible hosts.  Due to other    considerations in varasm, we must restrict this to what fits in an int.  */
 end_comment
 
@@ -828,12 +857,33 @@ name|ASM_OUTPUT_DEF
 parameter_list|(
 name|FILE
 parameter_list|,
-name|NAME1
+name|ALIAS
 parameter_list|,
-name|NAME2
+name|NAME
 parameter_list|)
 define|\
-value|do { assemble_name(FILE, NAME1); 	 \        fputs(" = ", FILE);		 \        assemble_name(FILE, NAME2);	 \        fputc('\n', FILE); } while (0)
+value|do {								\     assemble_name(FILE, ALIAS);					\     fputs(" = ", FILE);						\     assemble_name(FILE, NAME);					\     fputc('\n', FILE);						\   } while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_DEF_FROM_DECLS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DEF_FROM_DECLS
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|TARGET
+parameter_list|)
+define|\
+value|do {								\     const char *alias = XSTR (XEXP (DECL_RTL (DECL), 0), 0);	\     const char *name = IDENTIFIER_POINTER (TARGET);		\     if (TREE_CODE (DECL) == FUNCTION_DECL)			\       {								\ 	fputc ('$', FILE);					\ 	assemble_name (FILE, alias);				\ 	fputs ("..ng = $", FILE);				\ 	assemble_name (FILE, name);				\ 	fputs ("..ng\n", FILE);					\       }								\     assemble_name(FILE, alias);					\     fputs(" = ", FILE);						\     assemble_name(FILE, name);					\     fputc('\n', FILE);						\   } while (0)
 end_define
 
 begin_comment
@@ -1001,7 +1051,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed    before entering `main'.      Don't bother seeing crtstuff.c -- there is absolutely no hope    of getting that file to understand multiple GPs.  We provide a    hand-coded assembly version.  */
+comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed    before entering `main'.   */
 end_comment
 
 begin_undef
@@ -1015,7 +1065,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{shared:crtbeginS.o%s}%{!shared:crtbegin.o%s}"
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{shared:crtbeginS.o%s}%{!shared:crtbegin.o%s}}"
 end_define
 
 begin_comment
