@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	3.1	%H%	*/
+comment|/*	user.h	3.2	%H%	*/
 end_comment
 
 begin_ifdef
@@ -145,13 +145,22 @@ comment|/* syscall return values */
 struct|struct
 block|{
 name|int
-name|r_val1
+name|R_val1
 decl_stmt|;
 name|int
-name|r_val2
+name|R_val2
 decl_stmt|;
 block|}
+name|u_rv
 struct|;
+define|#
+directive|define
+name|r_val1
+value|u_rv.R_val1
+define|#
+directive|define
+name|r_val2
+value|u_rv.R_val2
 name|off_t
 name|r_off
 decl_stmt|;
