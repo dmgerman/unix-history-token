@@ -15,6 +15,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"INTERN.h"
 end_include
 
@@ -399,7 +405,7 @@ condition|)
 block|{
 name|tmpdir
 operator|=
-literal|"/tmp"
+name|_PATH_TMP
 expr_stmt|;
 block|}
 name|tmpname_len
@@ -1302,11 +1308,16 @@ operator|*
 name|rejname
 condition|)
 block|{
-name|Strcpy
+name|Strlcpy
 argument_list|(
 name|rejname
 argument_list|,
 name|outname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rejname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|addext
@@ -2008,27 +2019,42 @@ argument_list|(
 literal|"argument to -D is not an identifier\n"
 argument_list|)
 expr_stmt|;
-name|Sprintf
+name|Snprintf
 argument_list|(
 name|if_defined
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|if_defined
+argument_list|)
 argument_list|,
 literal|"#ifdef %s\n"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|Sprintf
+name|Snprintf
 argument_list|(
 name|not_defined
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|not_defined
+argument_list|)
 argument_list|,
 literal|"#ifndef %s\n"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|Sprintf
+name|Snprintf
 argument_list|(
 name|end_defined
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|end_defined
+argument_list|)
 argument_list|,
 literal|"#endif /* %s */\n"
 argument_list|,
@@ -2151,11 +2177,16 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|Strcpy
+name|Strlcpy
 argument_list|(
 name|rejname
 argument_list|,
 name|optarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rejname
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
