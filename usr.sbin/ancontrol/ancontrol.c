@@ -4699,7 +4699,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s -i iface -s 0|1|2|3 (set power same mode)\n"
+literal|"\t%s -i iface -s 0|1|2|3 (set power save mode)\n"
 argument_list|,
 name|p
 argument_list|)
