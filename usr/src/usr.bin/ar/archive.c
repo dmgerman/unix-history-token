@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	5.7 (Berkeley) %G%"
+literal|"@(#)archive.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,7 +1011,9 @@ name|name
 argument_list|,
 name|sb
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
 argument_list|,
 name|sb
 operator|->
@@ -1071,7 +1073,9 @@ name|lname
 argument_list|,
 name|sb
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
 argument_list|,
 name|sb
 operator|->
@@ -1113,7 +1117,9 @@ name|name
 argument_list|,
 name|sb
 operator|->
-name|st_mtime
+name|st_mtimespec
+operator|.
+name|ts_sec
 argument_list|,
 name|sb
 operator|->
