@@ -132,6 +132,7 @@ name|void
 name|Buf_OvAddByte
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|Byte
@@ -184,6 +185,7 @@ name|void
 name|Buf_AddBytes
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|size_t
@@ -245,6 +247,7 @@ name|void
 name|Buf_UngetByte
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|Byte
@@ -437,6 +440,7 @@ name|void
 name|Buf_UngetBytes
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|size_t
@@ -643,6 +647,7 @@ name|int
 name|Buf_GetByte
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|)
 block|{
@@ -736,6 +741,7 @@ name|int
 name|Buf_GetBytes
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|size_t
@@ -847,6 +853,7 @@ modifier|*
 name|Buf_GetAll
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|size_t
@@ -890,6 +897,7 @@ name|void
 name|Buf_Discard
 parameter_list|(
 name|Buffer
+modifier|*
 name|bp
 parameter_list|,
 name|size_t
@@ -961,6 +969,7 @@ name|size_t
 name|Buf_Size
 parameter_list|(
 name|Buffer
+modifier|*
 name|buf
 parameter_list|)
 block|{
@@ -984,6 +993,7 @@ end_comment
 
 begin_function
 name|Buffer
+modifier|*
 name|Buf_Init
 parameter_list|(
 name|size_t
@@ -991,6 +1001,7 @@ name|size
 parameter_list|)
 block|{
 name|Buffer
+modifier|*
 name|bp
 decl_stmt|;
 comment|/* New Buffer */
@@ -1070,6 +1081,7 @@ name|void
 name|Buf_Destroy
 parameter_list|(
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|Boolean
@@ -1104,6 +1116,7 @@ name|void
 name|Buf_ReplaceLastByte
 parameter_list|(
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|Byte

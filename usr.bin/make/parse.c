@@ -5826,6 +5826,7 @@ init|=
 literal|0
 decl_stmt|;
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|buf
@@ -6078,6 +6079,7 @@ name|void
 parameter_list|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for current line */

@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"compat.h"
 end_include
 
@@ -3764,6 +3770,7 @@ name|status
 block|;
 comment|/* command exit status */
 name|Buffer
+operator|*
 name|buf
 block|;
 comment|/* buffer to store the result */

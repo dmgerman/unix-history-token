@@ -82,6 +82,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -236,6 +237,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -345,6 +347,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -438,6 +441,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -545,6 +549,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -626,6 +631,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -750,6 +756,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -831,6 +838,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void
@@ -1491,6 +1499,7 @@ name|Boolean
 name|addSpace
 parameter_list|,
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 name|void

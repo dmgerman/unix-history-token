@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cond.h"
 end_include
 
@@ -578,6 +584,7 @@ name|size_t
 name|argLen
 decl_stmt|;
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|cp
@@ -1641,6 +1648,7 @@ name|NULL
 condition|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|char
@@ -1894,6 +1902,7 @@ name|int
 name|qt
 decl_stmt|;
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|do_string_compare

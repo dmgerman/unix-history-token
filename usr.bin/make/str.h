@@ -18,14 +18,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sprite.h"
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|Buffer
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * These constants are all used by the Str_Concat function to decide how the  * final string should look. If STR_ADDSPACE is given, a space will be  * placed between the two strings. If STR_ADDSLASH is given, a '/' will  * be used instead of a space. If neither is given, no intervening characters  * will be placed between the two strings in the final output.  */
@@ -164,7 +164,9 @@ begin_function_decl
 name|void
 name|Str_SYSVSubst
 parameter_list|(
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 specifier|const
 name|char

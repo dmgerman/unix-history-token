@@ -125,6 +125,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Buffer
+modifier|*
 name|forBuf
 decl_stmt|;
 end_decl_stmt
@@ -154,6 +155,7 @@ struct|struct
 name|_For
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 comment|/* Unexpanded buffer	*/
@@ -230,6 +232,7 @@ literal|0
 condition|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|size_t

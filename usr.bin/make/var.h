@@ -24,18 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"config.h"
 end_include
 
 begin_struct_decl
 struct_decl|struct
 name|GNode
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|Buffer
 struct_decl|;
 end_struct_decl
 
@@ -49,7 +49,9 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* the variable's name */
+name|struct
 name|Buffer
+modifier|*
 name|val
 decl_stmt|;
 comment|/* its value */
@@ -61,7 +63,7 @@ define|#
 directive|define
 name|VAR_IN_USE
 value|1
-comment|/* Variable's value currently being used. 				     * Used to avoid recursion */
+comment|/* Variable's value currently being used. 				 * Used to avoid recursion */
 define|#
 directive|define
 name|VAR_FROM_ENV
@@ -71,7 +73,7 @@ define|#
 directive|define
 name|VAR_JUNK
 value|4
-comment|/* Variable is a junk variable that 				     * should be destroyed when done with 				     * it. Used by Var_Parse for undefined, 				     * modified variables */
+comment|/* Variable is a junk variable that 				 * should be destroyed when done with 				 * it. Used by Var_Parse for undefined, 				 * modified variables */
 block|}
 name|Var
 typedef|;
@@ -237,7 +239,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -255,7 +259,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -273,7 +279,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -291,7 +299,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -309,7 +319,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -333,7 +345,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -356,7 +370,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -374,7 +390,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -392,7 +410,9 @@ modifier|*
 parameter_list|,
 name|Boolean
 parameter_list|,
+name|struct
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*

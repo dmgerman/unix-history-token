@@ -301,6 +301,7 @@ parameter_list|,
 name|Boolean
 parameter_list|,
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -1756,6 +1757,7 @@ parameter_list|,
 name|Boolean
 parameter_list|,
 name|Buffer
+modifier|*
 parameter_list|,
 name|void
 modifier|*
@@ -1767,6 +1769,7 @@ name|datum
 parameter_list|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for the new string */
@@ -1910,6 +1913,7 @@ parameter_list|)
 parameter_list|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|char
@@ -2139,6 +2143,7 @@ modifier|*
 name|cp
 decl_stmt|;
 name|Buffer
+modifier|*
 name|buf
 init|=
 name|Buf_Init
@@ -2612,6 +2617,7 @@ name|str
 parameter_list|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 comment|/* This should cover most shells :-( */
@@ -3063,6 +3069,7 @@ else|else
 block|{
 comment|/* build up expanded variable name in this buffer */
 name|Buffer
+modifier|*
 name|buf
 init|=
 name|Buf_Init
@@ -4262,6 +4269,7 @@ name|char
 name|del
 decl_stmt|;
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for patterns */
@@ -5310,6 +5318,7 @@ literal|':'
 condition|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|buf
@@ -5547,6 +5556,7 @@ literal|':'
 condition|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 name|buf
@@ -6531,6 +6541,7 @@ name|undefErr
 parameter_list|)
 block|{
 name|Buffer
+modifier|*
 name|buf
 decl_stmt|;
 comment|/* Buffer for forming things */

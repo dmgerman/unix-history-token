@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"globals.h"
 end_include
 
@@ -1571,6 +1577,7 @@ name|void
 name|Str_SYSVSubst
 parameter_list|(
 name|Buffer
+modifier|*
 name|buf
 parameter_list|,
 specifier|const
