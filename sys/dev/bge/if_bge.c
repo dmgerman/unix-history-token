@@ -5916,8 +5916,6 @@ name|BGE_MODECTL_MAC_ATTN_INTR
 operator||
 name|BGE_MODECTL_HOST_SEND_BDS
 operator||
-name|BGE_MODECTL_NO_RX_CRC
-operator||
 name|BGE_MODECTL_TX_NO_PHDR_CSUM
 operator||
 name|BGE_MODECTL_RX_NO_PHDR_CSUM
