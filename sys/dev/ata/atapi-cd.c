@@ -6723,7 +6723,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|bcmp
 argument_list|(
 operator|&
 name|buf

@@ -1545,7 +1545,7 @@ name|saddr
 operator|.
 name|sa_len
 operator|||
-name|memcmp
+name|bcmp
 argument_list|(
 operator|&
 name|ncp
