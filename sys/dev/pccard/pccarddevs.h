@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.7 2001/01/20 01:41:25 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.8 2001/01/20 01:48:55 imp Exp   */
 end_comment
 
 begin_comment
@@ -2306,7 +2306,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_PRODUCT_RATOC_REX_R280
-value|0x1
+value|0x0001
 end_define
 
 begin_define
