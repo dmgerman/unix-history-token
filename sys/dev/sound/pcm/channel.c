@@ -227,17 +227,19 @@ name|int
 name|dir
 parameter_list|)
 block|{
-if|if
+switch|switch
 condition|(
 name|dir
-operator|==
-name|PCMDIR_PLAY
 condition|)
+block|{
+case|case
+name|PCMDIR_PLAY
+case|:
 name|c
 operator|->
 name|lock
 operator|=
-name|snd_chnmtxcreate
+name|snd_mtxcreate
 argument_list|(
 name|c
 operator|->
@@ -246,12 +248,15 @@ argument_list|,
 literal|"pcm play channel"
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|PCMDIR_REC
+case|:
 name|c
 operator|->
 name|lock
 operator|=
-name|snd_chnmtxcreate
+name|snd_mtxcreate
 argument_list|(
 name|c
 operator|->
@@ -260,6 +265,42 @@ argument_list|,
 literal|"pcm record channel"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|PCMDIR_VIRTUAL
+case|:
+name|c
+operator|->
+name|lock
+operator|=
+name|snd_mtxcreate
+argument_list|(
+name|c
+operator|->
+name|name
+argument_list|,
+literal|"pcm virtual play channel"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0
+case|:
+name|c
+operator|->
+name|lock
+operator|=
+name|snd_mtxcreate
+argument_list|(
+name|c
+operator|->
+name|name
+argument_list|,
+literal|"pcm fake channel"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -3462,6 +3503,9 @@ name|devinfo
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|int
+name|direction
 parameter_list|)
 block|{
 name|struct
@@ -3672,7 +3716,7 @@ name|b
 argument_list|,
 name|c
 argument_list|,
-name|dir
+name|direction
 argument_list|)
 expr_stmt|;
 name|CHN_LOCK
@@ -3727,7 +3771,7 @@ name|chn_setdir
 argument_list|(
 name|c
 argument_list|,
-name|dir
+name|direction
 argument_list|)
 expr_stmt|;
 if|if

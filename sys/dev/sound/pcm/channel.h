@@ -276,6 +276,9 @@ name|devinfo
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|int
+name|direction
 parameter_list|)
 function_decl|;
 end_function_decl

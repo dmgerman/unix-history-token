@@ -1203,24 +1203,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-modifier|*
-name|snd_chnmtxcreate
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|desc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|snd_mtxfree
 parameter_list|(
 name|void
