@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.16	82/09/04	*/
+comment|/*	trap.c	4.17	82/09/12	*/
 end_comment
 
 begin_include
@@ -834,9 +834,10 @@ if|if
 condition|(
 name|setjmp
 argument_list|(
+operator|&
 name|u
 operator|.
-name|u_qsav
+name|u_qsave
 argument_list|)
 condition|)
 block|{
