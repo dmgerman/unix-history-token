@@ -123,10 +123,14 @@ name|unsigned
 name|v_dfree
 decl_stmt|;
 comment|/* pages freed by daemon */
+name|unsigned
+name|v_fastpgrec
+decl_stmt|;
+comment|/* fast reclaims in locore */
 define|#
 directive|define
 name|v_last
-value|v_dfree
+value|v_fastpgrec
 name|unsigned
 name|v_swpin
 decl_stmt|;
