@@ -212,7 +212,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_LOCK
+name|_PATH_UUCPLOCK
 value|"/var/spool/lock/"
 end_define
 
