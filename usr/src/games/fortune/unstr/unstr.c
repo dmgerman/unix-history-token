@@ -1,19 +1,60 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	This program un-does what "strfile" makes, thereby obtaining the  * original file again.  This can be invoked with the name of the output  * file, the input file, or both. If invoked with only a single argument  * ending in ".dat", it is pressumed to be the input file and the output  * file will be the same stripped of the ".dat".  If the single argument  * doesn't end in ".dat", then it is presumed to be the output file, and  * the input file is that name prepended by a ".dat".  If both are given  * they are treated literally as the input and output files.  *  *	Ken Arnold		Aug 13, 1978  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1989 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)unstr.c	5.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  *	This program un-does what "strfile" makes, thereby obtaining the  * original file again.  This can be invoked with the name of the output  * file, the input file, or both. If invoked with only a single argument  * ending in ".dat", it is pressumed to be the input file and the output  * file will be the same stripped of the ".dat".  If the single argument  * doesn't end in ".dat", then it is presumed to be the output file, and  * the input file is that name prepended by a ".dat".  If both are given  * they are treated literally as the input and output files.  *  *	Ken Arnold		Aug 13, 1978  */
+end_comment
 
 begin_include
 include|#
@@ -31,6 +72,18 @@ begin_include
 include|#
 directive|include
 file|"strfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
