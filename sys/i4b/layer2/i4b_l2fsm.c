@@ -2377,13 +2377,13 @@ name|l2sc
 operator|->
 name|Q921_state
 operator|)
-operator|>
+operator|>=
 name|N_STATES
 condition|)
 comment|/* failsafe */
 name|panic
 argument_list|(
-literal|"i4b_l2fsm.c: currstate> N_STATES\n"
+literal|"i4b_l2fsm.c: currstate>= N_STATES\n"
 argument_list|)
 expr_stmt|;
 comment|/* get new state and check it */
@@ -2402,12 +2402,12 @@ index|]
 operator|.
 name|newstate
 operator|)
-operator|>
+operator|>=
 name|N_STATES
 condition|)
 name|panic
 argument_list|(
-literal|"i4b_l2fsm.c: newstate> N_STATES\n"
+literal|"i4b_l2fsm.c: newstate>= N_STATES\n"
 argument_list|)
 expr_stmt|;
 if|if

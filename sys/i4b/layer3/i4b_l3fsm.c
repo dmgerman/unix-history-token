@@ -4435,12 +4435,12 @@ decl_stmt|;
 if|if
 condition|(
 name|event
-operator|>
+operator|>=
 name|N_EVENTS
 condition|)
 name|panic
 argument_list|(
-literal|"i4b_l3fsm.c: event> N_EVENTS\n"
+literal|"i4b_l3fsm.c: event>= N_EVENTS\n"
 argument_list|)
 expr_stmt|;
 name|currstate
@@ -4452,12 +4452,12 @@ expr_stmt|;
 if|if
 condition|(
 name|currstate
-operator|>
+operator|>=
 name|N_STATES
 condition|)
 name|panic
 argument_list|(
-literal|"i4b_l3fsm.c: currstate> N_STATES\n"
+literal|"i4b_l3fsm.c: currstate>= N_STATES\n"
 argument_list|)
 expr_stmt|;
 name|newstate
