@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.48	82/04/01	*/
+comment|/*	if_en.c	4.49	82/04/01	*/
 end_comment
 
 begin_include
@@ -495,7 +495,7 @@ name|ui
 operator|->
 name|ui_flags
 operator|&
-literal|0xffff
+literal|0xff
 expr_stmt|;
 name|es
 operator|->
