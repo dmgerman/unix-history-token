@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.1 %G%"
+literal|"@(#)put.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -932,6 +932,8 @@ index|[
 literal|1
 index|]
 operator|)
+operator|&
+literal|0377
 expr_stmt|;
 else|else
 block|{
