@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.26.2.5 1997/07/02 06:25:28 charnier Exp $ */
+comment|/* $Id: main.c,v 1.26.2.6 1997/08/03 18:53:18 peter Exp $ */
 end_comment
 
 begin_include
@@ -1457,7 +1457,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  (%.2f kB/s)\n"
+literal|"  (%.2f Kbytes/s)\n"
 argument_list|,
 name|d
 argument_list|)
@@ -1576,7 +1576,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\r%s: %qd kB"
+literal|"\r%s: %qd Kbytes"
 argument_list|,
 name|s
 argument_list|,
