@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.c,v 1.31 1999/02/17 02:11:28 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.c,v 1.32 1999/02/18 00:52:13 brian Exp $  */
 end_comment
 
 begin_include
@@ -346,7 +346,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|datalink_StartDialTimer
 parameter_list|(
 name|struct
@@ -358,6 +358,11 @@ name|int
 name|Timeout
 parameter_list|)
 block|{
+name|int
+name|result
+init|=
+name|Timeout
+decl_stmt|;
 name|timer_Stop
 argument_list|(
 operator|&
@@ -388,11 +393,8 @@ operator|*
 name|SECTICKS
 expr_stmt|;
 else|else
-name|dl
-operator|->
-name|dial_timer
-operator|.
-name|load
+block|{
+name|result
 operator|=
 operator|(
 name|random
@@ -400,9 +402,20 @@ argument_list|()
 operator|%
 name|DIAL_TIMEOUT
 operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|dl
+operator|->
+name|dial_timer
+operator|.
+name|load
+operator|=
+name|result
 operator|*
 name|SECTICKS
 expr_stmt|;
+block|}
 name|dl
 operator|->
 name|dial_timer
@@ -457,6 +470,9 @@ name|Timeout
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|result
+return|;
 block|}
 end_function
 
@@ -688,6 +704,7 @@ operator|->
 name|bundle
 argument_list|)
 expr_stmt|;
+comment|/* if dial.timeout is< 0 (random), don't override fsm.delay */
 if|if
 condition|(
 name|dl
@@ -1825,6 +1842,22 @@ operator|->
 name|CleaningUp
 condition|)
 block|{
+name|int
+name|timeout
+init|=
+name|datalink_StartDialTimer
+argument_list|(
+name|dl
+argument_list|,
+name|dl
+operator|->
+name|cfg
+operator|.
+name|dial
+operator|.
+name|timeout
+argument_list|)
+decl_stmt|;
 name|log_WritePrompts
 argument_list|(
 name|dl
@@ -1839,25 +1872,6 @@ name|name
 operator|.
 name|full
 argument_list|,
-name|dl
-operator|->
-name|cfg
-operator|.
-name|dial
-operator|.
-name|timeout
-argument_list|)
-expr_stmt|;
-name|datalink_StartDialTimer
-argument_list|(
-name|dl
-argument_list|,
-name|dl
-operator|->
-name|cfg
-operator|.
-name|dial
-operator|.
 name|timeout
 argument_list|)
 expr_stmt|;
@@ -6134,7 +6148,7 @@ operator|.
 name|dial
 operator|.
 name|next_timeout
-operator|>
+operator|>=
 literal|0
 condition|)
 name|prompt_Printf
@@ -6177,7 +6191,7 @@ operator|.
 name|dial
 operator|.
 name|timeout
-operator|>
+operator|>=
 literal|0
 condition|)
 name|prompt_Printf
