@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.28 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.29 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -719,6 +719,23 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
+name|getbsize
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|,
+name|long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|cgetcap
 name|__P
 argument_list|(
@@ -895,6 +912,21 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|daemon
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|devname
 name|__P
 argument_list|(
 operator|(
