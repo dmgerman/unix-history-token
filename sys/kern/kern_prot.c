@@ -6136,9 +6136,9 @@ name|CAPABILITIES
 if|if
 condition|(
 operator|!
-name|cap_check_xxx
+name|cap_check
 argument_list|(
-literal|0
+name|NULL
 argument_list|,
 name|p1
 argument_list|,
