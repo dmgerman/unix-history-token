@@ -2096,7 +2096,7 @@ if|#
 directive|if
 name|__FreeBSD__
 operator|>
-literal|2
+literal|1
 operator|(
 name|char
 operator|*
