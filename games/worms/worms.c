@@ -1209,15 +1209,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|int
 name|x
 decl_stmt|,
@@ -1264,10 +1255,6 @@ modifier|*
 modifier|*
 name|ref
 decl_stmt|;
-name|long
-name|random
-parameter_list|()
-function_decl|;
 specifier|const
 name|char
 modifier|*
