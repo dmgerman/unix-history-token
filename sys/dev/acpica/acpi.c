@@ -6183,7 +6183,7 @@ name|char
 modifier|*
 name|path
 parameter_list|,
-name|int
+name|UINT32
 name|number
 parameter_list|)
 block|{
@@ -6255,7 +6255,7 @@ name|char
 modifier|*
 name|path
 parameter_list|,
-name|int
+name|UINT32
 modifier|*
 name|number
 parameter_list|)
@@ -6432,7 +6432,7 @@ name|ACPI_BUFFER
 modifier|*
 name|bufp
 parameter_list|,
-name|int
+name|UINT32
 modifier|*
 name|number
 parameter_list|)
