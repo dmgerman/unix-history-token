@@ -2165,7 +2165,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 name|device_set_desc
