@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_types.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_types.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -266,6 +266,50 @@ end_define
 
 begin_comment
 comment|/* IP over generic TTY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_ULTRA
+value|0x1d
+end_define
+
+begin_comment
+comment|/* Ultra Technologies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_DS3
+value|0x1e
+end_define
+
+begin_comment
+comment|/* Generic T3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_SIP
+value|0x1f
+end_define
+
+begin_comment
+comment|/* SMDS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_FRELAY
+value|0x20
+end_define
+
+begin_comment
+comment|/* Frame Relay */
 end_comment
 
 end_unit
