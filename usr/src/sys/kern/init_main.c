@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -455,35 +455,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* 	 * Initialize process and pgrp structures. 	 */
+end_comment
+
+begin_expr_stmt
+name|procinit
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Create process 0 (the swapper). 	 */
 end_comment
 
 begin_expr_stmt
-name|allproc
-operator|=
-operator|(
-specifier|volatile
-expr|struct
-name|proc
-operator|*
-operator|)
-name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|p
-operator|->
-name|p_prev
-operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|*
-operator|)
+name|LIST_INSERT_HEAD
+argument_list|(
 operator|&
 name|allproc
+argument_list|,
+name|p
+argument_list|,
+name|p_list
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -498,22 +492,44 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|pgrphash
-index|[
+name|LIST_INSERT_HEAD
+argument_list|(
+name|PGRPHASH
+argument_list|(
 literal|0
-index|]
-operator|=
+argument_list|)
+argument_list|,
 operator|&
 name|pgrp0
+argument_list|,
+name|pg_hash
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|LIST_INIT
+argument_list|(
+operator|&
 name|pgrp0
 operator|.
-name|pg_mem
-operator|=
+name|pg_members
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|pgrp0
+operator|.
+name|pg_members
+argument_list|,
 name|p
+argument_list|,
+name|p_pglist
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -999,14 +1015,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * Initialize per uid information structure and charge 	 * root for one process. 	 */
+comment|/* 	 * Charge root for one process. 	 */
 end_comment
-
-begin_expr_stmt
-name|usrinfoinit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 operator|(

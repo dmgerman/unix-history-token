@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -250,22 +250,21 @@ for|for
 control|(
 name|p
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
 name|allproc
+operator|.
+name|lh_first
 init|;
 name|p
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|p
 operator|=
 name|p
 operator|->
-name|p_next
+name|p_list
+operator|.
+name|le_next
 control|)
 block|{
 comment|/* 		 * Increment time in/out of memory and sleep time 		 * (if sleeping).  We ignore overflow; with 16-bit int's 		 * (remember them?) overflow takes 45 days. 		 */

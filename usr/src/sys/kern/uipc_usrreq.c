@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.4 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3279,14 +3279,20 @@ control|(
 name|fp
 operator|=
 name|filehead
+operator|.
+name|lh_first
 init|;
 name|fp
+operator|!=
+literal|0
 condition|;
 name|fp
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 control|)
 name|fp
 operator|->
@@ -3306,14 +3312,20 @@ control|(
 name|fp
 operator|=
 name|filehead
+operator|.
+name|lh_first
 init|;
 name|fp
+operator|!=
+literal|0
 condition|;
 name|fp
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -3500,12 +3512,16 @@ operator|,
 name|fp
 operator|=
 name|filehead
+operator|.
+name|lh_first
 operator|,
 name|fpp
 operator|=
 name|extra_ref
 init|;
 name|fp
+operator|!=
+literal|0
 condition|;
 name|fp
 operator|=
@@ -3516,7 +3532,9 @@ name|nextfp
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(

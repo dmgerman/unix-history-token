@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2804,16 +2804,20 @@ control|(
 name|fp
 operator|=
 name|filehead
+operator|.
+name|lh_first
 init|;
 name|fp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fp
 operator|=
 name|fp
 operator|->
-name|f_filef
+name|f_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -3026,12 +3030,9 @@ operator|)
 return|;
 name|p
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
 name|allproc
+operator|.
+name|lh_first
 expr_stmt|;
 name|doingzomb
 operator|=
@@ -3044,13 +3045,15 @@ control|(
 init|;
 name|p
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|p
 operator|=
 name|p
 operator|->
-name|p_next
+name|p_list
+operator|.
+name|le_next
 control|)
 block|{
 comment|/* 		 * Skip embryonic processes. 		 */
@@ -3304,6 +3307,8 @@ block|{
 name|p
 operator|=
 name|zombproc
+operator|.
+name|lh_first
 expr_stmt|;
 name|doingzomb
 operator|++
