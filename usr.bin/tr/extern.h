@@ -12,19 +12,19 @@ end_include
 begin_define
 define|#
 directive|define
-name|NCHARS
+name|NCHARS_SB
 value|(UCHAR_MAX + 1)
 end_define
 
 begin_comment
-comment|/* Number of possible characters. */
+comment|/* Number of single-byte characters. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OOBCH
-value|(UCHAR_MAX + 1)
+value|-1
 end_define
 
 begin_comment
@@ -55,11 +55,13 @@ name|RANGE
 block|,
 name|SEQUENCE
 block|,
+name|CCLASS
+block|,
+name|CCLASS_UPPER
+block|,
+name|CCLASS_LOWER
+block|,
 name|SET
-block|,
-name|SET_UPPER
-block|,
-name|SET_LOWER
 block|}
 name|state
 enum|;
@@ -67,18 +69,22 @@ name|int
 name|cnt
 decl_stmt|;
 comment|/* character count */
-name|int
+name|wint_t
 name|lastch
 decl_stmt|;
 comment|/* last character */
-name|int
+name|wctype_t
+name|cclass
+decl_stmt|;
+comment|/* character class from wctype() */
+name|wint_t
 name|equiv
 index|[
-name|NCHARS
+name|NCHARS_SB
 index|]
 decl_stmt|;
 comment|/* equivalence set */
-name|int
+name|wint_t
 modifier|*
 name|set
 decl_stmt|;
@@ -94,7 +100,7 @@ typedef|;
 end_typedef
 
 begin_function_decl
-name|int
+name|wint_t
 name|next
 parameter_list|(
 name|STR
