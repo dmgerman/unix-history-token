@@ -161,14 +161,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|file_format
-name|i386_aout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|file_format
 name|i386_elf
 decl_stmt|;
 end_decl_stmt
@@ -183,9 +175,6 @@ init|=
 block|{
 operator|&
 name|i386_elf
-block|,
-operator|&
-name|i386_aout
 block|,
 name|NULL
 block|}
