@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ww.h	3.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ww.h	3.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1317,14 +1317,18 @@ begin_define
 define|#
 directive|define
 name|WWT_TERM
-value|"TERM=window"
+value|"TERM=window-v2"
 end_define
+
+begin_comment
+comment|/* version 2 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|WWT_TERMCAP
-value|"WW|window|window program:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%+ %+ :\ 	:da:db:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:me=\\Er^?:"
+value|"WW|window-v2|window program:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%+ %+ :\ 	:da:db:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:me=\\Er^?:"
 end_define
 
 begin_define
