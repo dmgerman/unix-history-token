@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -181,12 +181,20 @@ name|MOUNT_UFS
 value|1
 end_define
 
+begin_comment
+comment|/* Fast Filesystem */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUNT_NFS
 value|2
 end_define
+
+begin_comment
+comment|/* Sun-compatible Network Filesystem */
+end_comment
 
 begin_define
 define|#
@@ -195,12 +203,20 @@ name|MOUNT_MFS
 value|3
 end_define
 
+begin_comment
+comment|/* Memory-based Filesystem */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MOUNT_PC
+name|MOUNT_MSDOS
 value|4
 end_define
+
+begin_comment
+comment|/* MS/DOS Filesystem */
+end_comment
 
 begin_define
 define|#
@@ -209,12 +225,20 @@ name|MOUNT_LFS
 value|5
 end_define
 
+begin_comment
+comment|/* Log-based Filesystem */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUNT_LOFS
 value|6
 end_define
+
+begin_comment
+comment|/* Loopback Filesystem */
+end_comment
 
 begin_define
 define|#
@@ -223,12 +247,20 @@ name|MOUNT_FDESC
 value|7
 end_define
 
+begin_comment
+comment|/* File Descriptor Filesystem */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUNT_PORTAL
 value|8
 end_define
+
+begin_comment
+comment|/* Portal Filesystem */
+end_comment
 
 begin_define
 define|#
@@ -237,12 +269,20 @@ name|MOUNT_NULL
 value|9
 end_define
 
+begin_comment
+comment|/* Minimal Filesystem Layer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUNT_UMAP
 value|10
 end_define
+
+begin_comment
+comment|/* User/Group Identifer Remapping Filesystem */
+end_comment
 
 begin_define
 define|#
@@ -251,6 +291,10 @@ name|MOUNT_KERNFS
 value|11
 end_define
 
+begin_comment
+comment|/* Kernel Information Filesystem */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -258,11 +302,26 @@ name|MOUNT_PROCFS
 value|12
 end_define
 
+begin_comment
+comment|/* /proc Filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUNT_AFS
+value|13
+end_define
+
+begin_comment
+comment|/* Andrew Filesystem */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MOUNT_MAXTYPE
-value|12
+value|13
 end_define
 
 begin_define
