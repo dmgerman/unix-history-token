@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.31 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,7 +905,7 @@ specifier|static
 name|char
 name|ybuf
 index|[
-literal|10
+literal|60
 index|]
 decl_stmt|;
 comment|/* holds tty id */
