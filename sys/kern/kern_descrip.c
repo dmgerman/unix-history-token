@@ -3532,7 +3532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a list of sigio structures.  * We only need to lock the SIGIO_LOCK because we have made ourselves  * inaccessable to callers of fsetown and therefore do not need to lock  * the proc or pgrp struct for the list manipulation.  */
+comment|/*  * Free a list of sigio structures.  * We only need to lock the SIGIO_LOCK because we have made ourselves  * inaccessible to callers of fsetown and therefore do not need to lock  * the proc or pgrp struct for the list manipulation.  */
 end_comment
 
 begin_function
@@ -4398,7 +4398,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * we now hold the fp reference that used to be owned by the descriptor 	 * array. 	 * We have to unlock the FILEDESC *AFTER* knote_fdclose to prevent a 	 * race of the fd getting opened, a knote added, and deleteing a knote 	 * for the new fd. 	 */
+comment|/* 	 * We now hold the fp reference that used to be owned by the descriptor 	 * array. 	 * We have to unlock the FILEDESC *AFTER* knote_fdclose to prevent a 	 * race of the fd getting opened, a knote added, and deleteing a knote 	 * for the new fd. 	 */
 name|knote_fdclose
 argument_list|(
 name|td
@@ -5175,7 +5175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grow the file table to accomodate (at least) nfd descriptors.  This may  * block and drop the filedesc lock, but it will reacquire it before  * returing.  */
+comment|/*  * Grow the file table to accomodate (at least) nfd descriptors.  This may  * block and drop the filedesc lock, but it will reacquire it before  * returning.  */
 end_comment
 
 begin_function
@@ -5894,7 +5894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new open file structure and allocate  * a file decriptor for the process that refers to it.  * We add one reference to the file for the descriptor table  * and one reference for resultfp. This is to prevent us being  * prempted and the entry in the descriptor table closed after  * we release the FILEDESC lock.  */
+comment|/*  * Create a new open file structure and allocate  * a file decriptor for the process that refers to it.  * We add one reference to the file for the descriptor table  * and one reference for resultfp. This is to prevent us being  * preempted and the entry in the descriptor table closed after  * we release the FILEDESC lock.  */
 end_comment
 
 begin_function
@@ -7656,7 +7656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For setugid programs, we don't want to people to use that setugidness  * to generate error messages which write to a file which otherwise would  * otherwise be off-limits to the process.  We check for filesystems where  * the vnode can change out from under us after execve (like [lin]procfs).  *  * Since setugidsafety calls this only for fd 0, 1 and 2, this check is  * sufficient.  We also don't for check setugidness since we know we are.  */
+comment|/*  * For setugid programs, we don't want to people to use that setugidness  * to generate error messages which write to a file which otherwise would  * otherwise be off-limits to the process.  We check for filesystems where  * the vnode can change out from under us after execve (like [lin]procfs).  *  * Since setugidsafety calls this only for fd 0, 1 and 2, this check is  * sufficient.  We also don't check for setugidness since we know we are.  */
 end_comment
 
 begin_function
@@ -8816,7 +8816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Extract the file pointer associated with the specified descriptor for  * the current user process.  *  * If the descriptor doesn't exist, EBADF is returned.  *  * If the descriptor exists but doesn't match 'flags' then  * return EBADF for read attempts and EINVAL for write attempts.  *  * If 'hold' is set (non-zero) the file's refcount will be bumped on return.  * It should be droped with fdrop().  * If it is not set, then the refcount will not be bumped however the  * thread's filedesc struct will be returned locked (for fgetsock).  *  * If an error occured the non-zero error is returned and *fpp is set to NULL.  * Otherwise *fpp is set and zero is returned.  */
+comment|/*  * Extract the file pointer associated with the specified descriptor for  * the current user process.  *  * If the descriptor doesn't exist, EBADF is returned.  *  * If the descriptor exists but doesn't match 'flags' then  * return EBADF for read attempts and EINVAL for write attempts.  *  * If 'hold' is set (non-zero) the file's refcount will be bumped on return.  * It should be dropped with fdrop().  * If it is not set, then the refcount will not be bumped however the  * thread's filedesc struct will be returned locked (for fgetsock).  *  * If an error occured the non-zero error is returned and *fpp is set to NULL.  * Otherwise *fpp is set and zero is returned.  */
 end_comment
 
 begin_function
@@ -8923,7 +8923,7 @@ name|EBADF
 operator|)
 return|;
 block|}
-comment|/* 	 * Note: FREAD failures returns EBADF to maintain backwards 	 * compatibility with what routines returned before. 	 * 	 * Only one flag, or 0, may be specified. 	 */
+comment|/* 	 * Note: FREAD failure returns EBADF to maintain backwards 	 * compatibility with what routines returned before. 	 * 	 * Only one flag, or 0, may be specified. 	 */
 if|if
 condition|(
 name|flags
@@ -9509,7 +9509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drop the reference count on the the socket and XXX release the SX lock in  * the future.  The last reference closes the socket.  */
+comment|/*  * Drop the reference count on the socket and XXX release the SX lock in  * the future.  The last reference closes the socket.  */
 end_comment
 
 begin_function
@@ -10340,7 +10340,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * we now own the reference to fp that the ofiles[] array 		 * used to own.  Release it. 		 */
+comment|/* 		 * We now own the reference to fp that the ofiles[] array 		 * used to own.  Release it. 		 */
 if|if
 condition|(
 name|fp
