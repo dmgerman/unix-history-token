@@ -1202,9 +1202,9 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_FLAGS_CAM_NORESET
 operator|)
 condition|)
 block|{
@@ -1737,9 +1737,9 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_FLAGS_CAM_NORESET
 operator|)
 condition|)
 block|{
@@ -2235,9 +2235,9 @@ operator|||
 operator|(
 name|sc
 operator|->
-name|quirks
+name|flags
 operator|&
-name|AAC_QUIRK_CAM_PASSONLY
+name|AAC_FLAGS_CAM_PASSONLY
 operator|)
 condition|)
 name|ccb

@@ -579,13 +579,16 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|aif_get_mailboxstatus
+name|aif_get_mailbox
 function_decl|)
 parameter_list|(
 name|struct
 name|aac_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|mb
 parameter_list|)
 function_decl|;
 name|void
@@ -699,11 +702,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_GET_MAILBOXSTATUS
+name|AAC_GET_MAILBOX
 parameter_list|(
 name|sc
+parameter_list|,
+name|mb
 parameter_list|)
-value|((sc)->aac_if.aif_get_mailboxstatus(  \ 					(sc)))
+value|((sc)->aac_if.aif_get_mailbox((sc), \ 					(mb)))
 end_define
 
 begin_define
@@ -1129,27 +1134,53 @@ directive|define
 name|AAC_AIFFLAGS_PENDING
 value|(AAC_AIFFLAGS_AIF | AAC_AIFFLAGS_PRINTF | \ 				 AAC_AIFFLAGS_ALLOCFIBS)
 name|u_int32_t
-name|quirks
+name|flags
 decl_stmt|;
 define|#
 directive|define
-name|AAC_QUIRK_PERC2QC
+name|AAC_FLAGS_PERC2QC
 value|(1<< 0)
 define|#
 directive|define
-name|AAC_QUIRK_NOCAM
+name|AAC_FLAGS_ENABLE_CAM
 value|(1<< 1)
 comment|/* No SCSI passthrough */
 define|#
 directive|define
-name|AAC_QUIRK_CAM_NORESET
+name|AAC_FLAGS_CAM_NORESET
 value|(1<< 2)
 comment|/* Fake SCSI resets */
 define|#
 directive|define
-name|AAC_QUIRK_CAM_PASSONLY
+name|AAC_FLAGS_CAM_PASSONLY
 value|(1<< 3)
 comment|/* Only create pass devices */
+define|#
+directive|define
+name|AAC_FLAGS_SG_64BIT
+value|(1<< 4)
+comment|/* Use 64-bit S/G addresses */
+define|#
+directive|define
+name|AAC_FLAGS_4GB_WINDOW
+value|(1<< 5)
+comment|/* Device can access host mem 						 * 2GB-4GB range */
+define|#
+directive|define
+name|AAC_FLAGS_NO4GB
+value|(1<< 6)
+comment|/* Can't access host mem>2GB */
+define|#
+directive|define
+name|AAC_FLAGS_256FIBS
+value|(1<< 7)
+comment|/* Can only do 256 commands */
+name|u_int32_t
+name|supported_options
+decl_stmt|;
+name|int
+name|aac_max_fibs
+decl_stmt|;
 name|u_int32_t
 name|scsi_method_id
 decl_stmt|;
