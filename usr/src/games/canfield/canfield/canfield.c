@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c 4.9 %G%"
+literal|"@(#)canfield.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5612,14 +5612,20 @@ begin_comment
 comment|/*  * procedure to move from the tableau to the tableau  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|tabtotab
 argument_list|(
-argument|sour
+name|sour
 argument_list|,
-argument|des
+name|des
 argument_list|)
-end_macro
+specifier|register
+name|int
+name|sour
+operator|,
+name|des
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5672,6 +5678,22 @@ name|sour
 index|]
 operator|=
 name|NIL
+expr_stmt|;
+if|if
+condition|(
+name|bottom
+index|[
+name|des
+index|]
+operator|==
+name|NIL
+condition|)
+name|bottom
+index|[
+name|des
+index|]
+operator|=
+name|temp
 expr_stmt|;
 name|temp
 operator|->
