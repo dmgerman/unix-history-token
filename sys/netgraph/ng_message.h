@@ -490,8 +490,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NGM_RAISE
-value|LINK		42
+name|NGM_RAISE_LINK
+value|42
 end_define
 
 begin_comment
