@@ -3965,7 +3965,7 @@ specifier|static
 name|char
 name|buffer
 index|[
-literal|16
+literal|20
 index|]
 decl_stmt|;
 name|sprintf
