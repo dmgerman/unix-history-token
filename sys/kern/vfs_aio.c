@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.30 1998/07/04 22:30:22 julian Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.31 1998/07/05 20:33:18 julian Exp $  */
 end_comment
 
 begin_comment
@@ -5750,6 +5750,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|jobrefid
 expr_stmt|;
 name|jobrefid
@@ -6392,7 +6395,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -6551,7 +6554,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -6860,6 +6863,9 @@ expr|struct
 name|aiocb
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fuword
 argument_list|(
 operator|(
@@ -6981,7 +6987,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -7080,7 +7086,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -7362,7 +7368,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -7424,7 +7430,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -7485,7 +7491,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -7552,7 +7558,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -8665,6 +8671,9 @@ expr|struct
 name|aiocb
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fuword
 argument_list|(
 operator|(
@@ -8681,7 +8690,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|iocb
 operator|!=
@@ -8691,7 +8700,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|iocb
 operator|!=
@@ -8806,6 +8815,9 @@ expr|struct
 name|aiocb
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fuword
 argument_list|(
 operator|(
@@ -8822,7 +8834,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|iocb
 operator|==
@@ -8832,7 +8844,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|iocb
 operator|==
@@ -8903,7 +8915,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
@@ -9017,7 +9029,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|cb
 operator|->
