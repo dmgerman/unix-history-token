@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|1
+value|2
 end_define
 
 begin_comment
@@ -736,15 +736,19 @@ name|isp_retry_delay
 decl_stmt|;
 struct|struct
 block|{
-name|u_int
+name|u_int32_t
+name|exc_throttle
+range|:
+literal|8
+decl_stmt|,
+range|:
+literal|1
+decl_stmt|,
 name|dev_enable
 range|:
 literal|1
 decl_stmt|,
 comment|/* ignored */
-range|:
-literal|1
-decl_stmt|,
 name|dev_update
 range|:
 literal|1
@@ -753,34 +757,42 @@ name|dev_refresh
 range|:
 literal|1
 decl_stmt|,
-name|exc_throttle
-range|:
-literal|8
-decl_stmt|,
-name|cur_offset
+name|actv_offset
 range|:
 literal|4
 decl_stmt|,
-name|sync_offset
+name|goal_offset
+range|:
+literal|4
+decl_stmt|,
+name|nvrm_offset
 range|:
 literal|4
 decl_stmt|;
 name|u_int8_t
-name|cur_period
+name|actv_period
 decl_stmt|;
 comment|/* current sync period */
 name|u_int8_t
-name|sync_period
+name|goal_period
 decl_stmt|;
 comment|/* goal sync period */
+name|u_int8_t
+name|nvrm_period
+decl_stmt|;
+comment|/* nvram sync period */
 name|u_int16_t
-name|dev_flags
+name|actv_flags
+decl_stmt|;
+comment|/* current device flags */
+name|u_int16_t
+name|goal_flags
 decl_stmt|;
 comment|/* goal device flags */
 name|u_int16_t
-name|cur_dflags
+name|nvrm_flags
 decl_stmt|;
-comment|/* current device flags */
+comment|/* nvram device flags */
 block|}
 name|isp_devparam
 index|[
