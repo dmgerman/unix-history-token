@@ -311,6 +311,8 @@ sizeof|sizeof
 expr|*
 name|ansp
 argument_list|)
+operator|<=
+literal|0
 operator|)
 return|;
 block|}
