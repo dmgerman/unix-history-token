@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t10.c	2.2 (CWI) 88/03/09"
+literal|"@(#)t10.c	2.3 (CWI) 88/03/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -1592,6 +1592,14 @@ operator|(
 name|outsize
 operator|)
 return|;
+comment|/* 	 * Bug fix, if k == DRAWFCN, thewidcache gets a negative index. 	 * This worked by magic on the vax and tahoe, but caused somtimes 	 * a segment violaton on the suns. 	 * 	 * The code was plainly wrong (jna). 	 */
+if|if
+condition|(
+name|k
+operator|!=
+name|DRAWFCN
+condition|)
+block|{
 if|if
 condition|(
 name|widcache
@@ -1645,6 +1653,7 @@ operator|-
 literal|32
 argument_list|)
 expr_stmt|;
+block|}
 name|j
 operator|=
 name|z
