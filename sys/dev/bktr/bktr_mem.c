@@ -269,12 +269,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bktr_mem: Unit number %d invalid for memory type %d, address 0x%x\n"
+literal|"bktr_mem: Unit number %d invalid for memory type %d, address %p\n"
 argument_list|,
 name|unit
 argument_list|,
 name|type
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
@@ -398,12 +402,16 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"bktr_mem: Invalid memory type %d for bktr%d, address 0x%xn"
+literal|"bktr_mem: Invalid memory type %d for bktr%d, address %p\n"
 argument_list|,
 name|type
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;
