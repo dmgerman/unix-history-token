@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbrsdt - ACPI RSDT table utilities  *              $Revision: 3 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbrsdt - ACPI RSDT table utilities  *              $Revision: 4 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -247,12 +247,6 @@ operator|.
 name|Allocation
 operator|=
 name|ACPI_MEM_MAPPED
-expr_stmt|;
-name|TableInfo
-operator|.
-name|BasePointer
-operator|=
-name|Rsdp
 expr_stmt|;
 comment|/* Save the table pointers and allocation info */
 name|Status

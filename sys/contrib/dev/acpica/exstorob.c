@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -311,6 +311,9 @@ name|Pointer
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|ACPI_SIZE
+operator|)
 name|TargetDesc
 operator|->
 name|String

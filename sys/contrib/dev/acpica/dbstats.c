@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 63 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 64 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|>
-name|INTERNAL_TYPE_NODE_MAX
+name|ACPI_TYPE_NS_NODE_MAX
 condition|)
 block|{
 name|AcpiGbl_ObjTypeCountMisc
@@ -294,7 +294,7 @@ name|ACPI_TYPE_REGION
 case|:
 name|AcpiGbl_ObjTypeCount
 index|[
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 index|]
 operator|++
 expr_stmt|;
@@ -466,7 +466,7 @@ if|if
 condition|(
 name|Type
 operator|>
-name|INTERNAL_TYPE_NODE_MAX
+name|ACPI_TYPE_NS_NODE_MAX
 condition|)
 block|{
 name|AcpiGbl_NodeTypeCountMisc
@@ -525,7 +525,7 @@ init|;
 name|i
 operator|<
 operator|(
-name|INTERNAL_TYPE_NODE_MAX
+name|ACPI_TYPE_NS_NODE_MAX
 operator|-
 literal|1
 operator|)
@@ -742,7 +742,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|INTERNAL_TYPE_NODE_MAX
+name|ACPI_TYPE_NS_NODE_MAX
 condition|;
 name|i
 operator|++

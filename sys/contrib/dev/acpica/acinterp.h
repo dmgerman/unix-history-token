@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 139 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 142 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -409,6 +409,11 @@ parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ResultDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -987,7 +992,7 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Semaphore
 parameter_list|,
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|)
 function_decl|;
@@ -1586,16 +1591,6 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BOOLEAN
-name|AcpiExValidateObjectType
-parameter_list|(
-name|ACPI_OBJECT_TYPE
-name|Type
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|)
 expr_stmt|;
 if|if
@@ -143,12 +143,6 @@ operator|.
 name|Allocation
 operator|=
 name|ACPI_MEM_ALLOCATED
-expr_stmt|;
-name|TableInfo
-operator|.
-name|BasePointer
-operator|=
-name|Table
 expr_stmt|;
 name|Status
 operator|=
@@ -914,13 +908,13 @@ case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1201,7 +1195,7 @@ argument_list|(
 name|DdbHandle
 argument_list|)
 operator|!=
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 operator|)
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ name|Value
 operator|.
 name|String
 argument_list|,
-name|INTERNAL_TYPE_DEF_ANY
+name|ACPI_TYPE_ANY
 argument_list|,
 name|ACPI_IMODE_LOAD_PASS1
 argument_list|,
@@ -911,7 +911,7 @@ name|Info
 operator|.
 name|FieldType
 operator|=
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 expr_stmt|;
 name|Info
 operator|.
@@ -1006,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 name|Type
 operator|=
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 expr_stmt|;
 break|break;
 case|case
@@ -1023,7 +1023,7 @@ argument_list|)
 expr_stmt|;
 name|Type
 operator|=
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 expr_stmt|;
 break|break;
 case|case
@@ -1040,7 +1040,7 @@ argument_list|)
 expr_stmt|;
 name|Type
 operator|=
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 expr_stmt|;
 break|break;
 default|default:
@@ -1284,7 +1284,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Second arg is the Bank Register (must already exist) */
+comment|/* Second arg is the Bank Register (Field) (must already exist) */
 name|Arg
 operator|=
 name|Arg
@@ -1309,7 +1309,7 @@ name|Value
 operator|.
 name|String
 argument_list|,
-name|INTERNAL_TYPE_BANK_FIELD_DEFN
+name|ACPI_TYPE_ANY
 argument_list|,
 name|ACPI_IMODE_EXECUTE
 argument_list|,
@@ -1397,7 +1397,7 @@ name|Info
 operator|.
 name|FieldType
 operator|=
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 expr_stmt|;
 name|Info
 operator|.
@@ -1560,7 +1560,7 @@ name|Value
 operator|.
 name|String
 argument_list|,
-name|INTERNAL_TYPE_INDEX_FIELD_DEFN
+name|ACPI_TYPE_ANY
 argument_list|,
 name|ACPI_IMODE_EXECUTE
 argument_list|,
@@ -1627,7 +1627,7 @@ name|Info
 operator|.
 name|FieldType
 operator|=
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 expr_stmt|;
 name|Info
 operator|.

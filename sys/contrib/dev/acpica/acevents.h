@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiEvAcquireGlobalLock
 parameter_list|(
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|)
 function_decl|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 79 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 81 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -838,7 +838,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p"
+literal|" %p"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -995,7 +995,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p"
+literal|" %p"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1020,20 +1020,13 @@ parameter_list|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"<Node>            Name %4.4s Type-%s"
+literal|"<Node>            Name %4.4s"
 argument_list|,
 name|Node
 operator|->
 name|Name
 operator|.
 name|Ascii
-argument_list|,
-name|AcpiUtGetTypeName
-argument_list|(
-name|Node
-operator|->
-name|Type
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1162,7 +1155,7 @@ if|if
 condition|(
 name|Type
 operator|>
-name|INTERNAL_TYPE_MAX
+name|ACPI_TYPE_LOCAL_MAX
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1187,7 +1180,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 switch|switch
 condition|(

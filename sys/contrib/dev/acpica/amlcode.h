@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2185,9 +2185,13 @@ name|AML_FIELD_ATTRIB_SMB_BLOCK
 init|=
 literal|0x0A
 block|,
-name|AML_FIELD_ATTRIB_SMB_CALL
+name|AML_FIELD_ATTRIB_SMB_WORD_CALL
 init|=
-literal|0x0E
+literal|0x0C
+block|,
+name|AML_FIELD_ATTRIB_SMB_BLOCK_CALL
+init|=
+literal|0x0D
 block|}
 name|AML_ACCESS_ATTRIBUTE
 typedef|;

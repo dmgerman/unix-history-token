@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 2 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 3 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -444,6 +444,8 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/*          * Get the tables needed by this subsystem (FADT and any SSDTs).          * NOTE: All other tables are completely ignored at this time.          */
+name|Status
+operator|=
 name|AcpiTbGetPrimaryTable
 argument_list|(
 operator|&
@@ -453,6 +455,52 @@ operator|&
 name|TableInfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Status
+operator|!=
+name|AE_OK
+operator|)
+operator|&&
+operator|(
+name|Status
+operator|!=
+name|AE_TABLE_NOT_SUPPORTED
+operator|)
+condition|)
+block|{
+name|ACPI_REPORT_WARNING
+argument_list|(
+operator|(
+literal|"%s, while getting table at %8.8X%8.8X\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|,
+name|ACPI_HIDWORD
+argument_list|(
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* We must have a FADT to continue */
 if|if

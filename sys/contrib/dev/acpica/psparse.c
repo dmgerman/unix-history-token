@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 133 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 135 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1568,6 +1568,8 @@ name|Status
 operator|=
 name|AcpiPsGetNextArg
 argument_list|(
+name|WalkState
+argument_list|,
 name|ParserState
 argument_list|,
 name|GET_CURRENT_ARG_TYPE
@@ -1576,11 +1578,6 @@ name|WalkState
 operator|->
 name|ArgTypes
 argument_list|)
-argument_list|,
-operator|&
-name|WalkState
-operator|->
-name|ArgCount
 argument_list|,
 operator|&
 name|Arg
@@ -1759,7 +1756,7 @@ operator|==
 name|AML_REGION_OP
 condition|)
 block|{
-comment|/*                      * Defer final parsing of an OperationRegion body,                      * because we don't have enough info in the first pass                      * to parse it correctly (i.e., there may be method                      * calls within the TermArg elements of the body.                      *                      * However, we must continue parsing because                      * the opregion is not a standalone package --                      * we don't know where the end is at this point.                      *                      * (Length is unknown until parse of the body complete)                      */
+comment|/*                      * Defer final parsing of an OperationRegion body,                      * because we don't have enough info in the first pass                      * to parse it correctly (i.e., there may be method                      * calls within the TermArg elements of the body.)                      *                      * However, we must continue parsing because                      * the opregion is not a standalone package --                      * we don't know where the end is at this point.                      *                      * (Length is unknown until parse of the body complete)                      */
 name|Op
 operator|->
 name|Named
@@ -2046,14 +2043,11 @@ name|Status
 operator|=
 name|AcpiPsGetNextNamepath
 argument_list|(
+name|WalkState
+argument_list|,
 name|ParserState
 argument_list|,
 name|Op
-argument_list|,
-operator|&
-name|WalkState
-operator|->
-name|ArgCount
 argument_list|,
 literal|1
 argument_list|)
@@ -2066,40 +2060,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* NOT_FOUND is an error only if we are actually executing a method */
-if|if
-condition|(
-operator|(
-operator|(
-operator|(
-name|WalkState
-operator|->
-name|ParseFlags
-operator|&
-name|ACPI_PARSE_MODE_MASK
-operator|)
-operator|==
-name|ACPI_PARSE_EXECUTE
-operator|)
-operator|&&
-operator|(
-name|Status
-operator|==
-name|AE_NOT_FOUND
-operator|)
-operator|)
-operator|||
-operator|(
-name|Status
-operator|!=
-name|AE_NOT_FOUND
-operator|)
-condition|)
-block|{
 goto|goto
 name|CloseThisOp
 goto|;
-block|}
 block|}
 name|WalkState
 operator|->
@@ -2144,6 +2107,8 @@ name|Status
 operator|=
 name|AcpiPsGetNextArg
 argument_list|(
+name|WalkState
+argument_list|,
 name|ParserState
 argument_list|,
 name|GET_CURRENT_ARG_TYPE
@@ -2152,11 +2117,6 @@ name|WalkState
 operator|->
 name|ArgTypes
 argument_list|)
-argument_list|,
-operator|&
-name|WalkState
-operator|->
-name|ArgCount
 argument_list|,
 operator|&
 name|Arg
@@ -2170,50 +2130,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* NOT_FOUND is an error only if we are actually executing a method */
-if|if
-condition|(
-operator|(
-operator|(
-operator|(
-name|WalkState
-operator|->
-name|ParseFlags
-operator|&
-name|ACPI_PARSE_MODE_MASK
-operator|)
-operator|==
-name|ACPI_PARSE_EXECUTE
-operator|)
-operator|&&
-operator|(
-name|Status
-operator|==
-name|AE_NOT_FOUND
-operator|)
-operator|&&
-operator|(
-name|Op
-operator|->
-name|Common
-operator|.
-name|AmlOpcode
-operator|!=
-name|AML_COND_REF_OF_OP
-operator|)
-operator|)
-operator|||
-operator|(
-name|Status
-operator|!=
-name|AE_NOT_FOUND
-operator|)
-condition|)
-block|{
 goto|goto
 name|CloseThisOp
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -3408,7 +3327,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"Completed one call to walk loop, State=%p\n"
+literal|"Completed one call to walk loop, %s State=%p\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 operator|,
 name|WalkState
 operator|)
@@ -3454,6 +3378,40 @@ block|{
 name|Status
 operator|=
 name|AE_OK
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Status
+operator|!=
+name|AE_OK
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method execution failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_DUMP_PATHNAME
+argument_list|(
+name|WalkState
+operator|->
+name|MethodNode
+argument_list|,
+literal|"Method pathname: "
+argument_list|,
+name|ACPI_LV_ERROR
+argument_list|,
+name|_COMPONENT
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* We are done with this walk, move on to the parent if any */
@@ -3594,31 +3552,6 @@ argument_list|(
 name|PreviousWalkState
 operator|->
 name|ReturnDesc
-argument_list|)
-expr_stmt|;
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Method execution failed, %s\n"
-operator|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DUMP_PATHNAME
-argument_list|(
-name|WalkState
-operator|->
-name|MethodNode
-argument_list|,
-literal|"Method pathname: "
-argument_list|,
-name|ACPI_LV_ERROR
-argument_list|,
-name|_COMPONENT
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 58 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 61 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -264,21 +264,15 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|TopObjectList
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|SubObjectList
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|PackageElement
-init|=
-name|NULL
+name|ObjDesc
 decl_stmt|;
 name|ACPI_SIZE
 name|BufferSizeNeeded
@@ -287,19 +281,13 @@ literal|0
 decl_stmt|;
 name|UINT32
 name|NumberOfElements
-init|=
-literal|0
 decl_stmt|;
 name|UINT32
 name|Index
-init|=
-literal|0
 decl_stmt|;
 name|ACPI_PCI_ROUTING_TABLE
 modifier|*
 name|UserPrt
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -380,7 +368,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Loop through the ACPI_INTERNAL_OBJECTS - Each object should contain an      * ACPI_INTEGER Address, a UINT8 Pin, a Name and a UINT8 SourceIndex.      */
+comment|/*      * Loop through the ACPI_INTERNAL_OBJECTS - Each object       * should be a package that in turn contains an      * ACPI_INTEGER Address, a UINT8 Pin, a Name and a UINT8 SourceIndex.      */
 name|TopObjectList
 operator|=
 name|PackageObject
@@ -456,28 +444,107 @@ operator|-
 literal|4
 operator|)
 expr_stmt|;
-comment|/*          * Dereference the sub-package          */
-name|PackageElement
-operator|=
-operator|*
-name|TopObjectList
-expr_stmt|;
-comment|/*          * The SubObjectList will now point to an array of the four IRQ          * elements: Address, Pin, Source and SourceIndex          */
-name|SubObjectList
-operator|=
-name|PackageElement
-operator|->
-name|Package
-operator|.
-name|Elements
-expr_stmt|;
-comment|/*          * 1) First subobject:  Dereference the Address          */
+comment|/*          * Each element of the top-level package must also be a package          */
 if|if
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
 operator|*
+name|TopObjectList
+argument_list|)
+operator|!=
+name|ACPI_TYPE_PACKAGE
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"(PRT[%X]) Need sub-package, found %s\n"
+operator|,
+name|Index
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+operator|*
+name|TopObjectList
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_OPERAND_TYPE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Each sub-package must be of length 4 */
+if|if
+condition|(
+operator|(
+operator|*
+name|TopObjectList
+operator|)
+operator|->
+name|Package
+operator|.
+name|Count
+operator|!=
+literal|4
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"(PRT[%X]) Need package of length 4, found length %d\n"
+operator|,
+name|Index
+operator|,
+operator|(
+operator|*
+name|TopObjectList
+operator|)
+operator|->
+name|Package
+operator|.
+name|Count
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_PACKAGE_LIMIT
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*          * Dereference the sub-package.          * The SubObjectList will now point to an array of the four IRQ          * elements: [Address, Pin, Source, SourceIndex]          */
 name|SubObjectList
+operator|=
+operator|(
+operator|*
+name|TopObjectList
+operator|)
+operator|->
+name|Package
+operator|.
+name|Elements
+expr_stmt|;
+comment|/*          * 1) First subobject: Dereference the PRT.Address          */
+name|ObjDesc
+operator|=
+name|SubObjectList
+index|[
+literal|0
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
 argument_list|)
 operator|==
 name|ACPI_TYPE_INTEGER
@@ -487,10 +554,7 @@ name|UserPrt
 operator|->
 name|Address
 operator|=
-operator|(
-operator|*
-name|SubObjectList
-operator|)
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -504,12 +568,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Need Integer, found %s\n"
+literal|"(PRT[%X].Address) Need Integer, found %s\n"
+operator|,
+name|Index
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -520,16 +585,19 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * 2) Second subobject: Dereference the Pin          */
+comment|/*          * 2) Second subobject: Dereference the PRT.Pin          */
+name|ObjDesc
+operator|=
 name|SubObjectList
-operator|++
+index|[
+literal|1
+index|]
 expr_stmt|;
 if|if
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 operator|==
 name|ACPI_TYPE_INTEGER
@@ -539,13 +607,10 @@ name|UserPrt
 operator|->
 name|Pin
 operator|=
-call|(
+operator|(
 name|UINT32
-call|)
-argument_list|(
-operator|*
-name|SubObjectList
-argument_list|)
+operator|)
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -559,12 +624,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Need Integer, found %s\n"
+literal|"(PRT[%X].Pin) Need Integer, found %s\n"
+operator|,
+name|Index
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -575,28 +641,28 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * 3) Third subobject: Dereference the Source Name          */
+comment|/*          * 3) Third subobject: Dereference the PRT.SourceName          */
+name|ObjDesc
+operator|=
 name|SubObjectList
-operator|++
+index|[
+literal|2
+index|]
 expr_stmt|;
 switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 if|if
 condition|(
-operator|(
-operator|*
-name|SubObjectList
-operator|)
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -610,12 +676,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Need name, found reference op %X\n"
+literal|"(PRT[%X].Source) Need name, found reference op %X\n"
 operator|,
-operator|(
-operator|*
-name|SubObjectList
-operator|)
+name|Index
+operator|,
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -631,10 +696,7 @@ expr_stmt|;
 block|}
 name|Node
 operator|=
-operator|(
-operator|*
-name|SubObjectList
-operator|)
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -695,6 +757,9 @@ name|UserPrt
 operator|->
 name|Length
 operator|+=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_STRLEN
 argument_list|(
 name|UserPrt
@@ -715,10 +780,7 @@ name|UserPrt
 operator|->
 name|Source
 argument_list|,
-operator|(
-operator|*
-name|SubObjectList
-operator|)
+name|ObjDesc
 operator|->
 name|String
 operator|.
@@ -730,10 +792,7 @@ name|UserPrt
 operator|->
 name|Length
 operator|+=
-operator|(
-operator|*
-name|SubObjectList
-operator|)
+name|ObjDesc
 operator|->
 name|String
 operator|.
@@ -760,12 +819,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Need Integer, found %s\n"
+literal|"(PRT[%X].Source) Need Ref/String/Integer, found %s\n"
+operator|,
+name|Index
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -788,16 +848,19 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
-comment|/*          * 4) Fourth subobject: Dereference the Source Index          */
+comment|/*          * 4) Fourth subobject: Dereference the PRT.SourceIndex          */
+name|ObjDesc
+operator|=
 name|SubObjectList
-operator|++
+index|[
+literal|3
+index|]
 expr_stmt|;
 if|if
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 operator|==
 name|ACPI_TYPE_INTEGER
@@ -807,13 +870,10 @@ name|UserPrt
 operator|->
 name|SourceIndex
 operator|=
-call|(
+operator|(
 name|UINT32
-call|)
-argument_list|(
-operator|*
-name|SubObjectList
-argument_list|)
+operator|)
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -827,12 +887,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Need Integer, found %s\n"
+literal|"(PRT[%X].SourceIndex) Need Integer, found %s\n"
+operator|,
+name|Index
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|SubObjectList
+name|ObjDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -843,7 +904,7 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Point to the next ACPI_OPERAND_OBJECT */
+comment|/* Point to the next ACPI_OPERAND_OBJECT in the top level package */
 name|TopObjectList
 operator|++
 expr_stmt|;

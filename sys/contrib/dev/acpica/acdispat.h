@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1018,6 +1018,17 @@ end_function_decl
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsResolveOperands
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDsClearOperands
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*

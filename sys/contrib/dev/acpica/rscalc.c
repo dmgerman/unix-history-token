@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 43 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 44 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1505,7 +1505,7 @@ operator|)
 operator|||
 operator|(
 operator|(
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 operator|==
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 239 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 241 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ value|0x7F
 end_define
 
 begin_comment
-comment|/*  * Data types - Fixed across all compilation models  *  * BOOLEAN      Logical Boolean.  * INT8         8-bit  (1 byte) signed value  * UINT8        8-bit  (1 byte) unsigned value  * INT16        16-bit (2 byte) signed value  * UINT16       16-bit (2 byte) unsigned value  * INT32        32-bit (4 byte) signed value  * UINT32       32-bit (4 byte) unsigned value  * INT64        64-bit (8 byte) signed value  * UINT64       64-bit (8 byte) unsigned value  * NATIVE_INT   32-bit on IA-32, 64-bit on IA-64 signed value  * NATIVE_UINT  32-bit on IA-32, 64-bit on IA-64 unsigned value  */
+comment|/*  * Data types - Fixed across all compilation models (16/32/64)  *  * BOOLEAN      Logical Boolean.  * INT8         8-bit  (1 byte) signed value  * UINT8        8-bit  (1 byte) unsigned value  * INT16        16-bit (2 byte) signed value  * UINT16       16-bit (2 byte) unsigned value  * INT32        32-bit (4 byte) signed value  * UINT32       32-bit (4 byte) unsigned value  * INT64        64-bit (8 byte) signed value  * UINT64       64-bit (8 byte) unsigned value  * NATIVE_INT   32-bit on IA-32, 64-bit on IA-64 signed value  * NATIVE_UINT  32-bit on IA-32, 64-bit on IA-64 unsigned value  */
 end_comment
 
 begin_ifndef
@@ -1460,7 +1460,7 @@ value|(ACPI_TABLE_MAX+1)
 end_define
 
 begin_comment
-comment|/*  * Types associated with names.  The first group of  * values correspond to the definition of the ACPI  * ObjectType operator (See the ACPI Spec).  Therefore,  * only add to the first group if the spec changes.  *  * Types must be kept in sync with the AcpiNsProperties  * and AcpiNsTypeNames arrays  */
+comment|/*  * Types associated with ACPI names and objects.  The first group of  * values (up to ACPI_TYPE_EXTERNAL_MAX) correspond to the definition  * of the ACPI ObjectType() operator (See the ACPI Spec).  Therefore,  * only add to the first group if the spec changes.  *  * Types must be kept in sync with the global AcpiNsProperties  * and AcpiNsTypeNames arrays.  */
 end_comment
 
 begin_typedef
@@ -1620,201 +1620,137 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_TYPE_MAX
+name|ACPI_TYPE_EXTERNAL_MAX
 value|0x10
 end_define
 
 begin_comment
-comment|/*  * This section contains object types that do not relate to the ACPI ObjectType operator.  * They are used for various internal purposes only.  If new predefined ACPI_TYPEs are  * added (via the ACPI specification), these internal types must move upwards.  * Also, values exceeding the largest official ACPI ObjectType must not overlap with  * defined AML opcodes.  */
+comment|/*  * These are object types that do not map directly to the ACPI   * ObjectType() operator. They are used for various internal purposes only.    * If new predefined ACPI_TYPEs are added (via the ACPI specification), these   * internal types must move upwards. (There is code that depends on these  * values being contiguous with the external types above.)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_BEGIN
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 value|0x11
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_REGION_FIELD
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 value|0x14
 end_define
 
 begin_comment
-comment|/* Arg#, Local#, Name, Debug; used only in descriptors */
+comment|/* Arg#, Local#, Name, Debug, RefOf, Index */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 value|0x15
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_NOTIFY
+name|ACPI_TYPE_LOCAL_NOTIFY
 value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_ADDRESS_HANDLER
+name|ACPI_TYPE_LOCAL_ADDRESS_HANDLER
 value|0x17
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_RESOURCE
+name|ACPI_TYPE_LOCAL_RESOURCE
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_RESOURCE_FIELD
+name|ACPI_TYPE_LOCAL_RESOURCE_FIELD
 value|0x19
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_NODE_MAX
-value|0x19
-end_define
-
-begin_comment
-comment|/* These are pseudo-types because there are never any namespace nodes with these types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_FIELD_DEFN
+name|ACPI_TYPE_LOCAL_SCOPE
 value|0x1A
 end_define
 
 begin_comment
-comment|/* Name, ByteConst, multiple FieldElement */
+comment|/* 1 Name, multiple ObjectList Nodes */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_BANK_FIELD_DEFN
-value|0x1B
+name|ACPI_TYPE_NS_NODE_MAX
+value|0x1A
 end_define
 
 begin_comment
-comment|/* 2 Name,DWordConst,ByteConst,multi FieldElement */
+comment|/* Last typecode used within a NS Node */
+end_comment
+
+begin_comment
+comment|/*  * These are special object types that never appear in  * a Namespace node, only in an ACPI_OPERAND_OBJECT  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_INDEX_FIELD_DEFN
+name|ACPI_TYPE_LOCAL_EXTRA
+value|0x1B
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TYPE_LOCAL_DATA
+value|0x1C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TYPE_LOCAL_MAX
 value|0x1C
 end_define
 
 begin_comment
-comment|/* 2 Name, ByteConst, multiple FieldElement */
+comment|/* All types above here are invalid */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_IF
+name|ACPI_TYPE_INVALID
 value|0x1D
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_ELSE
-value|0x1E
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_WHILE
-value|0x1F
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_SCOPE
-value|0x20
-end_define
-
-begin_comment
-comment|/* Name, multiple Node */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_DEF_ANY
-value|0x21
-end_define
-
-begin_comment
-comment|/* type is Any, suppress search of enclosing scopes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_EXTRA
-value|0x22
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_DATA
-value|0x23
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_MAX
-value|0x23
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_INVALID
-value|0x24
 end_define
 
 begin_define
@@ -1825,7 +1761,7 @@ value|0xFF
 end_define
 
 begin_comment
-comment|/*  * Bitmapped ACPI types  * Used internally only  */
+comment|/*  * Bitmapped ACPI types.  Used internally only  */
 end_comment
 
 begin_define
@@ -2022,6 +1958,13 @@ begin_define
 define|#
 directive|define
 name|ACPI_WRITE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IO_MASK
 value|1
 end_define
 
@@ -3524,7 +3467,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * END_DEPENDENT_FUNCTIONS_RESOURCE struct is not  *  needed because it has no fields  */
+comment|/*  * END_DEPENDENT_FUNCTIONS_RESOURCE struct is not  * needed because it has no fields  */
 end_comment
 
 begin_typedef

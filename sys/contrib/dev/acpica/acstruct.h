@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 19 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 20 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -116,6 +116,12 @@ name|UINT16
 name|Opcode
 decl_stmt|;
 comment|/* Current AML opcode */
+name|UINT8
+name|ScopeDepth
+decl_stmt|;
+name|UINT8
+name|Reserved1
+decl_stmt|;
 name|UINT32
 name|ArgCount
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 131 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 132 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -437,7 +437,7 @@ begin_define
 define|#
 directive|define
 name|NUM_NS_TYPES
-value|INTERNAL_TYPE_INVALID+1
+value|ACPI_TYPE_INVALID+1
 end_define
 
 begin_if
@@ -919,7 +919,7 @@ name|ACPI_EXTERN
 name|UINT16
 name|AcpiGbl_ObjTypeCount
 index|[
-name|INTERNAL_TYPE_NODE_MAX
+name|ACPI_TYPE_NS_NODE_MAX
 operator|+
 literal|1
 index|]
@@ -931,7 +931,7 @@ name|ACPI_EXTERN
 name|UINT16
 name|AcpiGbl_NodeTypeCount
 index|[
-name|INTERNAL_TYPE_NODE_MAX
+name|ACPI_TYPE_NS_NODE_MAX
 operator|+
 literal|1
 index|]

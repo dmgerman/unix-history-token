@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ if|if
 condition|(
 name|TypeNeeded
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 condition|)
 block|{
 comment|/*          * Allow the AML "Constant" opcodes (Zero, One, etc.) to be reference          * objects and thus allow them to be targets.  (As per the ACPI          * specification, a store to a constant is a noop.)          */
@@ -381,7 +381,7 @@ comment|/* Check for bad ACPI_OBJECT_TYPE */
 if|if
 condition|(
 operator|!
-name|AcpiExValidateObjectType
+name|AcpiUtValidObjectType
 argument_list|(
 name|ObjectType
 argument_list|)
@@ -411,7 +411,7 @@ operator|==
 operator|(
 name|UINT8
 operator|)
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 condition|)
 block|{
 comment|/*                  * Decode the Reference                  */
@@ -605,7 +605,7 @@ case|case
 name|ARGI_SIMPLE_TARGET
 case|:
 comment|/* Name, Local, or Arg - no implicit conversion  */
-comment|/* Need an operand of type INTERNAL_TYPE_REFERENCE */
+comment|/* Need an operand of type ACPI_TYPE_LOCAL_REFERENCE */
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -625,7 +625,7 @@ name|Status
 operator|=
 name|AcpiExCheckObjectType
 argument_list|(
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|ObjectType
 argument_list|,
@@ -701,7 +701,7 @@ operator|*
 name|StackPtr
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 operator|)
 operator|&&
 operator|(
@@ -792,16 +792,6 @@ name|ACPI_TYPE_REGION
 expr_stmt|;
 break|break;
 case|case
-name|ARGI_IF
-case|:
-comment|/* If */
-comment|/* Need an operand of type INTERNAL_TYPE_IF */
-name|TypeNeeded
-operator|=
-name|INTERNAL_TYPE_IF
-expr_stmt|;
-break|break;
-case|case
 name|ARGI_PACKAGE
 case|:
 comment|/* Package */
@@ -880,21 +870,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ObjDesc
-operator|!=
-operator|*
-name|StackPtr
-condition|)
-block|{
-comment|/*                   * We just created a new object, remove a reference                  * on the original operand object                  */
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-block|}
 goto|goto
 name|NextOperand
 goto|;
@@ -953,21 +928,6 @@ block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ObjDesc
-operator|!=
-operator|*
-name|StackPtr
-condition|)
-block|{
-comment|/*                   * We just created a new object, remove a reference                  * on the original operand object                  */
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1033,21 +993,6 @@ block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ObjDesc
-operator|!=
-operator|*
-name|StackPtr
-condition|)
-block|{
-comment|/*                   * We just created a new object, remove a reference                  * on the original operand object                  */
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1125,7 +1070,7 @@ case|case
 name|ACPI_TYPE_BUFFER
 case|:
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 comment|/* Valid operand */
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -455,7 +455,7 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
-name|UINT32
+name|NATIVE_UINT
 name|Index
 decl_stmt|;
 name|ACPI_GENERIC_STATE
@@ -597,6 +597,9 @@ argument_list|)
 else|:
 literal|"NULL"
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|Index
 operator|-
 literal|1
@@ -1043,7 +1046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultStackPush  *  * PARAMETERS:  Object              - Object to push  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultStackPush  *  * PARAMETERS:  Object              - Object to push  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Push an object onto the WalkState result stack.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1121,7 +1124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultStackPop  *  * PARAMETERS:  WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultStackPop  *  * PARAMETERS:  WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Pop an object off of the WalkState result stack.  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 119 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 121 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -125,6 +125,10 @@ break|break;
 case|case
 name|AML_FIELD_ACCESS_BYTE
 case|:
+case|case
+name|AML_FIELD_ACCESS_BUFFER
+case|:
+comment|/* ACPI 2.0 (SMBus Buffer) */
 name|ByteAlignment
 operator|=
 literal|1
@@ -169,19 +173,6 @@ expr_stmt|;
 name|BitLength
 operator|=
 literal|64
-expr_stmt|;
-break|break;
-case|case
-name|AML_FIELD_ACCESS_BUFFER
-case|:
-comment|/* ACPI 2.0 */
-name|ByteAlignment
-operator|=
-literal|8
-expr_stmt|;
-name|BitLength
-operator|=
-literal|8
 expr_stmt|;
 break|break;
 default|default:
@@ -512,7 +503,7 @@ name|Info
 operator|->
 name|FieldType
 operator|!=
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 condition|)
 block|{
 if|if
@@ -661,7 +652,7 @@ name|FieldType
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 name|ObjDesc
 operator|->
@@ -721,7 +712,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 name|ObjDesc
 operator|->
@@ -819,7 +810,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|ObjDesc
 operator|->

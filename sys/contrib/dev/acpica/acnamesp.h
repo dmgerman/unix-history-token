@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 127 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 129 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -465,6 +465,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|AcpiNsCompareNames
+parameter_list|(
+name|char
+modifier|*
+name|Name1
+parameter_list|,
+name|char
+modifier|*
+name|Name2
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Namespace modification - nsmodify  */
 end_comment
@@ -737,7 +752,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Parent/Child/Peer utility functions - nsfamily  */
+comment|/*  * Parent/Child/Peer utility functions  */
 end_comment
 
 begin_function_decl
@@ -747,17 +762,6 @@ parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NodeToSearch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BOOLEAN
-name|AcpiNsExistDownstreamSibling
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|ThisNode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1048,12 +1052,10 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ParentNode
 parameter_list|,
-comment|/* Parent */
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-comment|/* New Child*/
 name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -487,7 +487,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"No notify handler for node %p \n"
+literal|"No notify handler for [%4.4s] node %p\n"
+operator|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 operator|,
 name|Node
 operator|)
@@ -885,7 +891,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiEvAcquireGlobalLock
 parameter_list|(
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|)
 block|{
@@ -957,7 +963,7 @@ comment|/* We got the lock */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Acquired the HW Global Lock\n"
 operator|)
@@ -977,7 +983,7 @@ comment|/*      * Did not get the lock.  The pending bit was set above, and we m
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Waiting for the HW Global Lock\n"
 operator|)

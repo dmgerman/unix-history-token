@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmopcode - AML disassembler, specific AML opcodes  *              $Revision: 77 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmopcode - AML disassembler, specific AML opcodes  *              $Revision: 79 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -756,7 +756,7 @@ break|break;
 case|case
 name|AML_STRING_OP
 case|:
-name|AcpiDmString
+name|AcpiUtPrintString
 argument_list|(
 name|Op
 operator|->
@@ -765,6 +765,8 @@ operator|.
 name|Value
 operator|.
 name|String
+argument_list|,
+name|ACPI_UINT8_MAX
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1048,7 +1050,7 @@ name|AML_INT_ACCESSFIELD_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"AccessAs (%s, 0x%.2X)"
+literal|"AccessAs (%s, "
 argument_list|,
 name|AcpiGbl_AccessTypes
 index|[
@@ -1062,7 +1064,13 @@ name|Integer32
 operator|>>
 literal|8
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|AcpiDmDecodeAttribute
+argument_list|(
+operator|(
+name|UINT8
+operator|)
 name|Op
 operator|->
 name|Common
@@ -1070,8 +1078,11 @@ operator|.
 name|Value
 operator|.
 name|Integer32
-operator|&
-literal|0x0F
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|")"
 argument_list|)
 expr_stmt|;
 name|AcpiDmCommaIfFieldMember

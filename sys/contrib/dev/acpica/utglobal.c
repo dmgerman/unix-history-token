@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 171 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 172 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -430,7 +430,7 @@ block|{
 block|{
 literal|"_GPE"
 block|,
-name|INTERNAL_TYPE_SCOPE
+name|ACPI_TYPE_LOCAL_SCOPE
 block|,
 name|NULL
 block|}
@@ -438,7 +438,7 @@ block|,
 block|{
 literal|"_PR_"
 block|,
-name|INTERNAL_TYPE_SCOPE
+name|ACPI_TYPE_LOCAL_SCOPE
 block|,
 name|NULL
 block|}
@@ -454,7 +454,7 @@ block|,
 block|{
 literal|"_SI_"
 block|,
-name|INTERNAL_TYPE_SCOPE
+name|ACPI_TYPE_LOCAL_SCOPE
 block|,
 name|NULL
 block|}
@@ -462,7 +462,7 @@ block|,
 block|{
 literal|"_TZ_"
 block|,
-name|INTERNAL_TYPE_SCOPE
+name|ACPI_TYPE_LOCAL_SCOPE
 block|,
 name|NULL
 block|}
@@ -617,38 +617,17 @@ operator||
 name|ACPI_NS_LOCAL
 block|,
 comment|/* 25 Resource Field   */
-name|ACPI_NS_NORMAL
-block|,
-comment|/* 26 DefFieldDefn     */
-name|ACPI_NS_NORMAL
-block|,
-comment|/* 27 BankFieldDefn    */
-name|ACPI_NS_NORMAL
-block|,
-comment|/* 28 IndexFieldDefn   */
-name|ACPI_NS_NORMAL
-block|,
-comment|/* 29 If               */
-name|ACPI_NS_NORMAL
-block|,
-comment|/* 30 Else             */
-name|ACPI_NS_NORMAL
-block|,
-comment|/* 31 While            */
 name|ACPI_NS_NEWSCOPE
 block|,
-comment|/* 32 Scope            */
-name|ACPI_NS_LOCAL
-block|,
-comment|/* 33 DefAny           */
+comment|/* 26 Scope            */
 name|ACPI_NS_NORMAL
 block|,
-comment|/* 34 Extra            */
+comment|/* 27 Extra            */
 name|ACPI_NS_NORMAL
 block|,
-comment|/* 35 Data             */
+comment|/* 28 Data             */
 name|ACPI_NS_NORMAL
-comment|/* 36 Invalid          */
+comment|/* 29 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1459,36 +1438,15 @@ comment|/* 25 */
 literal|"ResourceFld"
 block|,
 comment|/* 26 */
-literal|"RegionFldDfn"
-block|,
-comment|/* 27 */
-literal|"BankFldDfn"
-block|,
-comment|/* 28 */
-literal|"IndexFldDfn"
-block|,
-comment|/* 29 */
-literal|"If"
-block|,
-comment|/* 30 */
-literal|"Else"
-block|,
-comment|/* 31 */
-literal|"While"
-block|,
-comment|/* 32 */
 literal|"Scope"
 block|,
-comment|/* 33 */
-literal|"DefAny"
-block|,
-comment|/* 34 */
+comment|/* 27 */
 literal|"Extra"
 block|,
-comment|/* 35 */
+comment|/* 28 */
 literal|"Data"
 block|,
-comment|/* 36 */
+comment|/* 39 */
 literal|"Invalid"
 block|}
 decl_stmt|;
@@ -1507,7 +1465,7 @@ if|if
 condition|(
 name|Type
 operator|>
-name|INTERNAL_TYPE_INVALID
+name|ACPI_TYPE_INVALID
 condition|)
 block|{
 return|return
@@ -1632,7 +1590,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtValidObjectType  *  * PARAMETERS:  None.  *  * RETURN:      TRUE if valid object type  *  * DESCRIPTION: Validate an object type  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtValidObjectType  *  * PARAMETERS:  Type            - Object type to be validated  *  * RETURN:      TRUE if valid object type  *  * DESCRIPTION: Validate an object type  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1647,30 +1605,15 @@ if|if
 condition|(
 name|Type
 operator|>
-name|ACPI_TYPE_MAX
+name|ACPI_TYPE_LOCAL_MAX
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|Type
-operator|<
-name|INTERNAL_TYPE_BEGIN
-operator|)
-operator|||
-operator|(
-name|Type
-operator|>
-name|INTERNAL_TYPE_MAX
-operator|)
-condition|)
-block|{
+comment|/* Note: Assumes all TYPEs are contiguous (external/local) */
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -2429,7 +2372,7 @@ name|AcpiGbl_RootNodeStruct
 operator|.
 name|Type
 operator|=
-name|ACPI_TYPE_ANY
+name|ACPI_TYPE_DEVICE
 expr_stmt|;
 name|AcpiGbl_RootNodeStruct
 operator|.

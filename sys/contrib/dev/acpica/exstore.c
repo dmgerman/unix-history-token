@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 172 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 174 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ operator|==
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
-comment|/*          * Dest is a namespace node,          * Storing an object into a Name "container"          */
+comment|/*          * Dest is a namespace node,          * Storing an object into a Named node.          */
 name|Status
 operator|=
 name|AcpiExStoreObjectToNode
@@ -164,7 +164,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 break|break;
 case|case
@@ -921,13 +921,13 @@ case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 comment|/*          * For fields, copy the source data to the target field.          */
 name|Status
@@ -937,6 +937,11 @@ argument_list|(
 name|SourceDesc
 argument_list|,
 name|TargetDesc
+argument_list|,
+operator|&
+name|WalkState
+operator|->
+name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;

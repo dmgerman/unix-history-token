@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -60,54 +60,6 @@ argument_list|(
 literal|"exutils"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExValidateObjectType  *  * PARAMETERS:  Type            Object type to validate  *  * DESCRIPTION: Determine if a type is a valid ACPI object type  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiExValidateObjectType
-parameter_list|(
-name|ACPI_OBJECT_TYPE
-name|Type
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|Type
-operator|>
-name|ACPI_TYPE_MAX
-operator|&&
-name|Type
-operator|<
-name|INTERNAL_TYPE_BEGIN
-operator|)
-operator|||
-operator|(
-name|Type
-operator|>
-name|INTERNAL_TYPE_MAX
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-end_function
 
 begin_ifndef
 ifndef|#
@@ -309,7 +261,7 @@ name|Status
 operator|=
 name|AcpiEvAcquireGlobalLock
 argument_list|(
-name|ACPI_UINT32_MAX
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 if|if
@@ -529,6 +481,10 @@ literal|'@'
 operator|+
 operator|(
 operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|EisaId
 operator|>>
 literal|26

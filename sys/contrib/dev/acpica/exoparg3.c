@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg3 - AML execution - opcodes with 3 arguments  *              $Revision: 14 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg3 - AML execution - opcodes with 3 arguments  *              $Revision: 15 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -576,12 +576,21 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Set the return object and exit */
+if|if
+condition|(
+operator|!
+name|WalkState
+operator|->
+name|ResultObj
+condition|)
+block|{
 name|WalkState
 operator|->
 name|ResultObj
 operator|=
 name|ReturnDesc
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 73 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1837,7 +1837,7 @@ index|]
 init|=
 block|{
 comment|/*! [Begin] no source code translation */
-comment|/* Index           Name                 Parser Args               Interpreter Args                ObjectType                Class                      Type                  Flags */
+comment|/* Index           Name                 Parser Args               Interpreter Args                ObjectType                    Class                      Type                  Flags */
 comment|/* 00 */
 name|ACPI_OP
 argument_list|(
@@ -1883,7 +1883,7 @@ name|ARGP_ALIAS_OP
 argument_list|,
 name|ARGI_ALIAS_OP
 argument_list|,
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 argument_list|,
 name|AML_CLASS_NAMED_OBJECT
 argument_list|,
@@ -2007,7 +2007,7 @@ name|ARGP_SCOPE_OP
 argument_list|,
 name|ARGI_SCOPE_OP
 argument_list|,
-name|INTERNAL_TYPE_SCOPE
+name|ACPI_TYPE_LOCAL_SCOPE
 argument_list|,
 name|AML_CLASS_NAMED_OBJECT
 argument_list|,
@@ -2105,7 +2105,7 @@ name|ARGP_LOCAL0
 argument_list|,
 name|ARGI_LOCAL0
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2123,7 +2123,7 @@ name|ARGP_LOCAL1
 argument_list|,
 name|ARGI_LOCAL1
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2141,7 +2141,7 @@ name|ARGP_LOCAL2
 argument_list|,
 name|ARGI_LOCAL2
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2159,7 +2159,7 @@ name|ARGP_LOCAL3
 argument_list|,
 name|ARGI_LOCAL3
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2177,7 +2177,7 @@ name|ARGP_LOCAL4
 argument_list|,
 name|ARGI_LOCAL4
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2195,7 +2195,7 @@ name|ARGP_LOCAL5
 argument_list|,
 name|ARGI_LOCAL5
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2213,7 +2213,7 @@ name|ARGP_LOCAL6
 argument_list|,
 name|ARGI_LOCAL6
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2231,7 +2231,7 @@ name|ARGP_LOCAL7
 argument_list|,
 name|ARGI_LOCAL7
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2249,7 +2249,7 @@ name|ARGP_ARG0
 argument_list|,
 name|ARGI_ARG0
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2267,7 +2267,7 @@ name|ARGP_ARG1
 argument_list|,
 name|ARGI_ARG1
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2285,7 +2285,7 @@ name|ARGP_ARG2
 argument_list|,
 name|ARGI_ARG2
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2303,7 +2303,7 @@ name|ARGP_ARG3
 argument_list|,
 name|ARGI_ARG3
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2321,7 +2321,7 @@ name|ARGP_ARG4
 argument_list|,
 name|ARGI_ARG4
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2339,7 +2339,7 @@ name|ARGP_ARG5
 argument_list|,
 name|ARGI_ARG5
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -2357,7 +2357,7 @@ name|ARGP_ARG6
 argument_list|,
 name|ARGI_ARG6
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -3578,7 +3578,7 @@ name|ARGP_DEBUG_OP
 argument_list|,
 name|ARGI_DEBUG_OP
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -3642,7 +3642,7 @@ name|ARGP_FIELD_OP
 argument_list|,
 name|ARGI_FIELD_OP
 argument_list|,
-name|INTERNAL_TYPE_FIELD_DEFN
+name|ACPI_TYPE_ANY
 argument_list|,
 name|AML_CLASS_NAMED_OBJECT
 argument_list|,
@@ -3770,7 +3770,7 @@ name|ARGP_INDEX_FIELD_OP
 argument_list|,
 name|ARGI_INDEX_FIELD_OP
 argument_list|,
-name|INTERNAL_TYPE_INDEX_FIELD_DEFN
+name|ACPI_TYPE_ANY
 argument_list|,
 name|AML_CLASS_NAMED_OBJECT
 argument_list|,
@@ -3794,7 +3794,7 @@ name|ARGP_BANK_FIELD_OP
 argument_list|,
 name|ARGI_BANK_FIELD_OP
 argument_list|,
-name|INTERNAL_TYPE_BANK_FIELD_DEFN
+name|ACPI_TYPE_ANY
 argument_list|,
 name|AML_CLASS_NAMED_OBJECT
 argument_list|,
@@ -3879,7 +3879,7 @@ name|ARGP_NAMEPATH_OP
 argument_list|,
 name|ARGI_NAMEPATH_OP
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -4037,7 +4037,7 @@ name|ARG_NONE
 argument_list|,
 name|ARG_NONE
 argument_list|,
-name|INTERNAL_TYPE_INVALID
+name|ACPI_TYPE_INVALID
 argument_list|,
 name|AML_CLASS_UNKNOWN
 argument_list|,
@@ -4396,7 +4396,7 @@ argument|ARGP_SCOPE_OP
 argument_list|,
 argument|ARGI_SCOPE_OP
 argument_list|,
-argument|INTERNAL_TYPE_SCOPE
+argument|ACPI_TYPE_ANY
 argument_list|,
 argument|AML_CLASS_NAMED_OBJECT
 argument_list|,

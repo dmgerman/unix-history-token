@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -821,7 +821,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"RSDP structure not found\n"
+literal|"RSDP structure not found, %s Flags=%X\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|,
+name|Flags
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1056,6 +1063,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Could not map memory at %X for length %X\n"
+operator|,
+name|LO_RSDP_WINDOW_BASE
+operator|,
+name|LO_RSDP_WINDOW_SIZE
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1138,6 +1158,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Could not map memory at %X for length %X\n"
+operator|,
+name|HI_RSDP_WINDOW_BASE
+operator|,
+name|HI_RSDP_WINDOW_SIZE
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

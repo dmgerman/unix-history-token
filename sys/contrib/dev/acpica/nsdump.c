@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 141 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 146 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -317,48 +317,17 @@ name|UINT32
 name|BytesToDump
 decl_stmt|;
 name|UINT32
-name|DownstreamSiblingMask
-init|=
-literal|0
-decl_stmt|;
-name|UINT32
-name|LevelTmp
-decl_stmt|;
-name|UINT32
-name|WhichBit
+name|DbgLevel
 decl_stmt|;
 name|UINT32
 name|i
-decl_stmt|;
-name|UINT32
-name|DbgLevel
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"NsDumpOneObject"
 argument_list|)
 expr_stmt|;
-name|ThisNode
-operator|=
-name|AcpiNsMapHandleToNode
-argument_list|(
-name|ObjHandle
-argument_list|)
-expr_stmt|;
-name|LevelTmp
-operator|=
-name|Level
-expr_stmt|;
-name|Type
-operator|=
-name|ThisNode
-operator|->
-name|Type
-expr_stmt|;
-name|WhichBit
-operator|=
-literal|1
-expr_stmt|;
+comment|/* Is output enabled? */
 if|if
 condition|(
 operator|!
@@ -398,6 +367,19 @@ name|AE_OK
 operator|)
 return|;
 block|}
+name|ThisNode
+operator|=
+name|AcpiNsMapHandleToNode
+argument_list|(
+name|ObjHandle
+argument_list|)
+expr_stmt|;
+name|Type
+operator|=
+name|ThisNode
+operator|->
+name|Type
+expr_stmt|;
 comment|/* Check if the owner matches */
 if|if
 condition|(
@@ -427,157 +409,44 @@ operator|)
 return|;
 block|}
 comment|/* Indent the object according to the level */
-while|while
-condition|(
-name|LevelTmp
-operator|--
-condition|)
-block|{
-comment|/* Print appropriate characters to form tree structure */
-if|if
-condition|(
-name|LevelTmp
-condition|)
-block|{
-if|if
-condition|(
-name|DownstreamSiblingMask
-operator|&
-name|WhichBit
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"|"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
+literal|"%2d%*s"
+argument_list|,
+operator|(
+name|UINT32
+operator|)
+name|Level
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|int
+operator|)
+name|Level
+operator|*
+literal|2
+argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-block|}
-name|WhichBit
-operator|<<=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|AcpiNsExistDownstreamSibling
-argument_list|(
-name|ThisNode
-operator|+
-literal|1
-argument_list|)
-condition|)
-block|{
-name|DownstreamSiblingMask
-operator||=
-operator|(
-operator|(
-name|UINT32
-operator|)
-literal|1
-operator|<<
-operator|(
-name|Level
-operator|-
-literal|1
-operator|)
-operator|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"+"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|DownstreamSiblingMask
-operator|&=
-name|ACPI_UINT32_MAX
-operator|^
-operator|(
-operator|(
-name|UINT32
-operator|)
-literal|1
-operator|<<
-operator|(
-name|Level
-operator|-
-literal|1
-operator|)
-operator|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"+"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ThisNode
-operator|->
-name|Child
-operator|==
-name|NULL
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"-"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|AcpiNsExistDownstreamSibling
-argument_list|(
-name|ThisNode
-operator|->
-name|Child
-argument_list|)
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"+"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"-"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-comment|/* Check the integrity of our data */
+comment|/* Check the node type and name */
 if|if
 condition|(
 name|Type
 operator|>
-name|INTERNAL_TYPE_MAX
+name|ACPI_TYPE_LOCAL_MAX
 condition|)
 block|{
+name|ACPI_REPORT_WARNING
+argument_list|(
+operator|(
+literal|"Invalid ACPI Type %08X\n"
+operator|,
 name|Type
-operator|=
-name|INTERNAL_TYPE_DEF_ANY
+operator|)
+argument_list|)
 expr_stmt|;
-comment|/* prints as *ERROR* */
 block|}
 if|if
 condition|(
@@ -609,7 +478,7 @@ block|}
 comment|/*      * Now we can print out the pertinent information      */
 name|AcpiOsPrintf
 argument_list|(
-literal|" %4.4s %-12s %p"
+literal|"%4.4s %-12s %p "
 argument_list|,
 name|ThisNode
 operator|->
@@ -682,7 +551,7 @@ name|ACPI_TYPE_PROCESSOR
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" ID %X Len %.4X Addr %p\n"
+literal|"ID %X Len %.4X Addr %p\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -713,7 +582,7 @@ name|ACPI_TYPE_DEVICE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Notification object: %p"
+literal|"Notify object: %p"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -724,7 +593,7 @@ name|ACPI_TYPE_METHOD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Args %X Len %.4X Aml %p\n"
+literal|"Args %X Len %.4X Aml %p\n"
 argument_list|,
 operator|(
 name|UINT32
@@ -754,7 +623,7 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" = %8.8X%8.8X\n"
+literal|"= %8.8X%8.8X\n"
 argument_list|,
 name|ACPI_HIDWORD
 argument_list|(
@@ -792,7 +661,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Elements %.2X\n"
+literal|"Elements %.2X\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -806,7 +675,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" [Length not yet evaluated]\n"
+literal|"[Length not yet evaluated]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -827,7 +696,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Len %.2X"
+literal|"Len %.2X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -903,7 +772,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" [Length not yet evaluated]\n"
+literal|"[Length not yet evaluated]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -913,7 +782,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Len %.2X"
+literal|"Len %.2X "
 argument_list|,
 name|ObjDesc
 operator|->
@@ -922,46 +791,17 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|>
-literal|0
-condition|)
-block|{
-name|AcpiOsPrintf
+name|AcpiUtPrintString
 argument_list|(
-literal|" = \"%.32s\""
-argument_list|,
 name|ObjDesc
 operator|->
 name|String
 operator|.
 name|Pointer
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|>
+argument_list|,
 literal|32
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"..."
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -973,7 +813,7 @@ name|ACPI_TYPE_REGION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" [%s]"
+literal|"[%s]"
 argument_list|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -1036,11 +876,11 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" [%s]\n"
+literal|"[%s]\n"
 argument_list|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -1077,7 +917,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" Buf [%4.4s]"
+literal|"Buf [%4.4s]"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1097,11 +937,11 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Rgn [%4.4s]"
+literal|"Rgn [%4.4s]"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1120,11 +960,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Rgn [%4.4s] Bnk [%4.4s]"
+literal|"Rgn [%4.4s] Bnk [%4.4s]"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1157,11 +997,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Idx [%4.4s] Dat [%4.4s]"
+literal|"Idx [%4.4s] Dat [%4.4s]"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1194,11 +1034,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Target %4.4s (%p)\n"
+literal|"Target %4.4s (%p)\n"
 argument_list|,
 operator|(
 operator|(
@@ -1219,7 +1059,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Object %p\n"
+literal|"Object %p\n"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1236,13 +1076,13 @@ case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1287,9 +1127,7 @@ name|ACPI_DISPLAY_OBJECTS
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p O:%p"
-argument_list|,
-name|ThisNode
+literal|"O:%p"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1481,7 +1319,7 @@ condition|)
 block|{
 name|ObjType
 operator|=
-name|INTERNAL_TYPE_INVALID
+name|ACPI_TYPE_INVALID
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
@@ -1529,7 +1367,7 @@ if|if
 condition|(
 name|ObjType
 operator|>
-name|INTERNAL_TYPE_MAX
+name|ACPI_TYPE_LOCAL_MAX
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1688,7 +1526,7 @@ name|AmlStart
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 name|ObjDesc
 operator|=
@@ -1704,7 +1542,7 @@ name|RegionObj
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 name|ObjDesc
 operator|=
@@ -1720,7 +1558,7 @@ name|RegionObj
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|ObjDesc
 operator|=
@@ -1742,7 +1580,7 @@ goto|;
 block|}
 name|ObjType
 operator|=
-name|INTERNAL_TYPE_INVALID
+name|ACPI_TYPE_INVALID
 expr_stmt|;
 comment|/* Terminate loop after next pass */
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 143 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 146 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -935,15 +935,6 @@ name|Value
 operator|=
 literal|0
 expr_stmt|;
-comment|/*                  * Must delete the result descriptor since there is no reference                  * being returned                  */
-name|AcpiUtRemoveReference
-argument_list|(
-name|Operand
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
@@ -1048,7 +1039,16 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Normally, we would remove a reference on the Operand[0] parameter;          * But since it is being used as the internal return object          * (meaning we would normally increment it), the two cancel out,          * and we simply don't do anything.          */
+comment|/* It is possible that the Store already produced a return object */
+if|if
+condition|(
+operator|!
+name|WalkState
+operator|->
+name|ResultObj
+condition|)
+block|{
+comment|/*              * Normally, we would remove a reference on the Operand[0] parameter;              * But since it is being used as the internal return object              * (meaning we would normally increment it), the two cancel out,              * and we simply don't do anything.              */
 name|WalkState
 operator|->
 name|ResultObj
@@ -1068,6 +1068,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Prevent deletion */
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1252,12 +1253,21 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
+if|if
+condition|(
+operator|!
+name|WalkState
+operator|->
+name|ResultObj
+condition|)
+block|{
 name|WalkState
 operator|->
 name|ResultObj
 operator|=
 name|ReturnDesc
 expr_stmt|;
+block|}
 comment|/* Delete return object on error */
 if|if
 condition|(
@@ -1774,7 +1784,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 comment|/*                  * This is a DerefOf (LocalX | ArgX)                  *                  * Must resolve/dereference the local/arg reference first                  */
 switch|switch

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -636,14 +636,6 @@ name|Pointer
 expr_stmt|;
 name|TableDesc
 operator|->
-name|BasePointer
-operator|=
-name|TableInfo
-operator|->
-name|BasePointer
-expr_stmt|;
-name|TableDesc
-operator|->
 name|Length
 operator|=
 name|TableInfo
@@ -1033,7 +1025,7 @@ name|ACPI_MEM_FREE
 argument_list|(
 name|TableDesc
 operator|->
-name|BasePointer
+name|Pointer
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1044,7 +1036,7 @@ name|AcpiOsUnmapMemory
 argument_list|(
 name|TableDesc
 operator|->
-name|BasePointer
+name|Pointer
 argument_list|,
 name|TableDesc
 operator|->

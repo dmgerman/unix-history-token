@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 2 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 4 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -745,7 +745,7 @@ condition|(
 operator|(
 name|Type
 operator|>
-name|ACPI_TYPE_MAX
+name|ACPI_TYPE_EXTERNAL_MAX
 operator|)
 operator|||
 operator|(
@@ -1267,7 +1267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAttachData  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiAttachData  *  * PARAMETERS:  ObjHandle           - Namespace node   *              Handler             - Handler for this attachment  *              Data                - Pointer to data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Attach arbitrary data and handler to a namespace node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1384,7 +1384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDetachData  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDetachData  *  * PARAMETERS:  ObjHandle           - Namespace node handle  *              Handler             - Handler used in call to AcpiAttachData  *  * RETURN:      Status  *  * DESCRIPTION: Remove data that was previously attached to a node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1492,7 +1492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetData  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetData  *  * PARAMETERS:  ObjHandle           - Namespace node  *              Handler             - Handler used in call to AttachData  *              Data                - Where the data is returned  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve data that was previously attached to a namespace node.  *  ******************************************************************************/
 end_comment
 
 begin_function

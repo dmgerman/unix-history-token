@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -291,6 +291,7 @@ argument_list|(
 literal|"PsGetNextPackageEnd"
 argument_list|)
 expr_stmt|;
+comment|/* Function below changes ParserState->Aml */
 name|Length
 operator|=
 operator|(
@@ -399,7 +400,13 @@ case|:
 comment|/* Two name segments */
 name|End
 operator|+=
-literal|9
+literal|1
+operator|+
+operator|(
+literal|2
+operator|*
+name|ACPI_NAME_SIZE
+operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -421,7 +428,7 @@ operator|+
 literal|1
 argument_list|)
 operator|*
-literal|4
+name|ACPI_NAME_SIZE
 operator|)
 expr_stmt|;
 break|break;
@@ -429,7 +436,7 @@ default|default:
 comment|/* Single name segment */
 name|End
 operator|+=
-literal|4
+name|ACPI_NAME_SIZE
 expr_stmt|;
 break|break;
 block|}
@@ -456,13 +463,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              MethodCall          - Whether the namepath can be the start  *                                    of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method.  If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetNextNamepath  *  * PARAMETERS:  ParserState         - Current parser state object  *              Arg                 - Where the namepath will be stored  *              ArgCount            - If the namepath points to a control method  *                                    the method's argument is returned here.  *              MethodCall          - Whether the namepath can possibly be the  *                                    start of a method call  *  * RETURN:      Status  *  * DESCRIPTION: Get next name (if method call, return # of required args).  *              Names are looked up in the internal namespace to determine  *              if the name represents a control method.  If a method  *              is found, the number of arguments to the method is returned.  *              This information is critical for parsing to continue correctly.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiPsGetNextNamepath
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_STATE
 modifier|*
 name|ParserState
@@ -470,10 +481,6 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Arg
-parameter_list|,
-name|UINT32
-modifier|*
-name|ArgCount
 parameter_list|,
 name|BOOLEAN
 name|MethodCall
@@ -593,6 +600,7 @@ operator|==
 name|ACPI_TYPE_METHOD
 condition|)
 block|{
+comment|/*                  * This name is actually a control method invocation                  */
 name|MethodDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -708,7 +716,9 @@ name|ParamCount
 operator|)
 argument_list|)
 expr_stmt|;
-operator|*
+comment|/* Get the number of arguments to expect */
+name|WalkState
+operator|->
 name|ArgCount
 operator|=
 name|MethodDesc
@@ -724,6 +734,73 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*              * Else this is normal named object reference.              * Just init the NAMEPATH object with the pathname.              * (See code below)              */
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/*               * 1) Any error other than NOT_FOUND is always severe              * 2) NOT_FOUND is only important if we are executing a method.              * 3) If executing a CondRefOf opcode, NOT_FOUND is ok.              */
+if|if
+condition|(
+operator|(
+operator|(
+operator|(
+name|WalkState
+operator|->
+name|ParseFlags
+operator|&
+name|ACPI_PARSE_MODE_MASK
+operator|)
+operator|==
+name|ACPI_PARSE_EXECUTE
+operator|)
+operator|&&
+operator|(
+name|Status
+operator|==
+name|AE_NOT_FOUND
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_COND_REF_OF_OP
+operator|)
+operator|)
+operator|||
+operator|(
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+operator|)
+condition|)
+block|{
+name|ACPI_REPORT_NSERROR
+argument_list|(
+name|Path
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*                  * We got a NOT_FOUND during table load or we encountered                  * a CondRefOf(x) where the target does not exist.                  * -- either case is ok                   */
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/*      * Regardless of success/failure above,        * Just initialize the Op with the pathname.      */
@@ -1160,7 +1237,7 @@ name|ParserState
 operator|->
 name|Aml
 operator|+=
-literal|4
+name|ACPI_NAME_SIZE
 expr_stmt|;
 comment|/* Get the length which is encoded as a package length */
 name|Field
@@ -1264,16 +1341,16 @@ begin_function
 name|ACPI_STATUS
 name|AcpiPsGetNextArg
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_STATE
 modifier|*
 name|ParserState
 parameter_list|,
 name|UINT32
 name|ArgType
-parameter_list|,
-name|UINT32
-modifier|*
-name|ArgCount
 parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1593,11 +1670,11 @@ name|Status
 operator|=
 name|AcpiPsGetNextNamepath
 argument_list|(
+name|WalkState
+argument_list|,
 name|ParserState
 argument_list|,
 name|Arg
-argument_list|,
-name|ArgCount
 argument_list|,
 literal|0
 argument_list|)
@@ -1606,7 +1683,8 @@ block|}
 else|else
 block|{
 comment|/* single complex argument, nothing returned */
-operator|*
+name|WalkState
+operator|->
 name|ArgCount
 operator|=
 literal|1
@@ -1620,7 +1698,8 @@ case|case
 name|ARGP_TERMARG
 case|:
 comment|/* single complex argument, nothing returned */
-operator|*
+name|WalkState
+operator|->
 name|ArgCount
 operator|=
 literal|1
@@ -1647,7 +1726,8 @@ name|PkgEnd
 condition|)
 block|{
 comment|/* non-empty list of variable arguments, nothing returned */
-operator|*
+name|WalkState
+operator|->
 name|ArgCount
 operator|=
 name|ACPI_VAR_ARGS
