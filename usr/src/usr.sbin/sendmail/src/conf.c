@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.48 (Berkeley) %G%"
+literal|"@(#)conf.c	6.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1378,12 +1378,6 @@ begin_comment
 comment|/* **  TTYPATH -- Get the path of the user's tty ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
 begin_function
 name|char
 modifier|*
@@ -1782,7 +1776,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|hpux
+name|__hpux
 argument_list|)
 end_if
 
@@ -1942,7 +1936,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|hpux
+name|__hpux
 argument_list|)
 end_if
 
@@ -3777,7 +3771,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|hpux
+name|__hpux
 argument_list|)
 end_if
 
@@ -3946,12 +3940,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ustat.h>
 end_include
 
@@ -4001,7 +3989,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|hpux
+name|__hpux
 argument_list|)
 end_if
 
