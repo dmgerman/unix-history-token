@@ -623,7 +623,7 @@ name|base
 operator|)
 operator|)
 operator|>=
-literal|0
+name|nsize
 condition|)
 block|{
 name|Mbd
