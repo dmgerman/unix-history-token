@@ -1265,7 +1265,7 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|left
+name|right
 expr_stmt|;
 block|}
 elseif|else
@@ -1288,7 +1288,7 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|right
+name|left
 expr_stmt|;
 block|}
 else|else
