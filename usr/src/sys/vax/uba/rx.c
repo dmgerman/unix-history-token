@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.18	83/05/11	*/
+comment|/*	rx.c	4.19	83/05/21	*/
 end_comment
 
 begin_include
@@ -1191,13 +1191,12 @@ name|b_blkno
 operator|<
 literal|0
 operator|||
-operator|(
+name|dbtob
+argument_list|(
 name|bp
 operator|->
 name|b_blkno
-operator|*
-name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|>
 name|RXSIZE
 condition|)
@@ -1506,11 +1505,12 @@ decl_stmt|;
 name|ls
 operator|=
 operator|(
+name|dbtob
+argument_list|(
 name|bp
 operator|->
 name|b_blkno
-operator|*
-name|DEV_BSIZE
+argument_list|)
 operator|+
 operator|(
 name|sc
