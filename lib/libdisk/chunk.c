@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.3 1995/04/29 04:00:54 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.4 1995/04/30 06:09:24 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -1151,7 +1151,7 @@ name|fat
 operator|||
 name|type
 operator|==
-name|foo
+name|unknown
 operator|)
 condition|)
 name|c1
@@ -1185,7 +1185,7 @@ name|fat
 operator|||
 name|type
 operator|==
-name|foo
+name|unknown
 operator|)
 condition|)
 name|c1
@@ -1640,7 +1640,7 @@ name|fat
 operator|||
 name|type
 operator|==
-name|foo
+name|unknown
 operator|)
 condition|)
 name|c1
@@ -1678,7 +1678,7 @@ name|fat
 operator|||
 name|type
 operator|==
-name|foo
+name|unknown
 operator|)
 condition|)
 name|c1

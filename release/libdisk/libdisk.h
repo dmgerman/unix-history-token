@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.6 1995/04/30 06:09:27 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.7 1995/04/30 11:04:14 phk Exp $  *  */
 end_comment
 
 begin_define
@@ -20,7 +20,7 @@ enum|enum
 block|{
 name|whole
 block|,
-name|foo
+name|unknown
 block|,
 name|fat
 block|,
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_N
-value|static char *chunk_n[] = { \ 	"whole","foo","fat","freebsd","extended","part","unused","reserved",0};
+value|static char *chunk_n[] = { \ 	"whole","unknown","fat","freebsd","extended","part","unused","reserved",0};
 end_define
 
 begin_struct
