@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.37 1998/05/20 20:08:00 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_tl.c,v 1.1 1998/05/21 03:19:55 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -299,7 +299,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_tl.c,v 1.37 1998/05/20 20:08:00 wpaul Exp $"
+literal|"$Id: if_tl.c,v 1.1 1998/05/21 03:19:55 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3812,9 +3812,14 @@ name|h
 decl_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -3884,9 +3889,14 @@ else|else
 block|{
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 for|for
 control|(
 name|ifma
@@ -4941,9 +4951,14 @@ name|ilist
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 name|callout_handle_init
 argument_list|(
 operator|&
@@ -5772,9 +5787,14 @@ name|tl_next
 control|)
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 if|if
 condition|(
 name|ilist
@@ -5818,9 +5838,14 @@ block|}
 comment|/* 	 * Map control/status registers. 	 */
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 name|pci_conf_write
 argument_list|(
 name|config_id
@@ -8300,9 +8325,14 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 name|sc
 operator|->
 name|tl_stat_ch
@@ -9507,9 +9537,14 @@ expr_stmt|;
 comment|/* Start the stats update counter */
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 name|sc
 operator|->
 name|tl_stat_ch
@@ -9994,9 +10029,14 @@ name|SIOCDELMULTI
 case|:
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|<
-literal|300000
+literal|3
 if|if
 condition|(
 name|command
@@ -10273,9 +10313,14 @@ expr_stmt|;
 comment|/* Stop the stats updater. */
 if|#
 directive|if
-name|__FreeBSD_version
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
 operator|>=
-literal|300000
+literal|3
 name|untimeout
 argument_list|(
 name|tl_stats_update
