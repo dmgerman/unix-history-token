@@ -2597,8 +2597,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|!=
-name|USBD_NORMAL_COMPLETION
+operator|==
+name|USBD_STALLED
 condition|)
 name|usbd_clear_endpoint_stall_async
 argument_list|(
@@ -2607,6 +2607,13 @@ operator|->
 name|sc_ipipe
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_NORMAL_COMPLETION
+condition|)
 name|usb_needs_explore
 argument_list|(
 name|sc

@@ -3686,6 +3686,12 @@ name|status
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_STALLED
+condition|)
 name|usbd_clear_endpoint_stall_async
 argument_list|(
 name|state
