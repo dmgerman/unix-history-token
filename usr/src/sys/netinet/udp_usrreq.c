@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.33	82/10/09	*/
+comment|/*	udp_usrreq.c	4.34	82/10/16	*/
 end_comment
 
 begin_include
@@ -561,6 +561,18 @@ expr|struct
 name|udpiphdr
 argument_list|)
 expr_stmt|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|inp_socket
+operator|->
+name|so_rcv
+argument_list|,
+literal|"udpinput before"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sbappendaddr
@@ -588,6 +600,18 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|inp_socket
+operator|->
+name|so_rcv
+argument_list|,
+literal|"udpinput after"
+argument_list|)
+expr_stmt|;
 name|sorwakeup
 argument_list|(
 name|inp

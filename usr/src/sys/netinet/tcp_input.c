@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.76	82/10/09	*/
+comment|/*	tcp_input.c	1.77	82/10/16	*/
 end_comment
 
 begin_include
@@ -3832,6 +3832,17 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|,
+literal|"tcp_input before"
+argument_list|)
+expr_stmt|;
 name|sbappend
 argument_list|(
 operator|&
@@ -3842,6 +3853,17 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|SBCHECK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|,
+literal|"tcp_input after"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
