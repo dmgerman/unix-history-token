@@ -165,12 +165,13 @@ expr_stmt|;
 name|srandomdev
 argument_list|()
 expr_stmt|;
-name|umask
-argument_list|(
-literal|0117
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|umask(0117);
 comment|/* only owner can read/write created files */
+endif|#
+directive|endif
 comment|/* try to create data files */
 name|filename
 operator|=
@@ -252,7 +253,7 @@ argument_list|(
 operator|*
 name|filename
 argument_list|,
-literal|0660
+literal|0666
 argument_list|)
 operator|)
 operator|<
