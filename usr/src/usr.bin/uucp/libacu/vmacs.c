@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmacs.c	4.2 (Berkeley) %G%"
+literal|"@(#)vmacs.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,6 +445,11 @@ literal|"ACU %s opened.\n"
 argument_list|,
 name|acu
 argument_list|)
+expr_stmt|;
+name|next_fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|fixline
 argument_list|(
