@@ -731,11 +731,6 @@ name|ata_request
 modifier|*
 name|request
 decl_stmt|;
-name|int
-name|gotit
-init|=
-literal|0
-decl_stmt|;
 comment|/* if in immediate mode, just skip start requests (stall queue) */
 if|if
 condition|(
@@ -841,7 +836,7 @@ name|queue_mtx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if we have work todo, try to grap the ATA HW and start transaction */
+comment|/* if we have a request on the queue try to get it running */
 if|if
 condition|(
 operator|(
@@ -857,6 +852,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* we need the locking function to get the lock for this channel */
 if|if
 condition|(
 name|ch
@@ -873,6 +869,7 @@ operator|->
 name|unit
 condition|)
 block|{
+comment|/* check for the right state */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -890,42 +887,6 @@ operator|==
 name|ATA_IDLE
 condition|)
 block|{
-name|ch
-operator|->
-name|state
-operator|=
-name|ATA_ACTIVE
-expr_stmt|;
-name|gotit
-operator|=
-literal|1
-expr_stmt|;
-block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|state_mtx
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|gotit
-condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|queue_mtx
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -938,13 +899,11 @@ argument_list|,
 name|chain
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
 name|ch
 operator|->
-name|queue_mtx
-argument_list|)
+name|running
+operator|=
+name|request
 expr_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
@@ -953,7 +912,6 @@ argument_list|,
 literal|"starting"
 argument_list|)
 expr_stmt|;
-comment|/* arm timeout */
 if|if
 condition|(
 operator|!
@@ -981,13 +939,6 @@ argument_list|,
 name|request
 argument_list|)
 expr_stmt|;
-comment|/* kick HW into action */
-name|ch
-operator|->
-name|running
-operator|=
-name|request
-expr_stmt|;
 if|if
 condition|(
 name|ch
@@ -1008,14 +959,6 @@ name|running
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|state_mtx
-argument_list|)
-expr_stmt|;
 name|ch
 operator|->
 name|state
@@ -1027,12 +970,15 @@ argument_list|(
 operator|&
 name|ch
 operator|->
-name|state_mtx
+name|queue_mtx
 argument_list|)
 expr_stmt|;
-name|ata_finish
+name|mtx_unlock
 argument_list|(
-name|request
+operator|&
+name|ch
+operator|->
+name|state_mtx
 argument_list|)
 expr_stmt|;
 name|ch
@@ -1044,9 +990,31 @@ argument_list|,
 name|ATA_LF_UNLOCK
 argument_list|)
 expr_stmt|;
-block|}
+name|ata_finish
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 else|else
+name|ch
+operator|->
+name|state
+operator|=
+name|ATA_ACTIVE
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1126,7 +1094,7 @@ name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"finish via bio_taskqueue"
+literal|"finish bio_taskqueue"
 argument_list|)
 expr_stmt|;
 name|bio_taskqueue
@@ -1165,7 +1133,7 @@ name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"finish via taskqueue_thread"
+literal|"finish taskqueue_thread"
 argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
@@ -1226,7 +1194,7 @@ argument_list|,
 literal|"completed entered"
 argument_list|)
 expr_stmt|;
-comment|/* did everything go according to plan ? */
+comment|/* if we had a timeout, reinit channel and deal with the falldown */
 if|if
 condition|(
 name|request
@@ -1236,14 +1204,30 @@ operator|&
 name|ATA_R_TIMEOUT
 condition|)
 block|{
-comment|/* if reinit succeeds and retries still permit, reinject request */
-if|if
-condition|(
-operator|!
+name|int
+name|error
+init|=
 name|ata_reinit
 argument_list|(
 name|ch
 argument_list|)
+decl_stmt|;
+comment|/* if our device disappeared return as cleanup was done already */
+if|if
+condition|(
+operator|!
+name|request
+operator|->
+name|device
+operator|->
+name|param
+condition|)
+return|return;
+comment|/* if reinit succeeded and retries still permit, reinject request */
+if|if
+condition|(
+operator|!
+name|error
 operator|&&
 name|request
 operator|->
@@ -1278,7 +1262,7 @@ name|ATA_DEBUG_RQ
 argument_list|(
 name|request
 argument_list|,
-literal|"completed reinjecting"
+literal|"completed reinject"
 argument_list|)
 expr_stmt|;
 name|ata_queue_request
@@ -1288,7 +1272,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* finish with error */
+comment|/* nothing more to try so finish with error */
 if|if
 condition|(
 operator|!
@@ -1339,7 +1323,7 @@ operator|->
 name|callout
 argument_list|)
 expr_stmt|;
-comment|/* do the all the magic for completition evt retry etc etc */
+comment|/* if this is a soft ECC error warn about it */
 if|if
 condition|(
 operator|(
@@ -2151,17 +2135,13 @@ name|device
 operator|->
 name|channel
 decl_stmt|;
-name|int
-name|gotit
-init|=
-literal|0
-decl_stmt|;
-comment|/* mark request as no longer running we'll shoot it down shortly */
+name|mtx_lock
+argument_list|(
+operator|&
 name|ch
 operator|->
-name|running
-operator|=
-name|NULL
+name|state_mtx
+argument_list|)
 expr_stmt|;
 name|ATA_DEBUG_RQ
 argument_list|(
@@ -2170,7 +2150,7 @@ argument_list|,
 literal|"timeout"
 argument_list|)
 expr_stmt|;
-comment|/* if we saw an interrupt before the timeout, shout and re_arm timeout */
+comment|/* if interrupt has been seen, shout and just rearm timeout */
 if|if
 condition|(
 name|request
@@ -2260,9 +2240,44 @@ argument_list|,
 name|request
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-comment|/* report that we timed out if we have any retries left */
+comment|/*      * if we are waiting for a command to complete set ATA_TIMEOUT so      * we wont loose the race with an eventual interrupt arriving late      */
+if|if
+condition|(
+name|ch
+operator|->
+name|state
+operator|==
+name|ATA_ACTIVE
+condition|)
+block|{
+name|request
+operator|->
+name|flags
+operator||=
+name|ATA_R_TIMEOUT
+expr_stmt|;
+name|ch
+operator|->
+name|state
+operator|=
+name|ATA_TIMEOUT
+expr_stmt|;
+name|ch
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2348,48 +2363,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * if we are waiting for a commend to complete set ATA_TIMEOUT so      * we wont loose the race with an eventual interrupt arriving late      */
-name|mtx_lock
+name|ch
+operator|->
+name|hw
+operator|.
+name|end_transaction
 argument_list|(
-operator|&
-name|ch
-operator|->
-name|state_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|->
-name|state
-operator|==
-name|ATA_ACTIVE
-condition|)
-block|{
-name|ch
-operator|->
-name|state
-operator|=
-name|ATA_TIMEOUT
-expr_stmt|;
-name|gotit
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|ata_printf
-argument_list|(
-name|ch
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"unexpected state in ata_timeout 0x%02x\n"
-argument_list|,
-name|ch
-operator|->
-name|state
+name|request
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -2400,30 +2380,33 @@ operator|->
 name|state_mtx
 argument_list|)
 expr_stmt|;
-comment|/* we got our locks now try to clean up the situation */
-if|if
-condition|(
-name|gotit
-condition|)
-block|{
-name|request
-operator|->
-name|flags
-operator||=
-name|ATA_R_TIMEOUT
-expr_stmt|;
-name|ch
-operator|->
-name|hw
-operator|.
-name|end_transaction
+name|ata_finish
 argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-name|ata_finish
+block|}
+else|else
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
+name|ata_prtdev
 argument_list|(
 name|request
+operator|->
+name|device
+argument_list|,
+literal|"timeout state=%d unexpected\n"
+argument_list|,
+name|ch
+operator|->
+name|state
 argument_list|)
 expr_stmt|;
 block|}
@@ -2444,16 +2427,34 @@ name|struct
 name|ata_request
 modifier|*
 name|request
-init|=
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
+name|request
+operator|=
 name|ch
 operator|->
 name|running
-decl_stmt|;
+expr_stmt|;
 name|ch
 operator|->
 name|running
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2643,16 +2644,38 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
-comment|/* if we have a request "in flight" fail it as well */
-if|if
-condition|(
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
 name|request
 operator|=
 name|ch
 operator|->
 name|running
-operator|)
+expr_stmt|;
+name|ch
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
+comment|/* if we have a request "in flight" fail it as well */
+if|if
+condition|(
+name|request
 operator|&&
 operator|(
 operator|!
@@ -2673,12 +2696,6 @@ name|request
 operator|->
 name|callout
 argument_list|)
-expr_stmt|;
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
 expr_stmt|;
 name|request
 operator|->
