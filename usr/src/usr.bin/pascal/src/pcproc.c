@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.20 %G%"
+literal|"@(#)pcproc.c 1.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,8 +72,15 @@ file|"tmps.h"
 end_include
 
 begin_comment
-comment|/*  * The constant REALSPC defines the amount of forced padding preceeding  * real numbers when they are printed. If REALSPC == 0, then no padding  * is added, REALSPC == 1 adds one extra blank irregardless of the width  * specified by the user.  *  * N.B. - Values greater than one require program mods.  */
+comment|/*  * The constant EXPOSIZE specifies the number of digits in the exponent  * of real numbers.  *  * The constant REALSPC defines the amount of forced padding preceeding  * real numbers when they are printed. If REALSPC == 0, then no padding  * is added, REALSPC == 1 adds one extra blank irregardless of the width  * specified by the user.  *  * N.B. - Values greater than one require program mods.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|EXPOSIZE
+value|2
+end_define
 
 begin_define
 define|#
@@ -1930,11 +1937,23 @@ name|NIL
 case|:
 name|field
 operator|=
-literal|21
+literal|14
+operator|+
+operator|(
+literal|5
+operator|+
+name|EXPOSIZE
+operator|)
 expr_stmt|;
 name|prec
 operator|=
-literal|14
+name|field
+operator|-
+operator|(
+literal|5
+operator|+
+name|EXPOSIZE
+operator|)
 expr_stmt|;
 name|fmt
 operator|=
@@ -1968,7 +1987,11 @@ name|prec
 operator|=
 name|field
 operator|-
-literal|7
+operator|(
+literal|5
+operator|+
+name|EXPOSIZE
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3037,7 +3060,9 @@ name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
-literal|7
+literal|5
+operator|+
+name|EXPOSIZE
 operator|+
 name|REALSPC
 argument_list|,
