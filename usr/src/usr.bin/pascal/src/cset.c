@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cset.c 1.4 %G%"
+literal|"@(#)cset.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,8 @@ expr_stmt|;
 name|setran
 argument_list|(
 name|settype
+operator|->
+name|type
 argument_list|)
 expr_stmt|;
 if|if

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.10 %G%"
+literal|"@(#)put.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,6 +361,9 @@ name|O_FRTN
 case|:
 case|case
 name|O_WRITES
+case|:
+case|case
+name|O_WRITEC
 case|:
 case|case
 name|O_WRITEF

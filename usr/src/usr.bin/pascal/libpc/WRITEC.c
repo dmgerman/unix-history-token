@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)WRITEC.c 1.2 %G%"
+literal|"@(#)WRITEC.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|long
+name|char
 name|d1
 decl_stmt|;
 end_decl_stmt
@@ -79,9 +79,6 @@ return|return;
 block|}
 name|fputc
 argument_list|(
-operator|(
-name|char
-operator|)
 name|d1
 argument_list|,
 name|d2

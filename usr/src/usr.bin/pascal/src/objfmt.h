@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.5 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.6 %G%"; */
 end_comment
 
 begin_ifdef
@@ -227,6 +227,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|CON_INT
+value|O_CON24
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_TYP
+value|(nl + T4INT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTR_DCL
 value|unsigned long
 end_define
@@ -416,6 +430,20 @@ define|#
 directive|define
 name|PTR_DUP
 value|O_SDUP2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CON_INT
+value|O_CON2
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_TYP
+value|(nl + T2INT)
 end_define
 
 begin_define

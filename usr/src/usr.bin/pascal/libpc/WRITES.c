@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)WRITES.c 1.2 %G%"
+literal|"@(#)WRITES.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 name|d2
 decl_stmt|,
 name|d3
@@ -94,14 +94,8 @@ name|fwrite
 argument_list|(
 name|d1
 argument_list|,
-operator|(
-name|int
-operator|)
 name|d2
 argument_list|,
-operator|(
-name|int
-operator|)
 name|d3
 argument_list|,
 name|d4
