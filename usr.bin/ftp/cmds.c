@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cmds.c,v 1.7 1997/06/25 08:56:34 msmith Exp $ */
+comment|/*	$Id: cmds.c,v 1.8 1997/06/27 09:30:01 ache Exp $ */
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.7 1997/06/25 08:56:34 msmith Exp $"
+literal|"$Id: cmds.c,v 1.8 1997/06/27 09:30:01 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1440,18 +1440,19 @@ operator|*
 name|tp2
 argument_list|)
 condition|)
-block|{
 operator|*
 name|tp2
 operator|=
-literal|'a'
-operator|+
+name|tolower
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp2
-operator|-
-literal|'A'
+argument_list|)
 expr_stmt|;
-block|}
 name|tp
 operator|++
 expr_stmt|;
@@ -2262,18 +2263,19 @@ operator|*
 name|tp2
 argument_list|)
 condition|)
-block|{
 operator|*
 name|tp2
 operator|=
-literal|'a'
-operator|+
+name|tolower
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|tp2
-operator|-
-literal|'A'
+argument_list|)
 expr_stmt|;
-block|}
 name|tp
 operator|++
 expr_stmt|;
