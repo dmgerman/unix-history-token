@@ -234,6 +234,13 @@ name|int
 name|ac_multicnt
 decl_stmt|;
 comment|/* length of ac_multiaddrs list */
+comment|/* #ifdef	NETGRAPH */
+name|void
+modifier|*
+name|ac_ng
+decl_stmt|;
+comment|/* hook to hang netgraph stuff off */
+comment|/* #endif */
 block|}
 struct|;
 end_struct
