@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.13 94/04/02$  *  *	@(#)vn.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.13 94/04/02$  *  *	@(#)vn.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -454,20 +454,18 @@ begin_comment
 comment|/*  * Break the request into bsize pieces and submit using VOP_BMAP/VOP_STRATEGY.  * Note that this driver can only be used for swapping over NFS on the hp  * since nfs_strategy on the vax cannot handle u-areas and page tables.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vnstrategy
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|unit
@@ -1083,7 +1081,7 @@ name|sz
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Feed requests sequentially.  * We do it this way to keep from flooding NFS servers if we are connected  * to an NFS file.  This places the burden on the client rather than the  * server.  */
