@@ -37,7 +37,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_dropgid.c,v 1.6 2001/09/28 16:36:28 ca Exp $"
+literal|"@(#)$Id: t_dropgid.c,v 1.1.1.1 2002/02/17 21:56:43 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 

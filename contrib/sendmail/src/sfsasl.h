@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, 2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sfsasl.h,v 8.17 2000/09/19 21:30:49 ca Exp $"  */
+comment|/*  * Copyright (c) 1999, 2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sfsasl.h,v 1.1.1.2 2002/02/17 21:56:41 gshapiro Exp $"  */
 end_comment
 
 begin_ifndef

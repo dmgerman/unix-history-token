@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-fopen.c,v 1.9 2002/02/06 23:57:45 ca Exp $"
+literal|"@(#)$Id: t-fopen.c,v 1.1.1.2 2002/04/10 03:04:56 gshapiro Exp $"
 argument_list|)
 end_macro
 

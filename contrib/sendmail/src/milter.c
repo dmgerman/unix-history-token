@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.194 2002/03/05 00:23:47 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 1.1.1.9 2002/04/10 03:04:50 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -6660,6 +6660,12 @@ decl_stmt|,
 modifier|*
 name|bp
 decl_stmt|;
+name|char
+name|exp
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
 name|ssize_t
 name|s
 decl_stmt|;
@@ -6734,6 +6740,20 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+name|expand
+argument_list|(
+name|v
+argument_list|,
+name|exp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|exp
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|s
 operator|+=
 name|strlen
@@ -6748,7 +6768,7 @@ literal|1
 operator|+
 name|strlen
 argument_list|(
-name|v
+name|exp
 argument_list|)
 operator|+
 literal|1
@@ -6832,6 +6852,20 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+name|expand
+argument_list|(
+name|v
+argument_list|,
+name|exp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|exp
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -6856,7 +6890,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|v
+name|exp
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6896,7 +6930,7 @@ name|sm_strlcpy
 argument_list|(
 name|bp
 argument_list|,
-name|v
+name|exp
 argument_list|,
 name|s
 operator|-
@@ -11243,10 +11277,6 @@ block|{
 name|int
 name|err
 decl_stmt|;
-if|#
-directive|if
-name|NOFTRUNCATE
-comment|/* XXX: Not much we can do except rewind it */
 name|err
 operator|=
 name|sm_io_error
@@ -11298,6 +11328,40 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+block|{
+name|MILTER_DF_ERROR
+argument_list|(
+literal|"milter_replbody: sm_io_seek %s: %s"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|#
+directive|if
+name|NOFTRUNCATE
+comment|/* XXX: Not much we can do except rewind it */
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|MILTER_DF_ERROR
+argument_list|(
+literal|"milter_replbody: ftruncate not available on this platform (%s:%s)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 else|#
 directive|else
 comment|/* NOFTRUNCATE */
@@ -11319,9 +11383,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NOFTRUNCATE */
 if|if
 condition|(
 name|err
@@ -11339,6 +11400,9 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* NOFTRUNCATE */
 block|}
 if|if
 condition|(

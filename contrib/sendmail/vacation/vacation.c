@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.134 2002/03/01 20:45:00 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 1.1.1.7 2002/04/10 03:05:00 gshapiro Exp $"
 argument_list|)
 end_macro
 

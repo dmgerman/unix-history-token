@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.180 2002/03/05 05:47:12 gshapiro Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 1.1.1.8 2002/04/10 03:04:49 gshapiro Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.180 2002/03/05 05:47:12 gshapiro Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 1.1.1.8 2002/04/10 03:04:49 gshapiro Exp $ (without name server)"
 argument_list|)
 end_macro
 
