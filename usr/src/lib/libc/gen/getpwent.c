@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.7 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,8 +94,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|_pw_fd
-decl_stmt|,
 name|_pw_rewind
 init|=
 literal|1
@@ -112,7 +110,7 @@ decl_stmt|,
 modifier|*
 name|_pw_file
 init|=
-name|_PATH_MASTERPASSWD
+name|_PATH_PASSWD
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +466,10 @@ specifier|static
 name|start_pw
 argument_list|()
 block|{
+name|char
+operator|*
+name|p
+block|;
 if|if
 condition|(
 name|_pw_db
@@ -525,6 +527,26 @@ operator|)
 return|;
 end_if
 
+begin_comment
+comment|/* 	 * special case; if it's the official password file, look in 	 * the master password file, otherwise, look in the file itself. 	 */
+end_comment
+
+begin_expr_stmt
+name|p
+operator|=
+name|strcmp
+argument_list|(
+name|_pw_file
+argument_list|,
+name|_PATH_PASSWD
+argument_list|)
+condition|?
+name|_pw_file
+else|:
+name|_PATH_MASTERPASSWD
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
@@ -532,7 +554,7 @@ name|_pw_fp
 operator|=
 name|fopen
 argument_list|(
-name|_pw_file
+name|p
 argument_list|,
 literal|"r"
 argument_list|)
@@ -650,24 +672,6 @@ operator|(
 name|FILE
 operator|*
 operator|)
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|_pw_fd
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|_pw_fd
-argument_list|)
-expr_stmt|;
-name|_pw_fd
-operator|=
 name|NULL
 expr_stmt|;
 block|}
@@ -1354,6 +1358,8 @@ name|atol
 argument_list|()
 block|;
 name|int
+name|fd
+block|,
 name|n
 block|;
 name|char
@@ -1366,20 +1372,31 @@ name|geteuid
 argument_list|()
 condition|)
 return|return;
+comment|/* 	 * special case; if it's the official password file, look in 	 * the master password file, otherwise, look in the file itself. 	 */
+name|p
+operator|=
+name|strcmp
+argument_list|(
+name|_pw_file
+argument_list|,
+name|_PATH_PASSWD
+argument_list|)
+condition|?
+name|_pw_file
+else|:
+name|_PATH_MASTERPASSWD
+expr_stmt|;
 end_expr_stmt
 
 begin_if
 if|if
 condition|(
-operator|!
-name|_pw_fd
-operator|&&
 operator|(
-name|_pw_fd
+name|fd
 operator|=
 name|open
 argument_list|(
-name|_pw_file
+name|p
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -1389,9 +1406,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return;
 end_if
 
 begin_expr_stmt
@@ -1411,7 +1426,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
-name|_pw_fd
+name|fd
 argument_list|,
 name|pos
 argument_list|,
@@ -1433,7 +1448,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-name|_pw_fd
+name|fd
 argument_list|,
 name|pwbuf
 argument_list|,
@@ -1510,7 +1525,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|_pw_fd
+name|fd
 argument_list|)
 expr_stmt|;
 end_expr_stmt
