@@ -315,7 +315,7 @@ name|PCMCIA_CARD
 argument_list|(
 literal|3COM
 argument_list|,
-literal|3CRWE62092A
+literal|3CRWE777A
 argument_list|,
 literal|0
 argument_list|)
