@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.27 1998/12/07 21:58:35 archie Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.28 1999/01/02 18:52:13 dt Exp $ */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -43,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include
