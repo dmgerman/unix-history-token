@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.59 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.60 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.59 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.60 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1365,6 +1365,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|fsync
+argument_list|(
+name|fileno
+argument_list|(
+name|tfp
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
@@ -1525,14 +1536,6 @@ end_endif
 begin_comment
 comment|/* LOG */
 end_comment
-
-begin_expr_stmt
-name|fflush
-argument_list|(
-name|tfp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_return
 return|return;

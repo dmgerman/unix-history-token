@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.18 (Berkeley) %G%"
+literal|"@(#)collect.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -824,6 +824,17 @@ argument_list|(
 name|tf
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fsync
+argument_list|(
+name|fileno
+argument_list|(
+name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
