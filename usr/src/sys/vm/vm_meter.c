@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	3.5	%G%	*/
+comment|/*	vm_meter.c	3.6	%G%	*/
 end_comment
 
 begin_include
@@ -274,7 +274,7 @@ decl_stmt|;
 name|int
 name|sleeper
 decl_stmt|,
-name|desparate
+name|desperate
 decl_stmt|,
 name|deservin
 decl_stmt|,
@@ -348,7 +348,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|desparate
+name|desperate
 operator|=
 literal|1
 expr_stmt|;
@@ -356,11 +356,11 @@ goto|goto
 name|hardswap
 goto|;
 block|}
-name|desparate
+name|desperate
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Not desparate for core, 	 * look for someone who deserves to be brought in. 	 */
+comment|/* 	 * Not desperate for core, 	 * look for someone who deserves to be brought in. 	 */
 name|outpri
 operator|=
 operator|-
@@ -1071,12 +1071,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * If we found a long-time sleeper, or we are desparate and 	 * found anyone to swap out, or if someone deserves to come 	 * in and we didn't find a sleeper, but found someone who 	 * has been in core for a reasonable length of time, then 	 * we kick the poor luser out. 	 */
+comment|/* 	 * If we found a long-time sleeper, or we are desperate and 	 * found anyone to swap out, or if someone deserves to come 	 * in and we didn't find a sleeper, but found someone who 	 * has been in core for a reasonable length of time, then 	 * we kick the poor luser out. 	 */
 if|if
 condition|(
 name|sleeper
 operator|||
-name|desparate
+name|desperate
 operator|&&
 name|p
 operator|||
@@ -1109,7 +1109,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|desparate
+name|desperate
 condition|)
 block|{
 comment|/* 			 * Want to give this space to the rest of 			 * the processes in core so give them a chance 			 * by increasing the deficit. 			 */
