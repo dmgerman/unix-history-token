@@ -3119,6 +3119,12 @@ name|p_ru
 operator|.
 name|ru_oublock
 expr_stmt|;
+comment|/* 	 * Temporarily bump the ref count while reading to avoid the 	 * descriptor being ripped out from under us. 	 */
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cb
@@ -3180,6 +3186,13 @@ name|mycp
 argument_list|)
 expr_stmt|;
 block|}
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|mycp
+argument_list|)
+expr_stmt|;
 name|inblock_end
 operator|=
 name|mycp
@@ -4599,6 +4612,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|ki
 operator|->
 name|kaio_buffer_count
@@ -5045,6 +5063,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5075,6 +5100,13 @@ argument_list|(
 name|bp
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -6177,6 +6209,11 @@ return|return
 name|EINVAL
 return|;
 block|}
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX   	 * Figure out how to do this properly.  This currently won't 	 * work on the alpha, since we're passing in a pointer via 	 * aio_lio_opcode, which is an int. 	 */
 block|{
 name|struct
@@ -6372,11 +6409,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 name|no_kqueue
 label|:
@@ -6555,9 +6590,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
+name|error
+operator|=
 literal|0
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
 block|}
 name|splx
 argument_list|(
@@ -6580,10 +6619,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-literal|0
-return|;
-elseif|else
+goto|goto
+name|done
+goto|;
 if|if
 condition|(
 name|error
@@ -6625,9 +6663,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-name|error
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* No buffer for daemon I/O. */
 name|aiocbe
@@ -6819,6 +6857,15 @@ block|}
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|done
+label|:
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -9337,6 +9384,12 @@ name|iocb
 operator|.
 name|aio_nbytes
 expr_stmt|;
+comment|/* 	 * Temporarily bump the ref count while reading to avoid the 	 * descriptor being ripped out from under us. 	 */
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fo_read
@@ -9351,6 +9404,13 @@ operator|->
 name|f_cred
 argument_list|,
 name|FOF_OFFSET
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
 argument_list|,
 name|p
 argument_list|)
@@ -9694,6 +9754,12 @@ name|iocb
 operator|.
 name|aio_nbytes
 expr_stmt|;
+comment|/* 	 * Temporarily bump the ref count while writing to avoid the 	 * descriptor being ripped out from under us. 	 */
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fo_write
@@ -9708,6 +9774,13 @@ operator|->
 name|f_cred
 argument_list|,
 name|FOF_OFFSET
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
 argument_list|,
 name|p
 argument_list|)
