@@ -2027,6 +2027,13 @@ argument_list|,
 name|pci_set_powerstate_method
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_assign_interrupt
+argument_list|,
+name|pci_assign_interrupt_method
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
