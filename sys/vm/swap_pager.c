@@ -1221,6 +1221,14 @@ block|{
 name|vm_object_t
 name|object
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|handle
@@ -1253,6 +1261,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|sw_alloc_interlock
+operator|=
+literal|1
+expr_stmt|;
 name|object
 operator|=
 name|vm_pager_object_lookup
@@ -1315,8 +1327,9 @@ block|}
 if|if
 condition|(
 name|sw_alloc_interlock
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|wakeup
 argument_list|(
@@ -1383,6 +1396,14 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove from list right away so lookups will fail if we block for 	 * pageout completion. 	 */
 name|mtx_lock
 argument_list|(
@@ -2355,6 +2376,22 @@ name|nbp
 init|=
 name|NULL
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 comment|/* XXX: KASSERT instead ? */
 if|if
 condition|(
@@ -2672,9 +2709,21 @@ operator|->
 name|b_bcount
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|flushchainbuf
 argument_list|(
 name|nbp
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|s
@@ -2843,6 +2892,12 @@ operator|->
 name|b_bcount
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|flushchainbuf
 argument_list|(
 name|nbp
@@ -2850,6 +2905,7 @@ argument_list|)
 expr_stmt|;
 comment|/* nbp = NULL; */
 block|}
+else|else
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2925,6 +2981,14 @@ decl_stmt|;
 name|vm_pindex_t
 name|lastpindex
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|mreq
 operator|=
 name|m
@@ -3399,12 +3463,6 @@ operator|&
 name|vm_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|BUF_KERNPROC
 argument_list|(
 name|bp
@@ -3413,12 +3471,6 @@ expr_stmt|;
 name|BUF_STRATEGY
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3582,6 +3634,14 @@ name|n
 init|=
 literal|0
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|count
@@ -4152,12 +4212,6 @@ operator|&
 name|vm_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 		 * asynchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 		 */
 if|if
 condition|(
@@ -4180,12 +4234,6 @@ expr_stmt|;
 name|BUF_STRATEGY
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -4285,12 +4333,6 @@ operator|=
 name|VM_PAGER_PEND
 expr_stmt|;
 comment|/* 		 * Now that we are through with the bp, we can call the 		 * normal async completion, which frees everything up. 		 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|swp_pager_async_iodone
 argument_list|(
 name|bp
@@ -4378,6 +4420,14 @@ name|object
 init|=
 name|NULL
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -5148,7 +5198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  *  * 	mv_mtx must be held  *	This routine must be called at splvm()  */
+comment|/*  * SWP_PAGER_META_FREE() - free a range of blocks in the object's swap metadata  *  *	The requested range of blocks is freed, with any associated swap   *	returned to the swap bitmap.  *  *	This routine will free swap metadata structures as they are cleaned   *	out.  This routine does *NOT* operate on swap metadata associated  *	with resident pages.  *  * 	vm_mtx must be held  *	This routine must be called at splvm()  */
 end_comment
 
 begin_function
@@ -5542,6 +5592,14 @@ decl_stmt|;
 name|daddr_t
 name|r1
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The meta data only exists of the object is OBJT_SWAP  	 * and even then might not be allocated yet. 	 */
 if|if
 condition|(
@@ -5896,6 +5954,14 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|nbp
 operator|=
 name|getpbuf
@@ -6029,16 +6095,20 @@ modifier|*
 name|nbp
 parameter_list|)
 block|{
-name|mtx_unlock
+name|mtx_assert
 argument_list|(
 operator|&
 name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6091,18 +6161,6 @@ name|nbp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -6138,10 +6196,12 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|Giant
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|count
@@ -6232,12 +6292,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
