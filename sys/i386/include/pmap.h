@@ -269,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|NKPT
-value|17
+value|30
 end_define
 
 begin_comment
