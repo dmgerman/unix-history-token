@@ -1845,7 +1845,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"USA_RESIDENT=\"%s\"\n"
+literal|"USA_RESIDENT=%s\n"
 argument_list|,
 name|USAResident
 condition|?
