@@ -649,13 +649,11 @@ condition|(
 operator|(
 name|lc
 operator|=
-name|login_getclass
+name|login_getpwclass
 argument_list|(
 name|authctxt
 operator|->
 name|pw
-operator|->
-name|pw_class
 argument_list|)
 operator|)
 operator|==
