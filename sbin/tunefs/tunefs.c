@@ -462,7 +462,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:Ae:f:l:m:n:o:ps:"
+literal|"Aa:e:f:l:m:n:o:ps:"
 argument_list|)
 operator|)
 operator|!=
@@ -474,6 +474,17 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|found_arg
+operator|=
+literal|1
+expr_stmt|;
+name|Aflag
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -521,17 +532,6 @@ block|}
 name|aflag
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'A'
-case|:
-name|found_arg
-operator|=
-literal|1
-expr_stmt|;
-name|Aflag
-operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -1882,7 +1882,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: tunefs [-a enable | disable] [-A] [-e maxbpg] [-f avgfilesize]"
+literal|"usage: tunefs [-A] [-a enable | disable] [-e maxbpg] [-f avgfilesize]"
 argument_list|,
 literal|"              [-l enable | disable] [-m minfree] [-n enable | disable]"
 argument_list|,
