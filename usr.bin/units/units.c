@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: units.c,v 1.6 1996/04/06 06:01:03 thorpej Exp $	*/
+comment|/*	$Id: units.c,v 1.1.1.1 1996/06/08 03:43:43 alex Exp $	*/
 end_comment
 
 begin_comment
@@ -3170,7 +3170,6 @@ condition|(
 operator|!
 name|quiet
 condition|)
-empty_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
@@ -3280,6 +3279,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
