@@ -45,8 +45,16 @@ literal|0
 end_if
 
 begin_comment
-comment|/* from "snd.h" */
+comment|/* from "pcm.h" via disgusting #include in snd/sound.h */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isa_driver
+name|pcmdriver
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
