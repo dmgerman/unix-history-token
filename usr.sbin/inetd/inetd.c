@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.36 1998/07/22 14:24:12 phk Exp $"
+literal|"$Id: inetd.c,v 1.37 1998/07/23 20:05:02 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2414,6 +2414,11 @@ name|sep
 operator|->
 name|se_time
 argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2439,6 +2444,11 @@ argument_list|(
 operator|&
 name|now
 argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -8585,6 +8595,11 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
 name|NULL
 argument_list|)
 operator|<
