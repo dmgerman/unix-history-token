@@ -93,6 +93,12 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -2439,6 +2445,19 @@ name|vap
 operator|->
 name|va_rdev
 expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|va_size
+operator|>
+name|OFF_MAX
+condition|)
+return|return
+operator|(
+name|EOVERFLOW
+operator|)
+return|;
 name|sb
 operator|->
 name|st_size
