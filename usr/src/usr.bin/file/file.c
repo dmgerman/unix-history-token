@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.10 (Berkeley) %G%"
+literal|"@(#)file.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -992,6 +992,51 @@ name|mbuf
 argument_list|)
 condition|)
 return|return;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\037'
+operator|&&
+name|buf
+index|[
+literal|1
+index|]
+operator|==
+literal|'\235'
+condition|)
+block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|2
+index|]
+operator|&
+literal|0x80
+condition|)
+name|printf
+argument_list|(
+literal|"block "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"compressed %d bit code data\n"
+argument_list|,
+name|buf
+index|[
+literal|2
+index|]
+operator|&
+literal|0x1f
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|strncmp
