@@ -31,12 +31,6 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -180,6 +174,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|__sFILE
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|wint_t
@@ -194,7 +194,8 @@ begin_function_decl
 name|wint_t
 name|fgetwc
 parameter_list|(
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -211,7 +212,8 @@ name|__restrict
 parameter_list|,
 name|int
 parameter_list|,
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 name|__restrict
 parameter_list|)
@@ -224,7 +226,8 @@ name|fputwc
 parameter_list|(
 name|wchar_t
 parameter_list|,
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -239,7 +242,8 @@ name|wchar_t
 modifier|*
 name|__restrict
 parameter_list|,
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 name|__restrict
 parameter_list|)
@@ -250,7 +254,8 @@ begin_function_decl
 name|int
 name|fwide
 parameter_list|(
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 parameter_list|,
 name|int
@@ -262,7 +267,8 @@ begin_function_decl
 name|wint_t
 name|getwc
 parameter_list|(
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -357,7 +363,8 @@ name|putwc
 parameter_list|(
 name|wchar_t
 parameter_list|,
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -378,7 +385,8 @@ name|ungetwc
 parameter_list|(
 name|wint_t
 parameter_list|,
-name|FILE
+name|struct
+name|__sFILE
 modifier|*
 parameter_list|)
 function_decl|;
