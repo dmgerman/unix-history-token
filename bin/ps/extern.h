@@ -251,6 +251,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|mtxname
+name|__P
+argument_list|(
+operator|(
+name|KINFO
+operator|*
+operator|,
+name|VARENT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|nlisterr
 name|__P
 argument_list|(
