@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/elf.h>
 end_include
 
@@ -772,6 +778,40 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * It's necessary to fail if the filsz + offset taken from the 	 * header is greater than the actual file pager object's size. 	 * If we were to allow this, then the vm_map_find() below would 	 * walk right off the end of the file object and into the ether. 	 * 	 * While I'm here, might as well check for something else that 	 * is invalid: filsz cannot be greater than memsz. 	 */
+if|if
+condition|(
+operator|(
+name|off_t
+operator|)
+name|filsz
+operator|+
+name|offset
+operator|>
+name|object
+operator|->
+name|un_pager
+operator|.
+name|vnp
+operator|.
+name|vnp_size
+operator|||
+name|filsz
+operator|>
+name|memsz
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"elf_load_section: truncated ELF file\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 name|map_addr
 operator|=
 name|trunc_page
@@ -1377,6 +1417,21 @@ argument_list|(
 name|imgp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Also make certain that the interpreter stays the same, so set 	 * its VTEXT flag, too. 	 */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|nd
+operator|.
+name|ni_vp
+operator|->
+name|v_flag
+operator||=
+name|VTEXT
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|nd
@@ -1942,6 +1997,19 @@ name|e_phoff
 operator|)
 expr_stmt|;
 comment|/* 	 * From this point on, we may have resources that need to be freed. 	 */
+comment|/* 	 * Yeah, I'm paranoid.  There is every reason in the world to get 	 * VTEXT now since from here on out, there are places we can have 	 * a context switch.  Better safe than sorry; I really don't want 	 * the file to change while it's being loaded. 	 */
+name|atomic_set_long
+argument_list|(
+operator|&
+name|imgp
+operator|->
+name|vp
+operator|->
+name|v_flag
+argument_list|,
+name|VTEXT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2773,15 +2841,6 @@ operator|->
 name|interpreted
 operator|=
 literal|0
-expr_stmt|;
-comment|/* don't allow modifying the file while we run it */
-name|imgp
-operator|->
-name|vp
-operator|->
-name|v_flag
-operator||=
-name|VTEXT
 expr_stmt|;
 name|fail
 label|:
