@@ -91,10 +91,6 @@ name|c
 condition|)
 block|{
 case|case
-operator|-
-literal|1
-case|:
-case|case
 literal|'\n'
 case|:
 case|case
