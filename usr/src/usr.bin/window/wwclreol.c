@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreol.c	3.6 83/08/17"
+literal|"@(#)wwclreol.c	3.7 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,7 +272,7 @@ name|w
 operator|->
 name|ww_buf
 index|[
-name|row
+name|line
 index|]
 index|[
 name|col
