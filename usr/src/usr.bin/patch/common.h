@@ -958,18 +958,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* usually */
-end_comment
-
-begin_function_decl
 name|long
 name|atol
 parameter_list|()
