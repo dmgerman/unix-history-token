@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_subs.c	1.4 (Berkeley) %G%"
+literal|"@(#)ar_subs.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3400,12 +3400,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 				 * valid trailer found, drain input as required 				 */
+name|ar_drain
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|ret
@@ -3507,12 +3513,18 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
+comment|/* 		 * valid trailer found, drain input as required 		 */
+name|ar_drain
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 operator|++
 name|flcnt
 expr_stmt|;
