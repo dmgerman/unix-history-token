@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1991 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  run, runv, runp, runvp --  execute process and wait for it to exit  *  *  Usage:  *	i = run (file, arg1, arg2, ..., argn, 0);  *	i = runv (file, arglist);  *	i = runp (file, arg1, arg2, ..., argn, 0);  *	i = runvp (file, arglist);  *  *  Run, runv, runp and runvp have argument lists exactly like the  *  corresponding routines, execl, execv, execlp, execvp.  The run  *  routines perform a fork, then:  *  IN THE NEW PROCESS, an execl[p] or execv[p] is performed with the  *  specified arguments.  The process returns with a -1 code if the  *  exec was not successful.  *  IN THE PARENT PROCESS, the signals SIGQUIT and SIGINT are disabled,  *  the process waits until the newly forked process exits, the  *  signals are restored to their original status, and the return  *  status of the process is analyzed.  *  All run routines return:  -1 if the exec failed or if the child was  *  terminated abnormally; otherwise, the exit code of the child is  *  returned.  *  **********************************************************************  * HISTORY  * $Log: run.c,v $  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.1  89/10/14  19:53:39  rvb  * Initial revision  *   * Revision 1.2  89/08/03  14:36:46  mja  * 	Update run() and runp() to use<varargs.h>.  * 	[89/04/19            mja]  *   * 23-Sep-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged old runv and runvp modules.  *  * 22-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added check and kill if child process was stopped.  *  * 30-Apr-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Adapted for 4.2 BSD UNIX:  Conforms to new signals and wait.  *  * 15-July-82 Mike Accetta (mja) and Neal Friedman (naf)  *				  at Carnegie-Mellon University  *	Added a return(-1) if vfork fails.  This should only happen  *	if there are no more processes available.  *  * 28-Jan-80  Steven Shafer (sas) at Carnegie-Mellon University  *	Added setuid and setgid for system programs' use.  *  * 21-Jan-80  Steven Shafer (sas) at Carnegie-Mellon University  *	Changed fork to vfork.  *  * 20-Nov-79  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for VAX.  The proper way to fork-and-execute a system  *	program is now by "runvp" or "runp", with the program name  *	(rather than an absolute pathname) as the first argument;  *	that way, the "PATH" variable in the environment does the right  *	thing.  Too bad execvp and execlp (hence runvp and runp) don't  *	accept a pathlist as an explicit argument.  *  **********************************************************************  */
+comment|/*  run, runv, runp, runvp --  execute process and wait for it to exit  *  *  Usage:  *	i = run (file, arg1, arg2, ..., argn, 0);  *	i = runv (file, arglist);  *	i = runp (file, arg1, arg2, ..., argn, 0);  *	i = runvp (file, arglist);  *  *  Run, runv, runp and runvp have argument lists exactly like the  *  corresponding routines, execl, execv, execlp, execvp.  The run  *  routines perform a fork, then:  *  IN THE NEW PROCESS, an execl[p] or execv[p] is performed with the  *  specified arguments.  The process returns with a -1 code if the  *  exec was not successful.  *  IN THE PARENT PROCESS, the signals SIGQUIT and SIGINT are disabled,  *  the process waits until the newly forked process exits, the  *  signals are restored to their original status, and the return  *  status of the process is analyzed.  *  All run routines return:  -1 if the exec failed or if the child was  *  terminated abnormally; otherwise, the exit code of the child is  *  returned.  *  **********************************************************************  * HISTORY  * $Log: run.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.1  89/10/14  19:53:39  rvb  * Initial revision  *   * Revision 1.2  89/08/03  14:36:46  mja  * 	Update run() and runp() to use<varargs.h>.  * 	[89/04/19            mja]  *   * 23-Sep-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged old runv and runvp modules.  *  * 22-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added check and kill if child process was stopped.  *  * 30-Apr-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Adapted for 4.2 BSD UNIX:  Conforms to new signals and wait.  *  * 15-July-82 Mike Accetta (mja) and Neal Friedman (naf)  *				  at Carnegie-Mellon University  *	Added a return(-1) if vfork fails.  This should only happen  *	if there are no more processes available.  *  * 28-Jan-80  Steven Shafer (sas) at Carnegie-Mellon University  *	Added setuid and setgid for system programs' use.  *  * 21-Jan-80  Steven Shafer (sas) at Carnegie-Mellon University  *	Changed fork to vfork.  *  * 20-Nov-79  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for VAX.  The proper way to fork-and-execute a system  *	program is now by "runvp" or "runp", with the program name  *	(rather than an absolute pathname) as the first argument;  *	that way, the "PATH" variable in the environment does the right  *	thing.  Too bad execvp and execlp (hence runvp and runp) don't  *	accept a pathlist as an explicit argument.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -30,6 +30,13 @@ include|#
 directive|include
 file|<varargs.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MAXARGS
+value|100
+end_define
 
 begin_function_decl
 specifier|static
@@ -141,7 +148,53 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
+name|char
+modifier|*
+name|args
+index|[
+name|MAXARGS
+index|]
+decl_stmt|;
+name|int
+name|argno
+init|=
+literal|0
+decl_stmt|;
 name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|argno
+operator|<
+name|MAXARGS
+operator|&&
+operator|(
+name|args
+index|[
+name|argno
+operator|++
+index|]
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+operator|)
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+condition|)
+empty_stmt|;
+name|va_end
 argument_list|(
 name|ap
 argument_list|)
@@ -152,12 +205,7 @@ name|runvp
 argument_list|(
 name|name
 argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
+name|args
 argument_list|)
 expr_stmt|;
 return|return

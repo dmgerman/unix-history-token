@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * Logging support for SUP  **********************************************************************  * HISTORY  * $Log: log.c,v $  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.5  92/08/11  12:03:43  mrt  * 	Brad's delinting and variable argument list usage  * 	changes. Added copyright.  *   * Revision 1.3  89/08/15  15:30:37  bww  * 	Updated to use v*printf() in place of _doprnt().  * 	From "[89/04/19            mja]" at CMU.  * 	[89/08/15            bww]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added check to allow logopen() to be called multiple times.  *  * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
+comment|/*  * Logging support for SUP  **********************************************************************  * HISTORY  * $Log: log.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.5  92/08/11  12:03:43  mrt  * 	Brad's delinting and variable argument list usage  * 	changes. Added copyright.  *   * Revision 1.3  89/08/15  15:30:37  bww  * 	Updated to use v*printf() in place of _doprnt().  * 	From "[89/04/19            mja]" at CMU.  * 	[89/08/15            bww]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added check to allow logopen() to be called multiple times.  *  * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -12,6 +12,29 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -24,6 +47,11 @@ include|#
 directive|include
 file|<c.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -132,7 +160,7 @@ name|program
 argument_list|,
 name|LOG_PID
 argument_list|,
-name|LOG_DAEMON
+name|LOG_LOCAL1
 argument_list|)
 expr_stmt|;
 name|opened

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * SUP Communication Module for 4.3 BSD  *  * SUP COMMUNICATION MODULE SPECIFICATIONS:  *  * IN THIS MODULE:  *  * CONNECTION ROUTINES  *  *   FOR SERVER  *	servicesetup (port)	establish TCP port connection  *	  char *port;			name of service  *	service ()		accept TCP port connection  *	servicekill ()		close TCP port in use by another process  *	serviceprep ()		close temp ports used to make connection  *	serviceend ()		close TCP port  *  *   FOR CLIENT  *	request (port,hostname,retry) establish TCP port connection  *	  char *port,*hostname;		  name of service and host  *	  int retry;			  true if retries should be used  *	requestend ()		close TCP port  *  * HOST NAME CHECKING  *	p = remotehost ()	remote host name (if known)  *	  char *p;  *	i = samehost ()		whether remote host is also this host  *	  int i;  *	i = matchhost (name)	whether remote host is same as name  *	  int i;  *	  char *name;  *  * RETURN CODES  *	All procedures return values as indicated above.  Other routines  *	normally return SCMOK on success, SCMERR on error.  *  * COMMUNICATION PROTOCOL  *  *	Described in scmio.c.  *  **********************************************************************  * HISTORY  *  2-Oct-92  Mary Thompson (mrt) at Carnegie-Mellon University  *	Added conditional declarations of INADDR_NONE and INADDR_LOOPBACK  *	since Tahoe version of<netinet/in.h> does not define them.  *  * $Log: scm.c,v $  * Revision 1.2  1994/06/20  06:04:04  rgrimes  * Humm.. they did a lot of #if __STDC__ but failed to properly prototype  * the code.  Also fixed one bad argument to a wait3 call.  *  * It won't compile -Wall, but atleast it compiles standard without warnings  * now.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.13  92/08/11  12:05:35  mrt  * 	Added changes from stump:  * 	  Allow for multiple interfaces, and for numeric addresses.  * 	  Changed to use builtin port for the "supfiledbg"  * 	    service when getservbyname() cannot find it.  * 	  Added forward static declatations, delinted.  * 	  Updated variable argument usage.  * 	[92/08/08            mrt]  *   * Revision 1.12  92/02/08  19:01:11  mja  * 	Add (struct sockaddr *) casts for HC 2.1.  * 	[92/02/08  18:59:09  mja]  *   * Revision 1.11  89/08/03  19:49:03  mja  * 	Updated to use v*printf() in place of _doprnt().  * 	[89/04/19            mja]  *   * 11-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Moved sleep into computeBackoff, renamed to dobackoff.  *  * 10-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added timeout to backoff.  *  * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed nameserver support.  *  * 09-Sep-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed to depend less upon having name of remote host.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon Universtiy  *	Extracted backoff/sleeptime computation from "request" and  *	created "computeBackoff" so that I could use it in sup.c when  *	trying to get to nameservers as a group.  *  * 21-May-87  Chriss Stephens (chriss) at Carnegie Mellon University  *	Merged divergent CS and EE versions.  *  * 02-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added some bullet-proofing code around hostname calls.  *  * 31-Mar-87  Dan Nydick (dan) at Carnegie-Mellon University  *	Fixed for 4.3.  *  * 30-May-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to use known values for well-known ports if they are  *	not found in the host table.  *  * 19-Feb-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed setsockopt SO_REUSEADDR to be non-fatal.  Added fourth  *	parameter as described in 4.3 manual entry.  *  * 15-Feb-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added call of readflush() to requestend() routine.  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Major rewrite for protocol version 4.  All read/write and crypt  *	routines are now in scmio.c.  *  * 14-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added setsockopt SO_REUSEADDR call.  *  * 01-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed code to "gracefully" handle unexpected messages.  This  *	seems reasonable since it didn't work anyway, and should be  *	handled at a higher level anyway by adhering to protocol version  *	number conventions.  *  * 26-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed scm.c to free space for remote host name when connection  *	is closed.  *  * 07-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed 4.2 retry code to reload sin values before retry.  *  * 22-Oct-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to retry initial connection open request.  *  * 22-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged 4.1 and 4.2 versions together.  *  * 21-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Add close() calls after pipe() call.  *  * 12-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Converted for 4.2 sockets; added serviceprep() routine.  *  * 04-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for 4.2 BSD.  *  **********************************************************************  */
+comment|/*  * SUP Communication Module for 4.3 BSD  *  * SUP COMMUNICATION MODULE SPECIFICATIONS:  *  * IN THIS MODULE:  *  * CONNECTION ROUTINES  *  *   FOR SERVER  *	servicesetup (port)	establish TCP port connection  *	  char *port;			name of service  *	service ()		accept TCP port connection  *	servicekill ()		close TCP port in use by another process  *	serviceprep ()		close temp ports used to make connection  *	serviceend ()		close TCP port  *  *   FOR CLIENT  *	request (port,hostname,retry) establish TCP port connection  *	  char *port,*hostname;		  name of service and host  *	  int retry;			  true if retries should be used  *	requestend ()		close TCP port  *  * HOST NAME CHECKING  *	p = remotehost ()	remote host name (if known)  *	  char *p;  *	i = samehost ()		whether remote host is also this host  *	  int i;  *	i = matchhost (name)	whether remote host is same as name  *	  int i;  *	  char *name;  *  * RETURN CODES  *	All procedures return values as indicated above.  Other routines  *	normally return SCMOK on success, SCMERR on error.  *  * COMMUNICATION PROTOCOL  *  *	Described in scmio.c.  *  **********************************************************************  * HISTORY  *  2-Oct-92  Mary Thompson (mrt) at Carnegie-Mellon University  *	Added conditional declarations of INADDR_NONE and INADDR_LOOPBACK  *	since Tahoe version of<netinet/in.h> does not define them.  *  * $Log: scm.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.2  1994/06/20  06:04:04  rgrimes  * Humm.. they did a lot of #if __STDC__ but failed to properly prototype  * the code.  Also fixed one bad argument to a wait3 call.  *  * It won't compile -Wall, but atleast it compiles standard without warnings  * now.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.13  92/08/11  12:05:35  mrt  * 	Added changes from stump:  * 	  Allow for multiple interfaces, and for numeric addresses.  * 	  Changed to use builtin port for the "supfiledbg"  * 	    service when getservbyname() cannot find it.  * 	  Added forward static declatations, delinted.  * 	  Updated variable argument usage.  * 	[92/08/08            mrt]  *   * Revision 1.12  92/02/08  19:01:11  mja  * 	Add (struct sockaddr *) casts for HC 2.1.  * 	[92/02/08  18:59:09  mja]  *   * Revision 1.11  89/08/03  19:49:03  mja  * 	Updated to use v*printf() in place of _doprnt().  * 	[89/04/19            mja]  *   * 11-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Moved sleep into computeBackoff, renamed to dobackoff.  *  * 10-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added timeout to backoff.  *  * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed nameserver support.  *  * 09-Sep-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed to depend less upon having name of remote host.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon Universtiy  *	Extracted backoff/sleeptime computation from "request" and  *	created "computeBackoff" so that I could use it in sup.c when  *	trying to get to nameservers as a group.  *  * 21-May-87  Chriss Stephens (chriss) at Carnegie Mellon University  *	Merged divergent CS and EE versions.  *  * 02-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added some bullet-proofing code around hostname calls.  *  * 31-Mar-87  Dan Nydick (dan) at Carnegie-Mellon University  *	Fixed for 4.3.  *  * 30-May-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to use known values for well-known ports if they are  *	not found in the host table.  *  * 19-Feb-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed setsockopt SO_REUSEADDR to be non-fatal.  Added fourth  *	parameter as described in 4.3 manual entry.  *  * 15-Feb-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added call of readflush() to requestend() routine.  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Major rewrite for protocol version 4.  All read/write and crypt  *	routines are now in scmio.c.  *  * 14-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added setsockopt SO_REUSEADDR call.  *  * 01-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed code to "gracefully" handle unexpected messages.  This  *	seems reasonable since it didn't work anyway, and should be  *	handled at a higher level anyway by adhering to protocol version  *	number conventions.  *  * 26-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed scm.c to free space for remote host name when connection  *	is closed.  *  * 07-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed 4.2 retry code to reload sin values before retry.  *  * 22-Oct-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to retry initial connection open request.  *  * 22-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged 4.1 and 4.2 versions together.  *  * 21-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Add close() calls after pipe() call.  *  * 12-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Converted for 4.2 sockets; added serviceprep() routine.  *  * 04-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for 4.2 BSD.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -194,6 +194,9 @@ argument_list|(
 operator|(
 name|int
 operator|,
+name|FILE
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -369,6 +372,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Local hostname not known"
 argument_list|)
 operator|)
@@ -440,6 +445,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't find %s server description"
 argument_list|,
 name|server
@@ -453,6 +460,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"%s/tcp: unknown service: using port %d"
 argument_list|,
@@ -495,6 +504,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't create socket for connections"
 argument_list|)
 operator|)
@@ -530,6 +541,8 @@ operator|)
 name|scmerr
 argument_list|(
 name|errno
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Can't set SO_REUSEADDR socket option"
 argument_list|)
@@ -592,6 +605,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't bind socket for connections"
 argument_list|)
 operator|)
@@ -612,6 +627,8 @@ operator|(
 name|scmerr
 argument_list|(
 name|errno
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Can't listen on socket"
 argument_list|)
@@ -696,6 +713,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't accept connections"
 argument_list|)
 operator|)
@@ -736,6 +755,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't transmit data on connection"
 argument_list|)
 operator|)
@@ -768,6 +789,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Unexpected byteswap mode %x"
 argument_list|,
@@ -1060,6 +1083,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stdout
+argument_list|,
 literal|"Will retry in %d seconds"
 argument_list|,
 name|s
@@ -1207,6 +1232,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't find %s server description"
 argument_list|,
 name|server
@@ -1220,6 +1247,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"%s/tcp: unknown service: using port %d"
 argument_list|,
@@ -1305,6 +1334,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't find host entry for %s"
 argument_list|,
 name|hostname
@@ -1380,6 +1411,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't create socket"
 argument_list|)
 operator|)
@@ -1417,6 +1450,8 @@ operator|)
 name|scmerr
 argument_list|(
 name|errno
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Can't connect to server for %s"
 argument_list|,
@@ -2133,6 +2168,21 @@ name|ap
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"*"
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|addr
 operator|.
@@ -2262,6 +2312,10 @@ argument_list|(
 name|int
 name|errno
 argument_list|,
+name|FILE
+operator|*
+name|filedes
+argument_list|,
 name|char
 operator|*
 name|fmt
@@ -2288,6 +2342,10 @@ name|__STDC__
 name|int
 name|errno
 decl_stmt|;
+name|FILE
+modifier|*
+name|filedes
+decl_stmt|;
 name|char
 modifier|*
 name|fmt
@@ -2302,7 +2360,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|stdout
+name|filedes
 argument_list|)
 expr_stmt|;
 if|if
@@ -2313,7 +2371,7 @@ literal|0
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|filedes
 argument_list|,
 literal|"%s %d: "
 argument_list|,
@@ -2325,7 +2383,7 @@ expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
-name|stderr
+name|filedes
 argument_list|,
 literal|"%s: "
 argument_list|,
@@ -2372,7 +2430,7 @@ endif|#
 directive|endif
 name|vfprintf
 argument_list|(
-name|stderr
+name|filedes
 argument_list|,
 name|fmt
 argument_list|,
@@ -2392,7 +2450,7 @@ literal|0
 condition|)
 name|fprintf
 argument_list|(
-name|stderr
+name|filedes
 argument_list|,
 literal|": %s\n"
 argument_list|,
@@ -2405,7 +2463,7 @@ expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
-name|stderr
+name|filedes
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -2415,7 +2473,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|stderr
+name|filedes
 argument_list|)
 expr_stmt|;
 return|return

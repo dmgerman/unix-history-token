@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/* sup.h -- declarations for sup, supnamesrv, supfilesrv  *  * VERSION NUMBER for any program is given by:  a.b (c)  * where	a = PROTOVERSION	is the protocol version #  *		b = PGMVERSION		is program # within protocol  *		c = scmversion		is communication module version  *			(i.e. operating system for which scm is configured)  **********************************************************************  * HISTORY  * 13-Sep-92  Mary Thompson (mrt) at Carnegie-Mellon University  *	Changed name of DEFDIR from /usr/cs to /usr.  *  * 7-July-93  Nate Williams at Montana State University  *	Modified SUP to use gzip based compression when sending files  *	across the network to save BandWidth  *  * $Log: sup.h,v $  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:18  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.10  92/08/11  12:06:42  mrt  * 	Added definition for DEBUGFPORTNUM, the debugging port number.  * 	Changed so that last and when file names could include  * 	the relase name if any.  * 	[92/07/23            mrt]  *   * Revision 1.9  91/04/29  14:39:03  mja  * 	Reduce MAXCHILDREN from 8 to 3.  *   * Revision 1.8  89/08/23  14:55:30  gm0w  * 	Moved coll.dir from supservers to supfiles.  * 	[89/08/23            gm0w]  *   * 18-Mar-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added host=<hostfile> support to releases file.  *  * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added crosspatch support.  Removed nameserver support.  *  * 27-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added TREELIST and other changes for "release" support.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Version 6 of the network protocol, better support to reflect errors  *	back to server logfile.  *  * 21-May-87  Chriss Stephens (chriss) at Carnegie Mellon University  *	Merged divergent CS and EE versions.  *  * 19-Sep-86  Mike Accetta (mja) at Carnegie-Mellon University  *	Added FILESUPTDEFAULT definition.  *  * 07-Jun-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed FILESRVBUSYWAIT.  Now uses exponential backoff.  *  * 30-May-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added numeric port numbers to use when port names are not in the  *	host table.  *  * 04-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Update protocol version to 5 for name server protocol change to  *	allow multiple repositories per collection.  Added FILESRVBUSYWAIT  *	of 5 minutes.  Added FILELOCK file to indicate collections that  *	should be exclusively locked when upgraded.  *  * 22-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged 4.1 and 4.2 versions together.  *  * 04-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for 4.2 BSD.  *  **********************************************************************  */
+comment|/* sup.h -- declarations for sup, supnamesrv, supfilesrv  *  * VERSION NUMBER for any program is given by:  a.b (c)  * where	a = PROTOVERSION	is the protocol version #  *		b = PGMVERSION		is program # within protocol  *		c = scmversion		is communication module version  *			(i.e. operating system for which scm is configured)  **********************************************************************  * HISTORY  * 13-Sep-92  Mary Thompson (mrt) at Carnegie-Mellon University  *	Changed name of DEFDIR from /usr/cs to /usr.  *  * 7-July-93  Nate Williams at Montana State University  *	Modified SUP to use gzip based compression when sending files  *	across the network to save BandWidth  *  * $Log: sup.h,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:18  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.10  92/08/11  12:06:42  mrt  * 	Added definition for DEBUGFPORTNUM, the debugging port number.  * 	Changed so that last and when file names could include  * 	the relase name if any.  * 	[92/07/23            mrt]  *   * Revision 1.9  91/04/29  14:39:03  mja  * 	Reduce MAXCHILDREN from 8 to 3.  *   * Revision 1.8  89/08/23  14:55:30  gm0w  * 	Moved coll.dir from supservers to supfiles.  * 	[89/08/23            gm0w]  *   * 18-Mar-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added host=<hostfile> support to releases file.  *  * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added crosspatch support.  Removed nameserver support.  *  * 27-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added TREELIST and other changes for "release" support.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Version 6 of the network protocol, better support to reflect errors  *	back to server logfile.  *  * 21-May-87  Chriss Stephens (chriss) at Carnegie Mellon University  *	Merged divergent CS and EE versions.  *  * 19-Sep-86  Mike Accetta (mja) at Carnegie-Mellon University  *	Added FILESUPTDEFAULT definition.  *  * 07-Jun-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Removed FILESRVBUSYWAIT.  Now uses exponential backoff.  *  * 30-May-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added numeric port numbers to use when port names are not in the  *	host table.  *  * 04-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Update protocol version to 5 for name server protocol change to  *	allow multiple repositories per collection.  Added FILESRVBUSYWAIT  *	of 5 minutes.  Added FILELOCK file to indicate collections that  *	should be exclusively locked when upgraded.  *  * 22-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Merged 4.1 and 4.2 versions together.  *  * 04-Jun-85  Steven Shafer (sas) at Carnegie-Mellon University  *	Created for 4.2 BSD.  *  **********************************************************************  */
 end_comment
 
 begin_comment
@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|PROTOVERSION
-value|8
+value|9
 end_define
 
 begin_comment
@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|SCANVERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -500,6 +500,11 @@ modifier|*
 name|Tname
 decl_stmt|;
 comment|/* path component name */
+name|char
+modifier|*
+name|Tnewname
+decl_stmt|;
+comment|/* Used for renameing files */
 name|int
 name|Tflags
 decl_stmt|;
@@ -690,6 +695,17 @@ end_define
 
 begin_comment
 comment|/* only set file information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FRENAME
+value|020
+end_define
+
+begin_comment
+comment|/* Rename this file while updating */
 end_comment
 
 begin_define

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * SUP Communication Module for 4.3 BSD  *  * SUP COMMUNICATION MODULE SPECIFICATIONS:  *  * IN THIS MODULE:  *  * OUTPUT TO NETWORK  *  *   MESSAGE START/END  *	writemsg (msg)		start message  *	  int msg;			message type  *	writemend ()		end message and flush data to network  *  *   MESSAGE DATA  *	writeint (i)		write int  *	  int i;			integer to write  *	writestring (p)		write string  *	  char *p;			string pointer  *	writefile (f)		write open file  *	  int f;			open file descriptor  *  *   COMPLETE MESSAGE (start, one data block, end)  *	writemnull (msg)	write message with no data  *	  int msg;			message type  *	writemint (msg,i)	write int message  *	  int msg;			message type  *	  int i;			integer to write  *	writemstr (msg,p)	write string message  *	  int msg;			message type  *	  char *p;			string pointer  *  * INPUT FROM NETWORK  *   MESSAGE START/END  *	readflush ()		flush any unread data (close)  *	readmsg (msg)		read specified message type  *	  int msg;			message type  *	readmend ()		read message end  *  *   MESSAGE DATA  *	readskip ()		skip over one input data block  *	readint (i)		read int  *	  int *i;			pointer to integer  *	readstring (p)		read string  *	  char **p;			pointer to string pointer  *	readfile (f)		read into open file  *	  int f;			open file descriptor  *  *   COMPLETE MESSAGE (start, one data block, end)  *	readmnull (msg)		read message with no data  *	  int msg;			message type  *	readmint (msg,i)	read int message  *	  int msg;			message type  *	  int *i;			pointer to integer  *	readmstr (msg,p)	read string message  *	  int msg;			message type  *	  char **p;			pointer to string pointer  *  * RETURN CODES  *	All routines normally return SCMOK.  SCMERR may be returned  *	by any routine on abnormal (usually fatal) errors.  An  *	unexpected MSGGOAWAY will result in SCMEOF being returned.  *  * COMMUNICATION PROTOCOL  *	Messages always alternate, with the first message after  *	connecting being sent by the client process.  *  *	At the end of the conversation, the client process will  *	send a message to the server telling it to go away.  Then,  *	both processes will close the network connection.  *  *	Any time a process receives a message it does not expect,  *	the "readmsg" routine will send a MSGGOAWAY message and  *	return SCMEOF.  *	  *	Each message has this format:  *	    ----------    ------------    ------------         ----------  *	    |msg type|    |count|data|    |count|data|   ...   |ENDCOUNT|  *	    ----------    ------------    ------------         ----------  *	size:  int	    int  var.	    int  var.	   	  int  *  *	All ints are assumed to be 32-bit quantities.  A message  *	with no data simply has a message type followed by ENDCOUNT.  *  **********************************************************************  * HISTORY  * $Log: scmio.c,v $  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.2  1993/05/24  17:57:26  brezak  * Remove netcrypt.c. Remove unneeded files. Cleanup make.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.7  92/09/09  22:04:41  mrt  * 	Removed the data encryption routines from here to netcrypt.c  * 	[92/09/09            mrt]  *   * Revision 1.6  92/08/11  12:05:57  mrt  * 	Brad's changes: Delinted,Added forward declarations of   * 	static functions. Added copyright.  * 	[92/07/24            mrt]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added crosspatch support.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Found error in debuging code for readint().  *  * 01-Apr-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to readdata to "push" data back into the data buffer.  *	Added prereadcount() to return the message count size after  *	reading it and then pushing it back into the buffer.  Clear  *	any encryption when a GOAWAY message is detected before reading  *	the reason string. [V5.19]  *  * 02-Oct-86  Rudy Nedved (ern) at Carnegie-Mellon University  *	Put a timeout on reading from the network.  *  * 25-May-86  Jonathan J. Chew (jjc) at Carnegie-Mellon University  *	Renamed "howmany" parameter to routines "encode" and "decode" from  *	to "count" to avoid conflict with 4.3BSD macro.  *  * 15-Feb-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added readflush() to flush any unread data from the input  *	buffer.  Called by requestend() in scm.c module.  *  * 19-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added register variables to decode() for speedup.  Added I/O  *	buffering to reduce the number or read/write system calls.  *	Removed readmfil/writemfil routines which were not used and were  *	not compatable with the other similarly defined routines anyway.  *  * 19-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created from scm.c I/O and crypt routines.  *  **********************************************************************  */
+comment|/*  * SUP Communication Module for 4.3 BSD  *  * SUP COMMUNICATION MODULE SPECIFICATIONS:  *  * IN THIS MODULE:  *  * OUTPUT TO NETWORK  *  *   MESSAGE START/END  *	writemsg (msg)		start message  *	  int msg;			message type  *	writemend ()		end message and flush data to network  *  *   MESSAGE DATA  *	writeint (i)		write int  *	  int i;			integer to write  *	writestring (p)		write string  *	  char *p;			string pointer  *	writefile (f)		write open file  *	  int f;			open file descriptor  *  *   COMPLETE MESSAGE (start, one data block, end)  *	writemnull (msg)	write message with no data  *	  int msg;			message type  *	writemint (msg,i)	write int message  *	  int msg;			message type  *	  int i;			integer to write  *	writemstr (msg,p)	write string message  *	  int msg;			message type  *	  char *p;			string pointer  *  * INPUT FROM NETWORK  *   MESSAGE START/END  *	readflush ()		flush any unread data (close)  *	readmsg (msg)		read specified message type  *	  int msg;			message type  *	readmend ()		read message end  *  *   MESSAGE DATA  *	readskip ()		skip over one input data block  *	readint (i)		read int  *	  int *i;			pointer to integer  *	readstring (p)		read string  *	  char **p;			pointer to string pointer  *	readfile (f)		read into open file  *	  int f;			open file descriptor  *  *   COMPLETE MESSAGE (start, one data block, end)  *	readmnull (msg)		read message with no data  *	  int msg;			message type  *	readmint (msg,i)	read int message  *	  int msg;			message type  *	  int *i;			pointer to integer  *	readmstr (msg,p)	read string message  *	  int msg;			message type  *	  char **p;			pointer to string pointer  *  * RETURN CODES  *	All routines normally return SCMOK.  SCMERR may be returned  *	by any routine on abnormal (usually fatal) errors.  An  *	unexpected MSGGOAWAY will result in SCMEOF being returned.  *  * COMMUNICATION PROTOCOL  *	Messages always alternate, with the first message after  *	connecting being sent by the client process.  *  *	At the end of the conversation, the client process will  *	send a message to the server telling it to go away.  Then,  *	both processes will close the network connection.  *  *	Any time a process receives a message it does not expect,  *	the "readmsg" routine will send a MSGGOAWAY message and  *	return SCMEOF.  *	  *	Each message has this format:  *	    ----------    ------------    ------------         ----------  *	    |msg type|    |count|data|    |count|data|   ...   |ENDCOUNT|  *	    ----------    ------------    ------------         ----------  *	size:  int	    int  var.	    int  var.	   	  int  *  *	All ints are assumed to be 32-bit quantities.  A message  *	with no data simply has a message type followed by ENDCOUNT.  *  **********************************************************************  * HISTORY  * $Log: scmio.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.2  1993/05/24  17:57:26  brezak  * Remove netcrypt.c. Remove unneeded files. Cleanup make.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.7  92/09/09  22:04:41  mrt  * 	Removed the data encryption routines from here to netcrypt.c  * 	[92/09/09            mrt]  *   * Revision 1.6  92/08/11  12:05:57  mrt  * 	Brad's changes: Delinted,Added forward declarations of   * 	static functions. Added copyright.  * 	[92/07/24            mrt]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added crosspatch support.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Found error in debuging code for readint().  *  * 01-Apr-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to readdata to "push" data back into the data buffer.  *	Added prereadcount() to return the message count size after  *	reading it and then pushing it back into the buffer.  Clear  *	any encryption when a GOAWAY message is detected before reading  *	the reason string. [V5.19]  *  * 02-Oct-86  Rudy Nedved (ern) at Carnegie-Mellon University  *	Put a timeout on reading from the network.  *  * 25-May-86  Jonathan J. Chew (jjc) at Carnegie-Mellon University  *	Renamed "howmany" parameter to routines "encode" and "decode" from  *	to "count" to avoid conflict with 4.3BSD macro.  *  * 15-Feb-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added readflush() to flush any unread data from the input  *	buffer.  Called by requestend() in scm.c module.  *  * 19-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added register variables to decode() for speedup.  Added I/O  *	buffering to reduce the number or read/write system calls.  *	Removed readmfil/writemfil routines which were not used and were  *	not compatable with the other similarly defined routines anyway.  *  * 19-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created from scm.c I/O and crypt routines.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -469,6 +469,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Network write timed out"
 argument_list|)
 operator|)
@@ -483,6 +485,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Write error on network"
 argument_list|)
 operator|)
@@ -493,6 +497,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Write retries failed"
 argument_list|)
@@ -511,6 +517,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Write error on network returned %d on write of %d"
 argument_list|,
@@ -649,6 +657,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Buffering already enabled"
 argument_list|)
 operator|)
@@ -769,6 +779,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Buffering already disabled"
 argument_list|)
@@ -1088,6 +1100,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Can't access open file for message"
 argument_list|)
 operator|)
@@ -1231,6 +1245,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"File size error on output message"
 argument_list|)
 operator|)
@@ -1246,6 +1262,8 @@ operator|(
 name|scmerr
 argument_list|(
 name|errno
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Read error on file output message"
 argument_list|)
@@ -1537,6 +1555,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"No space in buffer %d"
 argument_list|,
 name|count
@@ -1702,6 +1722,41 @@ literal|1
 operator|<<
 name|netfile
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+if|if
+condition|(
+name|select
+argument_list|(
+literal|32
+argument_list|,
+operator|&
+name|imask
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|&
+name|timout
+argument_list|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|select
@@ -1733,6 +1788,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 name|imask
 operator|=
 literal|1
@@ -1764,6 +1821,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Timeout on network input"
 argument_list|)
 operator|)
@@ -1788,7 +1847,10 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"Premature EOF on network input"
+name|stderr
+argument_list|,
+literal|"Premature EOF on network "
+literal|"input"
 argument_list|)
 operator|)
 return|;
@@ -1834,6 +1896,8 @@ name|scmerr
 argument_list|(
 name|errno
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Read error on network"
 argument_list|)
 operator|)
@@ -1844,6 +1908,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Read retries failed"
 argument_list|)
@@ -2176,6 +2242,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Received unexpected message %d"
 argument_list|,
 name|m
@@ -2290,6 +2358,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Error reading end of message"
 argument_list|)
 operator|)
@@ -2357,6 +2427,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Invalid message count %d"
 argument_list|,
@@ -2454,6 +2526,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Invalid message count %d"
 argument_list|,
 name|y
@@ -2475,6 +2549,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Size error for int message is %d"
 argument_list|,
@@ -2618,6 +2694,8 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|stderr
+argument_list|,
 literal|"Invalid message count %d"
 argument_list|,
 name|count
@@ -2665,6 +2743,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Can't malloc %d bytes for string"
 argument_list|,
@@ -2880,6 +2960,8 @@ name|scmerr
 argument_list|(
 operator|-
 literal|1
+argument_list|,
+name|stderr
 argument_list|,
 literal|"Invalid message count %d"
 argument_list|,
@@ -3231,6 +3313,12 @@ operator|&
 name|ibits
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -3240,180 +3328,44 @@ name|select
 argument_list|(
 literal|16
 argument_list|,
-operator|&
-name|ibits
+argument|(int *)&ibits
 argument_list|,
-operator|&
-name|obits
+argument|(int *)&obits
 argument_list|,
-operator|&
-name|xbits
+argument|(int *)&xbits
 argument_list|,
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-name|NULL
-argument_list|)
-operator|)
-operator|<
+else|#
+directive|else
+argument|if ((c = select(
+literal|16
+argument|,&ibits,&obits,&xbits,
+endif|#
+directive|endif
+argument|(struct timeval *)NULL))<
 literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|c
-operator|==
-operator|-
+argument|) { 			if (c == -
 literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-continue|continue;
-block|}
-block|}
-name|sleep
-argument_list|(
+argument|) { 				if (errno == EINTR) { 					continue; 				} 			} 			sleep (
 literal|5
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|FD_ISSET
-argument_list|(
-name|netfile
-argument_list|,
-operator|&
-name|ibits
-argument_list|)
-condition|)
-block|{
-name|c
-operator|=
-name|read
-argument_list|(
-name|netfile
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|<
+argument|); 			continue; 		} 		if (FD_ISSET (netfile,&ibits)) { 			c = read (netfile,buf,sizeof (buf)); 			if (c<
 literal|0
-operator|&&
-name|errno
-operator|==
-name|EWOULDBLOCK
-condition|)
-name|c
-operator|=
+argument|&& errno == EWOULDBLOCK) 				c =
 literal|0
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|c
-operator|<=
+argument|; 			else { 				if (c<=
 literal|0
-condition|)
-block|{
-break|break;
-block|}
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
+argument|) { 					break; 				} 				(void) write (
 literal|1
-argument_list|,
-name|buf
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|FD_ISSET
-argument_list|(
+argument|,buf,c); 			} 		} 		if (FD_ISSET(
 literal|0
-argument_list|,
-operator|&
-name|ibits
-argument_list|)
-condition|)
-block|{
-name|c
-operator|=
-name|read
-argument_list|(
+argument|,&ibits)) { 			c = read (
 literal|0
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
-operator|<
+argument|,buf,sizeof (buf)); 			if (c<
 literal|0
-operator|&&
-name|errno
-operator|==
-name|EWOULDBLOCK
-condition|)
-name|c
-operator|=
+argument|&& errno == EWOULDBLOCK) 				c =
 literal|0
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|c
-operator|<=
+argument|; 			else { 				if (c<=
 literal|0
-condition|)
-break|break;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|netfile
-argument_list|,
-name|buf
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-block|}
+argument|) 					break; 				(void) write (netfile,buf,c); 			} 		} 	} }
 end_block
 
 end_unit

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * stree.c -- SUP Tree Routines  *  **********************************************************************  * HISTORY  * $Log: stree.c,v $  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.4  92/08/11  12:06:32  mrt  * 	Added copyright. Delinted  * 	[92/08/10            mrt]  *   *   * Revision 1.3  89/08/15  15:30:57  bww  * 	Changed code in Tlookup to Tsearch for each subpart of path.  * 	Added indent formatting code to Tprint.  * 	From "[89/06/24            gm0w]" at CMU.  * 	[89/08/15            bww]  *   * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to please lint.  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to initialize new fields.  Added Tfree routine.  *  * 27-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
+comment|/*  * stree.c -- SUP Tree Routines  *  **********************************************************************  * HISTORY  * $Log: stree.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.4  92/08/11  12:06:32  mrt  * 	Added copyright. Delinted  * 	[92/08/10            mrt]  *   *   * Revision 1.3  89/08/15  15:30:57  bww  * 	Changed code in Tlookup to Tsearch for each subpart of path.  * 	Added indent formatting code to Tprint.  * 	From "[89/06/24            gm0w]" at CMU.  * 	[89/08/15            bww]  *   * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to please lint.  *  * 29-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code to initialize new fields.  Added Tfree routine.  *  * 27-Sep-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -146,6 +146,25 @@ operator|*
 name|t
 operator|)
 operator|->
+name|Tnewname
+condition|)
+name|free
+argument_list|(
+operator|(
+operator|*
+name|t
+operator|)
+operator|->
+name|Tnewname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|t
+operator|)
+operator|->
 name|Tuser
 condition|)
 name|free
@@ -244,6 +263,12 @@ name|salloc
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|Tnewname
+operator|=
+name|NULL
 expr_stmt|;
 name|t
 operator|->

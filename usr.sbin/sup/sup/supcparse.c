@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * sup collection parsing routines  **********************************************************************  * HISTORY  *  * 7-July-93  Nate Williams at Montana State University  *	Modified SUP to use gzip based compression when sending files  *	across the network to save BandWidth  *  * $Log: supcparse.c,v $  * Revision 1.2  1994/08/11  02:46:25  rich  * Added extensions written by David Dawes.  From the man page:  *  * The -u flag, or the noupdate supfile option prevent updates from  * occurring for regular files where the modification time and mode  * hasn't changed.  *  * Now, how do we feed these patches back to CMU for consideration?  *  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:18  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.6  92/08/11  12:07:38  mrt  * 	Added use-rel-suffix option corresponding to -u switch.  * 	[92/07/26            mrt]  *   * Revision 1.5  92/02/08  18:24:19  mja  * 	Added "keep" supfile option, corresponding to -k switch.  * 	[92/01/17            vdelvecc]  *   * Revision 1.4  91/05/16  14:49:50  ern  * 	Change default timeout from none to 3 hours so we don't accumalute   * 	processes running sups to dead hosts especially for users.  * 	[91/05/16  14:49:21  ern]  *   *  * 10-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added timeout to backoff.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code for "release" support.  Removed obsolete options.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Split off from sup.c  *  **********************************************************************  */
+comment|/*  * sup collection parsing routines  **********************************************************************  * HISTORY  *  * 7-July-93  Nate Williams at Montana State University  *	Modified SUP to use gzip based compression when sending files  *	across the network to save BandWidth  *  * $Log: supcparse.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:46  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.2  1994/08/11  02:46:25  rich  * Added extensions written by David Dawes.  From the man page:  *  * The -u flag, or the noupdate supfile option prevent updates from  * occurring for regular files where the modification time and mode  * hasn't changed.  *  * Now, how do we feed these patches back to CMU for consideration?  *  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:18  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.6  92/08/11  12:07:38  mrt  * 	Added use-rel-suffix option corresponding to -u switch.  * 	[92/07/26            mrt]  *   * Revision 1.5  92/02/08  18:24:19  mja  * 	Added "keep" supfile option, corresponding to -k switch.  * 	[92/01/17            vdelvecc]  *   * Revision 1.4  91/05/16  14:49:50  ern  * 	Change default timeout from none to 3 hours so we don't accumalute   * 	processes running sups to dead hosts especially for users.  * 	[91/05/16  14:49:21  ern]  *   *  * 10-Feb-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added timeout to backoff.  *  * 28-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added code for "release" support.  Removed obsolete options.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Split off from sup.c  *  **********************************************************************  */
 end_comment
 
 begin_include
@@ -47,6 +47,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|char
+name|default_renamelog
+index|[]
+init|=
+name|RENAMELOG
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -70,6 +79,8 @@ name|OPASSWORD
 block|,
 name|OCRYPT
 block|,
+name|ORENAMELOG
+block|,
 name|OBACKUP
 block|,
 name|ODELETE
@@ -87,6 +98,8 @@ block|,
 name|OCOMPRESS
 block|,
 name|ONOUPDATE
+block|,
+name|OUNLINKBUSY
 block|}
 name|OPTION
 typedef|;
@@ -144,6 +157,10 @@ literal|"crypt"
 block|,
 name|OCRYPT
 block|,
+literal|"renamelog"
+block|,
+name|ORENAMELOG
+block|,
 literal|"backup"
 block|,
 name|OBACKUP
@@ -179,7 +196,11 @@ block|,
 literal|"noupdate"
 block|,
 name|ONOUPDATE
-block|}
+block|,
+literal|"unlinkbusy"
+block|,
+name|OUNLINKBUSY
+block|, }
 struct|;
 end_struct
 
@@ -372,6 +393,12 @@ operator|->
 name|Ccrypt
 operator|=
 name|NULL
+expr_stmt|;
+name|c
+operator|->
+name|Crenamelog
+operator|=
+name|default_renamelog
 expr_stmt|;
 name|c
 operator|->
@@ -824,6 +851,37 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ORENAMELOG
+case|:
+name|passdelim
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|'='
+argument_list|)
+expr_stmt|;
+name|arg
+operator|=
+name|nxtarg
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|" \t"
+argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|Crenamelog
+operator|=
+name|salloc
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|OBACKUP
 case|:
 name|c
@@ -901,6 +959,16 @@ operator|->
 name|Cflags
 operator||=
 name|CFNOUPDATE
+expr_stmt|;
+break|break;
+case|case
+name|OUNLINKBUSY
+case|:
+name|c
+operator|->
+name|Cflags
+operator||=
+name|CFUNLINKBUSY
 expr_stmt|;
 break|break;
 case|case

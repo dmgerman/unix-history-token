@@ -78,7 +78,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 if|if
 condition|(
 operator|(
@@ -218,7 +218,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 operator|(
 name|here
 operator|->

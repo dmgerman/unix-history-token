@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1991 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * varargs versions of printf routines  *  **********************************************************************  * HISTORY  * $Log: vprintf.c,v $  * Revision 1.1.1.1  1993/08/21  00:46:35  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:19  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 2.5  89/09/08  18:15:55  mbj  * 	Use _doprnt() for the Multimax (an "old" architecture).  * 	[89/09/08            mbj]  *   * Revision 2.4  89/08/03  14:40:10  mja  * 	Add vsnprintf() routine.  * 	[89/07/12            mja]  *   * 	Terminate vsprintf() string with null byte.  * 	[89/04/21            mja]  *   * 	Change to use new hidden name for _doprnt on MIPS.  * 	[89/04/18            mja]  *   * Revision 2.3  89/06/10  14:13:43  gm0w  * 	Added putc of NULL byte to vsprintf.  * 	[89/06/10            gm0w]  *   * Revision 2.2  88/12/13  13:53:17  gm0w  * 	From Brad White.  * 	[88/12/13            gm0w]  ************************************************************  */
+comment|/*  * varargs versions of printf routines  *  **********************************************************************  * HISTORY  * $Log: vprintf.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:35  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:19  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 2.5  89/09/08  18:15:55  mbj  * 	Use _doprnt() for the Multimax (an "old" architecture).  * 	[89/09/08            mbj]  *   * Revision 2.4  89/08/03  14:40:10  mja  * 	Add vsnprintf() routine.  * 	[89/07/12            mja]  *   * 	Terminate vsprintf() string with null byte.  * 	[89/04/21            mja]  *   * 	Change to use new hidden name for _doprnt on MIPS.  * 	[89/04/18            mja]  *   * Revision 2.3  89/06/10  14:13:43  gm0w  * 	Added putc of NULL byte to vsprintf.  * 	[89/06/10            gm0w]  *   * Revision 2.2  88/12/13  13:53:17  gm0w  * 	From Brad White.  * 	[88/12/13            gm0w]  ************************************************************  */
 end_comment
 
 begin_include
@@ -284,6 +284,48 @@ block|{
 name|FILE
 name|fakebuf
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__hpux
+name|fakebuf
+operator|.
+name|_flag
+operator|=
+name|_IODUMMY
+operator|+
+name|_IOWRT
+expr_stmt|;
+comment|/* no _IOWRT: avoid stdio bug */
+name|fakebuf
+operator|.
+name|_base
+operator|=
+name|fakebuf
+operator|.
+name|_ptr
+operator|=
+name|s
+expr_stmt|;
+name|fakebuf
+operator|.
+name|_cnt
+operator|=
+name|n
+operator|-
+literal|1
+expr_stmt|;
+name|fakebuf
+operator|.
+name|__fileL
+operator|=
+name|fakebuf
+operator|.
+name|__fileH
+operator|=
+literal|0xff
+expr_stmt|;
+else|#
+directive|else
 name|fakebuf
 operator|.
 name|_flag
@@ -307,6 +349,8 @@ name|n
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|_doprnt
 argument_list|(
 name|fmt

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * supmsg.h - global definitions/variables used in msg routines.  *  **********************************************************************  * HISTORY  *  * 7-July-93  Nate Williams at Montana State University  *	Modified SUP to use gzip based compression when sending files  *	across the network to save BandWidth  *  * $Log: supmsg.h,v $  * Revision 1.1.1.1  1993/08/21  00:46:35  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:19  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.7  92/08/11  12:08:20  mrt  * 	Added copyright.  * 	[92/08/10            mrt]  *   * Revision 1.6  89/08/23  14:56:42  gm0w  * 	Changed MSGF to MSG constants.  * 	[89/08/23            gm0w]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added crosspatch support.  Removed nameserver support.  *  * 29-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added "release" support.  *  * 27-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Added MSGFDONE and subvalues, added doneack and donereason.  *  * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added changes to make lint happy.  *  * 04-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed hostname to hostT to support multiple repositories per  *	collection.  Added FSETUPBUSY to tell clients that server is  *	currently busy.  *  * 19-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
+comment|/*  * supmsg.h - global definitions/variables used in msg routines.  *  **********************************************************************  * HISTORY  *  * 7-July-93  Nate Williams at Montana State University  *	Modified SUP to use gzip based compression when sending files  *	across the network to save BandWidth  *  * $Log: supmsg.h,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:35  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:19  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.7  92/08/11  12:08:20  mrt  * 	Added copyright.  * 	[92/08/10            mrt]  *   * Revision 1.6  89/08/23  14:56:42  gm0w  * 	Changed MSGF to MSG constants.  * 	[89/08/23            gm0w]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added crosspatch support.  Removed nameserver support.  *  * 29-Jun-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added "release" support.  *  * 27-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Added MSGFDONE and subvalues, added doneack and donereason.  *  * 20-May-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added changes to make lint happy.  *  * 04-Jan-86  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Changed hostname to hostT to support multiple repositories per  *	collection.  Added FSETUPBUSY to tell clients that server is  *	currently busy.  *  * 19-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
 end_comment
 
 begin_comment
@@ -674,6 +674,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* tree of files to list */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|TREE
+modifier|*
+name|renameT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tree of file rename targets */
 end_comment
 
 begin_decl_stmt
