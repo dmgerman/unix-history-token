@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1863,13 +1863,6 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX */
 name|bp
 operator|->
 name|b_flags
@@ -1915,6 +1908,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|biowait
 argument_list|(
 name|bp
@@ -1996,7 +1992,6 @@ name|db
 expr_stmt|;
 block|}
 else|else
-block|{
 name|log
 argument_list|(
 name|LOG_ERR
@@ -2018,14 +2013,6 @@ else|:
 literal|"format error in"
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX */
-block|}
 name|sc
 operator|->
 name|sc_state
