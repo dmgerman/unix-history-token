@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -158,24 +158,18 @@ operator|->
 name|p_fd
 expr_stmt|;
 comment|/* 	 * Get a buffer for the name to be translated, and copy the 	 * name into the buffer. 	 */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
+operator|(
 name|ndp
 operator|->
 name|ni_nameiop
 operator|&
 name|HASBUF
+operator|)
+operator|==
+literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"namei: reentered"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|MALLOC
 argument_list|(
 name|ndp
