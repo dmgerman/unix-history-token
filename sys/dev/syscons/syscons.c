@@ -10,7 +10,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Heavily modified by Søren Schmidt (sos@kmd-ac.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2b 930531  *  * Further changes 29 July 93 by Jordan Hubbard - provide full pccons and  * FreeBSD compatability.  */
+comment|/*  * Heavily modified by Søren Schmidt (sos@kmd-ac.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2b 930531  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * Further changes 29 July 93 by Jordan Hubbard - provide full pccons and  * FreeBSD compatability.  */
 end_comment
 
 begin_include
