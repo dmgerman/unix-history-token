@@ -1393,10 +1393,10 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"total length: %lld bytes\n"
+literal|"total length: %ju bytes\n"
 argument_list|,
 call|(
-name|intmax_t
+name|uintmax_t
 call|)
 argument_list|(
 name|tsize
