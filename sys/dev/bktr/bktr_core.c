@@ -9806,7 +9806,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TEST_A
+name|TEST_A_NOT
 end_define
 
 begin_if
