@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krb_passwd.c	5.2 (Berkeley) %G%"
+literal|"@(#)krb_passwd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,7 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|do_krb_passwd
+name|krb_passwd
 argument_list|()
 end_macro
 
