@@ -1498,6 +1498,9 @@ argument_list|,
 name|pageout_status
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1617,6 +1620,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 name|numpagedout
 return|;

@@ -4335,6 +4335,9 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 	 * cleanup pages.  If an error occurs writing to swap, we are in 	 * very serious trouble.  If it happens to be a disk error, though, 	 * we may be able to recover by reassigning the swap later on.  So 	 * in this case we remove the m->swapblk assignment for the page  	 * but do not free it in the rlist.  The errornous block(s) are thus 	 * never reallocated as swap.  Redirty the page and continue. 	 */
 for|for
 control|(
@@ -4550,6 +4553,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 	 * adjust pip.  NOTE: the original parent may still have its own 	 * pip refs on the object. 	 */
 if|if
 condition|(
