@@ -237,6 +237,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|kernacc
@@ -333,6 +337,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -455,6 +463,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|void
 name|vslock
@@ -470,8 +482,6 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_wire
 argument_list|(
 operator|&
