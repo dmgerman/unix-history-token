@@ -84,7 +84,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       kldunload [-v] -n name\n"
+literal|"       kldunload [-v] [-n] name\n"
 argument_list|)
 expr_stmt|;
 name|exit
