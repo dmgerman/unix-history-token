@@ -2618,44 +2618,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Bring the chip out of low-power mode and reset it. */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|GENCTL
-argument_list|,
-name|GENCTL_SOFT_RESET
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|500
-argument_list|)
-expr_stmt|;
-comment|/* Workaround for Application Note 7-15 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|TEST1
-argument_list|,
-name|TEST1_CLOCK_TEST
-argument_list|)
-expr_stmt|;
 comment|/* Do OS independent part, including chip wakeup and reset */
 if|if
 condition|(
