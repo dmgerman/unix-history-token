@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: vfprintf.c,v 1.15 1994/01/27 06:12:37 proven Exp $"
+literal|"$Id: vfprintf.c,v 1.1 1994/01/30 04:25:51 proven Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1881,6 +1881,27 @@ literal|'p'
 case|:
 comment|/* 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
 comment|/* NOSTRICT */
+ifdef|#
+directive|ifdef
+name|__i386
+name|_uquad
+operator|=
+operator|(
+name|u_quad_t
+operator|)
+operator|(
+name|u_long
+operator|)
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|_uquad
 operator|=
 operator|(
@@ -1894,6 +1915,8 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|base
 operator|=
 name|HEX
