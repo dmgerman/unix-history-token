@@ -2236,6 +2236,11 @@ condition|)
 endif|#
 directive|endif
 comment|/* APIC_IO */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|intr_handler
