@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_ioctl.c,v 1.30.2.1 1999/07/17 16:59:51 marcel Exp $  */
+comment|/*  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_ioctl.c,v 1.30.2.2 1999/07/17 18:20:33 marcel Exp $  */
 end_comment
 
 begin_include
@@ -2787,6 +2787,36 @@ return|return;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|dirbits
+index|[
+literal|4
+index|]
+init|=
+block|{
+name|IOC_VOID
+block|,
+name|IOC_OUT
+block|,
+name|IOC_IN
+block|,
+name|IOC_INOUT
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SETDIR
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& ~IOC_DIRMASK) | dirbits[args->cmd>> 30])
+end_define
+
 begin_function
 name|int
 name|linux_ioctl
@@ -5064,7 +5094,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_VOLUME
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5086,7 +5119,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_BASS
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5108,7 +5144,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_TREBLE
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5130,7 +5169,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_SYNTH
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5152,7 +5194,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_PCM
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5174,7 +5219,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_SPEAKER
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5196,7 +5244,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_LINE
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5218,7 +5269,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_MIC
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5240,7 +5294,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_CD
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5262,7 +5319,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_IMIX
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5284,7 +5344,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_ALTPCM
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5306,7 +5369,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_RECLEV
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5328,7 +5394,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_IGAIN
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5350,7 +5419,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_OGAIN
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5372,7 +5444,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_LINE1
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5394,7 +5469,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_LINE2
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
@@ -5416,7 +5494,10 @@ name|args
 operator|->
 name|cmd
 operator|=
+name|SETDIR
+argument_list|(
 name|SOUND_MIXER_WRITE_LINE3
+argument_list|)
 expr_stmt|;
 return|return
 name|ioctl
