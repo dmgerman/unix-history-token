@@ -12671,6 +12671,20 @@ name|ac
 operator|--
 expr_stmt|;
 block|}
+else|else
+block|{
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"unknown or out of order"
+literal|" argument ``%s''"
+argument_list|,
+operator|*
+name|av
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -12740,6 +12754,20 @@ operator|++
 expr_stmt|;
 name|ac
 operator|--
+expr_stmt|;
+block|}
+else|else
+block|{
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"unknown or out of order"
+literal|" argument ``%s''"
+argument_list|,
+operator|*
+name|av
+argument_list|)
 expr_stmt|;
 block|}
 block|}
