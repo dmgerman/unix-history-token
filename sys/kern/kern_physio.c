@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id$  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.3 1994/08/02 07:42:05 davidg Exp $  */
 end_comment
 
 begin_include
@@ -116,15 +116,6 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|bp_alloc
-init|=
-operator|(
-name|bp
-operator|==
-literal|0
-operator|)
-decl_stmt|;
-name|int
 name|bufflags
 init|=
 name|rw
@@ -139,6 +130,23 @@ decl_stmt|;
 name|int
 name|spl
 decl_stmt|;
+name|caddr_t
+name|sa
+decl_stmt|;
+name|int
+name|bp_alloc
+init|=
+operator|(
+name|bp
+operator|==
+literal|0
+operator|)
+decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|bpa
+decl_stmt|;
 comment|/*  * keep the process from being swapped  */
 name|curproc
 operator|->
@@ -147,12 +155,7 @@ operator||=
 name|P_PHYSIO
 expr_stmt|;
 comment|/* create and build a buffer header for a transfer */
-if|if
-condition|(
-name|bp_alloc
-condition|)
-block|{
-name|bp
+name|bpa
 operator|=
 operator|(
 expr|struct
@@ -162,8 +165,11 @@ operator|)
 name|getpbuf
 argument_list|()
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|bp_alloc
+condition|)
 block|{
 name|spl
 operator|=
@@ -212,6 +218,20 @@ name|spl
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|bp
+operator|=
+name|bpa
+expr_stmt|;
+block|}
+comment|/* 	 * get a copy of the kva from the physical buffer 	 */
+name|sa
+operator|=
+name|bpa
+operator|->
+name|b_data
+expr_stmt|;
 name|bp
 operator|->
 name|b_proc
@@ -321,6 +341,13 @@ name|i
 index|]
 operator|.
 name|iov_base
+expr_stmt|;
+comment|/* 			 * pass in the kva from the physical buffer 			 * for the temporary kernel mapping. 			 */
+name|bp
+operator|->
+name|b_saveaddr
+operator|=
+name|sa
 expr_stmt|;
 name|bp
 operator|->
@@ -515,18 +542,16 @@ block|}
 block|}
 name|doerror
 label|:
-if|if
-condition|(
-name|bp_alloc
-condition|)
-block|{
 name|relpbuf
 argument_list|(
-name|bp
+name|bpa
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+operator|!
+name|bp_alloc
+condition|)
 block|{
 name|bp
 operator|->

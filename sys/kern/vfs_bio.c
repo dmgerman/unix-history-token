@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.4 1994/08/02 07:43:13 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.5 1994/08/04 19:43:13 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1320,7 +1320,7 @@ name|needsbuffer
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* anyone need this very block? */
+comment|/* anyone need this block? */
 if|if
 condition|(
 name|bp
@@ -1433,7 +1433,7 @@ literal|"brelse: free buffer onto another queue???"
 argument_list|)
 expr_stmt|;
 comment|/* enqueue */
-comment|/* buffers with junk contents */
+comment|/* buffers with no memory */
 if|if
 condition|(
 name|bp
@@ -1485,6 +1485,7 @@ name|b_dev
 operator|=
 name|NODEV
 expr_stmt|;
+comment|/* buffers with junk contents */
 block|}
 elseif|else
 if|if
@@ -1691,9 +1692,9 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|x
+name|s
 decl_stmt|;
-name|x
+name|s
 operator|=
 name|splbio
 argument_list|()
@@ -1824,7 +1825,7 @@ argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1927,7 +1928,7 @@ argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2197,14 +2198,14 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|x
+name|s
 decl_stmt|;
 name|struct
 name|bufhashhdr
 modifier|*
 name|bh
 decl_stmt|;
-name|x
+name|s
 operator|=
 name|splbio
 argument_list|()
@@ -2409,7 +2410,7 @@ expr_stmt|;
 block|}
 name|splx
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2634,9 +2635,9 @@ name|bp
 parameter_list|)
 block|{
 name|int
-name|x
+name|s
 decl_stmt|;
-name|x
+name|s
 operator|=
 name|splbio
 argument_list|()
@@ -2747,7 +2748,7 @@ name|B_ERROR
 expr_stmt|;
 name|splx
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2762,7 +2763,7 @@ else|else
 block|{
 name|splx
 argument_list|(
-name|x
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2822,6 +2823,19 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BOUNCE
+condition|)
+name|vm_bounce_free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 comment|/* call optional completion function if requested */
 if|if
 condition|(
@@ -3133,25 +3147,20 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|pg
 argument_list|,
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|pmap_update
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -3203,48 +3212,19 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-name|vm_offset_t
-name|pa
-decl_stmt|;
-name|pa
-operator|=
-name|pmap_kextract
-argument_list|(
-name|pg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pa
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No pa for va: %x\n"
-argument_list|,
-name|pg
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|p
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|pa
+name|pmap_kextract
+argument_list|(
+name|pg
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|pmap_remove
+name|pmap_kremove
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|pg
-argument_list|,
-name|pg
-operator|+
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -3253,7 +3233,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|pmap_update
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
