@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*lint -save -library Flexelint comment for external headers */
+comment|/* lint -save -library Flexelint comment for external headers */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001 Charles Mott<cmott@scientech.com>  * All right
 end_comment
 
 begin_comment
-comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution. */
+comment|/*-  * Alias.h defines the outside world interfaces for the packet aliasing  * software.  *   * This software is placed into the public domain with no restrictions on its  * distribution.  */
 end_comment
 
 begin_ifndef
@@ -517,7 +517,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*lint -restore */
+comment|/* lint -restore */
 end_comment
 
 end_unit
