@@ -5110,7 +5110,7 @@ expr_stmt|;
 comment|/* Attach wake sysctls. */
 name|acpi_wake_sysctl_walk
 argument_list|(
-name|dev
+name|bus
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
