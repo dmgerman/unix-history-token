@@ -958,7 +958,7 @@ argument_list|(
 operator|&
 name|zs
 argument_list|,
-name|Z_FINISH
+name|Z_SYNC_FLUSH
 argument_list|)
 else|:
 name|deflate
@@ -983,8 +983,24 @@ name|zerror
 operator|==
 name|Z_OK
 condition|)
+block|{
+if|if
+condition|(
+name|mode
+operator|&&
+name|zs
+operator|.
+name|avail_out
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|terminate
+goto|;
+else|else
 empty_stmt|;
 comment|/* once more. */
+block|}
 else|else
 block|{
 if|if
