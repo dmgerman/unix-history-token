@@ -1064,6 +1064,14 @@ name|rtadvd_timer_init
 argument_list|()
 expr_stmt|;
 comment|/* random value initialization */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|srandomdev
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|srandom
 argument_list|(
 operator|(
@@ -1075,6 +1083,8 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* get iflist block from kernel */
 name|init_iflist
 argument_list|()
