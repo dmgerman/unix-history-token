@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.4	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.5	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|NOCAPS
-value|95
+value|97
 end_define
 
 begin_struct
@@ -248,6 +248,10 @@ literal|"do"
 block|,
 literal|"Down one line"
 block|,
+literal|"ds"
+block|,
+literal|"Disable status display"
+block|,
 literal|"dT"
 block|,
 literal|"Number of millisec of tab delay needed"
@@ -263,6 +267,10 @@ block|,
 literal|"eo"
 block|,
 literal|"Can erase overstrikes with a blank"
+block|,
+literal|"es"
+block|,
+literal|"Escape seq's ok on status line"
 block|,
 literal|"ff"
 block|,
@@ -322,7 +330,7 @@ literal|"Initialization string"
 block|,
 literal|"i2"
 block|,
-literal|"Alternate initialization string"
+literal|"Initialization string (used by sysline(1))"
 block|,
 literal|"kb"
 block|,
