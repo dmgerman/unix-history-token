@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.3 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,8 +329,11 @@ expr_stmt|;
 name|_cleanup
 argument_list|()
 expr_stmt|;
-asm|asm("	movl r11,r0");
-asm|asm("	chmk $1");
+name|_exit
+argument_list|(
+name|code
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
