@@ -235,6 +235,9 @@ decl_stmt|;
 name|int
 name|io_timeout
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1171,16 +1174,6 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* If we were successfull, register our devsw */
-name|cdevsw_add
-argument_list|(
-operator|&
-name|pt_cdevsw
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1355,7 +1348,6 @@ argument_list|,
 name|periph
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The DA driver supports a blocksize, but 	 * we don't know the blocksize until we do  	 * a read capacity.  So, set a flag to 	 * indicate that the blocksize is  	 * unavailable right now.  We'll clear the 	 * flag as soon as we've done a read capacity. 	 */
 name|devstat_add_entry
 argument_list|(
 operator|&
@@ -1380,6 +1372,36 @@ operator||
 name|DEVSTAT_TYPE_IF_SCSI
 argument_list|,
 name|DEVSTAT_PRIORITY_OTHER
+argument_list|)
+expr_stmt|;
+name|softc
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|pt_cdevsw
+argument_list|,
+name|periph
+operator|->
+name|unit_number
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_OPERATOR
+argument_list|,
+literal|0600
+argument_list|,
+literal|"%s%d"
+argument_list|,
+name|periph
+operator|->
+name|periph_name
+argument_list|,
+name|periph
+operator|->
+name|unit_number
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add async callbacks for bus reset and 	 * bus device reset calls.  I don't bother 	 * checking if this fails as, in most cases, 	 * the system will function just fine without 	 * them and the only alternative would be to 	 * not attach the device on failure. 	 */
@@ -1666,6 +1688,13 @@ operator|&
 name|softc
 operator|->
 name|device_stats
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|softc
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 name|cam_extend_release
