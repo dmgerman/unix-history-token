@@ -715,6 +715,9 @@ expr_stmt|;
 operator|++
 name|line
 expr_stmt|;
+operator|--
+name|len
+expr_stmt|;
 block|}
 name|rval
 operator|=
