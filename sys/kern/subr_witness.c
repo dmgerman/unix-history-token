@@ -1028,6 +1028,13 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"sabtty"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"ng_node"
 block|,
 operator|&
