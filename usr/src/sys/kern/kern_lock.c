@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.15 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -416,7 +416,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* 	 * Once a lock has drained, the LK_DRAINING flag is set and an 	 * exclusive lock is returned. The only valid operation thereafter 	 * is a single release of that exclusive lock. This final release 	 * clears the LK_DRAINING flag and sets the LK_DRAINED flag. Any 	 * further requests of any sort will result in a panic. The bits 	 * selected for these two flags are chosen so that they will be set 	 * in memory that is freed (freed memory is filled with 0xdeadbeef). 	 */
+comment|/* 	 * Once a lock has drained, the LK_DRAINING flag is set and an 	 * exclusive lock is returned. The only valid operation thereafter 	 * is a single release of that exclusive lock. This final release 	 * clears the LK_DRAINING flag and sets the LK_DRAINED flag. Any 	 * further requests of any sort will result in a panic. The bits 	 * selected for these two flags are chosen so that they will be set 	 * in memory that is freed (freed memory is filled with 0xdeadbeef). 	 * The final release is permitted to give a new lease on life to 	 * the lock by specifying LK_REENABLE. 	 */
 if|if
 condition|(
 name|lkp
@@ -475,6 +475,16 @@ operator|&=
 operator|~
 name|LK_DRAINING
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|LK_REENABLE
+operator|)
+operator|==
+literal|0
+condition|)
 name|lkp
 operator|->
 name|lk_flags
