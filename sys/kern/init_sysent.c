@@ -3510,16 +3510,19 @@ block|}
 block|,
 comment|/* 247 = nosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|ntp_gettime_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|ntp_gettime
 block|}
 block|,
-comment|/* 248 = nosys */
+comment|/* 248 = ntp_gettime */
 block|{
 literal|0
 block|,

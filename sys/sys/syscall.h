@@ -1283,6 +1283,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_ntp_gettime
+value|248
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYS_minherit
 value|250
 end_define
