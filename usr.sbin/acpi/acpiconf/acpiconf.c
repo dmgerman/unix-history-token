@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -95,9 +101,9 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSFILE
 argument_list|,
-name|NULL
+name|ACPIDEV
 argument_list|)
 expr_stmt|;
 block|}
@@ -116,11 +122,25 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|enable
+operator|==
+name|ACPIIO_ENABLE
+condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_IOERR
 argument_list|,
-name|NULL
+literal|"enable failed"
+argument_list|)
+expr_stmt|;
+else|else
+name|err
+argument_list|(
+name|EX_IOERR
+argument_list|,
+literal|"disable failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -168,9 +188,9 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSFILE
 argument_list|,
-name|NULL
+name|ACPIDEV
 argument_list|)
 expr_stmt|;
 block|}
@@ -192,9 +212,11 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|1
+name|EX_IOERR
 argument_list|,
-name|NULL
+literal|"sleep type (%d) failed"
+argument_list|,
+name|sleep_type
 argument_list|)
 expr_stmt|;
 block|}
@@ -344,26 +366,15 @@ name|sleep_type
 operator|>
 literal|5
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EX_USAGE
 argument_list|,
-literal|"%s: invalid sleep type (%d)\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"invalid sleep type (%d)"
 argument_list|,
 name|sleep_type
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 break|break;
 default|default:
 name|argc
