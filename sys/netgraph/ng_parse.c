@@ -2989,7 +2989,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 modifier|*
 specifier|const
 name|fi
@@ -3134,7 +3134,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 modifier|*
 specifier|const
 name|fi
@@ -3221,7 +3221,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 modifier|*
 specifier|const
 name|fi
@@ -3295,7 +3295,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 name|ng_parse_nodebuf_info
 init|=
 block|{
@@ -3325,7 +3325,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 name|ng_parse_hookbuf_info
 init|=
 block|{
@@ -3355,7 +3355,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 name|ng_parse_pathbuf_info
 init|=
 block|{
@@ -3385,7 +3385,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 name|ng_parse_typebuf_info
 init|=
 block|{
@@ -3415,7 +3415,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ng_parse_fixedsstring_info
+name|ng_parse_fixedstring_info
 name|ng_parse_cmdbuf_info
 init|=
 block|{
