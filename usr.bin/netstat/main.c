@@ -2579,7 +2579,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: netstat [-Aan] [-f address_family] [-M core] [-N system]"
+literal|"usage: netstat [-AaLn] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat [-bdghimnrs] [-f address_family] [-M core] [-N system]"
 argument_list|,
