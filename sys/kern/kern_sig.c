@@ -6011,11 +6011,16 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|struct
 name|ksegrp
 modifier|*
 name|kg
 decl_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|_SIG_VALID
