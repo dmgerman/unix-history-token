@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.9 83/05/03"
+literal|"@(#)ruptime.c	4.10 83/05/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,13 @@ define|#
 directive|define
 name|WHDRSIZE
 value|(sizeof (awhod) - sizeof (awhod.wd_we))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWHODIR
+value|"/usr/spool/rwho"
 end_define
 
 begin_function_decl

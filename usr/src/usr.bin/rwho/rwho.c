@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.4 83/05/03"
+literal|"@(#)rwho.c	4.5 83/05/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,13 @@ define|#
 directive|define
 name|WHDRSIZE
 value|(sizeof (wd) - sizeof (wd.wd_we))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWHODIR
+value|"/usr/spool/rwho"
 end_define
 
 begin_decl_stmt
