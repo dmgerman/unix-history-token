@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optim.c	4.1 (Berkeley) %G%"
+literal|"@(#)optim.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,14 +398,7 @@ name|p
 argument_list|)
 operator|!=
 name|NAME
-condition|)
-name|cerror
-argument_list|(
-literal|"& error"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 operator|!
 name|andable
 argument_list|(
