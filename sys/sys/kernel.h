@@ -278,37 +278,37 @@ block|,
 comment|/* kvm operational limits*/
 name|SI_SUB_CPU
 init|=
-literal|0x2000000
+literal|0x1e00000
 block|,
 comment|/* CPU resource(s)*/
 name|SI_SUB_KLD
 init|=
-literal|0x2100000
+literal|0x1f00000
 block|,
 comment|/* KLD and module setup */
 name|SI_SUB_INTRINSIC
 init|=
-literal|0x2200000
+literal|0x2000000
 block|,
 comment|/* proc 0*/
 name|SI_SUB_VM_CONF
 init|=
-literal|0x2300000
+literal|0x2100000
 block|,
 comment|/* config VM, set limits*/
 name|SI_SUB_RUN_QUEUE
 init|=
-literal|0x2400000
+literal|0x2200000
 block|,
 comment|/* the run queue*/
 name|SI_SUB_CREATE_INIT
 init|=
-literal|0x2500000
+literal|0x2300000
 block|,
 comment|/* create the init process */
 name|SI_SUB_DRIVERS
 init|=
-literal|0x3100000
+literal|0x2400000
 block|,
 comment|/* Let Drivers initialize */
 name|SI_SUB_CONFIGURE
