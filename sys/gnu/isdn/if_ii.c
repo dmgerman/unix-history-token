@@ -5,12 +5,12 @@ name|char
 name|_if_iiid
 index|[]
 init|=
-literal|"@(#)$Id: if_ii.c,v 1.2 1995/02/15 06:28:26 jkh Exp $"
+literal|"@(#)$Id: if_ii.c,v 1.3 1995/05/30 07:58:00 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: if_ii.c,v $  * Revision 1.2  1995/02/15  06:28:26  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:27  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.3 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: if_ii.c,v $  * Revision 1.3  1995/05/30  07:58:00  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1995/02/15  06:28:26  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:27  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -168,12 +168,55 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|ii_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+operator|,
+name|int
+name|cmd
+operator|,
+name|caddr_t
+name|data
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|iioutput
-argument_list|()
-decl_stmt|,
-name|ii_ioctl
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+operator|,
+expr|struct
+name|mbuf
+operator|*
+name|m
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+name|dst
+operator|,
+expr|struct
+name|rtentry
+operator|*
+name|rtp
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -311,6 +354,11 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+name|rtp
 parameter_list|)
 block|{
 name|int
@@ -460,6 +508,9 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 block|{
 name|int
