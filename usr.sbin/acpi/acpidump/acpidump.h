@@ -956,6 +956,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Addresses to scan on ia32 for the RSD PTR.  According to section 5.2.2  * of the ACPI spec, we only consider two regions for the base address:  * 1. EBDA (0x0 - 0x3FF)  * 2. High memory (0xE0000 - 0xFFFFF)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSDP_EBDA_START
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSDP_EBDA_END
+value|(0x400 - sizeof(struct ACPIrsdp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSDP_HI_START
+value|0xE0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSDP_HI_END
+value|(0x100000 - sizeof(struct ACPIrsdp))
+end_define
+
+begin_comment
 comment|/* Find and map the RSD PTR structure and return it for parsing */
 end_comment
 
