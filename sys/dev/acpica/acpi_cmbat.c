@@ -1376,11 +1376,7 @@ argument_list|,
 name|notify
 argument_list|)
 expr_stmt|;
-name|ACPI_SERIAL_BEGIN
-argument_list|(
-name|cmbat
-argument_list|)
-expr_stmt|;
+comment|/*      * Clear the appropriate last updated time.  The next call to retrieve      * the battery status will get the new value for us.  We don't need to      * acquire a lock since we are only clearing the time stamp and since      * calling _BST/_BIF can trigger a notify, we could deadlock also.      */
 switch|switch
 condition|(
 name|notify
@@ -1419,11 +1415,6 @@ break|break;
 default|default:
 break|break;
 block|}
-name|ACPI_SERIAL_END
-argument_list|(
-name|cmbat
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
