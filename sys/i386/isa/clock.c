@@ -3427,9 +3427,10 @@ expr_stmt|;
 comment|/* Don't bother enabling the statistics clock. */
 if|if
 condition|(
+operator|!
 name|statclock_disable
 condition|)
-return|return;
+block|{
 name|diag
 operator|=
 name|rtcin
@@ -3487,6 +3488,7 @@ argument_list|,
 name|rtc_statusb
 argument_list|)
 expr_stmt|;
+block|}
 name|init_TSC_tc
 argument_list|()
 expr_stmt|;
