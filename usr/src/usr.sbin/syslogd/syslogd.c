@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	8.2 (Berkeley) %G%"
+literal|"@(#)syslogd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,17 +1015,12 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
-name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|int
+name|ch
+decl_stmt|,
 name|funix
+decl_stmt|,
+name|i
 decl_stmt|,
 name|inetm
 decl_stmt|,
@@ -1051,10 +1046,10 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
 name|char
+modifier|*
+name|p
+decl_stmt|,
 name|line
 index|[
 name|MSG_BSIZE
@@ -1081,9 +1076,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -1197,7 +1189,9 @@ argument_list|(
 name|LocalHostName
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|LocalHostName
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1205,7 +1199,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|LocalHostName
 argument_list|,
@@ -1318,14 +1312,12 @@ parameter_list|)
 value|(strlen((unp)->sun_path) + 2)
 endif|#
 directive|endif
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sunx
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1351,9 +1343,11 @@ argument_list|,
 name|LogName
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|sunx
 operator|.
 name|sun_path
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|funix
@@ -1494,14 +1488,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sin
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1695,10 +1687,6 @@ name|inetm
 operator||
 name|klogm
 decl_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"readfds = %#x\n"
@@ -1859,7 +1847,9 @@ block|{
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|fromunix
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
@@ -1934,7 +1924,9 @@ block|{
 name|len
 operator|=
 sizeof|sizeof
+argument_list|(
 name|frominet
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
@@ -2051,28 +2043,24 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
-specifier|register
+name|int
+name|c
+decl_stmt|,
+name|pri
+decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|;
-specifier|register
-name|int
-name|c
-decl_stmt|;
-name|char
+decl_stmt|,
 name|line
 index|[
 name|MAXLINE
 operator|+
 literal|1
 index|]
-decl_stmt|;
-name|int
-name|pri
 decl_stmt|;
 comment|/* test for special codes */
 name|pri
@@ -2286,27 +2274,9 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
-specifier|register
 name|int
 name|c
-decl_stmt|;
-name|char
-name|line
-index|[
-name|MAXLINE
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|int
+decl_stmt|,
 name|pri
 decl_stmt|,
 name|flags
@@ -2314,6 +2284,19 @@ decl_stmt|;
 name|char
 modifier|*
 name|lp
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|q
+decl_stmt|,
+name|line
+index|[
+name|MAXLINE
+operator|+
+literal|1
+index|]
 decl_stmt|;
 operator|(
 name|void
@@ -2523,7 +2506,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|filed
 modifier|*
@@ -2532,12 +2514,11 @@ decl_stmt|;
 name|int
 name|fac
 decl_stmt|,
-name|prilev
-decl_stmt|;
-name|int
+name|msglen
+decl_stmt|,
 name|omask
 decl_stmt|,
-name|msglen
+name|prilev
 decl_stmt|;
 name|char
 modifier|*
@@ -3094,7 +3075,6 @@ name|flags
 parameter_list|,
 name|msg
 parameter_list|)
-specifier|register
 name|struct
 name|filed
 modifier|*
@@ -3115,13 +3095,11 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|iovec
 modifier|*
 name|v
 decl_stmt|;
-specifier|register
 name|int
 name|l
 decl_stmt|;
@@ -3463,6 +3441,7 @@ operator|.
 name|f_addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|f
 operator|->
 name|f_un
@@ -3470,6 +3449,7 @@ operator|.
 name|f_forw
 operator|.
 name|f_addr
+argument_list|)
 argument_list|)
 operator|!=
 name|l
@@ -3775,7 +3755,6 @@ name|f
 parameter_list|,
 name|iov
 parameter_list|)
-specifier|register
 name|struct
 name|filed
 modifier|*
@@ -3792,18 +3771,16 @@ name|int
 name|reenter
 decl_stmt|;
 comment|/* avoid calling ourselves */
-specifier|register
 name|FILE
 modifier|*
 name|uf
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|utmp
 name|ut
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|char
 modifier|*
@@ -3868,7 +3845,9 @@ operator|&
 name|ut
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ut
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -4130,7 +4109,6 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -4226,7 +4204,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hp
 operator|->
@@ -4272,7 +4250,6 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filed
 modifier|*
@@ -4503,7 +4480,6 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|filed
 modifier|*
@@ -4617,16 +4593,13 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|cf
 decl_stmt|;
-specifier|register
 name|struct
 name|filed
 modifier|*
@@ -4639,7 +4612,6 @@ modifier|*
 modifier|*
 name|nextp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -4647,7 +4619,7 @@ decl_stmt|;
 name|char
 name|cline
 index|[
-name|BUFSIZ
+name|LINE_MAX
 index|]
 decl_stmt|;
 name|dprintf
@@ -4855,7 +4827,9 @@ argument_list|(
 name|cline
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|cline
+argument_list|)
 argument_list|,
 name|cf
 argument_list|)
@@ -4879,7 +4853,7 @@ condition|;
 operator|++
 name|p
 control|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 operator|*
@@ -4897,7 +4871,7 @@ for|for
 control|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cline
 argument_list|,
@@ -4912,7 +4886,7 @@ name|p
 argument_list|)
 condition|;
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 operator|++
 name|p
@@ -5175,38 +5149,31 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-specifier|register
 name|struct
 name|filed
 modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|q
-decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|char
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|pri
-decl_stmt|;
 name|struct
 name|hostent
 modifier|*
 name|hp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|pri
+decl_stmt|;
+name|char
+modifier|*
+name|bp
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|char
 name|buf
@@ -5232,17 +5199,17 @@ literal|0
 expr_stmt|;
 comment|/* keep strerror() stuff out of logerror messages */
 comment|/* clear out file entry */
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|f
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|f
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -5318,7 +5285,7 @@ operator|*
 name|q
 operator|&&
 operator|!
-name|index
+name|strchr
 argument_list|(
 literal|"\t,;"
 argument_list|,
@@ -5343,7 +5310,7 @@ expr_stmt|;
 comment|/* skip cruft */
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 literal|", ;"
 argument_list|,
@@ -5413,7 +5380,7 @@ operator|*
 name|p
 operator|&&
 operator|!
-name|index
+name|strchr
 argument_list|(
 literal|"\t.;"
 argument_list|,
@@ -5432,7 +5399,7 @@ operator|*
 name|p
 operator|&&
 operator|!
-name|index
+name|strchr
 argument_list|(
 literal|"\t,;."
 argument_list|,
@@ -5613,40 +5580,19 @@ block|{
 specifier|extern
 name|int
 name|h_errno
-decl_stmt|,
-name|h_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|h_errlist
-index|[]
 decl_stmt|;
 name|logerror
 argument_list|(
-operator|(
-name|u_int
-operator|)
+name|hstrerror
+argument_list|(
 name|h_errno
-operator|<
-name|h_nerr
-condition|?
-name|h_errlist
-index|[
-name|h_errno
-index|]
-else|:
-literal|"Unknown error"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|f
 operator|->
@@ -5656,7 +5602,10 @@ name|f_forw
 operator|.
 name|f_addr
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
+argument_list|(
 name|f
 operator|->
 name|f_un
@@ -5664,6 +5613,7 @@ operator|.
 name|f_forw
 operator|.
 name|f_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|f
@@ -5690,16 +5640,8 @@ name|sin_port
 operator|=
 name|LogPort
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|f
 operator|->
@@ -5710,6 +5652,10 @@ operator|.
 name|f_addr
 operator|.
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 name|hp
 operator|->
@@ -5974,17 +5920,14 @@ modifier|*
 name|codetab
 decl_stmt|;
 block|{
-specifier|register
 name|CODE
 modifier|*
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 name|buf
 index|[
 literal|40
