@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vxm.c	1.2	86/01/05	*/
+comment|/*	vxm.c	1.3	86/01/12	*/
 end_comment
 
 begin_include
@@ -24,31 +24,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
@@ -74,13 +74,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../bsc/bscio.h"
+file|"../tahoebsc/bscio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bsc/bsc.h"
+file|"../tahoebsc/bsc.h"
 end_include
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vx.c	1.3	86/01/12	*/
+comment|/*	vx.c	1.4	86/01/12	*/
 end_comment
 
 begin_include
@@ -146,13 +146,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../bsc/bscio.h"
+file|"../tahoebsc/bscio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bsc/bsc.h"
+file|"../tahoebsc/bsc.h"
 end_include
 
 begin_decl_stmt
@@ -178,7 +178,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../bsc/bscdebug.h"
+file|"../tahoebsc/bscdebug.h"
 end_include
 
 begin_endif
@@ -211,7 +211,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"../vba/vxdebug.h"
+file|"../tahoevba/vxdebug.h"
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vxc.c	1.3	86/01/12	*/
+comment|/*	vxc.c	1.4	86/01/12	*/
 end_comment
 
 begin_include
@@ -24,49 +24,49 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../sna/snadebug.h"
+file|"../tahoesna/snadebug.h"
 end_include
 
 begin_ifdef
