@@ -478,9 +478,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|longwidth
+name|int64width
 parameter_list|(
-name|long
+name|int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1863,20 +1863,62 @@ begin_comment
 comment|/*  * Convert statfs returned filesystem size into BLOCKSIZE units.  * Attempts to avoid overflow for large filesystems.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|int64_t
 name|fsbtoblk
 parameter_list|(
+name|int64_t
 name|num
 parameter_list|,
+name|uint64_t
 name|fsbs
 parameter_list|,
+name|u_long
 name|bs
 parameter_list|)
-define|\
-value|(((fsbs) != 0&& (fsbs)< (bs)) ? \ 		(num) / ((bs) / (fsbs)) : (num) * ((fsbs) / (bs)))
-end_define
+block|{
+if|if
+condition|(
+name|fsbs
+operator|!=
+literal|0
+operator|&&
+name|fsbs
+operator|<
+name|bs
+condition|)
+return|return
+operator|(
+name|num
+operator|/
+call|(
+name|int64_t
+call|)
+argument_list|(
+name|bs
+operator|/
+name|fsbs
+argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|num
+operator|*
+call|(
+name|int64_t
+call|)
+argument_list|(
+name|fsbs
+operator|/
+name|bs
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Print out status about a filesystem.  */
@@ -2185,12 +2227,16 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*ld %*ld %*ld"
+literal|" %*lld %*lld %*lld"
 argument_list|,
 name|mwp
 operator|->
 name|total
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|fsbtoblk
 argument_list|(
 name|sfsp
@@ -2208,6 +2254,10 @@ name|mwp
 operator|->
 name|used
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|fsbtoblk
 argument_list|(
 name|used
@@ -2223,6 +2273,10 @@ name|mwp
 operator|->
 name|avail
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|fsbtoblk
 argument_list|(
 name|sfsp
@@ -2417,7 +2471,7 @@ name|mwp
 operator|->
 name|total
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|fsbtoblk
 argument_list|(
@@ -2444,7 +2498,7 @@ name|mwp
 operator|->
 name|used
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|fsbtoblk
 argument_list|(
@@ -2475,7 +2529,7 @@ name|mwp
 operator|->
 name|avail
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|fsbtoblk
 argument_list|(
@@ -2502,7 +2556,7 @@ name|mwp
 operator|->
 name|iused
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|sfsp
 operator|->
@@ -2524,7 +2578,7 @@ name|mwp
 operator|->
 name|ifree
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|sfsp
 operator|->
@@ -2541,9 +2595,9 @@ end_comment
 
 begin_function
 name|int
-name|longwidth
+name|int64width
 parameter_list|(
-name|long
+name|int64_t
 name|val
 parameter_list|)
 block|{
