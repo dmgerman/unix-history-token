@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t7.c	4.3 %G%"
+literal|"@(#)t7.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +524,17 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+elseif|else
+if|if
+condition|(
+name|allh
+argument_list|(
+name|i
+argument_list|)
+condition|)
+name|horlin
+operator|++
+expr_stmt|;
 else|else
 name|texlin
 operator|++
