@@ -2585,7 +2585,7 @@ if|if
 condition|(
 name|highest
 operator|==
-name|PCI_POWER_STATE_D3
+name|PCI_POWERSTATE_D3
 condition|)
 name|delay
 operator|=
@@ -2596,7 +2596,7 @@ if|if
 condition|(
 name|highest
 operator|==
-name|PCI_POWER_STATE_D2
+name|PCI_POWERSTATE_D2
 condition|)
 name|delay
 operator|=
