@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.3 (Berkeley) %G%"
+literal|"@(#)map.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
+file|<fcntl.h>
 end_include
 
 begin_ifdef

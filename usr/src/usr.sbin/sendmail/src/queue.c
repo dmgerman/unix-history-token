@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.7 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.8 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.7 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.8 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,12 +75,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -96,22 +90,11 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOCKF
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
