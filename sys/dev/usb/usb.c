@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.59 2001/11/26 20:16:55 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.61 2001/12/31 15:55:51 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1686,6 +1686,16 @@ argument_list|(
 operator|(
 literal|"usb_event_thread: start\n"
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the 	 * EHCI controller has grabbed the port. 	 */
+name|usb_delay_ms
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+literal|500
 argument_list|)
 expr_stmt|;
 comment|/* Make sure first discover does something. */
