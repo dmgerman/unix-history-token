@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.3 82/03/15"
+literal|"@(#)ls.c	4.4 82/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -2615,7 +2615,7 @@ name|sprintf
 argument_list|(
 name|fmtres
 argument_list|,
-literal|"%s%s%s%s"
+literal|"%s%s%s"
 argument_list|,
 name|iflg
 condition|?
