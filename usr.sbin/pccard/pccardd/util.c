@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.10 1997/10/06 11:36:08 charnier Exp $"
+literal|"$Id: util.c,v 1.6.2.2 1997/10/26 04:13:48 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ end_function
 
 begin_function
 name|void
-name|log_1s
+name|logmsg
 parameter_list|(
 specifier|const
 name|char
