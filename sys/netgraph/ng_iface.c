@@ -3167,6 +3167,13 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+name|bpfdetach
+argument_list|(
+name|priv
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|if_detach
 argument_list|(
 name|priv
