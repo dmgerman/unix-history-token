@@ -461,6 +461,7 @@ value|0x01
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vn_softc
 modifier|*
@@ -472,6 +473,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|vn_options
 decl_stmt|;
@@ -489,71 +491,59 @@ parameter_list|)
 value|if (((vn)->sc_options|vn_options)& (opt))
 end_define
 
-begin_comment
-comment|/*  * XXX these decls should be static (without __P(())) or elsewhere.  */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
+specifier|static
 name|void
 name|vniodone
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
 name|int
 name|vnsetcred
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vn_softc
-operator|*
+modifier|*
 name|vn
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ucred
-operator|*
+modifier|*
 name|cred
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
 name|void
 name|vnshutdown
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
 name|void
 name|vnclear
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vn_softc
-operator|*
+modifier|*
 name|vn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
