@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.7.6.6 1997/07/01 06:14:08 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.6.7 1997/10/09 07:07:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,6 +495,33 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|strrchr
+argument_list|(
+name|p
+operator|->
+name|name
+argument_list|,
+literal|'\''
+argument_list|)
+condition|)
+name|cleanup
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"Bogus filename \"%s\""
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 comment|/* first try to rename it into place */
 name|snprintf
 argument_list|(
@@ -648,7 +675,7 @@ name|maxargs
 operator|-
 name|perm_count
 argument_list|,
-literal|"%s "
+literal|"'%s' "
 argument_list|,
 name|p
 operator|->
@@ -740,7 +767,7 @@ name|maxargs
 operator|-
 name|where_count
 argument_list|,
-literal|" %s"
+literal|" '%s'"
 argument_list|,
 name|p
 operator|->
@@ -785,7 +812,7 @@ name|maxargs
 operator|-
 name|perm_count
 argument_list|,
-literal|"%s "
+literal|"'%s' "
 argument_list|,
 name|p
 operator|->
