@@ -7545,7 +7545,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If we don't have media loaded, check for it.  If still don't 	 * have media loaded, we can only do a load or eject. 	 */
+comment|/* 	 * If we don't have media loaded, check for it.  If still don't 	 * have media loaded, we can only do a load or eject. 	 * 	 * We only care whether media is loaded if this is a cd-specific ioctl 	 * (thus the IOCGROUP check below).  Note that this will break if 	 * anyone adds any ioctls into the switch statement below that don't 	 * have their ioctl group set to 'c'. 	 */
 if|if
 condition|(
 operator|(
@@ -7572,6 +7572,15 @@ name|cmd
 operator|!=
 name|CDIOCEJECT
 operator|)
+operator|)
+operator|&&
+operator|(
+name|IOCGROUP
+argument_list|(
+name|cmd
+argument_list|)
+operator|==
+literal|'c'
 operator|)
 condition|)
 block|{
