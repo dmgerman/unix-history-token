@@ -1664,9 +1664,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*       * If we found one, deliver th epacket to the socket      */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|ddp
+operator|->
+name|ddp_socket
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|sbappendaddr
+name|sbappendaddr_locked
 argument_list|(
 operator|&
 name|ddp
@@ -1691,6 +1701,16 @@ operator|==
 literal|0
 condition|)
 block|{
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|ddp
+operator|->
+name|ddp_socket
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 comment|/*  	 * If the socket is full (or similar error) dump the packet. 	 */
 name|ddpstat
 operator|.
@@ -1702,7 +1722,7 @@ name|out
 goto|;
 block|}
 comment|/*      * And wake up whatever might be waiting for it      */
-name|sorwakeup
+name|sorwakeup_locked
 argument_list|(
 name|ddp
 operator|->
