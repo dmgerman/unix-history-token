@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	8.6 (Berkeley) %G%"
+literal|"@(#)pass2.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +38,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -319,13 +313,13 @@ operator|->
 name|di_mode
 operator|&=
 operator|~
-name|S_IFMT
+name|IFMT
 expr_stmt|;
 name|dp
 operator|->
 name|di_mode
 operator||=
-name|S_IFDIR
+name|IFDIR
 expr_stmt|;
 name|inodirty
 argument_list|()
@@ -371,10 +365,7 @@ index|[
 name|WINO
 index|]
 operator|=
-name|IFTODT
-argument_list|(
-name|S_IFWHT
-argument_list|)
+name|DT_WHT
 expr_stmt|;
 block|}
 comment|/* 	 * Sort the directory list into disk block order. 	 */
@@ -664,7 +655,7 @@ name|dino
 operator|.
 name|di_mode
 operator|=
-name|S_IFDIR
+name|IFDIR
 expr_stmt|;
 name|dp
 operator|->
@@ -2359,10 +2350,10 @@ name|dp
 operator|->
 name|di_mode
 operator|&
-name|S_IFMT
+name|IFMT
 operator|)
 operator|==
-name|S_IFDIR
+name|IFDIR
 condition|?
 name|DSTATE
 else|:
