@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.15	82/07/15	*/
+comment|/*	vp.c	4.16	82/08/13	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vcmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_function_decl
@@ -1075,6 +1081,8 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minvpph
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
