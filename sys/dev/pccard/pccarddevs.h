@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.54 2003/07/11 09:15:21 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.55 2003/07/11 09:16:40 imp Exp   */
 end_comment
 
 begin_comment
@@ -1344,7 +1344,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_STR_ASUS_WL
-value|-100	"ASUS ASUS SpaceLink WL-100 Wireless LAN"
+value|-100	"ASUS SpaceLink WL-100 Wireless LAN"
 end_define
 
 begin_comment
