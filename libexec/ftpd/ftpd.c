@@ -10100,9 +10100,6 @@ name|transflag
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|buf
