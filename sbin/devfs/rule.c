@@ -108,8 +108,9 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
-name|int
-name|cmd
+name|unsigned
+name|long
+name|reqest
 parameter_list|,
 name|devfs_rsnum
 name|rsnum
@@ -1346,8 +1347,9 @@ name|FILE
 modifier|*
 name|fp
 parameter_list|,
-name|int
-name|cmd
+name|unsigned
+name|long
+name|request
 parameter_list|,
 name|devfs_rsnum
 name|rsnum
@@ -1399,7 +1401,7 @@ name|ioctl
 argument_list|(
 name|mpfd
 argument_list|,
-name|cmd
+name|request
 argument_list|,
 operator|&
 name|dr
