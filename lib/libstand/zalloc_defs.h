@@ -17,26 +17,11 @@ begin_comment
 comment|/* use stard/end guard bytes */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|USEENDGUARD
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
