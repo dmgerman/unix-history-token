@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.1	%G%	*/
+comment|/*	vp.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -99,7 +99,7 @@ name|short
 name|plbcr
 decl_stmt|;
 name|short
-name|fill
+name|pbxaddr
 decl_stmt|;
 name|short
 name|prbcr
@@ -771,6 +771,20 @@ operator|=
 name|vp11
 operator|.
 name|vp_bufp
+expr_stmt|;
+name|VPADDR
+operator|->
+name|pbxaddr
+operator|=
+operator|(
+name|vp11
+operator|.
+name|vp_bufp
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0x30
 expr_stmt|;
 if|if
 condition|(

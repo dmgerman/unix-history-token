@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.1	%G%	*/
+comment|/*	va.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -793,6 +793,20 @@ operator|=
 name|va11
 operator|.
 name|va_bufp
+expr_stmt|;
+name|VAADDR
+operator|->
+name|vacsl
+operator|=
+operator|(
+name|va11
+operator|.
+name|va_bufp
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0x30
 expr_stmt|;
 name|VAADDR
 operator|->
