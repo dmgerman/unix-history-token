@@ -40,16 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_comment
-comment|/* for _PATH_LOCALE */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -75,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"setlocale.h"
 end_include
 
 begin_comment
@@ -1773,11 +1769,6 @@ name|dirent
 modifier|*
 name|dp
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|dirname
-decl_stmt|;
 comment|/* why call this function twice ? */
 if|if
 condition|(
@@ -1806,29 +1797,26 @@ literal|"could not allocate memory"
 argument_list|)
 expr_stmt|;
 comment|/* get actual locales directory name */
-name|dirname
-operator|=
-name|getenv
-argument_list|(
-literal|"PATH_LOCALE"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|dirname
-operator|==
-name|NULL
+name|__detect_path_locale
+argument_list|()
+operator|!=
+literal|0
 condition|)
-name|dirname
-operator|=
-name|_PATH_LOCALE
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to find locales storage"
+argument_list|)
 expr_stmt|;
 comment|/* open locales directory */
 name|dirp
 operator|=
 name|opendir
 argument_list|(
-name|dirname
+name|_PathLocale
 argument_list|)
 expr_stmt|;
 if|if
@@ -1843,7 +1831,7 @@ literal|1
 argument_list|,
 literal|"could not open directory '%s'"
 argument_list|,
-name|dirname
+name|_PathLocale
 argument_list|)
 expr_stmt|;
 comment|/* scan directory and store its contents except "." and ".." */
