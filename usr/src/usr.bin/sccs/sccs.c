@@ -63,7 +63,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.63 %G%"
+literal|"@(#)sccs.c	1.64 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2389,6 +2389,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"\n%s:\n"
+argument_list|,
+operator|*
+name|np
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
