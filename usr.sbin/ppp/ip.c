@@ -3788,7 +3788,7 @@ name|logbuf
 operator|-
 name|loglen
 argument_list|,
-literal|"%s, spi %08x"
+literal|"%s, spi %p"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3797,9 +3797,6 @@ operator|->
 name|ip_dst
 argument_list|)
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 name|ptop
 argument_list|)
 expr_stmt|;
@@ -3868,7 +3865,7 @@ name|logbuf
 operator|-
 name|loglen
 argument_list|,
-literal|"%s, spi %08x"
+literal|"%s, spi %p"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3877,16 +3874,11 @@ operator|->
 name|ip_dst
 argument_list|)
 argument_list|,
-call|(
-name|u_int32_t
-call|)
-argument_list|(
 name|ptop
 operator|+
 sizeof|sizeof
 argument_list|(
 name|u_int32_t
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
