@@ -121,7 +121,7 @@ name|DPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|if (pccard_cis_debug) printf arg
+value|do { if (pccard_cis_debug) printf arg; } while (0)
 end_define
 
 begin_define
@@ -131,7 +131,7 @@ name|DEVPRINTF
 parameter_list|(
 name|arg
 parameter_list|)
-value|if (pccard_cis_debug) device_printf arg
+value|do { if (pccard_cis_debug) device_printf arg; } while (0)
 end_define
 
 begin_else
@@ -447,6 +447,17 @@ decl_stmt|;
 name|int
 name|mfc_index
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PCCARDCISDEBUG
+name|int
+name|cis_none_cnt
+init|=
+literal|10
+decl_stmt|;
+comment|/* Only report 10 CIS_NONEs */
+endif|#
+directive|endif
 struct|struct
 block|{
 name|int
@@ -679,6 +690,15 @@ operator|==
 name|PCCARD_CISTPL_NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PCCARDCISDEBUG
+if|if
+condition|(
+name|cis_none_cnt
+operator|>
+literal|0
+condition|)
 name|DPRINTF
 argument_list|(
 operator|(
@@ -686,6 +706,25 @@ literal|"CISTPL_NONE\n 00\n"
 operator|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cis_none_cnt
+operator|==
+literal|0
+condition|)
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"TOO MANY CIS_NONE\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|cis_none_cnt
+operator|--
+expr_stmt|;
+endif|#
+directive|endif
 name|tuple
 operator|.
 name|ptr
