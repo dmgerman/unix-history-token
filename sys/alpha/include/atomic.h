@@ -1106,6 +1106,8 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
+literal|"mb\n\t"
+comment|/* drain to memory */
 literal|"2:\n"
 comment|/* done */
 literal|".section .text3,\"ax\"\n"
@@ -1191,6 +1193,8 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
+literal|"mb\n\t"
+comment|/* drain to memory */
 literal|"2:\n"
 comment|/* done */
 literal|".section .text3,\"ax\"\n"
