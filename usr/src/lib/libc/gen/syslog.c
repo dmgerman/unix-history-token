@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.2 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -688,6 +694,32 @@ operator|==
 literal|0
 condition|)
 block|{
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+name|sigblock
+argument_list|(
+literal|0
+argument_list|)
+operator|&
+operator|~
+name|sigmask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
 name|LogFile
 operator|=
 name|open
@@ -695,6 +727,11 @@ argument_list|(
 name|ctty
 argument_list|,
 name|O_WRONLY
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|strcat
