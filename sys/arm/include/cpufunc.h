@@ -37,6 +37,16 @@ directive|include
 file|<machine/cpuconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/katelib.h>
+end_include
+
+begin_comment
+comment|/* For in[bwl] and out[bwl] */
+end_comment
+
 begin_function_decl
 name|void
 name|disable_intr
@@ -54,6 +64,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|breakpoint
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
 
 begin_function
 specifier|static
