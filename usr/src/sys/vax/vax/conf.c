@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.48	82/02/08	*/
+comment|/*	conf.c	4.49	82/03/14	*/
 end_comment
 
 begin_include
@@ -1569,9 +1569,6 @@ argument_list|()
 decl_stmt|,
 name|lpreset
 argument_list|()
-decl_stmt|,
-name|lpselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1606,13 +1603,6 @@ define|#
 directive|define
 name|lpreset
 value|nulldev
-end_define
-
-begin_define
-define|#
-directive|define
-name|lpselect
-value|nodev
 end_define
 
 begin_endif
@@ -2024,9 +2014,6 @@ argument_list|()
 decl_stmt|,
 name|dnwrite
 argument_list|()
-decl_stmt|,
-name|dnselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2054,13 +2041,6 @@ define|#
 directive|define
 name|dnwrite
 value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|dnselect
-value|selecttrue
 end_define
 
 begin_endif
