@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ace.c	1.5	86/01/21	*/
+comment|/*	if_ace.c	1.6	86/01/21	*/
 end_comment
 
 begin_comment
@@ -4453,14 +4453,25 @@ modifier|*
 name|ina
 init|=
 operator|&
-operator|(
 name|IA_SNS
 argument_list|(
 name|ifa
 argument_list|)
 operator|->
 name|sns_addr
-operator|)
+decl_stmt|;
+name|struct
+name|ace_softc
+modifier|*
+name|is
+init|=
+operator|&
+name|ace_softc
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -4479,18 +4490,6 @@ operator|&=
 operator|~
 name|IFF_RUNNING
 expr_stmt|;
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifr
-operator|->
-name|ifr_addr
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -4498,7 +4497,6 @@ expr|struct
 name|acedevice
 operator|*
 operator|)
-operator|(
 name|aceinfo
 index|[
 name|ifp
@@ -4507,7 +4505,6 @@ name|if_unit
 index|]
 operator|->
 name|ui_addr
-operator|)
 expr_stmt|;
 name|movow
 argument_list|(
@@ -4552,11 +4549,9 @@ expr|union
 name|ns_host
 operator|*
 operator|)
-operator|(
-name|es
+name|is
 operator|->
-name|es_addr
-operator|)
+name|is_addr
 expr_stmt|;
 name|aceinit
 argument_list|(
