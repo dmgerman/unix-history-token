@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.7 (Berkeley) 81/05/18"
+literal|"@(#)arff.c	4.6 (Berkeley) 81/05/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -1827,14 +1827,20 @@ specifier|register
 name|i
 expr_stmt|;
 name|int
-name|mode
-decl_stmt|,
 name|dirnum
+decl_stmt|;
+name|char
+modifier|*
+name|mode
 decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|last
+decl_stmt|;
+name|FILE
+modifier|*
+name|temp_floppydes
 decl_stmt|;
 if|if
 condition|(
@@ -1864,32 +1870,32 @@ argument_list|)
 condition|)
 name|mode
 operator|=
-literal|2
+literal|"r+"
 expr_stmt|;
 else|else
 name|mode
 operator|=
-literal|0
+literal|"r"
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|floppydes
+name|temp_floppydes
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|defdev
 argument_list|,
 name|mode
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
-name|dbprintf
+name|perror
 argument_list|(
-literal|"Floppy open failed\n"
+name|defdev
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1898,6 +1904,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|floppydes
+operator|=
+name|fileno
+argument_list|(
+name|temp_floppydes
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flag
@@ -3718,6 +3732,9 @@ name|trans
 parameter_list|()
 function_decl|;
 extern|extern floppydes;
+name|int
+name|temp
+decl_stmt|;
 name|rt_init
 argument_list|()
 expr_stmt|;
@@ -3757,6 +3774,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|temp
+operator|=
 name|read
 argument_list|(
 name|floppydes
@@ -3765,6 +3785,7 @@ name|obuff
 argument_list|,
 literal|128
 argument_list|)
+operator|)
 operator|!=
 literal|128
 condition|)
@@ -3772,11 +3793,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arff: read error block %d\n"
+literal|"arff: read error block %d %d\n"
 argument_list|,
 name|startad
 operator|/
 literal|128
+argument_list|,
+name|temp
 argument_list|)
 expr_stmt|;
 name|obuff
@@ -3814,15 +3837,34 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|temp
+operator|=
+name|read
+argument_list|(
+name|floppydes
+argument_list|,
+name|obuff
+argument_list|,
+literal|512
+argument_list|)
+operator|)
+operator|!=
+literal|512
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arff: read error block %d\n"
+literal|"arff: read error block %d %d\n"
 argument_list|,
 name|startad
 operator|/
 literal|512
+argument_list|,
+name|temp
 argument_list|)
 expr_stmt|;
 name|obuff
