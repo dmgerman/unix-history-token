@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.1	%G%	*/
+comment|/*	kern_resource.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -273,6 +273,9 @@ name|ac_utime
 operator|=
 name|compress
 argument_list|(
+operator|(
+name|long
+operator|)
 name|u
 operator|.
 name|u_vm
@@ -286,6 +289,9 @@ name|ac_stime
 operator|=
 name|compress
 argument_list|(
+operator|(
+name|long
+operator|)
 name|u
 operator|.
 name|u_vm
@@ -299,11 +305,16 @@ name|ac_etime
 operator|=
 name|compress
 argument_list|(
+call|(
+name|long
+call|)
+argument_list|(
 name|time
 operator|-
 name|u
 operator|.
 name|u_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|acctbuf
@@ -378,6 +389,10 @@ name|ac_io
 operator|=
 name|compress
 argument_list|(
+call|(
+name|long
+call|)
+argument_list|(
 name|u
 operator|.
 name|u_vm
@@ -389,6 +404,7 @@ operator|.
 name|u_vm
 operator|.
 name|vm_oublk
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|acctbuf
@@ -485,7 +501,7 @@ argument_list|(
 name|t
 argument_list|)
 specifier|register
-name|time_t
+name|long
 name|t
 expr_stmt|;
 end_expr_stmt

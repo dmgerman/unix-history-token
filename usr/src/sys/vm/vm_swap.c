@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.1	%G%	*/
+comment|/*	vm_swap.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -270,18 +270,6 @@ end_macro
 begin_block
 block|{
 specifier|register
-struct|struct
-name|a
-block|{
-name|char
-modifier|*
-name|sname
-decl_stmt|;
-block|}
-modifier|*
-name|uap
-struct|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -296,17 +284,6 @@ name|swdevt
 modifier|*
 name|sp
 decl_stmt|;
-name|uap
-operator|=
-operator|(
-expr|struct
-name|a
-operator|*
-operator|)
-name|u
-operator|.
-name|u_ap
-expr_stmt|;
 name|ip
 operator|=
 name|namei

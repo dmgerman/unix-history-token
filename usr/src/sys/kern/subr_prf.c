@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.1	%G%	*/
+comment|/*	subr_prf.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -907,6 +907,10 @@ begin_comment
 comment|/*  * Print a character on console or in internal trace buffer.  * If destination is console then the last MSGBUFS characters  * are saved in msgbuf for inspection later.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|putchar
 argument_list|(
@@ -921,11 +925,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|s
-operator|,
-name|timo
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.1	%G%	*/
+comment|/*	up.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -859,11 +859,11 @@ condition|)
 block|{
 name|timeout
 argument_list|(
+name|upwatch
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|upwatch
-argument_list|,
 literal|0
 argument_list|,
 name|HZ
@@ -2246,10 +2246,16 @@ name|deverror
 argument_list|(
 name|bp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|upaddr
 operator|->
 name|upcs2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|upaddr
 operator|->
 name|uper1
@@ -2627,8 +2633,6 @@ name|needie
 operator|=
 literal|0
 expr_stmt|;
-name|out
-label|:
 if|if
 condition|(
 name|needie
@@ -3265,11 +3269,11 @@ name|i
 decl_stmt|;
 name|timeout
 argument_list|(
+name|upwatch
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|upwatch
-argument_list|,
 literal|0
 argument_list|,
 name|HZ

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.1	%G%	*/
+comment|/*	mba.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -532,10 +532,10 @@ end_if
 begin_expr_stmt
 unit|}  mbainit
 operator|(
-name|mbanum
+name|mbano
 operator|)
 name|int
-name|mbanum
+name|mbano
 expr_stmt|;
 end_expr_stmt
 
@@ -571,7 +571,7 @@ operator|=
 operator|&
 name|mbainfo
 index|[
-name|mbanum
+name|mbano
 index|]
 expr_stmt|;
 name|v
@@ -658,7 +658,7 @@ operator||=
 operator|(
 literal|1
 operator|<<
-name|mbanum
+name|mbano
 operator|)
 expr_stmt|;
 block|}
