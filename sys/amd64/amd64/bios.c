@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"isa.h"
 end_include
 
@@ -102,6 +108,25 @@ include|#
 directive|include
 file|<isa/pnpvar.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|NACPI
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/acpi.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -639,21 +664,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+name|NACPI
+operator|>
+literal|0
+comment|/*      * ACPI BIOS      * acpi_rsdp is GLOBAL and holds RSD PTR signature      */
 if|if
 condition|(
-name|bootverbose
-condition|)
-block|{
-comment|/* look for other know signatures */
-name|printf
-argument_list|(
-literal|"Other BIOS signatures found:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ACPI: %08x\n"
-argument_list|,
+operator|(
+name|sigaddr
+operator|=
 name|bios_sigsearch
 argument_list|(
 literal|0
@@ -666,6 +687,96 @@ literal|16
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* get a virtual pointer to the structure */
+name|acpi_rsdp
+operator|=
+operator|(
+expr|struct
+name|ACPIrsdp
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|BIOS_PADDRTOVADDR
+argument_list|(
+name|sigaddr
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|cv
+operator|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|acpi_rsdp
+operator|,
+name|ck
+operator|=
+literal|0
+operator|,
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ACPIrsdp
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ck
+operator|+=
+name|cv
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+comment|/* If checksum is NG, disable it */
+if|if
+condition|(
+name|ck
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ACPI: Bad ACPI BIOS data checksum\n"
+argument_list|)
+expr_stmt|;
+name|acpi_rsdp
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 0xa0000<=RSD_PTR<0x100000*/
+block|}
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+comment|/* look for other know signatures */
+name|printf
+argument_list|(
+literal|"Other BIOS signatures found:\n"
 argument_list|)
 expr_stmt|;
 block|}
