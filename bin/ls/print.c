@@ -507,10 +507,10 @@ block|,
 comment|/* setgid executable */
 name|C_WSDIR
 block|,
-comment|/* directory writeble to others, with sticky bit */
+comment|/* directory writeble to others, with sticky 				 * bit */
 name|C_WDIR
 block|,
-comment|/* directory writeble to others, without sticky bit */
+comment|/* directory writeble to others, without 				 * sticky bit */
 name|C_NUMCOLORS
 comment|/* just a place-holder */
 block|}
@@ -2834,7 +2834,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*COLORLS*/
+comment|/* COLORLS */
 end_comment
 
 begin_function
