@@ -125,6 +125,19 @@ name|encaptab
 modifier|*
 name|encap_cookie6
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|r_unit
+decl_stmt|;
+comment|/* resource allocated for this unit */
+name|TAILQ_ENTRY
+argument_list|(
+argument|gif_softc
+argument_list|)
+name|gif_link
+expr_stmt|;
+comment|/* all gif's are linked */
 block|}
 struct|;
 end_struct
