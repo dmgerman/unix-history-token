@@ -3881,6 +3881,15 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|28800
+block|,
+name|COMBRD
+argument_list|(
+literal|28800
+argument_list|)
+block|}
+block|,
+block|{
 literal|38400
 block|,
 name|COMBRD
@@ -5433,17 +5442,9 @@ literal|0x10
 block|}
 block|,
 block|{
-literal|0x048011c1
+literal|0x2000131f
 block|,
-literal|"Lucent kermit based PCI Modem"
-block|,
-literal|0x14
-block|}
-block|,
-block|{
-literal|0x0000151f
-block|,
-literal|"SmartLink 5634PCV SurfRider"
+literal|"CyberSerial (1-port) 16550"
 block|,
 literal|0x10
 block|}
@@ -5460,6 +5461,30 @@ block|{
 literal|0x01111407
 block|,
 literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x048011c1
+block|,
+literal|"Lucent kermit based PCI Modem"
+block|,
+literal|0x14
+block|}
+block|,
+block|{
+literal|0x95211415
+block|,
+literal|"Oxford Semiconductor PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x0000151f
+block|,
+literal|"SmartLink 5634PCV SurfRider"
 block|,
 literal|0x10
 block|}
@@ -21086,11 +21111,11 @@ name|siocnputc
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_expr_stmt
 name|CONS_DRIVER
@@ -22699,6 +22724,16 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|sio_inited
+condition|)
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sio_lock
+argument_list|)
+expr_stmt|;
 name|siocnopen
 argument_list|(
 operator|&
@@ -22729,6 +22764,16 @@ operator|&
 name|sp
 argument_list|,
 name|iobase
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sio_inited
+condition|)
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sio_lock
 argument_list|)
 expr_stmt|;
 name|splx
