@@ -1476,10 +1476,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-name|c
-decl_stmt|;
 define|#
 directive|define
 name|PUTC
@@ -1499,14 +1495,10 @@ operator|++
 name|s
 control|)
 block|{
-name|c
-operator|=
-operator|*
-name|s
-expr_stmt|;
 if|if
 condition|(
-name|c
+operator|*
+name|s
 operator|==
 literal|'\n'
 condition|)
@@ -1528,16 +1520,19 @@ condition|(
 operator|!
 name|isprint
 argument_list|(
-name|c
+operator|*
+name|s
 argument_list|)
 operator|&&
 operator|!
 name|isspace
 argument_list|(
-name|c
+operator|*
+name|s
 argument_list|)
 operator|&&
-name|c
+operator|*
+name|s
 operator|!=
 literal|'\007'
 condition|)
@@ -1549,9 +1544,15 @@ argument_list|)
 expr_stmt|;
 name|PUTC
 argument_list|(
-name|c
+operator|(
+operator|*
+name|s
 operator|^
 literal|0x40
+operator|)
+operator|&
+operator|~
+literal|0x80
 argument_list|)
 expr_stmt|;
 comment|/* DEL to ?, others to alpha */
@@ -1559,7 +1560,8 @@ block|}
 else|else
 name|PUTC
 argument_list|(
-name|c
+operator|*
+name|s
 argument_list|)
 expr_stmt|;
 block|}
