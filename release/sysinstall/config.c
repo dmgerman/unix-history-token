@@ -3500,19 +3500,9 @@ return|;
 comment|/* Add an entry for localhost */
 if|if
 condition|(
-operator|!
-name|variable_cmp
-argument_list|(
-name|VAR_IPV6_ENABLE
-argument_list|,
-literal|"YES"
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|dp
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -3522,19 +3512,6 @@ argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"::1\t\t\tlocalhost\n"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|dp
-condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -3544,7 +3521,16 @@ argument_list|,
 name|dp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"::1\t\t\tlocalhost\n"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -3552,6 +3538,7 @@ argument_list|,
 literal|"127.0.0.1\t\tlocalhost\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Now the host entries, if applicable */
 if|if
 condition|(
