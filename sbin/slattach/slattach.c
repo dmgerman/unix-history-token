@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.11 1993/09/16 06:33:44 rich Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.12 1993/09/22 23:39:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1324,9 +1324,18 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"configuring sl%d, invoking: %s"
+literal|"Configuring %s (sl%d):"
 argument_list|,
-name|new_unit
+name|dev
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"  '%s'"
 argument_list|,
 name|s
 argument_list|)
@@ -1435,11 +1444,11 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sl%d caught SIGHUP on %s, running %s"
-argument_list|,
-name|unit
+literal|"SIGHUP on %s (sl%d); running %s"
 argument_list|,
 name|dev
+argument_list|,
+name|unit
 argument_list|,
 name|redial_cmd
 argument_list|)
@@ -1617,11 +1626,11 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sl%d on %s caught SIGTERM, exiting."
-argument_list|,
-name|unit
+literal|"SIGTERM on %s (sl%d); exiting"
 argument_list|,
 name|dev
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|exit_handler
