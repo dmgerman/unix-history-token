@@ -3781,7 +3781,7 @@ name|sprintf
 argument_list|(
 name|dname
 argument_list|,
-literal|"/dev/r%s"
+literal|"/dev/%s"
 argument_list|,
 name|rootdev
 operator|->
@@ -4231,7 +4231,7 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"%s %s/dev/r%s"
+literal|"%s %s/dev/%s"
 argument_list|,
 name|tmp
 operator|->
@@ -4255,7 +4255,7 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"fsck -y %s/dev/r%s"
+literal|"fsck -y %s/dev/%s"
 argument_list|,
 name|RunningAsInit
 condition|?
