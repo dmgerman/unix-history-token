@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -9639,8 +9643,12 @@ argument_list|(
 name|sp
 argument_list|,
 name|cp
+condition|?
+name|cp
 operator|->
 name|name
+else|:
+name|NULL
 argument_list|,
 name|EXM_NOFILEYET
 argument_list|)
