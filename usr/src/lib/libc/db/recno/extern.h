@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../btree/extern.h"
+end_include
 
 begin_decl_stmt
 name|int
@@ -31,6 +37,24 @@ name|DBT
 operator|*
 operator|,
 name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__rec_dleaf
+name|__P
+argument_list|(
+operator|(
+name|BTREE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -89,6 +113,7 @@ specifier|const
 name|DB
 operator|*
 operator|,
+specifier|const
 name|DBT
 operator|*
 operator|,
@@ -178,8 +203,8 @@ operator|*
 operator|,
 name|recno_t
 operator|,
-name|int
-operator|*
+expr|enum
+name|SRCHOP
 operator|)
 argument_list|)
 decl_stmt|;
@@ -263,12 +288,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"../btree/extern.h"
-end_include
 
 end_unit
 
