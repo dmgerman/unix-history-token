@@ -882,20 +882,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|mtx
-modifier|*
-name|mtx_pool_alloc_spin
-parameter_list|(
-name|struct
-name|mtx_pool
-modifier|*
-name|pool
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
