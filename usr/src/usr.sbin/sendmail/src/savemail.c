@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -676,7 +676,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		returnto -- the queue of people to send the message to. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
+comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		returnq -- the queue of people to send the message to. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
 end_comment
 
 begin_decl_stmt
@@ -702,7 +702,7 @@ name|returntosender
 argument_list|(
 argument|msg
 argument_list|,
-argument|returnto
+argument|returnq
 argument_list|,
 argument|sendbody
 argument_list|)
@@ -718,7 +718,7 @@ end_decl_stmt
 begin_decl_stmt
 name|ADDRESS
 modifier|*
-name|returnto
+name|returnq
 decl_stmt|;
 end_decl_stmt
 
@@ -823,7 +823,7 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
-name|returnto
+name|returnq
 argument_list|,
 name|TRUE
 argument_list|)
@@ -856,7 +856,7 @@ name|syserr
 argument_list|(
 literal|"returntosender: infinite recursion on %s"
 argument_list|,
-name|returnto
+name|returnq
 operator|->
 name|q_paddr
 argument_list|)
@@ -933,7 +933,7 @@ name|ee
 operator|->
 name|e_sendqueue
 operator|=
-name|returnto
+name|returnq
 expr_stmt|;
 end_expr_stmt
 
@@ -950,7 +950,7 @@ for|for
 control|(
 name|q
 operator|=
-name|returnto
+name|returnq
 init|;
 name|q
 operator|!=
