@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2072,7 +2072,11 @@ name|ICHG
 operator|)
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Allocate a new inode block if necessary. */
 if|if
 condition|(
@@ -2715,65 +2719,6 @@ operator|)
 return|;
 block|}
 comment|/* Insert into the buffer list, update the FINFO block. */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_vp
-operator|==
-name|sp
-operator|->
-name|fs
-operator|->
-name|lfs_ivnode
-operator|&&
-operator|(
-operator|(
-name|bp
-operator|->
-name|b_lblkno
-operator|==
-literal|0
-operator|&&
-operator|(
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_daddr
-index|[
-literal|0
-index|]
-operator|>
-literal|26
-operator|||
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_daddr
-index|[
-literal|1
-index|]
-operator|>
-literal|26
-operator|)
-operator|)
-operator|||
-operator|(
-name|bp
-operator|->
-name|b_lblkno
-operator|>
-literal|2
-operator|)
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"Bad ifile block\n"
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
