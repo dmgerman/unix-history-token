@@ -3775,7 +3775,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ffs_unmonut: ufs_extattr_stop returned %d\n"
+literal|"ffs_unmount: ufs_extattr_stop returned %d\n"
 argument_list|,
 name|error
 argument_list|)
