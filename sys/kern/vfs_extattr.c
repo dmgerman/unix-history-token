@@ -16676,6 +16676,16 @@ name|VREAD
 expr_stmt|;
 if|if
 condition|(
+name|fmode
+operator|&
+name|O_APPEND
+condition|)
+name|mode
+operator||=
+name|VAPPEND
+expr_stmt|;
+if|if
+condition|(
 name|mode
 condition|)
 block|{
