@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.10 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1483,14 +1483,6 @@ decl_stmt|;
 name|nltype
 modifier|*
 name|childp
-decl_stmt|;
-name|arctype
-modifier|*
-name|arcp
-decl_stmt|;
-name|nltype
-modifier|*
-name|parentp
 decl_stmt|;
 for|for
 control|(
