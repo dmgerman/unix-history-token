@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftell.c	8.1 (Berkeley) %G%"
+literal|"@(#)ftell.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,6 @@ parameter_list|(
 name|fp
 parameter_list|)
 specifier|register
-specifier|const
 name|FILE
 modifier|*
 name|fp
