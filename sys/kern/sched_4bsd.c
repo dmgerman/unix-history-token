@@ -206,14 +206,8 @@ value|((ke)->ke_runq != 0&& (ke)->ke_runq !=&runq)
 end_define
 
 begin_comment
-comment|/*  * KSE_CAN_MIGRATE macro returns true if the kse can migrate between  * cpus.  Currently ithread cpu binding is disabled on x86 due to a  * bug in the Xeon round-robin interrupt delivery that delivers all  * interrupts to cpu 0.  */
+comment|/*  * KSE_CAN_MIGRATE macro returns true if the kse can migrate between  * cpus.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
 
 begin_define
 define|#
@@ -225,27 +219,6 @@ parameter_list|)
 define|\
 value|((ke)->ke_thread->td_pinned == 0&& ((ke)->ke_flags& KEF_BOUND) == 0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KSE_CAN_MIGRATE
-parameter_list|(
-name|ke
-parameter_list|)
-define|\
-value|PRI_BASE((ke)->ke_ksegrp->kg_pri_class) != PRI_ITHD&&		\     ((ke)->ke_thread->td_pinned == 0&&((ke)->ke_flags& KEF_BOUND) == 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1855,11 +1828,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|td
 operator|->
-name|td_ithd
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_NOLOAD
+operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|sched_tdcnt
 operator|--
@@ -2229,20 +2208,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|td
+name|p
 operator|->
-name|td_flags
+name|p_flag
 operator|&
-name|TDF_IDLETD
+name|P_NOLOAD
 operator|)
 operator|==
 literal|0
-operator|&&
-name|td
-operator|->
-name|td_ithd
-operator|==
-name|NULL
 condition|)
 name|sched_tdcnt
 operator|--
@@ -2591,11 +2564,17 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|td
 operator|->
-name|td_ithd
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_NOLOAD
+operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|sched_tdcnt
 operator|++
@@ -2673,11 +2652,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|td
 operator|->
-name|td_ithd
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_NOLOAD
+operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|sched_tdcnt
 operator|--
