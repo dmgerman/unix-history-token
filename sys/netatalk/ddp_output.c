@@ -462,6 +462,15 @@ decl_stmt|;
 name|u_short
 name|net
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Check for net zero, node zero ("myself") */
+block|if (satosat(&ro->ro_dst)->sat_addr.s_net == ATADDR_ANYNET&& satosat(&ro->ro_dst)->sat_addr.s_node == ATADDR_ANYNODE) {
+comment|/* Find the loopback interface */
+block|}
+endif|#
+directive|endif
 comment|/*      * if we have a route, find the ifa that refers to this route.      * I.e The ifa used to get to the gateway.      */
 if|if
 condition|(
