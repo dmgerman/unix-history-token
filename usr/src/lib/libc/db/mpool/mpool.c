@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mpool.c	8.1 (Berkeley) %G%"
+literal|"@(#)mpool.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,6 +258,10 @@ condition|(
 operator|(
 name|mp
 operator|=
+operator|(
+name|MPOOL
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -1489,6 +1493,10 @@ condition|(
 operator|(
 name|b
 operator|=
+operator|(
+name|BKT
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	8.2 (Berkeley) %G%"
+literal|"@(#)bt_split.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1768,6 +1768,10 @@ condition|(
 operator|(
 name|l
 operator|=
+operator|(
+name|PAGE
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|t

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.6 (Berkeley) %G%"
+literal|"@(#)hash.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -601,6 +601,10 @@ operator|!
 operator|(
 name|hashp
 operator|=
+operator|(
+name|HTAB
+operator|*
+operator|)
 name|calloc
 argument_list|(
 literal|1
@@ -1076,6 +1080,10 @@ operator|!
 operator|(
 name|dbp
 operator|=
+operator|(
+name|DB
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4382,7 +4390,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|hashp
 operator|->
@@ -4391,6 +4398,9 @@ index|[
 name|new_segnum
 index|]
 operator|=
+operator|(
+name|SEGMENT
+operator|)
 name|calloc
 argument_list|(
 name|hashp
@@ -4403,6 +4413,8 @@ name|SEGMENT
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4704,12 +4716,15 @@ name|save_errno
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|hashp
 operator|->
 name|dir
 operator|=
+operator|(
+name|SEGMENT
+operator|*
+operator|)
 name|calloc
 argument_list|(
 name|hashp
@@ -4723,6 +4738,8 @@ operator|*
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|save_errno
@@ -4749,8 +4766,14 @@ operator|)
 return|;
 block|}
 comment|/* Allocate segments */
+if|if
+condition|(
+operator|(
 name|store
 operator|=
+operator|(
+name|SEGMENT
+operator|)
 name|calloc
 argument_list|(
 name|nsegs
@@ -4764,11 +4787,9 @@ argument_list|(
 name|SEGMENT
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|store
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|save_errno

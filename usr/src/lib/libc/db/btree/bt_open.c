@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	8.4 (Berkeley) %G%"
+literal|"@(#)bt_open.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,6 +431,10 @@ condition|(
 operator|(
 name|t
 operator|=
+operator|(
+name|BTREE
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -519,6 +523,10 @@ name|bt_dbp
 operator|=
 name|dbp
 operator|=
+operator|(
+name|DB
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof

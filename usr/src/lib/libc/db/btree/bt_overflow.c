@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_overflow.c	8.1 (Berkeley) %G%"
+literal|"@(#)bt_overflow.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,10 @@ operator|(
 operator|*
 name|buf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|realloc
 argument_list|(
 operator|*

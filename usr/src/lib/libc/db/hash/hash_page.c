@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	8.3 (Berkeley) %G%"
+literal|"@(#)hash_page.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3406,10 +3406,13 @@ name|clearints
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|ip
 operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|hashp
@@ -3417,6 +3420,8 @@ operator|->
 name|BSIZE
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4955,8 +4960,14 @@ operator|>=
 name|hashp
 operator|->
 name|nmaps
-operator|||
-operator|!
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|hashp
 operator|->
@@ -4965,6 +4976,10 @@ index|[
 name|ndx
 index|]
 operator|=
+operator|(
+name|u_long
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|hashp
@@ -4972,7 +4987,16 @@ operator|->
 name|BSIZE
 argument_list|)
 operator|)
-operator|||
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
 name|__get_page
 argument_list|(
 name|hashp
@@ -5002,11 +5026,23 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|hashp
+operator|->
+name|mapp
+index|[
+name|ndx
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|hashp

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	8.2 (Berkeley) %G%"
+literal|"@(#)rec_get.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -404,6 +404,10 @@ name|t
 operator|->
 name|bt_dbuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|t
@@ -742,6 +746,10 @@ name|t
 operator|->
 name|bt_dbuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|t
@@ -891,6 +899,10 @@ name|t
 operator|->
 name|bt_dbuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|t

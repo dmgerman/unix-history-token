@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_utils.c	8.3 (Berkeley) %G%"
+literal|"@(#)bt_utils.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,6 +215,10 @@ condition|(
 operator|(
 name|p
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|t
@@ -399,6 +403,10 @@ condition|(
 operator|(
 name|p
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|t

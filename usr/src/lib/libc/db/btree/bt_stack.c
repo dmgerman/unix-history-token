@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_stack.c	8.2 (Berkeley) %G%"
+literal|"@(#)bt_stack.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,10 @@ name|t
 operator|->
 name|bt_stack
 operator|=
+operator|(
+name|EPGNO
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|t
