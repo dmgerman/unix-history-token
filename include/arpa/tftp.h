@@ -93,16 +93,19 @@ begin_struct
 struct|struct
 name|tftphdr
 block|{
+name|unsigned
 name|short
 name|th_opcode
 decl_stmt|;
 comment|/* packet type */
 union|union
 block|{
+name|unsigned
 name|short
 name|tu_block
 decl_stmt|;
 comment|/* block # */
+name|unsigned
 name|short
 name|tu_code
 decl_stmt|;
