@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	6.9	84/07/02	*/
+comment|/*	ffs_vnops.c	6.10	84/07/04	*/
 end_comment
 
 begin_include
@@ -259,7 +259,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -701,7 +701,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -1110,7 +1110,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -2360,7 +2360,7 @@ name|suser
 argument_list|()
 condition|)
 return|return;
-name|ilock
+name|ILOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -2374,7 +2374,7 @@ operator|->
 name|fmode
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -2656,7 +2656,7 @@ name|suser
 argument_list|()
 condition|)
 return|return;
-name|ilock
+name|ILOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -2678,7 +2678,7 @@ operator|->
 name|gid
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -3267,7 +3267,7 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -3281,7 +3281,7 @@ operator|->
 name|length
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -3356,7 +3356,7 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -3366,7 +3366,7 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
@@ -3618,7 +3618,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|ip
 argument_list|)
