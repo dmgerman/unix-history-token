@@ -766,6 +766,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_UNLOCK_ASSERT
+parameter_list|(
+name|inp
+parameter_list|)
+value|mtx_assert(&(inp)->inp_mtx, MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_INFO_LOCK_INIT
 parameter_list|(
 name|ipi
