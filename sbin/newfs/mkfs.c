@@ -5407,6 +5407,8 @@ condition|(
 name|Nflag
 condition|)
 return|return;
+if|if
+condition|(
 name|bwrite
 argument_list|(
 operator|&
@@ -5417,6 +5419,22 @@ argument_list|,
 name|bf
 argument_list|,
 name|size
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|36
+argument_list|,
+literal|"wtfs: %d bytes at sector %jd"
+argument_list|,
+name|size
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|bno
 argument_list|)
 expr_stmt|;
 block|}
