@@ -1285,6 +1285,39 @@ begin_comment
 comment|/* 386BSD partition type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DOSPTYP_LINSWP
+value|0x82
+end_define
+
+begin_comment
+comment|/* Linux swap partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_LINUX
+value|0x83
+end_define
+
+begin_comment
+comment|/* Linux partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_EXT
+value|5
+end_define
+
+begin_comment
+comment|/* DOS extended partition */
+end_comment
+
 begin_struct
 struct|struct
 name|dos_partition
