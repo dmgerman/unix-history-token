@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.21 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -98,21 +104,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_define
 define|#
 directive|define
-name|LOGNAME
+name|_PATH_LOGNAME
 value|"/dev/log"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONSOLE
-value|"/dev/console"
 end_define
 
 begin_decl_stmt
@@ -759,7 +764,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|CONSOLE
+name|_PATH_CONSOLE
 argument_list|,
 name|O_WRONLY
 argument_list|,
@@ -845,28 +850,23 @@ operator|&
 name|LOG_NOWAIT
 operator|)
 condition|)
-while|while
-condition|(
 operator|(
-name|cnt
-operator|=
-name|wait
+name|void
+operator|)
+name|waitpid
 argument_list|(
+name|pid
+argument_list|,
 operator|(
-name|int
+expr|union
+name|wait
 operator|*
 operator|)
-literal|0
+name|NULL
+argument_list|,
+name|WSIGRESTART
 argument_list|)
-operator|)
-operator|>
-literal|0
-operator|&&
-name|cnt
-operator|!=
-name|pid
-condition|)
-empty_stmt|;
+expr_stmt|;
 block|}
 end_block
 
@@ -967,12 +967,14 @@ name|SyslogAddr
 operator|.
 name|sa_data
 argument_list|,
-name|LOGNAME
+name|_PATH_LOGNAME
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|SyslogAddr
 operator|.
 name|sa_data
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
