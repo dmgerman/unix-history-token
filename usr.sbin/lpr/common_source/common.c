@@ -727,6 +727,7 @@ specifier|const
 expr|struct
 name|jobqueue
 operator|*
+specifier|const
 operator|*
 operator|)
 name|p1
@@ -739,6 +740,7 @@ specifier|const
 expr|struct
 name|jobqueue
 operator|*
+specifier|const
 operator|*
 operator|)
 name|p2
