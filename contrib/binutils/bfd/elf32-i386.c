@@ -1529,12 +1529,23 @@ begin_comment
 comment|/* The name of the dynamic interpreter.  This is put in the .interp    section.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELF_DYNAMIC_INTERPRETER
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ELF_DYNAMIC_INTERPRETER
-value|"/usr/libexec/ld-elf.so.1"
+value|"/usr/lib/libc.so.1"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The size in bytes of an entry in the procedure linkage table.  */

@@ -10901,7 +10901,7 @@ literal|0
 condition|)
 name|skip
 operator|=
-literal|7
+literal|8
 expr_stmt|;
 else|else
 block|{
@@ -11131,7 +11131,7 @@ name|error
 operator|=
 name|_
 argument_list|(
-literal|"can only set flag field with immediate value"
+literal|"only flag field of psr can be set with immediate value"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -24473,6 +24473,9 @@ comment|/* Still No ?  Try using a negated value.  */
 elseif|else
 if|if
 condition|(
+operator|(
+name|newimm
+operator|=
 name|validate_immediate_twopart
 argument_list|(
 operator|-
@@ -24481,6 +24484,7 @@ argument_list|,
 operator|&
 name|highpart
 argument_list|)
+operator|)
 operator|!=
 operator|(
 name|unsigned

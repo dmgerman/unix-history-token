@@ -5138,6 +5138,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|size
+operator|/=
+literal|8
+expr_stmt|;
+comment|/* Size is in bits.  We store it in bytes.  */
 if|if
 condition|(
 name|size

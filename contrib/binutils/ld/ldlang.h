@@ -880,6 +880,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|lang_statement_list_type
+name|lang_output_section_statement
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|boolean
 name|lang_has_input_file
 decl_stmt|;
@@ -1024,7 +1031,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|lang_output_section_statement_type
+modifier|*
 name|lang_enter_output_section_statement
 name|PARAMS
 argument_list|(
