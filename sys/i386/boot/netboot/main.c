@@ -1838,7 +1838,7 @@ operator|.
 name|bi_symtab
 operator|=
 operator|(
-name|int
+name|u_int32_t
 operator|)
 name|loadpoint
 expr_stmt|;
@@ -1951,7 +1951,7 @@ operator|.
 name|bi_esymtab
 operator|=
 operator|(
-name|int
+name|u_int32_t
 operator|)
 name|loadpoint
 expr_stmt|;
@@ -1975,12 +1975,18 @@ name|bootinfo
 operator|.
 name|bi_kernelname
 operator|=
+operator|(
+name|u_int32_t
+operator|)
 name|kernel
 expr_stmt|;
 name|bootinfo
 operator|.
 name|bi_nfs_diskless
 operator|=
+operator|(
+name|u_int32_t
+operator|)
 operator|&
 name|nfsdiskless
 expr_stmt|;
