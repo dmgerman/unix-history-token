@@ -12402,6 +12402,20 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Skip providers with 0 sectorsize. */
+if|if
+condition|(
+name|pp
+operator|->
+name|sectorsize
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|gp
 operator|=
 name|g_new_geomf
