@@ -2031,7 +2031,7 @@ argument_list|(
 name|filename
 argument_list|,
 name|VINUM_DIR
-literal|"/rsd/%s"
+literal|"/sd/%s"
 argument_list|,
 name|sd
 operator|.

@@ -3086,7 +3086,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create the contents of /dev/vinum/sd and /dev/vinum/rsd */
+comment|/* Create the contents of /dev/vinum/sd */
 end_comment
 
 begin_function
