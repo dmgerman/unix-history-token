@@ -290,6 +290,10 @@ block|,
 name|DA_Q_NO_6_BYTE
 init|=
 literal|0x02
+block|,
+name|DA_Q_NO_PREVENT
+init|=
+literal|0x04
 block|}
 name|da_quirks
 typedef|;
@@ -643,7 +647,7 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
-comment|/* 		 * See above. 		 */
+comment|/* See above. */
 block|{
 name|T_DIRECT
 block|,
@@ -1327,7 +1331,62 @@ block|}
 endif|#
 directive|endif
 comment|/* DA_OLD_QUIRKS */
+block|{
+comment|/* 		 * EXATELECOM (Sigmatel) i-Bead 100/105 USB Flash MP3 Player 		 * PR: kern/51675 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"EXATEL"
+block|,
+literal|"i-BEAD10*"
+block|,
+literal|"*"
 block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Jungsoft NEXDISK USB flash key 		 * PR: kern/54737 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"JUNGSOFT"
+block|,
+literal|"NEXDISK*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/*  		 * Creative Nomad MUVO mp3 player (USB)  		 * PR: kern/53094  		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"CREATIVE"
+block|,
+literal|"NOMAD_MUVO"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_PREVENT
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2362,7 +2421,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|softc
 operator|->
 name|flags
@@ -2371,9 +2429,17 @@ name|DA_FLAG_PACK_REMOVABLE
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_PREVENT
 operator|)
+operator|==
+literal|0
 condition|)
-block|{
 name|daprevent
 argument_list|(
 name|periph
@@ -2381,7 +2447,6 @@ argument_list|,
 name|PR_PREVENT
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Check to see whether or not the blocksize is set yet. 		 * If it isn't, set it and then clear the blocksize 		 * unavailable flag for the device statistics. 		 */
 if|if
 condition|(
@@ -2439,8 +2504,17 @@ name|DA_FLAG_PACK_REMOVABLE
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_PREVENT
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
 name|daprevent
 argument_list|(
 name|periph
@@ -2448,7 +2522,6 @@ argument_list|,
 name|PR_ALLOW
 argument_list|)
 expr_stmt|;
-block|}
 name|softc
 operator|->
 name|flags
@@ -2812,6 +2885,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_PREVENT
+operator|)
+operator|==
+literal|0
+condition|)
 name|daprevent
 argument_list|(
 name|periph
