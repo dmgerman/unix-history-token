@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.27 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,8 +182,28 @@ begin_decl_stmt
 name|struct
 name|iso_aliasreq
 name|iso_addreq
+init|=
+block|{
+literal|""
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* default nsellen = 1*/
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -293,6 +313,9 @@ name|notealias
 argument_list|()
 decl_stmt|,
 name|setsnpaoffset
+argument_list|()
+decl_stmt|,
+name|setnsellength
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -465,14 +488,6 @@ name|setifmetric
 block|}
 block|,
 block|{
-literal|"snpaoffset"
-block|,
-name|NEXTARG
-block|,
-name|setsnpaoffset
-block|}
-block|,
-block|{
 literal|"broadcast"
 block|,
 name|NEXTARG
@@ -486,6 +501,22 @@ block|,
 name|NEXTARG
 block|,
 name|setifipdst
+block|}
+block|,
+block|{
+literal|"snpaoffset"
+block|,
+name|NEXTARG
+block|,
+name|setsnpaoffset
+block|}
+block|,
+block|{
+literal|"nsellength"
+block|,
+name|NEXTARG
+block|,
+name|setnsellength
 block|}
 block|,
 block|{
@@ -2801,13 +2832,43 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCGIFADDR
+name|SIOCGIFADDR_ISO
 argument_list|,
 operator|(
 name|caddr_t
@@ -2857,11 +2918,18 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|perror
 argument_list|(
-literal|"ioctl (SIOCGIFADDR)"
+literal|"ioctl (SIOCGIFADDR_ISO)"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|strncpy
 argument_list|(
@@ -2890,6 +2958,7 @@ literal|"\tiso %s "
 argument_list|,
 name|iso_ntoa
 argument_list|(
+operator|&
 name|siso
 operator|->
 name|siso_addr
@@ -2902,7 +2971,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCGIFNETMASK
+name|SIOCGIFNETMASK_ISO
 argument_list|,
 operator|(
 name|caddr_t
@@ -2922,7 +2991,7 @@ name|EADDRNOTAVAIL
 condition|)
 name|perror
 argument_list|(
-literal|"ioctl (SIOCGIFNETMASK)"
+literal|"ioctl (SIOCGIFNETMASK_ISO)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2930,10 +2999,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\n netmask %s "
+literal|" netmask %s "
 argument_list|,
 name|iso_ntoa
 argument_list|(
+operator|&
 name|siso
 operator|->
 name|siso_addr
@@ -2954,7 +3024,7 @@ name|ioctl
 argument_list|(
 name|s
 argument_list|,
-name|SIOCGIFDSTADDR
+name|SIOCGIFDSTADDR_ISO
 argument_list|,
 operator|(
 name|caddr_t
@@ -2994,7 +3064,7 @@ expr_stmt|;
 else|else
 name|Perror
 argument_list|(
-literal|"ioctl (SIOCGIFDSTADDR)"
+literal|"ioctl (SIOCGIFDSTADDR_ISO)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3027,6 +3097,7 @@ literal|"--> %s "
 argument_list|,
 name|iso_ntoa
 argument_list|(
+operator|&
 name|siso
 operator|->
 name|siso_addr
@@ -3762,6 +3833,82 @@ name|siso
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|setnsellength
+argument_list|(
+argument|val
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|val
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|sockaddr_iso
+modifier|*
+name|siso
+init|=
+name|sisotab
+index|[
+name|ADDR
+index|]
+decl_stmt|;
+name|int
+name|n
+init|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|afp
+operator|==
+literal|0
+operator|||
+name|afp
+operator|->
+name|af_af
+operator|!=
+name|AF_ISO
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Setting NSEL length valid only for iso\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|n
+operator|>=
+literal|0
+condition|)
+name|siso
+operator|->
+name|siso_tlen
+operator|=
+name|n
+expr_stmt|;
 block|}
 end_block
 
