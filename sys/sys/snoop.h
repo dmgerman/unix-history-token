@@ -178,24 +178,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|snpinc
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|snoop
-operator|*
-name|snp
-operator|,
-name|char
-name|c
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
