@@ -305,6 +305,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|sc_saver_keyb_only
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
