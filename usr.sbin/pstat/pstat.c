@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)pstat.c	8.16 (Berkeley) 5/9/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.16 (Berkeley) 5/9/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,7 +611,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|usage
+name|usagestr
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,6 +1101,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|vnode_header
 name|__P
@@ -1145,15 +1172,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -1238,9 +1256,9 @@ name|opts
 operator|=
 literal|"kM:N:"
 expr_stmt|;
-name|usage
+name|usagestr
 operator|=
-literal|"usage: swapinfo [-k] [-M core] [-N system]\n"
+literal|"swapinfo [-k] [-M core] [-N system]"
 expr_stmt|;
 block|}
 else|else
@@ -1249,9 +1267,9 @@ name|opts
 operator|=
 literal|"TM:N:fiknstv"
 expr_stmt|;
-name|usage
+name|usagestr
 operator|=
-literal|"usage: pstat [-Tfknstv] [-M core] [-N system]\n"
+literal|"pstat [-Tfknstv] [-M core] [-N system]"
 expr_stmt|;
 block|}
 while|while
@@ -1355,20 +1373,8 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 name|usage
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -1496,7 +1502,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"undefined symbol: %s\n"
+literal|"undefined symbol: %s"
 argument_list|,
 name|nl
 index|[
@@ -1532,23 +1538,9 @@ operator||
 name|totalflag
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 name|usage
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fileflag
@@ -1586,6 +1578,29 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: %s\n"
+argument_list|,
+name|usagestr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3013,11 +3028,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|KGETRET
@@ -3111,11 +3126,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|flags
 operator|=
 name|mp
 operator|->
 name|mnt_flag
+operator|)
 condition|)
 block|{
 name|int
@@ -3328,11 +3345,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3493,11 +3510,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3736,11 +3753,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|#
@@ -4393,11 +4410,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"realloc"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5499,7 +5516,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"files on dead kernel, not implemented\n"
+literal|"files on dead kernel, not implemented"
 argument_list|)
 expr_stmt|;
 name|mib
@@ -5563,11 +5580,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5757,7 +5774,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
