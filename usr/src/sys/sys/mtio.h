@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtio.h	6.1	83/07/29	*/
+comment|/*	mtio.h	6.2	84/09/25	*/
 end_comment
 
 begin_comment
@@ -236,6 +236,28 @@ end_define
 
 begin_comment
 comment|/* get tape status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCIEOT
+value|_IO(m, 3)
+end_define
+
+begin_comment
+comment|/* ignore EOT error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCEEOT
+value|_IO(m, 4)
+end_define
+
+begin_comment
+comment|/* enable EOT error */
 end_comment
 
 begin_ifndef
