@@ -218,7 +218,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SX_ASSERT_XLOCKER
+name|SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
