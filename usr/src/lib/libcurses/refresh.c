@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.38 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1677,6 +1677,18 @@ block|}
 if|if
 condition|(
 operator|!
+operator|(
+name|win
+operator|->
+name|flags
+operator|&
+name|__SCROLLWIN
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|curwin
 condition|)
 block|{
@@ -1708,6 +1720,7 @@ operator|->
 name|ch
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|wx
@@ -1783,27 +1796,32 @@ name|OK
 operator|)
 return|;
 block|}
-elseif|else
 if|if
 condition|(
+name|wx
+operator|<
+name|win
+operator|->
+name|maxx
+operator|||
+name|wy
+operator|<
+name|win
+operator|->
+name|maxy
+operator|-
+literal|1
+operator|||
+operator|!
+operator|(
 name|win
 operator|->
 name|flags
 operator|&
 name|__SCROLLWIN
+operator|)
 condition|)
 block|{
-name|lx
-operator|=
-operator|--
-name|wx
-expr_stmt|;
-return|return
-operator|(
-name|ERR
-operator|)
-return|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1841,6 +1859,7 @@ operator|->
 name|ch
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1888,7 +1907,6 @@ block|}
 name|nsp
 operator|++
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1903,6 +1921,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|lx
