@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.31 1998/09/29 22:40:52 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.10 1998/10/13 09:05:58 peter Exp $ */
+comment|/*	$Id: if_devar.h,v 1.11 1998/10/14 08:31:27 peter Exp $ */
 end_comment
 
 begin_comment
@@ -201,8 +201,47 @@ directive|if
 operator|!
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|__FreeBSD_version
+operator|<
+literal|300000
+end_if
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|uintptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__NetBSD__
 argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|300000
 end_if
 
 begin_typedef
@@ -211,6 +250,23 @@ name|pci_port_t
 name|tulip_csrptr_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|u_int16_t
+name|tulip_csrptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3677,12 +3733,37 @@ name|ifnet_ret_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
 begin_typedef
 typedef|typedef
 name|u_long
 name|ioctl_cmd_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|int
+name|ioctl_cmd_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
