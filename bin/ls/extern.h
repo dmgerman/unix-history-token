@@ -163,7 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|size_t
 name|len_octal
 parameter_list|(
 specifier|const

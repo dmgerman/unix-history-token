@@ -121,12 +121,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -273,13 +267,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNITS_2
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|KILO_SZ
 parameter_list|(
 name|n
@@ -363,6 +350,7 @@ value|(PETA_SZ(1024ULL))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|long
 name|long
@@ -419,6 +407,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|unitp
 index|[]
@@ -495,6 +484,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -784,7 +774,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*qd "
+literal|"%*lld "
 argument_list|,
 name|dp
 operator|->
@@ -800,9 +790,6 @@ name|blocksize
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strmode
 argument_list|(
 name|sp
@@ -988,7 +975,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*s%*qd "
+literal|"%*s%*lld "
 argument_list|,
 literal|8
 operator|-
@@ -1625,7 +1612,7 @@ name|chcnt
 operator|+=
 name|printf
 argument_list|(
-literal|"%*qd "
+literal|"%*lld "
 argument_list|,
 operator|(
 name|int
@@ -1943,6 +1930,7 @@ operator|(
 literal|1
 operator|)
 return|;
+default|default:
 block|}
 if|if
 condition|(
@@ -2921,6 +2909,9 @@ argument_list|(
 literal|" -> "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printname
 argument_list|(
 name|path
@@ -2981,7 +2972,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*qd%c "
+literal|"%*lld%c "
 argument_list|,
 name|width
 operator|-
@@ -3002,7 +2993,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*qd "
+literal|"%*lld "
 argument_list|,
 name|width
 argument_list|,
@@ -3039,6 +3030,9 @@ name|abval
 operator|=
 name|fabs
 argument_list|(
+operator|(
+name|double
+operator|)
 operator|*
 name|val
 argument_list|)

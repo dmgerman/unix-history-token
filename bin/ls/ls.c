@@ -334,16 +334,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_column
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* columnated format */
-end_comment
-
-begin_decl_stmt
-name|int
 name|f_flags
 decl_stmt|;
 end_decl_stmt
@@ -373,6 +363,7 @@ comment|/* print inode */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_kblocks
 decl_stmt|;
@@ -383,6 +374,7 @@ comment|/* print size in kilobytes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_listdir
 decl_stmt|;
@@ -393,6 +385,7 @@ comment|/* list actual directory, not contents */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_listdot
 decl_stmt|;
@@ -423,6 +416,7 @@ comment|/* show unprintables as ? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_nosort
 decl_stmt|;
@@ -443,6 +437,7 @@ comment|/* don't use tab-separated multi-col output */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_numericonly
 decl_stmt|;
@@ -473,6 +468,7 @@ comment|/* like f_octal but use C escapes if possible */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_recursive
 decl_stmt|;
@@ -483,6 +479,7 @@ comment|/* ls subdirectories also */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_reversesort
 decl_stmt|;
@@ -503,6 +500,7 @@ comment|/* print the real time for all files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_singlecol
 decl_stmt|;
@@ -533,6 +531,7 @@ comment|/* use time of last mode change */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_timesort
 decl_stmt|;
@@ -553,6 +552,7 @@ comment|/* add type character for non-regular files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_whiteout
 decl_stmt|;
@@ -649,6 +649,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rval
 decl_stmt|;
@@ -792,8 +793,6 @@ name|win
 operator|.
 name|ws_col
 expr_stmt|;
-name|f_column
-operator|=
 name|f_nonprint
 operator|=
 literal|1
@@ -806,16 +805,16 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* retrieve environment variable, in case of explicit -C */
-if|if
-condition|(
-operator|(
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|p
 condition|)
 name|termwidth
 operator|=
@@ -872,8 +871,6 @@ name|f_singlecol
 operator|=
 literal|1
 expr_stmt|;
-name|f_column
-operator|=
 name|f_longform
 operator|=
 literal|0
@@ -898,10 +895,6 @@ break|break;
 case|case
 literal|'C'
 case|:
-name|f_column
-operator|=
-literal|1
-expr_stmt|;
 name|f_longform
 operator|=
 name|f_singlecol
@@ -916,8 +909,6 @@ name|f_longform
 operator|=
 literal|1
 expr_stmt|;
-name|f_column
-operator|=
 name|f_singlecol
 operator|=
 literal|0
@@ -1882,6 +1873,7 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
 block|}
 if|if
 condition|(
@@ -1931,11 +1923,13 @@ name|NAMES
 modifier|*
 name|np
 decl_stmt|;
-name|u_quad_t
+name|off_t
 name|maxsize
 decl_stmt|;
 name|u_long
 name|btotal
+decl_stmt|,
+name|lattrlen
 decl_stmt|,
 name|maxblock
 decl_stmt|,
@@ -1950,19 +1944,20 @@ decl_stmt|;
 name|int
 name|bcfile
 decl_stmt|,
+name|maxflags
+decl_stmt|;
+name|gid_t
+name|maxgroup
+decl_stmt|;
+name|uid_t
+name|maxuser
+decl_stmt|;
+name|size_t
 name|flen
-decl_stmt|,
-name|glen
 decl_stmt|,
 name|ulen
 decl_stmt|,
-name|lattrlen
-decl_stmt|,
-name|maxflags
-decl_stmt|,
-name|maxgroup
-decl_stmt|,
-name|maxuser
+name|glen
 decl_stmt|;
 name|char
 modifier|*
@@ -1985,6 +1980,8 @@ name|flags
 decl_stmt|,
 modifier|*
 name|lattr
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf
@@ -2051,6 +2048,26 @@ literal|"LS_COLWIDTHS"
 argument_list|)
 expr_stmt|;
 comment|/* Fields match -lios order.  New ones should be added at the end. */
+name|maxlattr
+operator|=
+name|maxblock
+operator|=
+name|maxinode
+operator|=
+name|maxlen
+operator|=
+name|maxnlink
+operator|=
+name|maxuser
+operator|=
+name|maxgroup
+operator|=
+name|maxflags
+operator|=
+name|maxsize
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|initmax
@@ -2232,7 +2249,7 @@ name|sscanf
 argument_list|(
 name|jinitmax
 argument_list|,
-literal|" %lu : %lu : %lu : %i : %i : %i : %qu : %lu : %lu "
+literal|" %lu : %lu : %lu : %i : %i : %i : %llu : %lu : %lu "
 argument_list|,
 operator|&
 name|maxinode
@@ -2278,6 +2295,7 @@ name|maxinode
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|1
 case|:
@@ -2285,6 +2303,7 @@ name|maxblock
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|2
 case|:
@@ -2292,6 +2311,7 @@ name|maxnlink
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|3
 case|:
@@ -2299,6 +2319,7 @@ name|maxuser
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|4
 case|:
@@ -2306,6 +2327,7 @@ name|maxgroup
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|5
 case|:
@@ -2313,6 +2335,7 @@ name|maxflags
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|6
 case|:
@@ -2320,6 +2343,7 @@ name|maxsize
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|7
 case|:
@@ -2327,6 +2351,7 @@ name|maxlen
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|8
 case|:
@@ -2334,6 +2359,7 @@ name|maxlattr
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 ifdef|#
 directive|ifdef
 name|COLORLS
@@ -2348,6 +2374,8 @@ name|f_notabs
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
+default|default:
 block|}
 name|maxinode
 operator|=
@@ -2378,38 +2406,6 @@ name|maxsize
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|initmax
-operator|==
-name|NULL
-operator|||
-operator|*
-name|initmax
-operator|==
-literal|'\0'
-condition|)
-name|maxlattr
-operator|=
-name|maxblock
-operator|=
-name|maxinode
-operator|=
-name|maxlen
-operator|=
-name|maxnlink
-operator|=
-name|maxuser
-operator|=
-name|maxgroup
-operator|=
-name|maxflags
-operator|=
-name|maxsize
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|f_lomac
@@ -2831,17 +2827,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|flen
 operator|=
 name|strlen
 argument_list|(
 name|flags
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|flen
 operator|>
+operator|(
+name|size_t
+operator|)
 name|maxflags
 condition|)
 name|maxflags

@@ -75,6 +75,7 @@ value|"/dev/lomac"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|devlomac
 decl_stmt|;
@@ -85,6 +86,7 @@ comment|/* file descriptor for LOMAC_DEVICE */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|lomac_fioctl2
 name|ioctl_args

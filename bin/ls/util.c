@@ -116,7 +116,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|unsigned
 name|char
 name|c
 decl_stmt|;
@@ -173,7 +172,7 @@ comment|/*  * The fts system makes it difficult to replace fts_name with a diffe
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|len_octal
 parameter_list|(
 specifier|const
@@ -185,7 +184,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|r
 init|=
 literal|0
@@ -201,6 +200,7 @@ name|isprint
 argument_list|(
 operator|(
 name|unsigned
+specifier|const
 name|char
 operator|)
 operator|*
@@ -246,6 +246,10 @@ condition|(
 operator|(
 name|ch
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 operator|++
