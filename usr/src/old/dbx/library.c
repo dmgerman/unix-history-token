@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	1.6 (Berkeley) %G%"
+literal|"@(#)library.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1787,73 +1787,6 @@ name|NSIG
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|public
-name|String
-name|sys_siglist
-index|[]
-init|=
-block|{
-literal|"no signal"
-block|,
-literal|"hangup"
-block|,
-literal|"interrupt"
-block|,
-literal|"quit"
-block|,
-literal|"illegal instruction"
-block|,
-literal|"trace trap"
-block|,
-literal|"IOT instruction"
-block|,
-literal|"EMT instruction"
-block|,
-literal|"floating point exception"
-block|,
-literal|"kill"
-block|,
-literal|"bus error"
-block|,
-literal|"segmentation violation"
-block|,
-literal|"bad argument to system call"
-block|,
-literal|"broken pipe"
-block|,
-literal|"alarm clock"
-block|,
-literal|"soft kill"
-block|,
-literal|"urgent I/O condition"
-block|,
-literal|"stop signal not from tty"
-block|,
-literal|"stop signal from tty"
-block|,
-literal|"continue"
-block|,
-literal|"child termination"
-block|,
-literal|"stop (tty input)"
-block|,
-literal|"stop (tty output)"
-block|,
-literal|"possible input/output"
-block|,
-literal|"exceeded CPU time limit"
-block|,
-literal|"exceeded file size limit"
-block|,
-name|nil
-argument_list|(
-argument|String
-argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|public
 name|psignal
@@ -1874,6 +1807,11 @@ name|msg
 decl_stmt|;
 name|integer
 name|len
+decl_stmt|;
+specifier|extern
+name|String
+name|sys_siglist
+index|[]
 decl_stmt|;
 if|if
 condition|(
