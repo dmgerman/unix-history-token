@@ -362,13 +362,16 @@ operator|!=
 literal|0
 condition|)
 operator|*
-name|endptr
-operator|=
 operator|(
+operator|(
+specifier|const
 name|char
 operator|*
+operator|*
 operator|)
-operator|(
+name|endptr
+operator|)
+operator|=
 name|any
 condition|?
 name|s
@@ -376,7 +379,6 @@ operator|-
 literal|1
 else|:
 name|nptr
-operator|)
 expr_stmt|;
 return|return
 operator|(
