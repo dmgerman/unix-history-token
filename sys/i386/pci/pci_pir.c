@@ -1320,6 +1320,11 @@ name|already
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|errok
+init|=
+literal|0
+decl_stmt|;
 name|v
 operator|=
 name|pcibios_get_version
@@ -1499,6 +1504,7 @@ name|oldirq
 operator|)
 return|;
 block|}
+comment|/* 		 * We try to find a linked interrupt, then we look to see 		 * if the interrupt is uniquely routed, then we look for 		 * a virgin interrupt.  The virgin interrupt should return 		 * an interrupt we can route, but if that fails, maybe we 		 * should try harder to route a different interrupt. 		 * However, experience has shown that that's rarely the 		 * failure mode we see. 		 */
 name|irq
 operator|=
 name|pci_cfgintr_linked
@@ -1511,9 +1517,20 @@ expr_stmt|;
 if|if
 condition|(
 name|irq
+operator|!=
+name|PCI_INVALID_IRQ
+condition|)
+name|already
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|irq
 operator|==
 name|PCI_INVALID_IRQ
 condition|)
+block|{
 name|irq
 operator|=
 name|pci_cfgintr_unique
@@ -1523,6 +1540,17 @@ argument_list|,
 name|pin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|irq
+operator|!=
+name|PCI_INVALID_IRQ
+condition|)
+name|errok
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|irq
@@ -1545,7 +1573,7 @@ operator|==
 name|PCI_INVALID_IRQ
 condition|)
 break|break;
-comment|/* 		 * Ask the BIOS to route the interrupt 		 */
+comment|/* 		 * Ask the BIOS to route the interrupt.  If we picked an 		 * interrupt that failed, we should really try other 		 * choices that the BIOS offers us. 		 * 		 * For uniquely routed interrupts, we need to try 		 * to route them on some machines.  Yet other machines 		 * fail to route, so we have to pretend that in that 		 * case it worked.  Isn't pc hardware fun? 		 * 		 * NOTE: if we want to whack hardware to do this, then 		 * I think the right way to do that would be to have 		 * bridge drivers that do this.  I'm not sure that the 		 * $PIR table would be valid for those interrupt 		 * routers. 		 */
 name|args
 operator|.
 name|eax
@@ -1608,9 +1636,11 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 argument_list|)
+operator|&&
+operator|!
+name|errok
 condition|)
 block|{
-comment|/* 			 * XXX if it fails, we should try to smack the router 			 * hardware directly. 			 * XXX Also, there may be other choices that we can 			 * try that will work. 			 */
 name|PRVERB
 argument_list|(
 operator|(
