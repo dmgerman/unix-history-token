@@ -4002,16 +4002,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-value|(a>0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
 begin_function
 name|int
 name|rt_setgate
@@ -4053,20 +4043,16 @@ decl_stmt|;
 name|int
 name|dlen
 init|=
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|dst
-operator|->
-name|sa_len
 argument_list|)
 decl_stmt|,
 name|glen
 init|=
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|gate
-operator|->
-name|sa_len
 argument_list|)
 decl_stmt|;
 name|RT_LOCK_ASSERT
@@ -4149,13 +4135,11 @@ literal|0
 operator|||
 name|glen
 operator|>
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|rt
 operator|->
 name|rt_gateway
-operator|->
-name|sa_len
 argument_list|)
 condition|)
 block|{

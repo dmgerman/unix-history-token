@@ -2935,17 +2935,6 @@ name|metric
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|((a)> 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
-end_define
-
 begin_comment
 comment|/*  * Extract the addresses of the passed sockaddrs.  * Do a little sanity checking so as to avoid bad memory references.  * This data is derived straight from userland.  */
 end_comment
@@ -2967,22 +2956,11 @@ modifier|*
 name|rtinfo
 parameter_list|)
 block|{
-define|#
-directive|define
-name|ADVANCE
-parameter_list|(
-name|x
-parameter_list|,
-name|n
-parameter_list|)
-value|(x += ROUNDUP((n)->sa_len))
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3083,10 +3061,10 @@ index|]
 operator|=
 name|sa
 expr_stmt|;
-name|ADVANCE
-argument_list|(
 name|cp
-argument_list|,
+operator|+=
+name|SA_SIZE
+argument_list|(
 name|sa
 argument_list|)
 expr_stmt|;
@@ -3096,9 +3074,6 @@ operator|(
 literal|0
 operator|)
 return|;
-undef|#
-directive|undef
-name|ADVANCE
 block|}
 end_function
 
@@ -3368,11 +3343,9 @@ operator|)
 expr_stmt|;
 name|dlen
 operator|=
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|sa
-operator|->
-name|sa_len
 argument_list|)
 expr_stmt|;
 name|m_copyback
@@ -3602,11 +3575,9 @@ operator|)
 expr_stmt|;
 name|dlen
 operator|=
-name|ROUNDUP
+name|SA_SIZE
 argument_list|(
 name|sa
-operator|->
-name|sa_len
 argument_list|)
 expr_stmt|;
 if|if
