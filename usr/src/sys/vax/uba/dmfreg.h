@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmfreg.h	4.1	83/05/14	*/
+comment|/*	dmfreg.h	4.2	83/05/14	*/
 end_comment
 
 begin_comment
@@ -336,14 +336,10 @@ name|PENABLE
 value|040
 end_define
 
-begin_comment
-comment|/* DEC manuals incorrectly say this bit causes generation of even parity. */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|OPAR
+name|EPAR
 value|0100
 end_define
 

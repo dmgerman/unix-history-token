@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.17	83/05/14	*/
+comment|/*	dmf.c	4.18	83/05/14	*/
 end_comment
 
 begin_include
@@ -2266,19 +2266,15 @@ comment|/* CHECK FOR XON/XOFF AND SET lcr |= DMF_AUTOX; */
 block|}
 if|if
 condition|(
-operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 name|EVENP
-operator|)
-operator|==
-literal|0
 condition|)
 name|lpar
 operator||=
-name|OPAR
+name|EPAR
 expr_stmt|;
 if|if
 condition|(
