@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.121 1995/11/29 10:47:54 julian Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.122 1995/11/29 14:39:57 julian Exp $  */
 end_comment
 
 begin_include
@@ -1496,28 +1496,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX - configure this list */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Port_t
-name|likely_com_ports
-index|[]
-init|=
-block|{
-literal|0x3f8
-block|,
-literal|0x2f8
-block|,
-literal|0x3e8
-block|,
-literal|0x2e8
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2187,10 +2165,6 @@ specifier|static
 name|bool_t
 name|already_init
 decl_stmt|;
-name|Port_t
-modifier|*
-name|com_ptr
-decl_stmt|;
 name|bool_t
 name|failures
 index|[
@@ -2214,6 +2188,11 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+name|struct
+name|isa_device
+modifier|*
+name|xdev
+decl_stmt|;
 name|sioregisterdev
 argument_list|(
 name|dev
@@ -2228,32 +2207,37 @@ block|{
 comment|/* 		 * Turn off MCR_IENABLE for all likely serial ports.  An unused 		 * port with its MCR_IENABLE gate open will inhibit interrupts 		 * from any used port that shares the interrupt vector. 		 * XXX the gate enable is elsewhere for some multiports. 		 */
 for|for
 control|(
-name|com_ptr
+name|xdev
 operator|=
-name|likely_com_ports
+name|isa_devtab_tty
 init|;
-name|com_ptr
-operator|<
-operator|&
-name|likely_com_ports
-index|[
-sizeof|sizeof
-name|likely_com_ports
-operator|/
-sizeof|sizeof
-name|likely_com_ports
-index|[
-literal|0
-index|]
-index|]
+name|xdev
+operator|->
+name|id_driver
+operator|!=
+name|NULL
 condition|;
+name|xdev
 operator|++
-name|com_ptr
 control|)
+if|if
+condition|(
+name|xdev
+operator|->
+name|id_driver
+operator|==
+operator|&
+name|siodriver
+operator|&&
+name|xdev
+operator|->
+name|id_enabled
+condition|)
 name|outb
 argument_list|(
-operator|*
-name|com_ptr
+name|xdev
+operator|->
+name|id_iobase
 operator|+
 name|com_mcr
 argument_list|,
