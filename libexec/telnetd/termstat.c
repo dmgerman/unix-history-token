@@ -3,32 +3,34 @@ begin_comment
 comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)termstat.c	8.1 (Berkeley) 6/4/93";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)termstat.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,10 +38,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -112,37 +110,6 @@ begin_comment
 comment|/* LINEMODE */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|newmap
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nonzero if \n maps to ^M^J */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -156,33 +123,15 @@ end_comment
 begin_function
 name|void
 name|localstat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|need_will_echo
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-comment|/* 	 * Keep track of that ol' CR/NL mapping while we're in the 	 * neighborhood. 	 */
-name|newmap
-operator|=
-name|tty_isnewmap
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(CRAY2)&& defined(UNICOS5) */
 comment|/* 	 * Check for changes to flow control if client supports it. 	 */
 name|flowstat
 argument_list|()
@@ -219,7 +168,7 @@ condition|(
 name|uselinemode
 condition|)
 block|{
-comment|/*              * Check for state of BINARY options.              *              * We only need to do the binary dance if we are actually going              * to use linemode.  As this confuses some telnet clients that dont              * support linemode, and doesnt gain us anything, we dont do it               * unless we're doing linemode.  -Crh (henrich@msu.edu)              */
+comment|/* 		 * Check for state of BINARY options. 		 * 		 * We only need to do the binary dance if we are actually going 		 * to use linemode.  As this confuses some telnet clients 		 * that don't support linemode, and doesn't gain us 		 * anything, we don't do it unless we're doing linemode. 		 * -Crh (henrich@msu.edu) 		 */
 if|if
 condition|(
 name|tty_isbinaryin
@@ -713,7 +662,9 @@ end_comment
 begin_function
 name|void
 name|flowstat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -805,20 +756,15 @@ begin_function
 name|void
 name|clientstat
 parameter_list|(
-name|code
-parameter_list|,
-name|parm1
-parameter_list|,
-name|parm2
-parameter_list|)
-specifier|register
 name|int
 name|code
-decl_stmt|,
+parameter_list|,
+name|int
 name|parm1
-decl_stmt|,
+parameter_list|,
+name|int
 name|parm2
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Get a copy of terminal characteristics. 	 */
 name|init_termbuf
@@ -995,7 +941,6 @@ case|case
 name|LM_MODE
 case|:
 block|{
-specifier|register
 name|int
 name|ack
 decl_stmt|,
@@ -1252,24 +1197,6 @@ comment|/* What? */
 break|break;
 block|}
 comment|/* end of switch */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-comment|/* 	 * Just in case of the likely event that we changed the pty state. 	 */
-name|rcv_ioctl
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(CRAY2)&& defined(UNICOS5) */
 name|netflush
 argument_list|()
 expr_stmt|;
@@ -1278,62 +1205,6 @@ end_function
 
 begin_comment
 comment|/* end of clientstat */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-end_if
-
-begin_function
-name|void
-name|termstat
-parameter_list|()
-block|{
-name|needtermstat
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_termstat
-parameter_list|()
-block|{
-name|needtermstat
-operator|=
-literal|0
-expr_stmt|;
-name|init_termbuf
-argument_list|()
-expr_stmt|;
-name|localstat
-argument_list|()
-expr_stmt|;
-name|rcv_ioctl
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(CRAY2)&& defined(UNICOS5) */
 end_comment
 
 begin_ifdef
@@ -1349,7 +1220,9 @@ end_comment
 begin_function
 name|void
 name|defer_terminit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * local stuff that got deferred. 	 */
 if|if
@@ -1390,7 +1263,7 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1398,6 +1271,8 @@ operator|*
 operator|)
 operator|&
 name|ws
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1455,7 +1330,9 @@ end_comment
 begin_function
 name|int
 name|terminit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

@@ -3,21 +3,37 @@ begin_comment
 comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)genget.c	8.1 (Berkeley) 6/4/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)genget.c	8.2 (Berkeley) 5/30/95";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -32,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc-proto.h"
 end_include
 
 begin_define
@@ -52,27 +74,20 @@ begin_function
 name|int
 name|isprefix
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
 name|os1
 decl_stmt|;
-specifier|register
 name|char
 name|c1
 decl_stmt|,
@@ -164,7 +179,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -184,28 +199,19 @@ modifier|*
 modifier|*
 name|genget
 parameter_list|(
-name|name
-parameter_list|,
-name|table
-parameter_list|,
-name|stlen
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* name to match */
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|table
-decl_stmt|;
-comment|/* name entry in table */
+parameter_list|,
 name|int
 name|stlen
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -215,7 +221,6 @@ modifier|*
 modifier|*
 name|found
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -321,20 +326,14 @@ begin_function
 name|int
 name|Ambiguous
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
+modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|s
 operator|==
 operator|&

@@ -257,6 +257,7 @@ name|TELCMDS
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|telcmds
@@ -830,6 +831,7 @@ name|TELOPTS
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|telopts
@@ -1408,6 +1410,7 @@ name|SLC_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|slc_names
@@ -1684,8 +1687,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AUTHTYPE_SRA
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUTHTYPE_CNT
-value|5
+value|7
 end_define
 
 begin_define
@@ -1702,6 +1712,7 @@ name|AUTH_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|authtype_names
@@ -1717,6 +1728,10 @@ block|,
 literal|"SPX"
 block|,
 literal|"MINK"
+block|,
+name|NULL
+block|,
+literal|"SRA"
 block|,
 literal|0
 block|}
@@ -1899,6 +1914,7 @@ name|ENCRYPT_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|encrypt_names
@@ -1929,6 +1945,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|enctype_names
