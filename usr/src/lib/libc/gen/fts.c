@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.17 (Berkeley) %G%"
+literal|"@(#)fts.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,21 +114,16 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
-name|fts_lfree
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|fts_load
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|fts_lfree
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -684,29 +679,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|fts_load
-argument_list|(
-argument|sp
-argument_list|,
-argument|p
-argument_list|)
-name|FTS
-operator|*
+parameter_list|(
 name|sp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|p
+parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 specifier|register
 name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -835,13 +825,8 @@ name|fts_statb
 operator|.
 name|st_dev
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|fts_close
@@ -1434,21 +1419,13 @@ operator|==
 name|FTS_ROOTLEVEL
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|fts_load
 argument_list|(
 name|sp
 argument_list|,
 name|p
 argument_list|)
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+expr_stmt|;
 return|return
 operator|(
 name|sp
