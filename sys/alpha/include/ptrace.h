@@ -31,18 +31,6 @@ parameter_list|)
 value|ptrace_clear_single_step(p)
 end_define
 
-begin_function_decl
-name|int
-name|ptrace_clear_single_step
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|_p
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
