@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: linker.h,v 1.2 1997/11/20 20:07:59 bde Exp $  */
+comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: linker.h,v 1.3 1998/01/01 08:55:37 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -64,6 +64,42 @@ name|linker_file_list_t
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|caddr_t
+name|linker_sym_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* opaque symbol */
+end_comment
+
+begin_comment
+comment|/*  * expanded out linker_sym_t  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|linker_symval
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|caddr_t
+name|value
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+block|}
+name|linker_symval_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|linker_file_ops
@@ -82,13 +118,43 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|caddr_t
+name|linker_sym_t
 modifier|*
-name|address
+name|sym
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|symbol_values
+function_decl|)
+parameter_list|(
+name|linker_file_t
 parameter_list|,
-name|size_t
+name|linker_sym_t
+parameter_list|,
+name|linker_symval_t
 modifier|*
-name|size
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|search_symbol
+function_decl|)
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|caddr_t
+name|value
+parameter_list|,
+name|linker_sym_t
+modifier|*
+name|sym
+parameter_list|,
+name|long
+modifier|*
+name|diffp
 parameter_list|)
 function_decl|;
 comment|/*      * Unload a file, releasing dependancies and freeing storage.      */
