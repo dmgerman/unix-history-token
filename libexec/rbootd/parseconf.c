@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)parseconf.c	8.1 (Berkeley) 6/4/93  *  * From: Utah Hdr: parseconf.c 3.1 92/07/06  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)parseconf.c	8.1 (Berkeley) 6/4/93  *  * From: Utah Hdr: parseconf.c 3.1 92/07/06  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)parseconf.c	8.1 (Berkeley) 6/4/93";
+unit|static const char sccsid[] = "@(#)parseconf.c	8.1 (Berkeley) 6/4/93";
 endif|#
 directive|endif
 end_endif
@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parseconf.c,v 1.3.2.1 1997/12/16 07:17:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ name|CLIENT
 modifier|*
 name|client
 decl_stmt|;
-name|u_char
+name|u_int8_t
 modifier|*
 name|addr
 decl_stmt|;
@@ -134,7 +134,6 @@ index|[
 name|C_LINELEN
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -142,7 +141,6 @@ decl_stmt|,
 modifier|*
 name|bcp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -254,7 +252,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -534,11 +532,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  ParseAddr -- Parse a string containing an RMP address. ** **	This routine is fairly liberal at parsing an RMP address.  The **	address must contain 6 octets consisting of between 0 and 2 hex **	chars (upper/lower case) separated by colons.  If two colons are **	together (e.g. "::", the octet between them is recorded as being **	zero.  Hence, the following addrs are all valid and parse to the **	same thing: ** **		08:00:09:00:66:ad	8::9:0:66:AD	8::9::66:aD ** **	For clarity, an RMP address is really an Ethernet address, but **	since the HP boot code uses IEEE 802.3, it's really an IEEE **	802.3 address.  Of course, all of these are identical. ** **	Parameters: **		str - string representation of an RMP address. ** **	Returns: **		pointer to a static array of RMP_ADDRLEN bytes. ** **	Side Effects: **		None. ** **	Warnings: **		- The return value points to a static buffer; it must **		  be copied if it's to be saved. **		- For speed, we assume a u_char consists of 8 bits. */
+comment|/* **  ParseAddr -- Parse a string containing an RMP address. ** **	This routine is fairly liberal at parsing an RMP address.  The **	address must contain 6 octets consisting of between 0 and 2 hex **	chars (upper/lower case) separated by colons.  If two colons are **	together (e.g. "::", the octet between them is recorded as being **	zero.  Hence, the following addrs are all valid and parse to the **	same thing: ** **		08:00:09:00:66:ad	8::9:0:66:AD	8::9::66:aD ** **	For clarity, an RMP address is really an Ethernet address, but **	since the HP boot code uses IEEE 802.3, it's really an IEEE **	802.3 address.  Of course, all of these are identical. ** **	Parameters: **		str - string representation of an RMP address. ** **	Returns: **		pointer to a static array of RMP_ADDRLEN bytes. ** **	Side Effects: **		None. ** **	Warnings: **		- The return value points to a static buffer; it must **		  be copied if it's to be saved. */
 end_comment
 
 begin_function
-name|u_char
+name|u_int8_t
 modifier|*
 name|ParseAddr
 parameter_list|(
@@ -550,28 +548,25 @@ name|str
 decl_stmt|;
 block|{
 specifier|static
-name|u_char
+name|u_int8_t
 name|addr
 index|[
 name|RMP_ADDRLEN
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|unsigned
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|part
 decl_stmt|,
 name|subpart
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -582,6 +577,8 @@ name|addr
 index|[
 literal|0
 index|]
+argument_list|,
+literal|0
 argument_list|,
 name|RMP_ADDRLEN
 argument_list|)
@@ -771,13 +768,11 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
-specifier|register
 name|struct
 name|dirent
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
