@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.3	(Berkeley) 83/08/03  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.4	(Berkeley) 83/08/23  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -487,12 +487,12 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|".di gt\n\\&%s\n.di"
+literal|".ds g9 \"%s"
 argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
-comment|/* divert the text. */
+comment|/* define string containing the text. */
 name|tmove
 argument_list|(
 operator|&
@@ -517,7 +517,7 @@ name|CENTRIGHT
 case|:
 name|printf
 argument_list|(
-literal|"\\v'(\\n(dnu+1m)/2u'"
+literal|"\\v'0.85n'"
 argument_list|)
 expr_stmt|;
 comment|/* down half */
@@ -533,7 +533,7 @@ name|TOPRIGHT
 case|:
 name|printf
 argument_list|(
-literal|"\\v'\\n(dnu+1m'"
+literal|"\\v'1.7n'"
 argument_list|)
 expr_stmt|;
 comment|/* down whole */
@@ -555,7 +555,7 @@ name|TOPCENT
 case|:
 name|printf
 argument_list|(
-literal|"\\h'-\\n(dlu/2u'"
+literal|"\\h'-\\w'\\*(g9'u/2u'"
 argument_list|)
 expr_stmt|;
 comment|/* back half */
@@ -571,19 +571,17 @@ name|TOPRIGHT
 case|:
 name|printf
 argument_list|(
-literal|"\\h'-\\n(dlu'"
+literal|"\\h'-\\w'\\*(g9'u'"
 argument_list|)
 expr_stmt|;
 comment|/* back whole */
 block|}
-comment|/* now print the text.  The (cr) at the end */
 name|printf
 argument_list|(
-literal|"\\c\n.gt\n"
+literal|"\\*(g9"
 argument_list|)
 expr_stmt|;
-comment|/* results in a blank line in the output.  It */
-comment|/* is necessary to break the "\c" directive. */
+comment|/* now print the text. */
 block|}
 end_block
 
