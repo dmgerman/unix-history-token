@@ -203,8 +203,6 @@ operator|.
 name|exflags
 operator|=
 name|MNT_EXRDONLY
-operator||
-name|opts
 expr_stmt|;
 name|args
 operator|.
@@ -220,7 +218,7 @@ name|MOUNT_ISOFS
 argument_list|,
 name|dir
 argument_list|,
-name|MNT_RDONLY
+name|opts
 argument_list|,
 operator|&
 name|args
