@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -83,7 +83,7 @@ file|<sys/kinfo_proc.h>
 end_include
 
 begin_comment
-comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
+comment|/*  * Per process structure containing data that isn't needed in core  * when the process isn't running (esp. when swapped out).  * This structure may or may not be at the same kernel address  * in all processes.  */
 end_comment
 
 begin_struct
@@ -94,10 +94,6 @@ name|struct
 name|pcb
 name|u_pcb
 decl_stmt|;
-name|label_t
-name|u_ssave
-decl_stmt|;
-comment|/* label variable for swapping XXX */
 name|struct
 name|sigacts
 name|u_sigacts
@@ -168,24 +164,11 @@ name|U_code
 value|u_sigacts.ps_code
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-name|u
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_define
 define|#
