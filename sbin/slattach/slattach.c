@@ -130,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -658,10 +658,6 @@ literal|'e'
 case|:
 name|exit_cmd
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|strdup
 argument_list|(
 name|optarg
@@ -706,10 +702,6 @@ literal|'r'
 case|:
 name|redial_cmd
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|strdup
 argument_list|(
 name|optarg
@@ -732,10 +724,6 @@ literal|'u'
 case|:
 name|config_cmd
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|strdup
 argument_list|(
 name|optarg
