@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.1 (Berkeley) %G%"
+literal|"@(#)df.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,6 +410,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|endfsent
 argument_list|()
 expr_stmt|;
@@ -538,6 +541,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|setfsent
 argument_list|()
 expr_stmt|;
@@ -582,6 +588,9 @@ name|fsp
 operator|->
 name|fs_spec
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|endfsent
 argument_list|()
 expr_stmt|;
@@ -590,6 +599,9 @@ name|found
 goto|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|endfsent
 argument_list|()
 expr_stmt|;
@@ -633,7 +645,10 @@ if|if
 condition|(
 name|bread
 argument_list|(
-name|SBLOCK
+operator|(
+name|long
+operator|)
+name|SBOFF
 argument_list|,
 operator|(
 name|char
@@ -868,7 +883,7 @@ end_function_decl
 begin_macro
 name|bread
 argument_list|(
-argument|bno
+argument|off
 argument_list|,
 argument|buf
 argument_list|,
@@ -877,8 +892,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|daddr_t
-name|bno
+name|long
+name|off
 decl_stmt|;
 end_decl_stmt
 
@@ -902,14 +917,7 @@ name|lseek
 argument_list|(
 name|fi
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
-name|bno
-operator|*
-name|DEV_BSIZE
-argument_list|)
+name|off
 argument_list|,
 literal|0
 argument_list|)
@@ -942,9 +950,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nread error bno = %ld\n"
+literal|"\nread error off = %ld\n"
 argument_list|,
-name|bno
+name|off
 argument_list|)
 expr_stmt|;
 name|printf
