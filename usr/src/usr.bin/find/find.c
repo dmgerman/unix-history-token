@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.16 (Berkeley) %G%"
+literal|"@(#)find.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4922,6 +4922,13 @@ return|;
 case|case
 literal|'-'
 case|:
+name|cc
+operator|=
+name|p
+index|[
+literal|1
+index|]
+expr_stmt|;
 name|k
 operator||=
 name|lc
@@ -4930,14 +4937,7 @@ name|scc
 operator|&&
 name|scc
 operator|<=
-operator|(
 name|cc
-operator|=
-name|p
-index|[
-literal|1
-index|]
-operator|)
 expr_stmt|;
 block|}
 if|if
