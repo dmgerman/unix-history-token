@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_time.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_time.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vnode.h"
 end_include
 
 begin_comment
@@ -310,6 +316,17 @@ operator|-
 name|time
 operator|.
 name|tv_sec
+expr_stmt|;
+name|LEASE_UPDATETIME
+argument_list|(
+name|atv
+operator|.
+name|tv_sec
+operator|-
+name|time
+operator|.
+name|tv_sec
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
