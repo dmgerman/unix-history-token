@@ -908,6 +908,8 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* syscall marked mp-safe but isn't */
+do|do
+block|{
 if|if
 condition|(
 name|flags
@@ -915,7 +917,7 @@ operator|&
 name|MAP_ANON
 condition|)
 block|{
-comment|/* 		 * Mapping blank space is trivial. 		 */
+comment|/* 			 * Mapping blank space is trivial. 			 */
 name|handle
 operator|=
 name|NULL
@@ -928,9 +930,8 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
 comment|/* 		 * Mapping file, get fp for validation. Obtain vnode and make 		 * sure it is of appropriate type. 		 * don't let the descriptor disappear on us if we block 		 */
 if|if
 condition|(
@@ -1139,11 +1140,10 @@ name|pos
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
-comment|/* 			 * cdevs does not provide private mappings of any kind. 			 */
-comment|/* 			 * However, for XIG X server to continue to work, 			 * we should allow the superuser to do it anyway. 			 * We only allow it at securelevel< 1. 			 * (Because the XIG X server writes directly to video 			 * memory via /dev/mem, it should never work at any 			 * other securelevel. 			 * XXX this will have to go 			 */
+comment|/* 		 * cdevs does not provide private mappings of any kind. 		 */
+comment|/* 		 * However, for XIG X server to continue to work, 		 * we should allow the superuser to do it anyway. 		 * We only allow it at securelevel< 1. 		 * (Because the XIG X server writes directly to video 		 * memory via /dev/mem, it should never work at any 		 * other securelevel. 		 * XXX this will have to go 		 */
 if|if
 condition|(
 name|securelevel_ge
@@ -1196,7 +1196,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 			 * Ensure that file and memory protections are 			 * compatible.  Note that we only worry about 			 * writability if mapping is shared; in this case, 			 * current and max prot are dictated by the open file. 			 * XXX use the vnode instead?  Problem is: what 			 * credentials do we use for determination? What if 			 * proc does a setuid? 			 */
+comment|/* 		 * Ensure that file and memory protections are 		 * compatible.  Note that we only worry about 		 * writability if mapping is shared; in this case, 		 * current and max prot are dictated by the open file. 		 * XXX use the vnode instead?  Problem is: what 		 * credentials do we use for determination? What if 		 * proc does a setuid? 		 */
 name|maxprot
 operator|=
 name|VM_PROT_EXECUTE
@@ -1232,7 +1232,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 			 * If we are sharing potential changes (either via 			 * MAP_SHARED or via the implicit sharing of character 			 * device mappings), and we are trying to get write 			 * permission although we opened it without asking 			 * for it, bail out.  Check for superuser, only if 			 * we're at securelevel< 1, to allow the XIG X server 			 * to continue to work. 			 */
+comment|/* 		 * If we are sharing potential changes (either via 		 * MAP_SHARED or via the implicit sharing of character 		 * device mappings), and we are trying to get write 		 * permission although we opened it without asking 		 * for it, bail out.  Check for superuser, only if 		 * we're at securelevel< 1, to allow the XIG X server 		 * to continue to work. 		 */
 if|if
 condition|(
 operator|(
@@ -1374,7 +1374,11 @@ operator|)
 name|vp
 expr_stmt|;
 block|}
-block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 comment|/* 	 * Do not allow more then a certain number of vm_map_entry structures 	 * per process.  Scale with the number of rforks sharing the map 	 * to make the limit reasonable for threads. 	 */
 if|if
 condition|(
