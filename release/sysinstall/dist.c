@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.23 1995/05/26 10:34:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.24 1995/05/26 10:58:50 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -476,7 +476,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"xf86311/"
+literal|"XF86311/"
 block|,
 literal|"/usr"
 block|,
@@ -720,7 +720,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"x311bin"
+literal|"X311bin"
 block|,
 literal|"/usr"
 block|,
@@ -733,7 +733,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311lib"
+literal|"X311lib"
 block|,
 literal|"/usr"
 block|,
@@ -746,7 +746,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311doc"
+literal|"X311doc"
 block|,
 literal|"/usr"
 block|,
@@ -759,7 +759,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"xf86311/"
+literal|"Xf86311/"
 block|,
 literal|"/usr"
 block|,
@@ -772,7 +772,7 @@ name|XF86FontDistTable
 block|}
 block|,
 block|{
-literal|"x311man"
+literal|"X311man"
 block|,
 literal|"/usr"
 block|,
@@ -785,7 +785,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311prog"
+literal|"X311prog"
 block|,
 literal|"/usr"
 block|,
@@ -798,7 +798,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311link"
+literal|"X311link"
 block|,
 literal|"/usr"
 block|,
@@ -811,7 +811,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311pex"
+literal|"X311pex"
 block|,
 literal|"/usr"
 block|,
@@ -824,7 +824,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311lbx"
+literal|"X311lbx"
 block|,
 literal|"/usr"
 block|,
@@ -837,7 +837,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311xicf"
+literal|"X311xicf"
 block|,
 literal|"/usr"
 block|,
@@ -850,7 +850,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311xdmcf"
+literal|"X311xdmcf"
 block|,
 literal|"/usr"
 block|,
@@ -863,7 +863,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"xf86311/"
+literal|"Xf86311/"
 block|,
 literal|"/usr"
 block|,
@@ -894,7 +894,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"x3118514"
+literal|"X3118514"
 block|,
 literal|"/usr"
 block|,
@@ -907,7 +907,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311AGX"
+literal|"X311AGX"
 block|,
 literal|"/usr"
 block|,
@@ -920,7 +920,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311Mch3"
+literal|"X311Mch3"
 block|,
 literal|"/usr"
 block|,
@@ -933,7 +933,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311Mch8"
+literal|"X311Mch8"
 block|,
 literal|"/usr"
 block|,
@@ -946,7 +946,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311Mono"
+literal|"X311Mono"
 block|,
 literal|"/usr"
 block|,
@@ -959,7 +959,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311P9K"
+literal|"X311P9K"
 block|,
 literal|"/usr"
 block|,
@@ -972,7 +972,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311S3"
+literal|"X311S3"
 block|,
 literal|"/usr"
 block|,
@@ -985,7 +985,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311SVGA"
+literal|"X311SVGA"
 block|,
 literal|"/usr"
 block|,
@@ -998,7 +998,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311VG16"
+literal|"X311VG16"
 block|,
 literal|"/usr"
 block|,
@@ -1011,7 +1011,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311W32"
+literal|"X311W32"
 block|,
 literal|"/usr"
 block|,
@@ -1024,7 +1024,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311nest"
+literal|"X311nest"
 block|,
 literal|"/usr"
 block|,
@@ -1055,7 +1055,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"x311fnts"
+literal|"X311fnts"
 block|,
 literal|"/usr"
 block|,
@@ -1068,7 +1068,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311f100"
+literal|"X311f100"
 block|,
 literal|"/usr"
 block|,
@@ -1081,7 +1081,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311fscl"
+literal|"X311fscl"
 block|,
 literal|"/usr"
 block|,
@@ -1094,7 +1094,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311fnon"
+literal|"X311fnon"
 block|,
 literal|"/usr"
 block|,
@@ -1107,7 +1107,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"x311fsrv"
+literal|"X311fsrv"
 block|,
 literal|"/usr"
 block|,
