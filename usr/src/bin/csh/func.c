@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.8 (Berkeley) %G%"
+literal|"@(#)func.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5169,18 +5169,14 @@ end_macro
 
 begin_block
 block|{
+name|sig_t
+name|old
+decl_stmt|;
 name|int
 name|ldisc
 decl_stmt|,
 name|ctpgrp
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|old
-function_decl|)
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|loginsh

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -596,29 +596,21 @@ begin_comment
 comment|/* Label for an onintr transfer */
 end_comment
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|parintr
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Parents interrupt catch */
 end_comment
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|parterm
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Parents terminate catch */

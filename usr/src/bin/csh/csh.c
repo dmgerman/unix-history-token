@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.12 (Berkeley) %G%"
+literal|"@(#)csh.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -502,6 +502,9 @@ condition|(
 name|loginsh
 condition|)
 block|{
+name|sig_t
+name|phup
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1152,12 +1155,8 @@ operator|!=
 name|shpgrp
 condition|)
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|old
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -1165,7 +1164,7 @@ name|SIGTTIN
 argument_list|,
 name|SIG_DFL
 argument_list|)
-function_decl|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
