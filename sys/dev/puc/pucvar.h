@@ -266,6 +266,8 @@ block|,
 name|PUC_IVAR_SUBTYPE
 block|,
 name|PUC_IVAR_REGSHFT
+block|,
+name|PUC_IVAR_PORT
 block|}
 enum|;
 end_enum
