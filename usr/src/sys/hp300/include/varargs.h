@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)varargs.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)varargs.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,17 +15,13 @@ directive|define
 name|_VARARGS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|va_dcl
-end_undef
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|va_list
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -33,12 +29,6 @@ directive|define
 name|va_dcl
 value|int va_alist;
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|va_start
-end_undef
 
 begin_define
 define|#
@@ -49,6 +39,57 @@ name|ap
 parameter_list|)
 define|\
 value|ap = (char *)&va_alist
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_arg
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((type *)(ap += sizeof(type)))[-1]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|va_arg
+parameter_list|(
+name|ap
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|((type *)(ap += sizeof(type)< sizeof(int) ? \ 		(abort(), 0) : sizeof(type)))[-1]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|va_end
+parameter_list|(
+name|ap
+parameter_list|)
 end_define
 
 begin_endif
