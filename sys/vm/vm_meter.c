@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_meter.c	8.4 (Berkeley) 1/4/94  * $Id: vm_meter.c,v 1.5 1995/01/09 16:05:47 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_meter.c	8.4 (Berkeley) 1/4/94  * $Id: vm_meter.c,v 1.6 1995/01/10 07:32:47 davidg Exp $  */
 end_comment
 
 begin_include
@@ -58,49 +58,6 @@ name|MAXSLP
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
-name|vmmeter
-parameter_list|()
-block|{
-if|if
-condition|(
-name|time
-operator|.
-name|tv_sec
-operator|%
-literal|5
-operator|==
-literal|0
-condition|)
-name|loadav
-argument_list|(
-operator|&
-name|averunnable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|proc0
-operator|.
-name|p_slptime
-operator|>
-name|maxslp
-operator|/
-literal|2
-condition|)
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|proc0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Constants for averages over 1, 5, and 15 minutes  * when sampling at 5 second intervals.  */
 end_comment
@@ -137,6 +94,7 @@ comment|/*  * Compute a tenex style load average of a quantity on  * 1, 5 and 15
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|loadav
 parameter_list|(
@@ -272,6 +230,46 @@ operator|)
 operator|)
 operator|>>
 name|FSHIFT
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vmmeter
+parameter_list|()
+block|{
+if|if
+condition|(
+name|time
+operator|.
+name|tv_sec
+operator|%
+literal|5
+operator|==
+literal|0
+condition|)
+name|loadav
+argument_list|(
+operator|&
+name|averunnable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc0
+operator|.
+name|p_slptime
+operator|>
+name|maxslp
+operator|/
+literal|2
+condition|)
+name|wakeup
+argument_list|(
+operator|&
+name|proc0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -622,12 +620,6 @@ name|totalp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Mark all objects as inactive. 	 */
-name|simple_lock
-argument_list|(
-operator|&
-name|vm_object_list_lock
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|object
@@ -654,12 +646,6 @@ name|flags
 operator|&=
 operator|~
 name|OBJ_ACTIVE
-expr_stmt|;
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_object_list_lock
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate process statistics. 	 */
 for|for
@@ -896,12 +882,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Calculate object memory usage statistics. 	 */
-name|simple_lock
-argument_list|(
-operator|&
-name|vm_object_list_lock
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|object

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.31 1995/04/16 12:56:21 davidg Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.32 1995/05/30 08:16:15 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -96,16 +96,6 @@ comment|/* Mask for hash function */
 end_comment
 
 begin_decl_stmt
-name|simple_lock_data_t
-name|bucket_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lock for all buckets XXX */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|pglist
 name|vm_page_queue_free
@@ -130,18 +120,6 @@ begin_decl_stmt
 name|struct
 name|pglist
 name|vm_page_queue_cache
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|simple_lock_data_t
-name|vm_page_queue_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|simple_lock_data_t
-name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -534,19 +512,6 @@ index|[
 name|biggestone
 index|]
 expr_stmt|;
-comment|/* 	 * Initialize the locks 	 */
-name|simple_lock_init
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
-name|simple_lock_init
-argument_list|(
-operator|&
-name|vm_page_queue_lock
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize the queue headers for the free queue, the active queue 	 * and the inactive queue. 	 */
 name|TAILQ_INIT
 argument_list|(
@@ -699,12 +664,6 @@ name|bucket
 operator|++
 expr_stmt|;
 block|}
-name|simple_lock_init
-argument_list|(
-operator|&
-name|bucket_lock
-argument_list|)
-expr_stmt|;
 comment|/* 	 * round (or truncate) the addresses to our page size. 	 */
 comment|/* 	 * Pre-allocate maps and map entries that cannot be dynamically 	 * allocated via malloc().  The maps include the kernel_map and 	 * kmem_map which must be initialized before malloc() will work 	 * (obviously).  Also could include pager maps which would be 	 * allocated before kmeminit. 	 * 	 * Allow some kernel map entries... this should be plenty since people 	 * shouldn't be cluttering up the kernel map (they should use their 	 * own maps). 	 */
 name|kentry_data_size
@@ -798,7 +757,6 @@ index|]
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* for VM_PAGE_CHECK() */
 name|last_page
 operator|=
 name|phys_avail
@@ -1047,13 +1005,6 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Initialize vm_pages_needed lock here - don't wait for pageout 	 * daemon	XXX 	 */
-name|simple_lock_init
-argument_list|(
-operator|&
-name|vm_pages_needed_lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|mapped
@@ -1134,11 +1085,6 @@ name|pglist
 modifier|*
 name|bucket
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|mem
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mem
@@ -1179,12 +1125,6 @@ name|offset
 argument_list|)
 index|]
 expr_stmt|;
-name|simple_lock
-argument_list|(
-operator|&
-name|bucket_lock
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|bucket
@@ -1192,12 +1132,6 @@ argument_list|,
 name|mem
 argument_list|,
 name|hashq
-argument_list|)
-expr_stmt|;
-name|simple_unlock
-argument_list|(
-operator|&
-name|bucket_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now link into the object's list of backed pages. 	 */
@@ -1250,11 +1184,6 @@ name|pglist
 modifier|*
 name|bucket
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|mem
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1285,12 +1214,6 @@ name|offset
 argument_list|)
 index|]
 expr_stmt|;
-name|simple_lock
-argument_list|(
-operator|&
-name|bucket_lock
-argument_list|)
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 name|bucket
@@ -1298,12 +1221,6 @@ argument_list|,
 name|mem
 argument_list|,
 name|hashq
-argument_list|)
-expr_stmt|;
-name|simple_unlock
-argument_list|(
-operator|&
-name|bucket_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now remove from the object's list of backed pages. 	 */
@@ -1392,12 +1309,6 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|simple_lock
-argument_list|(
-operator|&
-name|bucket_lock
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|mem
@@ -1419,11 +1330,6 @@ operator|.
 name|tqe_next
 control|)
 block|{
-name|VM_PAGE_CHECK
-argument_list|(
-name|mem
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1443,12 +1349,6 @@ name|offset
 operator|)
 condition|)
 block|{
-name|simple_unlock
-argument_list|(
-operator|&
-name|bucket_lock
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1461,12 +1361,6 @@ operator|)
 return|;
 block|}
 block|}
-name|simple_unlock
-argument_list|(
-operator|&
-name|bucket_lock
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1518,10 +1412,6 @@ operator|==
 name|new_object
 condition|)
 return|return;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-comment|/* keep page from moving out from under pageout daemon */
 name|s
 operator|=
 name|splhigh
@@ -1545,9 +1435,6 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1735,6 +1622,43 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|offset
+operator|!=
+name|trunc_page
+argument_list|(
+name|offset
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_alloc: offset not page aligned"
+argument_list|)
+expr_stmt|;
+name|mem
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|object
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mem
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_alloc: page already allocated"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1756,12 +1680,6 @@ name|VM_ALLOC_SYSTEM
 expr_stmt|;
 block|}
 empty_stmt|;
-name|simple_lock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splhigh
@@ -1846,12 +1764,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1958,12 +1870,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2008,12 +1914,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2034,12 +1934,6 @@ literal|"vm_page_alloc: invalid allocation class"
 argument_list|)
 expr_stmt|;
 block|}
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 name|mem
 operator|->
 name|flags
@@ -2668,9 +2562,6 @@ literal|0
 condition|)
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|mem
 argument_list|)
 expr_stmt|;
@@ -2685,12 +2576,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|simple_lock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mem
@@ -2750,12 +2635,6 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_lock
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2769,9 +2648,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vm_pageout_pages_needed
 argument_list|)
@@ -2806,9 +2682,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|cnt
 operator|.
@@ -2817,9 +2690,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|proc0
 argument_list|)
@@ -2860,11 +2730,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|mem
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mem
@@ -2929,11 +2794,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|mem
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splhigh
@@ -3012,11 +2872,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splhigh
@@ -3139,11 +2994,6 @@ block|{
 name|int
 name|spl
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Only move active pages -- ignore locked or already inactive ones. 	 * 	 * XXX: sometimes we get pages which aren't wired down or on any queue - 	 * we need to put them on the inactive queue also, otherwise we lose 	 * track of them. Paul Mackerras (paulus@cs.anu.edu.au) 9-Jan-93. 	 */
 name|spl
 operator|=
@@ -3254,11 +3104,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3343,9 +3188,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|cnt
 operator|.
@@ -3354,9 +3196,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|proc0
 argument_list|)
@@ -3369,9 +3208,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vm_pageout_pages_needed
 argument_list|)
@@ -3403,11 +3239,6 @@ name|vm_page_t
 name|m
 decl_stmt|;
 block|{
-name|VM_PAGE_CHECK
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|pmap_zero_page
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -3449,16 +3280,6 @@ name|vm_page_t
 name|dest_m
 decl_stmt|;
 block|{
-name|VM_PAGE_CHECK
-argument_list|(
-name|src_m
-argument_list|)
-expr_stmt|;
-name|VM_PAGE_CHECK
-argument_list|(
-name|dest_m
-argument_list|)
-expr_stmt|;
 name|pmap_copy_page
 argument_list|(
 name|VM_PAGE_TO_PHYS
