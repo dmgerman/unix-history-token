@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.5	%G%"
+literal|"@(#)recipient.c	3.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,6 +540,11 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|buf
@@ -559,18 +564,35 @@ expr_stmt|;
 comment|/* see if this is to a file */
 if|if
 condition|(
-name|index
+operator|(
+name|p
+operator|=
+name|rindex
 argument_list|(
 name|buf
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* check if writable or creatable */
 if|if
 condition|(
+operator|(
+name|access
+argument_list|(
+name|buf
+argument_list|,
+literal|0
+argument_list|)
+operator|>=
+literal|0
+operator|)
+condition|?
+operator|(
 name|access
 argument_list|(
 name|buf
@@ -579,6 +601,23 @@ literal|2
 argument_list|)
 operator|<
 literal|0
+operator|)
+else|:
+operator|(
+operator|*
+name|p
+operator|=
+literal|'\0'
+operator|,
+name|access
+argument_list|(
+name|buf
+argument_list|,
+literal|3
+argument_list|)
+operator|<
+literal|0
+operator|)
 condition|)
 block|{
 name|a
