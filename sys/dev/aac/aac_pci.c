@@ -1180,8 +1180,11 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
+literal|8192
+operator|+
 name|AAC_FIB_COUNT
 operator|*
+comment|/* XXX dma hack */
 sizeof|sizeof
 argument_list|(
 expr|struct

@@ -1386,7 +1386,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Allocate command structures. 	 */
+comment|/* 	 * Allocate command structures.  This must be done before aac_init() 	 * in order to work around a 2120/2200 bug. 	 */
 if|if
 condition|(
 operator|(
@@ -5242,6 +5242,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+comment|/* 	 * Work around a bug in the 2120 and 2200 that cannot DMA commands 	 * below address 8192 in physical memory. 	 * XXX If the padding is not needed, can it be put to use instead 	 * of ignored? 	 */
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -5256,6 +5257,8 @@ name|sc
 operator|->
 name|aac_fibs
 argument_list|,
+literal|8192
+operator|+
 name|AAC_FIB_COUNT
 operator|*
 sizeof|sizeof
@@ -5271,6 +5274,37 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|aac_fibphys
+operator|<
+literal|8192
+condition|)
+block|{
+name|sc
+operator|->
+name|aac_fibs
+operator|+=
+operator|(
+literal|8192
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib
+argument_list|)
+operator|)
+expr_stmt|;
+name|sc
+operator|->
+name|aac_fibphys
+operator|+=
+literal|8192
+expr_stmt|;
+block|}
+comment|/* initialise constant fields in the command structure */
 name|bzero
 argument_list|(
 name|sc
@@ -5286,7 +5320,6 @@ name|aac_fib
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* initialise constant fields in the command structure */
 for|for
 control|(
 name|i
