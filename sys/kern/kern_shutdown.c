@@ -1008,18 +1008,6 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|)
 comment|/* 	 * Bind us to CPU 0 so that all shutdown code runs there.  Some 	 * systems don't shutdown properly (i.e., ACPI power off) if we 	 * run on another processor. 	 */
 name|mtx_lock_spin
 argument_list|(
