@@ -616,8 +616,6 @@ name|ng_ing_connect
 block|,
 name|ng_ing_rcvdata
 block|,
-name|ng_ing_rcvdata
-block|,
 name|ng_ing_disconnect
 block|,
 name|ng_ing_cmdlist
