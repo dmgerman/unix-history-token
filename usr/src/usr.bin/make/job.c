@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.5 (Berkeley) %G%"
+literal|"@(#)job.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4055,22 +4055,6 @@ condition|)
 block|{
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|sparc
-comment|/* KLUDGE */
-operator|(
-name|job
-operator|->
-name|node
-operator|->
-name|type
-operator|&
-name|OP_M68020
-operator|)
-operator|||
-endif|#
-directive|endif
 operator|(
 operator|(
 name|nLocal
@@ -5470,20 +5454,6 @@ condition|(
 name|local
 operator|&&
 operator|(
-ifdef|#
-directive|ifdef
-name|sparc
-comment|/* KLUDGE */
-operator|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_M68020
-operator|)
-operator|||
-endif|#
-directive|endif
 operator|(
 operator|(
 name|nLocal
