@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)radix.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)radix.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -55,13 +55,11 @@ block|{
 struct|struct
 block|{
 comment|/* leaf only data: */
-name|char
-modifier|*
+name|caddr_t
 name|rn_Key
 decl_stmt|;
 comment|/* object of search */
-name|char
-modifier|*
+name|caddr_t
 name|rn_Mask
 decl_stmt|;
 comment|/* netmask, if present */
@@ -123,6 +121,13 @@ end_struct
 begin_define
 define|#
 directive|define
+name|MAXKEYLEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|rn_dupedkey
 value|rn_u.rn_leaf.rn_Dupedkey
 end_define
@@ -167,6 +172,7 @@ comment|/*  * Annotations to tree concerning potential routes applying to subtre
 end_comment
 
 begin_struct
+specifier|extern
 struct|struct
 name|radix_mask
 block|{
@@ -188,8 +194,7 @@ modifier|*
 name|rm_mklist
 decl_stmt|;
 comment|/* more masks to try */
-name|char
-modifier|*
+name|caddr_t
 name|rm_mask
 decl_stmt|;
 comment|/* the mask */
@@ -198,6 +203,49 @@ name|rm_refs
 decl_stmt|;
 comment|/* # of references to this struct */
 block|}
+modifier|*
+name|rn_mkfreelist
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MKGet
+parameter_list|(
+name|m
+parameter_list|)
+value|{\ 	if (rn_mkfreelist) {\ 		m = rn_mkfreelist; \ 		rn_mkfreelist = (m)->rm_mklist; \ 	} else \ 		R_Malloc(m, struct radix_mask *, sizeof (*(m))); }\  #define MKFree(m) { (m)->rm_mklist = rn_mkfreelist; rn_mkfreelist = (m);}
+end_define
+
+begin_struct
+specifier|extern
+struct|struct
+name|radix_node_head
+block|{
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh_next
+decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+name|rnh_treetop
+decl_stmt|;
+name|int
+name|rnh_af
+decl_stmt|;
+name|struct
+name|radix_node
+name|rnh_nodes
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+modifier|*
+name|radix_node_head
 struct|;
 end_struct
 
@@ -232,7 +280,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|Malloc
+name|Bzero
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|)
+value|bzero((char *)(p), (int)(n));
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_Malloc
 parameter_list|(
 name|p
 parameter_list|,
@@ -241,18 +301,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|(p = (t) malloc((unsigned int)(n)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Bzero
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-value|bzero((char *)(p), (int)(n));
 end_define
 
 begin_define
@@ -277,32 +325,6 @@ parameter_list|)
 value|((a)< (b) ? (a) : (b))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RTF_UP
-end_ifndef
-
-begin_comment
-comment|/*  * probably just testing here . . .  */
-end_comment
-
-begin_struct
-struct|struct
-name|rtentry
-block|{
-name|int
-name|rt_unused
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_else
 else|#
 directive|else
@@ -325,15 +347,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Malloc
+name|Bcopy
 parameter_list|(
-name|p
+name|a
 parameter_list|,
-name|t
+name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|(p = (t) malloc((n), M_RTABLE, M_DONTWAIT))
+value|bcopy(((caddr_t)(a)), ((caddr_t)(b)), (n))
 end_define
 
 begin_define
@@ -351,6 +373,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|R_Malloc
+parameter_list|(
+name|p
+parameter_list|,
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|(p = (t) malloc((n), M_RTABLE, M_DONTWAIT))
+end_define
+
+begin_define
+define|#
+directive|define
 name|Free
 parameter_list|(
 name|p
@@ -363,83 +399,6 @@ endif|#
 directive|endif
 endif|KERNEL
 end_endif
-
-begin_struct
-struct|struct
-name|nrtentry
-block|{
-name|struct
-name|radix_node
-name|nrt_nodes
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|struct
-name|rtentry
-name|nrt_rt
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|MAXKEYLEN
-value|32
-end_define
-
-begin_struct
-specifier|extern
-struct|struct
-name|radix_node_head
-block|{
-name|struct
-name|radix_node_head
-modifier|*
-name|rnh_next
-decl_stmt|;
-name|struct
-name|radix_node
-modifier|*
-name|rnh_treetop
-decl_stmt|;
-name|int
-name|rnh_af
-decl_stmt|;
-name|struct
-name|radix_node
-name|rnh_upper
-decl_stmt|;
-name|struct
-name|nrtentry
-name|rnh_nrt
-decl_stmt|;
-block|}
-modifier|*
-name|radix_node_head
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|radix_mask
-modifier|*
-name|rn_mkfreelist
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MKGet
-parameter_list|(
-name|m
-parameter_list|)
-value|{\ 	if (rn_mkfreelist) {\ 		m = rn_mkfreelist; \ 		rn_mkfreelist = (m)->rm_mklist; \ 	} else \ 		Malloc(m, struct radix_mask *, sizeof (*(m))); }\  #define MKFree(m) { (m)->rm_mklist = rn_mkfreelist; rn_mkfreelist = (m);}
-end_define
 
 end_unit
 
