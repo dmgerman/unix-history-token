@@ -334,6 +334,14 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 	 * Retire the architecture specific id so it may be 		 	 * used for new threads. 			 */
+name|_retire_thread
+argument_list|(
+name|pthread_cln
+operator|->
+name|arch_id
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 		 * Check if this is not the last thread and there is no 		 * memory to free this time around. 		 */
 if|if

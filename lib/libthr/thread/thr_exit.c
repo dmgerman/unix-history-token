@@ -480,22 +480,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
-if|if
-condition|(
-name|pthread_cond_signal
-argument_list|(
-operator|&
-name|_gc_cond
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot signal gc cond"
-argument_list|)
-expr_stmt|;
 comment|/* If we're the last thread, call it quits */
 if|if
 condition|(
@@ -511,7 +495,21 @@ literal|1
 expr_stmt|;
 name|THREAD_LIST_UNLOCK
 expr_stmt|;
-name|DEAD_LIST_UNLOCK
+comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. But don't allow it to free the memory until after 	 * it is retired by holding on to the dead list lock. 	 */
+if|if
+condition|(
+name|pthread_cond_signal
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot signal gc cond"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -522,14 +520,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Retire the architecture specific id so that it can be used for 	 * new threads. 	 */
-name|_retire_thread
-argument_list|(
-name|curthread
-operator|->
-name|arch_id
-argument_list|)
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
+comment|/* 	 * This function will not return unless we are the last 	 * thread, which we can't be because we've already checked 	 * for that. 	 */
 name|_thr_exit
 argument_list|()
 expr_stmt|;

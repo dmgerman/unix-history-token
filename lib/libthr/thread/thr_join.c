@@ -402,6 +402,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
 if|if
 condition|(
 name|pthread_cond_signal
@@ -416,8 +418,6 @@ name|PANIC
 argument_list|(
 literal|"Cannot signal gc cond"
 argument_list|)
-expr_stmt|;
-name|THREAD_LIST_UNLOCK
 expr_stmt|;
 name|DEAD_LIST_UNLOCK
 expr_stmt|;
