@@ -149,18 +149,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ip_fw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_dummynet.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
