@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bibargs.c	2.8	%G%"
+literal|"@(#)bibargs.c	2.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1743,7 +1743,40 @@ argument_list|(
 name|word
 argument_list|)
 condition|)
+block|{
+comment|/* already there-toss rest of def.*/
+while|while
+condition|(
+name|line
+index|[
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\\'
+condition|)
+block|{
+if|if
+condition|(
+name|tfgets
+argument_list|(
+name|line
+argument_list|,
+name|LINELENGTH
+argument_list|,
+name|fd
+argument_list|)
+operator|==
+name|NULL
+condition|)
 break|break;
+block|}
+break|break;
+block|}
 for|for
 control|(
 name|p
@@ -5998,6 +6031,8 @@ init|;
 name|i
 operator|<
 name|numrefs
+operator|-
+literal|1
 condition|;
 name|i
 operator|=
@@ -6044,6 +6079,10 @@ name|i
 operator|+
 literal|1
 init|;
+name|j
+operator|<
+name|numrefs
+operator|&&
 name|strcmp
 argument_list|(
 name|refinfo
@@ -6077,13 +6116,6 @@ operator|-
 name|i
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|j
-operator|==
-name|numrefs
-condition|)
-break|break;
 name|refinfo
 index|[
 name|j
