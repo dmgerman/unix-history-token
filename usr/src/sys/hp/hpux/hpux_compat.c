@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_compat.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.33 89/08/23$  *  *	@(#)hpux_compat.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -579,7 +579,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * HPUX versions of wait and wait3 actually pass the parameters  * (status pointer, options, rusage) into the kernel rather than  * handling it in the C library stub.  We also need to map any  * termination signal from BSD to HPUX.  */
+comment|/*  * HPUX versions of wait and wait3 actually pass the parameters  * (status pointer, options, rusage) into the kernel rather than  * handling it in the C library stub.  For now, use COMPAT_43 version  * of wait (owait), as it's most convenient (it leaves the status  * in rval2 where we can muck with it before copying out).  * We also need to map any termination signal from BSD to HPUX.  */
 end_comment
 
 begin_macro
@@ -716,24 +716,16 @@ if|if
 condition|(
 name|u
 operator|.
-name|u_eosys
+name|u_error
 operator|==
-name|RESTARTSYS
+name|ERESTART
 condition|)
-block|{
-name|u
-operator|.
-name|u_eosys
-operator|=
-name|NORMALRETURN
-expr_stmt|;
 name|u
 operator|.
 name|u_error
 operator|=
 name|EINTR
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|u
@@ -6605,12 +6597,10 @@ end_macro
 
 begin_block
 block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -6618,7 +6608,19 @@ operator|)
 operator|&
 name|u
 argument_list|,
-name|PSLEP
+name|PPAUSE
+operator||
+name|PCATCH
+argument_list|,
+literal|"pause"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* always return EINTR rather than ERESTART... */
+name|RETURN
+argument_list|(
+name|EINTR
 argument_list|)
 expr_stmt|;
 block|}
