@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.4 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2958,6 +2958,18 @@ comment|/* load avg at which to auto-reject connections */
 name|RefuseLA
 operator|=
 name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+comment|/* fork jobs during queue runs */
+name|ForkQueueRuns
+operator|=
+name|atobool
 argument_list|(
 name|val
 argument_list|)
