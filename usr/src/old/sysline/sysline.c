@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.9 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * sysline - system status display on 25th line of terminal  * j.k.foderaro  *  * Prints a variety of information on the special status line of terminals  * that have a status display capability.  Cursor motions, status commands,  * etc. are gleamed from /etc/termcap.  * By default, all information is printed, and flags are given on the command  * line to disable the printing of information.  The information and  * disabling flags are:  *  *  flag	what  *  -----	----  *		time of day  *		load average and change in load average in the last 5 mins  *		number of user logged on  *   -p		# of processes the users owns which are runnable and the  *		  number which are suspended.  Processes whose parent is 1  *		  are not counted.  *   -l		users who've logged on and off.  *   -m		summarize new mail which has arrived  *  *<other flags>  *   -r		use non reverse video  *   -c		turn off 25th line for 5 seconds before redisplaying.  *   -b		beep once one the half hour, twice on the hour  *   +N		refresh display every N seconds.  *   -i		print pid first thing  *   -e		do simple print designed for an emacs buffer line  *   -w		do the right things for a window  *   -h		print hostname between time and load average  *   -D		print day/date before time of day  *   -d		debug mode - print status line data in human readable format  *   -q		quiet mode - don't output diagnostic messages  *   -s		print Short (left-justified) line if escapes not allowed  *   -j		Print left Justified line regardless  */
@@ -1033,6 +1039,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* escapes on status line okay (reverse, cursor addressing) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|hasws
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* is "ws" explicitly defined? */
 end_comment
 
 begin_decl_stmt
@@ -4095,7 +4113,8 @@ name|stringcat
 argument_list|(
 literal|"Mail has just arrived"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5642,11 +5661,16 @@ argument_list|(
 literal|"ws"
 argument_list|)
 expr_stmt|;
+name|hasws
+operator|=
+name|columns
+operator|>=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|columns
-operator|<
-literal|0
+operator|!
+name|hasws
 condition|)
 name|columns
 operator|=
@@ -6359,6 +6383,9 @@ decl_stmt|;
 comment|/* the "-1" below is to avoid cursor wraparound problems */
 if|if
 condition|(
+operator|!
+name|hasws
+operator|&&
 name|ioctl
 argument_list|(
 literal|2
