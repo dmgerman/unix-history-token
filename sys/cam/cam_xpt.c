@@ -1435,6 +1435,30 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* TeraSolutions special settings for TRC-22 RAID */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"TERASOLU"
+block|,
+literal|"TRC-22"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+literal|0
+block|,
+comment|/*mintags*/
+literal|55
+block|,
+comment|/*maxtags*/
+literal|255
+block|}
+block|,
+block|{
 comment|/* Default tagged queuing parameters for all devices */
 block|{
 name|T_ANY
