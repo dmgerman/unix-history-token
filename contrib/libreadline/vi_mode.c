@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* vi_mode.c -- A vi emulation mode for Bash.    Derived from code written by Jeff Sparkes (jsparkes@bnr.ca).  */
 end_comment
 
@@ -2644,7 +2648,12 @@ name|char
 name|mb
 index|[
 name|MB_LEN_MAX
+operator|+
+literal|1
 index|]
+decl_stmt|;
+name|int
+name|mblen
 decl_stmt|;
 name|mbstate_t
 name|ps
@@ -2753,12 +2762,27 @@ condition|(
 name|wc
 condition|)
 block|{
+name|mblen
+operator|=
 name|wctomb
 argument_list|(
 name|mb
 argument_list|,
 name|wc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mblen
+operator|>=
+literal|0
+condition|)
+name|mb
+index|[
+name|mblen
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|rl_begin_undo_group
 argument_list|()
