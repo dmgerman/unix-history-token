@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -996,6 +1002,31 @@ name|first_buf_printf
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* Do all shutdown processing on cpu0 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|sched_bind
+argument_list|(
+name|curthread
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* collect extra flags that shutdown_nice might have set */
 name|howto
 operator||=
