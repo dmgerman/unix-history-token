@@ -49,12 +49,6 @@ directive|include
 file|<openssl/md5.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cryptlib.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|long
@@ -230,6 +224,9 @@ name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
 comment|/* IDEA_128_CBC_WITH_MD5 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_IDEA
 block|{
 literal|1
 block|,
@@ -262,6 +259,8 @@ block|,
 name|SSL_ALL_STRENGTHS
 block|, 	}
 block|,
+endif|#
+directive|endif
 comment|/* DES_64_CBC_WITH_MD5 */
 block|{
 literal|1

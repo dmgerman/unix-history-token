@@ -939,6 +939,11 @@ directive|define
 name|EVP_MD_CTX_FLAG_CLEANED
 value|0x0002
 comment|/* context has already been 						* cleaned */
+define|#
+directive|define
+name|EVP_MD_CTX_FLAG_REUSE
+value|0x0004
+comment|/* Don't free up ctx->md_data 						* in EVP_MD_CTX_cleanup */
 struct|struct
 name|evp_cipher_st
 block|{
