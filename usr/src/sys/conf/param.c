@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,7 +136,7 @@ begin_decl_stmt
 name|int
 name|tickadj
 init|=
-literal|240000
+literal|30000
 operator|/
 operator|(
 literal|60
@@ -147,7 +147,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* can adjust 240ms in 60s */
+comment|/* can adjust 30ms in 60s */
 end_comment
 
 begin_decl_stmt
