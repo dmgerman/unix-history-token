@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"rpc_dtablesize.c,v 1.1 1994/08/07 18:36:02 wollman Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,10 +57,16 @@ begin_comment
 comment|/*  * Cache the result of getdtablesize(), so we don't have to do an  * expensive system call every time.  */
 end_comment
 
+begin_comment
+comment|/*  * XXX In FreeBSD 2.x, you can have the maximum number of open file  * descriptors be greater than FD_SETSIZE (which us 256 by default).  *  * Since old programs tend to use this call to determine the first arg  * for select(), having this return> FD_SETSIZE is a Bad Idea(TM)!  */
+end_comment
+
 begin_function
 name|int
 name|_rpc_dtablesize
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -72,11 +78,23 @@ name|size
 operator|==
 literal|0
 condition|)
+block|{
 name|size
 operator|=
 name|getdtablesize
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|FD_SETSIZE
+condition|)
+name|size
+operator|=
+name|FD_SETSIZE
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|size
