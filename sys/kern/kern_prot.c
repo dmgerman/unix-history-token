@@ -4509,13 +4509,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * `suser_permitted' (which can be set by the kern.security.suser_permitted  * sysctl) determines whether the system 'super-user' policy is in effect.  * If it is nonzero, an effective uid of 0 connotes special privilege,  * overriding many mandatory and discretionary protections.  If it is zero,  * uid 0 is offered no special privilege in the kernel security policy.  * Setting it to zero may seriously impact the functionality of many  * existing userland programs, and should not be done without careful  * consideration of the consequences.  */
+comment|/*  * `suser_enabled' (which can be set by the kern.security.suser_enabled  * sysctl) determines whether the system 'super-user' policy is in effect.  * If it is nonzero, an effective uid of 0 connotes special privilege,  * overriding many mandatory and discretionary protections.  If it is zero,  * uid 0 is offered no special privilege in the kernel security policy.  * Setting it to zero may seriously impact the functionality of many  * existing userland programs, and should not be done without careful  * consideration of the consequences.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
-name|suser_permitted
+name|suser_enabled
 init|=
 literal|1
 decl_stmt|;
@@ -4528,12 +4527,12 @@ name|_kern_security
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|suser_permitted
+name|suser_enabled
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|suser_permitted
+name|suser_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -4598,7 +4597,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|suser_permitted
+name|suser_enabled
 condition|)
 return|return
 operator|(
