@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ERROR.c 1.3 %G%"
+literal|"@(#)ERROR.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,21 +41,20 @@ begin_comment
 comment|/*  * Routine ERROR is called from the runtime library when a runtime error  * occurs. Its arguments are the internal number of the error which occurred,  * and an error specific piece of error data. The error file is constructed  * from errdata by the makefile using the editor script make.ed1.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|long
 name|ERROR
-parameter_list|(
+argument_list|(
 name|errnum
-parameter_list|,
-name|errordata
-parameter_list|)
-name|short
+argument_list|,
+name|errdata
+argument_list|)
+name|int
 name|errnum
 decl_stmt|;
-name|double
-name|errordata
-decl_stmt|;
-block|{
+end_decl_stmt
+
+begin_union
 union|union
 name|cvt
 block|{
@@ -72,12 +71,10 @@ decl_stmt|;
 block|}
 name|errdata
 union|;
-name|errdata
-operator|.
-name|dbldat
-operator|=
-name|errordata
-expr_stmt|;
+end_union
+
+begin_block
+block|{
 name|PFLUSH
 argument_list|()
 expr_stmt|;
@@ -874,7 +871,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 
