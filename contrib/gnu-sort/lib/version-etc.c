@@ -124,8 +124,7 @@ name|va_list
 name|authors
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|n_authors
 decl_stmt|;
 comment|/* Count the number of authors.  */

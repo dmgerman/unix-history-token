@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hard-locale.c -- Determine whether a locale is hard.     Copyright (C) 1997, 1998, 1999, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* hard-locale.c -- Determine whether a locale is hard.     Copyright (C) 1997, 1998, 1999, 2002, 2003, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -60,11 +60,11 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/* Return nonzero if the current CATEGORY locale is hard, i.e. if you    can't get away with assuming traditional C or POSIX behavior.  */
+comment|/* Return true if the current CATEGORY locale is hard, i.e. if you    can't get away with assuming traditional C or POSIX behavior.  */
 end_comment
 
 begin_function
-name|int
+name|bool
 name|hard_locale
 parameter_list|(
 name|int
@@ -76,14 +76,14 @@ directive|if
 operator|!
 name|HAVE_SETLOCALE
 return|return
-literal|0
+name|false
 return|;
 else|#
 directive|else
-name|int
+name|bool
 name|hard
 init|=
-literal|1
+name|true
 decl_stmt|;
 name|char
 specifier|const
@@ -94,7 +94,7 @@ name|setlocale
 argument_list|(
 name|category
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 decl_stmt|;
 if|if
@@ -139,7 +139,7 @@ literal|0
 condition|)
 name|hard
 operator|=
-literal|0
+name|false
 expr_stmt|;
 else|#
 directive|else
@@ -218,7 +218,7 @@ operator|)
 condition|)
 name|hard
 operator|=
-literal|0
+name|false
 expr_stmt|;
 comment|/* Restore the caller's locale.  */
 name|setlocale
