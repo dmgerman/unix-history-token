@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.16	85/02/25	*/
+comment|/*	defs.h	4.17	85/06/03	*/
 end_comment
 
 begin_comment
@@ -88,8 +88,12 @@ begin_define
 define|#
 directive|define
 name|LOOPBACKNET
-value|0177
+value|0x7f000000
 end_define
+
+begin_comment
+comment|/* 127.0.0.0 */
+end_comment
 
 begin_define
 define|#
