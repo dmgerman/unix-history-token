@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	8.1 (Berkeley) %G%"
+literal|"@(#)disklabel.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,7 +822,7 @@ name|sprintf
 argument_list|(
 name|np
 argument_list|,
-literal|"%s/r%s%c"
+literal|"%sr%s%c"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -890,7 +890,7 @@ name|sprintf
 argument_list|(
 name|specname
 argument_list|,
-literal|"%s/r%s"
+literal|"%sr%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
