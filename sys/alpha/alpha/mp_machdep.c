@@ -1009,6 +1009,10 @@ decl_stmt|,
 name|cpus
 decl_stmt|;
 comment|/* XXX: Need to check for valid platforms here. */
+name|mp_ncpus
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Make sure we have at least one secondary CPU. */
 name|cpus
 operator|=
@@ -1142,10 +1146,6 @@ literal|"ap boot"
 argument_list|,
 name|MTX_SPIN
 argument_list|)
-expr_stmt|;
-name|mp_ncpus
-operator|=
-literal|1
 expr_stmt|;
 name|boot_cpu_id
 operator|=
