@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.81	83/06/13	*/
+comment|/*	machdep.c	4.82	83/06/19	*/
 end_comment
 
 begin_include
@@ -3438,15 +3438,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|MC780_TBPAR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|MC750_TBPAR
-value|2
+value|4
 end_define
 
 begin_endif
@@ -3500,13 +3493,6 @@ literal|"unalgn ubaddr"
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MC730_TBPAR
-value|0
-end_define
 
 begin_endif
 endif|#
@@ -4003,7 +3989,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|mcf
+operator|->
+name|mc5_mcesr
 operator|&
 literal|0xf
 operator|)
@@ -4013,7 +4001,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"tbuf par!?!: flushing and returning\n"
+literal|"tbuf par: flushing and returning\n"
 argument_list|)
 expr_stmt|;
 name|mtpr
