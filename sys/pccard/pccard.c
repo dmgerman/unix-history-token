@@ -2743,12 +2743,6 @@ decl_stmt|;
 name|int
 name|pwval
 decl_stmt|;
-comment|/* beep is disabled until the 1st call of crdioctl() */
-name|pccard_beep_select
-argument_list|(
-name|BEEP_ON
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|slt

@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * pccard noise interface.  * Nate Williams, October 1997.  * This file is in the public domain.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -129,7 +133,7 @@ argument_list|)
 expr_stmt|;
 name|allow_beep
 operator|=
-literal|1
+name|BEEP_ON
 expr_stmt|;
 block|}
 end_function
@@ -157,7 +161,7 @@ argument_list|)
 expr_stmt|;
 name|allow_beep
 operator|=
-literal|0
+name|BEEP_OFF
 expr_stmt|;
 name|beeptimeout_ch
 operator|=
@@ -203,7 +207,7 @@ argument_list|)
 expr_stmt|;
 name|allow_beep
 operator|=
-literal|0
+name|BEEP_OFF
 expr_stmt|;
 name|beeptimeout_ch
 operator|=
@@ -233,6 +237,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|allow_beep
+operator|==
+name|BEEP_ON
+condition|)
+block|{
 name|sysbeep
 argument_list|(
 name|PCCARD_BEEP_PITCH1
@@ -240,6 +251,7 @@ argument_list|,
 name|PCCARD_BEEP_DURATION1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -250,6 +262,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|allow_beep
+operator|==
+name|BEEP_ON
+condition|)
+block|{
 name|sysbeep
 argument_list|(
 name|PCCARD_BEEP_PITCH2
@@ -257,6 +276,7 @@ argument_list|,
 name|PCCARD_BEEP_DURATION2
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -39,9 +39,9 @@ begin_enum
 enum|enum
 name|beepstate
 block|{
-name|BEEP_ON
-block|,
 name|BEEP_OFF
+block|,
+name|BEEP_ON
 block|}
 enum|;
 end_enum
