@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.h	6.1	83/07/29	*/
+comment|/*	if_en.h	6.2	85/05/01	*/
 end_comment
 
 begin_comment
@@ -67,6 +67,17 @@ directive|define
 name|ENTYPE_NTRAILER
 value|16
 end_define
+
+begin_define
+define|#
+directive|define
+name|EN_BROADCAST
+value|0
+end_define
+
+begin_comment
+comment|/* Hardware broadcast address */
+end_comment
 
 end_unit
 
