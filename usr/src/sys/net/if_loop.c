@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.3	81/12/03	*/
+comment|/*	if_loop.c	4.4	81/12/07	*/
 end_comment
 
 begin_comment
@@ -78,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|LOMTU
-value|1024
+value|(1024+512)
 end_define
 
 begin_decl_stmt
