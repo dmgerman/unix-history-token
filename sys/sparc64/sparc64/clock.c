@@ -45,9 +45,7 @@ name|cpu_initclocks
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-comment|/* XXX */
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -98,30 +96,6 @@ operator|<
 name|end
 condition|)
 empty_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|inittodr
-parameter_list|(
-name|time_t
-name|base
-parameter_list|)
-block|{
-comment|/* XXX */
-block|}
-end_function
-
-begin_function
-name|void
-name|resettodr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|TODO
-expr_stmt|;
 block|}
 end_function
 
