@@ -210,6 +210,14 @@ name|c
 operator|=
 literal|0
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|bp
