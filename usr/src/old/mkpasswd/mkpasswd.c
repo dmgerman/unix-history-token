@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkpasswd.c	5.6 (Berkeley) %G%"
+literal|"@(#)mkpasswd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,11 @@ modifier|*
 name|strerror
 argument_list|()
 decl_stmt|;
+specifier|static
+name|int
+name|scanpw
+parameter_list|()
+function_decl|;
 name|makeold
 operator|=
 literal|0
