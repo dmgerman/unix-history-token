@@ -3620,6 +3620,25 @@ argument_list|(
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|disk
+operator|.
+name|d_dev
+condition|)
+block|{
+name|disk_destroy
+argument_list|(
+name|softc
+operator|->
+name|disk
+operator|.
+name|d_dev
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|softc
