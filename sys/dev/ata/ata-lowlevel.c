@@ -3072,13 +3072,6 @@ block|}
 comment|/* reset host end of channel (if supported) */
 name|ATA_RESET
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|ch
-operator|->
-name|dev
-argument_list|)
-argument_list|,
 name|ch
 operator|->
 name|dev

@@ -823,7 +823,7 @@ argument_list|)
 expr_stmt|;
 name|ATA_SETMODE
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -1035,7 +1035,7 @@ return|;
 block|}
 name|ATA_SETMODE
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -12055,12 +12055,8 @@ literal|"acd"
 block|,
 name|acd_methods
 block|,
-expr|sizeof
-operator|(
-expr|struct
-name|acd_softc
-operator|)
-block|}
+literal|0
+block|, }
 decl_stmt|;
 end_decl_stmt
 

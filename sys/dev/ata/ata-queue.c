@@ -858,11 +858,6 @@ if|if
 condition|(
 name|ATA_LOCKING
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|ATA_LF_LOCK
@@ -1079,11 +1074,6 @@ argument_list|)
 expr_stmt|;
 name|ATA_LOCKING
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|ATA_LF_UNLOCK
@@ -2742,13 +2732,6 @@ argument_list|)
 expr_stmt|;
 name|ATA_LOCKING
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|ch
-operator|->
-name|dev
-argument_list|)
-argument_list|,
 name|ch
 operator|->
 name|dev

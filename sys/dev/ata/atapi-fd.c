@@ -357,7 +357,7 @@ argument_list|)
 expr_stmt|;
 name|ATA_SETMODE
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -761,7 +761,7 @@ return|;
 block|}
 name|ATA_SETMODE
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -2303,12 +2303,8 @@ literal|"afd"
 block|,
 name|afd_methods
 block|,
-expr|sizeof
-operator|(
-expr|struct
-name|afd_softc
-operator|)
-block|}
+literal|0
+block|, }
 decl_stmt|;
 end_decl_stmt
 

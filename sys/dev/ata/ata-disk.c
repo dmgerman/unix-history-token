@@ -1798,7 +1798,7 @@ argument_list|)
 decl_stmt|;
 name|ATA_SETMODE
 argument_list|(
-name|GRANDPARENT
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
@@ -2385,12 +2385,8 @@ literal|"ad"
 block|,
 name|ad_methods
 block|,
-expr|sizeof
-operator|(
-expr|struct
-name|ad_softc
-operator|)
-block|}
+literal|0
+block|, }
 decl_stmt|;
 end_decl_stmt
 
