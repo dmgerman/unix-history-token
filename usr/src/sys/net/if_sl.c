@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_sl.c	5.3 (Berkeley) %G% */
+comment|/*	@(#)if_sl.c	5.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -893,6 +893,32 @@ name|ENETDOWN
 operator|)
 return|;
 comment|/* sort of */
+block|}
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_ttyp
+operator|->
+name|t_state
+operator|&
+name|TS_CARR_ON
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EHOSTUNREACH
+operator|)
+return|;
 block|}
 name|s
 operator|=
