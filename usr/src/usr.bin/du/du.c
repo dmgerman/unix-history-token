@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.18 (Berkeley) %G%"
+literal|"@(#)du.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -552,7 +552,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ld\t%s\n"
+literal|"%qd\t%s\n"
 argument_list|,
 name|howmany
 argument_list|(
