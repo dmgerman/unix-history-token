@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.39 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2485,6 +2485,22 @@ name|int
 name|includetimeout
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"include(%s)\n"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
 comment|/* 	**  If home directory is remote mounted but server is down, 	**  this can hang or give errors; use a timeout to avoid this 	*/
 if|if
 condition|(
@@ -2555,6 +2571,24 @@ comment|/* don't use this .forward file */
 name|clrevent
 argument_list|(
 name|ev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"include: not safe (uid=%d)\n"
+argument_list|,
+name|ctladdr
+operator|->
+name|q_uid
 argument_list|)
 expr_stmt|;
 return|return
@@ -2709,13 +2743,17 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|p
+name|buf
+index|[
+literal|0
+index|]
 operator|==
 literal|'#'
 operator|||
-operator|*
-name|p
+name|buf
+index|[
+literal|0
+index|]
 operator|==
 literal|'\0'
 condition|)
