@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mp.c	1.2	87/11/24	*/
+comment|/*	mp.c	1.3	88/03/05	*/
 end_comment
 
 begin_include
@@ -5773,6 +5773,20 @@ case|case
 name|RCVDTA
 case|:
 comment|/* Normal (good) rcv data */
+comment|/* do not report the following */
+comment|/* they are "normal" errors */
+case|case
+name|FRAMERR
+case|:
+comment|/* frame error */
+case|case
+name|BRKASRT
+case|:
+comment|/* Break condition */
+case|case
+name|PARERR
+case|:
+comment|/* parity error */
 name|rcverr
 operator|=
 operator|(
@@ -5780,24 +5794,6 @@ name|char
 operator|*
 operator|)
 literal|0
-expr_stmt|;
-break|break;
-case|case
-name|PARERR
-case|:
-comment|/* parity error */
-name|rcverr
-operator|=
-literal|"parity error"
-expr_stmt|;
-break|break;
-case|case
-name|FRAMERR
-case|:
-comment|/* frame error */
-name|rcverr
-operator|=
-literal|"frame error"
 expr_stmt|;
 break|break;
 case|case
