@@ -739,7 +739,7 @@ end_comment
 begin_function
 name|nlm_testres
 modifier|*
-name|nlm_test_1
+name|nlm_test_1_svc
 parameter_list|(
 name|nlm_testargs
 modifier|*
@@ -799,7 +799,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|nlm_test_msg_1
+name|nlm_test_msg_1_svc
 parameter_list|(
 name|nlm_testargs
 modifier|*
@@ -951,7 +951,7 @@ end_comment
 begin_function
 name|nlm_res
 modifier|*
-name|nlm_lock_1
+name|nlm_lock_1_svc
 parameter_list|(
 name|nlm_lockargs
 modifier|*
@@ -1007,7 +1007,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|nlm_lock_msg_1
+name|nlm_lock_msg_1_svc
 parameter_list|(
 name|nlm_lockargs
 modifier|*
@@ -1079,7 +1079,7 @@ end_comment
 begin_function
 name|nlm_res
 modifier|*
-name|nlm_cancel_1
+name|nlm_cancel_1_svc
 parameter_list|(
 name|nlm_cancargs
 modifier|*
@@ -1137,7 +1137,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|nlm_cancel_msg_1
+name|nlm_cancel_msg_1_svc
 parameter_list|(
 name|nlm_cancargs
 modifier|*
@@ -1211,7 +1211,7 @@ end_comment
 begin_function
 name|nlm_res
 modifier|*
-name|nlm_unlock_1
+name|nlm_unlock_1_svc
 parameter_list|(
 name|nlm_unlockargs
 modifier|*
@@ -1266,7 +1266,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|nlm_unlock_msg_1
+name|nlm_unlock_msg_1_svc
 parameter_list|(
 name|nlm_unlockargs
 modifier|*
@@ -1346,7 +1346,7 @@ end_comment
 begin_function
 name|nlm_res
 modifier|*
-name|nlm_granted_1
+name|nlm_granted_1_svc
 parameter_list|(
 name|nlm_testargs
 modifier|*
@@ -1402,7 +1402,7 @@ end_function
 begin_function
 name|void
 modifier|*
-name|nlm_granted_msg_1
+name|nlm_granted_msg_1_svc
 parameter_list|(
 name|nlm_testargs
 modifier|*
@@ -1473,7 +1473,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|nlm_test_res_1
+name|nlm_test_res_1_svc
 parameter_list|(
 name|nlm_testres
 modifier|*
@@ -1515,7 +1515,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|nlm_lock_res_1
+name|nlm_lock_res_1_svc
 parameter_list|(
 name|nlm_res
 modifier|*
@@ -1557,7 +1557,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|nlm_cancel_res_1
+name|nlm_cancel_res_1_svc
 parameter_list|(
 name|nlm_res
 modifier|*
@@ -1599,7 +1599,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|nlm_unlock_res_1
+name|nlm_unlock_res_1_svc
 parameter_list|(
 name|nlm_res
 modifier|*
@@ -1641,7 +1641,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|nlm_granted_res_1
+name|nlm_granted_res_1_svc
 parameter_list|(
 name|nlm_res
 modifier|*
@@ -1691,7 +1691,7 @@ end_comment
 begin_function
 name|nlm_shareres
 modifier|*
-name|nlm_share_3
+name|nlm_share_3_svc
 parameter_list|(
 name|nlm_shareargs
 modifier|*
@@ -1759,7 +1759,7 @@ end_comment
 begin_function
 name|nlm_shareres
 modifier|*
-name|nlm_unshare_3
+name|nlm_unshare_3_svc
 parameter_list|(
 name|nlm_shareargs
 modifier|*
@@ -1827,7 +1827,7 @@ end_comment
 begin_function
 name|nlm_res
 modifier|*
-name|nlm_nm_lock_3
+name|nlm_nm_lock_3_svc
 parameter_list|(
 name|nlm_lockargs
 modifier|*
@@ -1891,7 +1891,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|nlm_free_all_3
+name|nlm_free_all_3_svc
 parameter_list|(
 name|nlm_notify
 modifier|*

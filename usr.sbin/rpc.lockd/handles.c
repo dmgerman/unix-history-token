@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lockd.h"
+file|"nlm_prot.h"
 end_include
 
 begin_comment
