@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.11	81/12/09	*/
+comment|/*	uipc_syscalls.c	4.12	81/12/20	*/
 end_comment
 
 begin_include
@@ -980,6 +980,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+while|while
+condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CONNAWAITING
+operator|)
+operator|==
+literal|0
+condition|)
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|so
+operator|->
+name|so_timeo
+argument_list|,
+name|PZERO
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_error
@@ -1006,6 +1033,36 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|uap
+operator|->
+name|asa
+condition|)
+operator|(
+name|void
+operator|)
+name|copyout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sa
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|uap
+operator|->
+name|asa
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* deal with new file descriptor case */
 comment|/* u.u_r.r_val1 = ... */
 name|splx
