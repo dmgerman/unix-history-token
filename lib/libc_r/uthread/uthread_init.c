@@ -666,6 +666,12 @@ expr_stmt|;
 comment|/* Initialise the rest of the fields: */
 name|_thread_initial
 operator|->
+name|magic
+operator|=
+name|PTHREAD_MAGIC
+expr_stmt|;
+name|_thread_initial
+operator|->
 name|specific_data
 operator|=
 name|NULL
