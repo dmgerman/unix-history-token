@@ -132,6 +132,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LUN_DISAD
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* bit25 Disable autodisconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LUN_DM
 value|0x40000000
 end_define
