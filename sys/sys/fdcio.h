@@ -289,6 +289,34 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * cyl and head are being passed into ioctl(FD_READID)  * all four fields are being returned  */
+end_comment
+
+begin_struct
+struct|struct
+name|fdc_readid
+block|{
+name|u_char
+name|cyl
+decl_stmt|;
+comment|/* C - 0...79 */
+name|u_char
+name|head
+decl_stmt|;
+comment|/* H - 0...1 */
+name|u_char
+name|sec
+decl_stmt|;
+comment|/* R - 1...n */
+name|u_char
+name|secshift
+decl_stmt|;
+comment|/* N - log2(secsize / 128) */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -356,6 +384,17 @@ end_define
 
 begin_comment
 comment|/* clear error counter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FD_READID
+value|_IOWR('F', 68, struct fdc_readid)
+end_define
+
+begin_comment
+comment|/* read ID field */
 end_comment
 
 begin_comment
