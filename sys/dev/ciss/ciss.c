@@ -1998,6 +1998,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev_t
+argument_list|)
+expr_stmt|;
 comment|/* release all resources */
 name|ciss_free
 argument_list|(
