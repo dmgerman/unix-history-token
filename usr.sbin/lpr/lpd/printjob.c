@@ -2212,6 +2212,11 @@ name|bombed
 init|=
 name|OK
 decl_stmt|;
+name|int
+name|didignorehdr
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * open control file; ignore if no longer there. 	 */
 if|if
 condition|(
