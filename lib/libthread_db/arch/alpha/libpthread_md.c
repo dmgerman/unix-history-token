@@ -20,31 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/procfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<proc_service.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<thread_db.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libpthread_db.h"
+file|<ucontext.h>
 end_include
 
 begin_function

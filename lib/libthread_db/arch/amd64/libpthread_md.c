@@ -17,6 +17,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<sys/procfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ucontext.h>
+end_include
+
 begin_function
 name|void
 name|pt_reg_to_ucontext

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004 David Xu<davidxu@freebsd.org>  * Copyright (c) 2004 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -139,13 +139,61 @@ name|TD_EVENT_NONE
 init|=
 literal|0
 block|,
-name|TD_CREATE
+name|TD_CATCHSIG
 init|=
 literal|0x0001
 block|,
-name|TD_DEATH
+name|TD_CONCURRENCY
 init|=
 literal|0x0002
+block|,
+name|TD_CREATE
+init|=
+literal|0x0004
+block|,
+name|TD_DEATH
+init|=
+literal|0x0008
+block|,
+name|TD_IDLE
+init|=
+literal|0x0010
+block|,
+name|TD_LOCK_TRY
+init|=
+literal|0x0020
+block|,
+name|TD_PREEMPT
+init|=
+literal|0x0040
+block|,
+name|TD_PRI_INHERIT
+init|=
+literal|0x0080
+block|,
+name|TD_READY
+init|=
+literal|0x0100
+block|,
+name|TD_REAP
+init|=
+literal|0x0200
+block|,
+name|TD_SLEEP
+init|=
+literal|0x0400
+block|,
+name|TD_SWITCHFROM
+init|=
+literal|0x0800
+block|,
+name|TD_SWITCHTO
+init|=
+literal|0x1000
+block|,
+name|TD_TIMEOUT
+init|=
+literal|0x2000
 block|,
 name|TD_ALL_EVENTS
 init|=
@@ -195,18 +243,37 @@ name|td_thr_events_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* XXX can't be it... */
-end_comment
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|NOTIFY_BPT
+block|,
+comment|/* User inserted breakpoint. */
+name|NOTIFY_AUTOBPT
+block|,
+comment|/* Automatic breakpoint. */
+name|NOTIFY_SYSCALL
+comment|/* Invocation of system call. */
+block|}
+name|td_notify_e
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|td_notify_e
+name|type
+decl_stmt|;
 union|union
 block|{
 name|psaddr_t
 name|bptaddr
+decl_stmt|;
+name|int
+name|syscallno
 decl_stmt|;
 block|}
 name|u
@@ -407,22 +474,10 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|pthread_key_t
 name|thread_key_t
 typedef|;
 end_typedef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|typedef struct td_thrinfo_t { 	unsigned int	ti_user_flags; 	psaddr_t	ti_pc; 	psaddr_t	ti_sp; 	short		ti_flags; 	uchar_t		ti_preemptflag; 	uchar_t		ti_pirecflag; };
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
