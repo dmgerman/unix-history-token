@@ -1958,6 +1958,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|item1
@@ -1967,6 +1968,7 @@ operator|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|item2
