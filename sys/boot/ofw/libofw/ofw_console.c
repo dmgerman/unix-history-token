@@ -374,7 +374,7 @@ name|ch
 argument_list|,
 literal|1
 argument_list|)
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
