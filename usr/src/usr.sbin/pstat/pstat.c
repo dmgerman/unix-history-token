@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.17 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,6 +498,22 @@ name|SNVX
 value|(SNPTY+2)
 block|{
 literal|"_nvx"
+block|}
+block|,
+define|#
+directive|define
+name|SMP
+value|(SNPTY+3)
+block|{
+literal|"_mp_tty"
+block|}
+block|,
+define|#
+directive|define
+name|SNMP
+value|(SNPTY+4)
+block|{
+literal|"_nmp"
 block|}
 block|,
 endif|#
@@ -2888,6 +2904,26 @@ argument_list|,
 name|SVX
 argument_list|,
 name|SNVX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nl
+index|[
+name|SNMP
+index|]
+operator|.
+name|n_type
+operator|!=
+literal|0
+condition|)
+name|dottytype
+argument_list|(
+literal|"mp"
+argument_list|,
+name|SMP
+argument_list|,
+name|SNMP
 argument_list|)
 expr_stmt|;
 endif|#
