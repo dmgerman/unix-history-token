@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.5 (Berkeley) 12/30/93  * $Id: ffs_inode.c,v 1.8 1994/10/10 01:04:37 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.5 (Berkeley) 12/30/93  * $Id: ffs_inode.c,v 1.9 1994/10/22 02:27:32 davidg Exp $  */
 end_comment
 
 begin_include
@@ -152,7 +152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the access, modified, and inode change times as specified by the  * IACCESS, IUPDATE, and ICHANGE flags respectively. The IMODIFIED flag is  * used to specify that the inode needs to be updated but that the times have  * already been set. The access and modified times are taken from the second  * and third parameters; the inode change time is always taken from the current  * time. If waitfor is set, then wait for the disk write of the inode to  * complete.  */
+comment|/*  * Update the access, modified, and inode change times as specified by the  * IN_ACCESS, IN_UPDATE, and IN_CHANGE flags respectively. The IN_MODIFIED  * flag is used to specify that the inode needs to be updated even if none  * of the times needs to be updated. The access and modified times are taken  * from the second and third parameters; the inode change time is always  * taken from the current time. If waitfor is set, then wait for the disk  * write of the inode to complete.  */
 end_comment
 
 begin_function
@@ -186,6 +186,9 @@ name|ip
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|time_t
+name|tv_sec
 decl_stmt|;
 name|ip
 operator|=
@@ -255,6 +258,13 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Use a copy of the current time to get consistent timestamps 	 * (a_access and a_modify are sometimes aliases for&time). 	 * 	 * XXX in 2.0, a_access and a_modify are often pointers to the 	 * same copy of `time'.  This is not as good.  Some callers forget 	 * to make a copy; others make a copy too early (before the i/o 	 * has completed)... 	 * 	 * XXX there should be a function or macro for reading the time 	 * (e.g., some machines may require splclock()). 	 */
+name|tv_sec
+operator|=
+name|time
+operator|.
+name|tv_sec
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -269,11 +279,22 @@ name|i_atime
 operator|.
 name|ts_sec
 operator|=
+operator|(
+name|ap
+operator|->
+name|a_access
+operator|==
+operator|&
+name|time
+condition|?
+name|tv_sec
+else|:
 name|ap
 operator|->
 name|a_access
 operator|->
 name|tv_sec
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -290,11 +311,22 @@ name|i_mtime
 operator|.
 name|ts_sec
 operator|=
+operator|(
+name|ap
+operator|->
+name|a_modify
+operator|==
+operator|&
+name|time
+condition|?
+name|tv_sec
+else|:
 name|ap
 operator|->
 name|a_modify
 operator|->
 name|tv_sec
+operator|)
 expr_stmt|;
 name|ip
 operator|->
@@ -316,8 +348,6 @@ name|i_ctime
 operator|.
 name|ts_sec
 operator|=
-name|time
-operator|.
 name|tv_sec
 expr_stmt|;
 name|ip
@@ -1284,7 +1314,7 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
