@@ -122,9 +122,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|length
-decl_stmt|,
 name|offset
+decl_stmt|;
+name|size_t
+name|length
 decl_stmt|;
 comment|/* a shell script? */
 if|if
