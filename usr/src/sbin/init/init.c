@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	6.6 (Berkeley) %G%"
+literal|"@(#)init.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2374,7 +2374,7 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|state_func_t
@@ -2764,7 +2764,7 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-empty_stmt|;
+continue|continue;
 name|sleep
 argument_list|(
 name|STALL_TIMEOUT
@@ -3212,6 +3212,10 @@ decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
+name|session_t
+modifier|*
+name|ret
+decl_stmt|;
 name|key
 operator|.
 name|data
@@ -3251,16 +3255,27 @@ condition|)
 return|return
 literal|0
 return|;
-return|return
-operator|*
-operator|(
-name|session_t
-operator|*
-operator|*
-operator|)
+name|bcopy
+argument_list|(
 name|data
 operator|.
 name|data
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ret
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -3372,7 +3387,7 @@ argument_list|,
 name|separators
 argument_list|)
 condition|)
-empty_stmt|;
+continue|continue;
 return|return
 name|argv
 return|;
