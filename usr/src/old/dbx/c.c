@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c 1.5 %G%"
+literal|"@(#)c.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2254,9 +2254,6 @@ break|break;
 case|case
 name|RECORD
 case|:
-case|case
-name|VARNT
-case|:
 name|c_printstruct
 argument_list|(
 name|s
@@ -2509,9 +2506,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|error
+name|sp
+operator|-=
+name|size
 argument_list|(
-literal|"don't know how to print a %s"
+name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"<%s>"
 argument_list|,
 name|c_classname
 argument_list|(
@@ -2519,7 +2523,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+break|break;
 block|}
 block|}
 end_function
