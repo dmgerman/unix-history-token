@@ -154,23 +154,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|pcic_mapirq
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|slot
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|timeout_t
 name|pcictimeout
 decl_stmt|;
@@ -407,6 +390,39 @@ name|u
 parameter_list|)
 value|*(int *)device_get_softc(d) = (u)
 end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|bridges
+index|[]
+init|=
+block|{
+literal|"Intel i82365"
+block|,
+literal|"IBM PCIC"
+block|,
+literal|"VLSI 82C146"
+block|,
+literal|"Cirrus logic 672x"
+block|,
+literal|"Cirrus logic 6710"
+block|,
+literal|"Vadem 365"
+block|,
+literal|"Vadem 465"
+block|,
+literal|"Vadem 468"
+block|,
+literal|"Vadem 469"
+block|,
+literal|"Ricoh RF5C396"
+block|,
+literal|"IBM KING PCMCIA Controller"
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	Internal inline functions for accessing the PCIC.  */
@@ -1361,10 +1377,6 @@ name|unsigned
 name|char
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1432,12 +1444,6 @@ operator|.
 name|power
 operator|=
 name|pcic_power
-expr_stmt|;
-name|cinfo
-operator|.
-name|mapirq
-operator|=
-name|pcic_mapirq
 expr_stmt|;
 name|cinfo
 operator|.
@@ -1626,7 +1632,7 @@ argument_list|,
 name|PCIC_ID_REV
 argument_list|)
 operator|!=
-literal|0x84
+name|PCIC_VLSI82C146
 condition|)
 block|{
 name|sp
@@ -1676,10 +1682,10 @@ condition|)
 block|{
 comment|/* 		 *	82365 or clones. 		 */
 case|case
-literal|0x82
+name|PCIC_INTEL0
 case|:
 case|case
-literal|0x83
+name|PCIC_INTEL1
 case|:
 name|sp
 operator|->
@@ -1705,6 +1711,7 @@ argument_list|,
 literal|0x0E
 argument_list|)
 expr_stmt|;
+comment|/* Unlock VADEM's extra regs */
 name|outb
 argument_list|(
 name|sp
@@ -1718,9 +1725,9 @@ name|setb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x3A
+name|PCIC_VMISC
 argument_list|,
-literal|0x40
+name|PCIC_VADEMREV
 argument_list|)
 expr_stmt|;
 name|c
@@ -1795,9 +1802,9 @@ name|clrb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x3A
+name|PCIC_VMISC
 argument_list|,
-literal|0x40
+name|PCIC_VADEMREV
 argument_list|)
 expr_stmt|;
 block|}
@@ -1830,7 +1837,7 @@ block|}
 break|break;
 comment|/* 		 *	VLSI chips. 		 */
 case|case
-literal|0x84
+name|PCIC_VLSI82C146
 case|:
 name|sp
 operator|->
@@ -1844,10 +1851,10 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|0x88
+name|PCIC_IBM1
 case|:
 case|case
-literal|0x89
+name|PCIC_IBM2
 case|:
 name|sp
 operator|->
@@ -1865,7 +1872,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|0x8a
+name|PCIC_IBM3
 case|:
 name|sp
 operator|->
@@ -1892,7 +1899,7 @@ name|putb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x1F
+name|PCIC_CLCHIP
 argument_list|,
 literal|0
 argument_list|)
@@ -1905,7 +1912,7 @@ name|getb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x1F
+name|PCIC_CLCHIP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1913,10 +1920,10 @@ condition|(
 operator|(
 name|c
 operator|&
-literal|0xC0
+name|PCIC_CLC_TOGGLE
 operator|)
 operator|==
-literal|0xC0
+name|PCIC_CLC_TOGGLE
 condition|)
 block|{
 name|c
@@ -1927,7 +1934,7 @@ name|getb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x1F
+name|PCIC_CLCHIP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1935,7 +1942,7 @@ condition|(
 operator|(
 name|c
 operator|&
-literal|0xC0
+name|PCIC_CLC_TOGGLE
 operator|)
 operator|==
 literal|0
@@ -1945,7 +1952,7 @@ if|if
 condition|(
 name|c
 operator|&
-literal|0x20
+name|PCIC_CLC_DUAL
 condition|)
 name|sp
 operator|->
@@ -1978,113 +1985,19 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-switch|switch
-condition|(
-name|sp
-operator|->
-name|controller
-condition|)
-block|{
-case|case
-name|PCIC_I82365
-case|:
-name|name
-operator|=
-literal|"Intel i82365"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_IBM
-case|:
-name|name
-operator|=
-literal|"IBM PCIC"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_IBM_KING
-case|:
-name|name
-operator|=
-literal|"IBM KING PCMCIA Controller"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_PD672X
-case|:
-name|name
-operator|=
-literal|"Cirrus Logic PD672X"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_PD6710
-case|:
-name|name
-operator|=
-literal|"Cirrus Logic PD6710"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_VG365
-case|:
-name|name
-operator|=
-literal|"Vadem 365"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_VG465
-case|:
-name|name
-operator|=
-literal|"Vadem 465"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_VG468
-case|:
-name|name
-operator|=
-literal|"Vadem 468"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_VG469
-case|:
-name|name
-operator|=
-literal|"Vadem 469"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_RF5C396
-case|:
-name|name
-operator|=
-literal|"Ricoh RF5C396"
-expr_stmt|;
-break|break;
-case|case
-name|PCIC_VLSI
-case|:
-name|name
-operator|=
-literal|"VLSI 82C146"
-expr_stmt|;
-break|break;
-default|default:
-name|name
-operator|=
-literal|"Unknown!"
-expr_stmt|;
-break|break;
-block|}
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-name|name
+name|bridges
+index|[
+operator|(
+name|int
+operator|)
+name|sp
+operator|->
+name|controller
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* 		 *	OK it seems we have a PCIC or lookalike. 		 *	Allocate a slot and initialise the data structures. 		 */
@@ -2144,7 +2057,7 @@ name|sp
 argument_list|,
 name|PCIC_MISC1
 argument_list|,
-name|PCIC_SPKR_EN
+name|PCIC_MISC1_SPEAKER
 argument_list|)
 expr_stmt|;
 name|setb
@@ -2178,6 +2091,50 @@ else|:
 name|ENXIO
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|do_mgt_irq
+parameter_list|(
+name|struct
+name|pcic_slot
+modifier|*
+name|sp
+parameter_list|,
+name|int
+name|irq
+parameter_list|)
+block|{
+comment|/* Management IRQ changes */
+name|clrb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_INT_GEN
+argument_list|,
+name|PCIC_INTR_ENA
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|putb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_STAT_INT
+argument_list|,
+operator|(
+name|irq
+operator|<<
+literal|4
+operator|)
+operator||
+literal|0xF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2357,7 +2314,7 @@ expr_stmt|;
 if|if
 condition|(
 name|irq
-operator|>=
+operator|>
 literal|0
 condition|)
 block|{
@@ -2374,13 +2331,63 @@ name|rid
 argument_list|,
 name|irq
 argument_list|,
-operator|~
-literal|0
+name|irq
 argument_list|,
 literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|r
+operator|&&
+operator|(
+operator|(
+literal|1
+operator|<<
+operator|(
+name|rman_get_start
+argument_list|(
+name|r
+argument_list|)
+operator|)
+operator|)
+operator|&
+name|PCIC_INT_MASK_ALLOWED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Hardware does not support irq %d, trying polling.\n"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+name|rid
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+literal|0
+expr_stmt|;
+name|irq
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -2522,22 +2529,20 @@ name|sp
 operator|++
 control|)
 block|{
-comment|/* Assign IRQ */
+if|if
+condition|(
 name|sp
 operator|->
-name|putb
+name|slt
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|do_mgt_irq
 argument_list|(
 name|sp
 argument_list|,
-name|PCIC_STAT_INT
-argument_list|,
-operator|(
 name|irq
-operator|<<
-literal|4
-operator|)
-operator||
-literal|0xF
 argument_list|)
 expr_stmt|;
 comment|/* Check for changes */
@@ -2552,15 +2557,6 @@ operator||
 name|PCIC_DISRST
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|slt
-operator|==
-name|NULL
-condition|)
-continue|continue;
 name|stat
 operator|=
 name|sp
@@ -2838,6 +2834,9 @@ case|:
 case|case
 name|PCIC_IBM_KING
 case|:
+case|case
+name|PCIC_I82365
+case|:
 switch|switch
 condition|(
 name|slt
@@ -2956,9 +2955,9 @@ name|setb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x2f
+name|PCIC_CVSR
 argument_list|,
-literal|0x03
+name|PCIC_CVSR_VS
 argument_list|)
 expr_stmt|;
 else|else
@@ -2966,9 +2965,9 @@ name|setb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x16
+name|PCIC_MISC1
 argument_list|,
-literal|0x02
+name|PCIC_MISC1_VCC_33
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3032,9 +3031,9 @@ name|clrb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x2f
+name|PCIC_CVSR
 argument_list|,
-literal|0x03
+name|PCIC_CVSR_VS
 argument_list|)
 expr_stmt|;
 else|else
@@ -3042,9 +3041,9 @@ name|clrb
 argument_list|(
 name|sp
 argument_list|,
-literal|0x16
+name|PCIC_MISC1
 argument_list|,
-literal|0x02
+name|PCIC_MISC1_VCC_33
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3115,7 +3114,7 @@ argument_list|,
 name|PCIC_STATUS
 argument_list|)
 operator|&
-literal|0x40
+name|PCIC_POW
 operator|)
 operator|&&
 name|slt
@@ -3161,7 +3160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tell the PCIC which irq we want to use.  only the following are legal:  * 3, 4, 5, 7, 9, 10, 11, 12, 14, 15  */
+comment|/*  * tell the PCIC which irq we want to use.  only the following are legal:  * 3, 4, 5, 7, 9, 10, 11, 12, 14, 15.  We require the callers of this  * routine to do the check for legality.  */
 end_comment
 
 begin_function
@@ -3702,6 +3701,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|pcic_disable
+argument_list|(
+name|sp
+operator|->
+name|slt
+argument_list|)
+expr_stmt|;
 name|pccard_event
 argument_list|(
 name|sp
@@ -3747,23 +3753,13 @@ name|slt
 operator|->
 name|cdata
 decl_stmt|;
-name|sp
-operator|->
-name|putb
+name|do_mgt_irq
 argument_list|(
 name|sp
 argument_list|,
-name|PCIC_STAT_INT
-argument_list|,
-operator|(
 name|slt
 operator|->
 name|irq
-operator|<<
-literal|4
-operator|)
-operator||
-literal|0xF
 argument_list|)
 expr_stmt|;
 if|if
@@ -3781,7 +3777,7 @@ name|sp
 argument_list|,
 name|PCIC_MISC1
 argument_list|,
-name|PCIC_SPKR_EN
+name|PCIC_MISC1_SPEAKER
 argument_list|)
 expr_stmt|;
 name|setb
@@ -4280,6 +4276,42 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+literal|1
+operator|<<
+name|rman_get_start
+argument_list|(
+name|irq
+argument_list|)
+operator|)
+operator|&
+name|PCIC_INT_MASK_ALLOWED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Hardware does not support irq %ld.\n"
+argument_list|,
+name|rman_get_start
+argument_list|(
+name|irq
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|err
 operator|=
 name|bus_generic_setup_intr

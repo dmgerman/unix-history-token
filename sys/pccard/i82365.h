@@ -44,7 +44,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Cirrus logic 627x */
+comment|/* Cirrus logic 672x */
 end_comment
 
 begin_define
@@ -61,19 +61,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_CL6729
-value|5
-end_define
-
-begin_comment
-comment|/* Cirrus logic 6729 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PCIC_VG365
-value|6
+value|5
 end_define
 
 begin_comment
@@ -84,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_VG465
-value|7
+value|6
 end_define
 
 begin_comment
@@ -95,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_VG468
-value|8
+value|7
 end_define
 
 begin_comment
@@ -106,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_VG469
-value|9
+value|8
 end_define
 
 begin_comment
@@ -117,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_RF5C396
-value|10
+value|9
 end_define
 
 begin_comment
@@ -128,18 +117,22 @@ begin_define
 define|#
 directive|define
 name|PCIC_IBM_KING
-value|11
+value|10
 end_define
 
 begin_comment
 comment|/* IBM KING PCMCIA Controller */
 end_comment
 
+begin_comment
+comment|/* These last two aren't in normal freebsd */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PCIC_PC98
-value|12
+value|11
 end_define
 
 begin_comment
@@ -150,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_TI1130
-value|13
+value|12
 end_define
 
 begin_comment
@@ -377,6 +370,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_CLCHIP
+value|0x1f
+end_define
+
+begin_comment
+comment|/* PD67xx: Chip I/D */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CVSR
+value|0x2f
+end_define
+
+begin_comment
+comment|/* Vadem: Voltage select register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VMISC
+value|0x3a
+end_define
+
+begin_comment
+comment|/* Vadem: Misc control register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_TIME_SETUP0
 value|0x3a
 end_define
@@ -455,6 +481,17 @@ end_define
 
 begin_comment
 comment|/* Intel 82365SL Rev. 1; Both Memory and I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VLSI82C146
+value|0x84
+end_define
+
+begin_comment
+comment|/* VLSI 82C146 */
 end_comment
 
 begin_define
@@ -656,7 +693,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_VPP
-value|0x0C
+value|0x03
 end_define
 
 begin_comment
@@ -1029,22 +1066,77 @@ comment|/* s/w card detect interrupt */
 end_comment
 
 begin_comment
-comment|/* For Misc. Control Register 1 */
+comment|/* CL-PD67[12]x: For 3.3V cards, etc. (PCIC_MISC1) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCIC_SPKR_EN
+name|PCIC_MISC1_5V_DETECT
+value|0x01
+end_define
+
+begin_comment
+comment|/* PD6710 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC1_VCC_33
+value|0x02
+end_define
+
+begin_comment
+comment|/* Set Vcc is 3.3V, else 5.0V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC1_PMINT
+value|0x04
+end_define
+
+begin_comment
+comment|/* Pulse management intr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC1_PCINT
+value|0x08
+end_define
+
+begin_comment
+comment|/* Pulse card interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC1_SPEAKER
 value|0x10
 end_define
 
 begin_comment
-comment|/* Cirrus PD672x: speaker enable */
+comment|/* Enable speaker */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MISC1_INPACK
+value|0x80
+end_define
+
+begin_comment
+comment|/* INPACK throttles data */
 end_comment
 
 begin_comment
-comment|/* For Global Control register (PCIC_GLO_CTRL) */
+comment|/* i82365B and newer (!PD67xx) Global Control register (PCIC_GLO_CTRL) */
 end_comment
 
 begin_define
@@ -1080,6 +1172,10 @@ begin_comment
 comment|/* explicit write-back csc intr */
 end_comment
 
+begin_comment
+comment|/* Rev B only */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1099,7 +1195,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* For Misc. Control Register 2 */
+comment|/* CL-PD67[12]x: For Misc. Control Register 2 (PCIC_MISC2) */
 end_comment
 
 begin_define
@@ -1114,8 +1210,126 @@ comment|/* Cirrus PD672x: low power dynamic mode */
 end_comment
 
 begin_comment
-comment|/*  *	Mask of allowable interrupts.  *	Ints are 3,4,5,7,9,10,11,12,14,15  */
+comment|/* CL-PD67[12]x: Chip info (PCIC_CLCHIP) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CLC_TOGGLE
+value|0xc0
+end_define
+
+begin_comment
+comment|/* These bits toggle 1 -> 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CLC_DUAL
+value|0x20
+end_define
+
+begin_comment
+comment|/* Single/dual socket version */
+end_comment
+
+begin_comment
+comment|/* Vadem: Card Voltage Select register (PCIC_CVSR) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CVSR_VS
+value|0x03
+end_define
+
+begin_comment
+comment|/* Voltage select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CVSR_VS_5
+value|0x00
+end_define
+
+begin_comment
+comment|/* 5.0 V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CVSR_VS_33a
+value|0x01
+end_define
+
+begin_comment
+comment|/* alt 3.3V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CVSR_VS_XX
+value|0x02
+end_define
+
+begin_comment
+comment|/* X.XV when available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CVSR_VS_33
+value|0x03
+end_define
+
+begin_comment
+comment|/* 3.3V */
+end_comment
+
+begin_comment
+comment|/* Vadem: misc register (PCIC_VMISC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VADEMREV
+value|0x40
+end_define
+
+begin_comment
+comment|/*  *	Mask of allowable interrupts.  *  *	For IBM-AT machines, irqs 3, 4, 5, 7, 9, 10, 11, 12, 14, 15 are  *	allowed.  Nearly all IBM-AT machines with pcic cards or bridges  *	wire these interrupts (or a subset thereof) to the corresponding  *	pins on the ISA bus.  Some older laptops are reported to not route  *	all the interrupt pins to the bus because the designers knew that  *	some would conflict with builtin devices.  *  *	For NEC PC98 machines, irq 3, 5, 6, 9, 10, 11, 12, 13 are allowed.  *	These correspond to the C-BUS signals INT 0, 1, 2, 3, 41, 42, 5, 6  *	respectively.  This is with the desktop C-BUS addin card.  I don't  *	know if this corresponds to laptop usage or not.  *  *	I'm not sure the proper way to map these interrupts, but it looks  *	like pc98 is a subset of ibm-at so no actual mapping is required.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCIC_INT_MASK_ALLOWED
+value|0x3E68
+end_define
+
+begin_comment
+comment|/* PC98 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1123,6 +1337,15 @@ directive|define
 name|PCIC_INT_MASK_ALLOWED
 value|0xDEB8
 end_define
+
+begin_comment
+comment|/* AT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

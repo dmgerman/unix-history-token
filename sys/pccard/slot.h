@@ -156,22 +156,6 @@ expr_stmt|;
 comment|/* ioctl to lower level */
 name|void
 argument_list|(
-argument|*mapirq
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|slot
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Map interrupt number */
-name|void
-argument_list|(
 argument|*resume
 argument_list|)
 name|__P
