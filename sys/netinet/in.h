@@ -2410,6 +2410,29 @@ comment|/* in libkern */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|inet_ntoa_r
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+name|ina
+operator|,
+name|char
+operator|*
+name|buf
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in libkern */
+end_comment
+
+begin_decl_stmt
 name|int
 name|prison_ip
 name|__P
