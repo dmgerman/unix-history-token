@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.24 1998/07/06 21:01:54 bde Exp $"
+literal|"$Id: vmstat.c,v 1.25 1998/09/15 08:16:43 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,6 +575,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|nflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|kvm_t
 modifier|*
 name|kd
@@ -851,6 +859,10 @@ break|break;
 case|case
 literal|'n'
 case|:
+name|nflag
+operator|=
+literal|1
+expr_stmt|;
 name|maxshowdevs
 operator|=
 name|atoi
@@ -1540,6 +1552,20 @@ block|}
 name|dev_select
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|nflag
+operator|==
+literal|0
+operator|&&
+name|maxshowdevs
+operator|<
+name|num_devices_specified
+condition|)
+name|maxshowdevs
+operator|=
+name|num_devices_specified
 expr_stmt|;
 comment|/* 	 * People are generally only interested in disk statistics when 	 * they're running vmstat.  So, that's what we're going to give 	 * them if they don't specify anything by default.  We'll also give 	 * them any other random devices in the system so that we get to 	 * maxshowdevs devices, if that many devices exist.  If the user 	 * specifies devices on the command line, either through a pattern 	 * match or by naming them explicitly, we will give the user only 	 * those devices. 	 */
 if|if
