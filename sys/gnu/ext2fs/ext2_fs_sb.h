@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  modified for EXT2FS support in Lites 1.1  *  *  Aug 1995, Godmar Back (gback@cs.utah.edu)  *  University of Utah, Department of Computer Science  */
+comment|/*  *  modified for EXT2FS support in Lites 1.1  *  *  Aug 1995, Godmar Back (gback@cs.utah.edu)  *  University of Utah, Department of Computer Science  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -216,6 +216,9 @@ name|char
 name|s_wasvalid
 decl_stmt|;
 comment|/* valid at mount time */
+name|off_t
+name|fs_maxfilesize
+decl_stmt|;
 name|char
 name|fs_fsmnt
 index|[
