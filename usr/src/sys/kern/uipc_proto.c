@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.18	82/03/13	*/
+comment|/*	uipc_proto.c	4.19	82/03/28	*/
 end_comment
 
 begin_include
@@ -159,12 +159,6 @@ argument_list|()
 decl_stmt|,
 name|rip_output
 argument_list|()
-decl_stmt|,
-name|rip_ctlinput
-argument_list|()
-decl_stmt|,
-name|rip_usrreq
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -186,18 +180,12 @@ operator|>
 literal|0
 end_if
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|rimp_usrreq
-argument_list|()
-decl_stmt|,
 name|rimp_output
-argument_list|()
-decl_stmt|,
-name|rimp_ctlinput
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -222,15 +210,12 @@ operator|>
 literal|0
 end_if
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|rpup_output
-argument_list|()
-decl_stmt|,
-name|rpup_ctlinput
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -538,11 +523,11 @@ name|rip_input
 block|,
 name|rip_output
 block|,
-name|rip_ctlinput
+literal|0
 block|,
 literal|0
 block|,
-name|rip_usrreq
+name|raw_usrreq
 block|,
 literal|0
 block|,
@@ -573,11 +558,11 @@ literal|0
 block|,
 name|rimp_output
 block|,
-name|rimp_ctlinput
+literal|0
 block|,
 literal|0
 block|,
-name|rimp_usrreq
+name|raw_usrreq
 block|,
 literal|0
 block|,
@@ -610,7 +595,7 @@ literal|0
 block|,
 name|rpup_output
 block|,
-name|rpup_ctlinput
+literal|0
 block|,
 literal|0
 block|,
