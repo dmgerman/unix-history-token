@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.13 1996/02/22 03:33:52 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.14 1996/03/17 04:52:10 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -1793,6 +1793,7 @@ operator|&
 name|PIPE_EOF
 condition|)
 block|{
+comment|/* XXX error = ? */
 break|break;
 block|}
 comment|/* 			 * If the "write-side" has been blocked, wake it up now. 			 */
@@ -2125,7 +2126,7 @@ name|pipe_buffer
 operator|.
 name|cnt
 operator|)
-operator|>
+operator|>=
 name|PIPE_BUF
 condition|)
 name|pipeselwakeup
@@ -2797,18 +2798,27 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|||
-operator|(
+condition|)
+goto|goto
+name|error1
+goto|;
+if|if
+condition|(
 name|wpipe
 operator|->
 name|pipe_state
 operator|&
 name|PIPE_EOF
-operator|)
 condition|)
+block|{
+name|error
+operator|=
+name|EPIPE
+expr_stmt|;
 goto|goto
 name|error1
 goto|;
+block|}
 block|}
 name|wpipe
 operator|->
@@ -2876,22 +2886,19 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|||
-operator|(
+condition|)
+goto|goto
+name|error1
+goto|;
+if|if
+condition|(
 name|wpipe
 operator|->
 name|pipe_state
 operator|&
 name|PIPE_EOF
-operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
 name|error
 operator|=
 name|EPIPE
@@ -2984,14 +2991,13 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-name|wpipe
-argument_list|)
-expr_stmt|;
-return|return
+name|error
+operator|=
 name|EPIPE
-return|;
+expr_stmt|;
+goto|goto
+name|error1
+goto|;
 block|}
 if|if
 condition|(
@@ -3703,7 +3709,7 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|=
+operator|==
 literal|0
 condition|)
 block|{
