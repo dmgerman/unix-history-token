@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -120,6 +120,7 @@ operator|&
 name|B_LOCKED
 operator|)
 condition|)
+block|{
 operator|++
 name|locked_queue_count
 expr_stmt|;
@@ -149,6 +150,41 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+define|#
+directive|define
+name|PMAP_BUG_FIX_HACK
+ifdef|#
+directive|ifdef
+name|PMAP_BUG_FIX_HACK
+if|if
+condition|(
+operator|(
+operator|(
+expr|struct
+name|ufsmount
+operator|*
+operator|)
+operator|(
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_data
+operator|)
+operator|)
+operator|->
+name|um_lfs
+operator|->
+name|lfs_ivnode
+operator|!=
+name|bp
+operator|->
+name|b_vp
+condition|)
+endif|#
+directive|endif
 name|reassignbuf
 argument_list|(
 name|bp
@@ -163,6 +199,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 name|brelse
 argument_list|(
 name|bp
