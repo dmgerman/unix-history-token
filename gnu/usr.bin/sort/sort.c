@@ -1580,7 +1580,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s%ssortXXXXXXXXXX"
+literal|"%s%ssortXXXXXX"
 argument_list|,
 name|temp_file_prefix
 argument_list|,
