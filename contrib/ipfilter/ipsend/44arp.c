@@ -257,10 +257,6 @@ name|needed
 decl_stmt|;
 name|char
 modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
 name|lim
 decl_stmt|,
 modifier|*

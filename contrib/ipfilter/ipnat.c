@@ -242,7 +242,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipnat.c,v 2.0.1.7 1997/01/30 12:02:32 darrenr Exp $"
+literal|"$Id: ipnat.c,v 2.0.1.8 1997/02/16 21:23:40 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -934,7 +934,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\t%x %u %x %u %x %d\n"
+literal|"\t%p %u %x %u %x %d\n"
 argument_list|,
 operator|(
 name|u_int
@@ -1197,7 +1197,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\t%x %u %s %d %x\n"
+literal|"\t%p %u %s %d %x\n"
 argument_list|,
 operator|(
 name|u_int
@@ -1424,7 +1424,7 @@ name|OPT_VERBOSE
 condition|)
 name|printf
 argument_list|(
-literal|"table %#x list %#x\n"
+literal|"table %p list %p\n"
 argument_list|,
 operator|(
 name|u_int
