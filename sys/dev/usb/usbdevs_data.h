@@ -415,6 +415,18 @@ literal|"Zip 100"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_OMNIVISION
+block|,
+name|USB_PRODUCT_OMNIVISION_OV511
+block|,
+literal|0
+block|,
+literal|"OmniVision"
+block|,
+literal|"OV511 Camera"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_BELKIN
 block|,
 name|USB_PRODUCT_BELKIN_F5U002
@@ -878,6 +890,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Iomega"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_OMNIVISION
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"OmniVision"
 block|,
 name|NULL
 block|, 	}

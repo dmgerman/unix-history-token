@@ -334,6 +334,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_OMNIVISION
+value|0x05a9
+end_define
+
+begin_comment
+comment|/* OmniVision */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_BELKIN
 value|0x05ab
 end_define
@@ -914,6 +925,21 @@ end_define
 
 begin_comment
 comment|/* Zip 100 */
+end_comment
+
+begin_comment
+comment|/* OmniVision Technologies Inc. products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_OMNIVISION_OV511
+value|0x0511
+end_define
+
+begin_comment
+comment|/* OV511 Camera */
 end_comment
 
 begin_comment
