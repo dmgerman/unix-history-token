@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftpd.c	5.9 (Berkeley) %G%"
+literal|"@(#)tftpd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1103,10 +1103,11 @@ name|fd
 decl_stmt|;
 name|char
 modifier|*
+name|cp
+decl_stmt|,
+modifier|*
 modifier|*
 name|dirp
-init|=
-name|dirs
 decl_stmt|;
 if|if
 condition|(
@@ -1120,8 +1121,51 @@ operator|(
 name|EACCESS
 operator|)
 return|;
+comment|/* 	 * prevent tricksters from getting around the directory restrictions 	 */
 for|for
 control|(
+name|cp
+operator|=
+name|filename
+operator|+
+literal|1
+init|;
+operator|*
+name|cp
+condition|;
+name|cp
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'.'
+operator|&&
+name|strncmp
+argument_list|(
+name|cp
+operator|-
+literal|1
+argument_list|,
+literal|"/../"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EACCESS
+operator|)
+return|;
+for|for
+control|(
+name|dirp
+operator|=
+name|dirs
 init|;
 operator|*
 name|dirp
