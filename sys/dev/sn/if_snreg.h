@@ -1463,17 +1463,6 @@ comment|/*  * I define some macros to make it easier to do somewhat common  * or
 end_comment
 
 begin_comment
-comment|/* The base I/O address.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASE
-value|(sc->sn_io_addr)
-end_define
-
-begin_comment
 comment|/* Select a register bank, 0 to 3  */
 end_comment
 
@@ -1482,9 +1471,11 @@ define|#
 directive|define
 name|SMC_SELECT_BANK
 parameter_list|(
+name|sc
+parameter_list|,
 name|x
 parameter_list|)
-value|{ outw( BASE + BANK_SELECT_REG_W, (x) ); }
+value|{ CSR_WRITE_2(sc, BANK_SELECT_REG_W, (x)); }
 end_define
 
 begin_comment
@@ -1495,8 +1486,10 @@ begin_define
 define|#
 directive|define
 name|SMC_DELAY
-parameter_list|()
-value|{ inw( BASE + RECV_CONTROL_REG_W );\                       inw( BASE + RECV_CONTROL_REG_W );\                       inw( BASE + RECV_CONTROL_REG_W );  }
+parameter_list|(
+name|sc
+parameter_list|)
+value|{ CSR_READ_2(sc, RECV_CONTROL_REG_W); \                         CSR_READ_2(sc, RECV_CONTROL_REG_W); \                         CSR_READ_2(sc, RECV_CONTROL_REG_W); }
 end_define
 
 begin_comment
