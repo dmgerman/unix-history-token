@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3061,6 +3061,36 @@ argument_list|,
 name|ap
 operator|->
 name|in_lbn
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Bread may create a new indirect block which needs 			 * to get counted for the inode. 			 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_blkno
+operator|==
+operator|-
+literal|1
+operator|&&
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_CACHE
+operator|)
+condition|)
+name|ip
+operator|->
+name|i_blocks
+operator|+=
+name|btodb
+argument_list|(
+name|fs
+operator|->
+name|lfs_bsize
 argument_list|)
 expr_stmt|;
 name|bp
