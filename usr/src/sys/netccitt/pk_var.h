@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -159,6 +159,12 @@ modifier|*
 name|lcd_pkp
 decl_stmt|;
 comment|/* Network this lcd is attached to */
+name|struct
+name|mbuf
+modifier|*
+name|lcd_ifrag
+decl_stmt|;
+comment|/* IP, CLNP reassembly */
 name|struct
 name|sockaddr_x25
 name|lcd_faddr
@@ -330,17 +336,29 @@ struct|struct
 name|llinfo_x25
 block|{
 name|struct
-name|pklcd
+name|llinfo_x25
 modifier|*
-name|lx_lcd
+name|lx_next
 decl_stmt|;
-comment|/* local connection block */
+comment|/* chain together in linked list */
+name|struct
+name|llinfo_x25
+modifier|*
+name|lx_prev
+decl_stmt|;
+comment|/* chain together in linked list */
 name|struct
 name|rtentry
 modifier|*
 name|lx_rt
 decl_stmt|;
 comment|/* back pointer to route */
+name|struct
+name|pklcd
+modifier|*
+name|lx_lcd
+decl_stmt|;
+comment|/* local connection block */
 name|struct
 name|x25_ifaddr
 modifier|*
@@ -358,6 +376,10 @@ name|int
 name|lx_timer
 decl_stmt|;
 comment|/* for idle timeout */
+name|int
+name|lx_family
+decl_stmt|;
+comment|/* for dispatch */
 block|}
 struct|;
 end_struct
@@ -408,6 +430,13 @@ name|LXS_DISCONNECTING
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|LXS_LISTENING
+value|6
+end_define
+
 begin_comment
 comment|/* flags */
 end_comment
@@ -432,6 +461,17 @@ end_define
 
 begin_comment
 comment|/* this lcb references rtentry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LXF_LISTEN
+value|0x4
+end_define
+
+begin_comment
+comment|/* accepting incoming calls */
 end_comment
 
 begin_ifdef
