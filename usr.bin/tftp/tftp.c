@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tftp.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tftp.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -107,13 +126,6 @@ include|#
 directive|include
 file|"tftpsubs.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -584,9 +596,9 @@ operator|+
 literal|4
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"tftp: sendto"
+literal|"sendto"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -667,9 +679,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"tftp: recvfrom"
+literal|"recvfrom"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1114,9 +1126,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
-literal|"tftp: sendto"
+literal|"sendto"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1194,9 +1206,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"tftp: recvfrom"
+literal|"recvfrom"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1838,7 +1850,7 @@ argument_list|)
 operator|!=
 name|length
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"nak"
 argument_list|)
