@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4172,25 +4172,21 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
+name|NDINIT
+argument_list|(
+operator|&
 name|nd
-operator|.
-name|ni_dirp
-operator|=
-name|name
-expr_stmt|;
-name|nd
-operator|.
-name|ni_segflg
-operator|=
+argument_list|,
+name|LOOKUP
+argument_list|,
+name|FOLLOW
+argument_list|,
 name|UIO_SYSSPACE
-expr_stmt|;
-name|nd
-operator|.
-name|ni_cnd
-operator|.
-name|cn_proc
-operator|=
+argument_list|,
+name|name
+argument_list|,
 name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4200,8 +4196,6 @@ name|vn_open
 argument_list|(
 operator|&
 name|nd
-argument_list|,
-name|p
 argument_list|,
 name|O_CREAT
 operator||
