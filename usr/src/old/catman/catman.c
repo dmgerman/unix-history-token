@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)catman.c	4.7 (Berkeley) %G%"
+literal|"@(#)catman.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +194,7 @@ while|while
 condition|(
 name|ac
 operator|>
-literal|1
+literal|0
 operator|&&
 name|av
 index|[
@@ -297,26 +297,9 @@ block|}
 if|if
 condition|(
 name|ac
-operator|==
-literal|2
+operator|>
+literal|1
 condition|)
-name|sections
-operator|=
-operator|*
-name|av
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ac
-operator|<
-literal|2
-condition|)
-name|sections
-operator|=
-literal|"12345678ln"
-expr_stmt|;
-else|else
 block|{
 name|usage
 label|:
@@ -332,6 +315,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|sections
+operator|=
+operator|(
+name|ac
+operator|==
+literal|1
+operator|)
+condition|?
+operator|*
+name|av
+else|:
+literal|"12345678ln"
+expr_stmt|;
 if|if
 condition|(
 name|wflag
