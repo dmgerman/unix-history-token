@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.11.2.9 1996/04/01 00:25:26 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.11.2.10 1996/04/28 19:37:09 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -528,7 +528,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|load_seeprom
 name|__P
 argument_list|(
@@ -814,6 +814,16 @@ name|ahc_data
 modifier|*
 name|ahc
 decl_stmt|;
+name|u_char
+name|ultra_enb
+init|=
+literal|0
+decl_stmt|;
+name|u_char
+name|our_id
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -951,6 +961,35 @@ comment|/* On all PCI adapters, we allow SCB paging */
 name|ahc_f
 operator||=
 name|AHC_PAGESCBS
+expr_stmt|;
+comment|/* Remeber how the card was setup in case there is no SEEPROM */
+name|our_id
+operator|=
+name|inb
+argument_list|(
+name|SCSIID
+operator|+
+name|io_port
+argument_list|)
+operator|&
+name|OID
+expr_stmt|;
+if|if
+condition|(
+name|ahc_t
+operator|&
+name|AHC_ULTRA
+condition|)
+name|ultra_enb
+operator|=
+name|inb
+argument_list|(
+name|SXFRCTL0
+operator|+
+name|io_port
+argument_list|)
+operator|&
+name|ULTRAEN
 expr_stmt|;
 name|ahc_reset
 argument_list|(
@@ -1217,7 +1256,7 @@ name|id_string
 operator|=
 literal|"aic7860 "
 expr_stmt|;
-comment|/* Assume there is no BIOS for these cards? */
+comment|/* 			 * Use defaults, if the chip wasn't initialized by 			 * a BIOS. 			 */
 name|ahc
 operator|->
 name|flags
@@ -1234,7 +1273,7 @@ name|id_string
 operator|=
 literal|"aic7850 "
 expr_stmt|;
-comment|/* Assume there is no BIOS for these cards? */
+comment|/* 			 * Use defaults, if the chip wasn't initialized by 			 * a BIOS. 			 */
 name|ahc
 operator|->
 name|flags
@@ -1254,15 +1293,6 @@ return|return;
 break|break;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"ahc%d: %s"
-argument_list|,
-name|unit
-argument_list|,
-name|id_string
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Take the LED out of diagnostic mode 		 */
 name|sblkctl
 operator|=
@@ -1310,15 +1340,84 @@ operator|&
 name|AHC_USEDEFAULTS
 condition|)
 block|{
-comment|/* 			 * PCI Adapter default setup 			 * Should only be used if the adapter does not have 			 * an SEEPROM and we don't think a BIOS was installed. 			 */
-comment|/* Set the host ID */
+comment|/* 			 * PCI Adapter default setup 			 * Should only be used if the adapter does not have 			 * an SEEPROM. 			 */
+comment|/* See if someone else set us up already */
+name|u_long
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|io_port
+operator|+
+name|TARG_SCRATCH
+init|;
+name|i
+operator|<
+name|io_port
+operator|+
+literal|0x60
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|inb
+argument_list|(
+name|i
+argument_list|)
+operator|!=
+literal|0xff
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|i
+operator|!=
+name|io_port
+operator|+
+literal|0x60
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ahc%d: Using left over BIOS settings\n"
+argument_list|,
+name|ahc
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|AHC_USEDEFAULTS
+expr_stmt|;
+block|}
+else|else
+name|our_id
+operator|=
+literal|0x07
+expr_stmt|;
 name|outb
 argument_list|(
 name|SCSICONF
-operator|+
-name|iobase
 argument_list|,
-literal|7
+operator|(
+name|our_id
+operator|&
+literal|0x07
+operator|)
+operator||
+name|ENSPCHK
+operator||
+name|RESET_SCSI
 argument_list|)
 expr_stmt|;
 comment|/* In case we are a wide card */
@@ -1327,13 +1426,43 @@ argument_list|(
 name|SCSICONF
 operator|+
 literal|1
-operator|+
-name|iobase
 argument_list|,
-literal|7
+name|our_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ultra_enb
+operator|||
+operator|(
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_USEDEFAULTS
+operator|)
+condition|)
+block|{
+comment|/* 				 * If there wasn't a BIOS or the board 				 * wasn't in this mode to begin with,  				 * turn off ultra. 				 */
+name|ahc
+operator|->
+name|type
+operator|&=
+operator|~
+name|AHC_ULTRA
+expr_stmt|;
 block|}
+block|}
+name|printf
+argument_list|(
+literal|"ahc%d: %s"
+argument_list|,
+name|unit
+argument_list|,
+name|id_string
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1400,7 +1529,7 @@ comment|/*  * Read the SEEPROM.  Return 0 on failure  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|load_seeprom
 parameter_list|(
 name|ahc
@@ -1446,8 +1575,6 @@ name|host_id
 decl_stmt|;
 name|int
 name|have_seeprom
-decl_stmt|,
-name|retval
 decl_stmt|;
 if|if
 condition|(
@@ -1600,6 +1727,10 @@ operator|.
 name|checksum
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"checksum error"
@@ -1628,38 +1759,24 @@ operator|!
 name|have_seeprom
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"\nahc%d: SEEPROM read failed, "
-literal|"using leftover BIOS values\n"
+literal|"\nahc%d: No SEEPROM availible\n"
 argument_list|,
 name|ahc
 operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
-literal|0
-expr_stmt|;
-name|host_id
-operator|=
-literal|0x7
-expr_stmt|;
-name|scsi_conf
-operator|=
-name|host_id
-operator||
-name|ENSPCHK
-expr_stmt|;
-comment|/* Assume a default */
-comment|/* 		 * If we happen to be an ULTRA card, 		 * default to non-ultra mode. 		 */
 name|ahc
 operator|->
-name|type
-operator|&=
-operator|~
-name|AHC_ULTRA
+name|flags
+operator||=
+name|AHC_USEDEFAULTS
 expr_stmt|;
 block|}
 else|else
@@ -1840,6 +1957,18 @@ name|ENSPCHK
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|.
+name|adapter_control
+operator|&
+name|CFRESETB
+condition|)
+name|scsi_conf
+operator||=
+name|RESET_SCSI
+expr_stmt|;
+if|if
+condition|(
 name|ahc
 operator|->
 name|type
@@ -1868,11 +1997,6 @@ operator|~
 name|AHC_ULTRA
 expr_stmt|;
 block|}
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* Set the host ID */
 name|outb
 argument_list|(
@@ -1895,11 +2019,8 @@ argument_list|,
 name|host_id
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|retval
-operator|)
-return|;
+block|}
+return|return;
 block|}
 end_function
 
