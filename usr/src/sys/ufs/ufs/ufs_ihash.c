@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ihash.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ihash.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -325,10 +325,28 @@ name|ipp
 operator|=
 name|ip
 expr_stmt|;
-name|ILOCK
-argument_list|(
+if|if
+condition|(
+operator|(
 name|ip
+operator|->
+name|i_flag
+operator|&
+name|ILOCKED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"ufs_ihashins: already locked"
 argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|ILOCKED
 expr_stmt|;
 block|}
 end_function
