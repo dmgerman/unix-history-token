@@ -4638,9 +4638,6 @@ index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
-name|u_int32_t
-name|command
-decl_stmt|;
 name|struct
 name|sis_softc
 modifier|*
