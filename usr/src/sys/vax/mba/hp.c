@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.56	82/10/17	*/
+comment|/*	hp.c	4.57	82/10/31	*/
 end_comment
 
 begin_ifdef
@@ -142,13 +142,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/dkio.h"
+file|"../h/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/uio.h"
+file|"../vax/dkio.h"
 end_include
 
 begin_include
