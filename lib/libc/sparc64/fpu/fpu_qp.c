@@ -437,7 +437,7 @@ argument_list|,
 argument|i
 argument_list|,
 argument|int
-argument_list|,	)
+argument_list|)
 end_macro
 
 begin_macro
@@ -448,7 +448,7 @@ argument_list|,
 argument|s
 argument_list|,
 argument|float
-argument_list|,	)
+argument_list|)
 end_macro
 
 begin_macro
@@ -472,7 +472,7 @@ argument_list|,
 argument|i
 argument_list|,
 argument|u_int
-argument_list|,	)
+argument_list|)
 end_macro
 
 begin_macro
