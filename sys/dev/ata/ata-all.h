@@ -1012,9 +1012,11 @@ literal|1
 decl_stmt|;
 comment|/* IORDY supported */
 name|u_int8_t
-label|:
+name|softreset
+range|:
 literal|1
-expr_stmt|;
+decl_stmt|;
+comment|/* needs softreset when busy */
 name|u_int8_t
 name|stdby_ovlap
 range|:
@@ -1022,9 +1024,11 @@ literal|1
 decl_stmt|;
 comment|/* standby/overlap supported */
 name|u_int8_t
-label|:
+name|queuing
+range|:
 literal|1
-expr_stmt|;
+decl_stmt|;
+comment|/* supports queuing overlap */
 name|u_int8_t
 name|idmaflag
 range|:
@@ -1407,27 +1411,27 @@ value|0x0
 define|#
 directive|define
 name|ATA_IMMEDIATE
-value|0x0
-define|#
-directive|define
-name|ATA_WAIT_INTR
 value|0x1
 define|#
 directive|define
-name|ATA_WAIT_READY
+name|ATA_WAIT_INTR
 value|0x2
 define|#
 directive|define
-name|ATA_ACTIVE_ATA
+name|ATA_WAIT_READY
 value|0x3
 define|#
 directive|define
-name|ATA_ACTIVE_ATAPI
+name|ATA_ACTIVE_ATA
 value|0x4
 define|#
 directive|define
-name|ATA_REINITING
+name|ATA_ACTIVE_ATAPI
 value|0x5
+define|#
+directive|define
+name|ATA_REINITING
+value|0x6
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1702,6 +1706,34 @@ name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int32_t
+name|ata_printf
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|,
+name|int32_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

@@ -334,23 +334,13 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s: piomode=%d dmamode=%d udmamode=%d dmaflag=%d\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
-operator|(
 name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave"
+argument_list|,
+literal|"piomode=%d dmamode=%d udmamode=%d dmaflag=%d\n"
 argument_list|,
 name|ata_pmode
 argument_list|(
@@ -571,23 +561,13 @@ directive|endif
 name|notfound
 label|:
 default|default:
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s:<%.40s/%.8s> %s device - NO DRIVER!\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
-operator|(
 name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave"
+argument_list|,
+literal|"<%.40s/%.8s> %s device - NO DRIVER!\n"
 argument_list|,
 name|ATP_PARAM
 operator|->
@@ -808,7 +788,6 @@ operator|=
 name|driver
 expr_stmt|;
 block|}
-comment|/* append onto controller queue and try to start controller */
 name|s
 operator|=
 name|splbio
@@ -834,6 +813,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* append onto controller queue and try to start controller */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1435,8 +1415,6 @@ operator|->
 name|data
 decl_stmt|;
 name|int32_t
-name|length
-decl_stmt|,
 name|reason
 decl_stmt|,
 name|dma_stat
@@ -1720,12 +1698,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-goto|goto
-name|op_finished
-goto|;
 block|}
+else|else
+block|{
+name|int32_t
 name|length
-operator|=
+init|=
 name|inb
 argument_list|(
 name|atp
@@ -1736,9 +1714,7 @@ name|ioaddr
 operator|+
 name|ATA_CYL_LSB
 argument_list|)
-expr_stmt|;
-name|length
-operator||=
+operator||
 name|inb
 argument_list|(
 name|atp
@@ -1751,7 +1727,7 @@ name|ATA_CYL_MSB
 argument_list|)
 operator|<<
 literal|8
-expr_stmt|;
+decl_stmt|;
 switch|switch
 condition|(
 name|reason
@@ -1800,9 +1776,7 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|op_finished
-goto|;
+break|break;
 block|}
 name|atapi_write
 argument_list|(
@@ -1860,9 +1834,7 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|op_finished
-goto|;
+break|break;
 block|}
 name|atapi_read
 argument_list|(
@@ -1970,9 +1942,7 @@ name|result
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|op_finished
-goto|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1985,6 +1955,7 @@ argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|op_finished
 label|:
@@ -3060,6 +3031,12 @@ name|request
 operator|->
 name|device
 decl_stmt|;
+name|int32_t
+name|s
+init|=
+name|splbio
+argument_list|()
+decl_stmt|;
 name|atp
 operator|->
 name|controller
@@ -3151,6 +3128,11 @@ argument_list|(
 name|atp
 operator|->
 name|controller
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}

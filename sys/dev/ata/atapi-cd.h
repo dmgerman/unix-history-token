@@ -1234,10 +1234,6 @@ name|u_int32_t
 name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */
-name|u_int32_t
-name|next_writeable_addr
-decl_stmt|;
-comment|/* next writable address */
 name|struct
 name|devstat
 modifier|*

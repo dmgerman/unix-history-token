@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -546,9 +552,7 @@ operator|==
 name|ENXIO
 condition|)
 return|return
-operator|(
 name|ENXIO
-operator|)
 return|;
 comment|/* Allocate the port range */
 name|rid
@@ -582,9 +586,7 @@ operator|!
 name|port
 condition|)
 return|return
-operator|(
 name|ENOMEM
-operator|)
 return|;
 comment|/* check if allready in use by a PCI device */
 for|for
@@ -1497,21 +1499,12 @@ operator|&
 name|IOMASK
 operator|)
 condition|)
-block|{
 name|bmaddr_2
 operator|=
 name|bmaddr_1
 operator|+
 name|ATA_BM_OFFSET1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ata-pci%d: Busmastering DMA supported\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 name|printf
 argument_list|(
@@ -1563,31 +1556,12 @@ name|IOMASK
 expr_stmt|;
 name|bmaddr_2
 operator|=
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x20
-argument_list|,
-literal|4
-argument_list|)
-operator|&
-name|IOMASK
-operator|)
+name|bmaddr_1
 operator|+
 name|ATA_BM_OFFSET1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ata-pci%d: Busmastering DMA supported\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 block|}
 else|else
-block|{
 comment|/* we dont know this controller, no busmastering DMA */
 name|printf
 argument_list|(
@@ -1596,7 +1570,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* do extra chipset specific setups */
 switch|switch
@@ -1811,51 +1784,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|0x00041103
-case|:
-comment|/* HighPoint HPT366 controller */
-name|printf
-argument_list|(
-literal|"hpt366: cache_line_size=0x%02x latency_timer=0x%02x min_grant=0x%02x max_latency=0x%02x\n"
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x0c
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x0d
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x3e
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x3f
-argument_list|,
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* now probe the addresse found for "real" ATA/ATAPI hardware */
 name|lun
@@ -2488,11 +2416,14 @@ index|]
 operator|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: unit already attached\n"
+name|scp
 argument_list|,
-name|lun
+operator|-
+literal|1
+argument_list|,
+literal|"unit already attached\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2521,11 +2452,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: failed to allocate driver storage\n"
+name|scp
 argument_list|,
-name|lun
+operator|-
+literal|1
+argument_list|,
+literal|"failed to allocate driver storage\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2584,13 +2518,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: iobase=0x%04x altiobase=0x%04x bmaddr=0x%04x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"iobase=0x%04x altiobase=0x%04x bmaddr=0x%04x\n"
 argument_list|,
 name|scp
 operator|->
@@ -2696,13 +2631,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: mask=%02x status0=%02x status1=%02x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"mask=%02x status0=%02x status1=%02x\n"
 argument_list|,
 name|mask
 argument_list|,
@@ -3044,13 +2980,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: devices = 0x%x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"devices = 0x%x\n"
 argument_list|,
 name|scp
 operator|->
@@ -3147,9 +3084,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata: ERROR malloc attach_hook failed\n"
+name|scp
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"ERROR malloc attach_hook failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3183,9 +3125,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata: config_intrhook_establish failed\n"
+name|scp
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"config_intrhook_establish failed\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -3642,6 +3589,11 @@ index|[
 name|DEV_BSIZE
 index|]
 decl_stmt|;
+name|int
+name|retry
+init|=
+literal|0
+decl_stmt|;
 comment|/* select drive */
 name|outb
 argument_list|(
@@ -3661,6 +3613,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* apparently some devices needs this repeated */
+do|do
+block|{
 if|if
 condition|(
 name|ata_command
@@ -3685,23 +3640,13 @@ name|ATA_WAIT_INTR
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s: identify failed\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
-operator|(
 name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave "
+argument_list|,
+literal|"identify failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3710,6 +3655,27 @@ literal|1
 return|;
 block|}
 if|if
+condition|(
+name|retry
+operator|++
+condition|)
+block|{
+name|ata_printf
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|,
+literal|"drive wont come ready after identify\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+do|while
 condition|(
 name|ata_wait
 argument_list|(
@@ -3724,31 +3690,7 @@ operator||
 name|ATA_S_DRQ
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ata%d-%s: drive wont come ready after identify\n"
-argument_list|,
-name|scp
-operator|->
-name|lun
-argument_list|,
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave "
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
+do|;
 name|insw
 argument_list|(
 name|scp
@@ -3791,23 +3733,13 @@ operator|!
 name|ata_parm
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s: malloc for ata_param failed\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
-operator|(
 name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave "
+argument_list|,
+literal|"malloc for ata_param failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3973,15 +3905,10 @@ name|scp
 operator|->
 name|dev_param
 index|[
-operator|(
+name|ATA_DEV
+argument_list|(
 name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
+argument_list|)
 index|]
 operator|=
 name|ata_parm
@@ -4014,94 +3941,8 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
 comment|/* check if this interrupt is for us (shared PCI interrupts) */
-switch|switch
-condition|(
-name|scp
-operator|->
-name|chiptype
-condition|)
-block|{
-case|case
-literal|0x00041103
-case|:
-comment|/* HighPoint HPT366 controller */
-if|if
-condition|(
-name|scp
-operator|->
-name|active
-operator|==
-name|ATA_IDLE
-condition|)
-return|return;
-if|if
-condition|(
-operator|!
-operator|(
-name|ata_dmastatus
-argument_list|(
-name|scp
-argument_list|)
-operator|&
-name|ATA_BMSTAT_INTERRUPT
-operator|)
-condition|)
-return|return;
-break|break;
-case|case
-literal|0x4d33105a
-case|:
-comment|/* Promise 33's */
-case|case
-literal|0x4d38105a
-case|:
-comment|/* Promise 66's */
-if|if
-condition|(
-operator|!
-operator|(
-name|inl
-argument_list|(
-operator|(
-name|pci_read_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x20
-argument_list|,
-literal|4
-argument_list|)
-operator|&
-name|IOMASK
-operator|)
-operator|+
-literal|0x1c
-argument_list|)
-operator|&
-operator|(
-operator|(
-name|scp
-operator|->
-name|unit
-operator|)
-condition|?
-literal|0x00004000
-else|:
-literal|0x00000400
-operator|)
-operator|)
-condition|)
-return|return;
-break|break;
-default|default:
+comment|/* if DMA active look at the dmastatus */
 if|if
 condition|(
 operator|(
@@ -4123,9 +3964,7 @@ name|ATA_BMSTAT_INTERRUPT
 operator|)
 condition|)
 return|return;
-block|}
-endif|#
-directive|endif
+comment|/* if drive is busy it didn't interrupt */
 if|if
 condition|(
 operator|(
@@ -4269,13 +4108,14 @@ operator|++
 operator|<
 literal|10
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: unwanted interrupt %d status = %02x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"unwanted interrupt %d status = %02x\n"
 argument_list|,
 name|intr_count
 argument_list|,
@@ -4910,13 +4750,14 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: mask=%02x status0=%02x status1=%02x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"mask=%02x status0=%02x status1=%02x\n"
 argument_list|,
 operator|*
 name|mask
@@ -4958,13 +4799,14 @@ name|running
 operator|=
 name|NULL
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: resetting devices .. "
-argument_list|,
 name|scp
-operator|->
-name|lun
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"resetting devices .. "
 argument_list|)
 expr_stmt|;
 if|if
@@ -5256,19 +5098,13 @@ operator|==
 literal|0xff
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s: no status, reselecting device\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
 name|device
-condition|?
-literal|"slave"
-else|:
-literal|"master"
+argument_list|,
+literal|"no status, reselecting device\n"
 argument_list|)
 expr_stmt|;
 name|outb
@@ -5509,20 +5345,18 @@ block|{
 ifdef|#
 directive|ifdef
 name|ATA_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d: ata_command: addr=%04x, device=%02x, cmd=%02x, "
+name|scp
+argument_list|,
+name|device
+argument_list|,
+literal|"ata_command: addr=%04x, cmd=%02x, "
 literal|"c=%d, h=%d, s=%d, count=%d, flags=%02x\n"
 argument_list|,
 name|scp
 operator|->
-name|lun
-argument_list|,
-name|scp
-operator|->
 name|ioaddr
-argument_list|,
-name|device
 argument_list|,
 name|command
 argument_list|,
@@ -5554,19 +5388,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s: timeout waiting to give command=%02x s=%02x e=%02x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
 name|device
-condition|?
-literal|"slave"
-else|:
-literal|"master"
+argument_list|,
+literal|"timeout waiting to give command=%02x s=%02x e=%02x\n"
 argument_list|,
 name|command
 argument_list|,
@@ -5672,8 +5500,12 @@ name|active
 operator|!=
 name|ATA_IDLE
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|,
 literal|"WARNING: WAIT_INTR active=%s\n"
 argument_list|,
 name|active2str
@@ -5725,9 +5557,13 @@ literal|500
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata_command: timeout waiting for interrupt\n"
+name|scp
+argument_list|,
+name|device
+argument_list|,
+literal|"ata_command: timeout waiting for intr\n"
 argument_list|)
 expr_stmt|;
 name|scp
@@ -5759,8 +5595,12 @@ name|active
 operator|!=
 name|ATA_REINITING
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|,
 literal|"WARNING: WAIT_READY active=%s\n"
 argument_list|,
 name|active2str
@@ -5771,6 +5611,14 @@ name|active
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|active
+operator|!=
+name|ATA_REINITING
+condition|)
 name|scp
 operator|->
 name|active
@@ -5802,19 +5650,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ata%d-%s: timeout waiting for command=%02x s=%02x e=%02x\n"
-argument_list|,
 name|scp
-operator|->
-name|lun
 argument_list|,
 name|device
-condition|?
-literal|"slave"
-else|:
-literal|"master"
+argument_list|,
+literal|"timeout waiting for command=%02x s=%02x e=%02x\n"
 argument_list|,
 name|command
 argument_list|,
@@ -5827,6 +5669,14 @@ operator|->
 name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|active
+operator|!=
+name|ATA_REINITING
+condition|)
 name|scp
 operator|->
 name|active
@@ -5838,6 +5688,14 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|scp
+operator|->
+name|active
+operator|!=
+name|ATA_REINITING
+condition|)
 name|scp
 operator|->
 name|active
@@ -5861,8 +5719,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ata_printf
 argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|,
 literal|"DANGER: illegal interrupt flag=%s\n"
 argument_list|,
 name|active2str
@@ -6117,6 +5979,39 @@ return|return
 literal|3
 return|;
 block|}
+if|if
+condition|(
+name|ap
+operator|->
+name|opiomode
+operator|==
+literal|2
+condition|)
+return|return
+literal|2
+return|;
+if|if
+condition|(
+name|ap
+operator|->
+name|opiomode
+operator|==
+literal|1
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|ap
+operator|->
+name|opiomode
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|-
 literal|1
@@ -6133,15 +6028,6 @@ name|ata_params
 modifier|*
 name|ap
 parameter_list|)
-block|{
-if|if
-condition|(
-name|ap
-operator|->
-name|atavalid
-operator|&
-name|ATA_FLAG_64_70
-condition|)
 block|{
 if|if
 condition|(
@@ -6176,7 +6062,6 @@ condition|)
 return|return
 literal|0
 return|;
-block|}
 return|return
 operator|-
 literal|1
@@ -6442,8 +6327,6 @@ init|;
 name|i
 operator|<
 name|len
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
@@ -6524,6 +6407,12 @@ name|i
 index|]
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|j
+operator|<
+name|len
+condition|)
 name|dst
 index|[
 name|j
@@ -6531,6 +6420,99 @@ index|]
 operator|=
 literal|0x00
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int32_t
+name|ata_printf
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+name|scp
+parameter_list|,
+name|int32_t
+name|device
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+if|if
+condition|(
+name|device
+operator|==
+operator|-
+literal|1
+condition|)
+name|ret
+operator|=
+name|printf
+argument_list|(
+literal|"ata%d: "
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|)
+expr_stmt|;
+else|else
+name|ret
+operator|=
+name|printf
+argument_list|(
+literal|"ata%d-%s: "
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|,
+operator|(
+name|device
+operator|==
+name|ATA_MASTER
+operator|)
+condition|?
+literal|"master"
+else|:
+literal|"slave"
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|ret
+operator|+=
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 

@@ -773,37 +773,10 @@ if|if
 condition|(
 name|bootverbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"ad%d: piomode=%d dmamode=%d udmamode=%d cblid=%d\n"
-argument_list|,
-name|adp
-operator|->
-name|lun
-argument_list|,
-name|ata_pmode
-argument_list|(
-name|AD_PARAM
-argument_list|)
-argument_list|,
-name|ata_wmode
-argument_list|(
-name|AD_PARAM
-argument_list|)
-argument_list|,
-name|ata_umode
-argument_list|(
-name|AD_PARAM
-argument_list|)
-argument_list|,
-name|AD_PARAM
-operator|->
-name|cblid
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ad%d:<%s/%s> ATA-%d disk at ata%d as %s\n"
+literal|"ad%d:<%.40s/%.8s> ATA-%d disk at ata%d as %s\n"
 argument_list|,
 name|adp
 operator|->
@@ -909,6 +882,96 @@ argument_list|,
 name|adp
 operator|->
 name|num_tags
+argument_list|,
+name|ata_mode2str
+argument_list|(
+name|adp
+operator|->
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|adp
+operator|->
+name|unit
+argument_list|)
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ad%d: piomode=%d dmamode=%d udmamode=%d cblid=%d\n"
+argument_list|,
+name|adp
+operator|->
+name|lun
+argument_list|,
+name|ata_pmode
+argument_list|(
+name|AD_PARAM
+argument_list|)
+argument_list|,
+name|ata_wmode
+argument_list|(
+name|AD_PARAM
+argument_list|)
+argument_list|,
+name|ata_umode
+argument_list|(
+name|AD_PARAM
+argument_list|)
+argument_list|,
+name|AD_PARAM
+operator|->
+name|cblid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"ad%d: %luMB disk<%.40s> at ata%d as %s mode %s\n"
+argument_list|,
+name|adp
+operator|->
+name|lun
+argument_list|,
+name|adp
+operator|->
+name|total_secs
+operator|/
+operator|(
+operator|(
+literal|1024L
+operator|*
+literal|1024L
+operator|)
+operator|/
+name|DEV_BSIZE
+operator|)
+argument_list|,
+name|AD_PARAM
+operator|->
+name|model
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|,
+operator|(
+name|adp
+operator|->
+name|unit
+operator|==
+name|ATA_MASTER
+operator|)
+condition|?
+literal|"master"
+else|:
+literal|"slave "
 argument_list|,
 name|ata_mode2str
 argument_list|(
@@ -1851,7 +1914,11 @@ literal|256
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ad_transfer: count=%d not supported\n"
+literal|"ad%d: count=%d not supported\n"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|,
 name|count
 argument_list|)
@@ -2118,8 +2185,7 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* if this is a DMA transaction start it, return and wait for interrupt */
+comment|/* if this is a DMA transfer, start it, return and wait for interrupt */
 if|if
 condition|(
 name|request
@@ -2137,6 +2203,7 @@ name|controller
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* calculate this transfer length */
 name|request
@@ -2163,9 +2230,7 @@ name|flags
 operator|&
 name|AR_F_READ
 condition|)
-block|{
 return|return;
-block|}
 comment|/* ready to write PIO data ? */
 if|if
 condition|(
@@ -2192,7 +2257,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"ad_transfer: timeout waiting for DRQ"
+literal|"ad%d: timeout waiting for DRQ"
+argument_list|,
+name|adp
+operator|->
+name|lun
 argument_list|)
 expr_stmt|;
 comment|/* output the data */
@@ -2281,14 +2350,6 @@ name|int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|request
-operator|->
-name|bytecount
-operator|-=
-name|request
-operator|->
-name|currentsize
-expr_stmt|;
 block|}
 end_function
 
@@ -2357,6 +2418,7 @@ argument_list|(
 literal|"ad_interrupt: timeout waiting for status"
 argument_list|)
 expr_stmt|;
+comment|/* do we have a corrected soft error ? */
 if|if
 condition|(
 name|adp
@@ -2376,6 +2438,7 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
+comment|/* did any real errors happen ? */
 if|if
 condition|(
 operator|(
@@ -2453,6 +2516,12 @@ expr_stmt|;
 comment|/* if this is a UDMA CRC error, reinject request */
 if|if
 condition|(
+name|request
+operator|->
+name|flags
+operator|&
+name|AR_F_DMA_USED
+operator|&&
 name|adp
 operator|->
 name|controller
@@ -2657,17 +2726,15 @@ name|flags
 operator|&
 name|AR_F_FORCE_PIO
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"ad%d: DMA problem encountered, fallback to PIO mode\n"
+literal|"ad%d: DMA problem, fallback to PIO mode\n"
 argument_list|,
 name|adp
 operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* if this was a PIO read operation, get the data */
 if|if
 condition|(
@@ -2848,55 +2915,8 @@ name|int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|request
-operator|->
-name|bytecount
-operator|-=
-name|request
-operator|->
-name|currentsize
-expr_stmt|;
 block|}
-comment|/* if this was a DMA operation finish up */
-if|if
-condition|(
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|AR_F_DMA_USED
-operator|)
-operator|&&
-operator|!
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|AR_F_ERROR
-operator|)
-condition|)
-name|request
-operator|->
-name|bytecount
-operator|-=
-name|request
-operator|->
-name|currentsize
-expr_stmt|;
-comment|/* finish up this tranfer, check for more work on this buffer */
-if|if
-condition|(
-name|adp
-operator|->
-name|controller
-operator|->
-name|active
-operator|==
-name|ATA_ACTIVE_ATA
-condition|)
-block|{
+comment|/* finish up transfer */
 if|if
 condition|(
 name|request
@@ -2925,6 +2945,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|request
+operator|->
+name|bytecount
+operator|-=
+name|request
+operator|->
+name|currentsize
+expr_stmt|;
 name|request
 operator|->
 name|donecount
@@ -2981,7 +3009,6 @@ operator|->
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* disarm timeout for this transfer */
 name|untimeout
 argument_list|(
@@ -3053,22 +3080,17 @@ name|DEV_BSIZE
 argument_list|,
 literal|0
 argument_list|,
-name|ATA_IMMEDIATE
+name|ATA_WAIT_READY
 argument_list|)
 expr_stmt|;
-name|ata_wait
-argument_list|(
+if|if
+condition|(
 name|adp
 operator|->
-name|controller
-argument_list|,
-name|adp
-operator|->
-name|unit
-argument_list|,
-name|ATA_S_READY
-argument_list|)
-expr_stmt|;
+name|flags
+operator|&
+name|AD_F_DMA_ENABLED
+condition|)
 name|ata_dmainit
 argument_list|(
 name|adp
@@ -3095,6 +3117,29 @@ name|AD_PARAM
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|ata_dmainit
+argument_list|(
+name|adp
+operator|->
+name|controller
+argument_list|,
+name|adp
+operator|->
+name|unit
+argument_list|,
+name|ata_pmode
+argument_list|(
+name|AD_PARAM
+argument_list|)
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3117,6 +3162,12 @@ init|=
 name|request
 operator|->
 name|device
+decl_stmt|;
+name|int32_t
+name|s
+init|=
+name|splbio
+argument_list|()
 decl_stmt|;
 name|adp
 operator|->
@@ -3281,6 +3332,11 @@ argument_list|(
 name|adp
 operator|->
 name|controller
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
