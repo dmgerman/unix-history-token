@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -479,11 +479,11 @@ comment|/* maximum representable file size */
 name|int64_t
 name|fs_qbmask
 decl_stmt|;
-comment|/* ~fs_bmask - for use with quad size */
+comment|/* ~fs_bmask for use with 64-bit size */
 name|int64_t
 name|fs_qfmask
 decl_stmt|;
-comment|/* ~fs_fmask - for use with quad size */
+comment|/* ~fs_fmask for use with 64-bit size */
 name|int32_t
 name|fs_state
 decl_stmt|;
