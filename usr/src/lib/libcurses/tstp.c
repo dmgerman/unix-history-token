@@ -12,7 +12,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * handle stop and start signals  *  * %G% (Berkeley) @(#)tstp.c	1.2  */
+comment|/*  * handle stop and start signals  *  * %G% (Berkeley) @(#)tstp.c	1.3  */
 end_comment
 
 begin_macro
