@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.c,v 3.92 2000/11/11 23:03:35 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.c,v 3.95 2001/04/27 22:36:39 christos Exp $ */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_macro
 name|RCSID
 argument_list|(
-literal|"$Id: sh.c,v 3.92 2000/11/11 23:03:35 christos Exp $"
+literal|"$Id: sh.c,v 3.95 2001/04/27 22:36:39 christos Exp $"
 argument_list|)
 end_macro
 
@@ -519,6 +519,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WINNT_NATIVE
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -540,6 +546,41 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|srcfile
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|int
+operator|,
+name|Char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*WINNT_NATIVE*/
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2797,6 +2838,19 @@ argument_list|,
 name|Strsave
 argument_list|(
 name|STRNULL
+argument_list|)
+argument_list|,
+name|VAR_READWRITE
+argument_list|)
+expr_stmt|;
+comment|/*      * Random default kill ring size      */
+name|set
+argument_list|(
+name|STRkillring
+argument_list|,
+name|SAVE
+argument_list|(
+literal|"30"
 argument_list|)
 argument_list|,
 name|VAR_READWRITE
@@ -5768,8 +5822,17 @@ return|;
 block|}
 block|}
 comment|/*  * Source to a file putting the file descriptor in a safe place (> 2).  */
+ifndef|#
+directive|ifndef
+name|WINNT_NATIVE
 specifier|static
 name|int
+else|#
+directive|else
+name|int
+endif|#
+directive|endif
+comment|/*WINNT_NATIVE*/
 name|srcfile
 parameter_list|(
 name|f
