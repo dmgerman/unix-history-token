@@ -712,16 +712,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
-name|pmap_enter_temporary
+name|void
+modifier|*
+name|pmap_kenter_temporary
 name|__P
 argument_list|(
 operator|(
 name|vm_offset_t
 name|pa
-operator|,
-name|vm_prot_t
-name|prot
 operator|)
 argument_list|)
 decl_stmt|;

@@ -7625,17 +7625,19 @@ comment|/*  * Make temporary mapping for a physical address. This is called  * d
 end_comment
 
 begin_function
-name|vm_offset_t
-name|pmap_enter_temporary
+name|void
+modifier|*
+name|pmap_kenter_temporary
 parameter_list|(
 name|vm_offset_t
 name|pa
-parameter_list|,
-name|vm_prot_t
-name|prot
 parameter_list|)
 block|{
 return|return
+operator|(
+name|void
+operator|*
+operator|)
 name|ALPHA_PHYS_TO_K0SEG
 argument_list|(
 name|pa

@@ -8389,41 +8389,36 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make temporary mapping for a physical address using CADDR1. This is  * called during dump.  */
+comment|/*  * Make a temporary mapping for a physical address.  This is only intended  * to be used for panic dumps.  */
 end_comment
 
 begin_function
-name|vm_offset_t
-name|pmap_enter_temporary
+name|void
+modifier|*
+name|pmap_kenter_temporary
 parameter_list|(
 name|vm_offset_t
 name|pa
-parameter_list|,
-name|vm_prot_t
-name|prot
 parameter_list|)
 block|{
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|kernel_pmap
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
 name|CADDR1
 argument_list|,
 name|pa
-argument_list|,
-name|prot
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vm_offset_t
+operator|(
+name|void
+operator|*
 operator|)
 name|CADDR1
+operator|)
 return|;
 block|}
 end_function
