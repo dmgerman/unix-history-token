@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.6 83/08/19"
+literal|"@(#)cmd1.c	3.7 83/08/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,6 +370,10 @@ name|openwin
 argument_list|(
 name|id
 argument_list|,
+name|row
+argument_list|,
+name|col
+argument_list|,
 name|xrow
 operator|-
 name|row
@@ -382,9 +386,7 @@ name|col
 operator|+
 literal|1
 argument_list|,
-name|row
-argument_list|,
-name|col
+name|nbufline
 argument_list|)
 operator|==
 literal|0
@@ -731,13 +733,15 @@ name|openwin
 parameter_list|(
 name|id
 parameter_list|,
+name|row
+parameter_list|,
+name|col
+parameter_list|,
 name|nrow
 parameter_list|,
 name|ncol
 parameter_list|,
-name|row
-parameter_list|,
-name|col
+name|nline
 parameter_list|)
 name|int
 name|id
@@ -801,7 +805,7 @@ name|row
 argument_list|,
 name|col
 argument_list|,
-literal|48
+name|nline
 argument_list|)
 operator|)
 operator|==

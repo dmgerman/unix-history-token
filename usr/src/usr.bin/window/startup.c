@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.3 83/08/18"
+literal|"@(#)startup.c	3.4 83/08/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,13 +116,15 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
 name|r
 argument_list|,
 name|wwncol
 argument_list|,
-literal|1
-argument_list|,
-literal|0
+name|nbufline
 argument_list|)
 operator|)
 operator|==
@@ -138,6 +140,12 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
+name|r
+operator|+
+literal|2
+argument_list|,
+literal|0
+argument_list|,
 name|wwnrow
 operator|-
 name|r
@@ -146,11 +154,7 @@ literal|2
 argument_list|,
 name|wwncol
 argument_list|,
-name|r
-operator|+
-literal|2
-argument_list|,
-literal|0
+name|nbufline
 argument_list|)
 operator|==
 literal|0

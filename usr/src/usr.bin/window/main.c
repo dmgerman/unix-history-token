@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.5 83/08/19"
+literal|"@(#)main.c	3.6 83/08/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,18 @@ name|p
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nbufline
+init|=
+literal|48
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* compatible */
+end_comment
 
 begin_define
 define|#

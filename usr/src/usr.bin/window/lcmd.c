@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.5 83/08/22"
+literal|"@(#)lcmd.c	3.6 83/08/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,13 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_function_decl
+name|int
+name|l_buffer
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -139,6 +146,18 @@ literal|0
 block|,
 name|l_select
 block|,
+literal|"buffer"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|l_buffer
+block|,
 literal|"close"
 block|,
 literal|1
@@ -208,7 +227,7 @@ literal|0
 block|,
 literal|4
 block|,
-literal|4
+literal|5
 block|,
 name|l_window
 block|,

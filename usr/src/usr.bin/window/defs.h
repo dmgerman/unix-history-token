@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.2 83/08/18	  */
+comment|/*  *	@(#)defs.h	3.3 83/08/25	  */
 end_comment
 
 begin_include
@@ -188,6 +188,10 @@ name|curwin
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the current window */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -195,12 +199,34 @@ name|shell
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the shell program */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
 name|shellname
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the shell program name (for argv[0]) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nbufline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of lines in the buffer */
+end_comment
+
+begin_comment
+comment|/* flags */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -225,6 +251,10 @@ name|char
 name|escapec
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* escape character */
+end_comment
 
 begin_function_decl
 name|struct
