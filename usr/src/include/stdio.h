@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stdio.h	1.11	85/01/08	*/
+comment|/*	stdio.h	1.12	85/05/30	*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FILE
+end_ifndef
 
 begin_define
 define|#
@@ -9,19 +15,6 @@ directive|define
 name|BUFSIZ
 value|1024
 end_define
-
-begin_define
-define|#
-directive|define
-name|_NFILE
-value|48
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FILE
-end_ifndef
 
 begin_struct
 specifier|extern
@@ -35,10 +28,12 @@ name|char
 modifier|*
 name|_ptr
 decl_stmt|;
+comment|/* should be unsigned char */
 name|char
 modifier|*
 name|_base
 decl_stmt|;
+comment|/* ditto */
 name|int
 name|_bufsiz
 decl_stmt|;
@@ -48,18 +43,12 @@ decl_stmt|;
 name|char
 name|_file
 decl_stmt|;
+comment|/* should be short */
 block|}
 name|_iob
-index|[
-name|_NFILE
-index|]
+index|[]
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -236,6 +225,16 @@ parameter_list|)
 value|((p)->_file)
 end_define
 
+begin_define
+define|#
+directive|define
+name|clearerr
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->_flag&= ~(_IOERR|_IOEOF))
+end_define
+
 begin_function_decl
 name|FILE
 modifier|*
@@ -261,8 +260,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|FILE
+modifier|*
+name|popen
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|long
 name|ftell
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|fseek
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -300,6 +314,11 @@ end_function_decl
 begin_comment
 comment|/* too painful to do right */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
