@@ -2262,21 +2262,27 @@ argument_list|(
 name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJC_SPARSE2
 name|printf
 argument_list|(
 literal|"memory usage: (%s)\n"
 argument_list|,
-ifdef|#
-directive|ifdef
-name|OBJC_SPARSE2
 literal|"2-level sparse arrays"
-else|#
-directive|else
-literal|"3-level sparse arrays"
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"memory usage: (%s)\n"
+argument_list|,
+literal|"3-level sparse arrays"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"arrays: %d = %ld bytes\n"
