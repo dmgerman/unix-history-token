@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -32,7 +32,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The I node is the focus of all file activity in UNIX.  * There is a unique inode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An inode is 'named' by its dev/inumber pair. (iget/iget.c)  * Data in `struct dinode' is read in from permanent inode on volume.  */
+comment|/*  * The inode is used to describe each active (or recently active)  * file in the UFS filesystem. It is composed of two types of  * information. The first part is the information that is needed  * only while the file is active (such as the identity of the file  * and linkage to speed its lookup). The second part is the   * permannent meta-data associated with the file which is read  * in from the permanent dinode from long term storage when the  * file becomes active, and is put back when the file is no longer  * being used.  */
 end_comment
 
 begin_struct
@@ -71,13 +71,13 @@ comment|/* device where inode resides */
 name|ino_t
 name|i_number
 decl_stmt|;
-comment|/* i number, 1-to-1 with device address */
+comment|/* the identity of the inode */
 name|struct
 name|fs
 modifier|*
 name|i_fs
 decl_stmt|;
-comment|/* file sys associated with this inode */
+comment|/* filesystem associated with this inode */
 name|struct
 name|dquot
 modifier|*
@@ -92,7 +92,7 @@ name|lockf
 modifier|*
 name|i_lockf
 decl_stmt|;
-comment|/* Head of byte-level lock list */
+comment|/* head of byte-level lock list */
 name|long
 name|i_diroff
 decl_stmt|;
@@ -111,7 +111,7 @@ name|struct
 name|dinode
 name|i_din
 decl_stmt|;
-comment|/* the on-disk inode */
+comment|/* the on-disk dinode */
 block|}
 struct|;
 end_struct
