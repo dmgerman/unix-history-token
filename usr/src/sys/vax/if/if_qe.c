@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_qe.c	6.1 (Berkeley) %G% */
+comment|/*	@(#)if_qe.c	6.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -628,8 +628,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|ncl
 decl_stmt|;
 specifier|static
 name|int
@@ -651,6 +649,28 @@ name|next
 operator|++
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|qeintr
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Set the address mask for the particular cpu 	 */
 name|mask
 operator|=
@@ -1989,16 +2009,11 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|,
-modifier|*
-name|m0
 decl_stmt|;
 name|int
 name|buf_addr
 decl_stmt|,
 name|len
-decl_stmt|,
-name|j
 decl_stmt|,
 name|s
 decl_stmt|;
@@ -2370,17 +2385,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-specifier|register
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|is_if
-decl_stmt|;
 name|struct
 name|qedevice
 modifier|*
@@ -2564,20 +2568,6 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|mbuf
-modifier|*
-name|mp
-decl_stmt|,
-modifier|*
-name|mp0
-decl_stmt|;
-specifier|register
-name|first
-operator|,
-name|index
-expr_stmt|;
-specifier|register
-name|struct
 name|qe_ring
 modifier|*
 name|rp
@@ -2589,11 +2579,7 @@ modifier|*
 name|ifxp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|status1
-decl_stmt|,
-name|status2
 decl_stmt|,
 name|setupflag
 decl_stmt|;
@@ -2873,17 +2859,6 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|is_if
-decl_stmt|;
-specifier|register
-name|struct
 name|qe_ring
 modifier|*
 name|rp
@@ -2897,11 +2872,6 @@ name|status2
 decl_stmt|;
 name|int
 name|bufaddr
-decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
 decl_stmt|;
 comment|/* 	 * Traverse the receive ring looking for packets to pass back. 	 * The search is complete when we find a descriptor not in use. 	 * 	 * As in the transmit case the deqna doesn't honor it's own protocols 	 * so there exists the possibility that the device can beat us around 	 * the ring. The proper way to guard against this is to insure that 	 * there is always at least one invalid descriptor. We chose instead 	 * to make the ring large enough to minimize the problem. With a ring 	 * size of 4 we haven't been able to see the problem. To be safe we 	 * doubled that to 8. 	 * 	 */
 for|for
@@ -3190,11 +3160,6 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|idst
-decl_stmt|;
-name|struct
-name|protosw
-modifier|*
-name|pr
 decl_stmt|;
 specifier|register
 name|struct
@@ -3913,8 +3878,6 @@ operator|)
 name|data
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|s
 init|=
 name|splimp
@@ -4151,8 +4114,6 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-name|done
-label|:
 name|splx
 argument_list|(
 name|s
@@ -4322,7 +4283,7 @@ end_expr_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|buf
+name|addr
 decl_stmt|;
 end_decl_stmt
 
@@ -4373,7 +4334,7 @@ operator|=
 operator|(
 name|short
 operator|)
-name|buf
+name|addr
 expr_stmt|;
 name|rp
 operator|->
@@ -4386,7 +4347,7 @@ argument_list|(
 operator|(
 name|int
 operator|)
-name|buf
+name|addr
 operator|>>
 literal|16
 argument_list|)
@@ -4416,19 +4377,11 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+specifier|register
 name|i
-decl_stmt|,
+operator|,
 name|j
-decl_stmt|,
-name|offset
-init|=
-literal|0
-decl_stmt|,
-name|next
-init|=
-literal|3
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * Copy the target address to the rest of the entries in this row. 	 */
 for|for
 control|(
@@ -4568,24 +4521,11 @@ name|struct
 name|ether_header
 modifier|*
 name|eh
-decl_stmt|,
-name|swloop_eh
 decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|,
-modifier|*
-name|swloop_tmp1
-decl_stmt|,
-modifier|*
-name|swloop_tmp2
-decl_stmt|;
-name|struct
-name|protosw
-modifier|*
-name|pr
 decl_stmt|;
 name|int
 name|off
