@@ -1750,6 +1750,14 @@ operator|->
 name|stat_ch
 argument_list|)
 expr_stmt|;
+name|sysctl_ctx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sysctl_ctx
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2341,14 +2349,6 @@ operator||=
 name|FXP_FLAG_SERIAL_MEDIA
 expr_stmt|;
 comment|/* 	 * Create the sysctl tree 	 */
-name|sysctl_ctx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sysctl_ctx
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sysctl_tree
