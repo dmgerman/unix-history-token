@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  */
 end_comment
 
 begin_include
@@ -1927,7 +1927,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
@@ -7888,11 +7887,6 @@ block|{
 name|usbd_pipe_handle
 name|pipe
 decl_stmt|;
-name|struct
-name|ohci_pipe
-modifier|*
-name|opipe
-decl_stmt|;
 name|u_char
 modifier|*
 name|p
@@ -7941,15 +7935,6 @@ name|pipe
 operator|=
 name|xfer
 operator|->
-name|pipe
-expr_stmt|;
-name|opipe
-operator|=
-operator|(
-expr|struct
-name|ohci_pipe
-operator|*
-operator|)
 name|pipe
 expr_stmt|;
 name|p

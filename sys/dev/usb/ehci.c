@@ -4,6 +4,10 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  */
+end_comment
+
+begin_comment
 comment|/*  * TODO  *  hold off explorations by companion controllers until ehci has started.  */
 end_comment
 
@@ -2966,11 +2970,6 @@ block|{
 name|usbd_pipe_handle
 name|pipe
 decl_stmt|;
-name|struct
-name|ehci_pipe
-modifier|*
-name|epipe
-decl_stmt|;
 name|u_char
 modifier|*
 name|p
@@ -2994,15 +2993,6 @@ name|pipe
 operator|=
 name|xfer
 operator|->
-name|pipe
-expr_stmt|;
-name|epipe
-operator|=
-operator|(
-expr|struct
-name|ehci_pipe
-operator|*
-operator|)
 name|pipe
 expr_stmt|;
 name|p
@@ -4346,7 +4336,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
