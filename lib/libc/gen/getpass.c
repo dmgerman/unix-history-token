@@ -156,11 +156,6 @@ name|sigblock
 argument_list|(
 name|sigmask
 argument_list|(
-name|SIGINT
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
 name|SIGTSTP
 argument_list|)
 argument_list|)
