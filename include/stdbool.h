@@ -22,10 +22,6 @@ name|__bool_true_false_are_defined
 value|1
 end_define
 
-begin_comment
-comment|/* And those constants must also be available as macros */
-end_comment
-
 begin_define
 define|#
 directive|define
