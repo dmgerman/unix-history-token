@@ -77,6 +77,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|rflags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* regex flags to add */
+end_comment
+
+begin_decl_stmt
 name|void
 name|cfclose
 name|__P

@@ -247,6 +247,14 @@ name|nflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|rflags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Current file and line number; line numbers restart across compilation  * units, but span across input files.  */
 end_comment
@@ -369,7 +377,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ae:f:n"
+literal|"Eae:f:n"
 argument_list|)
 operator|)
 operator|!=
@@ -381,6 +389,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'E'
+case|:
+name|rflags
+operator|=
+name|REG_EXTENDED
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -545,7 +561,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sed script [-an] [file ...]"
+literal|"usage: sed script [-Ean] [file ...]"
 argument_list|,
 literal|"       sed [-an] [-e script] ... [-f script_file] ... [file ...]"
 argument_list|)
