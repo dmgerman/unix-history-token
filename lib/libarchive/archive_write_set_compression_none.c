@@ -774,6 +774,12 @@ argument_list|,
 name|block_length
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|ret
+expr_stmt|;
 block|}
 comment|/* Close the output */
 if|if

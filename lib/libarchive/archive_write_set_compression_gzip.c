@@ -1452,6 +1452,12 @@ argument_list|,
 name|block_length
 argument_list|)
 expr_stmt|;
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|ret
+expr_stmt|;
 comment|/* Cleanup: shut down compressor, release memory, etc. */
 name|cleanup
 label|:
