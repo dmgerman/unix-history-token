@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.97 1997/07/27 04:49:19 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.98 1997/09/01 03:17:26 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1658,7 +1658,7 @@ operator|)
 condition|)
 block|{
 name|int
-name|refcount
+name|actcount
 decl_stmt|;
 if|if
 condition|(
@@ -1737,7 +1737,7 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
-name|refcount
+name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
@@ -1749,7 +1749,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|refcount
+name|actcount
 condition|)
 block|{
 name|p
@@ -1769,7 +1769,7 @@ operator|&
 name|PG_REFERENCED
 condition|)
 block|{
-name|refcount
+name|actcount
 operator|=
 literal|1
 expr_stmt|;
@@ -1802,7 +1802,7 @@ name|p
 operator|->
 name|act_count
 operator|+=
-name|refcount
+name|actcount
 expr_stmt|;
 name|p
 operator|->
@@ -2351,6 +2351,9 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|actcount
+decl_stmt|;
+name|int
 name|vnodes_skipped
 init|=
 literal|0
@@ -2531,6 +2534,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * If the object is not being used, we ignore previous references. 		 */
 if|if
 condition|(
 name|m
@@ -2557,6 +2561,7 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Otherwise, if the page has been referenced while in the inactive 		 * queue, we bump the "activation count" upwards, making it less 		 * likely that the page will be added back to the inactive queue 		 * prematurely again.  Here we check the page tables (or emulated 		 * bits, if any), given the upper level VM system not knowing anything 		 * about existing references. 		 */
 block|}
 elseif|else
 if|if
@@ -2573,6 +2578,9 @@ operator|==
 literal|0
 operator|)
 operator|&&
+operator|(
+name|actcount
+operator|=
 name|pmap_ts_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -2580,6 +2588,7 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vm_page_activate
@@ -2587,8 +2596,19 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|act_count
+operator|+=
+operator|(
+name|actcount
+operator|+
+name|ACT_ADVANCE
+operator|)
+expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * If the upper level VM system knows about any page references, 		 * we activate the page.  We also set the "activation count" higher 		 * than normal so that we will less likely place pages back onto the 		 * inactive queue again. 		 */
 if|if
 condition|(
 operator|(
@@ -2609,7 +2629,15 @@ operator|&=
 operator|~
 name|PG_REFERENCED
 expr_stmt|;
-name|pmap_clear_reference
+if|#
+directive|if
+literal|0
+block|pmap_clear_reference(VM_PAGE_TO_PHYS(m));
+else|#
+directive|else
+name|actcount
+operator|=
+name|pmap_ts_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -2617,13 +2645,28 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vm_page_activate
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|act_count
+operator|+=
+operator|(
+name|actcount
+operator|+
+name|ACT_ADVANCE
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * If the upper level VM system doesn't know anything about the 		 * page being dirty, we have to check for it again.  As far as the 		 * VM code knows, any partially dirty pages are fully dirty. 		 */
 if|if
 condition|(
 name|m
@@ -2656,6 +2699,7 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
+comment|/* 		 * Invalid pages can be easily freed 		 */
 if|if
 condition|(
 name|m
@@ -2685,6 +2729,7 @@ expr_stmt|;
 operator|++
 name|pages_freed
 expr_stmt|;
+comment|/* 		 * Clean pages can be placed onto the cache queue. 		 */
 block|}
 elseif|else
 if|if
@@ -2704,6 +2749,7 @@ expr_stmt|;
 operator|++
 name|pages_freed
 expr_stmt|;
+comment|/* 		 * Dirty pages need to be paged out.  Note that we clean 		 * only a limited number of pages per pagedaemon pass. 		 */
 block|}
 elseif|else
 if|if
@@ -2729,6 +2775,7 @@ name|m
 operator|->
 name|object
 expr_stmt|;
+comment|/* 			 * We don't bother paging objects that are "dead".  Those 			 * objects are in a "rundown" state. 			 */
 if|if
 condition|(
 name|object
@@ -3076,6 +3123,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If the "inactive" loop finds that there is a shortage over and 	 * above the page statistics variables, then we need to accomodate 	 * that.  This avoids potential deadlocks due to pages being temporarily 	 * busy for I/O or other types of temporary wiring. 	 */
 if|if
 condition|(
 name|addl_page_shortage
@@ -3132,9 +3180,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|int
-name|refcount
-decl_stmt|;
+comment|/* 		 * This is a consistancy check, and should likely be a panic 		 * or warning. 		 */
 if|if
 condition|(
 name|m
@@ -3225,7 +3271,8 @@ operator|.
 name|v_pdpages
 operator|++
 expr_stmt|;
-name|refcount
+comment|/* 		 * Check to see "how much" the page has been used. 		 */
+name|actcount
 operator|=
 literal|0
 expr_stmt|;
@@ -3249,12 +3296,12 @@ operator|&
 name|PG_REFERENCED
 condition|)
 block|{
-name|refcount
+name|actcount
 operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|refcount
+name|actcount
 operator|+=
 name|pmap_ts_referenced
 argument_list|(
@@ -3266,7 +3313,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|refcount
+name|actcount
 condition|)
 block|{
 name|m
@@ -3275,7 +3322,7 @@ name|act_count
 operator|+=
 name|ACT_ADVANCE
 operator|+
-name|refcount
+name|actcount
 expr_stmt|;
 if|if
 condition|(
@@ -3293,6 +3340,7 @@ name|ACT_MAX
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * Since we have "tested" this bit, we need to clear it now. 		 */
 name|m
 operator|->
 name|flags
@@ -3300,9 +3348,10 @@ operator|&=
 operator|~
 name|PG_REFERENCED
 expr_stmt|;
+comment|/* 		 * Only if an object is currently being used, do we use the 		 * page activation count stats. 		 */
 if|if
 condition|(
-name|refcount
+name|actcount
 operator|&&
 operator|(
 name|m
@@ -3923,7 +3972,7 @@ operator|)
 condition|)
 block|{
 name|int
-name|refcount
+name|actcount
 decl_stmt|;
 if|if
 condition|(
@@ -4009,7 +4058,7 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
-name|refcount
+name|actcount
 operator|=
 literal|0
 expr_stmt|;
@@ -4029,12 +4078,12 @@ operator|&=
 operator|~
 name|PG_REFERENCED
 expr_stmt|;
-name|refcount
+name|actcount
 operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|refcount
+name|actcount
 operator|+=
 name|pmap_ts_referenced
 argument_list|(
@@ -4046,7 +4095,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|refcount
+name|actcount
 condition|)
 block|{
 name|m
@@ -4055,7 +4104,7 @@ name|act_count
 operator|+=
 name|ACT_ADVANCE
 operator|+
-name|refcount
+name|actcount
 expr_stmt|;
 if|if
 condition|(
@@ -4113,6 +4162,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 				 * We turn off page access, so that we have more accurate 				 * RSS stats.  We don't do this in the normal page deactivation 				 * when the system is loaded VM wise, because the cost of 				 * the large number of page protect operations would be higher 				 * than the value of doing the operation. 				 */
 name|vm_page_protect
 argument_list|(
 name|m
