@@ -141,7 +141,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); disable_intr(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1) \
+value|{ s = read_eflags(); disable_intr(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1)) \
 comment|/* nothing */
 value|; }
 end_define
