@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)correct.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)correct.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,9 +71,9 @@ name|printf
 argument_list|(
 literal|"type %s.\n"
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_name
+name|d_typename
 argument_list|)
 expr_stmt|;
 name|indent
@@ -220,9 +220,9 @@ name|dskaddr
 operator|.
 name|cylinder
 operator|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 literal|1
 expr_stmt|;
@@ -230,9 +230,9 @@ name|dskaddr
 operator|.
 name|cylinder
 operator|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 operator|-
 literal|1
 expr_stmt|;
@@ -384,7 +384,7 @@ condition|)
 break|break;
 block|}
 name|D_INFO
-operator|.
+operator|->
 name|id
 operator|=
 name|bad_map
@@ -499,7 +499,7 @@ operator|=
 call|(
 modifier|*
 name|C_INFO
-operator|.
+operator|->
 name|code_pos
 call|)
 argument_list|(
@@ -588,7 +588,7 @@ operator|=
 call|(
 modifier|*
 name|C_INFO
-operator|.
+operator|->
 name|code_pos
 call|)
 argument_list|(
@@ -629,30 +629,24 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|sec
 operator|==
 operator|-
 literal|1
-operator|)
 operator|||
-operator|(
-operator|(
-name|CURRENT
-operator|->
-name|vc_nsec
-operator|*
-name|CURRENT
-operator|->
-name|vc_ntrak
-operator|*
-name|CURRENT
-operator|->
-name|vc_ncyl
-operator|)
-operator|<
 name|sec
-operator|)
+operator|>
+name|lab
+operator|->
+name|d_nsectors
+operator|*
+name|lab
+operator|->
+name|d_ntracks
+operator|*
+name|lab
+operator|->
+name|d_ncylinders
 condition|)
 block|{
 name|print
@@ -698,7 +692,7 @@ operator|=
 call|(
 modifier|*
 name|C_INFO
-operator|.
+operator|->
 name|code_pos
 call|)
 argument_list|(
@@ -826,9 +820,9 @@ name|entry
 operator|.
 name|bs_cyl
 operator|>=
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 condition|)
 name|print
 argument_list|(
@@ -842,9 +836,9 @@ name|entry
 operator|.
 name|bs_trk
 operator|>=
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 condition|)
 name|print
 argument_list|(
@@ -858,9 +852,9 @@ name|entry
 operator|.
 name|bs_offset
 operator|>=
-name|CURRENT
+name|lab
 operator|->
-name|vc_traksize
+name|d_traksize
 condition|)
 name|print
 argument_list|(

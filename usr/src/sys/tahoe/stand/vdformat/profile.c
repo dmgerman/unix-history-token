@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)profile.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)profile.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,9 +87,9 @@ name|printf
 argument_list|(
 literal|"type %s.\n"
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_name
+name|d_typename
 argument_list|)
 expr_stmt|;
 name|indent
@@ -163,9 +163,9 @@ literal|0
 expr_stmt|;
 name|step
 operator|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|/
 literal|55
 expr_stmt|;
@@ -181,9 +181,9 @@ name|ead
 operator|.
 name|cylinder
 operator|<
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 condition|;
 name|ead
 operator|.

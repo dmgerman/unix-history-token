@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	1.3 (Berkeley/CCI) %G%"
+literal|"@(#)verify.c	1.4 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,9 +77,9 @@ name|printf
 argument_list|(
 literal|"type %s.\n"
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_name
+name|d_typename
 argument_list|)
 expr_stmt|;
 if|if
@@ -105,11 +105,14 @@ operator|->
 name|bs_id
 operator|==
 name|D_INFO
-operator|.
+operator|->
 name|id
 condition|)
 block|{
 name|verify_users_data_area
+argument_list|()
+expr_stmt|;
+name|writelabel
 argument_list|()
 expr_stmt|;
 return|return;
@@ -151,9 +154,14 @@ name|flawpat
 modifier|*
 name|fp
 init|=
-name|CURRENT
+operator|(
+expr|struct
+name|flawpat
+operator|*
+operator|)
+name|lab
 operator|->
-name|vc_pat
+name|d_pat
 decl_stmt|;
 comment|/* Init bad block pattern array */
 for|for
@@ -164,7 +172,7 @@ literal|0
 init|;
 name|index
 operator|<
-name|TRKSIZ
+name|MAXTRKSIZ
 condition|;
 name|index
 operator|++
@@ -376,9 +384,9 @@ argument_list|(
 operator|(
 name|int
 operator|)
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMSYS
 argument_list|,
@@ -434,9 +442,9 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMSYS
 argument_list|,
@@ -454,7 +462,7 @@ comment|/* ** */
 end_comment
 
 begin_macro
-name|verify_maintainence_area
+name|verify_maintenence_area
 argument_list|()
 end_macro
 
@@ -468,9 +476,9 @@ name|sub_vfy
 expr_stmt|;
 name|verify_cylinders
 argument_list|(
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMSYS
 operator|+
@@ -558,9 +566,9 @@ name|dskaddr
 operator|.
 name|track
 operator|<
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 condition|;
 name|dskaddr
 operator|.
@@ -639,7 +647,9 @@ specifier|register
 name|long
 name|offset
 init|=
-name|SECSIZ
+name|lab
+operator|->
+name|d_secsize
 operator|/
 sizeof|sizeof
 argument_list|(
@@ -688,9 +698,9 @@ name|dskaddr
 argument_list|,
 name|VDOP_WD
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 argument_list|,
 literal|1
 argument_list|)
@@ -767,9 +777,9 @@ name|dskaddr
 argument_list|,
 name|VDOP_RD
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 argument_list|,
 literal|1
 argument_list|)
@@ -815,9 +825,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 condition|;
 name|i
 operator|++
@@ -918,18 +928,18 @@ name|dskaddr
 argument_list|,
 name|VDOP_WD
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 operator|*
 name|offset
 expr_stmt|;
@@ -1064,6 +1074,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* check again in case of header error */
+if|if
+condition|(
+name|kill_processes
+operator|==
+name|true
+condition|)
+block|{
+name|sync_bad_sector_map
+argument_list|()
+expr_stmt|;
+name|_longjmp
+argument_list|(
+name|quit_environ
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1168,7 +1197,7 @@ expr_stmt|;
 if|if
 condition|(
 name|C_INFO
-operator|.
+operator|->
 name|type
 operator|==
 name|VDTYPE_SMDE
@@ -1216,7 +1245,7 @@ operator|=
 call|(
 modifier|*
 name|C_INFO
-operator|.
+operator|->
 name|code_pos
 call|)
 argument_list|(

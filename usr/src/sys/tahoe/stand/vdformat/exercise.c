@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exercise.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)exercise.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,9 +76,9 @@ name|printf
 argument_list|(
 literal|"type %s.\n"
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_name
+name|d_typename
 argument_list|)
 expr_stmt|;
 if|if
@@ -96,7 +96,7 @@ operator|->
 name|bs_id
 operator|!=
 name|D_INFO
-operator|.
+operator|->
 name|id
 condition|)
 block|{
@@ -177,9 +177,9 @@ name|sad
 operator|.
 name|cylinder
 operator|<
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 condition|;
 name|sad
 operator|.
@@ -204,9 +204,9 @@ literal|0
 init|;
 name|cyl
 operator|<
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMSYS
 condition|;
@@ -228,9 +228,9 @@ literal|0
 init|;
 name|trk
 operator|<
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 condition|;
 name|trk
 operator|++

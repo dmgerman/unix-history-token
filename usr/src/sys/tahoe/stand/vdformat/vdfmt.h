@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdfmt.h	1.4	87/06/01	*/
+comment|/*	vdfmt.h	1.5	87/11/23	*/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"disklabel.h"
 end_include
 
 begin_include
@@ -167,8 +173,12 @@ begin_define
 define|#
 directive|define
 name|MAXSECS_PER_TRK
-value|64
+value|72
 end_define
+
+begin_comment
+comment|/* at 512 bytes/sector */
+end_comment
 
 begin_define
 define|#
@@ -180,22 +190,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SECSIZ
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRKSIZ
-value|((SECSIZ/sizeof(long)) * MAXSECS_PER_TRK)
+name|MAXTRKSIZ
+value|((512/sizeof(long)) * MAXSECS_PER_TRK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|bytes_trk
-value|(CURRENT->vc_nsec * SECSIZ)
+value|(lab->d_nsectors * lab->d_secsize)
 end_define
 
 begin_define
@@ -850,31 +853,10 @@ name|code_pos
 function_decl|)
 parameter_list|()
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|cylinder_skew
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|track_skew
-function_decl|)
-parameter_list|()
-function_decl|;
 block|}
 name|ctlr_info
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|C_INFO
-value|c_info[cur.controller]
-end_define
 
 begin_decl_stmt
 name|ctlr_info
@@ -882,6 +864,13 @@ name|c_info
 index|[
 name|MAXCTLR
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ctlr_info
+modifier|*
+name|C_INFO
 decl_stmt|;
 end_decl_stmt
 
@@ -900,18 +889,8 @@ name|int
 name|id
 decl_stmt|;
 name|struct
-name|vdconfig
-modifier|*
-name|info
-decl_stmt|;
-name|int
-name|trk_size
-decl_stmt|;
-name|int
-name|num_slip
-decl_stmt|;
-name|int
-name|track_skew
+name|disklabel
+name|label
 decl_stmt|;
 name|drv_stat
 name|condition
@@ -924,15 +903,15 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|D_INFO
-value|d_info[cur.controller][cur.drive]
+name|d_traksize
+value|d_drivedata[1]
 end_define
 
 begin_define
 define|#
 directive|define
-name|CURRENT
-value|D_INFO.info
+name|d_pat
+value|d_drivedata[2]
 end_define
 
 begin_decl_stmt
@@ -944,6 +923,41 @@ index|]
 index|[
 name|MAXDRIVE
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|drive_info
+modifier|*
+name|D_INFO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|disklabel
+modifier|*
+name|lab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|disklabel
+name|vdproto
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ndrives
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|smddrives
 decl_stmt|;
 end_decl_stmt
 
@@ -981,14 +995,14 @@ begin_define
 define|#
 directive|define
 name|MAX_FLAWS
-value|(((TRKSIZ*sizeof(long))-sizeof(bs_map))/sizeof(bs_entry))
+value|(((MAXTRKSIZ*sizeof(long))-sizeof(bs_map))/sizeof(bs_entry))
 end_define
 
 begin_decl_stmt
 name|long
 name|bs_map_space
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1063,12 +1077,12 @@ begin_decl_stmt
 name|long
 name|pattern_0
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_1
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1077,12 +1091,12 @@ begin_decl_stmt
 name|long
 name|pattern_2
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_3
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1091,12 +1105,12 @@ begin_decl_stmt
 name|long
 name|pattern_4
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_5
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1105,12 +1119,12 @@ begin_decl_stmt
 name|long
 name|pattern_6
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_7
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1119,12 +1133,12 @@ begin_decl_stmt
 name|long
 name|pattern_8
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_9
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1133,12 +1147,12 @@ begin_decl_stmt
 name|long
 name|pattern_10
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_11
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1147,12 +1161,12 @@ begin_decl_stmt
 name|long
 name|pattern_12
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_13
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1161,12 +1175,12 @@ begin_decl_stmt
 name|long
 name|pattern_14
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|,
 name|pattern_15
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1193,7 +1207,7 @@ begin_decl_stmt
 name|long
 name|scratch
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1202,7 +1216,7 @@ begin_decl_stmt
 name|long
 name|save
 index|[
-name|TRKSIZ
+name|MAXTRKSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1313,6 +1327,168 @@ name|smde_hdr
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* for MAXTOR */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|long
+name|esdi_flaw_sync
+decl_stmt|;
+name|unsigned
+name|short
+name|esdi_flaw_cyl
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_flaw_trk
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_flaw_sec
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_flags
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_ecc_1
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_pad_1
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_plo_sync
+index|[
+literal|26
+index|]
+decl_stmt|;
+block|}
+name|esdi_flaw_header
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|long
+name|esdi_data_sync
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_month
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_day
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_year
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_head
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_pad_2
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_flaws
+index|[
+literal|50
+index|]
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* see esdi_flaw_entry */
+name|unsigned
+name|char
+name|esdi_ecc_2
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_pad_3
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|esdi_flaw_junk
+index|[
+literal|1024
+index|]
+decl_stmt|;
+comment|/* Fill up block */
+block|}
+name|esdi_flaw_data
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|esdi_flaw_header
+name|esdi_header
+decl_stmt|;
+name|esdi_flaw_data
+name|esdi_data
+decl_stmt|;
+block|}
+name|esdi_flaw
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* **  since each flaw entry is 5 bytes and this forces alignment problems we ** define a structure here so that the entries can be BCOPYed into a ** reasonable work area before access. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|short
+name|esdi_flaw_cyl
+decl_stmt|;
+name|unsigned
+name|short
+name|esdi_flaw_offset
+decl_stmt|;
+name|unsigned
+name|char
+name|esdi_flaw_length
+decl_stmt|;
+block|}
+name|esdi_flaw_entry
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -1341,33 +1517,27 @@ name|SMDE1SYNC
 value|0x000d
 end_define
 
+begin_define
+define|#
+directive|define
+name|ESDISYNC
+value|0x00fe
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESDI1SYNC
+value|0x00fe
+end_define
+
+begin_comment
+comment|/* 0x00f8 */
+end_comment
+
 begin_comment
 comment|/* XXX */
 end_comment
-
-begin_comment
-comment|/*  * Disk drive geometry definition.  */
-end_comment
-
-begin_struct
-struct|struct
-name|geometry
-block|{
-name|u_short
-name|g_nsec
-decl_stmt|;
-comment|/* sectors/track */
-name|u_short
-name|g_ntrak
-decl_stmt|;
-comment|/* tracks/cylinder */
-name|u_int
-name|g_ncyl
-decl_stmt|;
-comment|/* cylinders/drive */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Flaw testing patterns.  */
@@ -1386,83 +1556,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Disk drive configuration information.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vdconfig
-block|{
-name|char
-modifier|*
-name|vc_name
-decl_stmt|;
-comment|/* drive name for selection */
-name|struct
-name|geometry
-name|vc_geometry
-decl_stmt|;
-comment|/* disk geometry */
-define|#
-directive|define
-name|vc_nsec
-value|vc_geometry.g_nsec
-define|#
-directive|define
-name|vc_ntrak
-value|vc_geometry.g_ntrak
-define|#
-directive|define
-name|vc_ncyl
-value|vc_geometry.g_ncyl
-name|int
-name|vc_nslip
-decl_stmt|;
-comment|/* # of slip sectors */
-name|int
-name|vc_rpm
-decl_stmt|;
-comment|/* revolutions/minute */
-name|int
-name|vc_traksize
-decl_stmt|;
-comment|/* bits/track for flaw map interp */
-name|struct
-name|flawpat
-modifier|*
-name|vc_pat
-decl_stmt|;
-comment|/* flaw testing patterns */
-name|char
-modifier|*
-name|vc_type
-decl_stmt|;
-comment|/* informative description */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|struct
-name|vdconfig
-name|vdconfig
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ndrives
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|smddrives
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)info.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)info.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,9 +87,9 @@ name|print
 argument_list|(
 literal|"Drive type is %s.\n"
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_name
+name|d_typename
 argument_list|)
 expr_stmt|;
 if|if
@@ -111,11 +111,6 @@ argument_list|)
 expr_stmt|;
 name|print_bad_sector_list
 argument_list|()
-expr_stmt|;
-name|print
-argument_list|(
-literal|"Information display completed successfully.\n"
-argument_list|)
 expr_stmt|;
 block|}
 end_block

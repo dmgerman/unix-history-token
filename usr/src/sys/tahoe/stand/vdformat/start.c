@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)start.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,32 @@ name|drive
 operator|=
 name|drive
 expr_stmt|;
+name|C_INFO
+operator|=
+operator|&
+name|c_info
+index|[
+name|ctlr
+index|]
+expr_stmt|;
+name|D_INFO
+operator|=
+operator|&
+name|d_info
+index|[
+name|ctlr
+index|]
+index|[
+name|drive
+index|]
+expr_stmt|;
+name|lab
+operator|=
+operator|&
+name|D_INFO
+operator|->
+name|label
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -138,6 +164,14 @@ expr_stmt|;
 name|load_verify_patterns
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|D_INFO
+operator|->
+name|alive
+operator|!=
+name|u_true
+condition|)
 name|spin_up_drive
 argument_list|()
 expr_stmt|;

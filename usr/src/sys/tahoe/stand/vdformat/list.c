@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)list.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,9 +244,9 @@ index|[
 name|drive
 index|]
 operator|.
-name|info
-operator|->
-name|vc_name
+name|label
+operator|.
+name|d_typename
 argument_list|)
 expr_stmt|;
 block|}

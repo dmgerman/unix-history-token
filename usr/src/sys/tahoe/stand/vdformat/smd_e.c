@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)smd_e.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)smd_e.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ decl_stmt|;
 name|int
 name|sector_length
 init|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_traksize
+name|d_traksize
 operator|/
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 decl_stmt|;
 name|int
 name|offset
@@ -124,9 +124,9 @@ name|err_adr
 operator|.
 name|sector
 operator|>=
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 condition|)
 block|{
 name|error
@@ -135,9 +135,9 @@ name|err_adr
 operator|.
 name|sector
 operator|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 operator|-
 literal|1
 expr_stmt|;
@@ -203,13 +203,13 @@ block|{
 name|int
 name|sector_length
 init|=
-name|CURRENT
+name|lab
 operator|->
-name|vc_traksize
+name|d_traksize
 operator|/
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 decl_stmt|;
 name|bs_entry
 name|temp
@@ -309,36 +309,6 @@ name|scanning
 expr_stmt|;
 return|return
 name|temp
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ** */
-end_comment
-
-begin_function
-name|int
-name|smd_e_cyl_skew
-parameter_list|()
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ** */
-end_comment
-
-begin_function
-name|int
-name|smd_e_trk_skew
-parameter_list|()
-block|{
-return|return
-literal|0
 return|;
 block|}
 end_function

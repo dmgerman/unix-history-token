@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.4 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.5 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,9 +69,9 @@ name|printf
 argument_list|(
 literal|"type %s.\n"
 argument_list|,
-name|CURRENT
+name|lab
 operator|->
-name|vc_name
+name|d_typename
 argument_list|)
 expr_stmt|;
 comment|/* Read the flaw map from the disk (where ever it may be) */
@@ -90,7 +90,7 @@ operator|->
 name|bs_id
 operator|!=
 name|D_INFO
-operator|.
+operator|->
 name|id
 condition|)
 block|{
@@ -99,6 +99,9 @@ argument_list|(
 literal|"Module serial numbers do not match!\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|print
 argument_list|(
 literal|"Use `info' to find the real serial number.\n"
@@ -111,6 +114,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Using serial number from drive, %d\n"
+argument_list|,
+name|bad_map
+operator|->
+name|bs_id
+argument_list|)
+expr_stmt|;
+name|D_INFO
+operator|->
+name|id
+operator|=
+name|bad_map
+operator|->
+name|bs_id
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 else|else
@@ -119,7 +143,7 @@ operator|->
 name|bs_id
 operator|=
 name|D_INFO
-operator|.
+operator|->
 name|id
 expr_stmt|;
 comment|/* Re-Initialize bad sector map relocation pointers */
@@ -146,7 +170,7 @@ comment|/* format the disk surface */
 name|format_relocation_area
 argument_list|()
 expr_stmt|;
-name|format_maintainence_area
+name|format_maintenence_area
 argument_list|()
 expr_stmt|;
 name|format_users_data_area
@@ -169,10 +193,16 @@ comment|/* verify the surface */
 name|verify_relocation_area
 argument_list|()
 expr_stmt|;
-name|verify_maintainence_area
+name|verify_maintenence_area
 argument_list|()
 expr_stmt|;
 name|verify_users_data_area
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|writelabel
 argument_list|()
 expr_stmt|;
 block|}
@@ -210,9 +240,9 @@ call|(
 name|short
 call|)
 argument_list|(
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMSYS
 argument_list|)
@@ -243,13 +273,13 @@ call|)
 argument_list|(
 name|NUMREL
 operator|*
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 operator|*
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 argument_list|)
 expr_stmt|;
 name|format_sectors
@@ -302,13 +332,13 @@ call|(
 name|long
 call|)
 argument_list|(
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 operator|*
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 argument_list|)
 expr_stmt|;
 name|dskaddr
@@ -338,9 +368,9 @@ init|;
 name|cyl
 operator|<
 operator|(
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMSYS
 operator|)
@@ -382,7 +412,7 @@ comment|/* ** */
 end_comment
 
 begin_macro
-name|format_maintainence_area
+name|format_maintenence_area
 argument_list|()
 end_macro
 
@@ -409,9 +439,9 @@ call|(
 name|short
 call|)
 argument_list|(
-name|CURRENT
+name|lab
 operator|->
-name|vc_ncyl
+name|d_ncylinders
 operator|-
 name|NUMMNT
 operator|-
@@ -444,13 +474,13 @@ call|)
 argument_list|(
 name|NUMMNT
 operator|*
-name|CURRENT
+name|lab
 operator|->
-name|vc_ntrak
+name|d_ntracks
 operator|*
-name|CURRENT
+name|lab
 operator|->
-name|vc_nsec
+name|d_nsectors
 argument_list|)
 expr_stmt|;
 name|format_sectors
@@ -507,7 +537,7 @@ expr_stmt|;
 if|if
 condition|(
 name|C_INFO
-operator|.
+operator|->
 name|type
 operator|==
 name|VDTYPE_SMDE
@@ -839,7 +869,7 @@ expr_stmt|;
 name|VDGO
 argument_list|(
 name|C_INFO
-operator|.
+operator|->
 name|addr
 argument_list|,
 operator|(
@@ -849,7 +879,7 @@ operator|&
 name|mdcb
 argument_list|,
 name|C_INFO
-operator|.
+operator|->
 name|type
 argument_list|)
 expr_stmt|;
@@ -893,6 +923,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|kill_processes
+operator|==
+name|true
+condition|)
+name|_longjmp
+argument_list|(
+name|quit_environ
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
