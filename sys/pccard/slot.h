@@ -231,10 +231,22 @@ comment|/* Current state of driver */
 name|uint8_t
 name|misc
 index|[
-literal|116
+name|DEV_MISC_LEN
 index|]
 decl_stmt|;
 comment|/* For any random info */
+name|uint8_t
+name|manufstr
+index|[
+name|DEV_MAX_CIS_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|versstr
+index|[
+name|DEV_MAX_CIS_LEN
+index|]
+decl_stmt|;
 name|uint32_t
 name|manufacturer
 decl_stmt|;

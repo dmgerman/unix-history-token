@@ -414,6 +414,20 @@ begin_comment
 comment|/*  *	Device descriptor for allocation of driver.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DEV_MISC_LEN
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEV_MAX_CIS_LEN
+value|40
+end_define
+
 begin_struct
 struct|struct
 name|dev_desc
@@ -457,10 +471,22 @@ comment|/* Device flags */
 name|uint8_t
 name|misc
 index|[
-literal|116
+name|DEV_MISC_LEN
 index|]
 decl_stmt|;
 comment|/* For any random info */
+name|uint8_t
+name|manufstr
+index|[
+name|DEV_MAX_CIS_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|versstr
+index|[
+name|DEV_MAX_CIS_LEN
+index|]
+decl_stmt|;
 name|uint32_t
 name|manufacturer
 decl_stmt|;
