@@ -4311,6 +4311,19 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|ip6
+operator|->
+name|ip6_vfc
+operator|&
+name|IPV6_VERSION_MASK
+operator|)
+operator|!=
+name|IPV6_VERSION
+condition|)
+return|return;
 comment|/* RFC 2292 sec. 5 */
 if|if
 condition|(
