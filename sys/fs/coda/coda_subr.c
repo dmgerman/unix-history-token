@@ -32,12 +32,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<vcoda.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -57,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
