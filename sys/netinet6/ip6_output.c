@@ -5397,6 +5397,29 @@ break|break;
 case|case
 name|IPV6_V6ONLY
 case|:
+comment|/* 					 * make setsockopt(IPV6_V6ONLY) 					 * available only prior to bind(2). 					 * see ipng mailing list, Jun 22 2001. 					 */
+if|if
+condition|(
+name|in6p
+operator|->
+name|in6p_lport
+operator|||
+operator|!
+name|IN6_IS_ADDR_UNSPECIFIED
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_laddr
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 comment|/* 					 * XXX: BINDV6ONLY should be integrated 					 * into V6ONLY. 					 */
 name|OPTSET
 argument_list|(
