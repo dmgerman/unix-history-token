@@ -4784,6 +4784,14 @@ operator|.
 name|sin6_scope_id
 argument_list|)
 expr_stmt|;
+name|su
+operator|->
+name|sin6
+operator|.
+name|sin6_scope_id
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|0
 return|;
