@@ -5202,9 +5202,32 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"MS Sound System"
+argument_list|)
+condition|)
+comment|/* *sigh* */
 name|printk
 argument_list|(
-literal|"gus0:<%s>"
+literal|"\ngus0:<%s>"
+argument_list|,
+name|ad1848_pcm_operations
+index|[
+name|nr_ad1848_devs
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|printk
+argument_list|(
+literal|"mss0:<%s>"
 argument_list|,
 name|ad1848_pcm_operations
 index|[
