@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_udp.c,v 1.1 1993/10/27 05:41:03 paul Exp $"
+literal|"$Id: svc_udp.c,v 1.1 1994/08/07 18:36:12 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,11 +818,16 @@ if|if
 condition|(
 name|rlen
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
 name|u_long
+argument_list|)
 argument_list|)
 condition|)
 return|return
