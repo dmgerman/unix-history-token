@@ -2164,6 +2164,23 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|errstr
+argument_list|,
+literal|"warning: "
+argument_list|,
+name|strlen
+argument_list|(
+literal|"warning: "
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|gctl_free
 argument_list|(
 name|req
@@ -2174,6 +2191,7 @@ argument_list|(
 name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2332,7 +2350,8 @@ name|EXIT_FAILURE
 argument_list|,
 literal|"%s and %s are not synchronized."
 argument_list|,
-name|comm
+name|getprogname
+argument_list|()
 argument_list|,
 name|path
 argument_list|)
