@@ -514,6 +514,11 @@ name|off_t
 name|f_nextoff
 decl_stmt|;
 comment|/* 				 * offset of next expected read or write 				 */
+name|void
+modifier|*
+name|f_label
+decl_stmt|;
+comment|/* Place-holder for struct label pointer. */
 block|}
 struct|;
 end_struct
