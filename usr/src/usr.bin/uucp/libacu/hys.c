@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys.c	4.5 (Berkeley) %G%"
+literal|"@(#)hys.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,16 +31,6 @@ ifdef|#
 directive|ifdef
 name|HAYES
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|USR2400
-end_define
-
-begin_comment
-comment|/* U.S. Robotics Courier 2400 */
-end_comment
 
 begin_ifdef
 ifdef|#
