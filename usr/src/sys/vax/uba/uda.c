@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.20	83/02/23	*/
+comment|/*	uda.c	4.21	83/05/12	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * UDA50/RAxx disk device driver  *  * Restrictions:  *	Unit numbers must be less than 8.  *  * TO DO:  *	write dump code  *	test on 750  */
+comment|/*  * UDA50/RAxx disk device driver  *  * Restrictions:  *	Unit numbers must be less than 8.  *  * TO DO:  *	write dump code  */
 end_comment
 
 begin_include
@@ -152,31 +152,6 @@ include|#
 directive|include
 file|"../vaxuba/udareg.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|udadebug
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|printd
-value|if(udadebug&1)printf
-end_define
-
-begin_decl_stmt
-name|int
-name|udaerror
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to cause hex dump of error log packets */
-end_comment
 
 begin_include
 include|#
@@ -354,6 +329,9 @@ literal|8
 index|]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 literal|15884
 block|,
 literal|0
@@ -398,12 +376,91 @@ literal|131404
 block|,
 comment|/* H=blk 131404 thru end */
 block|}
+name|ra81_sizes
+index|[
+literal|8
+index|]
+operator|=
+block|{
+endif|#
+directive|endif
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 22 */
+literal|66880
+block|,
+literal|16422
+block|,
+comment|/* B=cyl 23 thru 116 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru end */
+literal|15884
+block|,
+literal|375564
+block|,
+comment|/* D=cyl 526 thru 548 */
+literal|307200
+block|,
+literal|391986
+block|,
+comment|/* E=cyl 549 thru 979 */
+operator|-
+literal|1
+block|,
+literal|699720
+block|,
+comment|/* F=cyl 980 thru end */
+operator|-
+literal|1
+block|,
+literal|375564
+block|,
+comment|/* G=cyl 526 thru end */
+literal|291346
+block|,
+literal|83538
+block|,
+comment|/* H=cyl 117 thru 525 */
+block|}
 struct|;
 end_struct
 
 begin_comment
 comment|/* END OF STUFF WHICH SHOULD BE READ IN PER DISK */
 end_comment
+
+begin_decl_stmt
+name|int
+name|udaerror
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* causes hex dump of packets */
+end_comment
+
+begin_decl_stmt
+name|int
+name|udadebug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|printd
+value|if (udadebug) printf
+end_define
 
 begin_decl_stmt
 name|daddr_t
@@ -644,6 +701,21 @@ expr_stmt|;
 name|reg
 operator|=
 name|reg
+expr_stmt|;
+name|udread
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|udwrite
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|udreset
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|udintr
 argument_list|(
@@ -1493,6 +1565,23 @@ condition|(
 name|cpu
 operator|==
 name|VAX_750
+operator|&&
+name|udwtab
+index|[
+name|um
+operator|->
+name|um_ctlr
+index|]
+operator|.
+name|av_forw
+operator|==
+operator|&
+name|udwtab
+index|[
+name|um
+operator|->
+name|um_ctlr
+index|]
 condition|)
 block|{
 if|if
@@ -1505,7 +1594,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"uda: ubinfo %x\n"
+literal|"udastrat: ubinfo 0x%x\n"
 argument_list|,
 name|um
 operator|->
@@ -1654,42 +1743,6 @@ name|b_active
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_750
-condition|)
-block|{
-if|if
-condition|(
-name|um
-operator|->
-name|um_ubinfo
-operator|!=
-literal|0
-condition|)
-name|ubarelse
-argument_list|(
-name|um
-operator|->
-name|um_ubanum
-argument_list|,
-operator|&
-name|um
-operator|->
-name|um_ubinfo
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -3457,6 +3510,24 @@ operator|->
 name|mscp_unit
 argument_list|)
 expr_stmt|;
+comment|/*** New for ***/
+name|printf
+argument_list|(
+literal|"uda%d: online, size=%d\n"
+argument_list|,
+comment|/*** debugging **/
+name|mp
+operator|->
+name|mscp_unit
+argument_list|,
+operator|(
+name|daddr_t
+operator|)
+name|mp
+operator|->
+name|mscp_untsize
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3589,6 +3660,65 @@ name|bp
 operator|->
 name|av_back
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_750
+operator|&&
+name|udwtab
+index|[
+name|um
+operator|->
+name|um_ctlr
+index|]
+operator|.
+name|av_forw
+operator|==
+operator|&
+name|udwtab
+index|[
+name|um
+operator|->
+name|um_ctlr
+index|]
+condition|)
+block|{
+if|if
+condition|(
+name|um
+operator|->
+name|um_ubinfo
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"udintr: um_ubinfo == 0\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|ubarelse
+argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|,
+operator|&
+name|um
+operator|->
+name|um_ubinfo
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|dp
 operator|=
 operator|&
@@ -3732,6 +3862,46 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX750
+operator|&&
+name|um
+operator|->
+name|um_ubinfo
+operator|==
+literal|0
+condition|)
+name|um
+operator|->
+name|um_ubinfo
+operator|=
+name|uballoc
+argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|UBA_NEEDBDP
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 if|if
@@ -3889,11 +4059,19 @@ name|M_FM_DISKTRN
 case|:
 name|printf
 argument_list|(
-literal|"disk transfer error, unit %d\n"
+literal|"disk transfer error, unit %d, grp 0x%x, hdr 0x%x\n"
 argument_list|,
 name|mp
 operator|->
 name|mslg_unit
+argument_list|,
+name|mp
+operator|->
+name|mslg_group
+argument_list|,
+name|mp
+operator|->
+name|mslg_hdr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3902,7 +4080,7 @@ name|M_FM_SDI
 case|:
 name|printf
 argument_list|(
-literal|"SDI error, unit %d, event 0%o\n"
+literal|"SDI error, unit %d, event 0%o, hdr 0x%x\n"
 argument_list|,
 name|mp
 operator|->
@@ -3911,6 +4089,10 @@ argument_list|,
 name|mp
 operator|->
 name|mslg_event
+argument_list|,
+name|mp
+operator|->
+name|mslg_hdr
 argument_list|)
 expr_stmt|;
 break|break;
