@@ -1236,7 +1236,7 @@ name|db_lhist_nlines
 condition|)
 block|{
 comment|/* Rotate history. */
-name|ovbcopy
+name|bcopy
 argument_list|(
 name|db_lhistory
 operator|+
