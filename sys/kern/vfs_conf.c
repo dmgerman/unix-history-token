@@ -281,7 +281,28 @@ name|mnt_flag
 operator||=
 name|MNT_ROOTFS
 expr_stmt|;
-comment|/* 	 * Attempt the mount 	 */
+comment|/* 	 * If we have no idea what the device is because the VFS root mount 	 * initialization code couldn't figure it out, take a guess by 	 * assuming that vfs_getnewfsid() will be called when we try the 	 * mount.  For the moment this is necessary for NFS-baesd BOOTP 	 * boots.  Ultimately we would like to get rid of 'rootdev' entirely 	 * and go with a linked list of possible roots and device-specific 	 * auxillary data that we do not try to interpret ourselves. 	 */
+if|if
+condition|(
+name|rootdev
+operator|==
+name|NODEV
+operator|&&
+name|rootdevs
+index|[
+literal|0
+index|]
+operator|==
+name|NODEV
+condition|)
+name|rootdev
+operator|=
+name|vfs_getrootfsid
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Attempt the mount.  This is rather messy due to many historical 	 * layers.  Basically what it comes down to is that 'rootdev' is an 	 * override to the rootdevs[] array.  The rootdevs[] array itself 	 * cannot normally be accessed directly by other modules, but FFS 	 * plays with it.  NFS, on the otherhand, has no clue what the  	 * device assignment for a mount will be until it actually does it. 	 * 	 * During the loop we set rootdev to rootdevs[i].  This is used 	 * by FFS and a few other modules.  It is ignored by NFS. 	 */
 name|err
 operator|=
 name|ENXIO

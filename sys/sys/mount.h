@@ -1897,6 +1897,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|dev_t
+name|vfs_getrootfsid
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|mount
 modifier|*
