@@ -753,6 +753,7 @@ name|dsa_ctx
 expr_stmt|;
 break|break;
 default|default:
+break|break;
 block|}
 name|status
 operator|=
@@ -907,6 +908,7 @@ decl_stmt|;
 name|EVP_MD_CTX
 name|md_ctx
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 name|md_type
