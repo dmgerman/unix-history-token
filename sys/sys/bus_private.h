@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.1 1998/06/10 10:57:23 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -49,6 +49,18 @@ name|driver_list_t
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|TAILQ_HEAD
+argument_list|(
+argument|device_list
+argument_list|,
+argument|device
+argument_list|)
+name|device_list_t
+expr_stmt|;
+end_typedef
+
 begin_struct
 struct|struct
 name|devclass
@@ -85,6 +97,66 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Compiled device methods.  */
+end_comment
+
+begin_struct
+struct|struct
+name|device_ops
+block|{
+name|int
+name|maxoffset
+decl_stmt|;
+name|devop_t
+name|methods
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Helpers for device method wrappers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVOPDESC
+parameter_list|(
+name|OP
+parameter_list|)
+value|(&OP##_##desc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVOPOFF
+parameter_list|(
+name|DEV
+parameter_list|,
+name|OP
+parameter_list|)
+define|\
+value|((DEVOPDESC(OP)->offset>= DEV->ops->maxoffset	\ 	  || !DEV->ops->methods[DEVOPDESC(OP)->offset])	\ 	 ? 0 : DEVOPDESC(OP)->offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVOPMETH
+parameter_list|(
+name|DEV
+parameter_list|,
+name|OP
+parameter_list|)
+value|(DEV->ops->methods[DEVOPOFF(DEV, OP)])
+end_define
+
+begin_comment
 comment|/*  * Implementation of device.  */
 end_comment
 
@@ -92,15 +164,24 @@ begin_struct
 struct|struct
 name|device
 block|{
+comment|/*      * Device hierarchy.      */
 name|TAILQ_ENTRY
 argument_list|(
 argument|device
 argument_list|)
 name|link
 expr_stmt|;
-comment|/* list of devices on a bus */
-name|bus_t
+comment|/* list of devices in parent */
+name|device_t
 name|parent
+decl_stmt|;
+name|device_list_t
+name|children
+decl_stmt|;
+comment|/* list of subordinate devices */
+comment|/*      * Details of this device.      */
+name|device_ops_t
+name|ops
 decl_stmt|;
 name|driver_t
 modifier|*
@@ -152,6 +233,25 @@ name|void
 modifier|*
 name|softc
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|device_op_desc
+block|{
+name|unsigned
+name|int
+name|offset
+decl_stmt|;
+comment|/* offset in driver ops */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* unique name (for registration) */
 block|}
 struct|;
 end_struct

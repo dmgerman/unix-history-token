@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: clock.c,v 1.1 1998/06/10 10:52:13 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/dec/clockvar.h>
+file|<machine/clockvar.h>
 end_include
 
 begin_define
@@ -124,15 +124,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|struct
-name|clockfns
-modifier|*
-name|clockfns
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|clockinitted
 decl_stmt|;
@@ -160,9 +151,12 @@ begin_comment
 comment|/* wall	CMOS clock assumed if != 0 */
 end_comment
 
-begin_extern
-extern|extern cycles_per_sec;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|cycles_per_sec
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -284,28 +278,14 @@ begin_function
 name|void
 name|clockattach
 parameter_list|(
+name|device_t
 name|dev
-parameter_list|,
-name|fns
 parameter_list|)
-name|struct
-name|device
-modifier|*
-name|dev
-decl_stmt|;
-specifier|const
-name|struct
-name|clockfns
-modifier|*
-name|fns
-decl_stmt|;
 block|{
 comment|/* 	 * Just bookkeeping. 	 */
 if|if
 condition|(
-name|clockfns
-operator|!=
-name|NULL
+name|clockdev
 condition|)
 name|panic
 argument_list|(
@@ -315,10 +295,6 @@ expr_stmt|;
 name|clockdev
 operator|=
 name|dev
-expr_stmt|;
-name|clockfns
-operator|=
-name|fns
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -353,7 +329,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|clockfns
+name|clockdev
 operator|==
 name|NULL
 condition|)
@@ -482,12 +458,7 @@ operator|)
 name|handleclock
 expr_stmt|;
 comment|/* 	 * Get the clock started. 	 */
-call|(
-modifier|*
-name|clockfns
-operator|->
-name|cf_init
-call|)
+name|CLOCK_INIT
 argument_list|(
 name|clockdev
 argument_list|)
@@ -705,12 +676,7 @@ name|badbase
 operator|=
 literal|0
 expr_stmt|;
-call|(
-modifier|*
-name|clockfns
-operator|->
-name|cf_get
-call|)
+name|CLOCK_GET
 argument_list|(
 name|clockdev
 argument_list|,
@@ -1225,12 +1191,7 @@ name|t
 operator|%
 name|SECMIN
 expr_stmt|;
-call|(
-modifier|*
-name|clockfns
-operator|->
-name|cf_set
-call|)
+name|CLOCK_SET
 argument_list|(
 name|clockdev
 argument_list|,

@@ -633,47 +633,6 @@ value|0x70
 end_define
 
 begin_comment
-comment|/*  * RTC register/NVRAM read and write functions -- machine-dependent.  * Appropriately manipulate RTC registers to get/put data values.  */
-end_comment
-
-begin_decl_stmt
-name|u_int
-name|mc146818_read
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|sc
-operator|,
-name|u_int
-name|reg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|mc146818_write
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|sc
-operator|,
-name|u_int
-name|reg
-operator|,
-name|u_int
-name|datum
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * A collection of TOD/Alarm registers.  */
 end_comment
 
@@ -696,16 +655,16 @@ define|#
 directive|define
 name|MC146818_GETTOD
 parameter_list|(
-name|sc
+name|dev
 parameter_list|,
 name|regs
 parameter_list|)
 define|\
 value|do {								\ 		int i;							\ 									\
 comment|/* update in progress; spin loop */
-value|\ 		while (mc146818_read(sc, MC_REGA)& MC_REGA_UIP)	\ 			;						\ 									\
+value|\ 		while (MCCLOCK_READ(dev, MC_REGA)& MC_REGA_UIP)	\ 			;						\ 									\
 comment|/* read all of the tod/alarm regs */
-value|\ 		for (i = 0; i< MC_NTODREGS; i++)			\ 			(*regs)[i] = mc146818_read(sc, i);		\ 	} while (0);
+value|\ 		for (i = 0; i< MC_NTODREGS; i++)			\ 			(*regs)[i] = MCCLOCK_READ(dev, i);		\ 	} while (0);
 end_define
 
 begin_comment
@@ -717,18 +676,18 @@ define|#
 directive|define
 name|MC146818_PUTTOD
 parameter_list|(
-name|sc
+name|dev
 parameter_list|,
 name|regs
 parameter_list|)
 define|\
 value|do {								\ 		int i;							\ 									\
 comment|/* stop updates while setting */
-value|\ 		mc146818_write(sc, MC_REGB,				\ 		    mc146818_read(sc, MC_REGB) | MC_REGB_SET);		\ 									\
+value|\ 		MCCLOCK_WRITE(dev, MC_REGB,				\ 		    MCCLOCK_READ(dev, MC_REGB) | MC_REGB_SET);		\ 									\
 comment|/* write all of the tod/alarm regs */
-value|\ 		for (i = 0; i< MC_NTODREGS; i++)			\ 			mc146818_write(sc, i, (*regs)[i]);		\ 									\
+value|\ 		for (i = 0; i< MC_NTODREGS; i++)			\ 			MCCLOCK_WRITE(dev, i, (*regs)[i]);		\ 									\
 comment|/* reenable updates */
-value|\ 		mc146818_write(sc, MC_REGB,				\ 		    mc146818_read(sc, MC_REGB)& ~MC_REGB_SET);		\ 	} while (0);
+value|\ 		MCCLOCK_WRITE(dev, MC_REGB,				\ 		    MCCLOCK_READ(dev, MC_REGB)& ~MC_REGB_SET);		\ 	} while (0);
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: tlsbvar.h,v 1.1 1998/06/10 10:55:58 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\ 									 \
-value|static __inline T tlsb_get_ ## A(device_t dev)				 \ {									 \ 	u_long v;							 \ 	bus_read_ivar(device_get_parent(dev), dev, TLSB_IVAR_ ## B,&v); \ 	return v;							 \ }
+value|static __inline T tlsb_get_ ## A(device_t dev)				 \ {									 \ 	u_long v;							 \ 	BUS_READ_IVAR(device_get_parent(dev), dev, TLSB_IVAR_ ## B,&v); \ 	return v;							 \ }
 end_define
 
 begin_macro

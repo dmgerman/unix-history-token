@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: vmparam.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
+comment|/* $Id: vmparam.h,v 1.2 1998/06/10 10:55:30 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_ADDRESS
-value|((vm_offset_t)ALPHA_USEG_BASE)
+value|(ALPHA_USEG_BASE)
 end_define
 
 begin_comment
@@ -300,7 +300,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)(ALPHA_USEG_END + 1L))
+value|((ALPHA_USEG_END + 1LL))
 end_define
 
 begin_define
@@ -314,14 +314,14 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)ALPHA_K1SEG_BASE)
+value|(ALPHA_K1SEG_BASE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|((vm_offset_t)ALPHA_K1SEG_END)
+value|(ALPHA_K1SEG_END)
 end_define
 
 begin_comment
@@ -402,7 +402,7 @@ begin_define
 define|#
 directive|define
 name|VPTBASE
-value|((vm_offset_t)0xfffffffe00000000)
+value|(0xfffffffe00000000LL)
 end_define
 
 begin_comment

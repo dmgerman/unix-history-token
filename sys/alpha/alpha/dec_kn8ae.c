@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dec_kn8ae.c,v 1.1 1998/06/10 10:52:30 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<alpha/tlsb/gbusreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<alpha/tlsb/zsvar.h>
 end_include
 
 begin_function_decl

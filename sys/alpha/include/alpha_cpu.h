@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: alpha_cpu.h,v 1.1 1998/01/10 10:13:13 jb Exp $ */
+comment|/* $Id: alpha_cpu.h,v 1.2 1998/06/10 10:54:21 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -651,14 +651,14 @@ begin_define
 define|#
 directive|define
 name|ALPHA_USEG_END
-value|0x000003ffffffffff
+value|0x000003ffffffffffLL
 end_define
 
 begin_define
 define|#
 directive|define
 name|ALPHA_K0SEG_BASE
-value|0xfffffc0000000000
+value|0xfffffc0000000000LL
 end_define
 
 begin_comment
@@ -669,14 +669,14 @@ begin_define
 define|#
 directive|define
 name|ALPHA_K0SEG_END
-value|0xfffffdffffffffff
+value|0xfffffdffffffffffLL
 end_define
 
 begin_define
 define|#
 directive|define
 name|ALPHA_K1SEG_BASE
-value|0xfffffe0000000000
+value|0xfffffe0000000000LL
 end_define
 
 begin_comment
@@ -687,7 +687,7 @@ begin_define
 define|#
 directive|define
 name|ALPHA_K1SEG_END
-value|0xffffffffffffffff
+value|0xffffffffffffffffLL
 end_define
 
 begin_define
