@@ -462,11 +462,12 @@ index|[
 literal|2
 index|]
 decl_stmt|,
-name|size
-decl_stmt|,
 name|st
 decl_stmt|,
 name|nfiles
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|struct
 name|file
