@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.35 1998/05/06 05:29:38 msmith Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.13.2.2 1998/07/16 02:01:44 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -1408,6 +1408,21 @@ name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD_version
+if|if
+condition|(
+name|vfs_busy
+argument_list|(
+name|mp
+argument_list|)
+condition|)
+return|return
+name|EBUSY
+return|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|vflush
@@ -1419,6 +1434,16 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD_version
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1486,10 +1511,8 @@ name|mp
 operator|->
 name|mnt_flag
 operator|&
-name|MNT_RDONLY
+name|MNT_WANTRDWR
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 endif|#
