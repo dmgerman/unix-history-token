@@ -494,22 +494,29 @@ decl_stmt|;
 name|int
 name|mi_started
 decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|coda_mntinfo
+argument_list|)
+name|mi_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|struct
 name|coda_mntinfo
-name|coda_mnttbl
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* indexed by minor device number */
-end_comment
+modifier|*
+name|dev2coda_mntinfo
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * vfs pointer to mount info  */
@@ -610,7 +617,6 @@ comment|/* cfs_psdev.h */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|coda_call
 parameter_list|(
@@ -644,7 +650,6 @@ comment|/* cfs_subr.h */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|handleDownCall
 parameter_list|(
@@ -660,7 +665,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|coda_unmounting
 parameter_list|(
@@ -673,7 +677,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|coda_vmflush
 parameter_list|(
@@ -690,7 +693,6 @@ comment|/* cfs_vnodeops.h */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|cnode
 modifier|*
@@ -712,7 +714,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|coda_vnodeopstats_init
 parameter_list|(
@@ -726,7 +727,6 @@ comment|/* coda_vfsops.h */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|struct
 name|mount
 modifier|*

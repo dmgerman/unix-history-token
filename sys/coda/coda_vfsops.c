@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_coda.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -163,20 +157,6 @@ modifier|*
 name|coda_ctlvp
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|coda_mntinfo
-name|coda_mnttbl
-index|[
-name|NVCODA
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* indexed by minor device number */
-end_comment
 
 begin_comment
 comment|/* structure to keep statistics of internally generated/satisfied calls */
@@ -585,45 +565,13 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|NVCODA
-operator|||
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|MARK_INT_FAIL
-argument_list|(
-name|CODA_MOUNT_STATS
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/*      * Initialize the mount record and link it to the vfs struct      */
 name|mi
 operator|=
-operator|&
-name|coda_mnttbl
-index|[
-name|minor
+name|dev2coda_mntinfo
 argument_list|(
 name|dev
 argument_list|)
-index|]
 expr_stmt|;
 if|if
 condition|(
