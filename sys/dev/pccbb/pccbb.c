@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000,2001 Jonathan Chen.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2002 M. Warner Losh.  * Copyright (c) 2000,2001 Jonathan Chen.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -272,7 +272,7 @@ init|=
 block|{
 comment|/* Texas Instruments chips */
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1031
+name|PCIC_ID_TI1031
 block|,
 literal|"TI1031 PCI-PC Card Bridge"
 block|,
@@ -280,7 +280,7 @@ name|CB_TI113X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1130
+name|PCIC_ID_TI1130
 block|,
 literal|"TI1130 PCI-CardBus Bridge"
 block|,
@@ -288,7 +288,7 @@ name|CB_TI113X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1131
+name|PCIC_ID_TI1131
 block|,
 literal|"TI1131 PCI-CardBus Bridge"
 block|,
@@ -296,7 +296,7 @@ name|CB_TI113X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1210
+name|PCIC_ID_TI1210
 block|,
 literal|"TI1210 PCI-CardBus Bridge"
 block|,
@@ -304,7 +304,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1211
+name|PCIC_ID_TI1211
 block|,
 literal|"TI1211 PCI-CardBus Bridge"
 block|,
@@ -312,7 +312,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1220
+name|PCIC_ID_TI1220
 block|,
 literal|"TI1220 PCI-CardBus Bridge"
 block|,
@@ -320,7 +320,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1221
+name|PCIC_ID_TI1221
 block|,
 literal|"TI1221 PCI-CardBus Bridge"
 block|,
@@ -328,7 +328,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1225
+name|PCIC_ID_TI1225
 block|,
 literal|"TI1225 PCI-CardBus Bridge"
 block|,
@@ -336,31 +336,31 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1250
+name|PCIC_ID_TI1250
 block|,
 literal|"TI1250 PCI-CardBus Bridge"
 block|,
-name|CB_TI12XX
+name|CB_TI125X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1251
+name|PCIC_ID_TI1251
 block|,
 literal|"TI1251 PCI-CardBus Bridge"
 block|,
-name|CB_TI12XX
+name|CB_TI125X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1251B
+name|PCIC_ID_TI1251B
 block|,
 literal|"TI1251B PCI-CardBus Bridge"
 block|,
-name|CB_TI12XX
+name|CB_TI125X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1260
+name|PCIC_ID_TI1260
 block|,
 literal|"TI1260 PCI-CardBus Bridge"
 block|,
@@ -368,7 +368,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1260B
+name|PCIC_ID_TI1260B
 block|,
 literal|"TI1260B PCI-CardBus Bridge"
 block|,
@@ -376,7 +376,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1410
+name|PCIC_ID_TI1410
 block|,
 literal|"TI1410 PCI-CardBus Bridge"
 block|,
@@ -384,7 +384,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1420
+name|PCIC_ID_TI1420
 block|,
 literal|"TI1420 PCI-CardBus Bridge"
 block|,
@@ -392,7 +392,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1421
+name|PCIC_ID_TI1421
 block|,
 literal|"TI1421 PCI-CardBus Bridge"
 block|,
@@ -400,15 +400,15 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1450
+name|PCIC_ID_TI1450
 block|,
 literal|"TI1450 PCI-CardBus Bridge"
 block|,
-name|CB_TI12XX
+name|CB_TI125X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1451
+name|PCIC_ID_TI1451
 block|,
 literal|"TI1451 PCI-CardBus Bridge"
 block|,
@@ -416,7 +416,23 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI4410
+name|PCIC_ID_TI1510
+block|,
+literal|"TI1510 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI1520
+block|,
+literal|"TI1520 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI4410
 block|,
 literal|"TI4410 PCI-CardBus Bridge"
 block|,
@@ -424,7 +440,7 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI4450
+name|PCIC_ID_TI4450
 block|,
 literal|"TI4450 PCI-CardBus Bridge"
 block|,
@@ -432,16 +448,24 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI4451
+name|PCIC_ID_TI4451
 block|,
 literal|"TI4451 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|}
 block|,
+block|{
+name|PCIC_ID_TI4510
+block|,
+literal|"TI4510 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
 comment|/* Ricoh chips */
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C465
+name|PCIC_ID_RICOH_RL5C465
 block|,
 literal|"RF5C465 PCI-CardBus Bridge"
 block|,
@@ -449,7 +473,7 @@ name|CB_RF5C46X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C466
+name|PCIC_ID_RICOH_RL5C466
 block|,
 literal|"RF5C466 PCI-CardBus Bridge"
 block|,
@@ -457,7 +481,7 @@ name|CB_RF5C46X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C475
+name|PCIC_ID_RICOH_RL5C475
 block|,
 literal|"RF5C475 PCI-CardBus Bridge"
 block|,
@@ -465,7 +489,7 @@ name|CB_RF5C47X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C476
+name|PCIC_ID_RICOH_RL5C476
 block|,
 literal|"RF5C476 PCI-CardBus Bridge"
 block|,
@@ -473,7 +497,7 @@ name|CB_RF5C47X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C477
+name|PCIC_ID_RICOH_RL5C477
 block|,
 literal|"RF5C477 PCI-CardBus Bridge"
 block|,
@@ -481,7 +505,7 @@ name|CB_RF5C47X
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C478
+name|PCIC_ID_RICOH_RL5C478
 block|,
 literal|"RF5C478 PCI-CardBus Bridge"
 block|,
@@ -490,7 +514,7 @@ block|}
 block|,
 comment|/* Toshiba products */
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
+name|PCIC_ID_TOPIC95
 block|,
 literal|"ToPIC95 PCI-CardBus Bridge"
 block|,
@@ -498,7 +522,7 @@ name|CB_TOPIC95
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC95B
+name|PCIC_ID_TOPIC95B
 block|,
 literal|"ToPIC95B PCI-CardBus Bridge"
 block|,
@@ -506,7 +530,7 @@ name|CB_TOPIC95
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+name|PCIC_ID_TOPIC97
 block|,
 literal|"ToPIC97 PCI-CardBus Bridge"
 block|,
@@ -514,7 +538,7 @@ name|CB_TOPIC97
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+name|PCIC_ID_TOPIC100
 block|,
 literal|"ToPIC100 PCI-CardBus Bridge"
 block|,
@@ -523,7 +547,7 @@ block|}
 block|,
 comment|/* Cirrus Logic */
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6832
+name|PCIC_ID_CLPD6832
 block|,
 literal|"CLPD6832 PCI-CardBus Bridge"
 block|,
@@ -531,7 +555,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6833
+name|PCIC_ID_CLPD6833
 block|,
 literal|"CLPD6833 PCI-CardBus Bridge"
 block|,
@@ -539,7 +563,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6834
+name|PCIC_ID_CLPD6834
 block|,
 literal|"CLPD6834 PCI-CardBus Bridge"
 block|,
@@ -548,7 +572,7 @@ block|}
 block|,
 comment|/* 02Micro */
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6832
+name|PCIC_ID_OZ6832
 block|,
 literal|"O2Mirco OZ6832/6833 PCI-CardBus Bridge"
 block|,
@@ -556,7 +580,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6860
+name|PCIC_ID_OZ6860
 block|,
 literal|"O2Mirco OZ6836/6860 PCI-CardBus Bridge"
 block|,
@@ -564,7 +588,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6872
+name|PCIC_ID_OZ6872
 block|,
 literal|"O2Mirco OZ6812/6872 PCI-CardBus Bridge"
 block|,
@@ -572,7 +596,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6912
+name|PCIC_ID_OZ6912
 block|,
 literal|"O2Mirco OZ6912/6972 PCI-CardBus Bridge"
 block|,
@@ -580,7 +604,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6922
+name|PCIC_ID_OZ6922
 block|,
 literal|"O2Mirco OZ6822 PCI-CardBus Bridge"
 block|,
@@ -588,7 +612,7 @@ name|CB_CIRRUS
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6933
+name|PCIC_ID_OZ6933
 block|,
 literal|"O2Mirco OZ6833 PCI-CardBus Bridge"
 block|,
@@ -1599,87 +1623,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
-name|uint8_t
-name|pccbb_pcic_read
-parameter_list|(
-name|struct
-name|exca_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|reg
-parameter_list|)
-block|{
-return|return
-operator|(
-name|bus_space_read_1
-argument_list|(
-name|sc
-operator|->
-name|bst
-argument_list|,
-name|sc
-operator|->
-name|bsh
-argument_list|,
-name|sc
-operator|->
-name|offset
-operator|+
-name|reg
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|pccbb_pcic_write
-parameter_list|(
-name|struct
-name|exca_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|reg
-parameter_list|,
-name|uint8_t
-name|val
-parameter_list|)
-block|{
-return|return
-operator|(
-name|bus_space_write_1
-argument_list|(
-name|sc
-operator|->
-name|bst
-argument_list|,
-name|sc
-operator|->
-name|bsh
-argument_list|,
-name|sc
-operator|->
-name|offset
-operator|+
-name|reg
-argument_list|,
-name|val
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|pccbb_remove_res
 parameter_list|(
@@ -2156,6 +2099,11 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|uint32_t
+name|mux
+decl_stmt|,
+name|sysctrl
+decl_stmt|;
 comment|/* Set CardBus latency timer */
 if|if
 condition|(
@@ -2350,6 +2298,108 @@ name|CBBM_DEVCTRL_INT_PCI
 operator|)
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CB_TI12XX
+case|:
+comment|/* 		 * Some TI 12xx (and [14][45]xx) based pci cards 		 * sometimes have issues with the MFUNC register not 		 * being initialized due to a bad EEPROM on board. 		 * Laptops that this matters on have this register 		 * properly initialized. 		 * 		 * The TI125X parts have a different register. 		 */
+name|mux
+operator|=
+name|pci_read_config
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|CBBR_MFUNC
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|sysctrl
+operator|=
+name|pci_read_config
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|CBBR_SYSCTRL
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mux
+operator|==
+literal|0
+condition|)
+block|{
+name|mux
+operator|=
+operator|(
+name|mux
+operator|&
+operator|~
+name|CBBM_MFUNC_PIN0
+operator|)
+operator||
+name|CBBM_MFUNC_PIN0_INTA
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sysctrl
+operator|&
+name|CBBM_SYSCTRL_INTRTIE
+operator|)
+operator|==
+literal|0
+condition|)
+name|mux
+operator|=
+operator|(
+name|mux
+operator|&
+operator|~
+name|CBBM_MFUNC_PIN1
+operator|)
+operator||
+name|CBBM_MFUNC_PIN1_INTB
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|CBBR_MFUNC
+argument_list|,
+name|mux
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*FALLTHROUGH*/
+case|case
+name|CB_TI125X
+case|:
+comment|/* 		 * Disable zoom video.  Some machines initialize this 		 * improperly and exerpience has shown that this helps 		 * on some machines. 		 */
+name|pci_write_config
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|CBBR_MMCTRL
+argument_list|,
+literal|0
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2609,9 +2659,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|rid
-decl_stmt|;
-name|uint32_t
-name|sockbase
 decl_stmt|;
 name|mtx_init
 argument_list|(
@@ -2936,6 +2983,8 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 name|sc
 operator|->
@@ -2968,12 +3017,6 @@ name|exca
 argument_list|,
 name|brdev
 argument_list|,
-operator|&
-name|pccbb_pcic_write
-argument_list|,
-operator|&
-name|pccbb_pcic_read
-argument_list|,
 name|sc
 operator|->
 name|bst
@@ -2982,8 +3025,16 @@ name|sc
 operator|->
 name|bsh
 argument_list|,
-literal|0x800
+name|CBB_EXCA_OFFSET
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|exca
+operator|.
+name|flags
+operator||=
+name|EXCA_HAS_MEMREG_WIN
 expr_stmt|;
 name|pccbb_chipinit
 argument_list|(

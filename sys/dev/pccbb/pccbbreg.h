@@ -232,6 +232,121 @@ begin_comment
 comment|/* len=4 */
 end_comment
 
+begin_comment
+comment|/* TI * */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBR_SYSCTRL
+value|0x80
+end_define
+
+begin_comment
+comment|/* len=4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBM_SYSCTRL_INTRTIE
+value|0x20000000u
+end_define
+
+begin_comment
+comment|/* TI [14][245]xx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBR_MMCTRL
+value|0x84
+end_define
+
+begin_comment
+comment|/* len=4 */
+end_comment
+
+begin_comment
+comment|/* TI 12xx/14xx/15xx (except 1250/1251/1251B/1450) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBR_MFUNC
+value|0x8c
+end_define
+
+begin_comment
+comment|/* len=4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN0
+value|0x0000000f
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN0_INTA
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN1
+value|0x000000f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN1_INTB
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN2
+value|0x00000f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN3
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN4
+value|0x000f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN5
+value|0x00f00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CBBM_MFUNC_PIN6
+value|0x0f000000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -304,7 +419,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* bits for TI 12XX */
+comment|/* TI [14][245]xx */
 end_comment
 
 begin_define
@@ -1087,6 +1202,17 @@ directive|define
 name|CBB_SOCKET_POWER
 value|0x14
 end_define
+
+begin_define
+define|#
+directive|define
+name|CBB_EXCA_OFFSET
+value|0x800
+end_define
+
+begin_comment
+comment|/* offset for exca regs */
+end_comment
 
 end_unit
 

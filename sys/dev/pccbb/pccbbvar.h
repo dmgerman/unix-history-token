@@ -151,31 +151,36 @@ define|#
 directive|define
 name|CB_TI12XX
 value|2
-comment|/* TI PCI1250/1220 */
+comment|/* TI PCI12xx/14xx/44xx/15xx/45xx */
+define|#
+directive|define
+name|CB_TI125X
+value|3
+comment|/* TI PCI1250/1251(B)/1450 */
 define|#
 directive|define
 name|CB_RF5C47X
-value|3
+value|4
 comment|/* RICOH RF5C475/476/477 */
 define|#
 directive|define
 name|CB_RF5C46X
-value|4
+value|5
 comment|/* RICOH RF5C465/466/467 */
 define|#
 directive|define
 name|CB_CIRRUS
-value|5
+value|6
 comment|/* Cirrus Logic CLPD683x */
 define|#
 directive|define
 name|CB_TOPIC95
-value|6
+value|7
 comment|/* Toshiba ToPIC95 */
 define|#
 directive|define
 name|CB_TOPIC97
-value|7
+value|8
 comment|/* Toshiba ToPIC97/100 */
 name|SLIST_HEAD
 argument_list|(
