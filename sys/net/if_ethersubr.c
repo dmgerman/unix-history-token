@@ -1443,6 +1443,9 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|n
 operator|=
 name|m_copy
@@ -1456,7 +1459,11 @@ name|int
 operator|)
 name|M_COPYALL
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|n
 operator|->
 name|m_pkthdr
@@ -1495,6 +1502,7 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
