@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#73 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#78 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -317,6 +317,44 @@ parameter_list|)
 define|\
 value|(0x01<< (SCB_GET_TARGET_OFFSET(ahd, scb)))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHD_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SCB_IS_SILENT
+parameter_list|(
+name|scb
+parameter_list|)
+define|\
+value|((ahd_debug& AHD_SHOW_MASKED_ERRORS) == 0		\&& (((scb)->flags& SCB_SILENT) != 0))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCB_IS_SILENT
+parameter_list|(
+name|scb
+parameter_list|)
+define|\
+value|(((scb)->flags& SCB_SILENT) != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TCLs have the following format: TTTTLLLLLLLL  */
@@ -943,6 +981,14 @@ block|,
 name|AHD_RESET_POLL_ACTIVE
 init|=
 literal|0x200000
+block|,
+name|AHD_UPDATE_PEND_CMDS
+init|=
+literal|0x400000
+block|,
+name|AHD_RUNNING_QOUTFIFO
+init|=
+literal|0x800000
 block|}
 name|ahd_flag
 typedef|;
@@ -1362,6 +1408,11 @@ block|,
 name|SCB_ON_COL_LIST
 init|=
 literal|0x08000
+block|,
+name|SCB_SILENT
+init|=
+literal|0x10000
+comment|/* 					   * Be quiet about transmission type 					   * errors.  They are expected and we 					   * don't want to upset the user.  This 					   * flag is typically used during DV. 					   */
 block|}
 name|scb_flag
 typedef|;
@@ -1802,13 +1853,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AHD_PERIOD_ASYNC
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
 name|AHD_PERIOD_10MHz
 value|0x19
 end_define
@@ -1948,13 +1992,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AHD_SYNCRATE_MAX
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
 name|AHD_SYNCRATE_160
 value|0x8
 end_define
@@ -2020,6 +2057,13 @@ define|#
 directive|define
 name|AHD_SYNCRATE_ASYNC
 value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_SYNCRATE_MAX
+value|AHD_SYNCRATE_160
 end_define
 
 begin_comment
@@ -2997,6 +3041,31 @@ comment|/* 	 * Timer handles for timer driven callbacks. 	 */
 name|ahd_timer_t
 name|reset_timer
 decl_stmt|;
+name|ahd_timer_t
+name|stat_timer
+decl_stmt|;
+comment|/* 	 * Statistics. 	 */
+define|#
+directive|define
+name|AHD_STAT_UPDATE_US
+value|250000
+comment|/* 250ms */
+define|#
+directive|define
+name|AHD_STAT_BUCKETS
+value|4
+name|u_int
+name|cmdcmplt_bucket
+decl_stmt|;
+name|uint32_t
+name|cmdcmplt_counts
+index|[
+name|AHD_STAT_BUCKETS
+index|]
+decl_stmt|;
+name|uint32_t
+name|cmdcmplt_total
+decl_stmt|;
 comment|/* 	 * Card characteristics 	 */
 name|ahd_chip
 name|chip
@@ -3079,6 +3148,10 @@ name|targetcmds
 decl_stmt|;
 name|uint8_t
 name|tqinfifonext
+decl_stmt|;
+comment|/* 	 * Cached verson of the hs_mailbox so we can avoid 	 * pausing the sequencer during mailbox updates. 	 */
+name|uint8_t
+name|hs_mailbox
 decl_stmt|;
 comment|/* 	 * Incoming and outgoing message handling. 	 */
 name|uint8_t
@@ -3181,6 +3254,51 @@ decl_stmt|;
 comment|/* Selection Timer settings */
 name|int
 name|seltime
+decl_stmt|;
+comment|/* 	 * Interrupt coalessing settings. 	 */
+define|#
+directive|define
+name|AHD_INT_COALESSING_TIMER_DEFAULT
+value|250
+comment|/*us*/
+define|#
+directive|define
+name|AHD_INT_COALESSING_MAXCMDS_DEFAULT
+value|10
+define|#
+directive|define
+name|AHD_INT_COALESSING_MAXCMDS_MAX
+value|127
+define|#
+directive|define
+name|AHD_INT_COALESSING_MINCMDS_DEFAULT
+value|5
+define|#
+directive|define
+name|AHD_INT_COALESSING_MINCMDS_MAX
+value|127
+define|#
+directive|define
+name|AHD_INT_COALESSING_THRESHOLD_DEFAULT
+value|2000
+define|#
+directive|define
+name|AHD_INT_COALESSING_STOP_THRESHOLD_DEFAULT
+value|1000
+name|u_int
+name|int_coalessing_timer
+decl_stmt|;
+name|u_int
+name|int_coalessing_maxcmds
+decl_stmt|;
+name|u_int
+name|int_coalessing_mincmds
+decl_stmt|;
+name|u_int
+name|int_coalessing_threshold
+decl_stmt|;
+name|u_int
+name|int_coalessing_stop_threshold
 decl_stmt|;
 name|uint16_t
 name|user_discenable
@@ -3475,6 +3593,18 @@ comment|/***********************************************************************
 end_comment
 
 begin_function_decl
+name|void
+name|ahd_reset_cmds_pending
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|ahd_find_busy_tcl
 parameter_list|(
@@ -3762,6 +3892,42 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ahd_update_coalessing_values
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|u_int
+name|timer
+parameter_list|,
+name|u_int
+name|maxcmds
+parameter_list|,
+name|u_int
+name|mincmds
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_enable_coalessing
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ahd_pause_and_flushwork
 parameter_list|(
 name|struct
@@ -3997,6 +4163,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ahd_clear_intstat
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahd_flush_qoutfifo
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -4828,8 +5006,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHD_DEBUG_SEQUENCER
+name|AHD_SHOW_INT_COALESSING
 value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHD_DEBUG_SEQUENCER
+value|0x20000
 end_define
 
 begin_endif
