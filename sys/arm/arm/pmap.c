@@ -9516,12 +9516,13 @@ name|opte
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|cpu_dcache_wbinv_range(va, PAGE_SIZE);
-endif|#
-directive|endif
+name|cpu_dcache_wbinv_range
+argument_list|(
+name|va
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 name|cpu_tlb_flushD_SE
 argument_list|(
 name|va
@@ -9634,6 +9635,21 @@ argument_list|,
 name|KENTER_CACHE
 operator||
 name|KENTER_USER
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Call pmap_fault_fixup now, to make sure we'll have no exception 	 * at the first use of the new address, or bad things will happen, 	 * as we use one of these addresses in the exception handlers. 	 */
+name|pmap_fault_fixup
+argument_list|(
+name|pmap_kernel
+argument_list|()
+argument_list|,
+name|va
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
