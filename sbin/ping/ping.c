@@ -4204,8 +4204,8 @@ name|struct
 name|in_addr
 name|ina
 decl_stmt|;
-name|struct
-name|timeval
+specifier|const
+name|void
 modifier|*
 name|tp
 decl_stmt|;
@@ -4348,11 +4348,6 @@ directive|ifndef
 name|icmp_data
 name|tp
 operator|=
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
 operator|&
 name|icp
 operator|->
@@ -4362,24 +4357,19 @@ else|#
 directive|else
 name|tp
 operator|=
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
 name|icp
 operator|->
 name|icmp_data
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Avoid unaligned data (cannot use memcpy) */
-name|bcopy
+comment|/* Copy to avoid alignment problems: */
+name|memcpy
 argument_list|(
-name|tp
-argument_list|,
 operator|&
 name|tv1
+argument_list|,
+name|tp
 argument_list|,
 sizeof|sizeof
 argument_list|(
