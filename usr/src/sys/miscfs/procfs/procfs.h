@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.5 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs.h	8.6 (Berkeley) %G%  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -289,6 +289,12 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|reg
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|fpreg
 struct_decl|;
 end_struct_decl
 
