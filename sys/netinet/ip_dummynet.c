@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.5 1999/01/12 12:27:54 eivind Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.6 1999/01/12 16:40:57 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -808,6 +808,10 @@ name|printf
 argument_list|(
 literal|"-- Warning, pipe head %p len %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|pkt
 argument_list|,
 name|pipe
@@ -1935,8 +1939,16 @@ name|printf
 argument_list|(
 literal|"dn_rule_delete, r %p, default %p%s, %d matches\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|r
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ip_fw_default_rule
 argument_list|,
 name|r
