@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.12 (Berkeley) 5/20/95  * $Id: nfs_vfsops.c,v 1.69 1998/05/31 20:08:56 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.12 (Berkeley) 5/20/95  * $Id: nfs_vfsops.c,v 1.70 1998/06/01 10:01:31 peter Exp $  */
 end_comment
 
 begin_include
@@ -5072,7 +5072,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|nmp
 operator|->
 name|nm_maxfilesize
@@ -5383,7 +5382,13 @@ name|error
 operator|)
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * unmount system call  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_unmount
@@ -5653,7 +5658,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Return root of a filesystem  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_root
@@ -5769,12 +5780,24 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|syncprt
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Flush out the buffer cache  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_sync
@@ -5924,8 +5947,17 @@ name|allerror
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * NFS flat namespace lookup.  * Currently unsupported.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_vget
@@ -5957,8 +5989,17 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * At this point, this should never happen  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_fhtovp
@@ -6014,8 +6055,17 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Vnode pointer to File handle, should never happen either  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_vptofh
@@ -6041,8 +6091,17 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Vfs start routine, a no-op.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_start
@@ -6073,8 +6132,17 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Do operations associated with quotas, not supported  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|nfs_quotactl
@@ -6115,7 +6183,7 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
