@@ -1,7 +1,80 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	8.6 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Arguments to mount UFS-based filesystems  */
+end_comment
+
+begin_struct
+struct|struct
+name|ufs_args
+block|{
+name|char
+modifier|*
+name|fspec
+decl_stmt|;
+comment|/* block special device to mount */
+name|struct
+name|export_args
+name|export
+decl_stmt|;
+comment|/* network export information */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MFS
+end_ifdef
+
+begin_comment
+comment|/*  * Arguments to mount MFS  */
+end_comment
+
+begin_struct
+struct|struct
+name|mfs_args
+block|{
+name|char
+modifier|*
+name|fspec
+decl_stmt|;
+comment|/* name to export for statfs */
+name|struct
+name|export_args
+name|export
+decl_stmt|;
+comment|/* if exported MFSes are supported */
+name|caddr_t
+name|base
+decl_stmt|;
+comment|/* base of file system in memory */
+name|u_long
+name|size
+decl_stmt|;
+comment|/* size of file system */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MFS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
@@ -244,6 +317,15 @@ name|b
 parameter_list|)
 value|((b) == (a) + ump->um_seqinc)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 end_unit
 
