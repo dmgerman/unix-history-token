@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.17 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.18 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.17 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.18 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -810,20 +810,11 @@ name|h_errno
 operator|==
 name|TRY_AGAIN
 condition|)
-block|{
-name|CurEnv
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
-expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-block|}
 comment|/* 			**  XXX Should look for mail forwarder record here 			**  XXX if (h_errno == NO_ADDRESS). 			*/
 return|return
 operator|(
@@ -1168,13 +1159,6 @@ case|case
 name|ENETUNREACH
 case|:
 comment|/* there are others, I'm sure..... */
-name|CurEnv
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
-expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL

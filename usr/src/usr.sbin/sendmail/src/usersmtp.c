@@ -45,7 +45,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.6 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)usersmtp.c	5.7 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.6 (Berkeley) %G%"
+literal|"@(#)usersmtp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -938,16 +938,6 @@ name|smtpquit
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CurEnv
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
 expr_stmt|;
 end_expr_stmt
 
