@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.8 1999/01/23 01:29:05 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.21 1998/12/30 06:04:31 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -2485,10 +2485,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Kludge: kernel printf doesn't handle quads */
-end_comment
-
 begin_function_decl
 specifier|static
 name|char
@@ -2593,14 +2589,6 @@ name|int
 name|len
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|2
-name|BROKEN_GDB
-endif|#
-directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -2620,16 +2608,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX die, die */
-comment|/* First write the drive configuration */
-block|for (i = 0; i< vinum_conf.drives_used; i++)     {     struct drive *drive;          drive =&vinum_conf.drive [i];     if (drive->state != drive_unallocated)       {       sprintf (s, 	       "drive %s state %s device %s\n", 	       drive->label.name, 	       drive_state (drive->state), 	       drive->devicename);       while (*s) 	s++;
-comment|/* find the end */
-block|if (s>&config [len - 80]) 	{ 	printf ("vinum: configuration data overflow\n"); 	return; 	}       }     }
-endif|#
-directive|endif
 comment|/* Then the volume configuration */
 for|for
 control|(
@@ -2738,15 +2716,6 @@ name|s
 operator|++
 expr_stmt|;
 comment|/* find the end */
-if|#
-directive|if
-literal|0
-comment|/* Do we need to state the plexes? */
-block|for (j = 0; j< vol->plexes; j++) 	{ 	sprintf (s, " plex %s", vinum_conf.plex [vol->plex [j]].name); 	while (*s) 	  s++;
-comment|/* find the end */
-block|}
-endif|#
-directive|endif
 name|s
 operator|=
 name|sappend
@@ -2862,19 +2831,6 @@ name|organization
 operator|==
 name|plex_striped
 operator|)
-ifdef|#
-directive|ifdef
-name|RAID5
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
-operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 name|sprintf
@@ -4571,13 +4527,23 @@ expr_stmt|;
 comment|/* try to open it */
 if|if
 condition|(
+operator|(
 name|drive
 operator|->
 name|lasterror
 operator|!=
 literal|0
-condition|)
+operator|)
 comment|/* didn't work, */
+operator|||
+operator|(
+name|drive
+operator|->
+name|state
+operator|!=
+name|drive_up
+operator|)
+condition|)
 name|free_drive
 argument_list|(
 name|drive
@@ -5028,7 +4994,6 @@ specifier|const
 expr|struct
 name|drive
 operator|*
-specifier|const
 operator|*
 operator|)
 name|va
@@ -5045,7 +5010,6 @@ specifier|const
 expr|struct
 name|drive
 operator|*
-specifier|const
 operator|*
 operator|)
 name|vb
