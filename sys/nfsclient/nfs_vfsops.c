@@ -1510,10 +1510,10 @@ goto|goto
 name|nfsmout
 goto|;
 block|}
+name|sfp
+operator|=
 name|nfsm_dissect
 argument_list|(
-name|sfp
-argument_list|,
 expr|struct
 name|nfs_statfs
 operator|*
@@ -1956,10 +1956,10 @@ operator|!
 name|error
 condition|)
 block|{
+name|fsp
+operator|=
 name|nfsm_dissect
 argument_list|(
-name|fsp
-argument_list|,
 expr|struct
 name|nfsv3_fsinfo
 operator|*

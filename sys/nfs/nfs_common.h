@@ -119,14 +119,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|nfsm_dissect_xx
-parameter_list|(
 name|void
 modifier|*
-modifier|*
-name|a
-parameter_list|,
+name|nfsm_dissect_xx
+parameter_list|(
 name|int
 name|s
 parameter_list|,
@@ -207,7 +203,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
+modifier|*
 name|nfsm_disct
 parameter_list|(
 name|struct
@@ -221,9 +218,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|caddr_t
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -238,27 +232,20 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(c)nfsm_build_xx((s),&mb,&bpos);
+value|(c)nfsm_build_xx((s),&mb,&bpos)
 end_define
-
-begin_comment
-unit|\
-comment|/* XXX 'c' arg (type) is not used */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|nfsm_dissect
 parameter_list|(
-name|a
-parameter_list|,
 name|c
 parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 	int t1; \ 	t1 = nfsm_dissect_xx((void **)&(a), (s),&md,&dpos); \ 	if (t1) { \ 		error = t1; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ } while (0)
+value|({ \ 	void *ret; \ 	ret = nfsm_dissect_xx((s),&md,&dpos); \ 	if (ret == NULL) { \ 		error = EBADRPC; \ 		m_freem(mrep); \ 		mrep = NULL; \ 		goto nfsmout; \ 	} \ 	(c)ret; \ })
 end_define
 
 begin_define

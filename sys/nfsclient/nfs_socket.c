@@ -3391,10 +3391,10 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
+name|tl
+operator|=
 name|nfsm_dissect
 argument_list|(
-name|tl
-argument_list|,
 name|u_int32_t
 operator|*
 argument_list|,
@@ -4426,10 +4426,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * break down the rpc header and check if ok 	 */
+name|tl
+operator|=
 name|nfsm_dissect
 argument_list|(
-name|tl
-argument_list|,
 name|u_int32_t
 operator|*
 argument_list|,
@@ -4529,10 +4529,10 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tl
+operator|=
 name|nfsm_dissect
 argument_list|(
-name|tl
-argument_list|,
 name|u_int32_t
 operator|*
 argument_list|,
@@ -4548,10 +4548,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|tl
+operator|=
 name|nfsm_dissect
 argument_list|(
-name|tl
-argument_list|,
 name|u_int32_t
 operator|*
 argument_list|,
