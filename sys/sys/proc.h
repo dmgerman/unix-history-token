@@ -1813,8 +1813,12 @@ operator|(
 name|uid_t
 name|uid
 operator|,
-name|rlim_t
-name|diff
+name|u_long
+operator|*
+name|hiwat
+operator|,
+name|u_long
+name|to
 operator|,
 name|rlim_t
 name|max
