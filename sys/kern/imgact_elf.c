@@ -1901,6 +1901,25 @@ begin_comment
 comment|/*  * non static, as it can be overridden by start_init()  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|fallback_elf_brand
+init|=
+name|ELFOSABI_FREEBSD
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|fallback_elf_brand
@@ -1909,6 +1928,11 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
