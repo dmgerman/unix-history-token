@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)timed.h	1.4	(Berkeley)	%G%	*/
+comment|/*	@(#)timed.h	1.5	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -38,10 +38,18 @@ decl_stmt|;
 name|short
 name|tsp_seq
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|timeval
-name|tsp_time
+name|tspu_time
 decl_stmt|;
+name|char
+name|tspu_hopcnt
+decl_stmt|;
+block|}
+name|tsp_u
+union|;
 name|char
 name|tsp_name
 index|[
@@ -51,6 +59,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|tsp_time
+value|tsp_u.tspu_time
+end_define
+
+begin_define
+define|#
+directive|define
+name|tsp_hopcnt
+value|tsp_u.tspu_hopcnt
+end_define
 
 begin_comment
 comment|/*  * Command types.  */
@@ -323,8 +345,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TSPTYPENUMBER
+name|TSP_LOOP
 value|24
+end_define
+
+begin_comment
+comment|/* loop detection packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSPTYPENUMBER
+value|25
 end_define
 
 begin_ifdef
@@ -389,6 +422,8 @@ block|,
 literal|"SETDATE"
 block|,
 literal|"SETDATEREQ"
+block|,
+literal|"LOOP"
 block|}
 decl_stmt|;
 end_decl_stmt
