@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)disktab.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)disktab.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,6 +48,14 @@ name|int
 name|d_rpm
 decl_stmt|;
 comment|/* revolutions/minute */
+name|int
+name|d_badsectforw
+decl_stmt|;
+comment|/* supports DEC bad144 std */
+name|int
+name|d_sectoffset
+decl_stmt|;
+comment|/* use sect rather than cyl offsets */
 struct|struct
 name|partition
 block|{
