@@ -265,12 +265,6 @@ name|errnum
 decl_stmt|;
 block|{
 specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
