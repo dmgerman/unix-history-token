@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.26 1997/10/27 07:45:47 charnier Exp $"
+literal|"$Id: ypbind.c,v 1.27 1998/01/19 23:31:38 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1263,6 +1263,13 @@ name|fromsin
 decl_stmt|,
 name|bindsin
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|result
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 name|strchr
@@ -1460,7 +1467,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|result
 operator|)
 return|;
 block|}
