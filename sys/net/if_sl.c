@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.8 1994/10/05 21:22:45 wollman Exp $  */
+comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.9 1994/10/08 01:40:22 phk Exp $  */
 end_comment
 
 begin_comment
@@ -195,7 +195,7 @@ directive|include
 file|<net/bpf.h>
 endif|#
 directive|endif
-comment|/*  * SLRMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLRMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is the default transmit MTU. The transmit MTU should be kept  * small enough so that interactive use doesn't suffer, but large  * enough to provide good performance. 552 is a good choice for SLMTU  * because it is high enough to not fragment TCP packets being routed  * through this host. Packet fragmentation is bad with SLIP because  * fragment headers aren't compressed. The previous assumptions about  * the best MTU value don't really hold when using modern modems with  * BTLZ data compression because the modem buffers play a much larger  * role in interactive performance than the MTU. The MTU can be changed  * at any time to suit the specific environment with ifconfig(8), and  * its maximum value is defined as SLTMAX. SLTMAX must not be so large  * that it would overflow the stack if BPF is configured.  *  * SLIP_HIWAT is the amount of data that will be queued 'downstream'  * of us (i.e., in clists waiting to be picked up by the tty output  * interrupt).  If we queue a lot of data downstream, it's immune to  * our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
+comment|/*  * SLRMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLRMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is the default transmit MTU. The transmit MTU should be kept  * small enough so that interactive use doesn't suffer, but large  * enough to provide good performance. 552 is a good choice for SLMTU  * because it is high enough to not fragment TCP packets being routed  * through this host. Packet fragmentation is bad with SLIP because  * fragment headers aren't compressed. The previous assumptions about  * the best MTU value don't really hold when using modern modems with  * BTLZ data compression because the modem buffers play a much larger  * role in interactive performance than the MTU. The MTU can be changed  * at any time to suit the specific environment with ifconfig(8), and  * its maximum value is defined as SLTMAX. SLTMAX must not be so large  * that it would overflow the stack if BPF is configured (XXX; if_ppp.c  * handles this better).  *  * SLIP_HIWAT is the amount of data that will be queued 'downstream'  * of us (i.e., in clists waiting to be picked up by the tty output  * interrupt).  If we queue a lot of data downstream, it's immune to  * our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
 if|#
 directive|if
 name|NBPFILTER
@@ -245,11 +245,6 @@ directive|define
 name|CLISTRESERVE
 value|1024
 comment|/* Can't let clists get too low */
-comment|/* add this many cblocks to the pool */
-define|#
-directive|define
-name|CLISTEXTRA
-value|((SLRMAX+SLTMAX) / CBSIZE)
 comment|/*  * SLIP ABORT ESCAPE MECHANISM:  *	(inspired by HAYES modem escape arrangement)  *	1sec escape 1sec escape 1sec escape { 1sec escape 1sec escape }  *	within window time signals a "soft" exit from slip mode by remote end  *	if the IFF_DEBUG flag is on.  */
 define|#
 directive|define
@@ -837,9 +832,53 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
-name|cblock_alloc_cblocks
+comment|/* 			 * We don't use t_canq or t_rawq, so reduce their 			 * cblock resources to 0.  Reserve enough cblocks 			 * for t_outq to guarantee that we can fit a full 			 * packet if the SLIP_HIWAT check allows slstart() 			 * to loop.  Use the same value for the cblock 			 * limit since the reserved blocks should always 			 * be enough.  Reserving cblocks probably makes 			 * the CLISTRESERVE check unnecessary and wasteful. 			 */
+name|clist_alloc_cblocks
 argument_list|(
-name|CLISTEXTRA
+operator|&
+name|tp
+operator|->
+name|t_canq
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|SLIP_HIWAT
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|SLIP_HIWAT
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -891,12 +930,21 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX the placement of the following spl is misleading.  tty 	 * interrupts must be blocked across line discipline switches 	 * and throughout closes to avoid races. 	 */
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* actually, max(spltty, splnet) */
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_line
@@ -972,11 +1020,6 @@ operator|->
 name|sc_buf
 operator|=
 literal|0
-expr_stmt|;
-name|cblock_free_cblocks
-argument_list|(
-name|CLISTEXTRA
-argument_list|)
 expr_stmt|;
 block|}
 name|splx
@@ -3216,12 +3259,10 @@ name|ifr_mtu
 operator|>
 name|SLTMAX
 condition|)
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 else|else
 block|{
 name|ifp
@@ -3231,6 +3272,33 @@ operator|=
 name|ifr
 operator|->
 name|ifr_mtu
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|sl_softc
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
+operator|.
+name|sc_ttyp
+operator|->
+name|t_outq
+argument_list|,
+name|ifp
+operator|->
+name|if_mtu
+operator|+
+name|SLIP_HIWAT
+argument_list|,
+name|ifp
+operator|->
+name|if_mtu
+operator|+
+name|SLIP_HIWAT
+argument_list|)
 expr_stmt|;
 block|}
 break|break;

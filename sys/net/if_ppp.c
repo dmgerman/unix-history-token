@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.6 1994/11/01 22:18:34 wollman Exp $ */
+comment|/* $Id: if_ppp.c,v 1.7 1994/11/23 08:29:44 ugen Exp $ */
 end_comment
 
 begin_comment
@@ -280,6 +280,17 @@ end_define
 
 begin_comment
 comment|/* Don't start a new packet if HIWAT on que */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_MAXMTU
+value|16384
+end_define
+
+begin_comment
+comment|/* Largest MTU we allow */
 end_comment
 
 begin_decl_stmt
@@ -1412,6 +1423,55 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+comment|/*      * XXX we fudge t_canq to avoid providing pppselect() and FIONREAD.      * I hope one char is enough.  The following actually gives CBSIZE      * chars.      */
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_canq
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1466,6 +1526,14 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* paranoid; splnet probably ok */
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_line
@@ -7374,6 +7442,20 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|ifr
+operator|->
+name|ifr_mtu
+operator|>
+name|PPP_MAXMTU
+condition|)
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+else|else
+block|{
 name|sc
 operator|->
 name|sc_if
@@ -7384,6 +7466,40 @@ name|ifr
 operator|->
 name|ifr_mtu
 expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+operator|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|sc
+operator|->
+name|sc_devp
+operator|)
+operator|->
+name|t_outq
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCGIFMTU
