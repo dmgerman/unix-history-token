@@ -1710,6 +1710,20 @@ argument_list|,
 name|sn
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|t
+argument_list|,
+literal|"VINUM"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+empty_stmt|;
+comment|/* nothing */
 else|else
 block|{
 name|printf
