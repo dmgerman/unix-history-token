@@ -15,6 +15,12 @@ directive|define
 name|_LIBC_PRIVATE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<spinlock.h>
+end_include
+
 begin_comment
 comment|/*  * This global flag is non-zero when a process has created one  * or more threads. It is used to avoid calling locking functions  * when they are not required.  */
 end_comment
@@ -227,6 +233,18 @@ specifier|const
 name|char
 modifier|*
 name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * This is the lock to make malloc() thread-safe.  It is externalized  * so that thread libraries can protect malloc across fork().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|spinlock_t
+modifier|*
+name|__malloc_lock
 decl_stmt|;
 end_decl_stmt
 

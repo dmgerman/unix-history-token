@@ -250,6 +250,16 @@ name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|spinlock_t
+modifier|*
+name|__malloc_lock
+init|=
+operator|&
+name|thread_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
