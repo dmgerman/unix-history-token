@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)events.c	5.2 (Berkeley) %G%"
+literal|"@(#)events.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: events.c,v 1.5 84/12/26 10:39:26 linton Exp $"
+literal|"$Header: events.c,v 1.3 87/07/08 18:46:02 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,53 +135,11 @@ name|Breakpoint
 typedef|;
 end_typedef
 
-begin_decl_stmt
-name|boolean
-name|inst_tracing
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|boolean
-name|single_stepping
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|boolean
-name|isstopped
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
 file|"symbols.h"
 end_include
-
-begin_decl_stmt
-name|Symbol
-name|linesym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Symbol
-name|procsym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Symbol
-name|pcsym
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Symbol
-name|retaddrsym
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -207,10 +165,70 @@ parameter_list|)
 value|event_alloc(true, cond, cmdlist)
 end_define
 
+begin_comment
+comment|/*  * When tracing variables we keep a copy of their most recent value  * and compare it to the current one each time a breakpoint occurs.  * MAXTRSIZE is the maximum size variable we allow.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXTRSIZE
+value|512
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|public
+name|boolean
+name|inst_tracing
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|boolean
+name|single_stepping
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|boolean
+name|isstopped
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|Symbol
+name|linesym
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|Symbol
+name|procsym
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|Symbol
+name|pcsym
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|Symbol
+name|retaddrsym
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2939,17 +2957,6 @@ name|false
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * When tracing variables we keep a copy of their most recent value  * and compare it to the current one each time a breakpoint occurs.  * MAXTRSIZE is the maximum size variable we allow.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXTRSIZE
-value|512
-end_define
 
 begin_comment
 comment|/*  * List of variables being watched.  */

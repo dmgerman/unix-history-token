@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)coredump.c	5.2 (Berkeley) %G%"
+literal|"@(#)coredump.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: coredump.c,v 1.5 84/12/26 10:38:56 linton Exp $"
+literal|"$Header: coredump.c,v 1.4 87/04/15 03:25:22 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,14 +276,13 @@ name|datamap
 operator|.
 name|seekaddr
 operator|+
-name|physaddr
-argument_list|(
 name|s
 operator|->
 name|symvalue
 operator|.
 name|offset
-argument_list|)
+operator|&
+literal|0x7fffffff
 operator|-
 name|datamap
 operator|.
@@ -460,6 +459,11 @@ argument_list|,
 name|corefile
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|vax
+operator|||
+name|tahoe
 name|savreg
 operator|=
 operator|(
@@ -479,6 +483,54 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
+else|#
+directive|else
+else|ifdef mc68000
+name|savreg
+operator|=
+operator|(
+name|Word
+operator|*
+operator|)
+operator|(
+operator|&
+name|ustruct
+operator|.
+name|dummy
+index|[
+name|ctob
+argument_list|(
+name|UPAGES
+argument_list|)
+operator|-
+literal|10
+index|]
+operator|-
+operator|(
+name|NREG
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Word
+argument_list|)
+operator|)
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IRIS
+operator|*
+name|mask
+operator|=
+name|savreg
+index|[
+name|RPS
+index|]
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|mask
 operator|=
@@ -487,6 +539,8 @@ index|[
 name|PS
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 name|copyregs
 argument_list|(
 name|savreg
@@ -561,12 +615,14 @@ name|datamap
 operator|.
 name|begin
 operator|=
-literal|0
+name|CODESTART
 expr_stmt|;
 name|datamap
 operator|.
 name|end
 operator|=
+name|CODESTART
+operator|+
 name|ctob
 argument_list|(
 name|up
@@ -611,6 +667,8 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
+operator|+
+name|CODESTART
 expr_stmt|;
 name|datamap
 operator|.
@@ -772,6 +830,8 @@ name|hdr
 argument_list|)
 operator|+
 name|addr
+operator|-
+name|CODESTART
 argument_list|,
 literal|0
 argument_list|)

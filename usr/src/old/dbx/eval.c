@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.4 (Berkeley) %G%"
+literal|"@(#)eval.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: eval.c,v 1.5 84/12/26 10:39:08 linton Exp $"
+literal|"$Header: eval.c,v 1.2 87/03/25 19:48:33 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -891,11 +891,10 @@ name|len
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Move the stack pointer so that the top of the stack has 	 * something corresponding to the size of the current node type. 	 * If this new type is bigger than the subtree (len> 0), 	 * then the stack is padded with nulls.  If it's smaller, 	 * the stack is just dropped by the appropriate amount. 	 */
 case|case
 name|O_TYPERENAME
 case|:
-name|typerename
+name|loophole
 argument_list|(
 name|size
 argument_list|(
@@ -3640,9 +3639,11 @@ name|Node
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|Boolean
 name|b
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -3663,15 +3664,19 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+name|pop
+argument_list|(
+name|Boolrep
+argument_list|)
+expr_stmt|;
 name|b
 operator|=
 operator|(
 name|Boolean
 operator|)
-name|pop
-argument_list|(
-name|Boolrep
-argument_list|)
+name|i
 expr_stmt|;
 block|}
 return|return
@@ -4668,6 +4673,26 @@ decl_stmt|;
 name|Command
 name|action
 decl_stmt|;
+if|if
+condition|(
+name|size
+argument_list|(
+name|exp
+operator|->
+name|nodetype
+argument_list|)
+operator|>
+name|MAXTRSIZE
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"expression too large to trace (limit is %d bytes)"
+argument_list|,
+name|MAXTRSIZE
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|=
 operator|(
@@ -5219,6 +5244,26 @@ decl_stmt|;
 name|Command
 name|action
 decl_stmt|;
+if|if
+condition|(
+name|size
+argument_list|(
+name|exp
+operator|->
+name|nodetype
+argument_list|)
+operator|>
+name|MAXTRSIZE
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"expression too large to trace (limit is %d bytes)"
+argument_list|,
+name|MAXTRSIZE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|place
@@ -6131,42 +6176,6 @@ begin_comment
 comment|/*  * Send a message to the current support person.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAINTAINER
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|maintainer
-index|[]
-init|=
-name|MAINTAINER
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|maintainer
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|public
 name|gripe
@@ -6195,23 +6204,9 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|maintainer
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|puts
-argument_list|(
-literal|"Gripes not supported at this site.  Sorry."
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+ifdef|#
+directive|ifdef
+name|MAINTAINER
 name|puts
 argument_list|(
 literal|"Type control-D to end your message.  Be sure to include"
@@ -6259,7 +6254,7 @@ literal|"-s"
 argument_list|,
 name|subject
 argument_list|,
-name|maintainer
+name|MAINTAINER
 argument_list|,
 name|nil
 argument_list|)
@@ -6307,6 +6302,20 @@ literal|"\nMail not sent."
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|puts
+argument_list|(
+literal|"Sorry, no dbx maintainer available to gripe to."
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"Try contacting your system manager."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

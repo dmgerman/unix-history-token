@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	5.3 (Berkeley) %G%"
+literal|"@(#)fortran.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: fortran.c,v 1.5 84/12/26 10:39:37 linton Exp $"
+literal|"$Header: fortran.c,v 1.3 87/03/25 20:00:03 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1679,7 +1679,7 @@ name|printlogical
 parameter_list|(
 name|i
 parameter_list|)
-name|Integer
+name|integer
 name|i
 decl_stmt|;
 block|{
@@ -1729,13 +1729,11 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|(
 name|t
 operator|->
 name|type
 operator|==
 name|t_int
-operator|)
 name|or
 name|istypename
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,6 +12,43 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|double
+value|long float
+end_define
+
+begin_define
+define|#
+directive|define
+name|atof
+value|_latof
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRIS
+end_define
+
+begin_define
+define|#
+directive|define
+name|mc68000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
