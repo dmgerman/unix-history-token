@@ -1689,7 +1689,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * vm_map_growstack() will fail if *sfp does not fit inside the stack 	 * and the stack can not be grown. 	 * useracc() will return FALSE if access is denied. 	 */
 name|fp
 operator|=
 operator|(
@@ -1701,106 +1700,6 @@ name|sfp
 operator|-
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|vm_map_growstack
-argument_list|(
-name|p
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|fp
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-operator|||
-operator|!
-name|useracc
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|fp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|fp
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sfp
-argument_list|)
-argument_list|,
-name|VM_PROT_WRITE
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
-name|CTR2
-argument_list|(
-name|KTR_SIG
-argument_list|,
-literal|"sendsig: trashed stack td=%p sfp=%p"
-argument_list|,
-name|td
-argument_list|,
-name|sfp
-argument_list|)
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|SIGACTION
-argument_list|(
-name|p
-argument_list|,
-name|SIGILL
-argument_list|)
-operator|=
-name|SIG_DFL
-expr_stmt|;
-name|SIGDELSET
-argument_list|(
-name|p
-operator|->
-name|p_sigignore
-argument_list|,
-name|SIGILL
-argument_list|)
-expr_stmt|;
-name|SIGDELSET
-argument_list|(
-name|p
-operator|->
-name|p_sigcatch
-argument_list|,
-name|SIGILL
-argument_list|)
-expr_stmt|;
-name|SIGDELSET
-argument_list|(
-name|p
-operator|->
-name|p_sigmask
-argument_list|,
-name|SIGILL
-argument_list|)
-expr_stmt|;
-name|psignal
-argument_list|(
-name|p
-argument_list|,
-name|SIGILL
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* Translate the signal if appropriate. */
 if|if
 condition|(
@@ -2100,7 +1999,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stub to satisfy the reference to osigreturn in the syscall table.  This  * is needed even for newer arches that don't support old signals because  * the syscall table is machine-independent.  */
+comment|/*  * Stub to satisfy the reference to osigreturn in the syscall table.  This  * is needed even for newer arches that don't support old signals because  * the syscall table is machine-independent.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2158,6 +2057,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
