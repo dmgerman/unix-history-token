@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -158,7 +158,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|gethostid
+name|ogethostid
 argument_list|(
 argument|p
 argument_list|,
@@ -226,7 +226,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|sethostid
+name|osethostid
 argument_list|(
 argument|p
 argument_list|,
@@ -287,7 +287,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|gethostname
+name|ogethostname
 argument_list|(
 argument|p
 argument_list|,
@@ -376,7 +376,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|sethostname
+name|osethostname
 argument_list|(
 argument|p
 argument_list|,
