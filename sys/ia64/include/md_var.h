@@ -130,15 +130,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ia64_running_in_simulator
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|is_physical_memory
 parameter_list|(
 name|vm_offset_t

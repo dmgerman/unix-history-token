@@ -25,6 +25,10 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|SAL_SIGNATURE
+value|"SST_"
 name|u_int32_t
 name|sal_length
 decl_stmt|;

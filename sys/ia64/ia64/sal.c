@@ -291,7 +291,7 @@ name|saltab
 operator|->
 name|sal_signature
 argument_list|,
-literal|"SST_"
+name|SAL_SIGNATURE
 argument_list|,
 literal|4
 argument_list|)

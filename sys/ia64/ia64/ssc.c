@@ -390,13 +390,6 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|ia64_running_in_simulator
-argument_list|()
-condition|)
-return|return;
 name|cp
 operator|->
 name|cn_dev
@@ -440,13 +433,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|ia64_running_in_simulator
-argument_list|()
-condition|)
-return|return;
 name|make_dev
 argument_list|(
 operator|&

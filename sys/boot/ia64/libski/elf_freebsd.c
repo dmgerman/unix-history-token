@@ -290,6 +290,14 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|bootinfo
+name|bootinfo
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|enter_kernel
@@ -443,12 +451,8 @@ expr_stmt|;
 comment|/* 	 * Ugly hack, similar to linux. Dump the bootinfo into a 	 * special page reserved in the link map. 	 */
 name|bi
 operator|=
-operator|(
-expr|struct
+operator|&
 name|bootinfo
-operator|*
-operator|)
-literal|0x508000
 expr_stmt|;
 name|bzero
 argument_list|(

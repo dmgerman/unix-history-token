@@ -390,6 +390,13 @@ name|SSC_LOAD_SYMBOLS
 value|69
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSC_SAL_SET_VECTORS
+value|120
+end_define
+
 begin_function_decl
 name|u_int64_t
 name|ssc

@@ -299,12 +299,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|BOOTP
-if|if
-condition|(
-operator|!
-name|ia64_running_in_simulator
-argument_list|()
-condition|)
 name|bootpc_init
 argument_list|()
 expr_stmt|;

@@ -801,6 +801,11 @@ argument_list|(
 name|max_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|max_size
+condition|)
+block|{
 name|p
 operator|=
 name|contigmalloc
@@ -849,11 +854,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"MCA: allocated %ld bytes for state information\n"
+literal|"MCA: allocated %ld bytes for state info.\n"
 argument_list|,
 name|max_size
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Initialize the spin lock used to protect the info block. When APs 	 * get launched, there's a short moment of contention, but in all other 	 * cases it's not a hot spot. I think it's possible to have the MCA 	 * handler be called on multiple processors at the same time, but that 	 * should be rare. On top of that, performance is not an issue when 	 * dealing with machine checks... 	 */
 name|mtx_init
 argument_list|(

@@ -1324,13 +1324,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|ia64_running_in_simulator
-argument_list|()
-condition|)
-return|return;
 name|ssccreate
 argument_list|(
 operator|-

@@ -15,6 +15,10 @@ directive|include
 file|"libski.h"
 end_include
 
+begin_comment
+comment|/*  * Ugh... Work around a bug in the Linux version of ski for SSC_GET_RTC. The  * PSR.dt register is not preserved properly and causes further memory  * references to be done without translation. All we need to do is preserve  * PSR.dt across the SSC call. We do this by saving and restoring psr.l  * completely.  */
+end_comment
+
 begin_function
 name|u_int64_t
 name|ssc
@@ -37,10 +41,15 @@ parameter_list|)
 block|{
 specifier|register
 name|u_int64_t
+name|psr
+decl_stmt|;
+specifier|register
+name|u_int64_t
 name|ret0
 asm|__asm("r8");
+asm|__asm __volatile("mov %0=psr;;" : "=r"(psr));
 asm|__asm __volatile("mov r15=%1\n\t"
-literal|"break 0x80000"
+literal|"break 0x80000;;"
 operator|:
 literal|"=r"
 operator|(
@@ -74,6 +83,10 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_asm
+asm|__asm __volatile("mov psr.l=%0;; srlz.d" :: "r"(psr));
+end_asm
 
 begin_return
 return|return

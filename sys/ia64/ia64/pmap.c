@@ -581,7 +581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Values for ptc.e. XXX values for SKI.  */
+comment|/* Values for ptc.e. XXX values for SKI. */
 end_comment
 
 begin_decl_stmt
