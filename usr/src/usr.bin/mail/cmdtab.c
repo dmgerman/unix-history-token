@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	1.1 %G%"
+literal|"@(#)cmdtab.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,8 @@ literal|"visual"
 block|,
 name|visual
 block|,
+name|W
+operator||
 name|I
 operator||
 name|MSGLIST
@@ -242,6 +244,8 @@ literal|"touch"
 block|,
 name|stouch
 block|,
+name|W
+operator||
 name|MSGLIST
 block|,
 literal|0
@@ -252,6 +256,8 @@ literal|"preserve"
 block|,
 name|preserve
 block|,
+name|W
+operator||
 name|MSGLIST
 block|,
 literal|0
@@ -262,6 +268,8 @@ literal|"delete"
 block|,
 name|delete
 block|,
+name|W
+operator||
 name|P
 operator||
 name|MSGLIST
@@ -274,6 +282,8 @@ literal|"dp"
 block|,
 name|deltype
 block|,
+name|W
+operator||
 name|MSGLIST
 block|,
 literal|0
@@ -284,6 +294,8 @@ literal|"dt"
 block|,
 name|deltype
 block|,
+name|W
+operator||
 name|MSGLIST
 block|,
 literal|0
@@ -332,6 +344,8 @@ literal|"mbox"
 block|,
 name|stouch
 block|,
+name|W
+operator||
 name|MSGLIST
 block|,
 literal|0
@@ -470,11 +484,11 @@ name|file
 block|,
 name|M
 operator||
-name|NOLIST
+name|RAWLIST
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|"?"
 block|,
@@ -584,6 +598,8 @@ literal|"edit"
 block|,
 name|editor
 block|,
+name|W
+operator||
 name|I
 operator||
 name|MSGLIST
@@ -662,6 +678,8 @@ literal|"hold"
 block|,
 name|preserve
 block|,
+name|W
+operator||
 name|MSGLIST
 block|,
 literal|0
