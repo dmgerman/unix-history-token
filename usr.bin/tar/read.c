@@ -1245,7 +1245,7 @@ argument_list|(
 name|tmp
 argument_list|)
 argument_list|,
-literal|"%b %e %Y"
+literal|"%b %e  %Y"
 argument_list|,
 name|localtime
 argument_list|(
