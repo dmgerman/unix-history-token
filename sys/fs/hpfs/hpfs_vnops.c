@@ -1243,7 +1243,7 @@ block|}
 default|default:
 name|error
 operator|=
-name|EOPNOTSUPP
+name|ENOTTY
 expr_stmt|;
 break|break;
 block|}
