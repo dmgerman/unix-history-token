@@ -359,7 +359,6 @@ directive|endif
 block|{
 specifier|register
 name|char
-specifier|const
 modifier|*
 name|whoami
 decl_stmt|;
