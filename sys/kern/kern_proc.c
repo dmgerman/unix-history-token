@@ -698,21 +698,6 @@ name|ui_sbsize
 operator|+=
 name|diff
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|uip
-operator|->
-name|ui_sbsize
-operator|>=
-literal|0
-argument_list|,
-operator|(
-literal|"ui_sbsize (%d)< 0"
-operator|,
-name|uid
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uip
