@@ -830,7 +830,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|4
+literal|6
 argument_list|,
 name|TRUE
 argument_list|)
