@@ -898,7 +898,7 @@ operator|!
 operator|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 operator|)
 condition|)
 name|bus_dmamap_sync
@@ -1580,7 +1580,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|B_READ
+name|ISADMA_READ
 condition|)
 block|{
 name|bus_dmamap_sync
