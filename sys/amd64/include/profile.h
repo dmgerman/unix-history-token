@@ -280,6 +280,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|kmupetext
+name|__P
+argument_list|(
+operator|(
+name|uintfptr_t
+name|nhighpc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
