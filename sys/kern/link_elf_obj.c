@@ -3018,6 +3018,8 @@ condition|)
 name|linker_file_unload
 argument_list|(
 name|lf
+argument_list|,
+name|LINKER_UNLOAD_FORCE
 argument_list|)
 expr_stmt|;
 if|if

@@ -437,6 +437,9 @@ name|linker_file_unload
 parameter_list|(
 name|linker_file_t
 name|_file
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1213,6 +1216,24 @@ name|KLDSYM_LOOKUP
 value|1
 end_define
 
+begin_comment
+comment|/*  * Flags for kldunloadf() and linker_file_unload()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKER_UNLOAD_NORMAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKER_UNLOAD_FORCE
+value|1
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1244,6 +1265,19 @@ name|kldunload
 parameter_list|(
 name|int
 name|_fileid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kldunloadf
+parameter_list|(
+name|int
+name|_fileid
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

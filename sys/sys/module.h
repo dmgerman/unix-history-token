@@ -80,6 +80,8 @@ block|,
 name|MOD_UNLOAD
 block|,
 name|MOD_SHUTDOWN
+block|,
+name|MOD_QUIESCE
 block|}
 name|modeventtype_t
 typedef|;
@@ -435,6 +437,9 @@ name|int
 name|module_unload
 parameter_list|(
 name|module_t
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
