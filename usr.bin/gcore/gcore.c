@@ -211,8 +211,6 @@ block|{
 name|int
 name|ch
 decl_stmt|,
-name|cnt
-decl_stmt|,
 name|efd
 decl_stmt|,
 name|fd

@@ -480,6 +480,10 @@ name|exec
 operator|.
 name|a_text
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ptoa
 argument_list|(
 name|ki
@@ -538,6 +542,7 @@ comment|/*  * core --  *	Build the core file.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aoutcore
 parameter_list|(
@@ -549,6 +554,7 @@ name|fd
 parameter_list|,
 name|pid_t
 name|pid
+name|__unused
 parameter_list|)
 block|{
 union|union

@@ -365,10 +365,12 @@ name|efd
 parameter_list|,
 name|pid_t
 name|pid
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|binfile
+name|__unused
 parameter_list|)
 block|{
 name|Elf_Ehdr
@@ -376,9 +378,6 @@ name|hdr
 decl_stmt|;
 name|int
 name|cnt
-decl_stmt|;
-name|uid_t
-name|uid
 decl_stmt|;
 name|cnt
 operator|=
@@ -434,11 +433,13 @@ comment|/*  * Write an ELF coredump for the given pid to the given fd.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|elf_coredump
 parameter_list|(
 name|int
 name|efd
+name|__unused
 parameter_list|,
 name|int
 name|fd
