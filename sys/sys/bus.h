@@ -149,6 +149,48 @@ file|<sys/kobj.h>
 end_include
 
 begin_comment
+comment|/*  * devctl hooks.  Typically one should use the devctl_notify  * hook to send the message.  However, devctl_queue_data is also  * included in case devctl_notify isn't sufficiently general.  */
+end_comment
+
+begin_function_decl
+name|void
+name|devctl_notify
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__system
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__subsystem
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|devctl_queue_data
+parameter_list|(
+name|char
+modifier|*
+name|__data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Forward declarations  */
 end_comment
 
