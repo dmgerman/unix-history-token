@@ -281,17 +281,6 @@ begin_comment
 comment|/*  * Structures for per cpu queues.  */
 end_comment
 
-begin_comment
-comment|/*  * This size was chosen so that the struct bucket size is roughly  * 128 * sizeof(void *).  This is exactly true for x86, and for alpha  * it will would be 32bits smaller if it didn't have alignment adjustments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_BUCKET_SIZE
-value|125
-end_define
-
 begin_struct
 struct|struct
 name|uma_bucket
@@ -304,15 +293,17 @@ name|ub_link
 expr_stmt|;
 comment|/* Link into the zone */
 name|int16_t
-name|ub_ptr
+name|ub_cnt
 decl_stmt|;
-comment|/* Pointer to current item */
+comment|/* Count of free items. */
+name|int16_t
+name|ub_entries
+decl_stmt|;
+comment|/* Max items. */
 name|void
 modifier|*
 name|ub_bucket
-index|[
-name|UMA_BUCKET_SIZE
-index|]
+index|[]
 decl_stmt|;
 comment|/* actual allocation storage */
 block|}
