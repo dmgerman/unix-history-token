@@ -10659,7 +10659,7 @@ name|rxcycles
 operator|<=
 literal|0
 condition|)
-break|break ;
+break|break;
 name|sc
 operator|->
 name|rxcycles
@@ -12228,7 +12228,7 @@ name|if_ipending
 operator|&
 name|IFF_POLLING
 condition|)
-return|return ;
+return|return;
 if|if
 condition|(
 name|ether_poll_register
@@ -12258,7 +12258,7 @@ argument_list|,
 name|poll_burst
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 endif|#
 directive|endif
