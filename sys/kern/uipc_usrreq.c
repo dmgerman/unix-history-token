@@ -3143,6 +3143,12 @@ name|unp_socket
 operator|=
 name|so
 expr_stmt|;
+name|so
+operator|->
+name|so_pcb
+operator|=
+name|unp
+expr_stmt|;
 name|UNP_LOCK
 argument_list|()
 expr_stmt|;
@@ -3174,12 +3180,6 @@ name|unp
 argument_list|,
 name|unp_link
 argument_list|)
-expr_stmt|;
-name|so
-operator|->
-name|so_pcb
-operator|=
-name|unp
 expr_stmt|;
 name|UNP_UNLOCK
 argument_list|()
