@@ -3041,18 +3041,6 @@ name|dl
 operator|>
 literal|0
 condition|)
-block|{
-name|sb
-operator|->
-name|pch
-operator|.
-name|buffer
-operator|->
-name|dl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|chn_intr
 argument_list|(
 name|sb
@@ -3062,7 +3050,6 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sb
@@ -3075,18 +3062,6 @@ name|dl
 operator|>
 literal|0
 condition|)
-block|{
-name|sb
-operator|->
-name|rch
-operator|.
-name|buffer
-operator|->
-name|dl
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|chn_intr
 argument_list|(
 name|sb
@@ -3096,7 +3071,6 @@ operator|.
 name|channel
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
