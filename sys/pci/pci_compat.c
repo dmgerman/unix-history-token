@@ -395,7 +395,7 @@ name|cfg
 operator|->
 name|dev
 argument_list|,
-name|SYS_RES_DENSE
+name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
@@ -408,6 +408,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|RF_ACTIVE
+operator||
+name|PCI_RF_DENSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -487,7 +489,7 @@ name|cfg
 operator|->
 name|dev
 argument_list|,
-name|SYS_RES_BWX
+name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
@@ -500,6 +502,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|RF_ACTIVE
+operator||
+name|PCI_RF_BWX
 argument_list|)
 expr_stmt|;
 if|if

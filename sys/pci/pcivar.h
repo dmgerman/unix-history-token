@@ -172,57 +172,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* map register information */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int32_t
-name|base
-decl_stmt|;
-name|u_int8_t
-name|type
-decl_stmt|;
-define|#
-directive|define
-name|PCI_MAPMEM
-value|0x01
-comment|/* memory map */
-define|#
-directive|define
-name|PCI_MAPMEMP
-value|0x02
-comment|/* prefetchable memory map */
-define|#
-directive|define
-name|PCI_MAPPORT
-value|0x04
-comment|/* port map */
-name|u_int8_t
-name|ln2size
-decl_stmt|;
-name|u_int8_t
-name|ln2range
-decl_stmt|;
-name|u_int8_t
-name|reg
-decl_stmt|;
-comment|/* offset of map register in config space */
-comment|/*    u_int8_t	dummy;*/
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-comment|/* handle from resource manager */
-block|}
-name|pcimap
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* config header information common to all header types */
 end_comment
 
@@ -237,22 +186,11 @@ modifier|*
 name|dev
 decl_stmt|;
 comment|/* device which owns this */
-name|pcimap
-modifier|*
-name|map
-decl_stmt|;
-comment|/* pointer to array of PCI maps */
 name|void
 modifier|*
 name|hdrspec
 decl_stmt|;
 comment|/* pointer to header type specific data */
-name|struct
-name|resource
-modifier|*
-name|irqres
-decl_stmt|;
-comment|/* resource descriptor for interrupt mapping */
 name|u_int16_t
 name|subvendor
 decl_stmt|;
@@ -585,27 +523,6 @@ name|pciattach
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
-name|pci_devinfo
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|pci_devinfo
-argument_list|)
-name|pci_links
-expr_stmt|;
-name|pcicfgregs
-name|cfg
-decl_stmt|;
-name|struct
-name|pci_conf
-name|conf
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
@@ -732,6 +649,24 @@ include|#
 directive|include
 file|"pci_if.h"
 end_include
+
+begin_comment
+comment|/*  * Define pci-specific resource flags for accessing memory via dense  * or bwx memory spaces. These flags are ignored on i386.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_RF_DENSE
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RF_BWX
+value|0x20000
+end_define
 
 begin_enum
 enum|enum

@@ -68,28 +68,6 @@ begin_comment
 comment|/* i/o ports */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_RES_DENSE
-value|5
-end_define
-
-begin_comment
-comment|/* i/o memory in dense space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYS_RES_BWX
-value|6
-end_define
-
-begin_comment
-comment|/* i/i memory in bwx space */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
