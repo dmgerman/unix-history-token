@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /tmp/vm_glue.c,v 1.1 1993/06/12 14:57:39 rgrimes Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sys.386bsd/vm/vm_glue.c,v 1.3 1993/06/30 22:30:55 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,8 +163,6 @@ argument_list|(
 name|addr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|rv
@@ -272,10 +270,6 @@ operator|)
 name|addr
 operator|>=
 name|VM_MAXUSER_ADDRESS
-operator|+
-name|UPAGES
-operator|*
-name|NBPG
 operator|||
 operator|(
 name|vm_offset_t
@@ -285,10 +279,6 @@ operator|+
 name|len
 operator|>
 name|VM_MAXUSER_ADDRESS
-operator|+
-name|UPAGES
-operator|*
-name|NBPG
 operator|||
 operator|(
 name|vm_offset_t
@@ -328,8 +318,6 @@ argument_list|(
 name|addr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 argument_list|,
 name|prot
@@ -405,8 +393,6 @@ argument_list|(
 name|addr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 argument_list|,
 name|prot
@@ -464,8 +450,6 @@ argument_list|(
 name|addr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 argument_list|,
 name|FALSE
@@ -533,8 +517,6 @@ argument_list|(
 name|addr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 argument_list|,
 name|TRUE
