@@ -1593,7 +1593,11 @@ case|case
 name|NAME
 case|:
 name|exprisname
-operator|++
+operator|=
+operator|(
+name|int
+operator|)
+name|np
 expr_stmt|;
 name|locxp
 operator|->
