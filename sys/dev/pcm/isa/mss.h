@@ -14,17 +14,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|io_Index_Addr
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base + 4)
+name|MSS_INDEX
+value|(0 + 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IA_BUSY
+name|MSS_IDXBUSY
 value|0x80
 end_define
 
@@ -35,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IA_MCE
+name|MSS_MCE
 value|0x40
 end_define
 
@@ -50,7 +47,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IA_TRD
+name|MSS_TRD
 value|0x20
 end_define
 
@@ -65,7 +62,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IA_AMASK
+name|MSS_IDXMASK
 value|0x1f
 end_define
 
@@ -76,11 +73,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|io_Indexed_Data
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+1+4)
+name|MSS_IDATA
+value|(1 + 4)
 end_define
 
 begin_comment
@@ -90,11 +84,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|io_Status
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+2+4)
+name|MSS_STATUS
+value|(2 + 4)
 end_define
 
 begin_define
@@ -189,6 +180,12 @@ begin_comment
 comment|/* 	 * IS_INT is clreared by any write to the status register. 	 */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -202,6 +199,11 @@ end_define
 begin_comment
 comment|/* 	 * this register is used in case of polled i/o 	 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The MSS has a set of 16 (or 32 depending on the model) indirect  * registers accessible through the data port by specifying the  * appropriate address in the address register.  *  * The 16 low registers are uniformly handled in AD1848/CS4248 compatible  * mode (often called MODE1). For the upper 16 registers there are  * some differences among different products, mainly Crystal uses them  * differently from OPTi.  *  */
@@ -269,6 +271,24 @@ name|BD_F_TMR_RUN
 value|0x0004
 end_define
 
+begin_define
+define|#
+directive|define
+name|BD_F_MSS_OFFSET
+value|0x0008
+end_define
+
+begin_comment
+comment|/* offset mss writes by -4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BD_F_DUPLEX
+value|0x0010
+end_define
+
 begin_comment
 comment|/* AD1816 register macros */
 end_comment
@@ -276,62 +296,52 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ad1816_ale
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+0)
+name|AD1816_ALE
+value|0
 end_define
 
 begin_comment
-comment|/* indirect reg access */
+comment|/* indirect reg access 		*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ad1816_int
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+1)
+name|AD1816_INT
+value|1
 end_define
 
 begin_comment
-comment|/* interupt status     */
+comment|/* interupt status     		*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ad1816_low
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+2)
+name|AD1816_LOW
+value|2
 end_define
 
 begin_comment
-comment|/* indirect low byte   */
+comment|/* indirect low byte   		*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ad1816_high
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+3)
+name|AD1816_HIGH
+value|3
 end_define
 
 begin_comment
-comment|/* indirect high byte  */
+comment|/* indirect high byte  		*/
 end_comment
 
-begin_comment
-comment|/* unused */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -344,7 +354,7 @@ value|((d)->io_base+4)
 end_define
 
 begin_comment
-comment|/* PIO debug           */
+comment|/* PIO debug		*/
 end_comment
 
 begin_define
@@ -358,7 +368,7 @@ value|((d)->io_base+5)
 end_define
 
 begin_comment
-comment|/* PIO status          */
+comment|/* PIO status		*/
 end_comment
 
 begin_define
@@ -372,12 +382,13 @@ value|((d)->io_base+6)
 end_define
 
 begin_comment
-comment|/* PIO data            */
+comment|/* PIO data 		*/
 end_comment
 
-begin_comment
-comment|/* end of unused */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* values for playback/capture config:    bits: 0   enable/disable          1   pio/dma          2   stereo/mono          3   companded/linearPCM          4-5 format : 00 8bit  linear (uncomp)                       00 8bit  mulaw  (comp)                       01 16bit le     (uncomp)                       01 8bit  alaw   (comp)                       11 16bit be     (uncomp) */
@@ -386,29 +397,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ad1816_play
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+8)
+name|AD1816_PLAY
+value|8
 end_define
 
 begin_comment
-comment|/* playback config     */
+comment|/* playback config     		*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ad1816_capt
-parameter_list|(
-name|d
-parameter_list|)
-value|((d)->io_base+9)
+name|AD1816_CAPT
+value|9
 end_define
 
 begin_comment
-comment|/* capture config      */
+comment|/* capture config      		*/
 end_comment
 
 begin_define
@@ -433,9 +438,11 @@ begin_comment
 comment|/* mask for indirect adr.	*/
 end_comment
 
-begin_comment
-comment|/* unusud */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -503,9 +510,10 @@ begin_comment
 comment|/* timer intr			*/
 end_comment
 
-begin_comment
-comment|/* used again */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -644,7 +652,7 @@ comment|/* format mask			*/
 end_comment
 
 begin_comment
-comment|/*  * sound/ad1848_mixer.h  *   * Definitions for the mixer of AD1848 and compatible codecs.  *   * Copyright by Hannu Savolainen 1994  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * sound/ad1848_mixer.h  *  * Definitions for the mixer of AD1848 and compatible codecs.  *  * Copyright by Hannu Savolainen 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1162,69 +1170,983 @@ define|\
 value|(SOUND_MASK_VOLUME | SOUND_MASK_PCM | SOUND_MASK_SYNTH | \      SOUND_MASK_LINE   | SOUND_MASK_MIC | SOUND_MASK_CD | SOUND_MASK_IGAIN)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|u_short
-name|default_mixer_levels
-index|[
-name|SOUND_MIXER_NRDEVICES
-index|]
-init|=
-block|{
-literal|0x5a5a
-block|,
-comment|/* Master Volume */
-literal|0x3232
-block|,
-comment|/* Bass */
-literal|0x3232
-block|,
-comment|/* Treble */
-literal|0x4b4b
-block|,
-comment|/* FM */
-literal|0x4040
-block|,
-comment|/* PCM */
-literal|0x4b4b
-block|,
-comment|/* PC Speaker */
-literal|0x2020
-block|,
-comment|/* Ext Line */
-literal|0x4040
-block|,
-comment|/* Mic */
-literal|0x4b4b
-block|,
-comment|/* CD */
-literal|0x0000
-block|,
-comment|/* Recording monitor */
-literal|0x4b4b
-block|,
-comment|/* SB PCM */
-literal|0x4b4b
-block|,
-comment|/* Recording level */
-literal|0x2525
-block|,
-comment|/* Input gain */
-literal|0x0000
-block|,
-comment|/* Output gain */
-comment|/*  0x4040,			Line1 */
-literal|0x0000
-block|,
-comment|/* Line1 */
-literal|0x0000
-block|,
-comment|/* Line2 */
-literal|0x1515
-comment|/* Line3 (usually line in)*/
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*-  * Copyright (c) 1999 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+end_comment
+
+begin_comment
+comment|/*  * Register definitions for the Yamaha OPL3-SA[23x].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_POWER
+value|0x01
+end_define
+
+begin_comment
+comment|/* Power Management (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_POWER_PDX
+value|0x01
+end_define
+
+begin_comment
+comment|/* Set to 1 to halt oscillator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_POWER_PDN
+value|0x02
+end_define
+
+begin_comment
+comment|/* Set to 1 to power down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_POWER_PSV
+value|0x04
+end_define
+
+begin_comment
+comment|/* Set to 1 to power save */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_POWER_ADOWN
+value|0x20
+end_define
+
+begin_comment
+comment|/* Analog power (?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SYSTEM
+value|0x02
+end_define
+
+begin_comment
+comment|/* System control (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SYSTEM_VZE
+value|0x01
+end_define
+
+begin_comment
+comment|/* I2S audio routing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SYSTEM_IDSEL
+value|0x03
+end_define
+
+begin_comment
+comment|/* SB compat version select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SYSTEM_SBHE
+value|0x80
+end_define
+
+begin_comment
+comment|/* 0 for AT bus, 1 for XT bus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF
+value|0x03
+end_define
+
+begin_comment
+comment|/* Interrupt configuration (R/W */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_WSSA
+value|0x01
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_SBA
+value|0x02
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_MPUA
+value|0x04
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_OPL3A
+value|0x08
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_WSSB
+value|0x10
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_SBB
+value|0x20
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_MPUB
+value|0x40
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQCONF_OPL3B
+value|0x80
+end_define
+
+begin_comment
+comment|/* WSS interrupts through IRQB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUSA
+value|0x04
+end_define
+
+begin_comment
+comment|/* Interrupt (IRQ-A) Status (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUSB
+value|0x05
+end_define
+
+begin_comment
+comment|/* Interrupt (IRQ-B) Status (RO) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_PI
+value|0x01
+end_define
+
+begin_comment
+comment|/* Playback Flag of CODEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_CI
+value|0x02
+end_define
+
+begin_comment
+comment|/* Recording Flag of CODEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_TI
+value|0x04
+end_define
+
+begin_comment
+comment|/* Timer Flag of CODEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_SB
+value|0x08
+end_define
+
+begin_comment
+comment|/* SB compat Playback Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_MPU
+value|0x10
+end_define
+
+begin_comment
+comment|/* MPU401 Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_OPL3
+value|0x20
+end_define
+
+begin_comment
+comment|/* Internal FM Timer Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_MV
+value|0x40
+end_define
+
+begin_comment
+comment|/* HW Volume Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_PI
+value|0x01
+end_define
+
+begin_comment
+comment|/* Playback Flag of CODEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_CI
+value|0x02
+end_define
+
+begin_comment
+comment|/* Recording Flag of CODEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_TI
+value|0x04
+end_define
+
+begin_comment
+comment|/* Timer Flag of CODEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_SB
+value|0x08
+end_define
+
+begin_comment
+comment|/* SB compat Playback Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_MPU
+value|0x10
+end_define
+
+begin_comment
+comment|/* MPU401 Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_OPL3
+value|0x20
+end_define
+
+begin_comment
+comment|/* Internal FM Timer Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_IRQSTATUS_MV
+value|0x40
+end_define
+
+begin_comment
+comment|/* HW Volume Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF
+value|0x06
+end_define
+
+begin_comment
+comment|/* DMA configuration (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF_WSSPA
+value|0x01
+end_define
+
+begin_comment
+comment|/* WSS Playback on DMA-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF_WSSRA
+value|0x02
+end_define
+
+begin_comment
+comment|/* WSS Recording on DMA-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF_SBA
+value|0x02
+end_define
+
+begin_comment
+comment|/* SB Playback on DMA-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF_WSSPB
+value|0x10
+end_define
+
+begin_comment
+comment|/* WSS Playback on DMA-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF_WSSRB
+value|0x20
+end_define
+
+begin_comment
+comment|/* WSS Recording on DMA-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DMACONF_SBB
+value|0x20
+end_define
+
+begin_comment
+comment|/* SB Playback on DMA-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMEL
+value|0x07
+end_define
+
+begin_comment
+comment|/* Master Volume Left (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMEL_MVL
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Attenuation level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMEL_MVLM
+value|0x80
+end_define
+
+begin_comment
+comment|/* Mute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMER
+value|0x08
+end_define
+
+begin_comment
+comment|/* Master Volume Right (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMER_MVR
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Attenuation level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMER_MVRM
+value|0x80
+end_define
+
+begin_comment
+comment|/* Mute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_MIC
+value|0x09
+end_define
+
+begin_comment
+comment|/* MIC Volume (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMER_MCV
+value|0x1f
+end_define
+
+begin_comment
+comment|/* Attenuation level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_VOLUMER_MICM
+value|0x80
+end_define
+
+begin_comment
+comment|/* Mute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_MISC
+value|0x0a
+end_define
+
+begin_comment
+comment|/* Miscellaneous */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_MISC_VER
+value|0x07
+end_define
+
+begin_comment
+comment|/* Version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_MISC_MODE
+value|0x08
+end_define
+
+begin_comment
+comment|/* SB or WSS mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_MISC_MCSW
+value|0x10
+end_define
+
+begin_comment
+comment|/*  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_MISC_VEN
+value|0x80
+end_define
+
+begin_comment
+comment|/* Enable hardware volume control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WSSDMA
+value|0x0b
+end_define
+
+begin_comment
+comment|/* WSS DMA Counter (RW) (4 regs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WSSIRQSCAN
+value|0x0f
+end_define
+
+begin_comment
+comment|/* WSS Interrupt Scan out/in (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WSSIRQSCAN_SPI
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WSSIRQSCAN_SCI
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WSSIRQSCAN_STI
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBSTATE
+value|0x10
+end_define
+
+begin_comment
+comment|/* SB compat Internal State (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBSTATE_SBPDR
+value|0x01
+end_define
+
+begin_comment
+comment|/* SB Power Down Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBSTATE_SE
+value|0x02
+end_define
+
+begin_comment
+comment|/* Scan Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBSTATE_SM
+value|0x04
+end_define
+
+begin_comment
+comment|/* Scan Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBSTATE_SS
+value|0x08
+end_define
+
+begin_comment
+comment|/* Scan Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBSTATE_SBPDA
+value|0x80
+end_define
+
+begin_comment
+comment|/* SB Power Down Acknowledge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_SBDATA
+value|0x11
+end_define
+
+begin_comment
+comment|/* SB compat State Scan Data (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER
+value|0x12
+end_define
+
+begin_comment
+comment|/* Digital Partial Power Down (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_PnP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_SB
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_WSSP
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_WSSR
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_FM
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_MCLK0
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_MPU
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_DIGITALPOWER_JOY
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_ANALOGPOWER
+value|0x13
+end_define
+
+begin_comment
+comment|/* Analog Partial Power Down (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_ANALOGPOWER_WIDE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_ANALOGPOWER_SBDAC
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_ANALOGPOWER_DA
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_ANALOGPOWER_AD
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_ANALOGPOWER_FMDAC
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WIDE
+value|0x14
+end_define
+
+begin_comment
+comment|/* Enhanced control(WIDE) (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WIDE_WIDEL
+value|0x07
+end_define
+
+begin_comment
+comment|/* Wide level on Left Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_WIDE_WIDER
+value|0x70
+end_define
+
+begin_comment
+comment|/* Wide level on Right Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_BASS
+value|0x15
+end_define
+
+begin_comment
+comment|/* Enhanced control(BASS) (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_BASS_BASSL
+value|0x07
+end_define
+
+begin_comment
+comment|/* Bass level on Left Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_BASS_BASSR
+value|0x70
+end_define
+
+begin_comment
+comment|/* Bass level on Right Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_TREBLE
+value|0x16
+end_define
+
+begin_comment
+comment|/* Enhanced control(TREBLE) (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_TREBLE_TREBLEL
+value|0x07
+end_define
+
+begin_comment
+comment|/* Treble level on Left Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_TREBLE_TREBLER
+value|0x70
+end_define
+
+begin_comment
+comment|/* Treble level on Right Channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_HWVOL
+value|0x17
+end_define
+
+begin_comment
+comment|/* HW Volume IRQ Configuration (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_HWVOL_IRQA
+value|0x10
+end_define
+
+begin_comment
+comment|/* HW Volume IRQ on IRQ-A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPL3SAx_HWVOL_IRQB
+value|0x20
+end_define
+
+begin_comment
+comment|/* HW Volume IRQ on IRQ-B */
+end_comment
 
 end_unit
 
