@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)code.c	1.7 (Berkeley) %G%"
+literal|"@(#)code.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,12 @@ begin_comment
 comment|/* are we within a function definition ? */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STABDOT
+end_ifndef
+
 begin_decl_stmt
 name|char
 name|NULLNAME
@@ -93,6 +99,11 @@ literal|8
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -888,6 +899,9 @@ condition|(
 name|nerrors
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|locctr
 argument_list|(
 name|PROG
@@ -1082,6 +1096,9 @@ name|offset
 operator|=
 name|NOOFFSET
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|oalloc
 argument_list|(
 name|p
@@ -2383,7 +2400,7 @@ name|q
 decl_stmt|;
 name|q
 operator|=
-name|select
+name|selectheap
 argument_list|(
 name|m
 argument_list|)
@@ -2444,7 +2461,7 @@ block|}
 end_block
 
 begin_macro
-name|select
+name|selectheap
 argument_list|(
 argument|m
 argument_list|)
