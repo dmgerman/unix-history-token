@@ -126,20 +126,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Sections in object code files can be sparse. That is, the  * section may occupy more space in memory that it does when  * stored in a disk file. In Windows PE files, each section header  * has a 'virtual size' and 'raw data size' field. The latter  * specifies the amount of section data actually stored in the  * disk file, and the former describes how much space the section  * should actually occupy in memory. If the vsize is larger than  * the rsize, we need to allocate some extra storage and fill  * it with zeros. (Think BSS.)  *  * The typical method of loading an executable file involves  * reading each segment into memory using the vaddr/vsize from  * each section header. We try to make a small optimization however  * and only pad/move segments when it's absolutely necessary, i.e.  * if the vsize is larger than the rsize. This conserves a little  * bit of memory, at the cost of having to fixup some of the values  * in the section headers.  */
+comment|/*  * Sections within Windows PE files are defined using virtual  * and physical address offsets and virtual and physical sizes.  * The physical values define how the section data is stored in  * the executable file while the virtual values describe how the  * sections will look once loaded into memory. It happens that  * the linker in the Microsoft(r) DDK will tend to generate  * binaries where the virtual and physical values are identical,  * which means in most cases we can just transfer the file  * directly to memory without any fixups. This is not always  * the case though, so we have to be prepared to handle files  * where the in-memory section layout differs from the disk file  * section layout.  *  * There are two kinds of variations that can occur: the relative  * virtual address of the section might be different from the  * physical file offset, and the virtual section size might be  * different from the physical size (for example, the physical  * size of the .data section might be 1024 bytes, but the virtual  * size might be 1384 bytes, indicating that the data section should  * actually use up 1384 bytes in RAM and be padded with zeros). What we  * do is read the original file into memory and then make an in-memory  * copy with all of the sections relocated, re-sized and zero padded  * according to the virtual values specified in the section headers.  * We then emit the fixed up image file for use by the if_ndis driver.  * This way, we don't have to do the fixups inside the kernel.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ROUND_DOWN
+parameter_list|(
+name|n
+parameter_list|,
+name|align
+parameter_list|)
+value|(((uintptr_t)n)& ~((align) - 1l))
+end_define
 
 begin_define
 define|#
 directive|define
 name|ROUND_UP
 parameter_list|(
-name|x
+name|n
 parameter_list|,
-name|y
+name|align
 parameter_list|)
-define|\
-value|(((x) + (y)) - ((x) % (y)))
+value|ROUND_DOWN(((uintptr_t)n) + (align) - 1l, \                                 (align))
 end_define
 
 begin_define
@@ -202,8 +213,6 @@ name|int
 name|offaccum
 init|=
 literal|0
-decl_stmt|,
-name|diff
 decl_stmt|,
 name|oldraddr
 decl_stmt|,
@@ -298,7 +307,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * If we have accumulated any padding offset, 		 * add it to the raw data address of this segment. 		 */
 name|oldraddr
 operator|=
 name|sect_hdr
@@ -311,42 +319,23 @@ name|sect_hdr
 operator|->
 name|ish_rawdatasize
 expr_stmt|;
-if|if
-condition|(
-name|offaccum
-condition|)
 name|sect_hdr
 operator|->
 name|ish_rawdataaddr
-operator|+=
-name|offaccum
-expr_stmt|;
-if|if
-condition|(
-name|sect_hdr
-operator|->
-name|ish_misc
-operator|.
-name|ish_vsize
-operator|>
-name|sect_hdr
-operator|->
-name|ish_rawdatasize
-condition|)
-block|{
-name|diff
 operator|=
+name|sect_hdr
+operator|->
+name|ish_vaddr
+expr_stmt|;
+name|offaccum
+operator|+=
 name|ROUND_UP
 argument_list|(
 name|sect_hdr
 operator|->
-name|ish_misc
-operator|.
-name|ish_vsize
+name|ish_vaddr
 operator|-
-name|sect_hdr
-operator|->
-name|ish_rawdatasize
+name|oldraddr
 argument_list|,
 name|opt_hdr
 operator|.
@@ -357,29 +346,17 @@ name|offaccum
 operator|+=
 name|ROUND_UP
 argument_list|(
-name|diff
-operator|-
-operator|(
 name|sect_hdr
 operator|->
 name|ish_misc
 operator|.
 name|ish_vsize
-operator|-
-name|sect_hdr
-operator|->
-name|ish_rawdatasize
-operator|)
 argument_list|,
 name|opt_hdr
 operator|.
 name|ioh_filealign
 argument_list|)
-expr_stmt|;
-name|sect_hdr
-operator|->
-name|ish_rawdatasize
-operator|=
+operator|-
 name|ROUND_UP
 argument_list|(
 name|sect_hdr
@@ -434,7 +411,6 @@ name|sect_hdr
 operator|+=
 name|i
 expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 name|newimg
