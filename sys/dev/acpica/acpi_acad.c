@@ -407,12 +407,6 @@ argument_list|(
 name|acad
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|status
-operator|=
-name|newstatus
-expr_stmt|;
 if|if
 condition|(
 name|newstatus
@@ -427,6 +421,12 @@ operator|!=
 name|newstatus
 condition|)
 block|{
+name|sc
+operator|->
+name|status
+operator|=
+name|newstatus
+expr_stmt|;
 name|power_profile_set_state
 argument_list|(
 name|newstatus
