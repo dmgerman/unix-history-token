@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FSAV.c 1.2 %G%"
+literal|"@(#)FSAV.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,13 @@ begin_block
 block|{
 name|frtn
 operator|->
-name|entryaddr
+name|fentryaddr
 operator|=
 name|entryaddr
 expr_stmt|;
 name|frtn
 operator|->
-name|cbn
+name|fbn
 operator|=
 name|cbn
 expr_stmt|;
@@ -73,7 +73,7 @@ name|blkcpy
 argument_list|(
 name|frtn
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -90,7 +90,7 @@ argument_list|,
 operator|&
 name|frtn
 operator|->
-name|disp
+name|fdisp
 index|[
 literal|0
 index|]

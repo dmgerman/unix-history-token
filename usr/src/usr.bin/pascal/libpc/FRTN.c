@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FRTN.c 1.3 %G%"
+literal|"@(#)FRTN.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,8 @@ begin_expr_stmt
 name|FRTN
 argument_list|(
 name|frtn
+argument_list|,
+name|save
 argument_list|)
 specifier|register
 expr|struct
@@ -32,13 +34,20 @@ name|frtn
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|save
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|blkcpy
 argument_list|(
 name|frtn
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -46,15 +55,7 @@ expr|struct
 name|display
 argument_list|)
 argument_list|,
-operator|&
-name|frtn
-operator|->
-name|disp
-index|[
-name|frtn
-operator|->
-name|cbn
-index|]
+name|save
 argument_list|,
 operator|&
 name|_disply

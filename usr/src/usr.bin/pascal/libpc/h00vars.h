@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.5 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.6 %G%"; */
 end_comment
 
 begin_include
@@ -226,22 +226,23 @@ block|{
 name|long
 function_decl|(
 modifier|*
-name|entryaddr
+name|fentryaddr
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* formal entry point */
 name|long
-name|cbn
+name|fbn
 decl_stmt|;
+comment|/* block number of function */
 name|struct
 name|display
-name|disp
+name|fdisp
 index|[
-literal|2
-operator|*
 name|MAXLVL
 index|]
 decl_stmt|;
+comment|/* saved at first passing */
 block|}
 struct|;
 end_struct

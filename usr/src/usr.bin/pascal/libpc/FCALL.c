@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FCALL.c 1.2 %G%"
+literal|"@(#)FCALL.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,25 +19,38 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_function
-name|long
-modifier|*
+begin_macro
 name|FCALL
-parameter_list|(
-name|frtn
-parameter_list|)
+argument_list|(
+argument|save
+argument_list|,
+argument|frtn
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|save
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|struct
 name|formalrtn
 modifier|*
 name|frtn
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|blkcpy
 argument_list|(
 name|frtn
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -51,22 +64,14 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|&
-name|frtn
-operator|->
-name|disp
-index|[
-name|frtn
-operator|->
-name|cbn
-index|]
+name|save
 argument_list|)
 expr_stmt|;
 name|blkcpy
 argument_list|(
 name|frtn
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -77,7 +82,7 @@ argument_list|,
 operator|&
 name|frtn
 operator|->
-name|disp
+name|fdisp
 index|[
 literal|0
 index|]
@@ -89,19 +94,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|long
-operator|*
-operator|)
-operator|(
-name|frtn
-operator|->
-name|entryaddr
-operator|)
-return|;
 block|}
-end_function
+end_block
 
 end_unit
 
