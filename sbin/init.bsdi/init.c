@@ -288,6 +288,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GETTY_NSPACE
+value|3
+end_define
+
+begin_comment
+comment|/* max. spacing count to bring reaction */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WINDOW_WAIT
 value|3
 end_define
@@ -614,6 +625,10 @@ directive|define
 name|SE_SHUTDOWN
 value|0x1
 comment|/* session won't be restarted */
+name|int
+name|se_nspace
+decl_stmt|;
+comment|/* spacing count */
 name|char
 modifier|*
 name|se_device
@@ -4768,13 +4783,31 @@ operator|<
 name|GETTY_SPACING
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|sp
+operator|->
+name|se_nspace
+operator|>
+name|GETTY_NSPACE
+condition|)
+block|{
+name|sp
+operator|->
+name|se_nspace
+operator|=
+literal|0
+expr_stmt|;
 name|warning
 argument_list|(
-literal|"getty repeating too quickly on port %s, sleeping"
+literal|"getty repeating too quickly on port %s, sleeping %d secs"
 argument_list|,
 name|sp
 operator|->
 name|se_device
+argument_list|,
+name|GETTY_SLEEP
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -4786,6 +4819,14 @@ name|GETTY_SLEEP
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+name|sp
+operator|->
+name|se_nspace
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sp
