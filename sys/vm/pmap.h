@@ -72,6 +72,17 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Updates to kernel_vm_end are synchronized by the kernel_map's system mutex.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|kernel_vm_end
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
