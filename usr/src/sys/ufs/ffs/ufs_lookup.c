@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	3.3	%G%	*/
+comment|/*	ufs_lookup.c	3.4	%G%	*/
 end_comment
 
 begin_include
@@ -433,6 +433,10 @@ operator|&&
 name|c
 operator|==
 literal|'\0'
+operator|&&
+name|dp
+operator|->
+name|i_nlink
 condition|)
 block|{
 if|if
