@@ -931,7 +931,7 @@ name|board
 operator|=
 name|ida_pci_match
 argument_list|(
-name|pci_get_subdevice
+name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
@@ -947,7 +947,7 @@ name|board
 operator|=
 name|ida_pci_match
 argument_list|(
-name|pci_get_devid
+name|pci_get_subdevice
 argument_list|(
 name|dev
 argument_list|)
@@ -973,6 +973,20 @@ operator|->
 name|regs_res_id
 operator|=
 name|IDA_PCI_MEMADDR
+expr_stmt|;
+if|if
+condition|(
+name|board
+operator|->
+name|board
+operator|==
+name|IDA_DEVICEID_DEC_SMART
+condition|)
+name|ida
+operator|->
+name|regs_res_id
+operator|=
+name|PCIR_MAPS
 expr_stmt|;
 name|ida
 operator|->
@@ -1014,7 +1028,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"can't allocate register resources\n"
+literal|"can't allocate memory resources\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1193,6 +1207,12 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|ida
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|ida_init
@@ -1224,7 +1244,7 @@ expr_stmt|;
 name|ida
 operator|->
 name|flags
-operator|=
+operator||=
 name|IDA_ATTACHED
 expr_stmt|;
 return|return

@@ -1332,6 +1332,12 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+name|ida
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|ida_init
@@ -1363,7 +1369,7 @@ expr_stmt|;
 name|ida
 operator|->
 name|flags
-operator|=
+operator||=
 name|IDA_ATTACHED
 expr_stmt|;
 return|return
