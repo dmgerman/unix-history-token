@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../tahoe/mtpr.h"
 end_include
 
@@ -2816,7 +2822,7 @@ name|s
 decl_stmt|;
 name|log
 argument_list|(
-name|LOG_ERROR
+name|LOG_ERR
 argument_list|,
 literal|"ik%d: timeout\n"
 argument_list|,
