@@ -10682,12 +10682,14 @@ name|int
 name|i
 decl_stmt|,
 name|rid
-init|=
-literal|0
 decl_stmt|;
 name|u_int
 name|bval
 decl_stmt|;
+name|rid
+operator|=
+name|PCI_BASE_ADDR0
+expr_stmt|;
 name|iores
 operator|=
 name|bus_alloc_resource
@@ -11285,8 +11287,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|rid
-init|=
-literal|0
 decl_stmt|;
 name|void
 modifier|*
@@ -11329,6 +11329,10 @@ name|INTSTATREG
 argument_list|)
 expr_stmt|;
 comment|/* After setting up the adapter, map our interrupt */
+name|rid
+operator|=
+literal|0
+expr_stmt|;
 name|irqres
 operator|=
 name|bus_alloc_resource
