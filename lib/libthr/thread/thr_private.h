@@ -491,6 +491,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pthread_spinlock
+block|{
+name|void
+modifier|*
+name|s_owner
+decl_stmt|;
+name|unsigned
+name|int
+name|s_magic
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Flags for mutexes.   */
 end_comment
