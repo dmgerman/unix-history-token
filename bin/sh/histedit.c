@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -656,9 +662,7 @@ decl_stmt|;
 name|char
 name|editfile
 index|[
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|FILE
