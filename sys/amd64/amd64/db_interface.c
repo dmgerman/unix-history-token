@@ -1234,11 +1234,16 @@ else|else
 block|{
 name|db_printf
 argument_list|(
-literal|"cpuid\t = %d\ncurproc\t = "
+literal|"cpuid    = %d\n"
 argument_list|,
 name|gd
 operator|->
 name|gd_cpuid
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"curproc  = "
 argument_list|)
 expr_stmt|;
 if|if
@@ -1278,11 +1283,16 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"curpcb\t = %p\nnpxproc\t = "
+literal|"curpcb   = %p\n"
 argument_list|,
 name|gd
 operator|->
 name|gd_curpcb
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"npxproc  = "
 argument_list|)
 expr_stmt|;
 if|if
