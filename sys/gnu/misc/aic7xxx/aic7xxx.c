@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Adaptec 274x device driver for Linux.  * Copyright (c) 1994 The University of Calgary Department of Computer Science.  *   * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  *  Comments are started by `#' and continue to the end of the line; lines  *  may be of the form:  *  *<label>*  *<label>*<undef-sym> =<value>  *<label>*<opcode><operand>*  *  *  A<label> is an<undef-sym> ending in a colon.  Spaces, tabs, and commas  *  are token separators.  *	  *	$Id: aic7xxx.c,v 1.5 1995/01/22 00:46:52 gibbs Exp $  */
+comment|/*  * Adaptec 274x device driver for Linux.  * Copyright (c) 1994 The University of Calgary Department of Computer Science.  *   * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  *  Comments are started by `#' and continue to the end of the line; lines  *  may be of the form:  *  *<label>*  *<label>*<undef-sym> =<value>  *<label>*<opcode><operand>*  *  *  A<label> is an<undef-sym> ending in a colon.  Spaces, tabs, and commas  *  are token separators.  *	  *	$Id: aic7xxx.c,v 1.6 1995/03/17 23:54:16 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -48,12 +48,8 @@ begin_define
 define|#
 directive|define
 name|MEMORY
-value|512
+value|448
 end_define
-
-begin_comment
-comment|/* 2^9 29-bit words */
-end_comment
 
 begin_define
 define|#
@@ -3047,6 +3043,17 @@ name|i
 index|]
 operator|.
 name|addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LC
+operator|>=
+name|MEMORY
+condition|)
+name|error
+argument_list|(
+literal|"Memory exhausted!\n"
 argument_list|)
 expr_stmt|;
 switch|switch
