@@ -2295,6 +2295,28 @@ value|0x8139
 end_define
 
 begin_comment
+comment|/*  * Planex Communications, Inc. vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PLANEX_VENDORID
+value|0x14ea
+end_define
+
+begin_comment
+comment|/*  * Planex FNW-3800-TX device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PLANEX_DEVICEID_FNW3800TX
+value|0xab07
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 

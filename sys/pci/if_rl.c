@@ -314,6 +314,14 @@ literal|"Peppercon AG ROL-F"
 block|}
 block|,
 block|{
+name|PLANEX_VENDORID
+block|,
+name|PLANEX_DEVICEID_FNW3800TX
+block|,
+literal|"Planex FNW-3800-TX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -3909,6 +3917,10 @@ operator|||
 name|rl_did
 operator|==
 name|COREGA_DEVICEID_FETHERIICBTXD
+operator|||
+name|rl_did
+operator|==
+name|PLANEX_DEVICEID_FNW3800TX
 condition|)
 name|sc
 operator|->
