@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)xdr_subs.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)xdr_subs.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|{ \ 	(t)->ts_sec = ntohl(((struct nfsv2_time *)(f))->nfs_sec); \ 	(t)->ts_nsec = 1000 * ntohl(((struct nfsv2_time *)(f))->nfs_usec); \ }
+value|{ \ 	register u_long _nsec; \ 	(t)->ts_sec = ntohl(((struct nfsv2_time *)(f))->nfs_sec); \ 	_nsec = ntohl(((struct nfsv2_time *)(f))->nfs_usec); \ 	if (_nsec != VNOVAL) \ 		_nsec *= 1000; \ 	(t)->ts_nsec = _nsec; \ }
 end_define
 
 begin_define
@@ -50,7 +50,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|{ \ 	((struct nfsv2_time *)(t))->nfs_sec = htonl((f)->ts_sec); \ 	((struct nfsv2_time *)(t))->nfs_usec = htonl((f)->ts_nsec) / 1000; \ }
+value|{ \ 	register u_long _nsec = (f)->ts_nsec; \ 	((struct nfsv2_time *)(t))->nfs_sec = htonl((f)->ts_sec); \ 	if (_nsec != VNOVAL) \ 		_nsec /= 1000; \ 	((struct nfsv2_time *)(t))->nfs_usec = htonl(_nsec); \ }
 end_define
 
 begin_define
