@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cp.c,v 1.19 1999/05/08 10:19:27 kris Exp $"
+literal|"$Id: cp.c,v 1.20 1999/07/10 05:46:44 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<fts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -162,6 +168,8 @@ decl_stmt|,
 name|rflag
 decl_stmt|,
 name|fflag
+decl_stmt|,
+name|vflag
 decl_stmt|;
 end_decl_stmt
 
@@ -286,7 +294,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfipr"
+literal|"HLPRfiprv"
 argument_list|)
 operator|)
 operator|!=
@@ -384,6 +392,14 @@ case|case
 literal|'r'
 case|:
 name|rflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1371,6 +1387,23 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"%s"
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s -> %s\n"
+argument_list|,
+name|curr
+operator|->
+name|fts_path
 argument_list|,
 name|to
 operator|.

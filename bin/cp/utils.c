@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: utils.c,v 1.22 1999/04/25 21:13:32 imp Exp $"
+literal|"$Id: utils.c,v 1.23 1999/05/08 10:19:29 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,6 +427,23 @@ block|}
 name|rval
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s -> %s\n"
+argument_list|,
+name|entp
+operator|->
+name|fts_path
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Mmap and write if less than 8M (the limit is so we don't totally 	 * trash memory on big files.  This is really a minor hack, but it 	 * wins some CPU back. 	 */
 ifdef|#
@@ -1541,9 +1558,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i] [-p] src target"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i] [-p] [-v] src target"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i] [-p] src1 ... srcN directory"
+literal|"       cp [-R [-H | -L | -P]] [-f | -i] [-p] [-v] src1 ... srcN directory"
 argument_list|)
 expr_stmt|;
 name|exit
