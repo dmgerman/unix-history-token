@@ -2705,6 +2705,15 @@ name|hwspd
 operator|=
 name|DSP_DEFAULT_SPEED
 expr_stmt|;
+comment|/* only do this on a record channel until feederbuilder works */
+if|if
+condition|(
+name|c
+operator|->
+name|direction
+operator|==
+name|PCMDIR_REC
+condition|)
 name|RANGE
 argument_list|(
 name|hwspd
