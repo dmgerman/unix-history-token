@@ -5057,6 +5057,9 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 		 * If we have enough free memory, wakeup waiters.  Do 		 * not clear vm_pages_needed until we reach our target, 		 * otherwise we may be woken up over and over again and 		 * waste a lot of cpu. 		 */
 if|if
 condition|(
@@ -5102,10 +5105,13 @@ name|pass
 operator|>
 literal|1
 condition|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|vm_pages_needed
+argument_list|,
+operator|&
+name|vm_page_queue_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -5137,10 +5143,13 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|vm_pages_needed
+argument_list|,
+operator|&
+name|vm_page_queue_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -5159,6 +5168,9 @@ operator|!
 name|vm_pages_needed
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -5182,6 +5194,9 @@ name|cnt
 operator|.
 name|v_pdwakeups
 operator|++
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
