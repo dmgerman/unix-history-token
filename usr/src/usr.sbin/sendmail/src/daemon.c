@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -1035,6 +1035,11 @@ name|i
 init|=
 literal|30
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|gethostname
 argument_list|(
 name|hostbuf
@@ -1049,6 +1054,35 @@ name|gethostbyname
 argument_list|(
 name|hostbuf
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|hostbuf
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|islower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|-=
+literal|'a'
+operator|-
+literal|'A'
 expr_stmt|;
 if|if
 condition|(
@@ -1079,7 +1113,7 @@ else|DAEMON
 end_else
 
 begin_comment
-comment|/* **  MYHOSTNAME -- stub version for case of no daemon code. */
+comment|/* **  MYHOSTNAME -- stub version for case of no daemon code. ** **	Can't convert to upper case here because might be a UUCP name. */
 end_comment
 
 begin_function
