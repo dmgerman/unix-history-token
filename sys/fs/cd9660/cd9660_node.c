@@ -785,11 +785,6 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Purge old data structures associated with the inode. 	 */
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ip
