@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * fontedit  *	Fonteditor for VT220  *  *  BUGS:  *	o Cursor motion is less than optimal (but who cares at 9600),  *  *  COMPILE:  *	cc -O fontedit.c -o fontedit  *      (use Makefile)  *  *	Copyright (c) 1987 by Greg Franks.  *  *	Permission is granted to do anything you want with this program  *	except claim that you wrote it.  *  *  *      REVISION HISTORY:  *  *      Nov 21, 1987 - Fixed man page to say "Fontedit" instead of "Top"  *      Nov 22, 1987 - Added BSD Compatible ioctl, turned cursor on/off  *                     - eap@bucsf.bu.edu  */
+comment|/*  * fontedit  *	Fonteditor for VT220  *  *  BUGS:  *	o Cursor motion is less than optimal (but who cares at 9600),  *  *  COMPILE:  *	cc -O fontedit.c -o fontedit  *      (use Makefile)  *  *	Copyright (c) 1987 by Greg Franks.  *  *	Permission is granted to do anything you want with this program  *	except claim that you wrote it.  *  *  *      REVISION HISTORY:  *  *      Nov 21, 1987 - Fixed man page to say "Fontedit" instead of "Top"  *      Nov 22, 1987 - Added BSD Compatible ioctl, turned cursor on/off  *                     - eap@bucsf.bu.edu  * $FreeBSD$  */
 end_comment
 
 begin_function_decl
@@ -31,8 +31,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|SYSV
 end_endif
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -49,8 +52,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_if
 if|#
@@ -116,8 +122,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|CURFIX
 end_endif
+
+begin_comment
+comment|/* CURFIX */
+end_comment
 
 begin_define
 define|#
@@ -437,8 +446,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|SYSV
 end_endif
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -458,8 +470,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_if
 if|#
@@ -533,7 +548,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|CURFIX
+comment|/* CURFIX */
 ifdef|#
 directive|ifdef
 name|SYSV
@@ -549,7 +564,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SYSV
+comment|/* SYSV */
 ifdef|#
 directive|ifdef
 name|BSD
@@ -565,7 +580,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|BSD
+comment|/* BSD */
 if|#
 directive|if
 name|defined
@@ -841,7 +856,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|CURFIX
+comment|/* CURFIX */
 ifdef|#
 directive|ifdef
 name|SYSV
@@ -857,7 +872,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SYSV
+comment|/* SYSV */
 ifdef|#
 directive|ifdef
 name|BSD
@@ -873,7 +888,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|BSD
+comment|/* BSD */
 if|#
 directive|if
 name|defined
@@ -944,7 +959,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SYSV
+comment|/* SYSV */
 if|#
 directive|if
 name|defined
@@ -1020,7 +1035,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|BSD
+comment|/* BSD */
 name|current_entry
 operator|=
 literal|1
@@ -1051,7 +1066,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SYSV
+comment|/* SYSV */
 ifdef|#
 directive|ifdef
 name|BSD
@@ -1067,7 +1082,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|BSD
+comment|/* BSD */
 if|#
 directive|if
 name|defined
@@ -1127,7 +1142,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|CURFIX
+comment|/* CURFIX */
 block|}
 end_function
 
