@@ -4827,13 +4827,12 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
+name|suser
+argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
+argument_list|)
 operator|!=
 literal|0
 condition|)
