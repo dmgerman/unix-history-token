@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<math.h>
 end_include
 
@@ -160,6 +154,16 @@ end_define
 begin_comment
 comment|/* lunar mean long of node at EPOCH */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|isleap
+parameter_list|(
+name|y
+parameter_list|)
+value|(((y) % 4) == 0&& ((y) % 100) != 0 || ((y) % 400) == 0)
+end_define
 
 begin_decl_stmt
 name|double

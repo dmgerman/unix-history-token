@@ -73,12 +73,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -382,7 +376,7 @@ expr_stmt|;
 define|#
 directive|define
 name|SIXMONTHS
-value|((DAYSPERNYEAR / 2) * SECSPERDAY)
+value|((365 / 2) * 86400)
 if|if
 condition|(
 name|ftime

@@ -73,12 +73,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -191,7 +185,7 @@ name|tp
 operator|->
 name|tm_year
 operator|+
-name|TM_YEAR_BASE
+literal|1900
 argument_list|)
 expr_stmt|;
 block|}
@@ -461,13 +455,13 @@ literal|100
 condition|)
 name|year
 operator|+=
-name|TM_YEAR_BASE
+literal|1900
 expr_stmt|;
 if|if
 condition|(
 name|year
 operator|<=
-name|EPOCH_YEAR
+literal|1970
 condition|)
 name|bad
 label|:
@@ -482,7 +476,7 @@ name|tm_year
 operator|=
 name|year
 operator|-
-name|TM_YEAR_BASE
+literal|1900
 expr_stmt|;
 name|lt
 operator|->

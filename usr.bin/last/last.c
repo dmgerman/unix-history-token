@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -1308,7 +1302,7 @@ if|if
 condition|(
 name|delta
 operator|<
-name|SECSPERDAY
+literal|86400
 condition|)
 name|printf
 argument_list|(
@@ -1333,7 +1327,7 @@ literal|" (%ld+%5.5s)\n"
 argument_list|,
 name|delta
 operator|/
-name|SECSPERDAY
+literal|86400
 argument_list|,
 name|asctime
 argument_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ruptime.c,v 1.4 1995/07/22 22:28:31 joerg Exp $ */
 end_comment
 
 begin_ifndef
@@ -115,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
 end_include
 
 begin_include
@@ -1081,33 +1075,33 @@ operator|(
 name|tval
 operator|+
 operator|(
-name|SECSPERMIN
+literal|60
 operator|-
 literal|1
 operator|)
 operator|)
 operator|/
-name|SECSPERMIN
+literal|60
 expr_stmt|;
 name|hours
 operator|=
 name|minutes
 operator|/
-name|MINSPERHOUR
+literal|60
 expr_stmt|;
 name|minutes
 operator|%=
-name|MINSPERHOUR
+literal|60
 expr_stmt|;
 name|days
 operator|=
 name|hours
 operator|/
-name|HOURSPERDAY
+literal|24
 expr_stmt|;
 name|hours
 operator|%=
-name|HOURSPERDAY
+literal|24
 expr_stmt|;
 if|if
 condition|(

@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
@@ -444,6 +438,18 @@ operator|->
 name|loginat
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|SECSPERDAY
+value|86400
+define|#
+directive|define
+name|DAYSPERWEEK
+value|7
+define|#
+directive|define
+name|DAYSPERNYEAR
+value|365
 if|if
 condition|(
 name|now

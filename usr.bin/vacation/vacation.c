@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -382,7 +376,7 @@ argument_list|(
 name|optarg
 argument_list|)
 operator|*
-name|SECSPERDAY
+literal|86400
 expr_stmt|;
 if|if
 condition|(
@@ -1426,9 +1420,9 @@ argument_list|)
 condition|)
 name|next
 operator|=
-name|SECSPERDAY
+literal|86400
 operator|*
-name|DAYSPERWEEK
+literal|7
 expr_stmt|;
 else|else
 name|bcopy

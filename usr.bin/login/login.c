@@ -156,12 +156,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -1710,9 +1704,9 @@ name|tv_sec
 operator|<
 literal|2
 operator|*
-name|DAYSPERWEEK
+literal|7
 operator|*
-name|SECSPERDAY
+literal|86400
 operator|&&
 operator|!
 name|quietlog
@@ -1777,9 +1771,9 @@ name|tv_sec
 operator|<
 literal|2
 operator|*
-name|DAYSPERWEEK
+literal|7
 operator|*
-name|SECSPERDAY
+literal|86400
 operator|&&
 operator|!
 name|quietlog

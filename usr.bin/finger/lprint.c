@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
@@ -996,9 +990,9 @@ name|w
 operator|->
 name|loginat
 operator|>
-name|SECSPERDAY
+literal|86400
 operator|*
-name|DAYSPERNYEAR
+literal|365
 operator|/
 literal|2
 condition|)
