@@ -1547,6 +1547,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* Range checking already done at upper level caller */
 name|strcpy
 argument_list|(
 name|name
