@@ -924,12 +924,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|interp
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|col
@@ -1033,8 +1027,6 @@ argument_list|(
 name|p
 operator|->
 name|v_value
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|col
