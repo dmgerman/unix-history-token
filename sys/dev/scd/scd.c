@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment

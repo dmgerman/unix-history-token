@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_comment

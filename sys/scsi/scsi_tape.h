@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$FreeBSD$  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
 end_comment
 
 begin_ifndef

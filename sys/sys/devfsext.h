@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_ifndef

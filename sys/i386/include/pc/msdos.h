@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * msdos common header file  * [obtained from mtools -wfj]  * how to decipher DOS disk structures in coexisting with DOS  *  *	$FreeBSD$  */
+comment|/*  * msdos common header file  * [obtained from mtools -wfj]  * how to decipher DOS disk structures in coexisting with DOS  *  *	$Id$  */
 end_comment
 
 begin_define

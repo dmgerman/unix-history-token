@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$FreeBSD$  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id$  */
 end_comment
 
 begin_comment

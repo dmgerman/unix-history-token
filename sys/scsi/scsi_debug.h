@@ -4,7 +4,7 @@ comment|/*  * Use  *	options		SCSIDEBUG  *  * in the kernel config file to get t
 end_comment
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  *  *	$FreeBSD$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  *  *	$Id$  */
 end_comment
 
 begin_ifndef

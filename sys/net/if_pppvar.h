@@ -4,7 +4,7 @@ comment|/*	from Id: if_pppvar.h,v 1.1 1994/12/15 22:28:09 paulus Exp	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
