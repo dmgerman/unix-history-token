@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spec_vnops.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spec_vnops.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
+file|"stat.h"
 end_include
 
 begin_include
@@ -104,25 +104,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|ufs_getattr
-argument_list|()
-decl_stmt|,
-name|ufs_setattr
-argument_list|()
-decl_stmt|,
-name|ufs_access
-argument_list|()
-decl_stmt|,
-name|ufs_inactive
-argument_list|()
-decl_stmt|,
-name|ufs_reclaim
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnodeops
 name|blk_vnodeops
@@ -138,11 +119,11 @@ name|blk_open
 block|,
 name|blk_close
 block|,
-name|ufs_access
+name|blk_badop
 block|,
-name|ufs_getattr
+name|blk_badop
 block|,
-name|ufs_setattr
+name|blk_badop
 block|,
 name|blk_read
 block|,
@@ -176,9 +157,9 @@ name|blk_badop
 block|,
 name|blk_badop
 block|,
-name|ufs_inactive
+name|blk_nullop
 block|,
-name|ufs_reclaim
+name|blk_nullop
 block|,
 name|blk_lock
 block|,
@@ -363,7 +344,7 @@ name|dev
 operator|,
 name|mode
 operator|,
-name|IFCHR
+name|S_IFCHR
 operator|)
 operator|)
 return|;
@@ -400,7 +381,7 @@ name|dev
 operator|,
 name|mode
 operator|,
-name|IFBLK
+name|S_IFBLK
 operator|)
 operator|)
 return|;
@@ -408,63 +389,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Check access permissions for a block device.  */
-end_comment
-
-begin_macro
-name|blk_access
-argument_list|(
-argument|vp
-argument_list|,
-argument|mode
-argument_list|,
-argument|cred
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|iaccess
-argument_list|(
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-argument_list|,
-name|mode
-argument_list|,
-name|cred
-argument_list|)
 operator|)
 return|;
 block|}
@@ -1021,6 +945,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * At the moment we do not do any locking.  */
+end_comment
+
 begin_macro
 name|blk_lock
 argument_list|(
@@ -1038,26 +966,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
-name|ILOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1083,26 +991,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ip
-condition|)
-name|IUNLOCK
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1152,17 +1040,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-decl_stmt|;
 name|dev_t
 name|dev
 init|=
@@ -1182,34 +1059,6 @@ name|error
 decl_stmt|,
 name|mode
 decl_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_count
-operator|>
-literal|1
-operator|&&
-operator|!
-operator|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|ILOCKED
-operator|)
-condition|)
-name|ITIMES
-argument_list|(
-name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|vp
@@ -1247,7 +1096,7 @@ name|d_close
 expr_stmt|;
 name|mode
 operator|=
-name|IFCHR
+name|S_IFCHR
 expr_stmt|;
 break|break;
 case|case
@@ -1275,7 +1124,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 		 * We don't want to really close the device if it is still 		 * in use. Since every use (buffer, inode, swap, cmap) 		 * holds a reference to the vnode, and because we ensure 		 * that there cannot be more than one vnode per device, 		 * we need only check that we are down to the last 		 * reference before closing. 		 */
+comment|/* 		 * We don't want to really close the device if it is still 		 * in use. Since every use (buffer, vnode, swap, cmap) 		 * holds a reference to the vnode, and because we ensure 		 * that there cannot be more than one vnode per device, 		 * we need only check that we are down to the last 		 * reference before closing. 		 */
 if|if
 condition|(
 name|vp
@@ -1303,7 +1152,7 @@ name|d_close
 expr_stmt|;
 name|mode
 operator|=
-name|IFBLK
+name|S_IFBLK
 expr_stmt|;
 break|break;
 default|default:
@@ -1313,7 +1162,6 @@ literal|"blk_close: not special"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX what is this doing below the vnode op call */
 if|if
 condition|(
 name|setjmp
