@@ -1478,11 +1478,7 @@ argument|) 		    drv = dsk.unit; 		dsk.drive = (dsk.type<= TYPE_MAXHARD 			     
 literal|0
 argument|) + drv; 		dsk_meta =
 literal|0
-argument|; 		fsread(
-literal|0
-argument|, NULL,
-literal|0
-argument|); 	    } 	    if ((i = p - arg - !*(p -
+argument|; 	    } 	    if ((i = p - arg - !*(p -
 literal|1
 argument|))) { 		if (i>= sizeof(kname)) 		    return -
 literal|1
