@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.40 (Berkeley) %G%"
+literal|"@(#)main.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6087,11 +6087,71 @@ block|{
 ifdef|#
 directive|ifdef
 name|LOG
+specifier|register
+name|char
+modifier|*
+name|j
+init|=
+name|macvalue
+argument_list|(
+literal|'j'
+argument_list|,
+name|CurEnv
+argument_list|)
+decl_stmt|;
+specifier|register
+name|STAB
+modifier|*
+name|s
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"--- dumping state on user signal: open file descriptors: ---"
+literal|"--- dumping state on user signal: $j = %s ---"
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|stab
+argument_list|(
+name|j
+argument_list|,
+name|ST_CLASS
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+operator|||
+operator|!
+name|bitnset
+argument_list|(
+literal|'w'
+argument_list|,
+name|s
+operator|->
+name|s_class
+argument_list|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"*** $j not in $=w ***"
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"--- open file descriptors: ---"
 argument_list|)
 expr_stmt|;
 name|printopenfds
