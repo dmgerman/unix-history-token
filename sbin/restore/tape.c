@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tape.c,v 1.13 1998/07/28 06:20:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -583,6 +583,13 @@ operator|,
 name|long
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|readmapflag
 decl_stmt|;
 end_decl_stmt
 
@@ -3532,6 +3539,8 @@ control|)
 block|{
 if|if
 condition|(
+name|readmapflag
+operator|||
 name|spcl
 operator|.
 name|c_addr
@@ -3699,6 +3708,8 @@ operator|++
 control|)
 if|if
 condition|(
+name|readmapflag
+operator|||
 name|spcl
 operator|.
 name|c_addr
@@ -5604,6 +5615,10 @@ operator|.
 name|qval
 expr_stmt|;
 block|}
+name|readmapflag
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|buf
@@ -5636,6 +5651,19 @@ name|c_count
 operator|*
 name|TP_BSIZE
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|->
+name|c_count
+operator|>
+name|TP_NINDIR
+condition|)
+name|readmapflag
+operator|=
+literal|1
+expr_stmt|;
+else|else
 for|for
 control|(
 name|i
@@ -5978,6 +6006,8 @@ operator|++
 control|)
 if|if
 condition|(
+name|readmapflag
+operator|||
 name|header
 operator|->
 name|c_addr
