@@ -273,6 +273,17 @@ comment|/* #undef HAVE_CONNECT */
 end_comment
 
 begin_comment
+comment|/* Define if this system supports chown(), link(), and friends.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRESERVE_PERMISSIONS_SUPPORT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have memchr (always for CVS).  */
 end_comment
 
