@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.121 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.122 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6409,7 +6409,21 @@ argument_list|,
 name|rcode
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+operator||
+name|QQUEUEUP
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+condition|)
 block|{
 name|to
 operator|->
@@ -6471,6 +6485,49 @@ operator|->
 name|e_xfp
 argument_list|,
 literal|"%s... Successfully delivered\n"
+argument_list|,
+name|to
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QPINGONSUCCESS
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_DSN
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+name|to
+operator|->
+name|q_flags
+operator||=
+name|QRELAYED
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"%s... relayed; expect no further notifications\n"
 argument_list|,
 name|to
 operator|->

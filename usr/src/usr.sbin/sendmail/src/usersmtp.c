@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.34 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.35 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.34 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.35 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2083,39 +2083,6 @@ name|q_orcpt
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QPINGONSUCCESS
-argument_list|,
-name|to
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-name|to
-operator|->
-name|q_flags
-operator||=
-name|QRELAYED
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|e
-operator|->
-name|e_xfp
-argument_list|,
-literal|"%s... relayed; expect no further notifications\n"
-argument_list|,
-name|to
-operator|->
-name|q_paddr
-argument_list|)
-expr_stmt|;
 block|}
 name|smtpmessage
 argument_list|(
