@@ -1777,7 +1777,7 @@ name|IS_LOCKING_VFS
 parameter_list|(
 name|vp
 parameter_list|)
-value|(  ((vp)->v_tag == VT_UFS		\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS		\ 				 || (vp)->v_tag == VT_UDF)		\&& ((vp)->v_type != VBLK		\&& (vp)->v_type != VCHR) )
+value|(  ((vp)->v_tag == VT_UFS		\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS		\ 				 || (vp)->v_tag == VT_UDF		\ 				 || (vp)->v_tag == VT_PSEUDOFS		\ 				 || (vp)->v_tag == VT_PROCFS)		\&& (vp)->v_type != VCHR)
 end_define
 
 begin_define
