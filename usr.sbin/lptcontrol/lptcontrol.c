@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_DEVICE
-value|"/dev/lpt0"
+value|_PATH_DEV "lpt0"
 end_define
 
 begin_define
