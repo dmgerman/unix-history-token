@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: bootinfo.h,v 1.2 1998/07/05 12:13:18 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -92,10 +92,23 @@ comment|/* 176: console pollc pointer	*/
 name|u_long
 name|pad
 index|[
-literal|9
+literal|6
 index|]
 decl_stmt|;
 comment|/* 184: rsvd for future use	*/
+name|char
+modifier|*
+name|envp
+decl_stmt|;
+comment|/* 232:	start of environment	*/
+name|u_long
+name|kernend
+decl_stmt|;
+comment|/* 240: end of kernel		*/
+name|u_long
+name|modbase
+decl_stmt|;
+comment|/* 248: FreeBSD module base	*/
 comment|/* 256: total size		*/
 block|}
 struct|;
@@ -117,6 +130,19 @@ name|u_long
 name|esym
 decl_stmt|;
 comment|/* end of syms */
+name|u_long
+name|modptr
+decl_stmt|;
+comment|/* FreeBSD module pointer */
+name|u_long
+name|kernend
+decl_stmt|;
+comment|/* "end of kernel" from boot code */
+name|char
+modifier|*
+name|envp
+decl_stmt|;
+comment|/* "end of kernel" from boot code */
 name|u_long
 name|hwrpb_phys
 decl_stmt|;
