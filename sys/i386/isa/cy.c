@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.27 1995/12/10 20:34:27 bde Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.28 1995/12/10 20:54:29 bde Exp $  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"cy.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NCY
-operator|>
-literal|0
-end_if
 
 begin_comment
 comment|/*  * TODO:  * Check that cy16's work.  * Implement BREAK.  * Fix overflows when closing line.  * Atomic COR change.  * Don't report individual ports in devconf; busy flag for board should be  * union of the current individual busy flags.  * Consoles.  */
@@ -166,6 +158,23 @@ directive|include
 file|<sys/devconf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/devfsext.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -313,13 +322,6 @@ define|#
 directive|define
 name|comhardclose
 value|cyhardclose
-end_define
-
-begin_define
-define|#
-directive|define
-name|commajor
-value|cymajor
 end_define
 
 begin_define
@@ -857,12 +859,8 @@ directive|if
 literal|0
 block|u_char	cfcr_image;
 comment|/* copy of value written to CFCR */
-block|u_char	ftl;
-comment|/* current rx fifo trigger level */
-block|u_char	ftl_init;
-comment|/* ftl_max for next open() */
-block|u_char	ftl_max;
-comment|/* maximum ftl for curent open() */
+block|u_char	fifo_image;
+comment|/* copy of value written to FIFO */
 block|bool_t	hasfifo;
 comment|/* nonzero for 16550 UARTs */
 block|bool_t	loses_outints;
@@ -1052,6 +1050,10 @@ name|u_char
 name|intr_enable
 decl_stmt|;
 comment|/* CD1400 SRER shadow */
+name|struct
+name|kern_devconf
+name|kdc
+decl_stmt|;
 comment|/* 	 * Ping-pong input buffers.  The extra factor of 2 in the sizes is 	 * to allow for an error byte for each input byte. 	 */
 define|#
 directive|define
@@ -1091,15 +1093,30 @@ directive|ifdef
 name|DEVFS
 name|void
 modifier|*
-name|devfs_token
+name|devfs_token_ttyd
 decl_stmt|;
-comment|/* one for now */
+name|void
+modifier|*
+name|devfs_token_ttyl
+decl_stmt|;
+name|void
+modifier|*
+name|devfs_token_ttyi
+decl_stmt|;
+name|void
+modifier|*
+name|devfs_token_cuaa
+decl_stmt|;
+name|void
+modifier|*
+name|devfs_token_cual
+decl_stmt|;
+name|void
+modifier|*
+name|devfs_token_cuai
+decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|kern_devconf
-name|kdc
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1406,6 +1423,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|char
+name|driver_name
+index|[]
+init|=
+literal|"cy"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* table and macro for fast conversion from a unit number to its com struct */
 end_comment
@@ -1441,51 +1468,66 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|isa_driver
+name|siodriver
+init|=
+block|{
+name|sioprobe
+block|,
+name|sioattach
+block|,
+name|driver_name
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|d_open_t
-name|cyopen
+name|sioopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_close_t
-name|cyclose
+name|sioclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_read_t
-name|cyread
+name|sioread
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_write_t
-name|cywrite
+name|siowrite
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
-name|cyioctl
+name|sioioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_stop_t
-name|cystop
+name|siostop
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_devtotty_t
-name|cydevtotty
+name|siodevtotty
 decl_stmt|;
 end_decl_stmt
 
@@ -1500,55 +1542,38 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|cy_cdevsw
+name|sio_cdevsw
 init|=
 block|{
-name|cyopen
+name|sioopen
 block|,
-name|cyclose
+name|sioclose
 block|,
-name|cyread
+name|sioread
 block|,
-name|cywrite
+name|siowrite
 block|,
-comment|/*48*/
-name|cyioctl
+name|sioioctl
 block|,
-name|cystop
+name|siostop
 block|,
 name|noreset
 block|,
-name|cydevtotty
+name|siodevtotty
 block|,
-comment|/*cyclades*/
 name|ttselect
 block|,
 name|nommap
 block|,
 name|NULL
 block|,
-literal|"cy"
+name|driver_name
 block|,
 name|NULL
 block|,
 operator|-
 literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|isa_driver
-name|siodriver
-init|=
-block|{
-name|sioprobe
-block|,
-name|sioattach
-block|,
-literal|"cy"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1581,13 +1606,6 @@ end_decl_stmt
 begin_comment
 comment|/* input chars + weighted output completions */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|commajor
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1630,19 +1648,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|nsio_tty
 init|=
 name|NSIO
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1765,26 +1784,15 @@ operator|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+name|chardev
+index|[]
+init|=
+literal|"0123456789abcdefghijklmnopqrstuvwxyz"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2180,20 +2188,23 @@ decl_stmt|;
 name|cy_addr
 name|cy_iobase
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
 name|cy_addr
 name|iobase
-decl_stmt|;
-name|int
-name|ncyu
-decl_stmt|;
-name|int
-name|unit
 decl_stmt|;
 name|char
 name|name
 index|[
 literal|32
 index|]
+decl_stmt|;
+name|int
+name|ncyu
+decl_stmt|;
+name|int
+name|unit
 decl_stmt|;
 name|unit
 operator|=
@@ -2566,7 +2577,7 @@ name|kdc
 operator|.
 name|kdc_name
 operator|=
-literal|"cy"
+name|driver_name
 expr_stmt|;
 name|com
 operator|->
@@ -2647,23 +2658,45 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|dev
+operator|=
+name|makedev
+argument_list|(
+name|CDEV_MAJOR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cdevsw_add
+argument_list|(
+operator|&
+name|dev
+argument_list|,
+operator|&
+name|sio_cdevsw
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-comment|/* XXX */
-comment|/* Fix this when you work out what the f*ck it looks like */
+comment|/* path, name, devsw, minor, type, uid, gid, perm */
 name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"cy%d"
+literal|"ttyc%c"
 argument_list|,
+name|chardev
+index|[
 name|unit
+index|]
 argument_list|)
 expr_stmt|;
 name|com
 operator|->
-name|devfs_token
+name|devfs_token_ttyd
 operator|=
 name|devfs_add_devsw
 argument_list|(
@@ -2672,7 +2705,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|&
-name|cy_cdevsw
+name|sio_cdevsw
 argument_list|,
 name|unit
 argument_list|,
@@ -2683,6 +2716,200 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0600
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"ttyic%c"
+argument_list|,
+name|chardev
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|devfs_token_ttyi
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|sio_cdevsw
+argument_list|,
+name|unit
+operator||
+name|CONTROL_INIT_STATE
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"ttylc%c"
+argument_list|,
+name|chardev
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|devfs_token_ttyl
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|sio_cdevsw
+argument_list|,
+name|unit
+operator||
+name|CONTROL_LOCK_STATE
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"cuac%c"
+argument_list|,
+name|chardev
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|devfs_token_cuaa
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|sio_cdevsw
+argument_list|,
+name|unit
+operator||
+name|CALLOUT_MASK
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0660
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"cuaic%c"
+argument_list|,
+name|chardev
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|devfs_token_cuai
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|sio_cdevsw
+argument_list|,
+name|unit
+operator||
+name|CALLOUT_MASK
+operator||
+name|CONTROL_INIT_STATE
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0660
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"cualc%c"
+argument_list|,
+name|chardev
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|devfs_token_cual
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|sio_cdevsw
+argument_list|,
+name|unit
+operator||
+name|CALLOUT_MASK
+operator||
+name|CONTROL_LOCK_STATE
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0660
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3052,7 +3279,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|(void)commctl(com, TIOCM_DTR | TIOCM_RTS, DMSET); 		com->ftl_max = com->ftl_init; 		com->poll = com->no_irq; 		com->poll_output = com->loses_outints;
+block|(void)commctl(com, TIOCM_DTR | TIOCM_RTS, DMSET); 		com->poll = com->no_irq; 		com->poll_output = com->loses_outints;
 endif|#
 directive|endif
 operator|++
@@ -3146,7 +3373,7 @@ directive|if
 literal|0
 block|if (com->hasfifo) {
 comment|/* 			 * (Re)enable and drain fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
-block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | FIFO_ENABLE | com->ftl); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		disable_intr(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		enable_intr();
+block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		disable_intr(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		enable_intr();
 else|#
 directive|else
 comment|/* !0 */
@@ -3654,7 +3881,7 @@ name|kgdb_dev
 operator|!=
 name|makedev
 argument_list|(
-name|commajor
+name|CDEV_MAJOR
 argument_list|,
 name|unit
 argument_list|)
@@ -3800,6 +4027,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|#
+directive|if
+literal|0
+block|if (com->hasfifo) {
+comment|/* 		 * Disable fifos so that they are off after controlled 		 * reboots.  Some BIOSes fail to detect 16550s when the 		 * fifos are enabled. 		 */
+block|outb(iobase + com_fifo, 0); 	}
+endif|#
+directive|endif
 name|com
 operator|->
 name|active_out
@@ -9428,7 +9663,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|disable_intr(); 	if (com->state>= (CS_BUSY | CS_TTGO)) { 		siointr1(com);
+block|disable_intr(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
 comment|/* fake interrupt to start output */
 block|enable_intr();
 endif|#
@@ -9587,6 +9822,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|tty
 modifier|*
@@ -10254,18 +10490,6 @@ argument_list|,
 name|total
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 			 * XXX if we resurrect this then we should move 			 * the dropping of the ftl to somewhere with less 			 * latency. 			 */
-block|if (errnum == CE_OVERRUN&& com->hasfifo&& com->ftl> FIFO_TRIGGER_1) { 				static	u_char	ftl_in_bytes[] = 					{ 1, 4, 8, 14, };  				com->ftl_init = FIFO_TRIGGER_8;
-define|#
-directive|define
-name|FIFO_TRIGGER_DELTA
-value|FIFO_TRIGGER_4
-block|com->ftl_max = 				com->ftl -= FIFO_TRIGGER_DELTA; 				outb(com->iobase + com_fifo, 				     FIFO_ENABLE | com->ftl); 				log(LOG_DEBUG, 				    "sio%d: reduced fifo trigger level to %d\n", 				    unit, 				    ftl_in_bytes[com->ftl 						 / FIFO_TRIGGER_DELTA]); 			}
-endif|#
-directive|endif
 block|}
 block|}
 block|}
@@ -11297,85 +11521,6 @@ end_endif
 
 begin_comment
 comment|/* CyDebug */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|cy_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_function
-specifier|static
-name|void
-name|cy_drvinit
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-block|{
-name|dev_t
-name|dev
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|cy_devsw_installed
-condition|)
-block|{
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|dev
-argument_list|,
-operator|&
-name|cy_cdevsw
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|cy_devsw_installed
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|cydev
-argument_list|,
-argument|SI_SUB_DRIVERS
-argument_list|,
-argument|SI_ORDER_MIDDLE+CDEV_MAJOR
-argument_list|,
-argument|cy_drvinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NCY> 0 */
 end_comment
 
 end_unit
