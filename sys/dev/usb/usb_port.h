@@ -210,7 +210,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match) __P((struct device *, struct cfdata *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ int __CONCAT(dname,_detach) __P((struct device *, int)); \ int __CONCAT(dname,_activate) __P((struct device *, enum devact)); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+value|int __CONCAT(dname,_match)(struct device *, struct cfdata *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
 end_define
 
 begin_define
@@ -624,7 +624,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match) __P((struct device *, void *, void *)); \ void __CONCAT(dname,_attach) __P((struct device *, struct device *, void *)); \ int __CONCAT(dname,_detach) __P((struct device *, int)); \ int __CONCAT(dname,_activate) __P((struct device *, enum devact)); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+value|int __CONCAT(dname,_match)(struct device *, void *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
 end_define
 
 begin_define
@@ -1020,26 +1020,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_DECLARE_DRIVER_INIT2
-parameter_list|(
-name|dname
-parameter_list|,
-name|init
-modifier|...
-parameter_list|)
-define|\
-value|Static device_probe_t __CONCAT(dname,_match); \ Static device_attach_t __CONCAT(dname,_attach); \ Static device_detach_t __CONCAT(dname,_detach); \ \ Static devclass_t __CONCAT(dname,_devclass); \ \ Static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ Static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USBCORE
-end_ifdef
-
-begin_define
-define|#
-directive|define
 name|USB_DECLARE_DRIVER_INIT
 parameter_list|(
 name|dname
@@ -1048,32 +1028,8 @@ name|init
 modifier|...
 parameter_list|)
 define|\
-value|USB_DECLARE_DRIVER_INIT2(dname, init); \ 	MODULE_VERSION(usb, 1)
+value|Static device_probe_t __CONCAT(dname,_match); \ Static device_attach_t __CONCAT(dname,_attach); \ Static device_detach_t __CONCAT(dname,_detach); \ \ Static devclass_t __CONCAT(dname,_devclass); \ \ Static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ Static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }; \ MODULE_DEPEND(dname, usb, 1, 1, 1)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|USB_DECLARE_DRIVER_INIT
-parameter_list|(
-name|dname
-parameter_list|,
-name|init
-modifier|...
-parameter_list|)
-define|\
-value|USB_DECLARE_DRIVER_INIT2(dname, init); \ 	MODULE_DEPEND(dname, usb, 1, 1, 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
