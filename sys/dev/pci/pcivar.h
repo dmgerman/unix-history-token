@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pcivar.h,v 1.31 1999/05/11 07:55:32 peter Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pcivar.h,v 1.32 1999/05/18 20:48:38 peter Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -329,6 +329,10 @@ name|u_int8_t
 name|nummaps
 decl_stmt|;
 comment|/* actual number of PCI maps used */
+name|u_int8_t
+name|hose
+decl_stmt|;
+comment|/* hose which bus is attached to */
 name|u_int8_t
 name|bus
 decl_stmt|;
@@ -748,6 +752,8 @@ block|,
 name|PCI_IVAR_SECONDARYBUS
 block|,
 name|PCI_IVAR_SUBORDINATEBUS
+block|,
+name|PCI_IVAR_HOSE
 block|, }
 enum|;
 end_enum
@@ -947,6 +953,17 @@ argument|u_int8_t
 argument_list|)
 end_macro
 
+begin_macro
+name|PCI_ACCESSOR
+argument_list|(
+argument|hose
+argument_list|,
+argument|HOSE
+argument_list|,
+argument|u_int32_t
+argument_list|)
+end_macro
+
 begin_function
 specifier|static
 name|__inline
@@ -1018,6 +1035,49 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Ivars for pci bridges.  */
+end_comment
+
+begin_comment
+comment|/*typedef enum pci_device_ivars pcib_device_ivars;*/
+end_comment
+
+begin_enum
+enum|enum
+name|pcib_device_ivars
+block|{
+name|PCIB_IVAR_HOSE
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|PCIB_ACCESSOR
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|T
+parameter_list|)
+define|\ 									 \
+value|static __inline T pcib_get_ ## A(device_t dev)				 \ {									 \ 	uintptr_t v;							 \ 	BUS_READ_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B,&v); \ 	return (T) v;							 \ }									 \ 									 \ static __inline void pcib_set_ ## A(device_t dev, T t)			 \ {									 \ 	u_long v = (u_long) t;						 \ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, PCIB_IVAR_ ## B, v); \ }
+end_define
+
+begin_macro
+name|PCIB_ACCESSOR
+argument_list|(
+argument|hose
+argument_list|,
+argument|HOSE
+argument_list|,
+argument|u_int32_t
+argument_list|)
+end_macro
 
 begin_endif
 endif|#

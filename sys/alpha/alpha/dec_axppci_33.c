@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_axppci_33.c,v 1.1 1998/08/10 07:53:58 dfr Exp $ */
+comment|/* $Id: dec_axppci_33.c,v 1.2 1999/04/23 19:53:37 dt Exp $ */
 end_comment
 
 begin_comment
@@ -881,6 +881,8 @@ name|chipset
 operator|.
 name|cfgreadl
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|,
 literal|7
