@@ -3214,7 +3214,7 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|" ERR#%d '%s'\n"
+literal|" ERR#%ld '%s'\n"
 argument_list|,
 name|retval
 argument_list|,
