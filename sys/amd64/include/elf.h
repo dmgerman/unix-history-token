@@ -551,8 +551,96 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_X86_64_COUNT
+name|R_X86_64_DTPMOD64
 value|16
+end_define
+
+begin_comment
+comment|/* ID of module containing symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_DTPOFF64
+value|17
+end_define
+
+begin_comment
+comment|/* Offset in TLS block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_TPOFF64
+value|18
+end_define
+
+begin_comment
+comment|/* Offset in static TLS block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_TLSGD
+value|19
+end_define
+
+begin_comment
+comment|/* PC relative offset to GD GOT entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_TLSLD
+value|20
+end_define
+
+begin_comment
+comment|/* PC relative offset to LD GOT entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_DTPOFF32
+value|21
+end_define
+
+begin_comment
+comment|/* Offset in TLS block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_GOTTPOFF
+value|22
+end_define
+
+begin_comment
+comment|/* PC relative offset to IE GOT entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_TPOFF32
+value|23
+end_define
+
+begin_comment
+comment|/* Offset in static TLS block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_COUNT
+value|24
 end_define
 
 begin_comment
