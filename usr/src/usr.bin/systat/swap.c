@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.11 (Berkeley) %G%"
+literal|"@(#)swap.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -982,7 +982,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|nlist
-name|nlst
+name|nl
 index|[]
 init|=
 block|{
@@ -1071,7 +1071,7 @@ directive|ifdef
 name|notdef
 if|if
 condition|(
-name|nlst
+name|nl
 index|[
 name|X_FIRST
 index|]
@@ -1087,13 +1087,13 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlst
+name|nl
 argument_list|)
 condition|)
 block|{
 name|nlsterr
 argument_list|(
-name|nlst
+name|nl
 argument_list|)
 expr_stmt|;
 return|return
@@ -1104,7 +1104,7 @@ return|;
 block|}
 if|if
 condition|(
-name|nlst
+name|nl
 index|[
 name|X_FIRST
 index|]
@@ -1283,7 +1283,7 @@ directive|ifdef
 name|notdef
 if|if
 condition|(
-name|nlst
+name|nl
 index|[
 name|X_FIRST
 index|]

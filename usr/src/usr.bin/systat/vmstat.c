@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.19 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -552,7 +552,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|nlist
-name|nlst
+name|nl
 index|[]
 init|=
 block|{
@@ -925,7 +925,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|nlst
+name|nl
 index|[
 literal|0
 index|]
@@ -941,13 +941,13 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlst
+name|nl
 argument_list|)
 condition|)
 block|{
 name|nlisterr
 argument_list|(
-name|nlst
+name|nl
 argument_list|)
 expr_stmt|;
 return|return
@@ -958,7 +958,7 @@ return|;
 block|}
 if|if
 condition|(
-name|nlst
+name|nl
 index|[
 literal|0
 index|]
@@ -1071,14 +1071,14 @@ block|{
 name|nintr
 operator|=
 operator|(
-name|nlst
+name|nl
 index|[
 name|X_EINTRCNT
 index|]
 operator|.
 name|n_value
 operator|-
-name|nlst
+name|nl
 index|[
 name|X_INTRCNT
 index|]
@@ -1132,14 +1132,14 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|nlst
+name|nl
 index|[
 name|X_EINTRNAMES
 index|]
 operator|.
 name|n_value
 operator|-
-name|nlst
+name|nl
 index|[
 name|X_INTRNAMES
 index|]

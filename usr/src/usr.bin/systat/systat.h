@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1989, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)systat.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1989, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)systat.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -140,7 +140,7 @@ name|NVAL
 parameter_list|(
 name|indx
 parameter_list|)
-value|nlst[(indx)].n_value
+value|nl[(indx)].n_value
 end_define
 
 begin_define
