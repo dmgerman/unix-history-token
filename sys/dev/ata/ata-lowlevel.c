@@ -466,7 +466,7 @@ comment|/* ATA DMA data transfer commands */
 case|case
 name|ATA_R_DMA
 case|:
-comment|/* check sanity and setup DMA engine */
+comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
 name|request
@@ -477,7 +477,7 @@ name|channel
 operator|->
 name|dma
 operator|->
-name|setup
+name|load
 argument_list|(
 name|request
 operator|->
@@ -490,6 +490,12 @@ argument_list|,
 name|request
 operator|->
 name|bytecount
+argument_list|,
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_READ
 argument_list|)
 condition|)
 block|{
@@ -588,20 +594,6 @@ operator|->
 name|device
 operator|->
 name|channel
-argument_list|,
-name|request
-operator|->
-name|data
-argument_list|,
-name|request
-operator|->
-name|bytecount
-argument_list|,
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_READ
 argument_list|)
 condition|)
 block|{
@@ -981,7 +973,7 @@ name|EBUSY
 expr_stmt|;
 break|break;
 block|}
-comment|/* check sanity and setup DMA engine */
+comment|/* check sanity, setup SG list and DMA engine */
 if|if
 condition|(
 name|request
@@ -992,7 +984,7 @@ name|channel
 operator|->
 name|dma
 operator|->
-name|setup
+name|load
 argument_list|(
 name|request
 operator|->
@@ -1005,6 +997,12 @@ argument_list|,
 name|request
 operator|->
 name|bytecount
+argument_list|,
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_READ
 argument_list|)
 condition|)
 block|{
@@ -1227,20 +1225,6 @@ operator|->
 name|device
 operator|->
 name|channel
-argument_list|,
-name|request
-operator|->
-name|data
-argument_list|,
-name|request
-operator|->
-name|bytecount
-argument_list|,
-name|request
-operator|->
-name|flags
-operator|&
-name|ATA_R_READ
 argument_list|)
 condition|)
 block|{
@@ -1690,6 +1674,16 @@ operator|=
 name|request
 operator|->
 name|bytecount
+expr_stmt|;
+comment|/* release SG list etc */
+name|ch
+operator|->
+name|dma
+operator|->
+name|unload
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
 comment|/* done with HW */
 break|break;
@@ -2151,6 +2145,16 @@ name|request
 operator|->
 name|bytecount
 expr_stmt|;
+comment|/* release SG list etc */
+name|ch
+operator|->
+name|dma
+operator|->
+name|unload
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* done with HW */
 break|break;
 block|}
@@ -2159,7 +2163,7 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-comment|/* unlock the ATA HW for new work */
+comment|/* unlock the ATA channel for new work */
 name|ch
 operator|->
 name|running

@@ -1389,6 +1389,10 @@ name|u_int32_t
 name|max_iosize
 decl_stmt|;
 comment|/* DMA engine max IO size */
+name|u_int32_t
+name|cur_iosize
+decl_stmt|;
+comment|/* DMA engine current IO size */
 name|int
 name|flags
 decl_stmt|;
@@ -1429,7 +1433,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|setup
+name|load
 function_decl|)
 parameter_list|(
 name|struct
@@ -1442,6 +1446,21 @@ name|data
 parameter_list|,
 name|int32_t
 name|count
+parameter_list|,
+name|int
+name|dir
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|unload
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 name|int
@@ -1454,15 +1473,6 @@ name|struct
 name|ata_channel
 modifier|*
 name|ch
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
-name|int32_t
-name|count
-parameter_list|,
-name|int
-name|dir
 parameter_list|)
 function_decl|;
 name|int
