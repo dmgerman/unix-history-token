@@ -2556,7 +2556,7 @@ name|a_reqpage
 operator|!=
 name|i
 condition|)
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|pages
 index|[
@@ -2720,7 +2720,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
