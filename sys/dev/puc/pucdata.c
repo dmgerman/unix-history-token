@@ -73,6 +73,8 @@ block|{
 block|{
 literal|"Comtrol RocketPort 550/4 RJ45"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x11fe
 block|,
@@ -146,6 +148,8 @@ block|, 	}
 block|,
 block|{
 literal|"Comtrol RocketPort 550/Quad"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x11fe
@@ -221,6 +225,8 @@ block|,
 block|{
 literal|"Comtrol RocketPort 550/8 RJ11 part A"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x11fe
 block|,
@@ -294,6 +300,8 @@ block|, 	}
 block|,
 block|{
 literal|"Comtrol RocketPort 550/8 RJ11 part B"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x11fe
@@ -369,6 +377,8 @@ block|,
 block|{
 literal|"Comtrol RocketPort 550/8 Octa part A"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x11fe
 block|,
@@ -442,6 +452,8 @@ block|, 	}
 block|,
 block|{
 literal|"Comtrol RocketPort 550/8 Octa part B"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x11fe
@@ -517,6 +529,8 @@ block|,
 block|{
 literal|"Comtrol RocketPort 550/8 part A"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x11fe
 block|,
@@ -590,6 +604,8 @@ block|, 	}
 block|,
 block|{
 literal|"Comtrol RocketPort 550/8 part B"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x11fe
@@ -665,6 +681,8 @@ block|,
 block|{
 literal|"Comtrol RocketPort 550/16 part A"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x11fe
 block|,
@@ -738,6 +756,8 @@ block|, 	}
 block|,
 block|{
 literal|"Comtrol RocketPort 550/16 part B"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x11fe
@@ -911,6 +931,8 @@ comment|/* 	 * Dolphin Peripherals 4014 (dual parallel port) card.  PLX 9050, wi
 block|{
 literal|"Dolphin Peripherals 4014"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x10b5
 block|,
@@ -959,6 +981,8 @@ comment|/* 	 * Dolphin Peripherals 4035 (dual serial port) card.  PLX 9050, with
 block|{
 literal|"Dolphin Peripherals 4035"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x10b5
 block|,
@@ -1005,6 +1029,8 @@ block|,
 comment|/* 	 * Dolphin Peripherals 4036 (dual serial port) card. 	 * (Dolpin 4025 has the same ID but only one port) 	 */
 block|{
 literal|"Dolphin Peripherals 4036"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x1409
@@ -1060,6 +1086,8 @@ comment|/* SIIG Cyber Serial PCI 16C550 (10x family): 1S */
 block|{
 literal|"SIIG Cyber Serial PCI 16C550 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1096,6 +1124,8 @@ block|,
 comment|/* SIIG Cyber Serial PCI 16C650 (10x family): 1S */
 block|{
 literal|"SIIG Cyber Serial PCI 16C650 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1134,6 +1164,8 @@ comment|/* SIIG Cyber Serial PCI 16C850 (10x family): 1S */
 block|{
 literal|"SIIG Cyber Serial PCI 16C850 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1170,6 +1202,8 @@ block|,
 comment|/* SIIG Cyber I/O PCI 16C550 (10x family): 1S, 1P */
 block|{
 literal|"SIIG Cyber I/O PCI 16C550 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1218,6 +1252,8 @@ comment|/* SIIG Cyber I/O PCI 16C650 (10x family): 1S, 1P */
 block|{
 literal|"SIIG Cyber I/O PCI 16C650 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1264,6 +1300,8 @@ block|,
 comment|/* SIIG Cyber I/O PCI 16C850 (10x family): 1S, 1P */
 block|{
 literal|"SIIG Cyber I/O PCI 16C850 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1312,6 +1350,8 @@ comment|/* SIIG Cyber Parallel PCI (10x family): 1P */
 block|{
 literal|"SIIG Cyber Parallel PCI (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1348,6 +1388,8 @@ block|,
 comment|/* SIIG Cyber Parallel Dual PCI (10x family): 2P */
 block|{
 literal|"SIIG Cyber Parallel Dual PCI (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1396,6 +1438,8 @@ comment|/* SIIG Cyber Serial Dual PCI 16C550 (10x family): 2S */
 block|{
 literal|"SIIG Cyber Serial Dual PCI 16C550 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1442,6 +1486,8 @@ block|,
 comment|/* SIIG Cyber Serial Dual PCI 16C650 (10x family): 2S */
 block|{
 literal|"SIIG Cyber Serial Dual PCI 16C650 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1490,6 +1536,8 @@ comment|/* SIIG Cyber Serial Dual PCI 16C850 (10x family): 2S */
 block|{
 literal|"SIIG Cyber Serial Dual PCI 16C850 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1536,6 +1584,8 @@ block|,
 comment|/* SIIG Cyber 2S1P PCI 16C550 (10x family): 2S, 1P */
 block|{
 literal|"SIIG Cyber 2S1P PCI 16C550 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1595,6 +1645,8 @@ comment|/* SIIG Cyber 2S1P PCI 16C650 (10x family): 2S, 1P */
 block|{
 literal|"SIIG Cyber 2S1P PCI 16C650 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1653,6 +1705,8 @@ comment|/* SIIG Cyber 2S1P PCI 16C850 (10x family): 2S, 1P */
 block|{
 literal|"SIIG Cyber 2S1P PCI 16C850 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1710,6 +1764,8 @@ block|,
 comment|/* SIIG Cyber 4S PCI 16C550 (10x family): 4S */
 block|{
 literal|"SIIG Cyber 4S PCI 16C550 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1778,6 +1834,8 @@ comment|/* SIIG Cyber 4S PCI 16C650 (10x family): 4S */
 block|{
 literal|"SIIG Cyber 4S PCI 16C650 (10x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1844,6 +1902,8 @@ block|,
 comment|/* SIIG Cyber 4S PCI 16C850 (10x family): 4S */
 block|{
 literal|"SIIG Cyber 4S PCI 16C850 (10x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1913,6 +1973,8 @@ comment|/* SIIG Cyber Parallel PCI (20x family): 1P */
 block|{
 literal|"SIIG Cyber Parallel PCI (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -1949,6 +2011,8 @@ block|,
 comment|/* SIIG Cyber Parallel Dual PCI (20x family): 2P */
 block|{
 literal|"SIIG Cyber Parallel Dual PCI (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -1996,6 +2060,8 @@ block|,
 comment|/* SIIG Cyber 2P1S PCI 16C550 (20x family): 1S, 2P */
 block|{
 literal|"SIIG Cyber 2P1S PCI 16C550 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2054,6 +2120,8 @@ comment|/* SIIG Cyber 2P1S PCI 16C650 (20x family): 1S, 2P */
 block|{
 literal|"SIIG Cyber 2P1S PCI 16C650 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2110,6 +2178,8 @@ block|,
 comment|/* SIIG Cyber 2P1S PCI 16C850 (20x family): 1S, 2P */
 block|{
 literal|"SIIG Cyber 2P1S PCI 16C850 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2168,6 +2238,8 @@ comment|/* SIIG Cyber Serial PCI 16C550 (20x family): 1S */
 block|{
 literal|"SIIG Cyber Serial PCI 16C550 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2204,6 +2276,8 @@ block|,
 comment|/* SIIG Cyber Serial PCI 16C650 (20x family): 1S */
 block|{
 literal|"SIIG Cyber Serial PCI 16C650 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2242,6 +2316,8 @@ comment|/* SIIG Cyber Serial PCI 16C850 (20x family): 1S */
 block|{
 literal|"SIIG Cyber Serial PCI 16C850 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2278,6 +2354,8 @@ block|,
 comment|/* SIIG Cyber I/O PCI 16C550 (20x family): 1S, 1P */
 block|{
 literal|"SIIG Cyber I/O PCI 16C550 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2326,6 +2404,8 @@ comment|/* SIIG Cyber I/O PCI 16C650 (20x family): 1S, 1P */
 block|{
 literal|"SIIG Cyber I/O PCI 16C650 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2372,6 +2452,8 @@ block|,
 comment|/* SIIG Cyber I/O PCI 16C850 (20x family): 1S, 1P */
 block|{
 literal|"SIIG Cyber I/O PCI 16C850 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2420,6 +2502,8 @@ comment|/* SIIG Cyber Serial Dual PCI 16C550 (20x family): 2S */
 block|{
 literal|"SIIG Cyber Serial Dual PCI 16C550 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2466,6 +2550,8 @@ block|,
 comment|/* SIIG Cyber Serial Dual PCI 16C650 (20x family): 2S */
 block|{
 literal|"SIIG Cyber Serial Dual PCI 16C650 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2514,6 +2600,8 @@ comment|/* SIIG Cyber Serial Dual PCI 16C850 (20x family): 2S */
 block|{
 literal|"SIIG Cyber Serial Dual PCI 16C850 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2560,6 +2648,8 @@ block|,
 comment|/* SIIG Cyber 2S1P PCI 16C550 (20x family): 2S, 1P */
 block|{
 literal|"SIIG Cyber 2S1P PCI 16C550 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2618,6 +2708,8 @@ comment|/* SIIG Cyber 2S1P PCI 16C650 (20x family): 2S, 1P */
 block|{
 literal|"SIIG Cyber 2S1P PCI 16C650 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2675,6 +2767,8 @@ comment|/* SIIG Cyber 2S1P PCI 16C850 (20x family): 2S, 1P */
 block|{
 literal|"SIIG Cyber 2S1P PCI 16C850 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2731,6 +2825,8 @@ block|,
 comment|/* SIIG Cyber 4S PCI 16C550 (20x family): 4S */
 block|{
 literal|"SIIG Cyber 4S PCI 16C550 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2799,6 +2895,8 @@ comment|/* SIIG Cyber 4S PCI 16C650 (20x family): 4S */
 block|{
 literal|"SIIG Cyber 4S PCI 16C650 (20x family)"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x131f
 block|,
@@ -2865,6 +2963,8 @@ block|,
 comment|/* SIIG Cyber 4S PCI 16C850 (20x family): 4S */
 block|{
 literal|"SIIG Cyber 4S PCI 16C850 (20x family)"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x131f
@@ -2933,6 +3033,8 @@ comment|/* VScom PCI-200L: 2S */
 block|{
 literal|"VScom PCI-200L"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x14d2
 block|,
@@ -2983,6 +3085,8 @@ block|,
 comment|/* VScom PCI-400: 4S */
 block|{
 literal|"VScom PCI-400"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x10b5
@@ -3058,6 +3162,8 @@ block|,
 comment|/* VScom PCI-800: 8S */
 block|{
 literal|"VScom PCI-800"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x10b5
@@ -3182,6 +3288,8 @@ comment|/* 	 * VScom PCI-800H. Uses 8 16950 UART, behind a PCI chips that offers
 block|{
 literal|"Titan PCI-800H"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x14d2
 block|,
@@ -3255,6 +3363,8 @@ block|, 	}
 block|,
 block|{
 literal|"Titan PCI-800H"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x14d2
@@ -3330,6 +3440,8 @@ block|,
 block|{
 literal|"Titan PCI-200H"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x14d2
 block|,
@@ -3381,6 +3493,8 @@ comment|/* NEC PK-UG-X001 K56flex PCI Modem card. 	   NEC MARTH bridge chip and 
 block|{
 literal|"NEC PK-UG-X001 K56flex PCI Modem"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x1033
 block|,
@@ -3417,6 +3531,8 @@ block|,
 comment|/* NEC PK-UG-X008 */
 block|{
 literal|"NEC PK-UG-X008"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x1033
@@ -3455,6 +3571,8 @@ comment|/* Lava Computers 2SP-PCI */
 block|{
 literal|"Lava Computers 2SP-PCI parallel port"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x1407
 block|,
@@ -3491,6 +3609,8 @@ block|,
 comment|/* Lava Computers 2SP-PCI and Quattro-PCI serial ports */
 block|{
 literal|"Lava Computers dual serial port"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x1407
@@ -3539,6 +3659,8 @@ comment|/* Lava Computers newer Quattro-PCI serial ports */
 block|{
 literal|"Lava Computers Quattro-PCI serial port"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x1407
 block|,
@@ -3586,6 +3708,8 @@ comment|/* Lava Computers DSerial PCI serial ports */
 block|{
 literal|"Lava Computers serial port"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x1407
 block|,
@@ -3622,6 +3746,8 @@ block|,
 comment|/* Lava Computers Octopus-550 serial ports */
 block|{
 literal|"Lava Computers Octopus-550 8-port serial"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x1407
@@ -3690,6 +3816,8 @@ comment|/* US Robotics (3Com) PCI Modems */
 block|{
 literal|"US Robotics (3Com) 3CP5609 PCI 16550 Modem"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x12b9
 block|,
@@ -3726,6 +3854,8 @@ block|,
 comment|/* Actiontec  56K PCI Master */
 block|{
 literal|"Actiontec 56K PCI Master"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x11c1
@@ -3764,6 +3894,8 @@ comment|/* 	 * Boards with an Oxford Semiconductor chip. 	 * 	 * Oxford Semicond
 comment|/* Oxford Semiconductor OX16PCI954 PCI UARTs */
 block|{
 literal|"Qxford Semiconductor OX16PCI954 UARTs"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x1415
@@ -3832,6 +3964,8 @@ comment|/* Oxford Semiconductor OX16PCI954 PCI Parallel port */
 block|{
 literal|"Qxford Semiconductor OX16PCI954 Parallel port"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x1415
 block|,
@@ -3868,6 +4002,8 @@ block|,
 comment|/* NetMos 2S1P PCI 16C650 : 2S, 1P */
 block|{
 literal|"NetMos NM9835 Dual UART and 1284 Printer port"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x9710
@@ -3926,6 +4062,8 @@ comment|/* 	 * This is the Middle Digital, Inc. PCI-Weasel, which 	 * uses a PCI
 block|{
 literal|"Middle Digital, Inc. Weasel serial port"
 block|,
+name|NULL
+block|,
 block|{
 literal|0xdeaf
 block|,
@@ -3962,6 +4100,8 @@ block|,
 comment|/* SD-LAB PCI I/O Card 4S2P */
 block|{
 literal|"Syba Tech Ltd. PCI-4S2P-550-ECP"
+block|,
+name|puc_config_win877
 block|,
 block|{
 literal|0x1592
@@ -4050,6 +4190,8 @@ comment|/* Moxa Technologies Co., Ltd. PCI I/O Card 4S RS232/422/485 */
 block|{
 literal|"Moxa Technologies, Industio CP-114"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x1393
 block|,
@@ -4124,6 +4266,8 @@ block|,
 comment|/* Moxa Technologies Co., Ltd. PCI I/O Card 8S RS232 */
 block|{
 literal|"Moxa Technologies, C168H/PCI"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x1393
@@ -4247,6 +4391,8 @@ block|,
 block|{
 literal|"Avlab Technology, PCI IO 2S"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x14db
 block|,
@@ -4293,6 +4439,8 @@ block|,
 comment|/* Avlab Technology, Inc. Low Profile PCI 4 Serial: 4S */
 block|{
 literal|"Avlab Low Profile PCI 4 Serial"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x14db
@@ -4361,6 +4509,8 @@ comment|/* Decision Computer Inc, serial ports */
 block|{
 literal|"Decision Computer Inc, PCCOM 4-port serial"
 block|,
+name|NULL
+block|,
 block|{
 literal|0x6666
 block|,
@@ -4426,6 +4576,8 @@ block|,         }
 block|,
 block|{
 literal|"PCCOM dual port RS232/422/485"
+block|,
+name|NULL
 block|,
 block|{
 literal|0x6666

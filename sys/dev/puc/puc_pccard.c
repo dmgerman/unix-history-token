@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sio/sioreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
@@ -90,6 +96,8 @@ name|rscom_devices
 init|=
 block|{
 literal|"RS-com 2 port"
+block|,
+name|NULL
 block|,
 block|{
 literal|0
@@ -119,7 +127,7 @@ literal|0x0
 block|,
 literal|0x00
 block|,
-literal|0
+name|DEFAULT_RCLK
 block|}
 block|,
 block|{
@@ -129,7 +137,7 @@ literal|0x1
 block|,
 literal|0x00
 block|,
-literal|0
+name|DEFAULT_RCLK
 block|}
 block|, 	}
 block|}
@@ -220,11 +228,22 @@ argument_list|,
 literal|"RS-COM 2P"
 argument_list|)
 condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|rscom_devices
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|ENXIO

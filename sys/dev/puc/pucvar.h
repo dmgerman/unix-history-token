@@ -26,6 +26,25 @@ name|PUC_MAX_PORTS
 value|12
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|puc_softc
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+name|puc_init_t
+parameter_list|(
+name|struct
+name|puc_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|puc_device_description
@@ -34,6 +53,10 @@ specifier|const
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|puc_init_t
+modifier|*
+name|init
 decl_stmt|;
 name|uint32_t
 name|rval
@@ -131,16 +154,6 @@ name|port
 parameter_list|)
 define|\
 value|((port)< PUC_MAX_PORTS&& (desc)->ports[(port)].type != PUC_PORT_TYPE_NONE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PUC_PORT_BAR_INDEX
-parameter_list|(
-name|bar
-parameter_list|)
-value|(((bar) - PCIR_MAPS) / 4)
 end_define
 
 begin_define
@@ -367,6 +380,12 @@ name|intr_cookie
 decl_stmt|;
 struct|struct
 block|{
+name|int
+name|used
+decl_stmt|;
+name|int
+name|bar
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -419,6 +438,17 @@ end_endif
 begin_comment
 comment|/* PUC_ENTRAILS */
 end_comment
+
+begin_function_decl
+name|int
+name|puc_config_win877
+parameter_list|(
+name|struct
+name|puc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
