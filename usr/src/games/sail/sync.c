@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	1.6 83/10/28"
+literal|"@(#)sync.c	1.7 83/10/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,6 +1273,21 @@ break|break;
 case|case
 name|W_CAPTURED
 case|:
+if|if
+condition|(
+name|a
+operator|<
+literal|0
+condition|)
+name|ship
+operator|->
+name|file
+operator|->
+name|captured
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|ship
 operator|->
 name|file
