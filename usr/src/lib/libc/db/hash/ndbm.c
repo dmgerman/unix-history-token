@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.5 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ literal|1
 expr_stmt|;
 name|info
 operator|.
-name|ncached
+name|cachesize
 operator|=
 name|NULL
 expr_stmt|;
@@ -267,6 +267,12 @@ operator|.
 name|dptr
 operator|=
 name|NULL
+expr_stmt|;
+name|retval
+operator|.
+name|dsize
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return
