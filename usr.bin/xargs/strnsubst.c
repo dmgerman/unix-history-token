@@ -99,6 +99,9 @@ name|s1
 decl_stmt|,
 modifier|*
 name|s2
+decl_stmt|,
+modifier|*
+name|this
 decl_stmt|;
 name|s1
 operator|=
@@ -148,8 +151,7 @@ name|maxsize
 operator|==
 name|strlen
 argument_list|(
-operator|*
-name|str
+name|s1
 argument_list|)
 condition|)
 block|{
@@ -172,10 +174,6 @@ init|;
 condition|;
 control|)
 block|{
-name|char
-modifier|*
-name|this
-decl_stmt|;
 name|this
 operator|=
 name|strstr
