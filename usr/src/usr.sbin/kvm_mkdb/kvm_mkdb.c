@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.7 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +322,16 @@ operator|)
 name|dbm_close
 argument_list|(
 name|db
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|dbtemp
+argument_list|,
+name|DBM_SUFFIX
 argument_list|)
 expr_stmt|;
 if|if

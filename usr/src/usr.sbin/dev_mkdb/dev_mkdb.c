@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.1 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,7 +248,7 @@ name|sprintf
 argument_list|(
 name|dbtmp
 argument_list|,
-literal|"%s/dev.db.tmp"
+literal|"%s/dev.tmp"
 argument_list|,
 name|_PATH_VARRUN
 argument_list|)
@@ -427,6 +427,16 @@ operator|)
 name|dbm_close
 argument_list|(
 name|db
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|dbtmp
+argument_list|,
+name|DBM_SUFFIX
 argument_list|)
 expr_stmt|;
 if|if
