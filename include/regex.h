@@ -174,6 +174,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|REG_ENOSYS
+value|-1
+end_define
+
+begin_comment
+comment|/* Reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REG_NOMATCH
 value|1
 end_define
