@@ -1313,7 +1313,7 @@ case|case
 name|OPTION_NO_SAME_PERMISSIONS
 case|:
 comment|/* GNU tar */
-comment|/* XXX This appears to be a no-op in GNU tar? XXX */
+comment|/* 			 * This is always the default in FreeBSD's 			 * version of GNU tar; it's also the default 			 * behavior for bsdtar, so treat the 			 * command-line option as a no-op. 			 */
 break|break;
 endif|#
 directive|endif
