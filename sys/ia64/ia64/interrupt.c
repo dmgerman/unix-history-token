@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -592,7 +598,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|void
+name|int
 name|interrupt
 parameter_list|(
 name|u_int64_t
@@ -1178,6 +1184,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|TRAPF_USERMODE
+argument_list|(
+name|framep
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

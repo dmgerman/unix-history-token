@@ -218,7 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|interrupt
 parameter_list|(
 name|uint64_t
