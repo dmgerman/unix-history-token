@@ -31,51 +31,41 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine moves the cursor to the given point  *  */
+comment|/*  * wmove --  *	Moves the cursor to the given point.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|wmove
-argument_list|(
-argument|win
-argument_list|,
-argument|y
-argument_list|,
-argument|x
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|reg
+specifier|register
 name|int
 name|y
 decl_stmt|,
 name|x
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MOVE to (%d, %d)\n"
+literal|"wmove: (%d, %d)\n"
 argument_list|,
 name|y
 argument_list|,
@@ -95,7 +85,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 if|if
 condition|(
@@ -112,7 +104,9 @@ operator|->
 name|_maxy
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 name|win
 operator|->
@@ -127,10 +121,12 @@ operator|=
 name|y
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -31,42 +31,34 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * relocate the starting position of a window  *  */
+comment|/*  * mvwin --  *	Relocate the starting position of a window.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mvwin
-argument_list|(
-argument|win
-argument_list|,
-argument|by
-argument_list|,
-argument|bx
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|,
+name|by
+parameter_list|,
+name|bx
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|reg
+specifier|register
 name|int
 name|by
 decl_stmt|,
 name|bx
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|WINDOW
@@ -98,7 +90,9 @@ operator|>
 name|COLS
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 name|dy
 operator|=
@@ -147,7 +141,7 @@ name|_begx
 operator|+=
 name|dx
 expr_stmt|;
-name|_swflags_
+name|__swflags
 argument_list|(
 name|win
 argument_list|)
@@ -188,7 +182,9 @@ operator|->
 name|_maxy
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 if|if
 condition|(
@@ -209,7 +205,9 @@ operator|->
 name|_maxx
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 name|win
 operator|->
@@ -223,12 +221,12 @@ name|_begx
 operator|=
 name|bx
 expr_stmt|;
-name|_swflags_
+name|__swflags
 argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
-name|_set_subwin_
+name|__set_subwin
 argument_list|(
 name|orig
 argument_list|,
@@ -242,10 +240,12 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

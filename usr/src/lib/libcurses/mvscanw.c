@@ -28,6 +28,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -56,14 +62,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"curses.ext"
-end_include
-
 begin_comment
-comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  */
+comment|/*  * mvscanw, mvwscanw --   *	Implement the mvscanw commands.  Due to the variable number of  *	arguments, they cannot be macros.  Another sigh....  */
 end_comment
 
 begin_if
@@ -75,9 +75,9 @@ end_if
 begin_macro
 name|mvscanw
 argument_list|(
-argument|reg int y
+argument|register int y
 argument_list|,
-argument|reg int x
+argument|register int x
 argument_list|,
 argument|const char *fmt
 argument_list|,
@@ -90,27 +90,24 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_expr_stmt
 name|mvscanw
 argument_list|(
-argument|y
+name|y
 argument_list|,
-argument|x
+name|x
 argument_list|,
-argument|fmt
+name|fmt
 argument_list|,
-argument|va_alist
+name|va_alist
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+specifier|register
 name|int
 name|y
-decl_stmt|,
+operator|,
 name|x
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -148,7 +145,9 @@ operator|!=
 name|OK
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 if|#
 directive|if
@@ -171,7 +170,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|_sscans
+name|__sscans
 argument_list|(
 name|stdscr
 argument_list|,
@@ -186,7 +185,9 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_block
@@ -200,11 +201,11 @@ end_if
 begin_macro
 name|mvwscanw
 argument_list|(
-argument|reg WINDOW *win
+argument|register WINDOW * win
 argument_list|,
-argument|reg int y
+argument|register int y
 argument_list|,
-argument|reg int x
+argument|register int x
 argument_list|,
 argument|const char *fmt
 argument_list|,
@@ -217,31 +218,28 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_expr_stmt
 name|mvwscanw
 argument_list|(
-argument|win
-argument_list|,
-argument|y
-argument_list|,
-argument|x
-argument_list|,
-argument|fmt
-argument_list|,
-argument|va_alist
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
-name|WINDOW
-modifier|*
 name|win
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|y
+argument_list|,
+name|x
+argument_list|,
+name|fmt
+argument_list|,
+name|va_alist
+argument_list|)
+specifier|register
+name|WINDOW
+operator|*
+name|win
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|reg
+specifier|register
 name|int
 name|y
 decl_stmt|,
@@ -285,7 +283,9 @@ operator|!=
 name|OK
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 if|#
 directive|if
@@ -323,7 +323,9 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_block
