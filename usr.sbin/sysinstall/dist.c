@@ -3080,9 +3080,6 @@ name|status
 operator|=
 name|TRUE
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isDebug
@@ -3125,6 +3122,24 @@ operator|&
 name|new
 operator|.
 name|sa_mask
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|dialog_msgbox
+argument_list|(
+literal|"Please Wait"
+argument_list|,
+literal|"Extracting all requested distributions..."
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sigaction
