@@ -501,6 +501,23 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 				 * The program may have scribbled into its 				 * argv array, e.g., to remove some arguments. 				 * If that has happened, break out before 				 * trying to call strlen on a NULL pointer. 				 */
+if|if
+condition|(
+name|oargv
+index|[
+name|i
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|oargc
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
 name|snprintf
 argument_list|(
 name|obuf
