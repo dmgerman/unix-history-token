@@ -24773,12 +24773,6 @@ name|CCB_TRANS_TQ_VALID
 operator|)
 operator|!=
 literal|0
-operator|&&
-operator|(
-name|async_update
-operator|==
-name|FALSE
-operator|)
 condition|)
 block|{
 name|int
