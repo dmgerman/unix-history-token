@@ -254,7 +254,7 @@ literal|24
 argument_list|,
 literal|0
 argument_list|,
-literal|"Validation Error: %s.  Press return to continue"
+literal|"%s"
 argument_list|,
 name|str
 argument_list|)
@@ -263,12 +263,6 @@ name|standend
 argument_list|()
 expr_stmt|;
 name|beep
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|getch
 argument_list|()
 expr_stmt|;
 block|}
@@ -4576,20 +4570,9 @@ argument_list|(
 literal|"Couldn't disable writing of labels"
 argument_list|)
 expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|24
-argument_list|,
-literal|0
-argument_list|,
-literal|"Label written successfully.  Press return to continue."
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|getch
-argument_list|()
+name|yip
+operator|=
+literal|"Label written successfully."
 expr_stmt|;
 break|break;
 case|case
