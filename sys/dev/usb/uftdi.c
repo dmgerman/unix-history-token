@@ -2904,7 +2904,7 @@ name|driver_t
 name|uftdi_driver
 init|=
 block|{
-literal|"uftdi"
+literal|"ucom"
 block|,
 name|uftdi_methods
 block|,
