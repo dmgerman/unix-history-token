@@ -2069,6 +2069,8 @@ comment|/* XXXKSE */
 name|mi_switch
 argument_list|(
 name|SW_INVOL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

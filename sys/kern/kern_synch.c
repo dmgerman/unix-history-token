@@ -1056,6 +1056,11 @@ name|mi_switch
 parameter_list|(
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|newtd
 parameter_list|)
 block|{
 name|struct
@@ -1349,6 +1354,8 @@ expr_stmt|;
 name|sched_switch
 argument_list|(
 name|td
+argument_list|,
+name|newtd
 argument_list|)
 expr_stmt|;
 name|CTR3
@@ -1800,6 +1807,8 @@ expr_stmt|;
 name|mi_switch
 argument_list|(
 name|SW_VOL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

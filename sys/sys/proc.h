@@ -2725,6 +2725,54 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* Flags for mi_switch(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_VOL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Voluntary switch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_INVOL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Involuntary switch. */
+end_comment
+
+begin_comment
+comment|/* How values for thread_single(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SINGLE_NO_EXIT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SINGLE_EXIT
+value|1
+end_define
+
+begin_comment
+comment|/* XXXKSE: Missing values for thread_signal_check(). */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3794,35 +3842,14 @@ name|mi_switch
 parameter_list|(
 name|int
 name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|newtd
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Flags for mi_switch(). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SW_VOL
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Voluntary switch. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SW_INVOL
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Involuntary switch. */
-end_comment
 
 begin_function_decl
 name|int
@@ -4629,24 +4656,6 @@ name|how
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|SINGLE_NO_EXIT
-value|0
-end_define
-
-begin_comment
-comment|/* values for 'how' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SINGLE_EXIT
-value|1
-end_define
 
 begin_function_decl
 name|void
