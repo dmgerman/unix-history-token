@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*                    * Copyright (c) 1995, David Greenman  * All rights reserved.  *                * Modifications to support NetBSD:  * Copyright (c) 1997 Jason R. Thorpe.  All rights reserved.  *                    * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:               * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.    * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*                    * Copyright (c) 1995, David Greenman  * All rights reserved.  *                * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:               * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.    * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -15,29 +15,6 @@ begin_struct
 struct|struct
 name|fxp_softc
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|struct
-name|device
-name|sc_dev
-decl_stmt|;
-comment|/* generic device structures */
-name|void
-modifier|*
-name|sc_ih
-decl_stmt|;
-comment|/* interrupt handler cookie */
-name|struct
-name|ethercom
-name|sc_ethercom
-decl_stmt|;
-comment|/* ethernet common part */
-else|#
-directive|else
 name|struct
 name|arpcom
 name|arpcom
@@ -64,9 +41,6 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
 name|bus_space_tag_t
 name|sc_st
 decl_stmt|;
@@ -274,110 +248,6 @@ define|\
 value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
 end_define
 
-begin_comment
-comment|/* Deal with slight differences in software interfaces. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|sc_ethercom.ec_if
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_FORMAT
-value|"%s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_ARGS
-parameter_list|(
-name|sc
-parameter_list|)
-value|(sc)->sc_dev.dv_xname
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_INTR_TYPE
-value|int
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_IOCTLCMD_TYPE
-value|u_long
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_BPFTAP_ARG
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp)->if_bpf
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SPLVAR
-parameter_list|(
-name|x
-parameter_list|)
-value|int x;
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_LOCK
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-value|x = splimp()
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_UNLOCK
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-value|splx(x)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -388,51 +258,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|FXP_FORMAT
-value|"fxp%d"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_ARGS
+name|FXP_UNIT
 parameter_list|(
-name|sc
+name|_sc
 parameter_list|)
-value|(sc)->arpcom.ac_if.if_unit
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_INTR_TYPE
-value|void
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_IOCTLCMD_TYPE
-value|u_long
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_BPFTAP_ARG
-parameter_list|(
-name|ifp
-parameter_list|)
-value|ifp
-end_define
-
-begin_define
-define|#
-directive|define
-name|FXP_SPLVAR
-parameter_list|(
-name|s
-parameter_list|)
+value|(_sc)->arpcom.ac_if.if_unit
 end_define
 
 begin_define
@@ -441,8 +271,6 @@ directive|define
 name|FXP_LOCK
 parameter_list|(
 name|_sc
-parameter_list|,
-name|x
 parameter_list|)
 value|mtx_enter(&(_sc)->sc_mtx, MTX_DEF)
 end_define
@@ -453,20 +281,9 @@ directive|define
 name|FXP_UNLOCK
 parameter_list|(
 name|_sc
-parameter_list|,
-name|x
 parameter_list|)
 value|mtx_exit(&(_sc)->sc_mtx, MTX_DEF)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ */
-end_comment
 
 end_unit
 
