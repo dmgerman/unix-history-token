@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.7.4.5 1998/09/04 10:16:43 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.19 1998/09/10 12:20:09 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ literal|"gs "
 block|,
 literal|"rs "
 block|,
-literal|"ns "
+literal|"us "
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1959,7 +1959,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" splash"
+literal|" saver "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4052,6 +4052,32 @@ name|duration
 decl_stmt|,
 name|pitch
 decl_stmt|;
+name|bell
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"quiet."
+argument_list|,
+literal|6
+argument_list|)
+condition|)
+block|{
+name|bell
+operator|=
+literal|2
+expr_stmt|;
+name|opt
+operator|+=
+literal|6
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -4063,16 +4089,8 @@ literal|"visual"
 argument_list|)
 condition|)
 name|bell
-operator|=
+operator||=
 literal|1
-operator|,
-name|duration
-operator|=
-literal|1
-operator|,
-name|pitch
-operator|=
-literal|800
 expr_stmt|;
 elseif|else
 if|if
@@ -4085,13 +4103,9 @@ argument_list|,
 literal|"normal"
 argument_list|)
 condition|)
-name|bell
-operator|=
-literal|0
-operator|,
 name|duration
 operator|=
-literal|1
+literal|5
 operator|,
 name|pitch
 operator|=
@@ -4186,6 +4200,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|pitch
+operator|!=
+literal|0
+condition|)
+name|pitch
+operator|=
+literal|1193182
+operator|/
+name|pitch
+expr_stmt|;
+comment|/* in Hz */
+name|duration
+operator|/=
+literal|10
+expr_stmt|;
+comment|/* in 10 m sec */
 block|}
 name|ioctl
 argument_list|(
@@ -4199,8 +4231,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|bell
+operator|&
+operator|~
+literal|2
+operator|)
+operator|==
+literal|0
 condition|)
 name|fprintf
 argument_list|(
@@ -4535,7 +4573,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | belltype]"
+literal|"usage: kbdcontrol [-dFx] [-b  duration.pitch | [quiet.]belltype]"
 argument_list|,
 literal|"                  [-r delay.repeat | speed] [-l mapfile] [-f # string]"
 argument_list|,
