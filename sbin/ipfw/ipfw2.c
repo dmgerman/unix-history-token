@@ -807,6 +807,8 @@ name|TOK_MACTYPE
 block|,
 name|TOK_VERREVPATH
 block|,
+name|TOK_IPSEC
+block|,
 name|TOK_PLR
 block|,
 name|TOK_NOERROR
@@ -1371,6 +1373,12 @@ block|{
 literal|"verrevpath"
 block|,
 name|TOK_VERREVPATH
+block|}
+block|,
+block|{
+literal|"ipsec"
+block|,
+name|TOK_IPSEC
 block|}
 block|,
 block|{
@@ -5817,6 +5825,15 @@ case|:
 name|printf
 argument_list|(
 literal|" verrevpath"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_IPSEC
+case|:
+name|printf
+argument_list|(
+literal|" ipsec"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16875,6 +16892,21 @@ argument_list|(
 name|cmd
 argument_list|,
 name|O_VERREVPATH
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TOK_IPSEC
+case|:
+name|fill_cmd
+argument_list|(
+name|cmd
+argument_list|,
+name|O_IPSEC
 argument_list|,
 literal|0
 argument_list|,
