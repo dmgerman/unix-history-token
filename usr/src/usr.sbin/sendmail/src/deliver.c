@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.127
+literal|3.128
 operator|%
 name|G
 operator|%
@@ -890,6 +890,21 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* hack attack -- delivermail compatibility */
+if|if
+condition|(
+name|m
+operator|==
+name|ProgMailer
+operator|&&
+operator|*
+name|user
+operator|==
+literal|'|'
+condition|)
+name|user
+operator|++
+expr_stmt|;
 comment|/* 		**  Do initial connection setup if needed. 		*/
 if|if
 condition|(
