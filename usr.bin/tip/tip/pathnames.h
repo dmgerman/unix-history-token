@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_LOCKDIRNAME
-value|"/var/spool/lock/LCK..%s"
+value|_PATH_LOCK "LCK..%s"
 end_define
 
 begin_comment
