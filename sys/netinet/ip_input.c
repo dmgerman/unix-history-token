@@ -2145,10 +2145,17 @@ directive|endif
 comment|/* PFIL_HOOKS */
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|FAST_IPSEC
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IPSEC
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
