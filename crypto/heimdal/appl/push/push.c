@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001, 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: push.c,v 1.47 2003/04/04 02:10:17 assar Exp $"
+literal|"$Id: push.c,v 1.47.2.1 2004/06/21 10:54:46 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1069,14 +1069,12 @@ init|=
 literal|0
 decl_stmt|;
 name|char
+modifier|*
 name|in_buf
-index|[
-name|PUSH_BUFSIZ
-operator|+
-literal|1
-index|]
 decl_stmt|;
-comment|/* sentinel */
+name|size_t
+name|in_buf_size
+decl_stmt|;
 name|size_t
 name|in_len
 init|=
@@ -1085,8 +1083,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|in_ptr
-init|=
-name|in_buf
 decl_stmt|;
 name|pop_state
 name|state
@@ -1160,6 +1156,23 @@ name|tmp
 init|=
 name|NULL
 decl_stmt|;
+name|in_buf
+operator|=
+name|emalloc
+argument_list|(
+name|PUSH_BUFSIZ
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|in_ptr
+operator|=
+name|in_buf
+expr_stmt|;
+name|in_buf_size
+operator|=
+name|PUSH_BUFSIZ
+expr_stmt|;
 if|if
 condition|(
 name|do_from
@@ -1629,6 +1642,47 @@ name|blank_line
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|in_len
+operator|>=
+name|in_buf_size
+condition|)
+block|{
+name|char
+modifier|*
+name|tmp
+init|=
+name|erealloc
+argument_list|(
+name|in_buf
+argument_list|,
+name|in_buf_size
+operator|+
+name|PUSH_BUFSIZ
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+name|in_ptr
+operator|=
+name|tmp
+operator|+
+operator|(
+name|in_ptr
+operator|-
+name|in_buf
+operator|)
+expr_stmt|;
+name|in_buf
+operator|=
+name|tmp
+expr_stmt|;
+name|in_buf_size
+operator|+=
+name|PUSH_BUFSIZ
+expr_stmt|;
+block|}
 name|ret
 operator|=
 name|read
@@ -1637,14 +1691,9 @@ name|s
 argument_list|,
 name|in_ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|in_buf
-argument_list|)
+name|in_buf_size
 operator|-
 name|in_len
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

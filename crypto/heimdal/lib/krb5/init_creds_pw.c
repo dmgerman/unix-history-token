@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: init_creds_pw.c,v 1.55 2003/03/20 18:07:31 lha Exp $"
+literal|"$Id: init_creds_pw.c,v 1.55.2.1 2004/08/30 23:21:07 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1752,6 +1752,19 @@ decl_stmt|;
 name|int
 name|done
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|kdc_reply
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|kdc_reply
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|get_init_creds_common
@@ -2124,12 +2137,6 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-literal|0
-condition|)
 name|krb5_free_kdc_rep
 argument_list|(
 name|context

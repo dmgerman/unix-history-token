@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: krb5.h,v 1.209.2.1 2003/09/18 20:50:40 lha Exp $ */
+comment|/* $Id: krb5.h,v 1.209.2.2 2004/06/21 08:32:00 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -2488,6 +2488,20 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|KRB5_KPASSWD_VERS_CHANGEPW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KPASSWD_VERS_SETPW
+value|0xff80
+end_define
+
+begin_define
+define|#
+directive|define
 name|KRB5_KPASSWD_SUCCESS
 value|0
 end_define
@@ -2518,6 +2532,27 @@ define|#
 directive|define
 name|KRB5_KPASSWD_SOFTERROR
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KPASSWD_ACCESSDENIED
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KPASSWD_BAD_VERSION
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_KPASSWD_INITIAL_FLAG_NEEDED
+value|7
 end_define
 
 begin_define
