@@ -4185,7 +4185,7 @@ name|release
 goto|;
 block|}
 block|}
-comment|/* 	 * Calculate data length and get a mbuf for UDP, IP, and possible 	 * link-layer headers. 	 */
+comment|/* 	 * Calculate data length and get a mbuf for UDP, IP, and possible 	 * link-layer headers.  Immediate slide the data pointer back forward 	 * since we won't use that space at this layer. 	 */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -4225,6 +4225,14 @@ expr_stmt|;
 name|m
 operator|->
 name|m_len
+operator|-=
+name|max_linkhdr
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 operator|-=
 name|max_linkhdr
 expr_stmt|;
