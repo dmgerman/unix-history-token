@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pthread.h"
 end_include
 
@@ -1969,7 +1975,9 @@ expr_stmt|;
 block|}
 name|log_trace
 argument_list|(
-literal|"Thread %d: Exiting thread 0x%x\n"
+literal|"Thread %d: Exiting thread 0x%"
+name|PRIxPTR
+literal|"\n"
 argument_list|,
 operator|(
 name|int
@@ -1979,7 +1987,7 @@ operator|->
 name|id
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|pthread_self
 argument_list|()
@@ -2198,7 +2206,9 @@ argument_list|)
 expr_stmt|;
 name|log_trace
 argument_list|(
-literal|"Thread %d: Exiting thread 0x%x\n"
+literal|"Thread %d: Exiting thread 0x%"
+name|PRIxPTR
+literal|"\n"
 argument_list|,
 operator|(
 name|int
@@ -2208,7 +2218,7 @@ operator|->
 name|id
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|pthread_self
 argument_list|()
@@ -2238,12 +2248,14 @@ parameter_list|)
 block|{
 name|log
 argument_list|(
-literal|"Signal handler caught signal %d, thread id 0x%x\n"
+literal|"Signal handler caught signal %d, thread id 0x%"
+name|PRIxPTR
+literal|"\n"
 argument_list|,
 name|signo
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|pthread_self
 argument_list|()
