@@ -629,7 +629,39 @@ value|0x0603
 end_define
 
 begin_comment
-comment|/* 0x0700 - 0xdfff	Reserved			*/
+comment|/* 0x0700 - 0x7fff	Reserved			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMDV_BATT_BASE
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMDV_BATT0
+value|0x8001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMDV_BATT1
+value|0x8002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMDV_BATT_ALL
+value|0x80ff
+end_define
+
+begin_comment
+comment|/* 0x8100 - 0xdfff	Reserved			*/
 end_comment
 
 begin_comment
@@ -1126,6 +1158,87 @@ name|apm_info_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Battery flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APM_BATT_HIGH
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_BATT_LOW
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_BATT_CRITICAL
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_BATT_CHARGING
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_BATT_NOT_PRESENT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_BATT_NO_SYSTEM
+value|0x80
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|apm_pwstatus
+block|{
+name|u_int
+name|ap_device
+decl_stmt|;
+comment|/* Device code of battery */
+name|u_int
+name|ap_acline
+decl_stmt|;
+comment|/* AC line status (0) */
+name|u_int
+name|ap_batt_stat
+decl_stmt|;
+comment|/* Battery status (0) */
+name|u_int
+name|ap_batt_flag
+decl_stmt|;
+comment|/* Battery flag (0) */
+name|u_int
+name|ap_batt_life
+decl_stmt|;
+comment|/* Remaining battery life in percent (0) */
+name|int
+name|ap_batt_time
+decl_stmt|;
+comment|/* Remaining battery time in seconds (0) */
+block|}
+typedef|*
+name|apm_pwstatus_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|apm_bios_arg
@@ -1240,6 +1353,13 @@ define|#
 directive|define
 name|APMIO_STANDBY
 value|_IO('P', 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APMIO_GETPWSTATUS
+value|_IOWR('P', 13, struct apm_pwstatus)
 end_define
 
 begin_comment
