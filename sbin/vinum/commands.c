@@ -4,7 +4,7 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.23 2003/05/04 05:23:59 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.24 2003/05/07 03:17:43 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -657,36 +657,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_STARTCONFIG
-argument_list|,
-operator|&
-name|force
-argument_list|)
-condition|)
-block|{
-comment|/* can't get config? */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't configure: %s (%d)\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|ioctl
 argument_list|(
 name|superdev
@@ -725,18 +695,6 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_RELEASECONFIG
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* save the config to disk */
 if|if
 condition|(
 name|error
@@ -751,18 +709,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|error
-operator|=
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_RELEASECONFIG
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-comment|/* save the config to disk */
 if|if
 condition|(
 name|error
