@@ -1713,8 +1713,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 				 * Collapse object into its shadow unless its 				 * shadow is dead.  In that case, object will 				 * be deallocated by the thread that is 				 * deallocating its shadow. 				 */
 if|if
 condition|(
+operator|(
+name|robject
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|(
 name|robject
 operator|->
