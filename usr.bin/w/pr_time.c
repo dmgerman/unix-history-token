@@ -201,7 +201,7 @@ name|use_ampm
 condition|?
 literal|"%a%I%p"
 else|:
-literal|"%a%H  "
+literal|"%a%H"
 argument_list|)
 expr_stmt|;
 block|}
@@ -219,7 +219,7 @@ name|use_ampm
 condition|?
 literal|"%l:%M%p"
 else|:
-literal|"%k:%M "
+literal|"%k:%M"
 argument_list|)
 expr_stmt|;
 block|}
@@ -234,8 +234,6 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|,
 name|fmt
 argument_list|,
@@ -243,24 +241,12 @@ operator|&
 name|tp
 argument_list|)
 expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%-7.7s"
 argument_list|,
 name|buf
 argument_list|)
