@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	8.1 (Berkeley) %G%"
+literal|"@(#)rm.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -939,18 +939,18 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
 if|if
 condition|(
+operator|!
+name|stdin_ok
+operator|||
 name|S_ISLNK
 argument_list|(
 name|sp
 operator|->
 name|st_mode
 argument_list|)
-operator|||
-operator|!
-name|stdin_ok
 operator|||
 operator|!
 name|access
