@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.2 (Berkeley) %G%"
+literal|"@(#)tape.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2469,6 +2469,12 @@ index|[
 name|TP_BSIZE
 index|]
 decl_stmt|;
+name|char
+name|junk
+index|[
+name|TP_BSIZE
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|checktype
@@ -2677,7 +2683,37 @@ operator|)
 operator|<=
 literal|0
 condition|)
+block|{
+for|for
+control|(
+name|i
+operator|++
+init|;
+name|i
+operator|<
+name|spcl
+operator|.
+name|c_count
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|spcl
+operator|.
+name|c_addr
+index|[
+name|i
+index|]
+condition|)
+name|readtape
+argument_list|(
+name|junk
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
