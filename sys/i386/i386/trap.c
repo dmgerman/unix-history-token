@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.53 1995/06/11 19:31:14 rgrimes Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.53.2.1 1995/07/20 09:18:16 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -137,6 +137,29 @@ include|#
 directive|include
 file|<machine/../isa/isa_device.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POWERFAIL_NMI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -757,6 +780,15 @@ name|T_NMI
 case|:
 ifdef|#
 directive|ifdef
+name|POWERFAIL_NMI
+goto|goto
+name|handle_powerfail
+goto|;
+else|#
+directive|else
+comment|/* !POWERFAIL_NMI */
+ifdef|#
+directive|ifdef
 name|DDB
 comment|/* NMI can be hooked up to a pushbutton for debugging */
 name|printf
@@ -779,6 +811,7 @@ condition|)
 return|return;
 endif|#
 directive|endif
+comment|/* DDB */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -797,6 +830,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* POWERFAIL_NMI */
+endif|#
+directive|endif
+comment|/* NISA> 0 */
 case|case
 name|T_OFLOW
 case|:
@@ -1090,6 +1127,66 @@ name|T_NMI
 case|:
 ifdef|#
 directive|ifdef
+name|POWERFAIL_NMI
+ifndef|#
+directive|ifndef
+name|TIMER_FREQ
+define|#
+directive|define
+name|TIMER_FREQ
+value|1193182
+endif|#
+directive|endif
+name|handle_powerfail
+label|:
+block|{
+specifier|static
+name|unsigned
+name|lastalert
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|time
+operator|.
+name|tv_sec
+operator|-
+name|lastalert
+operator|>
+literal|10
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"NMI: power fail\n"
+argument_list|)
+expr_stmt|;
+name|sysbeep
+argument_list|(
+name|TIMER_FREQ
+operator|/
+literal|880
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+name|lastalert
+operator|=
+name|time
+operator|.
+name|tv_sec
+expr_stmt|;
+block|}
+return|return;
+block|}
+else|#
+directive|else
+comment|/* !POWERFAIL_NMI */
+ifdef|#
+directive|ifdef
 name|DDB
 comment|/* NMI can be hooked up to a pushbutton for debugging */
 name|printf
@@ -1112,6 +1209,7 @@ condition|)
 return|return;
 endif|#
 directive|endif
+comment|/* DDB */
 comment|/* machine/parity/power fail/"kitchen sink" faults */
 if|if
 condition|(
@@ -1126,6 +1224,10 @@ return|return;
 comment|/* FALL THROUGH */
 endif|#
 directive|endif
+comment|/* POWERFAIL_NMI */
+endif|#
+directive|endif
+comment|/* NISA> 0 */
 block|}
 name|trap_fatal
 argument_list|(
@@ -1322,11 +1424,9 @@ name|ptepg
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|p
 operator|==
 name|NULL
-operator|)
 operator|||
 operator|(
 operator|!
@@ -1336,11 +1436,17 @@ name|va
 operator|<
 name|VM_MAXUSER_ADDRESS
 operator|&&
+operator|(
+name|curpcb
+operator|==
+name|NULL
+operator|||
 name|curpcb
 operator|->
 name|pcb_onfault
 operator|==
 name|NULL
+operator|)
 operator|)
 condition|)
 block|{
@@ -2711,8 +2817,6 @@ name|sticks
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|opc
 decl_stmt|;
 name|int
 name|args
@@ -2750,12 +2854,6 @@ argument_list|(
 literal|"syscall"
 argument_list|)
 expr_stmt|;
-name|code
-operator|=
-name|frame
-operator|.
-name|tf_eax
-expr_stmt|;
 name|p
 operator|->
 name|p_md
@@ -2783,14 +2881,11 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reconstruct pc, assuming lcall $X,y is 7 bytes, as it is always. 	 */
-name|opc
+name|code
 operator|=
 name|frame
 operator|.
-name|tf_eip
-operator|-
-literal|7
+name|tf_eax
 expr_stmt|;
 comment|/* 	 * Need to check if this is a 32 bit or 64 bit syscall. 	 */
 if|if
@@ -2830,13 +2925,6 @@ operator|=
 name|fuword
 argument_list|(
 name|params
-operator|+
-name|_QUAD_LOWWORD
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|params
@@ -2856,9 +2944,7 @@ operator|->
 name|sv_mask
 condition|)
 name|code
-operator|=
-name|code
-operator|&
+operator|&=
 name|p
 operator|->
 name|p_sysent
@@ -3072,11 +3158,12 @@ break|break;
 case|case
 name|ERESTART
 case|:
+comment|/* 		 * Reconstruct pc, assuming lcall $X,y is 7 bytes. 		 */
 name|frame
 operator|.
 name|tf_eip
-operator|=
-name|opc
+operator|-=
+literal|7
 expr_stmt|;
 break|break;
 case|case
@@ -3205,9 +3292,6 @@ name|trapframe
 name|frame
 decl_stmt|;
 block|{
-name|caddr_t
-name|params
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3228,8 +3312,6 @@ name|sticks
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|opc
 decl_stmt|;
 name|int
 name|rval
@@ -3237,7 +3319,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|code
 decl_stmt|;
 struct|struct
@@ -3323,12 +3405,6 @@ argument_list|(
 literal|"linux syscall"
 argument_list|)
 expr_stmt|;
-name|code
-operator|=
-name|frame
-operator|.
-name|tf_eax
-expr_stmt|;
 name|p
 operator|->
 name|p_md
@@ -3342,51 +3418,12 @@ operator|)
 operator|&
 name|frame
 expr_stmt|;
-name|params
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|frame
-operator|.
-name|tf_esp
-operator|+
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-comment|/* Reconstruct pc, subtract size of int 0x80 */
-name|opc
+name|code
 operator|=
 name|frame
 operator|.
-name|tf_eip
-operator|-
-literal|2
+name|tf_eax
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-literal|0
-condition|)
-block|{
-name|code
-operator|=
-name|fuword
-argument_list|(
-name|params
-argument_list|)
-expr_stmt|;
-name|params
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|p
@@ -3396,9 +3433,7 @@ operator|->
 name|sv_mask
 condition|)
 name|code
-operator|=
-name|code
-operator|&
+operator|&=
 name|p
 operator|->
 name|p_sysent
@@ -3407,10 +3442,6 @@ name|sv_mask
 expr_stmt|;
 if|if
 condition|(
-name|code
-operator|<
-literal|0
-operator|||
 name|code
 operator|>=
 name|p
@@ -3468,36 +3499,10 @@ name|callp
 operator|->
 name|sy_narg
 argument_list|,
-operator|&
-name|args
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KTRACE
-if|if
-condition|(
-name|KTRPOINT
-argument_list|(
-name|p
-argument_list|,
-name|KTR_SYSCALL
-argument_list|)
-condition|)
-name|ktrsyscall
-argument_list|(
-name|p
-operator|->
-name|p_tracep
-argument_list|,
-name|code
-argument_list|,
-name|callp
-operator|->
-name|sy_narg
-argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|args
 argument_list|)
@@ -3510,15 +3515,6 @@ literal|0
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|rval
-index|[
-literal|1
-index|]
-operator|=
-name|frame
-operator|.
-name|tf_edx
 expr_stmt|;
 name|error
 operator|=
@@ -3571,11 +3567,12 @@ break|break;
 case|case
 name|ERESTART
 case|:
+comment|/* Reconstruct pc, subtract size of int 0x80 */
 name|frame
 operator|.
 name|tf_eip
-operator|=
-name|opc
+operator|-=
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -3583,8 +3580,6 @@ name|EJUSTRETURN
 case|:
 break|break;
 default|default:
-name|bad
-label|:
 if|if
 condition|(
 name|p
