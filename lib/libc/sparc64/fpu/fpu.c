@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/emul.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/fp.h>
 end_include
 
