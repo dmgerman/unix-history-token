@@ -548,6 +548,10 @@ operator|&
 name|alpha_timecounter
 argument_list|)
 expr_stmt|;
+name|stathz
+operator|=
+literal|128
+expr_stmt|;
 name|platform
 operator|.
 name|clockintr

@@ -179,6 +179,13 @@ name|dummy_perf
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|schedclk2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|interrupt
@@ -320,6 +327,7 @@ name|platform
 operator|.
 name|clockintr
 condition|)
+block|{
 call|(
 modifier|*
 name|platform
@@ -330,6 +338,29 @@ argument_list|(
 name|framep
 argument_list|)
 expr_stmt|;
+comment|/* divide hz (1024) by 8 to get stathz (128) */
+if|if
+condition|(
+operator|(
+operator|++
+name|schedclk2
+operator|&
+literal|0x7
+operator|)
+operator|==
+literal|0
+condition|)
+name|statclock
+argument_list|(
+operator|(
+expr|struct
+name|clockframe
+operator|*
+operator|)
+name|framep
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ALPHA_INTR_ERROR
