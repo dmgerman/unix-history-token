@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.9	(Berkeley)	%G%"
+literal|"@(#)main.c	2.10	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4361,11 +4361,27 @@ if|if
 condition|(
 name|preen
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n***** FILE SYSTEM WAS MODIFIED *****\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hotroot
+condition|)
+block|{
+name|sync
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -5303,13 +5319,23 @@ operator|>=
 name|MAXBAD
 condition|)
 block|{
-name|printf
+name|pwarn
 argument_list|(
 literal|"EXCESSIVE BAD BLKS I=%u"
 argument_list|,
 name|inum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|" (SKIPPING)\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|reply
@@ -5359,13 +5385,23 @@ operator|>=
 name|MAXDUP
 condition|)
 block|{
-name|printf
+name|pwarn
 argument_list|(
 literal|"EXCESSIVE DUP BLKS I=%u"
 argument_list|,
 name|inum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|" (SKIPPING)\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|reply
@@ -5397,7 +5433,7 @@ name|DUPTBLSIZE
 index|]
 condition|)
 block|{
-name|printf
+name|pfatal
 argument_list|(
 literal|"DUP TABLE OVERFLOW."
 argument_list|)
@@ -6061,6 +6097,15 @@ block|{
 name|fixcg
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|preen
+condition|)
+name|pfatal
+argument_list|(
+literal|"DUP BLKS IN BIT MAPS."
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
