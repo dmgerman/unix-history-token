@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	1.2 (Berkeley) %G%"
+literal|"@(#)kdump.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,10 +69,6 @@ include|#
 directive|include
 file|<sys/dir.h>
 end_include
-
-begin_comment
-comment|/*#include<time.h>*/
-end_comment
 
 begin_include
 include|#
@@ -124,7 +120,7 @@ name|char
 modifier|*
 name|tracefile
 init|=
-literal|"trace.out"
+literal|"ktrace.data"
 decl_stmt|;
 end_decl_stmt
 
