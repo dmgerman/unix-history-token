@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.13 83/11/02"
+literal|"@(#)main.c	3.14 83/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,6 +544,9 @@ name|SIGCHLD
 argument_list|,
 name|wwchild
 argument_list|)
+expr_stmt|;
+name|setvars
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
