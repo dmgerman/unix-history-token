@@ -8017,7 +8017,7 @@ end_function
 begin_function
 name|__stdcall
 name|void
-name|KefReleaseSpinLockFromDpcLevel
+name|KeReleaseSpinLockFromDpcLevel
 parameter_list|(
 name|kspin_lock
 modifier|*
