@@ -1238,7 +1238,6 @@ specifier|register
 name|struct
 name|state
 modifier|*
-specifier|const
 name|sp
 init|=
 name|lclptr
