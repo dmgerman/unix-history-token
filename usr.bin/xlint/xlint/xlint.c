@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: xlint.c,v 1.3 1995/10/23 14:29:30 jpo Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1800,14 +1800,6 @@ operator|&
 name|cppflags
 argument_list|,
 literal|"-lang-c"
-argument_list|)
-expr_stmt|;
-name|appcstrg
-argument_list|(
-operator|&
-name|cppflags
-argument_list|,
-literal|"-undef"
 argument_list|)
 expr_stmt|;
 name|appcstrg
