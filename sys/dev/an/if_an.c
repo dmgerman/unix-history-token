@@ -805,7 +805,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* See if the ssid matches what we expect. */
+comment|/* See if the ssid matches what we expect ... but doesn't have to */
 if|if
 condition|(
 name|strcmp
@@ -2178,6 +2178,7 @@ decl_stmt|;
 name|int
 name|id
 decl_stmt|;
+comment|/* TX DONE enable lan monitor DJA 	   an_enable_sniff(); 	 */
 name|ifp
 operator|=
 operator|&
@@ -3288,7 +3289,7 @@ name|ltv
 operator|->
 name|an_len
 operator|-
-literal|1
+literal|2
 operator|)
 operator|>>
 literal|1
@@ -3396,6 +3397,8 @@ argument_list|,
 name|ltv
 operator|->
 name|an_len
+operator|-
+literal|2
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -3418,7 +3421,7 @@ name|ltv
 operator|->
 name|an_len
 operator|-
-literal|1
+literal|4
 operator|)
 operator|>>
 literal|1
@@ -4347,6 +4350,80 @@ operator|->
 name|an_val
 expr_stmt|;
 break|break;
+case|case
+name|AN_RID_WEP_TEMP
+case|:
+comment|/* Disable the MAC. */
+name|an_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|AN_CMD_DISABLE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Just write the Key, we don't want to save it */
+name|an_write_record
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+expr|struct
+name|an_ltv_gen
+operator|*
+operator|)
+name|areq
+argument_list|)
+expr_stmt|;
+comment|/* Turn the MAC back on. */
+name|an_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|AN_CMD_ENABLE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AN_RID_WEP_PERM
+case|:
+comment|/* Disable the MAC. */
+name|an_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|AN_CMD_DISABLE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Just write the Key, the card will save it in this mode */
+name|an_write_record
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+expr|struct
+name|an_ltv_gen
+operator|*
+operator|)
+name|areq
+argument_list|)
+expr_stmt|;
+comment|/* Turn the MAC back on. */
+name|an_cmd
+argument_list|(
+name|sc
+argument_list|,
+name|AN_CMD_ENABLE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -4441,14 +4518,7 @@ name|an_config
 operator|.
 name|an_rxmode
 expr_stmt|;
-name|sc
-operator|->
-name|an_config
-operator|.
-name|an_rxmode
-operator||=
-name|AN_RXMODE_LAN_MONITOR_CURBSS
-expr_stmt|;
+comment|/* kills card DJA, if in sniff mode can't TX packets 		sc->an_config.an_rxmode |= 		    AN_RXMODE_LAN_MONITOR_CURBSS; 		*/
 block|}
 else|else
 block|{
@@ -5328,22 +5398,7 @@ operator|=
 name|AN_RXMODE_BC_MC_ADDR
 expr_stmt|;
 comment|/* Initialize promisc mode. */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_PROMISC
-condition|)
-name|sc
-operator|->
-name|an_config
-operator|.
-name|an_rxmode
-operator||=
-name|AN_RXMODE_LAN_MONITOR_CURBSS
-expr_stmt|;
+comment|/* Kills card DJA can't TX packet in sniff mode  	if (ifp->if_flags& IFF_PROMISC) 		sc->an_config.an_rxmode |= AN_RXMODE_LAN_MONITOR_CURBSS; 	*/
 name|sc
 operator|->
 name|an_rxmode
@@ -5919,6 +5974,7 @@ name|m0
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* TX START disable lan monitor ? DJA  		   an_disable_sniff(): 		 */
 name|sc
 operator|->
 name|an_rdata
