@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tstp.c	8.1 (Berkeley) %G%"
+literal|"@(#)tstp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,14 +93,36 @@ name|save
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Block every signal we can get our hands on.  This is because 	 * applications have timers going off that want to repaint the 	 * screen. 	 */
+comment|/* 	 * Block window change and timer signals.  The latter is because 	 * applications use timers to decide when to repaint the screen. 	 */
 operator|(
 name|void
 operator|)
-name|sigfillset
+name|sigemptyset
 argument_list|(
 operator|&
 name|set
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|set
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaddset
+argument_list|(
+operator|&
+name|set
+argument_list|,
+name|SIGWINCH
 argument_list|)
 expr_stmt|;
 operator|(
