@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.187 1998/12/14 21:17:37 dillon Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.188 1998/12/22 14:43:58 luoqi Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * this file contains a new buffer I/O scheme implementing a coherent  * VM object and buffer cache scheme.  Pains have been taken to make  * sure that the performance degradation associated with schemes such  * as this is not realized.  *  * Author:  John S. Dyson  * Significant help during the development and debugging phases  * had been provided by David Greenman, also of the FreeBSD core team.  */
+comment|/*  * this file contains a new buffer I/O scheme implementing a coherent  * VM object and buffer cache scheme.  Pains have been taken to make  * sure that the performance degradation associated with schemes such  * as this is not realized.  *  * Author:  John S. Dyson  * Significant help during the development and debugging phases  * had been provided by David Greenman, also of the FreeBSD core team.  *  * see man buf(9) for more info.  */
 end_comment
 
 begin_define
@@ -2649,7 +2649,7 @@ operator|&=
 operator|~
 name|B_RELBUF
 expr_stmt|;
-comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, so the B_INVAL flag is used to *invalidate* the buffer, 	 * but the VM object is kept around.  The B_NOCACHE flag is used to 	 * invalidate the pages in the VM object. 	 * 	 * If the buffer is a partially filled NFS buffer, keep it 	 * since invalidating it now will lose informatio.  The valid 	 * flags in the vm_pages have only DEV_BSIZE resolution but 	 * the b_validoff, b_validend fields have byte resolution. 	 * This can avoid unnecessary re-reads of the buffer. 	 * XXX this seems to cause performance problems. 	 */
+comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, so the B_INVAL flag is used to *invalidate* the buffer, 	 * but the VM object is kept around.  The B_NOCACHE flag is used to 	 * invalidate the pages in the VM object. 	 * 	 * The b_{validoff,validend,dirtyoff,dirtyend} values are relative  	 * to b_offset and currently have byte granularity, whereas the 	 * valid flags in the vm_pages have only DEV_BSIZE resolution. 	 * The byte resolution fields are used to avoid unnecessary re-reads 	 * of the buffer but the code really needs to be genericized so 	 * other filesystem modules can take advantage of these fields. 	 * 	 * XXX this seems to cause performance problems. 	 */
 if|if
 condition|(
 operator|(
@@ -2779,6 +2779,7 @@ name|bp
 operator|->
 name|b_vp
 expr_stmt|;
+comment|/* 		 * Get the base offset and length of the buffer.  Note that  		 * for block sizes that are less then PAGE_SIZE, the b_data 		 * base of the buffer does not represent exactly b_offset and 		 * neither b_offset nor b_size are necessarily page aligned. 		 * Instead, the starting position of b_offset is: 		 * 		 * 	b_data + (b_offset& PAGE_MASK) 		 * 		 * block sizes less then DEV_BSIZE (usually 512) are not  		 * supported due to the page granularity bits (m->valid, 		 * m->dirty, etc...).  		 * 		 * See man buf(9) for more information 		 */
 name|resid
 operator|=
 name|bp
