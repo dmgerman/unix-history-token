@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.7 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1672,9 +1672,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 switch|switch
 condition|(
 name|type
@@ -1879,8 +1876,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1899,9 +1894,6 @@ name|int
 name|class
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 switch|switch
 condition|(
 name|class
@@ -1939,8 +1931,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
