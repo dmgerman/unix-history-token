@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.16.1.1 %G%"
+literal|"@(#)rval.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2696,7 +2696,7 @@ if|if
 condition|(
 name|contype
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 name|codeoff
@@ -2725,7 +2725,7 @@ if|if
 condition|(
 name|contype
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 return|return
@@ -2766,11 +2766,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 operator|||
 name|p1
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return
 name|NLNIL
@@ -2933,13 +2933,13 @@ condition|(
 operator|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 operator|)
 operator|||
 operator|(
 name|p1
 operator|==
-name|NIL
+name|NLNIL
 operator|)
 condition|)
 block|{
@@ -3077,13 +3077,6 @@ name|T_MULT
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|contype
-operator|==
-name|NIL
-condition|)
-block|{
 name|codeoff
 argument_list|()
 expr_stmt|;
@@ -3092,9 +3085,10 @@ operator|=
 name|rvalue
 argument_list|(
 name|r
-index|[
-literal|2
-index|]
+operator|->
+name|expr_node
+operator|.
+name|lhs
 argument_list|,
 name|p1
 argument_list|,
@@ -3109,7 +3103,7 @@ if|if
 condition|(
 name|contype
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 return|return
@@ -3193,11 +3187,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 operator|||
 name|p1
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 return|return
@@ -3327,11 +3321,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 operator|||
 name|p1
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 return|return
@@ -3481,11 +3475,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 operator|||
 name|p1
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return
 operator|(
@@ -3917,9 +3911,10 @@ operator|=
 name|rvalue
 argument_list|(
 name|r
-index|[
-literal|2
-index|]
+operator|->
+name|expr_node
+operator|.
+name|lhs
 argument_list|,
 name|contype
 argument_list|,
@@ -3933,11 +3928,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 name|contype
@@ -5633,25 +5628,22 @@ name|cstrng
 goto|;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
+unit|}
 comment|/*  * Can a class appear  * in a comparison ?  */
 end_comment
 
-begin_macro
-name|nocomp
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|nocomp
+operator|(
+name|c
+operator|)
 name|int
 name|c
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
