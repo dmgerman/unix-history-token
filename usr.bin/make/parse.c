@@ -3554,7 +3554,7 @@ condition|)
 block|{
 comment|/* 	     * If the target was one that doesn't take files as its sources 	     * but takes something like suffixes, we take each 	     * space-separated word on the line as a something and deal 	     * with it accordingly. 	     * 	     * If the target was .SUFFIXES, we take each source as a 	     * suffix and add it to the list of suffixes maintained by the 	     * Suff module. 	     * 	     * If the target was a .PATH, we add the source as a directory 	     * to search on the search path. 	     * 	     * If it was .INCLUDES, the source is taken to be the suffix of 	     * files which will be #included and whose search path should 	     * be present in the .INCLUDES variable. 	     * 	     * If it was .LIBS, the source is taken to be the suffix of 	     * files which are considered libraries and whose search path 	     * should be present in the .LIBS variable. 	     * 	     * If it was .NULL, the source is the suffix to use when a file 	     * has no valid suffix. 	     */
 name|char
-name|savec
+name|savech
 decl_stmt|;
 while|while
 condition|(
@@ -3577,7 +3577,7 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
-name|savec
+name|savech
 operator|=
 operator|*
 name|cp
@@ -3651,11 +3651,11 @@ block|}
 operator|*
 name|cp
 operator|=
-name|savec
+name|savech
 expr_stmt|;
 if|if
 condition|(
-name|savec
+name|savech
 operator|!=
 literal|'\0'
 condition|)
@@ -3775,7 +3775,7 @@ condition|)
 block|{
 name|GNode
 modifier|*
-name|gn
+name|gnp
 decl_stmt|;
 name|sources
 operator|=
@@ -3819,7 +3819,7 @@ name|sources
 argument_list|)
 condition|)
 block|{
-name|gn
+name|gnp
 operator|=
 operator|(
 name|GNode
@@ -3834,7 +3834,7 @@ name|ParseDoSrc
 argument_list|(
 name|tOp
 argument_list|,
-name|gn
+name|gnp
 operator|->
 name|name
 argument_list|,
@@ -4542,7 +4542,7 @@ modifier|*
 name|res
 decl_stmt|,
 modifier|*
-name|err
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -4582,7 +4582,7 @@ argument_list|(
 name|cp
 argument_list|,
 operator|&
-name|err
+name|error
 argument_list|)
 expr_stmt|;
 name|Var_Set
@@ -4601,13 +4601,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 name|Parse_Error
 argument_list|(
 name|PARSE_WARNING
 argument_list|,
-name|err
+name|error
 argument_list|,
 name|cp
 argument_list|)

@@ -6062,10 +6062,10 @@ decl_stmt|;
 comment|/* Length of the prefix */
 name|Src
 modifier|*
-name|targ
+name|target
 decl_stmt|;
 comment|/* 	     * Allocate a Src structure to which things can be transformed 	     */
-name|targ
+name|target
 operator|=
 operator|(
 name|Src
@@ -6079,7 +6079,7 @@ name|Src
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|file
 operator|=
@@ -6090,7 +6090,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|suff
 operator|=
@@ -6103,20 +6103,20 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|suff
 operator|->
 name|refCount
 operator|++
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|node
 operator|=
 name|gn
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|parent
 operator|=
@@ -6126,7 +6126,7 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|children
 operator|=
@@ -6135,7 +6135,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SRC
-name|targ
+name|target
 operator|->
 name|cp
 operator|=
@@ -6152,7 +6152,7 @@ operator|=
 operator|(
 name|eoname
 operator|-
-name|targ
+name|target
 operator|->
 name|suff
 operator|->
@@ -6161,7 +6161,7 @@ operator|)
 operator|-
 name|sopref
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|pref
 operator|=
@@ -6174,7 +6174,7 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|targ
+name|target
 operator|->
 name|pref
 argument_list|,
@@ -6183,7 +6183,7 @@ argument_list|,
 name|prefLen
 argument_list|)
 expr_stmt|;
-name|targ
+name|target
 operator|->
 name|pref
 index|[
@@ -6197,7 +6197,7 @@ name|SuffAddLevel
 argument_list|(
 name|srcs
 argument_list|,
-name|targ
+name|target
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Record the target so we can nuke it 	     */
@@ -6212,7 +6212,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|targ
+name|target
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Search from this suffix's successor... 	     */

@@ -2956,10 +2956,10 @@ modifier|*
 name|vpath
 decl_stmt|,
 modifier|*
-name|path
+name|path1
 decl_stmt|,
 modifier|*
-name|cp
+name|cp1
 decl_stmt|,
 name|savec
 decl_stmt|;
@@ -2984,7 +2984,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|path
+name|path1
 operator|=
 name|vpath
 expr_stmt|;
@@ -2993,9 +2993,9 @@ block|{
 comment|/* skip to end of directory */
 for|for
 control|(
-name|cp
+name|cp1
 operator|=
-name|path
+name|path1
 init|;
 operator|*
 name|cp
@@ -3015,10 +3015,10 @@ comment|/* Save terminator character so know when to stop */
 name|savec
 operator|=
 operator|*
-name|cp
+name|cp1
 expr_stmt|;
 operator|*
-name|cp
+name|cp1
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3027,17 +3027,17 @@ name|Dir_AddDir
 argument_list|(
 name|dirSearchPath
 argument_list|,
-name|path
+name|path1
 argument_list|)
 expr_stmt|;
 operator|*
-name|cp
+name|cp1
 operator|=
 name|savec
 expr_stmt|;
-name|path
+name|path1
 operator|=
-name|cp
+name|cp1
 operator|+
 literal|1
 expr_stmt|;
@@ -3747,7 +3747,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*-  * Cmd_Exec --  *	Execute the command in cmd, and return the output of that command  *	in a string.  *  * Results:  *	A string containing the output of the command, or the empty string  *	If err is not NULL, it contains the reason for the command failure  *  * Side Effects:  *	The string must be freed by the caller.  */
+comment|/*-  * Cmd_Exec --  *	Execute the command in cmd, and return the output of that command  *	in a string.  *  * Results:  *	A string containing the output of the command, or the empty string  *	If error is not NULL, it contains the reason for the command failure  *  * Side Effects:  *	The string must be freed by the caller.  */
 end_comment
 
 begin_expr_stmt
@@ -3757,7 +3757,7 @@ name|Cmd_Exec
 argument_list|(
 argument|cmd
 argument_list|,
-argument|err
+argument|error
 argument_list|)
 name|char
 operator|*
@@ -3769,7 +3769,7 @@ begin_decl_stmt
 name|char
 modifier|*
 modifier|*
-name|err
+name|error
 decl_stmt|;
 end_decl_stmt
 
@@ -3819,7 +3819,7 @@ name|int
 name|cc
 decl_stmt|;
 operator|*
-name|err
+name|error
 operator|=
 name|NULL
 expr_stmt|;
@@ -3865,7 +3865,7 @@ literal|1
 condition|)
 block|{
 operator|*
-name|err
+name|error
 operator|=
 literal|"Couldn't create pipe for \"%s\""
 expr_stmt|;
@@ -3970,7 +3970,7 @@ operator|-
 literal|1
 case|:
 operator|*
-name|err
+name|error
 operator|=
 literal|"Couldn't exec \"%s\""
 expr_stmt|;
@@ -4104,7 +4104,7 @@ operator|-
 literal|1
 condition|)
 operator|*
-name|err
+name|error
 operator|=
 literal|"Error reading shell's output for \"%s\""
 expr_stmt|;
@@ -4134,7 +4134,7 @@ condition|(
 name|status
 condition|)
 operator|*
-name|err
+name|error
 operator|=
 literal|"\"%s\" returned non-zero status"
 expr_stmt|;

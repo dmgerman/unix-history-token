@@ -7051,7 +7051,7 @@ name|VarPattern
 name|pattern
 decl_stmt|;
 name|char
-name|delim
+name|del
 decl_stmt|;
 name|Buffer
 name|buf
@@ -7063,7 +7063,7 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|delim
+name|del
 operator|=
 name|tstr
 index|[
@@ -7116,7 +7116,7 @@ operator|&&
 operator|*
 name|cp
 operator|!=
-name|delim
+name|del
 condition|;
 name|cp
 operator|++
@@ -7138,7 +7138,7 @@ index|[
 literal|1
 index|]
 operator|==
-name|delim
+name|del
 operator|)
 operator|||
 operator|(
@@ -7194,7 +7194,7 @@ index|[
 literal|1
 index|]
 operator|!=
-name|delim
+name|del
 condition|)
 block|{
 comment|/* 				 * If unescaped dollar sign not before the 				 * delimiter, assume it's a variable 				 * substitution and recurse. 				 */
@@ -7301,7 +7301,7 @@ condition|(
 operator|*
 name|cp
 operator|!=
-name|delim
+name|del
 condition|)
 block|{
 operator|*
@@ -7340,7 +7340,7 @@ name|v
 operator|->
 name|name
 argument_list|,
-name|delim
+name|del
 argument_list|)
 expr_stmt|;
 return|return
@@ -7408,7 +7408,7 @@ operator|&&
 operator|*
 name|cp
 operator|!=
-name|delim
+name|del
 condition|;
 name|cp
 operator|++
@@ -7430,7 +7430,7 @@ index|[
 literal|1
 index|]
 operator|==
-name|delim
+name|del
 operator|)
 operator|||
 operator|(
@@ -7495,7 +7495,7 @@ index|[
 literal|1
 index|]
 operator|!=
-name|delim
+name|del
 operator|)
 condition|)
 block|{
@@ -7618,7 +7618,7 @@ condition|(
 operator|*
 name|cp
 operator|!=
-name|delim
+name|del
 condition|)
 block|{
 operator|*
@@ -7657,7 +7657,7 @@ name|v
 operator|->
 name|name
 argument_list|,
-name|delim
+name|del
 argument_list|)
 expr_stmt|;
 return|return
@@ -8407,7 +8407,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|err
+name|error
 decl_stmt|;
 name|newStr
 operator|=
@@ -8416,16 +8416,16 @@ argument_list|(
 name|str
 argument_list|,
 operator|&
-name|err
+name|error
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 name|Error
 argument_list|(
-name|err
+name|error
 argument_list|,
 name|str
 argument_list|)

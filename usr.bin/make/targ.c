@@ -1198,10 +1198,10 @@ name|char
 modifier|*
 name|Targ_FmtTime
 parameter_list|(
-name|time
+name|modtime
 parameter_list|)
 name|time_t
-name|time
+name|modtime
 decl_stmt|;
 block|{
 name|struct
@@ -1221,7 +1221,7 @@ operator|=
 name|localtime
 argument_list|(
 operator|&
-name|time
+name|modtime
 argument_list|)
 expr_stmt|;
 name|strftime

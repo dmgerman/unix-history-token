@@ -1405,7 +1405,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|p1
+name|ptr
 decl_stmt|;
 name|char
 modifier|*
@@ -1418,7 +1418,7 @@ argument_list|,
 name|cgn
 argument_list|,
 operator|&
-name|p1
+name|ptr
 argument_list|)
 decl_stmt|;
 while|while
@@ -1477,7 +1477,7 @@ block|}
 block|}
 name|efree
 argument_list|(
-name|p1
+name|ptr
 argument_list|)
 expr_stmt|;
 name|Lst_Close

@@ -510,7 +510,7 @@ name|cpid
 decl_stmt|;
 comment|/* Child actually found */
 name|ReturnStatus
-name|stat
+name|rstat
 decl_stmt|;
 comment|/* Status of fork */
 name|LstNode
@@ -1148,7 +1148,7 @@ block|{
 while|while
 condition|(
 operator|(
-name|stat
+name|rstat
 operator|=
 name|wait
 argument_list|(
@@ -1162,7 +1162,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|rstat
 operator|==
 operator|-
 literal|1
@@ -1177,7 +1177,7 @@ block|}
 block|}
 if|if
 condition|(
-name|stat
+name|rstat
 operator|>
 operator|-
 literal|1
@@ -1312,7 +1312,7 @@ name|Fatal
 argument_list|(
 literal|"error in wait: %d"
 argument_list|,
-name|stat
+name|rstat
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
