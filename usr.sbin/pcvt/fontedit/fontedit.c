@@ -57,11 +57,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -89,7 +84,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __386BSD__ || __NetBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __FreeBSD__ */
 end_comment
 
 begin_include
@@ -471,11 +466,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -500,7 +490,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __386BSD__ || __NetBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __FreeBSD__ */
 end_comment
 
 begin_decl_stmt
@@ -580,11 +570,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -604,7 +589,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __386BSD__ || __NetBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __FreeBSD__ */
 name|clear_screen
 argument_list|()
 expr_stmt|;
@@ -893,11 +878,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -917,7 +897,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __386BSD__ || __NetBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __FreeBSD__ */
 name|signal
 argument_list|(
 name|SIGINT
@@ -969,11 +949,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -1016,7 +991,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __386BSD__ || __NetBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __FreeBSD__ */
 ifdef|#
 directive|ifdef
 name|BSD
@@ -1097,11 +1072,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -1121,7 +1091,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __386BSD__ || __NetBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __FreeBSD__ */
 name|clear_screen
 argument_list|()
 expr_stmt|;

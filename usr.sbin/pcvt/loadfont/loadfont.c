@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992,1993,1994 Hellmuth Michaelis and Brian Dunford-Shore  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis and Brian Dunford-Shore  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis  *  * Copyright (c) 1992, 1994 Brian Dunford-Shore   *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis and Brian Dunford-Shore  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_decl_stmt
@@ -9,18 +9,24 @@ name|char
 modifier|*
 name|id
 init|=
-literal|"@(#)loadfont.c, 3.20, Last Edit-Date: [Tue Dec 20 14:52:58 1994]"
+literal|"@(#)loadfont.c, 3.20, Last Edit-Date: [Fri Apr  7 10:13:16 1995]"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	load a font into vga character font memory  *  *	-hm	removing explicit HGC support (same as MDA ..)  *	-hm	new pcvt_ioctl.h SIZ_xxROWS  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	load a font into vga character font memory  *  *	-hm	removing explicit HGC support (same as MDA ..)  *	-hm	new pcvt_ioctl.h SIZ_xxROWS  *	-hm	add -d option  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -77,17 +83,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SROWS8X8
-value|50
-end_define
-
-begin_comment
-comment|/* 50 character lines on screen       */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FONT8X10
 value|2560
 end_define
@@ -116,17 +111,6 @@ end_define
 
 begin_comment
 comment|/* 400 scan lines on screen - 256 - 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SROWS8X10
-value|40
-end_define
-
-begin_comment
-comment|/* 50 character lines on screen       */
 end_comment
 
 begin_define
@@ -165,17 +149,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SROWS8X14
-value|28
-end_define
-
-begin_comment
-comment|/* 28 character lines on screen       */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FONT8X16
 value|4096
 end_define
@@ -206,21 +179,23 @@ begin_comment
 comment|/* 400 scan lines on screen - 256 - 1 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SROWS8X16
-value|25
-end_define
-
-begin_comment
-comment|/* 25 character lines on screen       */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|screeninfo
 name|screeninfo
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DEFAULTFD
+value|0
+end_define
+
+begin_decl_stmt
+name|int
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -306,6 +281,15 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|int
+name|dflag
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|device
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -317,7 +301,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:f:i"
+literal|"c:d:f:i"
 argument_list|)
 operator|)
 operator|!=
@@ -338,6 +322,18 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|device
+operator|=
+name|optarg
+expr_stmt|;
+name|dflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -388,6 +384,67 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|dflag
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|device
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|char
+name|buffer
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|buffer
+argument_list|,
+literal|"ERROR opening "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buffer
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|buffer
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|fd
+operator|=
+name|DEFAULTFD
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|info
 operator|==
 literal|1
@@ -400,7 +457,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-literal|0
+name|fd
 argument_list|,
 name|VGAGETSCREEN
 argument_list|,
@@ -897,7 +954,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-literal|1
+name|fd
 argument_list|,
 name|VGASETFONTATTR
 argument_list|,
@@ -1032,7 +1089,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-literal|1
+name|fd
 argument_list|,
 name|VGALOADCHAR
 argument_list|,
@@ -1107,7 +1164,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-literal|1
+name|fd
 argument_list|,
 name|VGAGETFONTATTR
 argument_list|,
@@ -1257,7 +1314,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: loadfont -c<cset> -f<filename> -i\n"
+literal|"usage: loadfont -c<cset> -d<dev> -f<name> -i\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1265,6 +1322,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"       -c<cset> characterset to load (ega 0..3, vga 0..7)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -d<dev>  specify device\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
