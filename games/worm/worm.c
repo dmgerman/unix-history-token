@@ -279,12 +279,6 @@ name|char
 name|ch
 decl_stmt|;
 comment|/* revoke */
-name|setegid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|setgid
 argument_list|(
 name|getgid
