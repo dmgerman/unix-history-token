@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.3 (Berkeley) %G%"
+literal|"@(#)file.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,11 +138,18 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|4096
+end_define
+
 begin_decl_stmt
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|BUFSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -861,7 +868,7 @@ name|ifile
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+name|BUFSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1574,7 +1581,7 @@ name|ifile
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+name|BUFSIZE
 argument_list|)
 operator|>
 literal|0
@@ -2444,7 +2451,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* if next few lines in then read whole file looking for nulls ... 		while((in = read(ifile,buf,BUFSIZ))> 0) 			for(i = 0; i< in; i++) 				if((buf[i]&0377)> 127){ 					printf(" with garbage\n"); 					return; 				} 		/*.... */
+comment|/* if next few lines in then read whole file looking for nulls ... 		while((in = read(ifile,buf,BUFSIZE))> 0) 			for(i = 0; i< in; i++) 				if((buf[i]&0377)> 127){ 					printf(" with garbage\n"); 					return; 				} 		/*.... */
 name|printf
 argument_list|(
 literal|"\n"
