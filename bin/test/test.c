@@ -2605,6 +2605,13 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|&&
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
 condition|)
 name|err
 argument_list|(
