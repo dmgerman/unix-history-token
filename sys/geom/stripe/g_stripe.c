@@ -432,6 +432,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|g_stripe_fast_failed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_geom_stripe
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|fast_failed
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|g_stripe_fast_failed
+argument_list|,
+literal|0
+argument_list|,
+literal|"How many times \"fast\" mode failed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Greatest Common Divisor.  */
 end_comment
@@ -2764,6 +2794,7 @@ if|if
 condition|(
 name|fast
 condition|)
+block|{
 name|error
 operator|=
 name|g_stripe_start_fast
@@ -2777,6 +2808,16 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|g_stripe_fast_failed
+operator|++
+expr_stmt|;
+block|}
 comment|/* 	 * Do use "economic" when: 	 * 1. "Economic" mode is ON. 	 * or 	 * 2. "Fast" mode failed. It can only failed if there is no memory. 	 */
 if|if
 condition|(
