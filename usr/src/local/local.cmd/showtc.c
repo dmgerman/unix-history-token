@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.3	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.4	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** show termcap entries ** ** where: **	-S	sort entries before display **	-b	show bare entries **	-d	look for duplicate names **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-n	-d and stop **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Kevin Layer: modified for 4.1c and misc changes. ** Kevin Layer: added the printing of terminal capabilities **	in `human' readable form (like that in "man 5 termcap"). */
+comment|/* ** show termcap entries ** ** where: **	-D	look for duplicate names and print termcap file **	-S	sort entries before display **	-T	trace (-DDEBUG only) **	-b	show bare entries **	-d	-D and stop **	-f	following arg is FULL PATHNAME of termcap file **	-g	sort on generic names **	-s	don't print two char name at the front of every line **	-x	expand tc= capabilities **	[ent]	display specific entry. tc= will be expanded. ** ** David L. Wasley, U.C.Berkeley ** Kevin Layer: modified for 4.1c and misc changes. ** Kevin Layer: added the printing of terminal capabilities **	in `human' readable form (like that in "man 5 termcap"). */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|NOCAPS
-value|94
+value|95
 end_define
 
 begin_struct
@@ -319,6 +319,10 @@ block|,
 literal|"is"
 block|,
 literal|"Initialization string"
+block|,
+literal|"i2"
+block|,
+literal|"Alternate initialization string"
 block|,
 literal|"kb"
 block|,
@@ -837,7 +841,7 @@ expr_stmt|;
 break|break;
 comment|/* only check for dup names */
 case|case
-literal|'n'
+literal|'d'
 case|:
 name|nflag
 operator|=
@@ -846,7 +850,7 @@ expr_stmt|;
 comment|/* fall thru */
 comment|/* look for duplicated names */
 case|case
-literal|'d'
+literal|'D'
 case|:
 name|dflag
 operator|=
@@ -875,7 +879,7 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 case|case
-literal|'D'
+literal|'T'
 case|:
 name|Dflag
 operator|=
@@ -2710,7 +2714,7 @@ operator|)
 return|;
 return|return
 operator|(
-literal|"Unknown capability"
+literal|""
 operator|)
 return|;
 block|}
