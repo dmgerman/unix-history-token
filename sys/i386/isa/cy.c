@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.34 1996/07/30 19:50:37 bde Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.35 1996/09/06 23:07:17 phk Exp $  */
 end_comment
 
 begin_include
@@ -1672,6 +1672,32 @@ operator|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cy_chip_offset
+index|[]
+init|=
+block|{
+literal|0x0000
+block|,
+literal|0x0400
+block|,
+literal|0x0800
+block|,
+literal|0x0c00
+block|,
+literal|0x0200
+block|,
+literal|0x0600
+block|,
+literal|0x0a00
+block|,
+literal|0x0e00
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1775,15 +1801,27 @@ name|CY_MAX_CD1400s
 condition|;
 operator|++
 name|cyu
-operator|,
-name|iobase
-operator|+=
-name|CY_CD1400_MEMSIZE
 control|)
 block|{
 name|int
 name|i
 decl_stmt|;
+name|iobase
+operator|=
+call|(
+name|cy_addr
+call|)
+argument_list|(
+name|dev
+operator|->
+name|id_maddr
+operator|+
+name|cy_chip_offset
+index|[
+name|cyu
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* wait for chip to become ready for new command */
 for|for
 control|(
@@ -2010,10 +2048,6 @@ control|(
 name|cyu
 operator|=
 literal|0
-operator|,
-name|iobase
-operator|=
-name|cy_iobase
 init|;
 name|cyu
 operator|<
@@ -2021,15 +2055,27 @@ name|ncyu
 condition|;
 operator|++
 name|cyu
-operator|,
-name|iobase
-operator|+=
-name|CY_CD1400_MEMSIZE
 control|)
 block|{
 name|int
 name|cdu
 decl_stmt|;
+name|iobase
+operator|=
+call|(
+name|cy_addr
+call|)
+argument_list|(
+name|isdp
+operator|->
+name|id_maddr
+operator|+
+name|cy_chip_offset
+index|[
+name|cyu
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* Set up a receive timeout period of than 1+ ms. */
 name|cd_outb
 argument_list|(
@@ -2185,7 +2231,7 @@ name|iobase
 operator|=
 name|iobase
 expr_stmt|;
-comment|/* 	 * We don't use all the flags from<sys/ttydefaults.h> since they 	 * are only relevant for logins.  It's important to have echo off 	 * initially so that the line doesn't start blathering before the 	 * echo flag can be turned off. 	 */
+comment|/* 			 * We don't use all the flags from<sys/ttydefaults.h> since they 			 * are only relevant for logins.  It's important to have echo off 			 * initially so that the line doesn't start blathering before the 			 * echo flag can be turned off. 			 */
 name|com
 operator|->
 name|it_in
@@ -3477,11 +3523,13 @@ name|tp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
 name|t_cflag
 operator|&
 name|HUPCL
+operator|)
 comment|/* 		     * XXX we will miss any carrier drop between here and the 		     * next open.  Perhaps we should watch DCD even when the 		     * port is closed; it is not sufficient to check it at 		     * the next open because it might go up and down while 		     * we're not watching. 		     */
 operator|||
 operator|!
