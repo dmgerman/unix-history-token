@@ -16005,7 +16005,7 @@ operator|&&
 operator|(
 name|argv
 index|[
-literal|1
+literal|2
 index|]
 index|[
 literal|0
@@ -16022,7 +16022,7 @@ name|fopen
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 literal|"w"
