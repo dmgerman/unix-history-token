@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tunefs.c,v 1.6 1998/08/03 06:41:20 charnier Exp $"
+literal|"$Id: tunefs.c,v 1.7 1999/01/20 01:22:39 luoqi Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +397,17 @@ name|special
 argument_list|,
 operator|&
 name|stfs
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|special
+argument_list|,
+name|stfs
+operator|.
+name|f_mntonname
 argument_list|)
 operator|==
 literal|0
