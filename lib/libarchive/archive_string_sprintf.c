@@ -58,6 +58,9 @@ block|{
 name|size_t
 name|l
 decl_stmt|;
+name|va_list
+name|ap1
+decl_stmt|;
 if|if
 condition|(
 name|fmt
@@ -76,6 +79,13 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+name|va_copy
+argument_list|(
+name|ap1
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
 name|l
 operator|=
 name|vsnprintf
@@ -128,7 +138,7 @@ name|buffer_length
 argument_list|,
 name|fmt
 argument_list|,
-name|ap
+name|ap1
 argument_list|)
 expr_stmt|;
 block|}
@@ -137,6 +147,11 @@ operator|->
 name|length
 operator|=
 name|l
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap1
+argument_list|)
 expr_stmt|;
 block|}
 end_function

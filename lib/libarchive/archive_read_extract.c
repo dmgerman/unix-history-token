@@ -2313,9 +2313,11 @@ operator|->
 name|st_mode
 argument_list|)
 condition|)
-goto|goto
-name|success
-goto|;
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
 comment|/* It exists but isn't a dir. */
 if|if
 condition|(
