@@ -32,7 +32,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: buf.c,v 1.13 1997/10/08 13:46:39 eivind Exp $"
+literal|"$Id: buf.c,v 1.14 1997/10/09 11:05:16 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1105,6 +1105,18 @@ argument_list|,
 name|stdinbuf
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Ensure stdout is line buffered. This avoids bogus delays 	   of output if stdout is piped through utilities to a terminal. */
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
