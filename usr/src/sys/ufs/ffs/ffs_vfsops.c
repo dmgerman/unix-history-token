@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vfsops.c	6.1	83/07/29	*/
+comment|/*	ffs_vfsops.c	6.2	84/01/03	*/
 end_comment
 
 begin_include
@@ -167,6 +167,8 @@ argument_list|(
 name|uchar
 argument_list|,
 name|LOOKUP
+operator||
+name|NOCACHE
 argument_list|,
 literal|1
 argument_list|)
@@ -1041,6 +1043,12 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* remove unused sticky files from text table */
+name|nchinval
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* flush the name cache */
 name|update
 argument_list|()
 expr_stmt|;

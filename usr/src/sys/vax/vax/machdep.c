@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.2	83/10/02	*/
+comment|/*	machdep.c	6.3	84/01/03	*/
 end_comment
 
 begin_include
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|"../h/msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/nami.h"
 end_include
 
 begin_include
@@ -872,6 +878,16 @@ argument_list|,
 name|nmbclusters
 operator|/
 literal|4
+argument_list|)
+expr_stmt|;
+name|valloc
+argument_list|(
+name|nch
+argument_list|,
+expr|struct
+name|nch
+argument_list|,
+name|nchsize
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.1	83/07/29	*/
+comment|/*	namei.h	6.2	84/01/03	*/
 end_comment
 
 begin_struct
@@ -86,6 +86,102 @@ end_define
 begin_comment
 comment|/* see the top of namei */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NOCACHE
+value|0x20
+end_define
+
+begin_comment
+comment|/* name must not be left in cache */
+end_comment
+
+begin_comment
+comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCHNAMLEN
+value|11
+end_define
+
+begin_comment
+comment|/* maximum name segment length we bother with */
+end_comment
+
+begin_struct
+struct|struct
+name|nch
+block|{
+name|struct
+name|nch
+modifier|*
+name|nc_forw
+decl_stmt|,
+modifier|*
+name|nc_back
+decl_stmt|;
+comment|/* hash chain, MUST BE FIRST */
+name|struct
+name|nch
+modifier|*
+name|nc_nxt
+decl_stmt|,
+modifier|*
+modifier|*
+name|nc_prev
+decl_stmt|;
+comment|/* LRU chain */
+name|struct
+name|inode
+modifier|*
+name|nc_ip
+decl_stmt|;
+comment|/* inode the name refers to */
+name|ino_t
+name|nc_ino
+decl_stmt|;
+comment|/* ino of parent of name */
+name|dev_t
+name|nc_dev
+decl_stmt|;
+comment|/* dev of parent of name */
+name|dev_t
+name|nc_idev
+decl_stmt|;
+comment|/* dev of the name ref'd */
+name|char
+name|nc_nlen
+decl_stmt|;
+comment|/* length of name */
+name|char
+name|nc_name
+index|[
+name|NCHNAMLEN
+index|]
+decl_stmt|;
+comment|/* segment name */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|nch
+modifier|*
+name|nch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nchsize
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

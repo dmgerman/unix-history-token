@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	6.1	83/07/29	*/
+comment|/*	init_main.c	6.2	84/01/03	*/
 end_comment
 
 begin_include
@@ -504,6 +504,9 @@ name|binit
 argument_list|()
 expr_stmt|;
 name|bswinit
+argument_list|()
+expr_stmt|;
+name|nchinit
 argument_list|()
 expr_stmt|;
 ifdef|#
