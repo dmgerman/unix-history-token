@@ -1416,7 +1416,7 @@ comment|/* and those that are cylinder */
 end_comment
 
 begin_comment
-comment|/*  * Disk-specific ioctls.  */
+comment|/*  * Disklabel-specific ioctls.  *  * NB:<sys/disk.h> defines ioctls from 'd'/128 and up.  */
 end_comment
 
 begin_comment
@@ -1476,61 +1476,6 @@ end_define
 
 begin_comment
 comment|/* write en/disable label */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCGSECTORSIZE
-value|_IOR('d', 128, u_int)
-end_define
-
-begin_comment
-comment|/* Get sector size in bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCGMEDIASIZE
-value|_IOR('d', 129, off_t)
-end_define
-
-begin_comment
-comment|/* Get media size in bytes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCGFWSECTORS
-value|_IOR('d', 130, u_int)
-end_define
-
-begin_comment
-comment|/* Get firmware sectorcount */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCGFWHEADS
-value|_IOR('d', 131, u_int)
-end_define
-
-begin_comment
-comment|/* Get firmware headcount */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCGKERNELDUMP
-value|_IOW('d', 133, u_int)
-end_define
-
-begin_comment
-comment|/* Set/Clear kernel dumps */
 end_comment
 
 begin_ifdef

@@ -15,6 +15,18 @@ directive|define
 name|_SYS_DISK_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -181,6 +193,66 @@ name|disk
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DIOCGSECTORSIZE
+value|_IOR('d', 128, u_int)
+end_define
+
+begin_comment
+comment|/* Get sector size in bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGMEDIASIZE
+value|_IOR('d', 129, off_t)
+end_define
+
+begin_comment
+comment|/* Get media size in bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGFWSECTORS
+value|_IOR('d', 130, u_int)
+end_define
+
+begin_comment
+comment|/* Get firmware sectorcount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGFWHEADS
+value|_IOR('d', 131, u_int)
+end_define
+
+begin_comment
+comment|/* Get firmware headcount */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGKERNELDUMP
+value|_IOW('d', 133, u_int)
+end_define
+
+begin_comment
+comment|/* Set/Clear kernel dumps */
+end_comment
 
 begin_endif
 endif|#
