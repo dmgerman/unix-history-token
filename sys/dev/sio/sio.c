@@ -2578,7 +2578,7 @@ name|dev
 parameter_list|,
 name|bit
 parameter_list|)
-value|isa_set_flags(dev, isa_get_flags(dev) | (bit))
+value|device_set_flags(dev, device_get_flags(dev) | (bit))
 end_define
 
 begin_define
@@ -2590,7 +2590,7 @@ name|dev
 parameter_list|,
 name|bit
 parameter_list|)
-value|isa_set_flags(dev, isa_get_flags(dev)& ~(bit))
+value|device_set_flags(dev, device_get_flags(dev)& ~(bit))
 end_define
 
 begin_decl_stmt
@@ -2701,7 +2701,7 @@ decl_stmt|;
 name|u_int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
@@ -3977,7 +3977,7 @@ decl_stmt|;
 name|u_int
 name|flags
 init|=
-name|isa_get_flags
+name|device_get_flags
 argument_list|(
 name|dev
 argument_list|)
