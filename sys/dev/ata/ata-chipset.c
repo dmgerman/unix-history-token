@@ -3672,6 +3672,34 @@ literal|"HighPoint HPT372"
 block|}
 block|,
 block|{
+name|ATA_HPT302
+block|,
+literal|0x01
+block|,
+name|HPT372
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA6
+block|,
+literal|"HighPoint HPT302"
+block|}
+block|,
+block|{
+name|ATA_HPT371
+block|,
+literal|0x01
+block|,
+name|HPT372
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA6
+block|,
+literal|"HighPoint HPT371"
+block|}
+block|,
+block|{
 name|ATA_HPT374
 block|,
 literal|0x07
