@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.14 (Berkeley) %G%"
+literal|"@(#)table.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,6 +1640,44 @@ block|,
 name|RNULL
 block|,
 literal|"	HELP HELP HELP\n"
+block|,
+name|OREG
+block|,
+name|INTEMP
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+name|SOREG
+block|,
+name|TDOUBLE
+block|,
+literal|2
+operator|*
+name|NTEMP
+block|,
+name|RESC1
+block|,
+literal|"	movd	AR,A1\n"
+block|,
+name|OREG
+block|,
+name|INTEMP
+block|,
+name|SANY
+block|,
+name|TANY
+block|,
+name|SOREG
+block|,
+name|TANY
+block|,
+name|NTEMP
+block|,
+name|RESC1
+block|,
+literal|"	movZF	AR,A1\n"
 block|,
 name|REG
 block|,
