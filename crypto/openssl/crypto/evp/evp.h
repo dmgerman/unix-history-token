@@ -1953,11 +1953,13 @@ name|EVP_MD
 modifier|*
 name|md
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|salt
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -1800,7 +1800,7 @@ comment|/* bad decrypt */
 if|#
 directive|if
 literal|1
-comment|/* If a bad decrypt, continue with protocol but with a 	 * dud master secret */
+comment|/* If a bad decrypt, continue with protocol but with a 	 * random master secret (Bleichenbacher attack) */
 if|if
 condition|(
 operator|(
@@ -1855,6 +1855,9 @@ operator|)
 operator|)
 condition|)
 block|{
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|is_export
