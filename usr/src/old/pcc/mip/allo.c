@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)allo.c	4.3 (Berkeley) %G%"
+literal|"@(#)allo.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1191,6 +1191,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Have to check for ==,<=, etc. because the result is type INT 	 * but need a register pair temp if either side is real. 	 */
 if|if
 condition|(
 operator|(
@@ -1210,6 +1211,47 @@ name|type
 argument_list|)
 operator|==
 literal|2
+operator|||
+name|logop
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|op
+argument_list|)
+operator|&&
+operator|(
+name|szty
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|left
+operator|->
+name|in
+operator|.
+name|type
+argument_list|)
+operator|==
+literal|2
+operator|||
+name|szty
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|right
+operator|->
+name|in
+operator|.
+name|type
+argument_list|)
+operator|==
+literal|2
+operator|)
 operator|)
 condition|)
 block|{
