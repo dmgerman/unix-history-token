@@ -375,6 +375,11 @@ argument_list|,
 name|so_list
 argument_list|)
 expr_stmt|;
+name|head
+operator|->
+name|so_qlen
+operator|++
+expr_stmt|;
 name|so
 operator|->
 name|so_state
