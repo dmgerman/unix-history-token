@@ -260,32 +260,27 @@ modifier|*
 name|sc_ih
 decl_stmt|;
 comment|/* interrupt vectoring */
+endif|#
+directive|endif
 name|bus_space_tag_t
 name|iot
 decl_stmt|;
 name|bus_space_handle_t
 name|ioh
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|bus_dma_tag_t
 name|sc_dmatag
 decl_stmt|;
 comment|/* DMA tag */
 comment|/* XXX should keep track of all DMA memory */
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|bus_space_tag_t
-name|iot
-decl_stmt|;
-name|bus_space_handle_t
-name|ioh
-decl_stmt|;
 endif|#
 directive|endif
-comment|/* defined(__FreeBSD__) */
 name|uhci_physaddr_t
 modifier|*
 name|sc_pframes
