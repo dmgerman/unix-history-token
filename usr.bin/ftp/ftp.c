@@ -6333,6 +6333,18 @@ condition|(
 name|passivemode
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
+comment|/* XXX: to shut up gcc warnings */
+operator|(
+name|void
+operator|)
+operator|&
+name|pasvcmd
+expr_stmt|;
+endif|#
+directive|endif
 name|data_addr
 operator|=
 name|myctladdr
@@ -7232,10 +7244,6 @@ name|delim
 index|[
 literal|4
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|tcpport
 decl_stmt|;
 name|prt
 index|[
