@@ -151,6 +151,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPFLOW_HASHBITS
+value|6
+end_define
+
+begin_comment
+comment|/* should not be a multiple of 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPFLOW_HASHSIZE
 value|(1<< IPFLOW_HASHBITS)
 end_define
