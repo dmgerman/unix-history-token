@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: telnetd.c,v 1.17 1999/04/06 23:05:58 brian Exp $"
+literal|"$Id: telnetd.c,v 1.19 1999/04/07 08:39:54 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,9 +329,7 @@ begin_decl_stmt
 name|char
 name|remote_hostname
 index|[
-name|UT_HOSTSIZE
-operator|+
-literal|1
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -3649,6 +3647,13 @@ literal|1
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|trimdomain
+argument_list|(
+name|remote_hostname
+argument_list|,
+name|UT_HOSTSIZE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
