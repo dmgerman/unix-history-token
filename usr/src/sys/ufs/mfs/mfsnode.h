@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * This structure defines the control data for the memory  * based file system.  */
+comment|/*  * This structure defines the control data for the memory based file system.  */
 end_comment
 
 begin_struct
@@ -70,15 +70,8 @@ value|((mfsp)->mfs_vnode)
 end_define
 
 begin_comment
-comment|/*  * Prototypes for MFS operations on vnodes.  */
+comment|/* Prototypes for MFS operations on vnodes. */
 end_comment
-
-begin_function_decl
-name|int
-name|mfs_badop
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -100,62 +93,6 @@ directive|define
 name|mfs_mknod
 value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
 end_define
-
-begin_decl_stmt
-name|int
-name|mfs_open
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-name|int
-name|mode
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mfs_close
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-name|int
-name|fflag
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -191,40 +128,6 @@ directive|define
 name|mfs_write
 value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct uio *uio, \ 		int ioflag, \ 		struct ucred *cred))) mfs_badop)
 end_define
-
-begin_decl_stmt
-name|int
-name|mfs_ioctl
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-name|int
-name|command
-operator|,
-name|caddr_t
-name|data
-operator|,
-name|int
-name|fflag
-operator|,
-expr|struct
-name|ucred
-operator|*
-name|cred
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -317,26 +220,6 @@ name|mfs_abortop
 value|((int (*) __P(( \ 		struct nameidata *ndp))) mfs_badop)
 end_define
 
-begin_decl_stmt
-name|int
-name|mfs_inactive
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -357,64 +240,6 @@ directive|define
 name|mfs_unlock
 value|((int (*) __P(( \ 		struct vnode *vp))) nullop)
 end_define
-
-begin_decl_stmt
-name|int
-name|mfs_bmap
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-name|daddr_t
-name|bn
-operator|,
-expr|struct
-name|vnode
-operator|*
-operator|*
-name|vpp
-operator|,
-name|daddr_t
-operator|*
-name|bnp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mfs_strategy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-name|bp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mfs_print
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
