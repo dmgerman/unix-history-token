@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: hunt.c,v 1.1.6.1 1997/08/20 07:06:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tipconf.h"
 end_include
 
@@ -51,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"tip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_function_decl
@@ -129,6 +141,9 @@ decl_stmt|;
 name|sig_t
 name|f
 decl_stmt|;
+name|int
+name|res
+decl_stmt|;
 name|f
 operator|=
 name|signal
@@ -167,14 +182,38 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|res
+operator|=
 name|uu_lock
 argument_list|(
 name|uucplock
 argument_list|)
-operator|<
-literal|0
+operator|)
+operator|!=
+name|UU_LOCK_OK
 condition|)
+block|{
+if|if
+condition|(
+name|res
+operator|!=
+name|UU_LOCK_INUSE
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"uu_lock: %s\n"
+argument_list|,
+name|uu_lockerr
+argument_list|(
+name|res
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 		 * Straight through call units, such as the BIZCOMP, 		 * VADIC and the DF, must indicate they're hardwired in 		 *  order to get an open file descriptor placed in FD. 		 * Otherwise, as for a DN-11, the open will have to 		 *  be done in the "open" routine. 		 */
 if|if
 condition|(

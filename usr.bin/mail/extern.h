@@ -2990,7 +2990,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|undelete
+name|undelete_messages
 name|__P
 argument_list|(
 operator|(

@@ -1216,7 +1216,7 @@ end_comment
 
 begin_function
 name|int
-name|undelete
+name|undelete_messages
 parameter_list|(
 name|msgvec
 parameter_list|)

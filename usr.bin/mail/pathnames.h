@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_MASTER_RC
-value|"/etc/mail.rc"
+value|"/usr/share/misc/mail.rc:/usr/local/etc/mail.rc:/etc/mail.rc"
 end_define
 
 begin_define
