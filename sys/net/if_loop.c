@@ -1008,7 +1008,7 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
-name|m
+name|n
 operator|->
 name|m_pkthdr
 operator|.
@@ -1026,7 +1026,7 @@ name|n
 operator|->
 name|m_len
 operator|=
-name|m
+name|n
 operator|->
 name|m_pkthdr
 operator|.
