@@ -1947,6 +1947,14 @@ condition|(
 name|c
 operator|==
 literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+operator|||
+name|c
+operator|==
+literal|'\n'
 condition|)
 continue|continue;
 for|for
@@ -1967,6 +1975,11 @@ operator|*
 name|p
 operator|!=
 literal|' '
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\t'
 condition|;
 name|p
 operator|++
