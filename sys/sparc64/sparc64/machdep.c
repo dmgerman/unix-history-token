@@ -1319,6 +1319,8 @@ operator|=
 name|TSTATE_IE
 operator||
 name|TSTATE_PEF
+operator||
+name|TSTATE_PRIV
 expr_stmt|;
 name|thread0
 operator|.
@@ -2649,6 +2651,12 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
+name|tf
+operator|=
+name|td
+operator|->
+name|td_frame
+expr_stmt|;
 name|sp
 operator|=
 name|rounddown
@@ -2657,12 +2665,6 @@ name|stack
 argument_list|,
 literal|16
 argument_list|)
-expr_stmt|;
-name|tf
-operator|=
-name|td
-operator|->
-name|td_frame
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -2702,7 +2704,11 @@ index|[
 literal|3
 index|]
 operator|=
-name|PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 expr_stmt|;
 name|tf
 operator|->
