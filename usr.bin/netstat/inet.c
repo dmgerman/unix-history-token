@@ -1185,7 +1185,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nflag
+name|numeric_port
 condition|)
 block|{
 if|if
@@ -3518,7 +3518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct an Internet address representation.  * If the nflag has been supplied, give  * numeric value, otherwise try for symbolic name.  */
+comment|/*  * Construct an Internet address representation.  * If numeric_addr has been supplied, give  * numeric value, otherwise try for symbolic name.  */
 end_comment
 
 begin_function
@@ -3561,7 +3561,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nflag
+name|numeric_addr
 operator|&&
 name|inp
 operator|->

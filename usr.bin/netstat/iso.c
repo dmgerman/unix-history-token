@@ -1737,7 +1737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pretty print an iso address (net address + port).  * If the nflag was specified, use numbers instead of names.  */
+comment|/*  * Pretty print an iso address (net address + port).  * If the numeric_addr or numeric_port were specified,  * use numbers instead of names.  */
 end_comment
 
 begin_ifdef
@@ -1830,7 +1830,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nflag
+name|numeric_addr
 condition|)
 name|ihe
 operator|=
@@ -2004,7 +2004,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|nflag
+name|numeric_addr
 condition|)
 block|{
 if|if
@@ -2055,7 +2055,7 @@ operator|!
 name|Aflag
 operator|&&
 operator|!
-name|nflag
+name|numeric_port
 operator|&&
 operator|(
 name|ihe

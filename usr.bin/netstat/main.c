@@ -1635,12 +1635,22 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|nflag
+name|numeric_addr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* show addresses numerically */
+end_comment
+
+begin_decl_stmt
+name|int
+name|numeric_port
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show ports numerically */
 end_comment
 
 begin_decl_stmt
@@ -1779,7 +1789,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:gI:iLlM:mN:np:rstuWw:"
+literal|"Aabdf:gI:iLlM:mN:np:rSstuWw:"
 argument_list|)
 operator|)
 operator|!=
@@ -2119,7 +2129,9 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|nflag
+name|numeric_addr
+operator|=
+name|numeric_port
 operator|=
 literal|1
 expr_stmt|;
@@ -2169,6 +2181,14 @@ literal|'s'
 case|:
 operator|++
 name|sflag
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|numeric_addr
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3647,7 +3667,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: netstat [-AaLnW] [-f protocol_family | -p protocol]\n"
+literal|"usage: netstat [-AaLnSW] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -i | -I interface [-abdnt] [-f address_family]\n"

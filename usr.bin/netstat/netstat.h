@@ -100,12 +100,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|nflag
+name|numeric_addr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* show addresses numerically */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|numeric_port
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show ports numerically */
 end_comment
 
 begin_decl_stmt

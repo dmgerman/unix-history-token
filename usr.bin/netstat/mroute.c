@@ -176,7 +176,7 @@ name|banner_printed
 decl_stmt|;
 specifier|register
 name|int
-name|saved_nflag
+name|saved_numeric_addr
 decl_stmt|;
 name|vifi_t
 name|maxvif
@@ -201,11 +201,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|saved_nflag
+name|saved_numeric_addr
 operator|=
-name|nflag
+name|numeric_addr
 expr_stmt|;
-name|nflag
+name|numeric_addr
 operator|=
 literal|1
 expr_stmt|;
@@ -558,9 +558,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|nflag
+name|numeric_addr
 operator|=
-name|saved_nflag
+name|saved_numeric_addr
 expr_stmt|;
 block|}
 end_function

@@ -343,7 +343,7 @@ return|;
 default|default:
 if|if
 condition|(
-name|nflag
+name|numeric_port
 condition|)
 block|{
 operator|(
