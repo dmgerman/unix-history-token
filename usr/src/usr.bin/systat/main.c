@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -298,15 +298,15 @@ name|atoi
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|naptime
-operator|<
-literal|5
+operator|<=
+literal|0
 condition|)
 name|naptime
 operator|=
