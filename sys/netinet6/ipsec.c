@@ -2476,7 +2476,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: NULL pointer was passed."
+literal|"ipsec4_getpolicybypcb: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 name|pcbsp
@@ -2496,7 +2496,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: pcbsp is NULL."
+literal|"ipsec4_getpolicybypcb: pcbsp is NULL."
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2569,7 +2569,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: illegal direction."
+literal|"ipsec4_getpolicybypcb: illegal direction."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2582,7 +2582,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec4_getpolicybysock: currsp is NULL."
+literal|"ipsec4_getpolicybypcb: currsp is NULL."
 argument_list|)
 expr_stmt|;
 comment|/* when privileged socket */
@@ -2671,7 +2671,7 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP ipsec4_getpolicybysock called "
+literal|"DP ipsec4_getpolicybypcb called "
 literal|"to allocate SP:%p\n"
 argument_list|,
 name|kernsp
@@ -2756,7 +2756,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec4_getpolicybysock: "
+literal|"ipsec4_getpolicybypcb: "
 literal|"Invalid policy for PCB %d\n"
 operator|,
 name|currsp
@@ -2818,7 +2818,7 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP ipsec4_getpolicybysock called "
+literal|"DP ipsec4_getpolicybypcb called "
 literal|"to allocate SP:%p\n"
 argument_list|,
 name|kernsp
@@ -2861,7 +2861,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec4_getpolicybysock: "
+literal|"ipsec4_getpolicybypcb: "
 literal|"Illegal policy for non-privileged defined %d\n"
 operator|,
 name|currsp
@@ -2938,7 +2938,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec4_getpolicybysock: "
+literal|"ipsec4_getpolicybypcb: "
 literal|"Invalid policy for PCB %d\n"
 operator|,
 name|currsp
@@ -3224,7 +3224,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: NULL pointer was passed."
+literal|"ipsec6_getpolicybypcb: NULL pointer was passed."
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3244,7 +3244,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: socket domain != inet6"
+literal|"ipsec6_getpolicybypcb: socket domain != inet6"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3266,7 +3266,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: pcbsp is NULL."
+literal|"ipsec6_getpolicybypcb: pcbsp is NULL."
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3339,7 +3339,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: illegal direction."
+literal|"ipsec6_getpolicybypcb: illegal direction."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3352,7 +3352,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ipsec6_getpolicybysock: currsp is NULL."
+literal|"ipsec6_getpolicybypcb: currsp is NULL."
 argument_list|)
 expr_stmt|;
 comment|/* when privileged socket */
@@ -3441,7 +3441,7 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP ipsec6_getpolicybysock called "
+literal|"DP ipsec6_getpolicybypcb called "
 literal|"to allocate SP:%p\n"
 argument_list|,
 name|kernsp
@@ -3526,7 +3526,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec6_getpolicybysock: "
+literal|"ipsec6_getpolicybypcb: "
 literal|"Invalid policy for PCB %d\n"
 operator|,
 name|currsp
@@ -3588,7 +3588,7 @@ name|KEYDEBUG_IPSEC_STAMP
 argument_list|,
 name|printf
 argument_list|(
-literal|"DP ipsec6_getpolicybysock called "
+literal|"DP ipsec6_getpolicybypcb called "
 literal|"to allocate SP:%p\n"
 argument_list|,
 name|kernsp
@@ -3631,7 +3631,7 @@ argument_list|(
 operator|(
 name|LOG_ERR
 operator|,
-literal|"ipsec6_getpolicybysock: "
+literal|"ipsec6_getpolicybypcb: "
 literal|"Illegal policy for non-privileged defined %d\n"
 operator|,
 name|currsp
