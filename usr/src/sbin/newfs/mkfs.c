@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.9 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,6 +563,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 */
 if|if
 condition|(
 name|fssize
@@ -579,6 +580,22 @@ operator|,
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|wtfs
+argument_list|(
+name|fssize
+operator|-
+literal|1
+argument_list|,
+name|DEV_BSIZE
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sblock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * collect and verify the sector and track info 	 */
@@ -5365,17 +5382,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|lseek
-argument_list|(
-name|fso
-argument_list|,
-name|bno
-operator|*
-name|DEV_BSIZE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lseek
