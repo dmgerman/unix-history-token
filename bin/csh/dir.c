@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: dir.c,v 1.3 1995/05/30 00:06:30 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: dir.c,v 1.4 1995/06/18 14:34:48 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -247,17 +247,14 @@ modifier|*
 name|hp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|tcp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|struct
 name|directory
 modifier|*
@@ -622,7 +619,6 @@ name|dp
 decl_stmt|;
 block|{
 comment|/*      * Don't call set() directly cause if the directory contains ` or      * other junk characters glob will fail.      */
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -902,7 +898,6 @@ name|void
 name|printdirs
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|directory
 modifier|*
@@ -1194,7 +1189,6 @@ name|home
 parameter_list|,
 name|dir
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|home
@@ -1632,12 +1626,10 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|struct
 name|directory
 modifier|*
@@ -1929,7 +1921,6 @@ operator|!=
 literal|'/'
 condition|)
 block|{
-specifier|register
 name|Char
 modifier|*
 name|p
@@ -2130,13 +2121,11 @@ name|dfollow
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|dp
@@ -2273,7 +2262,6 @@ modifier|*
 modifier|*
 name|cdp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|p
@@ -2520,7 +2508,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|directory
 modifier|*
@@ -2731,7 +2718,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|Char
 modifier|*
 name|ccp
@@ -2824,23 +2810,19 @@ name|dfind
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|directory
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|ep
@@ -2981,7 +2963,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|directory
 modifier|*
@@ -3195,7 +3176,6 @@ name|dfree
 parameter_list|(
 name|dp
 parameter_list|)
-specifier|register
 name|struct
 name|directory
 modifier|*
@@ -3260,7 +3240,6 @@ name|cp
 parameter_list|,
 name|p
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -3272,12 +3251,10 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|Char
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|p1
@@ -4632,7 +4609,6 @@ name|dnewcwd
 parameter_list|(
 name|dp
 parameter_list|)
-specifier|register
 name|struct
 name|directory
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: func.c,v 1.4 1995/10/23 23:08:26 ache Exp $  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: func.c,v 1.5 1996/08/11 23:10:38 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -293,7 +293,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -305,7 +304,6 @@ index|[
 literal|0
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|biltins
 modifier|*
@@ -463,9 +461,9 @@ name|bp2
 condition|;
 control|)
 block|{
-specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|bp
 operator|=
 name|bp1
@@ -551,13 +549,11 @@ name|t
 parameter_list|,
 name|bp
 parameter_list|)
-specifier|register
 name|struct
 name|command
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
 name|struct
 name|biltins
 modifier|*
@@ -659,12 +655,10 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|vv
@@ -917,13 +911,11 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|varent
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|p
@@ -1227,11 +1219,9 @@ modifier|*
 name|kp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -1357,7 +1347,6 @@ name|reexecute
 parameter_list|(
 name|kp
 parameter_list|)
-specifier|register
 name|struct
 name|command
 modifier|*
@@ -1493,7 +1482,6 @@ modifier|*
 name|lab
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|whyle
 modifier|*
@@ -1600,7 +1588,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -1850,7 +1837,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -1858,7 +1844,6 @@ decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
 name|struct
 name|whyle
 modifier|*
@@ -2111,11 +2096,9 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|status
 decl_stmt|;
-specifier|register
 name|bool
 name|again
 init|=
@@ -2190,7 +2173,6 @@ operator|!
 name|again
 condition|)
 block|{
-specifier|register
 name|struct
 name|whyle
 modifier|*
@@ -2525,11 +2507,9 @@ modifier|*
 name|kp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|sigset_t
 name|omask
 init|=
@@ -2656,13 +2636,11 @@ name|srchx
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|srch
 modifier|*
@@ -2674,9 +2652,9 @@ decl_stmt|,
 modifier|*
 name|sp2
 decl_stmt|;
-specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 comment|/*      * Binary search Sp1 is the beginning of the current search range. Sp2 is      * one past the end.      */
 for|for
 control|(
@@ -2809,7 +2787,6 @@ parameter_list|)
 name|int
 name|type
 decl_stmt|;
-specifier|register
 name|int
 name|level
 decl_stmt|;
@@ -2824,14 +2801,12 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|aword
 init|=
 name|wordbuf
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -3281,19 +3256,16 @@ name|getword
 parameter_list|(
 name|wp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|wp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|found
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|,
@@ -3867,7 +3839,6 @@ operator|=
 name|nwp
 control|)
 block|{
-specifier|register
 name|struct
 name|whyle
 modifier|*
@@ -4118,14 +4089,12 @@ parameter_list|)
 name|int
 name|sep
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|v
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -4258,7 +4227,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -4405,7 +4373,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -4973,7 +4940,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -4981,7 +4947,6 @@ name|ep
 init|=
 name|STR_environ
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -5199,7 +5164,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -5207,7 +5171,6 @@ name|ep
 init|=
 name|STR_environ
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -5346,7 +5309,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -5356,7 +5318,6 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -5652,7 +5613,6 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|limits
 modifier|*
@@ -5761,13 +5721,11 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|limits
 modifier|*
 name|lp
 decl_stmt|;
-specifier|register
 name|RLIM_TYPE
 name|limit
 decl_stmt|;
@@ -5903,7 +5861,6 @@ name|lp
 parameter_list|,
 name|v
 parameter_list|)
-specifier|register
 name|struct
 name|limits
 modifier|*
@@ -5915,14 +5872,9 @@ modifier|*
 name|v
 decl_stmt|;
 block|{
-specifier|register
 name|float
 name|f
 decl_stmt|;
-name|double
-name|atof
-parameter_list|()
-function_decl|;
 name|Char
 modifier|*
 name|cp
@@ -6316,7 +6268,6 @@ name|lp
 parameter_list|,
 name|hard
 parameter_list|)
-specifier|register
 name|struct
 name|limits
 modifier|*
@@ -6464,7 +6415,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|limits
 modifier|*
@@ -6609,7 +6559,6 @@ name|hard
 parameter_list|,
 name|limit
 parameter_list|)
-specifier|register
 name|struct
 name|limits
 modifier|*
@@ -6760,12 +6709,16 @@ name|int
 name|ctpgrp
 decl_stmt|;
 name|void
-function_decl|(
-modifier|*
-name|old
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*old
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loginsh

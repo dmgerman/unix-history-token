@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: file.c,v 1.3 1995/05/30 00:06:33 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: file.c,v 1.4 1995/06/18 14:08:44 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -761,7 +761,6 @@ modifier|*
 name|string
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|p
@@ -910,7 +909,6 @@ name|src
 parameter_list|,
 name|count
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|des
@@ -921,7 +919,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|int
 name|count
 decl_stmt|;
@@ -987,7 +984,6 @@ name|src
 parameter_list|,
 name|count
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|des
@@ -998,7 +994,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|int
 name|count
 decl_stmt|;
@@ -1231,7 +1226,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1389,7 +1383,6 @@ operator|<
 name|count
 condition|)
 block|{
-specifier|register
 name|int
 name|w
 decl_stmt|;
@@ -1527,7 +1520,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|Char
 modifier|*
 name|o
@@ -1535,7 +1527,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|struct
 name|passwd
 modifier|*
@@ -1948,7 +1939,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|Char
 modifier|*
 name|p
@@ -2031,13 +2021,11 @@ name|int
 name|looking_for_lognames
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-specifier|register
 name|struct
 name|dirent
 modifier|*
@@ -2113,14 +2101,12 @@ name|free_items
 parameter_list|(
 name|items
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|items
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2204,29 +2190,28 @@ name|items
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|DIR
 modifier|*
 name|dir_fd
 decl_stmt|;
-specifier|register
+name|int
 name|numitems
-operator|=
+init|=
 literal|0
-operator|,
+decl_stmt|,
 name|ignoring
-operator|=
+init|=
 name|TRUE
-operator|,
+decl_stmt|,
 name|nignored
-operator|=
+init|=
 literal|0
-expr_stmt|;
-specifier|register
+decl_stmt|;
+name|int
 name|name_length
-operator|,
+decl_stmt|,
 name|looking_for_lognames
-expr_stmt|;
+decl_stmt|;
 name|Char
 name|tilded_dir
 index|[
@@ -2823,7 +2808,6 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 2nd& subsequent matches */
-specifier|register
 name|Char
 modifier|*
 name|x
@@ -2831,7 +2815,6 @@ decl_stmt|,
 modifier|*
 name|ent
 decl_stmt|;
-specifier|register
 name|int
 name|len
 init|=
@@ -2906,7 +2889,6 @@ name|check
 parameter_list|,
 name|template
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|check
@@ -2974,7 +2956,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|Char
 modifier|*
 name|c
@@ -3058,7 +3039,6 @@ name|int
 name|inputline_size
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|numitems
 decl_stmt|,
@@ -3131,7 +3111,6 @@ block|,
 literal|'\0'
 block|}
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|str_end
@@ -3143,7 +3122,6 @@ name|last_Char
 decl_stmt|,
 name|should_retype
 decl_stmt|;
-specifier|register
 name|int
 name|space_left
 decl_stmt|;
@@ -3400,7 +3378,6 @@ name|ignored
 parameter_list|(
 name|entry
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|entry
@@ -3411,7 +3388,6 @@ name|varent
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: misc.c,v 1.2 1994/09/24 02:54:10 davidg Exp $  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: misc.c,v 1.3 1996/09/28 14:32:01 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -109,12 +109,10 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -201,7 +199,6 @@ name|strsave
 parameter_list|(
 name|s
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -211,7 +208,6 @@ name|char
 modifier|*
 name|n
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -296,7 +292,6 @@ name|blkend
 parameter_list|(
 name|up
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -331,7 +326,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -391,14 +385,12 @@ name|blklen
 parameter_list|(
 name|av
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|av
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 init|=
@@ -436,14 +428,12 @@ modifier|*
 modifier|*
 name|oav
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|bv
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -530,7 +520,6 @@ modifier|*
 name|av0
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -581,14 +570,12 @@ name|saveblk
 parameter_list|(
 name|v
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|v
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -667,7 +654,6 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
@@ -681,14 +667,12 @@ begin_block
 block|{
 do|do
 block|{
-specifier|register
 name|char
 modifier|*
 name|ss
 init|=
 name|s
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|tt
@@ -776,7 +760,6 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -923,7 +906,6 @@ name|up
 parameter_list|,
 name|vp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -937,7 +919,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -1004,7 +985,6 @@ name|lastchr
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -1059,7 +1039,6 @@ name|void
 name|closem
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|f
 decl_stmt|,
@@ -1164,7 +1143,6 @@ name|i
 parameter_list|,
 name|j
 parameter_list|)
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1262,7 +1240,6 @@ name|i
 parameter_list|,
 name|j
 parameter_list|)
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -1347,14 +1324,12 @@ name|i
 parameter_list|,
 name|j
 parameter_list|)
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|k
 init|=
@@ -1441,18 +1416,15 @@ name|v
 parameter_list|,
 name|c
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|v
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -1580,7 +1552,6 @@ name|copyblk
 parameter_list|(
 name|v
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 modifier|*
@@ -1645,7 +1616,6 @@ name|strend
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1698,7 +1668,6 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|dp
@@ -1773,7 +1742,6 @@ name|sub
 parameter_list|,
 name|str
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|sub
