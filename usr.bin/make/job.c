@@ -7574,7 +7574,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * We had the environment variable so we are a slave. 	 * Open fifo and give ourselves a magic token which represents 	 * the token our parent make has grabbed to start his make process. 	 * Otherwise the sub-makes would gobble up tokens and the proper 	 * number of tokens to specify to -j would depend on the depth of		 * the tree and the order of execution. 	 */
+comment|/* 	 * We had the environment variable so we are a slave. 	 * Open fifo and give ourselves a magic token which represents 	 * the token our parent make has grabbed to start his make process. 	 * Otherwise the sub-makes would gobble up tokens and the proper 	 * number of tokens to specify to -j would depend on the depth of 	 * the tree and the order of execution. 	 */
 name|fifoFd
 operator|=
 name|open
