@@ -224,7 +224,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isnettty
+name|isnetworktty
 name|__P
 argument_list|(
 operator|(
