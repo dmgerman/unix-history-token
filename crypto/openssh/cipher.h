@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: cipher.h,v 1.22 2000/10/13 18:59:14 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: cipher.h,v 1.25 2000/12/19 23:17:56 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -375,8 +375,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int
 name|cipher_mask_ssh1
 parameter_list|(
 name|int

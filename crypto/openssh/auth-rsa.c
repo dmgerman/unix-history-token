@@ -12,10 +12,22 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.32 2000/10/14 12:19:45 markus Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.40 2001/04/06 21:00:07 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/md5.h>
+end_include
 
 begin_include
 include|#
@@ -38,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"ssh1.h"
 end_include
 
 begin_include
@@ -62,25 +74,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"auth-options.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/rsa.h>
+file|"pathnames.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<openssl/md5.h>
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"servconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
 end_include
 
 begin_comment
@@ -100,8 +118,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|char
+name|u_char
 name|session_id
 index|[
 literal|16
@@ -137,8 +154,7 @@ name|BN_CTX
 modifier|*
 name|ctx
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|buf
 index|[
 literal|32
@@ -157,8 +173,7 @@ decl_stmt|;
 name|MD5_CTX
 name|md
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|int
@@ -419,22 +434,20 @@ index|]
 decl_stmt|,
 name|file
 index|[
-literal|1024
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|int
 name|authenticated
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|bits
 decl_stmt|;
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|linenum
 init|=
 literal|0
@@ -461,8 +474,6 @@ comment|/* Temporarily use the user's uid. */
 name|temporarily_use_uid
 argument_list|(
 name|pw
-operator|->
-name|pw_uid
 argument_list|)
 expr_stmt|;
 comment|/* The authorized keys. */
@@ -479,7 +490,7 @@ name|pw
 operator|->
 name|pw_dir
 argument_list|,
-name|SSH_USER_PERMITTED_KEYS
+name|_PATH_SSH_USER_PERMITTED_KEYS
 argument_list|)
 expr_stmt|;
 comment|/* Fail quietly if file does not exist */
@@ -625,7 +636,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Check path to SSH_USER_PERMITTED_KEYS */
+comment|/* Check path to _PATH_SSH_USER_PERMITTED_KEYS */
 name|int
 name|i
 decl_stmt|;
@@ -639,7 +650,7 @@ init|=
 block|{
 literal|""
 block|,
-name|SSH_USER_DIR
+name|_PATH_SSH_USER_DIR
 block|,
 name|NULL
 block|}
@@ -950,20 +961,6 @@ name|options
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * If our options do not allow this key to be used, 		 * do not send challenge. 		 */
-if|if
-condition|(
-operator|!
-name|auth_parse_options
-argument_list|(
-name|pw
-argument_list|,
-name|options
-argument_list|,
-name|linenum
-argument_list|)
-condition|)
-continue|continue;
 comment|/* Parse the key from the line. */
 if|if
 condition|(
@@ -990,7 +987,7 @@ name|debug
 argument_list|(
 literal|"%.100s, line %lu: bad key syntax"
 argument_list|,
-name|SSH_USER_PERMITTED_KEYS
+name|file
 argument_list|,
 name|linenum
 argument_list|)
@@ -999,7 +996,7 @@ name|packet_send_debug
 argument_list|(
 literal|"%.100s, line %lu: bad key syntax"
 argument_list|,
-name|SSH_USER_PERMITTED_KEYS
+name|file
 argument_list|,
 name|linenum
 argument_list|)
@@ -1054,6 +1051,22 @@ name|bits
 argument_list|)
 expr_stmt|;
 comment|/* We have found the desired key. */
+comment|/* 		 * If our options do not allow this key to be used, 		 * do not send challenge. 		 */
+if|if
+condition|(
+operator|!
+name|auth_parse_options
+argument_list|(
+name|pw
+argument_list|,
+name|options
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|)
+condition|)
+continue|continue;
 comment|/* Perform the challenge-response dialog for this key. */
 if|if
 condition|(

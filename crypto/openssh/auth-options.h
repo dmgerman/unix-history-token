@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: auth-options.h,v 1.5 2000/10/16 09:38:44 djm Exp $ */
+comment|/* $OpenBSD: auth-options.h,v 1.8 2001/01/21 19:05:42 markus Exp $ */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,27 @@ define|#
 directive|define
 name|AUTH_OPTIONS_H
 end_define
+
+begin_comment
+comment|/* Linked list of custom environment strings */
+end_comment
+
+begin_struct
+struct|struct
+name|envstring
+block|{
+name|struct
+name|envstring
+modifier|*
+name|next
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Flags that may be set in authorized_keys options. */
@@ -69,7 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* return 1 if access is granted, 0 if not. side effect: sets key option flags */
+comment|/*  * return 1 if access is granted, 0 if not.  * side effect: sets key option flags  */
 end_comment
 
 begin_function_decl
@@ -85,8 +106,11 @@ name|char
 modifier|*
 name|options
 parameter_list|,
-name|unsigned
-name|long
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|u_long
 name|linenum
 parameter_list|)
 function_decl|;

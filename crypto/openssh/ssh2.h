@@ -8,7 +8,7 @@ comment|/*  * draft-ietf-secsh-architecture-05.txt  *  *   Transport layer proto
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: ssh2.h,v 1.5 2000/10/11 04:02:17 provos Exp $"); */
+comment|/* RCSID("$OpenBSD: ssh2.h,v 1.6 2001/03/27 17:46:49 provos Exp $"); */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH2_MSG_KEX_DH_GEX_REQUEST
+name|SSH2_MSG_KEX_DH_GEX_REQUEST_OLD
 value|30
 end_define
 
@@ -123,6 +123,13 @@ define|#
 directive|define
 name|SSH2_MSG_KEX_DH_GEX_REPLY
 value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_DH_GEX_REQUEST
+value|34
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rijndael.c,v 1.2 2000/10/15 14:14:01 markus Exp $	*/
+comment|/*	$OpenBSD: rijndael.c,v 1.7 2001/02/04 15:32:24 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ name|bswap
 parameter_list|(
 name|x
 parameter_list|)
-value|(rotl(x, 8)& 0x00ff00ff | rotr(x, 8)& 0xff00ff00)
+value|((rotl(x, 8)& 0x00ff00ff) | (rotr(x, 8)& 0xff00ff00))
 end_define
 
 begin_comment
@@ -156,34 +156,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|BLOCK_SWAP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* For inverting byte order in input/output 32 bit words if needed  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BLOCK_SWAP
-end_ifdef
-
-begin_define
-define|#
-directive|define
 name|BYTE_SWAP
-end_define
-
-begin_define
-define|#
-directive|define
-name|WORD_SWAP
 end_define
 
 begin_endif
@@ -220,96 +193,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* For inverting the byte order of input/output blocks if needed    */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WORD_SWAP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|get_block
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((u4byte*)(x))[0] = io_swap(in_blk[3]);     \     ((u4byte*)(x))[1] = io_swap(in_blk[2]);     \     ((u4byte*)(x))[2] = io_swap(in_blk[1]);     \     ((u4byte*)(x))[3] = io_swap(in_blk[0])
-end_define
-
-begin_define
-define|#
-directive|define
-name|put_block
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|out_blk[3] = io_swap(((u4byte*)(x))[0]);    \     out_blk[2] = io_swap(((u4byte*)(x))[1]);    \     out_blk[1] = io_swap(((u4byte*)(x))[2]);    \     out_blk[0] = io_swap(((u4byte*)(x))[3])
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_key
-parameter_list|(
-name|x
-parameter_list|,
-name|len
-parameter_list|)
-define|\
-value|((u4byte*)(x))[4] = ((u4byte*)(x))[5] =     \     ((u4byte*)(x))[6] = ((u4byte*)(x))[7] = 0;  \     switch((((len) + 63) / 64)) {               \     case 2:                                     \     ((u4byte*)(x))[0] = io_swap(in_key[3]);     \     ((u4byte*)(x))[1] = io_swap(in_key[2]);     \     ((u4byte*)(x))[2] = io_swap(in_key[1]);     \     ((u4byte*)(x))[3] = io_swap(in_key[0]);     \     break;                                      \     case 3:                                     \     ((u4byte*)(x))[0] = io_swap(in_key[5]);     \     ((u4byte*)(x))[1] = io_swap(in_key[4]);     \     ((u4byte*)(x))[2] = io_swap(in_key[3]);     \     ((u4byte*)(x))[3] = io_swap(in_key[2]);     \     ((u4byte*)(x))[4] = io_swap(in_key[1]);     \     ((u4byte*)(x))[5] = io_swap(in_key[0]);     \     break;                                      \     case 4:                                     \     ((u4byte*)(x))[0] = io_swap(in_key[7]);     \     ((u4byte*)(x))[1] = io_swap(in_key[6]);     \     ((u4byte*)(x))[2] = io_swap(in_key[5]);     \     ((u4byte*)(x))[3] = io_swap(in_key[4]);     \     ((u4byte*)(x))[4] = io_swap(in_key[3]);     \     ((u4byte*)(x))[5] = io_swap(in_key[2]);     \     ((u4byte*)(x))[6] = io_swap(in_key[1]);     \     ((u4byte*)(x))[7] = io_swap(in_key[0]);     \     }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|get_block
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((u4byte*)(x))[0] = io_swap(in_blk[0]);     \     ((u4byte*)(x))[1] = io_swap(in_blk[1]);     \     ((u4byte*)(x))[2] = io_swap(in_blk[2]);     \     ((u4byte*)(x))[3] = io_swap(in_blk[3])
-end_define
-
-begin_define
-define|#
-directive|define
-name|put_block
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|out_blk[0] = io_swap(((u4byte*)(x))[0]);    \     out_blk[1] = io_swap(((u4byte*)(x))[1]);    \     out_blk[2] = io_swap(((u4byte*)(x))[2]);    \     out_blk[3] = io_swap(((u4byte*)(x))[3])
-end_define
-
-begin_define
-define|#
-directive|define
-name|get_key
-parameter_list|(
-name|x
-parameter_list|,
-name|len
-parameter_list|)
-define|\
-value|((u4byte*)(x))[4] = ((u4byte*)(x))[5] =     \     ((u4byte*)(x))[6] = ((u4byte*)(x))[7] = 0;  \     switch((((len) + 63) / 64)) {               \     case 4:                                     \     ((u4byte*)(x))[6] = io_swap(in_key[6]);     \     ((u4byte*)(x))[7] = io_swap(in_key[7]);     \     case 3:                                     \     ((u4byte*)(x))[4] = io_swap(in_key[4]);     \     ((u4byte*)(x))[5] = io_swap(in_key[5]);     \     case 2:                                     \     ((u4byte*)(x))[0] = io_swap(in_key[0]);     \     ((u4byte*)(x))[1] = io_swap(in_key[1]);     \     ((u4byte*)(x))[2] = io_swap(in_key[2]);     \     ((u4byte*)(x))[3] = io_swap(in_key[3]);     \     }
 end_define
 
 begin_endif
@@ -461,7 +344,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|bo[n] =  ft_tab[0][byte(bi[n],0)] ^             \              ft_tab[1][byte(bi[(n + 1)& 3],1)] ^   \              ft_tab[2][byte(bi[(n + 2)& 3],2)] ^   \              ft_tab[3][byte(bi[(n + 3)& 3],3)] ^ *(k + n)
+value|bo[n] =  ft_tab[0][byte(bi[n],0)] ^             \ 	     ft_tab[1][byte(bi[(n + 1)& 3],1)] ^   \ 	     ft_tab[2][byte(bi[(n + 2)& 3],2)] ^   \ 	     ft_tab[3][byte(bi[(n + 3)& 3],3)] ^ *(k + n)
 end_define
 
 begin_define
@@ -478,7 +361,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|bo[n] =  it_tab[0][byte(bi[n],0)] ^             \              it_tab[1][byte(bi[(n + 3)& 3],1)] ^   \              it_tab[2][byte(bi[(n + 2)& 3],2)] ^   \              it_tab[3][byte(bi[(n + 1)& 3],3)] ^ *(k + n)
+value|bo[n] =  it_tab[0][byte(bi[n],0)] ^             \ 	     it_tab[1][byte(bi[(n + 3)& 3],1)] ^   \ 	     it_tab[2][byte(bi[(n + 2)& 3],2)] ^   \ 	     it_tab[3][byte(bi[(n + 1)& 3],3)] ^ *(k + n)
 end_define
 
 begin_ifdef
@@ -512,7 +395,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|bo[n] =  fl_tab[0][byte(bi[n],0)] ^             \              fl_tab[1][byte(bi[(n + 1)& 3],1)] ^   \              fl_tab[2][byte(bi[(n + 2)& 3],2)] ^   \              fl_tab[3][byte(bi[(n + 3)& 3],3)] ^ *(k + n)
+value|bo[n] =  fl_tab[0][byte(bi[n],0)] ^             \ 	     fl_tab[1][byte(bi[(n + 1)& 3],1)] ^   \ 	     fl_tab[2][byte(bi[(n + 2)& 3],2)] ^   \ 	     fl_tab[3][byte(bi[(n + 3)& 3],3)] ^ *(k + n)
 end_define
 
 begin_define
@@ -529,7 +412,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|bo[n] =  il_tab[0][byte(bi[n],0)] ^             \              il_tab[1][byte(bi[(n + 3)& 3],1)] ^   \              il_tab[2][byte(bi[(n + 2)& 3],2)] ^   \              il_tab[3][byte(bi[(n + 1)& 3],3)] ^ *(k + n)
+value|bo[n] =  il_tab[0][byte(bi[n],0)] ^             \ 	     il_tab[1][byte(bi[(n + 3)& 3],1)] ^   \ 	     il_tab[2][byte(bi[(n + 2)& 3],2)] ^   \ 	     il_tab[3][byte(bi[(n + 1)& 3],3)] ^ *(k + n)
 end_define
 
 begin_else
@@ -562,7 +445,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|bo[n] = (u4byte)sbx_tab[byte(bi[n],0)] ^                    \         rotl(((u4byte)sbx_tab[byte(bi[(n + 1)& 3],1)]),  8) ^  \         rotl(((u4byte)sbx_tab[byte(bi[(n + 2)& 3],2)]), 16) ^  \         rotl(((u4byte)sbx_tab[byte(bi[(n + 3)& 3],3)]), 24) ^ *(k + n)
+value|bo[n] = (u4byte)sbx_tab[byte(bi[n],0)] ^                    \ 	rotl(((u4byte)sbx_tab[byte(bi[(n + 1)& 3],1)]),  8) ^  \ 	rotl(((u4byte)sbx_tab[byte(bi[(n + 2)& 3],2)]), 16) ^  \ 	rotl(((u4byte)sbx_tab[byte(bi[(n + 3)& 3],3)]), 24) ^ *(k + n)
 end_define
 
 begin_define
@@ -579,7 +462,7 @@ parameter_list|,
 name|k
 parameter_list|)
 define|\
-value|bo[n] = (u4byte)isb_tab[byte(bi[n],0)] ^                    \         rotl(((u4byte)isb_tab[byte(bi[(n + 3)& 3],1)]),  8) ^  \         rotl(((u4byte)isb_tab[byte(bi[(n + 2)& 3],2)]), 16) ^  \         rotl(((u4byte)isb_tab[byte(bi[(n + 1)& 3],3)]), 24) ^ *(k + n)
+value|bo[n] = (u4byte)isb_tab[byte(bi[n],0)] ^                    \ 	rotl(((u4byte)isb_tab[byte(bi[(n + 3)& 3],1)]),  8) ^  \ 	rotl(((u4byte)isb_tab[byte(bi[(n + 2)& 3],2)]), 16) ^  \ 	rotl(((u4byte)isb_tab[byte(bi[(n + 1)& 3],3)]), 24) ^ *(k + n)
 end_define
 
 begin_endif
@@ -1249,7 +1132,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|u   = star_x(x);        \     v   = star_x(u);        \     w   = star_x(v);        \     t   = w ^ (x);          \    (y)  = u ^ v ^ w;        \    (y) ^= rotr(u ^ t,  8) ^ \           rotr(v ^ t, 16) ^ \           rotr(t,24)
+value|u   = star_x(x);        \     v   = star_x(u);        \     w   = star_x(v);        \     t   = w ^ (x);          \    (y)  = u ^ v ^ w;        \    (y) ^= rotr(u ^ t,  8) ^ \ 	  rotr(v ^ t, 16) ^ \ 	  rotr(t,24)
 end_define
 
 begin_comment
@@ -1370,40 +1253,52 @@ index|[
 literal|0
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 name|e_key
 index|[
 literal|1
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
 name|e_key
 index|[
 literal|2
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|2
 index|]
+argument_list|)
 expr_stmt|;
 name|e_key
 index|[
 literal|3
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|3
 index|]
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -1449,10 +1344,13 @@ index|[
 literal|4
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|4
 index|]
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
@@ -1461,10 +1359,13 @@ index|[
 literal|5
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|5
 index|]
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1493,30 +1394,39 @@ index|[
 literal|4
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|4
 index|]
+argument_list|)
 expr_stmt|;
 name|e_key
 index|[
 literal|5
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|5
 index|]
+argument_list|)
 expr_stmt|;
 name|e_key
 index|[
 literal|6
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|6
 index|]
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
@@ -1525,10 +1435,13 @@ index|[
 literal|7
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_key
 index|[
 literal|7
 index|]
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1723,10 +1636,13 @@ index|[
 literal|0
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|0
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -1738,10 +1654,13 @@ index|[
 literal|1
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|1
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -1753,10 +1672,13 @@ index|[
 literal|2
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|2
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -1768,10 +1690,13 @@ index|[
 literal|3
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|3
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -1931,40 +1856,52 @@ index|[
 literal|0
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 name|out_blk
 index|[
 literal|1
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
 name|out_blk
 index|[
 literal|2
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|2
 index|]
+argument_list|)
 expr_stmt|;
 name|out_blk
 index|[
 literal|3
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|3
 index|]
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2063,10 +2000,13 @@ index|[
 literal|0
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|0
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -2082,10 +2022,13 @@ index|[
 literal|1
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|1
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -2101,10 +2044,13 @@ index|[
 literal|2
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|2
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -2120,10 +2066,13 @@ index|[
 literal|3
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|in_blk
 index|[
 literal|3
 index|]
+argument_list|)
 operator|^
 name|e_key
 index|[
@@ -2293,40 +2242,52 @@ index|[
 literal|0
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 name|out_blk
 index|[
 literal|1
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
 name|out_blk
 index|[
 literal|2
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|2
 index|]
+argument_list|)
 expr_stmt|;
 name|out_blk
 index|[
 literal|3
 index|]
 operator|=
+name|io_swap
+argument_list|(
 name|b0
 index|[
 literal|3
 index|]
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: mpaux.c,v 1.14 2000/09/07 20:27:52 deraadt Exp $"
+literal|"$OpenBSD: mpaux.c,v 1.16 2001/02/08 19:30:52 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -41,19 +41,23 @@ directive|include
 file|<openssl/md5.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mpaux.h"
+end_include
+
 begin_function
 name|void
 name|compute_session_id
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 name|session_id
 index|[
 literal|16
 index|]
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|cookie
 index|[
 literal|8
@@ -68,8 +72,7 @@ modifier|*
 name|session_key_n
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|u_int
 name|host_key_bytes
 init|=
 name|BN_num_bytes
@@ -77,8 +80,7 @@ argument_list|(
 name|host_key_n
 argument_list|)
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|session_key_bytes
 init|=
 name|BN_num_bytes
@@ -86,16 +88,14 @@ argument_list|(
 name|session_key_n
 argument_list|)
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|bytes
 init|=
 name|host_key_bytes
 operator|+
 name|session_key_bytes
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|buf
 init|=

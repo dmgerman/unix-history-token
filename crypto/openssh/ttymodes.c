@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Encoding and decoding of terminal modes in a portable way.  * Much of the format is defined in ttymodes.h; it is included multiple times  * into this file with the appropriate macro definitions to generate the  * suitable code.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+end_comment
+
+begin_comment
+comment|/*  * SSH2 tty modes support by Kevin Steves.  * Copyright (c) 2001 Kevin Steves.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Encoding and decoding of terminal modes in a portable way.  * Much of the format is defined in ttymodes.h; it is included multiple times  * into this file with the appropriate macro definitions to generate the  * suitable code.  */
 end_comment
 
 begin_include
@@ -12,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ttymodes.c,v 1.8 2000/09/07 20:27:55 deraadt Exp $"
+literal|"$OpenBSD: ttymodes.c,v 1.13 2001/04/15 01:35:22 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -26,7 +34,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bufaux.h"
 end_include
 
 begin_define
@@ -36,27 +68,37 @@ name|TTY_OP_END
 value|0
 end_define
 
+begin_comment
+comment|/*  * uint32 (u_int) follows speed in SSH1 and SSH2  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TTY_OP_ISPEED
+name|TTY_OP_ISPEED_PROTO1
 value|192
 end_define
 
-begin_comment
-comment|/* int follows */
-end_comment
+begin_define
+define|#
+directive|define
+name|TTY_OP_OSPEED_PROTO1
+value|193
+end_define
 
 begin_define
 define|#
 directive|define
-name|TTY_OP_OSPEED
-value|193
+name|TTY_OP_ISPEED_PROTO2
+value|128
 end_define
 
-begin_comment
-comment|/* int follows */
-end_comment
+begin_define
+define|#
+directive|define
+name|TTY_OP_OSPEED_PROTO2
+value|129
+end_define
 
 begin_comment
 comment|/*  * Converts POSIX speed_t to a baud rate.  The values of the  * constants for speed_t are not themselves portable.  */
@@ -555,7 +597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Encodes terminal modes for the terminal referenced by fd  * in a portable manner, and appends the modes to a packet  * being constructed.  */
+comment|/*  * Encodes terminal modes for the terminal referenced by fd  * or tiop in a portable manner, and appends the modes to a packet  * being constructed.  */
 end_comment
 
 begin_function
@@ -564,6 +606,11 @@ name|tty_make_modes
 parameter_list|(
 name|int
 name|fd
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|tiop
 parameter_list|)
 block|{
 name|struct
@@ -573,6 +620,84 @@ decl_stmt|;
 name|int
 name|baud
 decl_stmt|;
+name|Buffer
+name|buf
+decl_stmt|;
+name|int
+name|tty_op_ospeed
+decl_stmt|,
+name|tty_op_ispeed
+decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|put_arg
+function_decl|)
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|buffer_init
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+name|tty_op_ospeed
+operator|=
+name|TTY_OP_OSPEED_PROTO2
+expr_stmt|;
+name|tty_op_ispeed
+operator|=
+name|TTY_OP_ISPEED_PROTO2
+expr_stmt|;
+name|put_arg
+operator|=
+name|buffer_put_int
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tty_op_ospeed
+operator|=
+name|TTY_OP_OSPEED_PROTO1
+expr_stmt|;
+name|tty_op_ispeed
+operator|=
+name|TTY_OP_ISPEED_PROTO1
+expr_stmt|;
+name|put_arg
+operator|=
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|Buffer
+operator|*
+argument_list|,
+name|u_int
+argument_list|)
+operator|)
+name|buffer_put_char
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tiop
+operator|==
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|tcgetattr
@@ -582,15 +707,11 @@ argument_list|,
 operator|&
 name|tio
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-name|packet_put_char
-argument_list|(
-name|TTY_OP_END
-argument_list|)
-expr_stmt|;
 name|log
 argument_list|(
 literal|"tcgetattr: %.100s"
@@ -601,8 +722,17 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
+block|}
+else|else
+name|tio
+operator|=
+operator|*
+name|tiop
+expr_stmt|;
 comment|/* Store input and output baud rates. */
 name|baud
 operator|=
@@ -615,13 +745,26 @@ name|tio
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|packet_put_char
+name|debug2
 argument_list|(
-name|TTY_OP_OSPEED
+literal|"tty_make_modes: ospeed %d"
+argument_list|,
+name|baud
 argument_list|)
 expr_stmt|;
-name|packet_put_int
+name|buffer_put_char
 argument_list|(
+operator|&
+name|buf
+argument_list|,
+name|tty_op_ospeed
+argument_list|)
+expr_stmt|;
+name|buffer_put_int
+argument_list|(
+operator|&
+name|buf
+argument_list|,
 name|baud
 argument_list|)
 expr_stmt|;
@@ -636,13 +779,26 @@ name|tio
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|packet_put_char
+name|debug2
 argument_list|(
-name|TTY_OP_ISPEED
+literal|"tty_make_modes: ispeed %d"
+argument_list|,
+name|baud
 argument_list|)
 expr_stmt|;
-name|packet_put_int
+name|buffer_put_char
 argument_list|(
+operator|&
+name|buf
+argument_list|,
+name|tty_op_ispeed
+argument_list|)
+expr_stmt|;
+name|buffer_put_int
+argument_list|(
+operator|&
+name|buf
+argument_list|,
 name|baud
 argument_list|)
 expr_stmt|;
@@ -656,7 +812,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|packet_put_char(OP); packet_put_char(tio.c_cc[NAME]);
+value|debug2("tty_make_modes: %d %d", OP, tio.c_cc[NAME]); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, tio.c_cc[NAME]);
 define|#
 directive|define
 name|TTYMODE
@@ -668,35 +824,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|packet_put_char(OP); packet_put_char((tio.FIELD& NAME) != 0);
-define|#
-directive|define
-name|SGTTYCHAR
-parameter_list|(
-name|NAME
-parameter_list|,
-name|OP
-parameter_list|)
-define|#
-directive|define
-name|SGTTYMODE
-parameter_list|(
-name|NAME
-parameter_list|,
-name|FIELD
-parameter_list|,
-name|OP
-parameter_list|)
-define|#
-directive|define
-name|SGTTYMODEN
-parameter_list|(
-name|NAME
-parameter_list|,
-name|FIELD
-parameter_list|,
-name|OP
-parameter_list|)
+value|debug2("tty_make_modes: %d %d", OP, ((tio.FIELD& NAME) != 0)); \ 	buffer_put_char(&buf, OP); \ 	put_arg(&buf, ((tio.FIELD& NAME) != 0));
 include|#
 directive|include
 file|"ttymodes.h"
@@ -706,21 +834,59 @@ name|TTYCHAR
 undef|#
 directive|undef
 name|TTYMODE
-undef|#
-directive|undef
-name|SGTTYCHAR
-undef|#
-directive|undef
-name|SGTTYMODE
-undef|#
-directive|undef
-name|SGTTYMODEN
+name|end
+label|:
 comment|/* Mark end of mode data. */
-name|packet_put_char
+name|buffer_put_char
 argument_list|(
+operator|&
+name|buf
+argument_list|,
 name|TTY_OP_END
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|compat20
+condition|)
+name|packet_put_string
+argument_list|(
+name|buffer_ptr
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+argument_list|,
+name|buffer_len
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|packet_put_raw
+argument_list|(
+name|buffer_ptr
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+argument_list|,
+name|buffer_len
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -759,6 +925,67 @@ name|failure
 init|=
 literal|0
 decl_stmt|;
+name|u_int
+function_decl|(
+modifier|*
+name|get_arg
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|arg
+decl_stmt|,
+name|arg_size
+decl_stmt|;
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+operator|*
+name|n_bytes_ptr
+operator|=
+name|packet_get_int
+argument_list|()
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"tty_parse_modes: SSH2 n_bytes %d"
+argument_list|,
+operator|*
+name|n_bytes_ptr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|n_bytes_ptr
+operator|==
+literal|0
+condition|)
+return|return;
+name|get_arg
+operator|=
+name|packet_get_int
+expr_stmt|;
+name|arg_size
+operator|=
+literal|4
+expr_stmt|;
+block|}
+else|else
+block|{
+name|get_arg
+operator|=
+name|packet_get_char
+expr_stmt|;
+name|arg_size
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Get old attributes for the terminal.  We will modify these 	 * flags. I am hoping that if there are any machine-specific 	 * modes, they will initially have reasonable values. 	 */
 if|if
 condition|(
@@ -769,14 +996,27 @@ argument_list|,
 operator|&
 name|tio
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
+block|{
+name|log
+argument_list|(
+literal|"tcgetattr: %.100s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|failure
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -803,8 +1043,12 @@ case|:
 goto|goto
 name|set
 goto|;
+comment|/* XXX: future conflict possible */
 case|case
-name|TTY_OP_ISPEED
+name|TTY_OP_ISPEED_PROTO1
+case|:
+case|case
+name|TTY_OP_ISPEED_PROTO2
 case|:
 name|n_bytes
 operator|+=
@@ -814,6 +1058,13 @@ name|baud
 operator|=
 name|packet_get_int
 argument_list|()
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"tty_parse_modes: ispeed %d"
+argument_list|,
+name|baud
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -832,8 +1083,9 @@ argument_list|(
 name|baud
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|error
 argument_list|(
@@ -843,8 +1095,12 @@ name|baud
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* XXX: future conflict possible */
 case|case
-name|TTY_OP_OSPEED
+name|TTY_OP_OSPEED_PROTO1
+case|:
+case|case
+name|TTY_OP_OSPEED_PROTO2
 case|:
 name|n_bytes
 operator|+=
@@ -854,6 +1110,13 @@ name|baud
 operator|=
 name|packet_get_int
 argument_list|()
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"tty_parse_modes: ospeed %d"
+argument_list|,
+name|baud
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -872,8 +1135,9 @@ argument_list|(
 name|baud
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|error
 argument_list|(
@@ -892,7 +1156,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP:					\ 	  n_bytes += 1;					\ 	  tio.c_cc[NAME] = packet_get_char();		\ 	  break;
+value|case OP: \ 	  n_bytes += arg_size; \ 	  tio.c_cc[NAME] = get_arg(); \ 	  debug2("tty_parse_modes: %d %d", OP, tio.c_cc[NAME]); \ 	  break;
 define|#
 directive|define
 name|TTYMODE
@@ -904,35 +1168,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|case OP:					\ 	  n_bytes += 1;					\ 	  if (packet_get_char())			\ 	    tio.FIELD |= NAME;				\ 	  else						\ 	    tio.FIELD&= ~NAME;				\ 	  break;
-define|#
-directive|define
-name|SGTTYCHAR
-parameter_list|(
-name|NAME
-parameter_list|,
-name|OP
-parameter_list|)
-define|#
-directive|define
-name|SGTTYMODE
-parameter_list|(
-name|NAME
-parameter_list|,
-name|FIELD
-parameter_list|,
-name|OP
-parameter_list|)
-define|#
-directive|define
-name|SGTTYMODEN
-parameter_list|(
-name|NAME
-parameter_list|,
-name|FIELD
-parameter_list|,
-name|OP
-parameter_list|)
+value|case OP: \ 	  n_bytes += arg_size; \ 	  if ((arg = get_arg())) \ 	    tio.FIELD |= NAME; \ 	  else \ 	    tio.FIELD&= ~NAME;	\ 	  debug2("tty_parse_modes: %d %d", OP, arg); \ 	  break;
 include|#
 directive|include
 file|"ttymodes.h"
@@ -942,15 +1178,6 @@ name|TTYCHAR
 undef|#
 directive|undef
 name|TTYMODE
-undef|#
-directive|undef
-name|SGTTYCHAR
-undef|#
-directive|undef
-name|SGTTYMODE
-undef|#
-directive|undef
-name|SGTTYMODEN
 default|default:
 name|debug
 argument_list|(
@@ -961,11 +1188,17 @@ argument_list|,
 name|opcode
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Opcodes 0 to 127 are defined to have 			 * a one-byte argument. 			 */
+if|if
+condition|(
+operator|!
+name|compat20
+condition|)
+block|{
+comment|/* 				 * SSH1: 				 * Opcodes 1 to 127 are defined to have 				 * a one-byte argument.   				 * Opcodes 128 to 159 are defined to have   				 * an integer argument.   				 */
 if|if
 condition|(
 name|opcode
-operator|>=
+operator|>
 literal|0
 operator|&&
 name|opcode
@@ -985,9 +1218,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-comment|/* 				 * Opcodes 128 to 159 are defined to have 				 * an integer argument. 				 */
+elseif|else
 if|if
 condition|(
 name|opcode
@@ -1011,8 +1242,9 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-block|}
-comment|/* 			 * It is a truly undefined opcode (160 to 255). 			 * We have no idea about its arguments.  So we 			 * must stop parsing.  Note that some data may be 			 * left in the packet; hopefully there is nothing 			 * more coming after the mode data. 			 */
+else|else
+block|{
+comment|/* 					 * It is a truly undefined opcode (160 to 255). 					 * We have no idea about its arguments.  So we 					 * must stop parsing.  Note that some data may be 					 * left in the packet; hopefully there is nothing 					 * more coming after the mode data. 					 */
 name|log
 argument_list|(
 literal|"parse_tty_modes: unknown opcode %d"
@@ -1034,6 +1266,48 @@ name|set
 goto|;
 block|}
 block|}
+else|else
+block|{
+comment|/* 				 * SSH2: 				 * Opcodes 1 to 159 are defined to have 				 * a uint32 argument. 				 * Opcodes 160 to 255 are undefined and 				 * cause parsing to stop. 				 */
+if|if
+condition|(
+name|opcode
+operator|>
+literal|0
+operator|&&
+name|opcode
+operator|<
+literal|160
+condition|)
+block|{
+name|n_bytes
+operator|+=
+literal|4
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|packet_get_int
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+name|log
+argument_list|(
+literal|"parse_tty_modes: unknown opcode %d"
+argument_list|,
+name|opcode
+argument_list|)
+expr_stmt|;
+goto|goto
+name|set
+goto|;
+block|}
+block|}
+block|}
+block|}
 name|set
 label|:
 if|if
@@ -1049,6 +1323,16 @@ name|n_bytes_ptr
 operator|=
 name|n_bytes
 expr_stmt|;
+name|log
+argument_list|(
+literal|"parse_tty_modes: n_bytes_ptr != n_bytes: %d %d"
+argument_list|,
+operator|*
+name|n_bytes_ptr
+argument_list|,
+name|n_bytes
+argument_list|)
+expr_stmt|;
 return|return;
 comment|/* Don't process bytes passed */
 block|}
@@ -1060,7 +1344,7 @@ operator|-
 literal|1
 condition|)
 return|return;
-comment|/* Packet parsed ok but tty stuff failed */
+comment|/* Packet parsed ok but tcgetattr() failed */
 comment|/* Set the new modes for the terminal. */
 if|if
 condition|(
@@ -1073,8 +1357,9 @@ argument_list|,
 operator|&
 name|tio
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|log
 argument_list|(

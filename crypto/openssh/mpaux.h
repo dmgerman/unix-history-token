@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: mpaux.h,v 1.8 2000/09/07 20:27:52 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: mpaux.h,v 1.9 2000/12/19 23:17:57 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -27,15 +27,13 @@ begin_function_decl
 name|void
 name|compute_session_id
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 name|session_id
 index|[
 literal|16
 index|]
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|cookie
 index|[
 literal|8

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: hostfile.c,v 1.20 2000/09/07 20:27:51 deraadt Exp $"
+literal|"$OpenBSD: hostfile.c,v 1.26 2001/04/12 19:15:24 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,24 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/dsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"key.h"
 end_include
 
@@ -57,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_comment
@@ -72,8 +60,7 @@ modifier|*
 modifier|*
 name|cpp
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 modifier|*
 name|bitsp
 parameter_list|,
@@ -82,10 +69,6 @@ modifier|*
 name|ret
 parameter_list|)
 block|{
-name|unsigned
-name|int
-name|bits
-decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -112,8 +95,8 @@ name|cp
 operator|++
 control|)
 empty_stmt|;
-name|bits
-operator|=
+if|if
+condition|(
 name|key_read
 argument_list|(
 name|ret
@@ -121,12 +104,8 @@ argument_list|,
 operator|&
 name|cp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bits
-operator|==
-literal|0
+operator|!=
+literal|1
 condition|)
 return|return
 literal|0
@@ -158,7 +137,10 @@ expr_stmt|;
 operator|*
 name|bitsp
 operator|=
-name|bits
+name|key_size
+argument_list|(
+name|ret
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -175,8 +157,7 @@ modifier|*
 modifier|*
 name|cpp
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 modifier|*
 name|bitsp
 parameter_list|,
@@ -195,7 +176,7 @@ name|k
 init|=
 name|key_new
 argument_list|(
-name|KEY_RSA
+name|KEY_RSA1
 argument_list|)
 decl_stmt|;
 name|int
@@ -278,7 +259,7 @@ name|key
 operator|->
 name|type
 operator|!=
-name|KEY_RSA
+name|KEY_RSA1
 operator|||
 name|key
 operator|->
@@ -378,6 +359,10 @@ parameter_list|,
 name|Key
 modifier|*
 name|found
+parameter_list|,
+name|int
+modifier|*
+name|numret
 parameter_list|)
 block|{
 name|FILE
@@ -395,11 +380,8 @@ name|linenum
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|kbits
-decl_stmt|,
-name|hostlen
 decl_stmt|;
 name|char
 modifier|*
@@ -411,6 +393,13 @@ decl_stmt|;
 name|HostStatus
 name|end_return
 decl_stmt|;
+name|debug3
+argument_list|(
+literal|"check_host_in_hostfile: filename %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|key
@@ -440,20 +429,12 @@ condition|)
 return|return
 name|HOST_NEW
 return|;
-comment|/* Cache the length of the host name. */
-name|hostlen
-operator|=
-name|strlen
-argument_list|(
-name|host
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Return value when the loop terminates.  This is set to 	 * HOST_CHANGED if we have seen a different key for the host and have 	 * not found the proper one. 	 */
 name|end_return
 operator|=
 name|HOST_NEW
 expr_stmt|;
-comment|/* Go trough the file. */
+comment|/* Go through the file. */
 while|while
 condition|(
 name|fgets
@@ -545,8 +526,7 @@ argument_list|,
 name|cp
 argument_list|,
 call|(
-name|unsigned
-name|int
+name|u_int
 call|)
 argument_list|(
 name|cp2
@@ -596,6 +576,17 @@ name|linenum
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|numret
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|numret
+operator|=
+name|linenum
+expr_stmt|;
 comment|/* Check if the current key is the same as the given key. */
 if|if
 condition|(
@@ -608,6 +599,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* Ok, they match. */
+name|debug3
+argument_list|(
+literal|"check_host_in_hostfile: match line %d"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|f

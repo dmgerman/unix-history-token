@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: packet.h,v 1.17 2000/09/07 20:27:52 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: packet.h,v 1.22 2001/04/14 16:33:20 stevesk Exp $"); */
 end_comment
 
 begin_ifndef
@@ -103,13 +103,11 @@ name|void
 name|packet_set_encryption_key
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|key
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|keylen
 parameter_list|,
 name|int
@@ -126,8 +124,7 @@ begin_function_decl
 name|void
 name|packet_set_protocol_flags
 parameter_list|(
-name|unsigned
-name|int
+name|u_int
 name|flags
 parameter_list|)
 function_decl|;
@@ -138,8 +135,7 @@ comment|/* Returns the remote protocol flags set earlier by the above function. 
 end_comment
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int
 name|packet_get_protocol_flags
 parameter_list|(
 name|void
@@ -171,9 +167,6 @@ name|packet_set_interactive
 parameter_list|(
 name|int
 name|interactive
-parameter_list|,
-name|int
-name|keepalives
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -227,8 +220,7 @@ begin_function_decl
 name|void
 name|packet_put_int
 parameter_list|(
-name|unsigned
-name|int
+name|u_int
 name|value
 parameter_list|)
 function_decl|;
@@ -273,8 +265,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;
@@ -301,8 +292,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;
@@ -382,8 +372,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;
@@ -394,8 +383,7 @@ comment|/* Returns a character (0-255) from the packet data. */
 end_comment
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int
 name|packet_get_char
 parameter_list|(
 name|void
@@ -408,8 +396,7 @@ comment|/* Returns an integer from the packet data. */
 end_comment
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int
 name|packet_get_int
 parameter_list|(
 name|void
@@ -472,8 +459,7 @@ name|char
 modifier|*
 name|packet_get_string
 parameter_list|(
-name|unsigned
-name|int
+name|u_int
 modifier|*
 name|length_ptr
 parameter_list|)
@@ -624,7 +610,7 @@ value|max_packet_size
 end_define
 
 begin_comment
-comment|/* Stores tty modes from the fd into current packet. */
+comment|/* Stores tty modes from the fd or tiop into current packet. */
 end_comment
 
 begin_function_decl
@@ -633,6 +619,11 @@ name|tty_make_modes
 parameter_list|(
 name|int
 name|fd
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|tiop
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -723,6 +714,34 @@ name|int
 name|packet_remaining
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* append an ignore message */
+end_comment
+
+begin_function_decl
+name|void
+name|packet_send_ignore
+parameter_list|(
+name|int
+name|nbytes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* add an ignore message and make sure size (current+ignore) = n*sumlen */
+end_comment
+
+begin_function_decl
+name|void
+name|packet_inject_ignore
+parameter_list|(
+name|int
+name|sumlen
 parameter_list|)
 function_decl|;
 end_function_decl

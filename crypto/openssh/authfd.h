@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: authfd.h,v 1.13 2000/10/09 21:51:00 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: authfd.h,v 1.16 2000/12/20 19:37:21 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -188,7 +188,9 @@ end_comment
 begin_function_decl
 name|int
 name|ssh_get_authentication_socket
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -214,7 +216,9 @@ begin_function_decl
 name|AuthenticationConnection
 modifier|*
 name|ssh_get_authentication_connection
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -229,6 +233,24 @@ parameter_list|(
 name|AuthenticationConnection
 modifier|*
 name|auth
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Returns the number authentication identity held by the agent.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ssh_get_num_identities
+parameter_list|(
+name|AuthenticationConnection
+modifier|*
+name|auth
+parameter_list|,
+name|int
+name|version
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -301,19 +323,16 @@ name|BIGNUM
 modifier|*
 name|challenge
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|session_id
 index|[
 literal|16
 index|]
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|response_type
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 name|response
 index|[
 literal|16
@@ -338,8 +357,7 @@ name|Key
 modifier|*
 name|key
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 modifier|*
 name|sigp
@@ -348,8 +366,7 @@ name|int
 modifier|*
 name|lenp
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|data
 parameter_list|,

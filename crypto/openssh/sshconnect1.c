@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.8 2000/10/12 09:59:19 markus Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.31 2001/04/17 08:14:01 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -26,19 +26,59 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/dsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/rsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/evp.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB4
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<krb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<kafs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"radix.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"ssh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh1.h"
 end_include
 
 begin_include
@@ -51,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"rsa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh.h"
 end_include
 
 begin_include
@@ -81,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"uidswap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_include
@@ -113,13 +153,30 @@ directive|include
 file|"authfile.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"readpass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
+end_include
+
 begin_comment
 comment|/* Session id for the current session. */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|u_char
 name|session_id
 index|[
 literal|16
@@ -128,8 +185,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|int
+name|u_int
 name|supported_authentications
 init|=
 literal|0
@@ -158,7 +214,9 @@ end_comment
 begin_function
 name|int
 name|try_agent_authentication
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|type
@@ -171,15 +229,13 @@ name|AuthenticationConnection
 modifier|*
 name|auth
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|response
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|int
@@ -213,13 +269,6 @@ name|challenge
 operator|=
 name|BN_new
 argument_list|()
-expr_stmt|;
-name|key
-operator|=
-name|key_new
-argument_list|(
-name|KEY_RSA
-argument_list|)
 expr_stmt|;
 comment|/* Loop through identities served by the agent. */
 for|for
@@ -451,6 +500,11 @@ operator|==
 name|SSH_SMSG_SUCCESS
 condition|)
 block|{
+name|ssh_close_authentication_connection
+argument_list|(
+name|auth
+argument_list|)
+expr_stmt|;
 name|BN_clear_free
 argument_list|(
 name|challenge
@@ -480,6 +534,11 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
+name|ssh_close_authentication_connection
+argument_list|(
+name|auth
+argument_list|)
+expr_stmt|;
 name|BN_clear_free
 argument_list|(
 name|challenge
@@ -513,8 +572,7 @@ modifier|*
 name|prv
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|buf
 index|[
 literal|32
@@ -534,6 +592,9 @@ decl_stmt|,
 name|len
 decl_stmt|;
 comment|/* Decrypt the challenge using the private key. */
+comment|/* XXX think about Bleichenbacher, too */
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|challenge
@@ -541,6 +602,13 @@ argument_list|,
 name|challenge
 argument_list|,
 name|prv
+argument_list|)
+operator|<=
+literal|0
+condition|)
+name|packet_disconnect
+argument_list|(
+literal|"respond_to_rsa_challenge: rsa_private_decrypt failed"
 argument_list|)
 expr_stmt|;
 comment|/* Compute the response. */
@@ -754,32 +822,26 @@ decl_stmt|,
 name|clen
 decl_stmt|;
 comment|/* Try to load identification for the authentication key. */
+comment|/* XXKEYLOAD */
 name|public
 operator|=
-name|key_new
+name|key_load_public_type
 argument_list|(
-name|KEY_RSA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|load_public_key
-argument_list|(
-name|authfile
+name|KEY_RSA1
 argument_list|,
-name|public
+name|authfile
 argument_list|,
 operator|&
 name|comment
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|public
+operator|==
+name|NULL
 condition|)
 block|{
-name|key_free
-argument_list|(
-name|public
-argument_list|)
-expr_stmt|;
 comment|/* Could not load it.  Fail. */
 return|return
 literal|0
@@ -892,27 +954,25 @@ argument_list|(
 literal|"Received RSA challenge from server."
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Load the private key.  Try first with empty passphrase; if it 	 * fails, ask for a passphrase. 	 */
 name|private
 operator|=
-name|key_new
+name|key_load_private_type
 argument_list|(
-name|KEY_RSA
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Load the private key.  Try first with empty passphrase; if it 	 * fails, ask for a passphrase. 	 */
-if|if
-condition|(
-operator|!
-name|load_private_key
-argument_list|(
+name|KEY_RSA1
+argument_list|,
 name|authfile
 argument_list|,
 literal|""
 argument_list|,
-name|private
-argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|private
+operator|==
+name|NULL
 condition|)
 block|{
 name|char
@@ -967,19 +1027,24 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Load the authentication file using the pasphrase. */
-if|if
-condition|(
-operator|!
-name|load_private_key
+name|private
+operator|=
+name|key_load_private_type
 argument_list|(
+name|KEY_RSA1
+argument_list|,
 name|authfile
 argument_list|,
 name|passphrase
 argument_list|,
-name|private
-argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|private
+operator|==
+name|NULL
 condition|)
 block|{
 name|memset
@@ -1046,6 +1111,11 @@ expr_stmt|;
 name|xfree
 argument_list|(
 name|comment
+argument_list|)
+expr_stmt|;
+name|BN_clear_free
+argument_list|(
+name|challenge
 argument_list|)
 expr_stmt|;
 return|return
@@ -1161,7 +1231,7 @@ name|char
 modifier|*
 name|local_user
 parameter_list|,
-name|RSA
+name|Key
 modifier|*
 name|host_key
 parameter_list|)
@@ -1205,6 +1275,8 @@ name|BN_num_bits
 argument_list|(
 name|host_key
 operator|->
+name|rsa
+operator|->
 name|n
 argument_list|)
 argument_list|)
@@ -1213,12 +1285,16 @@ name|packet_put_bignum
 argument_list|(
 name|host_key
 operator|->
+name|rsa
+operator|->
 name|e
 argument_list|)
 expr_stmt|;
 name|packet_put_bignum
 argument_list|(
 name|host_key
+operator|->
+name|rsa
 operator|->
 name|n
 argument_list|)
@@ -1303,6 +1379,8 @@ argument_list|(
 name|challenge
 argument_list|,
 name|host_key
+operator|->
+name|rsa
 argument_list|)
 expr_stmt|;
 comment|/* We no longer need the challenge. */
@@ -1369,7 +1447,9 @@ end_ifdef
 begin_function
 name|int
 name|try_kerberos_authentication
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|KTEXT_ST
 name|auth
@@ -1451,7 +1531,9 @@ operator|)
 name|krb_get_phost
 argument_list|(
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 argument_list|,
 name|INST_SZ
@@ -1466,7 +1548,9 @@ operator|)
 name|krb_realmofhost
 argument_list|(
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1480,7 +1564,9 @@ argument_list|(
 literal|"Kerberos V4: no realm for %s"
 argument_list|,
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1773,8 +1859,7 @@ operator|=
 name|packet_get_string
 argument_list|(
 operator|(
-name|unsigned
-name|int
+name|u_int
 operator|*
 operator|)
 operator|&
@@ -1960,7 +2045,9 @@ end_ifdef
 begin_function
 name|int
 name|send_kerberos_tgt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CREDENTIALS
 modifier|*
@@ -2130,8 +2217,7 @@ argument_list|(
 name|creds
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|buffer
@@ -2336,11 +2422,10 @@ name|length
 argument_list|,
 name|p
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
-name|int
-operator|)
+sizeof|sizeof
+argument_list|(
+name|u_int
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2356,11 +2441,10 @@ condition|)
 break|break;
 name|p
 operator|+=
-expr|sizeof
-operator|(
-name|unsigned
-name|int
-operator|)
+sizeof|sizeof
+argument_list|(
+name|u_int
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -2562,8 +2646,7 @@ operator|&
 name|creds
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|buffer
@@ -2651,8 +2734,10 @@ end_comment
 
 begin_function
 name|int
-name|try_skey_authentication
-parameter_list|()
+name|try_challenge_reponse_authentication
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|type
@@ -2662,9 +2747,14 @@ decl_stmt|;
 name|int
 name|payload_len
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|clen
+decl_stmt|;
+name|char
+name|prompt
+index|[
+literal|1024
+index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -2675,9 +2765,25 @@ name|response
 decl_stmt|;
 name|debug
 argument_list|(
-literal|"Doing skey authentication."
+literal|"Doing challenge reponse authentication."
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|options
+operator|.
+name|number_of_password_prompts
+condition|;
+name|i
+operator|++
+control|)
+block|{
 comment|/* request a challenge */
 name|packet_start
 argument_list|(
@@ -2712,7 +2818,7 @@ block|{
 name|packet_disconnect
 argument_list|(
 literal|"Protocol error: got %d in response "
-literal|"to skey-auth"
+literal|"to SSH_CMSG_AUTH_TIS"
 argument_list|,
 name|type
 argument_list|)
@@ -2727,7 +2833,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"No challenge for skey authentication."
+literal|"No challenge."
 argument_list|)
 expr_stmt|;
 return|return
@@ -2755,6 +2861,45 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|prompt
+argument_list|,
+sizeof|sizeof
+name|prompt
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|challenge
+argument_list|,
+name|strchr
+argument_list|(
+name|challenge
+argument_list|,
+literal|'\n'
+argument_list|)
+condition|?
+literal|""
+else|:
+literal|"\nResponse: "
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|challenge
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Permission denied, please try again."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|options
@@ -2769,74 +2914,42 @@ literal|"WARNING: Encryption is disabled! "
 literal|"Reponse will be transmitted in clear text."
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|challenge
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|challenge
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|options
-operator|.
-name|number_of_password_prompts
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|i
-operator|!=
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"Permission denied, please try again."
-argument_list|)
-expr_stmt|;
 name|response
 operator|=
 name|read_passphrase
 argument_list|(
-literal|"Response: "
+name|prompt
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|response
+argument_list|,
+literal|""
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|xfree
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|packet_start
 argument_list|(
 name|SSH_CMSG_AUTH_TIS_RESPONSE
 argument_list|)
 expr_stmt|;
-name|packet_put_string
+name|ssh_put_password
 argument_list|(
 name|response
-argument_list|,
-name|strlen
-argument_list|(
-name|response
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -2888,7 +3001,7 @@ condition|)
 name|packet_disconnect
 argument_list|(
 literal|"Protocol error: got %d in response "
-literal|"to skey-auth-reponse"
+literal|"to SSH_CMSG_AUTH_TIS_RESPONSE"
 argument_list|,
 name|type
 argument_list|)
@@ -2984,14 +3097,9 @@ argument_list|(
 name|SSH_CMSG_AUTH_PASSWORD
 argument_list|)
 expr_stmt|;
-name|packet_put_string
+name|ssh_put_password
 argument_list|(
 name|password
-argument_list|,
-name|strlen
-argument_list|(
-name|password
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -3101,26 +3209,22 @@ name|ssh_cipher_default
 init|=
 name|SSH_CIPHER_3DES
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|session_key
 index|[
 name|SSH_SESSION_KEY_LENGTH
 index|]
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|cookie
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|supported_ciphers
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|server_flags
 decl_stmt|,
 name|client_flags
@@ -3418,7 +3522,7 @@ name|k
 operator|.
 name|type
 operator|=
-name|KEY_RSA
+name|KEY_RSA1
 expr_stmt|;
 name|k
 operator|.
@@ -3740,33 +3844,6 @@ name|options
 operator|.
 name|cipher
 operator|==
-name|SSH_CIPHER_ILLEGAL
-condition|)
-block|{
-name|log
-argument_list|(
-literal|"No valid SSH1 cipher, using %.100s instead."
-argument_list|,
-name|cipher_name
-argument_list|(
-name|ssh_cipher_default
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|options
-operator|.
-name|cipher
-operator|=
-name|ssh_cipher_default
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|options
-operator|.
-name|cipher
-operator|==
 name|SSH_CIPHER_NOT_SET
 condition|)
 block|{
@@ -3785,6 +3862,49 @@ operator|<<
 name|ssh_cipher_default
 operator|)
 condition|)
+name|options
+operator|.
+name|cipher
+operator|=
+name|ssh_cipher_default
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|options
+operator|.
+name|cipher
+operator|==
+name|SSH_CIPHER_ILLEGAL
+operator|||
+operator|!
+operator|(
+name|cipher_mask_ssh1
+argument_list|(
+literal|1
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+name|options
+operator|.
+name|cipher
+operator|)
+operator|)
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"No valid SSH1 cipher, using %.100s instead."
+argument_list|,
+name|cipher_name
+argument_list|(
+name|ssh_cipher_default
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|options
 operator|.
 name|cipher
@@ -3944,7 +4064,7 @@ end_comment
 
 begin_function
 name|void
-name|ssh_userauth
+name|ssh_userauth1
 parameter_list|(
 specifier|const
 name|char
@@ -3960,12 +4080,13 @@ name|char
 modifier|*
 name|host
 parameter_list|,
-name|int
-name|host_key_valid
-parameter_list|,
-name|RSA
+name|Key
 modifier|*
-name|own_host_key
+modifier|*
+name|keys
+parameter_list|,
+name|int
+name|nkeys
 parameter_list|)
 block|{
 name|int
@@ -3984,7 +4105,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"ssh_userauth: server supports no auth methods"
+literal|"ssh_userauth1: server supports no auth methods"
 argument_list|)
 expr_stmt|;
 comment|/* Send the name of the user to log in as on the server. */
@@ -4276,20 +4397,52 @@ operator|&&
 name|options
 operator|.
 name|rhosts_rsa_authentication
-operator|&&
-name|host_key_valid
 condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nkeys
+condition|;
+name|i
+operator|++
+control|)
 block|{
 if|if
 condition|(
+name|keys
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+operator|&&
+name|keys
+index|[
+name|i
+index|]
+operator|->
+name|type
+operator|==
+name|KEY_RSA1
+operator|&&
 name|try_rhosts_rsa_authentication
 argument_list|(
 name|local_user
 argument_list|,
-name|own_host_key
+name|keys
+index|[
+name|i
+index|]
 argument_list|)
 condition|)
 return|return;
+block|}
 block|}
 comment|/* Try RSA authentication if the server supports it. */
 if|if
@@ -4334,6 +4487,26 @@ operator|++
 control|)
 if|if
 condition|(
+name|options
+operator|.
+name|identity_keys
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+operator|&&
+name|options
+operator|.
+name|identity_keys
+index|[
+name|i
+index|]
+operator|->
+name|type
+operator|==
+name|KEY_RSA1
+operator|&&
 name|try_rsa_authentication
 argument_list|(
 name|options
@@ -4346,7 +4519,7 @@ argument_list|)
 condition|)
 return|return;
 block|}
-comment|/* Try skey authentication if the server supports it. */
+comment|/* Try challenge response authentication if the server supports it. */
 if|if
 condition|(
 operator|(
@@ -4361,7 +4534,7 @@ operator|)
 operator|&&
 name|options
 operator|.
-name|skey_authentication
+name|challenge_reponse_authentication
 operator|&&
 operator|!
 name|options
@@ -4371,7 +4544,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|try_skey_authentication
+name|try_challenge_reponse_authentication
 argument_list|()
 condition|)
 return|return;
@@ -4414,7 +4587,7 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"%.30s@%.40s's password: "
+literal|"%.30s@%.128s's password: "
 argument_list|,
 name|server_user
 argument_list|,
