@@ -1214,9 +1214,10 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ip_init"
+literal|"ip_init: PF_INET not found"
 argument_list|)
 expr_stmt|;
+comment|/* Initialize the entire ip_protox[] array to IPPROTO_RAW. */
 for|for
 control|(
 name|i
@@ -1239,6 +1240,7 @@ name|pr
 operator|-
 name|inetsw
 expr_stmt|;
+comment|/* 	 * Cycle through IP protocols and put them into the appropriate place 	 * in ip_protox[]. 	 */
 for|for
 control|(
 name|pr
@@ -1276,6 +1278,20 @@ name|pr_protocol
 operator|!=
 name|IPPROTO_RAW
 condition|)
+block|{
+comment|/* Be careful to only index valid IP protocols. */
+if|if
+condition|(
+name|pr
+operator|->
+name|pr_protocol
+operator|&&
+name|pr
+operator|->
+name|pr_protocol
+operator|<
+name|IPPROTO_MAX
+condition|)
 name|ip_protox
 index|[
 name|pr
@@ -1287,6 +1303,7 @@ name|pr
 operator|-
 name|inetsw
 expr_stmt|;
+block|}
 comment|/* Initialize packet filter hooks. */
 name|inet_pfil_hook
 operator|.
@@ -1324,6 +1341,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* Initialize IP reassembly queue. */
 name|IPQ_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -1359,6 +1377,7 @@ name|maxfragsperpacket
 operator|=
 literal|16
 expr_stmt|;
+comment|/* Initialize various other remaining things. */
 name|ip_id
 operator|=
 name|time_second
