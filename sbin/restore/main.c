@@ -200,6 +200,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|pipecmd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|command
 init|=
@@ -361,22 +369,9 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|inputdev
 operator|=
-name|getenv
-argument_list|(
-literal|"TAPE"
-argument_list|)
-operator|)
-operator|==
 name|NULL
-condition|)
-name|inputdev
-operator|=
-name|_PATH_DEFTAPE
 expr_stmt|;
 name|obsolete
 argument_list|(
@@ -398,7 +393,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:df:himNRrs:tuvxy"
+literal|"b:df:himNP:Rrs:tuvxy"
 argument_list|)
 operator|)
 operator|!=
@@ -469,9 +464,46 @@ break|break;
 case|case
 literal|'f'
 case|:
+if|if
+condition|(
+name|pipecmd
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-P and -f options are mutually exclusive"
+argument_list|)
+expr_stmt|;
 name|inputdev
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+operator|!
+name|pipecmd
+operator|&&
+name|inputdev
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-P and -f options are mutually exclusive"
+argument_list|)
+expr_stmt|;
+name|inputdev
+operator|=
+name|optarg
+expr_stmt|;
+name|pipecmd
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -676,9 +708,32 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inputdev
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|inputdev
+operator|=
+name|getenv
+argument_list|(
+literal|"TAPE"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|inputdev
+operator|=
+name|_PATH_DEFTAPE
+expr_stmt|;
 name|setinput
 argument_list|(
 name|inputdev
+argument_list|,
+name|pipecmd
 argument_list|)
 expr_stmt|;
 if|if
@@ -1090,6 +1145,22 @@ name|void
 name|usage
 parameter_list|()
 block|{
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|common
+init|=
+literal|"[-b blocksize] [-P pipecmd | -f file] [-s fileno]"
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|fileell
+init|=
+literal|"[file ...]"
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1097,17 +1168,32 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
+literal|"usage:\t%s %s\n\t%s %s\n\t%s %s\n"
+literal|"\t%s %s %s\n\t%s %s %s\n"
 argument_list|,
-literal|"restore -i [-cdhmNuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -i [-cdhmNuvy]"
 argument_list|,
-literal|"restore -r [-cdNuvy] [-b blocksize] [-f file] [-s fileno]"
+name|common
 argument_list|,
-literal|"restore -R [-cdNuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -r [-cdNuvy]"
 argument_list|,
-literal|"restore -x [-cdhmNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+name|common
 argument_list|,
-literal|"restore -t [-cdhNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -R [-cdNuvy]"
+argument_list|,
+name|common
+argument_list|,
+literal|"restore -x [-cdhmNuvy]"
+argument_list|,
+name|common
+argument_list|,
+name|fileell
+argument_list|,
+literal|"restore -t [-cdhNuvy]"
+argument_list|,
+name|common
+argument_list|,
+name|fileell
 argument_list|)
 expr_stmt|;
 name|done

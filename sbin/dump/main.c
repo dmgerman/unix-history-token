@@ -507,26 +507,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Default later, based on 'c' option for cart tapes */
-if|if
-condition|(
-operator|(
-name|tape
-operator|=
-name|getenv
-argument_list|(
-literal|"TAPE"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|tape
-operator|=
-name|_PATH_DEFTAPE
-expr_stmt|;
 name|dumpdates
 operator|=
 name|_PATH_DUMPDATES
+expr_stmt|;
+name|popenout
+operator|=
+name|NULL
+expr_stmt|;
+name|tape
+operator|=
+name|NULL
 expr_stmt|;
 name|temp
 operator|=
@@ -584,7 +575,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789aB:b:C:cD:d:f:h:LnSs:T:uWw"
+literal|"0123456789aB:b:C:cD:d:f:h:LnP:Ss:T:uWw"
 argument_list|)
 operator|)
 operator|!=
@@ -744,6 +735,20 @@ case|case
 literal|'f'
 case|:
 comment|/* output file */
+if|if
+condition|(
+name|popenout
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|X_STARTUP
+argument_list|,
+literal|"You cannot use the P and f "
+literal|"flags together.\n"
+argument_list|)
+expr_stmt|;
 name|tape
 operator|=
 name|optarg
@@ -779,6 +784,28 @@ comment|/* notify operators */
 name|notify
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+name|tape
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|X_STARTUP
+argument_list|,
+literal|"You cannot use the P and f "
+literal|"flags together.\n"
+argument_list|)
+expr_stmt|;
+name|popenout
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1006,6 +1033,38 @@ name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|popenout
+condition|)
+block|{
+name|tape
+operator|=
+literal|"child pipeline process"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tape
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|tape
+operator|=
+name|getenv
+argument_list|(
+literal|"TAPE"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|tape
+operator|=
+name|_PATH_DEFTAPE
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1476,10 +1535,9 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"WARNING: %s%s\n"
+literal|"WARNING: %s\n"
 argument_list|,
 literal|"should use -L when dumping live read-write "
-argument_list|,
 literal|"filesystems!"
 argument_list|)
 expr_stmt|;
@@ -2871,8 +2929,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: dump [-0123456789acLnSu] [-B records] [-b blocksize] [-C cachesize]\n"
-literal|"            [-D dumpdates] [-d density] [-f file] [-h level] [-s feet]\n"
-literal|"            [-T date] filesystem\n"
+literal|"            [-D dumpdates] [-d density] [-h level] [-s feet] [-T date]\n"
+literal|"            [-f file | -P pipecommand] filesystem\n"
 literal|"       dump -W | -w\n"
 argument_list|)
 expr_stmt|;

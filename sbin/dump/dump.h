@@ -122,6 +122,17 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
+name|popenout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* popen(3) per-"tape" command */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
 name|dumpdates
 decl_stmt|;
 end_decl_stmt
