@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttymsg.c	5.2 (Berkeley) %G%"
+literal|"@(#)ttymsg.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ file|<paths.h>
 end_include
 
 begin_comment
-comment|/*  * display the contents of a uio structure on a terminal.  Used by  * wall(1) and syslogd(8).  Forks and finishes in child if write  * would block, waiting at most five minutes.  */
+comment|/*  * display the contents of a uio structure on a terminal.  Used by  * wall(1) and syslogd(8).  Forks and finishes in child if write  * would block, waiting at most five minutes.  * Returns pointer to error string on error;  * string is not newline-terminated.  */
 end_comment
 
 begin_function
@@ -193,7 +193,7 @@ name|EBUSY
 operator|&&
 name|errno
 operator|!=
-name|EPERM
+name|EACCES
 condition|)
 block|{
 operator|(
@@ -203,7 +203,7 @@ name|sprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"open %s: %s\n"
+literal|"open %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -380,7 +380,7 @@ name|sprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"writing %s: %s\n"
+literal|"writing %s: %s"
 argument_list|,
 name|device
 argument_list|,
