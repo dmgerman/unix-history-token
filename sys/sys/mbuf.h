@@ -1152,18 +1152,6 @@ define|\
 value|m_extadd((m), (caddr_t)(buf), (size), (free), (args), (flags), (type))
 end_define
 
-begin_define
-define|#
-directive|define
-name|MFREE
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-value|do {						\ 	(n) = m_free((m));						\ 	(m) = NULL;							\ } while (0)
-end_define
-
 begin_comment
 comment|/*  * MEXTFREE(m): disassociate (and possibly free) an external object from (m).  *   * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
 end_comment

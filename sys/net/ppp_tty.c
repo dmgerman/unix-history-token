@@ -2848,11 +2848,6 @@ name|done
 decl_stmt|,
 name|idle
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m2
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -3401,16 +3396,12 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Finished with this mbuf; free it and move on. */
-name|MFREE
-argument_list|(
-name|m
-argument_list|,
-name|m2
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
-name|m2
+name|m_free
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
