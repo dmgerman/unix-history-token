@@ -498,21 +498,8 @@ decl_stmt|;
 name|int
 name|k_locklevel
 decl_stmt|;
-name|sigset_t
-name|k_sigmask
-decl_stmt|;
-name|struct
-name|sigstatus
-name|k_sigq
-index|[
-name|_SIG_MAXSIG
-index|]
-decl_stmt|;
 name|stack_t
 name|k_stack
-decl_stmt|;
-name|int
-name|k_check_sigq
 decl_stmt|;
 name|int
 name|k_flags
@@ -527,9 +514,6 @@ directive|define
 name|KF_INITIALIZED
 value|0x0002
 comment|/* initialized on 1st upcall */
-name|int
-name|k_waiting
-decl_stmt|;
 name|int
 name|k_idle
 decl_stmt|;
@@ -779,36 +763,6 @@ parameter_list|(
 name|kse
 parameter_list|)
 value|TAILQ_FIRST(&(kse)->k_schedq->sq_waitq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSE_SET_WAIT
-parameter_list|(
-name|kse
-parameter_list|)
-value|atomic_store_rel_int(&(kse)->k_waiting, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSE_CLEAR_WAIT
-parameter_list|(
-name|kse
-parameter_list|)
-value|atomic_store_rel_int(&(kse)->k_waiting, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSE_WAITING
-parameter_list|(
-name|kse
-parameter_list|)
-value|(kse)->k_waiting != 0
 end_define
 
 begin_define
@@ -1810,10 +1764,6 @@ decl_stmt|;
 comment|/* 	 * Set to TRUE if a blocking operation was 	 * interrupted by a signal: 	 */
 name|int
 name|interrupted
-decl_stmt|;
-comment|/* Signal number when in state PS_SIGWAIT: */
-name|int
-name|signo
 decl_stmt|;
 comment|/* 	 * Set to non-zero when this thread has entered a critical 	 * region.  We allow for recursive entries into critical regions. 	 */
 name|int

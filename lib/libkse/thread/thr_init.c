@@ -1014,9 +1014,6 @@ argument_list|(
 literal|"Can't allocate initial kseg."
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSTEM_SCOPE_ONLY
 name|_kse_initial
 operator|->
 name|k_kseg
@@ -1025,8 +1022,6 @@ name|kg_flags
 operator||=
 name|KGF_SINGLE_THREAD
 expr_stmt|;
-endif|#
-directive|endif
 name|_kse_initial
 operator|->
 name|k_schedq
@@ -1187,6 +1182,19 @@ name|k_flags
 operator||=
 name|KF_INITIALIZED
 expr_stmt|;
+name|_thr_signal_init
+argument_list|()
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+operator|&
+name|_thr_initial
+operator|->
+name|tcb
+operator|->
+name|tcb_tmbx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1215,9 +1223,6 @@ name|attr
 operator|=
 name|_pthread_attr_default
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSTEM_SCOPE_ONLY
 name|thread
 operator|->
 name|attr
@@ -1226,8 +1231,6 @@ name|flags
 operator||=
 name|PTHREAD_SCOPE_SYSTEM
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set up the thread stack. 	 * 	 * Create a red zone below the main stack.  All other stacks 	 * are constrained to a maximum size by the parameters 	 * passed to mmap(), but this stack is only limited by 	 * resource limits, so this stack needs an explicitly mapped 	 * red zone to protect the thread stack that is just beyond. 	 */
 if|if
 condition|(

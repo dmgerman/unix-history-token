@@ -96,17 +96,6 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|_kse_isthreaded
-argument_list|()
-condition|)
-name|_kse_setthreaded
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|curthread
 operator|->
 name|attr

@@ -125,11 +125,6 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
-name|_kse_isthreaded
-argument_list|()
-operator|||
-operator|(
 name|curthread
 operator|->
 name|attr
@@ -137,7 +132,6 @@ operator|.
 name|flags
 operator|&
 name|PTHREAD_SCOPE_SYSTEM
-operator|)
 condition|)
 return|return
 operator|(
