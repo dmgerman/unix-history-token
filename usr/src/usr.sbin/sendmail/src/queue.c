@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -1832,6 +1832,11 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* do the delivery */
+if|if
+condition|(
+operator|!
+name|FatalErrors
+condition|)
 name|sendall
 argument_list|(
 name|CurEnv
