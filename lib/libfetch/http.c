@@ -454,8 +454,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"_http_fillbuf(): "
-literal|"end of last chunk\n"
+literal|"%s(): end of last chunk\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 else|else
@@ -463,8 +464,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"_http_fillbuf(): "
-literal|"new chunk: %lu (%lu)\n"
+literal|"%s(): new chunk: %lu (%lu)\n"
+argument_list|,
+name|__func__
 argument_list|,
 operator|(
 name|unsigned
