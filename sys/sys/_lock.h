@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_LOCK_TYPES_H_
+name|_SYS__LOCK_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_LOCK_TYPES_H_
+name|_SYS__LOCK_H_
 end_define
 
 begin_struct
@@ -61,7 +61,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_SYS_LOCK_TYPES_H_ */
+comment|/* !_SYS__LOCK_H_ */
 end_comment
 
 end_unit
