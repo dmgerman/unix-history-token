@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dbwrite.c,v 1.9 1996/02/04 04:08:11 wpaul Exp wpaul $  *  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dbwrite.c,v 1.10 1996/06/03 03:11:25 wpaul Exp $  *  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_dbwrite.c,v 1.9 1996/02/04 04:08:11 wpaul Exp wpaul $"
+literal|"$Id: yp_dbwrite.c,v 1.10 1996/06/03 03:11:25 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,8 @@ parameter_list|(
 name|domain
 parameter_list|,
 name|map
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|const
 name|char
@@ -126,6 +128,10 @@ specifier|const
 name|char
 modifier|*
 name|map
+decl_stmt|;
+specifier|const
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|DB
@@ -169,6 +175,10 @@ name|NULL
 operator|)
 return|;
 block|}
+define|#
+directive|define
+name|FLAGS
+value|O_RDWR|O_EXLOCK|O_EXCL|O_CREAT
 name|snprintf
 argument_list|(
 name|buf
@@ -193,13 +203,11 @@ name|dbopen
 argument_list|(
 name|buf
 argument_list|,
-name|O_RDWR
-operator||
-name|O_EXLOCK
-operator||
-name|O_EXCL
-operator||
-name|O_CREAT
+name|flags
+condition|?
+name|flags
+else|:
+name|FLAGS
 argument_list|,
 name|PERM_SECURE
 argument_list|,
@@ -262,6 +270,8 @@ parameter_list|,
 name|key
 parameter_list|,
 name|data
+parameter_list|,
+name|allow_overwrite
 parameter_list|)
 name|DB
 modifier|*
@@ -274,6 +284,9 @@ decl_stmt|;
 name|DBT
 modifier|*
 name|data
+decl_stmt|;
+name|int
+name|allow_overwrite
 decl_stmt|;
 block|{
 name|int
@@ -296,6 +309,10 @@ name|key
 argument_list|,
 name|data
 argument_list|,
+name|allow_overwrite
+condition|?
+literal|0
+else|:
 name|R_NOOVERWRITE
 argument_list|)
 operator|)

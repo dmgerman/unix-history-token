@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ypxfr_main.c,v 1.15 1996/01/10 17:41:55 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ypxfr_main.c,v 1.17 1996/06/03 03:11:39 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpcsvc/ypxfrd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ypxfr_extern.h"
 end_include
 
@@ -119,7 +125,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypxfr_main.c,v 1.15 1996/01/10 17:41:55 wpaul Exp $"
+literal|"$Id: ypxfr_main.c,v 1.17 1996/06/03 03:11:39 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,7 +335,7 @@ literal|"%s"
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
-literal|"failed to establish callback handle"
+literal|"failed to \ establish callback handle"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -543,6 +549,8 @@ name|dbkey
 argument_list|,
 operator|&
 name|dbval
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|YP_TRUE
@@ -1475,6 +1483,39 @@ argument_list|,
 name|tempmap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getrpcport
+argument_list|(
+name|ypxfr_master
+argument_list|,
+name|YPXFRD_FREEBSD_PROG
+argument_list|,
+name|YPXFRD_FREEBSD_VERS
+argument_list|,
+name|IPPROTO_TCP
+argument_list|)
+condition|)
+block|{
+comment|/* Try to send using ypxfrd. If it fails, use old method. */
+if|if
+condition|(
+operator|!
+name|ypxfrd_get_map
+argument_list|(
+name|ypxfr_master
+argument_list|,
+name|ypxfr_mapname
+argument_list|,
+name|ypxfr_source_domain
+argument_list|,
+name|ypxfr_temp_map
+argument_list|)
+condition|)
+goto|goto
+name|leave
+goto|;
+block|}
 comment|/* Open the temporary map read/write. */
 if|if
 condition|(
@@ -1486,6 +1527,8 @@ argument_list|(
 name|ypxfr_dest_domain
 argument_list|,
 name|tempmap
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -1546,6 +1589,8 @@ name|key
 argument_list|,
 operator|&
 name|data
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|YP_TRUE
@@ -1608,6 +1653,8 @@ name|key
 argument_list|,
 operator|&
 name|data
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|YP_TRUE
@@ -1670,6 +1717,8 @@ name|key
 argument_list|,
 operator|&
 name|data
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|YP_TRUE
@@ -1749,6 +1798,8 @@ name|key
 argument_list|,
 operator|&
 name|data
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|YP_TRUE
@@ -1830,6 +1881,8 @@ name|key
 argument_list|,
 operator|&
 name|data
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|YP_TRUE
@@ -1895,6 +1948,26 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/*<- yes, it seems this is necessary. */
+name|leave
+label|:
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s/%s/%s"
+argument_list|,
+name|yp_dir
+argument_list|,
+name|ypxfr_dest_domain
+argument_list|,
+name|ypxfr_mapname
+argument_list|)
+expr_stmt|;
 comment|/* Peek at the order number again and check for skew. */
 if|if
 condition|(
@@ -1957,7 +2030,7 @@ operator|&
 name|ypxfr_temp_map
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Send a YPPROC_CLEAR to the local ypserv. 	 * The FreeBSD ypserv doesn't really need this, but we send it 	 * here anyway for the sake of consistency. 	 */
+comment|/* 	 * Send a YPPROC_CLEAR to the local ypserv. 	 */
 if|if
 condition|(
 name|ypxfr_clear
