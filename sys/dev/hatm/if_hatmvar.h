@@ -873,22 +873,39 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This structure describes all information for a VCC open on the card.  * The array of these structures is indexed by the compressed connection ID  * (CID).  */
+comment|/*  * This structure describes all information for a VCC open on the card.  * The array of these structures is indexed by the compressed connection ID  * (CID). This structure must begin with the atmio_vcc.  */
 end_comment
 
 begin_struct
 struct|struct
 name|hevcc
 block|{
-name|u_int
-name|vflags
+name|struct
+name|atmio_vcc
+name|param
 decl_stmt|;
-comment|/* private flags */
+comment|/* traffic parameters */
 name|void
 modifier|*
 name|rxhand
 decl_stmt|;
 comment|/* NATM protocol block */
+name|u_int
+name|vflags
+decl_stmt|;
+comment|/* private flags */
+name|uint32_t
+name|ipackets
+decl_stmt|;
+name|uint32_t
+name|opackets
+decl_stmt|;
+name|uint32_t
+name|ibytes
+decl_stmt|;
+name|uint32_t
+name|obytes
+decl_stmt|;
 name|u_int
 name|rc
 decl_stmt|;
@@ -905,24 +922,6 @@ modifier|*
 name|last
 decl_stmt|;
 comment|/* last mbuf in chain */
-comment|/* from the OPEN_VCC ioctl */
-name|struct
-name|atmio_vcc
-name|param
-decl_stmt|;
-comment|/* traffic parameters */
-name|uint32_t
-name|ibytes
-decl_stmt|;
-name|uint32_t
-name|ipackets
-decl_stmt|;
-name|uint32_t
-name|obytes
-decl_stmt|;
-name|uint32_t
-name|opackets
-decl_stmt|;
 name|u_int
 name|ntpds
 decl_stmt|;
