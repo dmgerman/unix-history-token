@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -20,18 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)putchar.c	5.2 (Berkeley) %G%"
+literal|"@(#)putchar.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
 
 begin_comment
-comment|/*  * A subroutine version of the macro putchar  */
+comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_include
@@ -46,25 +49,42 @@ directive|undef
 name|putchar
 end_undef
 
-begin_expr_stmt
+begin_comment
+comment|/*  * A subroutine version of the macro putchar  */
+end_comment
+
+begin_macro
 name|putchar
 argument_list|(
-name|c
+argument|c
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-name|putc
+specifier|register
+name|FILE
+modifier|*
+name|so
+init|=
+name|stdout
+decl_stmt|;
+return|return
+operator|(
+name|__sputc
 argument_list|(
 name|c
 argument_list|,
-name|stdout
+name|so
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
