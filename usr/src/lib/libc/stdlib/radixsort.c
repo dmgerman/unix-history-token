@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.14 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
+specifier|inline
 name|void
 name|simplesort
 name|__P
@@ -1424,6 +1425,7 @@ end_block
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|simplesort
 parameter_list|(
