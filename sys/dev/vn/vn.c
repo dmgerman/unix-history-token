@@ -2721,12 +2721,6 @@ name|sc_size
 operator|=
 literal|0
 expr_stmt|;
-name|IFOPT
-argument_list|(
-argument|vn
-argument_list|,
-argument|VN_LABELS
-argument_list|)
 if|if
 condition|(
 name|vn
