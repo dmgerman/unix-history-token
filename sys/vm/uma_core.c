@@ -6886,7 +6886,6 @@ expr_stmt|;
 comment|/* We can handle one more allocation */
 name|wakeup_one
 argument_list|(
-operator|&
 name|zone
 argument_list|)
 expr_stmt|;
