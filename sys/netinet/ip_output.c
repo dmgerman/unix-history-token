@@ -1890,6 +1890,8 @@ literal|0
 condition|)
 block|{
 comment|/*                      * pass the pkt to dummynet. Need to include                      * pipe number, m, ifp, ro, dst because these are                      * not recomputed in the next pass.                      * All other parameters have been already used and                      * so they are not needed anymore.                       * XXX note: if the ifp or ro entry are deleted                      * while a pkt is in dummynet, we are in trouble!                      */
+name|error
+operator|=
 name|dummynet_io
 argument_list|(
 name|off
