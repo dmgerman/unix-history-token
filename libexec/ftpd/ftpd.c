@@ -237,6 +237,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1110,7 +1116,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|if (logging> 1) { \ 		if (cnt == (off_t)-1) \ 		    syslog(LOG_INFO,"%s %s%s", cmd, \ 			*(file) == '/' ? "" : curdir(), file); \ 		else \ 		    syslog(LOG_INFO, "%s %s%s = %qd bytes", \ 			cmd, (*(file) == '/') ? "" : curdir(), file, cnt); \ 	}
+value|if (logging> 1) { \ 		if (cnt == (off_t)-1) \ 		    syslog(LOG_INFO,"%s %s%s", cmd, \ 			*(file) == '/' ? "" : curdir(), file); \ 		else \ 		    syslog(LOG_INFO, "%s %s%s = %jd bytes", \ 			cmd, (*(file) == '/') ? "" : curdir(), file, \ 			(intmax_t)cnt); \ 	}
 end_define
 
 begin_ifdef
@@ -9128,8 +9134,11 @@ argument_list|(
 name|sizebuf
 argument_list|)
 argument_list|,
-literal|" (%qd bytes)"
+literal|" (%jd bytes)"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -12772,10 +12781,16 @@ name|reply
 argument_list|(
 literal|213
 argument_list|,
-literal|"Status: %qd of %qd bytes transferred"
+literal|"Status: %jd of %jd bytes transferred"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|byte_count
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|file_size
 argument_list|)
 expr_stmt|;
@@ -12784,8 +12799,11 @@ name|reply
 argument_list|(
 literal|213
 argument_list|,
-literal|"Status: %qd bytes transferred"
+literal|"Status: %jd bytes transferred"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|byte_count
 argument_list|)
 expr_stmt|;
