@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass3.c,v 1.5 1994/11/26 08:57:42 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass3.c,v 1.6 1994/11/27 16:01:29 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -1039,12 +1039,24 @@ block|{
 if|if
 condition|(
 literal|0
-operator|==
+operator|!=
 name|unlink
 argument_list|(
 name|name
 argument_list|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"<%s> unlink failed\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|WRONG
+block|}
 continue|continue;
 block|}
 if|if
@@ -1060,19 +1072,7 @@ literal|"DR"
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-literal|0
-operator|==
-name|rmdir
-argument_list|(
-name|name
-argument_list|)
-condition|)
-continue|continue;
-ifdef|#
-directive|ifdef
-name|NOTDEF
+comment|/* 	     * We cannot use rmdir() because we do not get the directories 	     * in '-depth' order (cvs-cur.0018.gz for examples) 	     */
 name|sprintf
 argument_list|(
 name|buf
@@ -1088,8 +1088,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 continue|continue;
-endif|#
-directive|endif
 block|}
 name|WRONG
 block|}
