@@ -189,7 +189,7 @@ name|disk
 operator|->
 name|d_error
 operator|=
-literal|"truncated superblock"
+literal|"non-existent or truncated superblock"
 expr_stmt|;
 name|DEBUG
 argument_list|(
