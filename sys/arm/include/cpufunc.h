@@ -47,24 +47,6 @@ begin_comment
 comment|/* For in[bwl] and out[bwl] */
 end_comment
 
-begin_function_decl
-name|void
-name|disable_intr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_intr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
