@@ -103,6 +103,17 @@ begin_comment
 comment|/* round-robin delivery */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_ONE2MANY_XMIT_ALL
+value|2
+end_define
+
+begin_comment
+comment|/* send packets to all many hooks */
+end_comment
+
 begin_comment
 comment|/* Algorithms for detecting link failure (XXX only one so far) */
 end_comment
@@ -182,6 +193,10 @@ name|u_int64_t
 name|xmitPackets
 decl_stmt|;
 comment|/* total pkts xmit'd on link */
+name|u_int64_t
+name|memoryFailures
+decl_stmt|;
+comment|/* times couldn't get mem or mbuf */
 block|}
 struct|;
 end_struct
@@ -194,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|NG_ONE2MANY_LINK_STATS_TYPE_INFO
-value|{		\ 	{							\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	{							\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { "memoryFailures",&ng_parse_uint64_type	},	\ 	  { NULL }						\ 	}							\ }
 end_define
 
 begin_comment
