@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmpnam.c	8.1 (Berkeley) %G%"
+literal|"@(#)tmpnam.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,11 @@ name|s
 decl_stmt|;
 block|{
 specifier|static
+name|unsigned
+name|long
+name|tmpcount
+decl_stmt|;
+specifier|static
 name|char
 name|buf
 index|[
@@ -87,10 +92,15 @@ name|s
 argument_list|,
 name|L_tmpnam
 argument_list|,
-literal|"%stmp.XXXXXX"
+literal|"%s/tmp.%lu.XXXXXX"
 argument_list|,
 name|P_tmpdir
+argument_list|,
+name|tmpcount
 argument_list|)
+expr_stmt|;
+operator|++
+name|tmpcount
 expr_stmt|;
 return|return
 operator|(
