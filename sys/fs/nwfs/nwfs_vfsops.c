@@ -2432,13 +2432,6 @@ operator|=
 literal|512
 expr_stmt|;
 comment|/* XXX how to get real value ??? */
-name|sbp
-operator|->
-name|f_spare2
-operator|=
-literal|0
-expr_stmt|;
-comment|/* placeholder */
 comment|/* fundamental filesystem block size */
 name|sbp
 operator|->
