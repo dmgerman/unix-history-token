@@ -335,6 +335,24 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|stub_copy_label
+parameter_list|(
+name|struct
+name|label
+modifier|*
+name|src
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|dest
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
 name|int
 name|stub_externalize_label
 parameter_list|(
@@ -3871,6 +3889,21 @@ operator|.
 name|mpo_destroy_vnode_label
 operator|=
 name|stub_destroy_label
+block|,
+operator|.
+name|mpo_copy_mbuf_label
+operator|=
+name|stub_copy_label
+block|,
+operator|.
+name|mpo_copy_pipe_label
+operator|=
+name|stub_copy_label
+block|,
+operator|.
+name|mpo_copy_vnode_label
+operator|=
+name|stub_copy_label
 block|,
 operator|.
 name|mpo_externalize_cred_label
