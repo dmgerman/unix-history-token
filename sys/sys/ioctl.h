@@ -982,6 +982,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MOUSEDISC
+value|6
+end_define
+
+begin_comment
+comment|/* Mouse discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FIOCLEX
 value|_IO('f', 1)
 end_define
