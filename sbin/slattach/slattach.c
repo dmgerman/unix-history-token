@@ -159,6 +159,12 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -270,6 +276,19 @@ end_function_decl
 begin_comment
 comment|/* get tty device as controling terminal */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -552,15 +571,26 @@ begin_comment
 comment|/* command to exec before exiting. */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
-name|char
-name|usage_str
-index|[]
-init|=
-literal|"\ usage: %s [-acfhlnz] [-e command] [-r command] [-s speed] [-u command] \\\n\ 	  [-L] [-K timeout] [-O timeout] [-S unit] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n\   -L      -- do uucp-style device locking\n\   -K #    -- set SLIP \"keep alive\" timeout (default 0)\n\   -O #    -- set SLIP \"out fill\" timeout (default 0)\n\   -S #    -- set SLIP unit number (default is dynamic)\n\ "
-decl_stmt|;
-end_decl_stmt
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: slattach [-acfhlnz] [-e command] [-r command] [-s speed] [-u command]"
+argument_list|,
+literal|"                [-L] [-K timeout] [-O timeout] [-S unit] device"
+argument_list|)
+expr_stmt|;
+comment|/* do not exit here */
+block|}
+end_function
 
 begin_function
 name|int
@@ -774,35 +804,12 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Invalid option -- '%c'\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|option
-argument_list|)
-expr_stmt|;
 case|case
 literal|'?'
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|usage_str
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+default|default:
+name|usage
+argument_list|()
 expr_stmt|;
 name|exit_handler
 argument_list|(
@@ -836,17 +843,9 @@ operator|-
 literal|1
 operator|)
 condition|)
-block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Too many args, first='%s'\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"too many args, first='%s'"
 argument_list|,
 name|argv
 index|[
@@ -854,7 +853,6 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|optind
@@ -865,20 +863,11 @@ operator|-
 literal|1
 operator|)
 condition|)
-block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Not enough args\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"not enough args"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dev
@@ -890,17 +879,8 @@ operator|)
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|usage_str
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|exit_handler
 argument_list|(
