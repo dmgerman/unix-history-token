@@ -11457,6 +11457,16 @@ break|break;
 case|case
 name|VAR_MRU
 case|:
+name|long_val
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
+name|change
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* silence gcc */
 switch|switch
 condition|(
 name|arg
@@ -11741,6 +11751,16 @@ break|break;
 case|case
 name|VAR_MTU
 case|:
+name|long_val
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
+name|change
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* silence gcc */
 switch|switch
 condition|(
 name|arg
