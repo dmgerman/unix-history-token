@@ -20,6 +20,20 @@ name|__xstrtol
 value|xstrtoul
 end_define
 
+begin_define
+define|#
+directive|define
+name|STRTOL_T_MINIMUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRTOL_T_MAXIMUM
+value|ULONG_MAX
+end_define
+
 begin_include
 include|#
 directive|include

@@ -1,10 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* argmatch.c -- find a match for a string in an array    Copyright (C) 1990, 1998, 1999, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* argmatch.c -- find a match for a string in an array     Copyright (C) 1990, 1998, 1999, 2001, 2002, 2003, 2004 Free    Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Written by David MacKenzie<djm@ai.mit.edu>    Modified by Akim Demaille<demaille@inf.enst.fr> */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_CONFIG_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Specification.  */
 end_comment
 
 begin_include
@@ -19,11 +40,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STDC_HEADERS
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -31,38 +52,10 @@ directive|include
 file|<string.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|HAVE_LOCALE_H
-end_if
-
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|ENABLE_NLS
-end_if
-
-begin_include
-include|#
-directive|include
-file|<libintl.h>
+file|"gettext.h"
 end_include
 
 begin_define
@@ -70,35 +63,21 @@ define|#
 directive|define
 name|_
 parameter_list|(
-name|Text
+name|msgid
 parameter_list|)
-value|gettext (Text)
+value|gettext (msgid)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_
-parameter_list|(
-name|Text
-parameter_list|)
-value|Text
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|"error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"exit.h"
 end_include
 
 begin_include
@@ -142,35 +121,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The following test is to work around the gross typo in    systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE    is defined to 0, not 1.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|EXIT_FAILURE
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|EXIT_FAILURE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Non failing version of argmatch call this function after failing. */
 end_comment
 
@@ -180,11 +130,17 @@ directive|ifndef
 name|ARGMATCH_DIE
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|"exitfail.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|ARGMATCH_DIE
-value|exit (EXIT_FAILURE)
+value|exit (exit_failure)
 end_define
 
 begin_endif
@@ -237,13 +193,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If ARG is an unambiguous match for an element of the    null-terminated array ARGLIST, return the index in ARGLIST    of the matched element, else -1 if it does not match any element    or -2 if it is ambiguous (is a prefix of more than one element).    If SENSITIVE, comparison is case sensitive.     If VALLIST is none null, use it to resolve ambiguities limited to    synonyms, i.e., for      "yes", "yop" -> 0      "no", "nope" -> 1    "y" is a valid argument, for `0', and "n" for `1'.  */
+comment|/* If ARG is an unambiguous match for an element of the    null-terminated array ARGLIST, return the index in ARGLIST    of the matched element, else -1 if it does not match any element    or -2 if it is ambiguous (is a prefix of more than one element).     If VALLIST is none null, use it to resolve ambiguities limited to    synonyms, i.e., for      "yes", "yop" -> 0      "no", "nope" -> 1    "y" is a valid argument, for `0', and "n" for `1'.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|__argmatch_internal
+name|argmatch
 parameter_list|(
 specifier|const
 name|char
@@ -264,9 +219,6 @@ name|vallist
 parameter_list|,
 name|size_t
 name|valsize
-parameter_list|,
-name|int
-name|case_sensitive
 parameter_list|)
 block|{
 name|int
@@ -315,23 +267,8 @@ control|)
 block|{
 if|if
 condition|(
-name|case_sensitive
-condition|?
 operator|!
 name|strncmp
-argument_list|(
-name|arglist
-index|[
-name|i
-index|]
-argument_list|,
-name|arg
-argument_list|,
-name|arglen
-argument_list|)
-else|:
-operator|!
-name|strncasecmp
 argument_list|(
 name|arglist
 index|[
@@ -420,98 +357,6 @@ return|;
 else|else
 return|return
 name|matchind
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* argmatch - case sensitive version */
-end_comment
-
-begin_function
-name|int
-name|argmatch
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|arg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|arglist
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|vallist
-parameter_list|,
-name|size_t
-name|valsize
-parameter_list|)
-block|{
-return|return
-name|__argmatch_internal
-argument_list|(
-name|arg
-argument_list|,
-name|arglist
-argument_list|,
-name|vallist
-argument_list|,
-name|valsize
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* argcasematch - case insensitive version */
-end_comment
-
-begin_function
-name|int
-name|argcasematch
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|arg
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|arglist
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|vallist
-parameter_list|,
-name|size_t
-name|valsize
-parameter_list|)
-block|{
-return|return
-name|__argmatch_internal
-argument_list|(
-name|arg
-argument_list|,
-name|arglist
-argument_list|,
-name|vallist
-argument_list|,
-name|valsize
-argument_list|,
-literal|0
-argument_list|)
 return|;
 block|}
 end_function
@@ -748,9 +593,6 @@ parameter_list|,
 name|size_t
 name|valsize
 parameter_list|,
-name|int
-name|case_sensitive
-parameter_list|,
 name|argmatch_exit_fn
 name|exit_fn
 parameter_list|)
@@ -758,7 +600,7 @@ block|{
 name|int
 name|res
 init|=
-name|__argmatch_internal
+name|argmatch
 argument_list|(
 name|arg
 argument_list|,
@@ -767,8 +609,6 @@ argument_list|,
 name|vallist
 argument_list|,
 name|valsize
-argument_list|,
-name|case_sensitive
 argument_list|)
 decl_stmt|;
 if|if
@@ -906,16 +746,6 @@ modifier|*
 name|program_name
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* When to make backup files.  */
@@ -1079,7 +909,7 @@ operator|)
 condition|)
 name|backup_type
 operator|=
-name|XARGCASEMATCH
+name|XARGMATCH
 argument_list|(
 literal|"$VERSION_CONTROL"
 argument_list|,
@@ -1098,7 +928,7 @@ literal|2
 condition|)
 name|backup_type
 operator|=
-name|XARGCASEMATCH
+name|XARGMATCH
 argument_list|(
 name|program_name
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Locale-specific memory comparison.    Copyright (C) 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Locale-specific memory comparison.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -54,16 +54,10 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|ENABLE_NLS
-end_if
-
 begin_include
 include|#
 directive|include
-file|<libintl.h>
+file|"gettext.h"
 end_include
 
 begin_define
@@ -71,35 +65,21 @@ define|#
 directive|define
 name|_
 parameter_list|(
-name|Text
+name|msgid
 parameter_list|)
-value|gettext (Text)
+value|gettext (msgid)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_
-parameter_list|(
-name|Text
-parameter_list|)
-value|Text
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|"error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"exitfail.h"
 end_include
 
 begin_include
@@ -119,18 +99,6 @@ include|#
 directive|include
 file|"xmemcoll.h"
 end_include
-
-begin_comment
-comment|/* Exit value when xmemcoll fails.    The caller may set it to some other value.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|xmemcoll_exit_failure
-init|=
-name|EXIT_FAILURE
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according    to the LC_COLLATE locale.  S1 and S2 do not overlap, and are not    adjacent.  Temporarily modify the bytes after S1 and S2, but    restore their original contents before returning.  Report an error    and exit if there is an error.  */
@@ -205,7 +173,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-name|xmemcoll_exit_failure
+name|exit_failure
 argument_list|,
 literal|0
 argument_list|,
