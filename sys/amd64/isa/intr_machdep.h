@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa_device.h	7.1 (Berkeley) 5/9/91  *	$Id: intr_machdep.h,v 1.5 1997/07/18 21:27:14 fsmp Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa_device.h	7.1 (Berkeley) 5/9/91  *	$Id: intr_machdep.h,v 1.10 1997/08/29 18:37:23 smp Exp smp $  */
 end_comment
 
 begin_ifndef
@@ -30,8 +30,26 @@ comment|/*  * XXX FIXME: rethink location for all IPI vectors.  */
 end_comment
 
 begin_comment
-comment|/*     APIC TPR priority vector levels:  	0xff (255) +------------+ 		   |		| 15 (IPIs: Xspuriousint) 	0xf0 (240) +------------+ 		   |		| 14 	0xe0 (224) +------------+ 		   |		| 13 	0xd0 (208) +------------+ 		   |		| 12 	0xc0 (192) +------------+ 		   |		| 11 	0xb0 (176) +------------+ 		   |		| 10 (IPIs: Xcpustop) 	0xa0 (160) +------------+ 		   |		|  9 (IPIs: Xinvltlb) 	0x90 (144) +------------+ 		   |		|  8 (linux compat @ vector 0x80) 	0x80 (128) +------------+ 		   |		|  7 	0x70 (112) +------------+ 		   |		|  6 	0x60 (96)  +------------+ 		   |		|  5 	0x50 (80)  +------------+ 		   |		|  4 	0x40 (64)  +------------+ 		   |		|  3 (upper APIC hardware INTs: PCI) 	0x30 (48)  +------------+ 		   |		|  2 (start of hardware INTs: ISA) 	0x20 (32)  +------------+ 		   |		|  1 (exceptions, traps, etc.) 	0x10 (16)  +------------+ 		   |		|  0 (exceptions, traps, etc.) 	0x00 (0)   +------------+  */
+comment|/*     APIC TPR priority vector levels:  	0xff (255) +-------------+ 		   |             | 15 (IPIs: Xspuriousint) 	0xf0 (240) +-------------+ 		   |             | 14 	0xe0 (224) +-------------+ 		   |             | 13 	0xd0 (208) +-------------+ 		   |             | 12 	0xc0 (192) +-------------+ 		   |             | 11 	0xb0 (176) +-------------+ 		   |             | 10 (IPIs: Xcpustop) 	0xa0 (160) +-------------+ 		   |             |  9 (IPIs: Xinvltlb) 	0x90 (144) +-------------+ 		   |             |  8 (linux/BSD syscall, IGNORE FAST HW INTS) 	0x80 (128) +-------------+ 		   |             |  7 (FAST_INTR 16-23) 	0x70 (112) +-------------+ 		   |             |  6 (FAST_INTR 0-15) 	0x60 (96)  +-------------+ 		   |             |  5 (IGNORE HW INTS) 	0x50 (80)  +-------------+ 		   |             |  4 (2nd IO APIC) 	0x40 (64)  +------+------+ 		   |      |      |  3 (upper APIC hardware INTs: PCI) 	0x30 (48)  +------+------+ 		   |             |  2 (start of hardware INTs: ISA) 	0x20 (32)  +-------------+ 		   |             |  1 (exceptions, traps, etc.) 	0x10 (16)  +-------------+ 		   |             |  0 (exceptions, traps, etc.) 	0x00 (0)   +-------------+  */
 end_comment
+
+begin_comment
+comment|/* IDT vector base for regular (aka. slow) and fast interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_SLOW_INTS
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPR_FAST_INTS
+value|0x60
+end_define
 
 begin_comment
 comment|/* blocking values for local APIC Task Priority Register */
@@ -41,11 +59,44 @@ begin_define
 define|#
 directive|define
 name|TPR_BLOCK_HWI
-value|0x3f
+value|0x4f
 end_define
 
 begin_comment
 comment|/* hardware INTs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_IGNORE_HWI
+value|0x5f
+end_define
+
+begin_comment
+comment|/* ignore INTs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_BLOCK_FHWI
+value|0x7f
+end_define
+
+begin_comment
+comment|/* hardware FAST INTs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_IGNORE_FHWI
+value|0x8f
+end_define
+
+begin_comment
+comment|/* ignore FAST INTs */
 end_comment
 
 begin_define

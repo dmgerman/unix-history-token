@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.3 1997/06/22 16:04:04 peter Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.1 1997/08/29 18:38:35 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -59,6 +59,16 @@ include|#
 directive|include
 file|<machine/smp.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smptests.h>
+end_include
+
+begin_comment
+comment|/** FAST_HI */
+end_comment
 
 begin_endif
 endif|#
@@ -1216,7 +1226,46 @@ modifier|*
 name|dvp
 decl_stmt|;
 block|{
-comment|/* read APIC IRR containing the 16 ISA INTerrupts */
+ifdef|#
+directive|ifdef
+name|FAST_HI
+comment|/* XXX not quite right for>1 IO APIC yet */
+if|if
+condition|(
+name|dvp
+operator|->
+name|id_ri_flags
+operator|&
+name|RI_FAST
+condition|)
+comment|/* read APIC IRR containing the FAST INTerrupts */
+return|return
+operator|(
+operator|(
+name|lapic
+operator|.
+name|irr3
+operator|&
+literal|0x00ffffff
+operator|)
+operator|&
+operator|(
+name|u_int32_t
+operator|)
+name|dvp
+operator|->
+name|id_irq
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+return|;
+else|else
+endif|#
+directive|endif
+comment|/* FAST_HI */
+comment|/* read APIC IRR containing the SLOW INTerrupts */
 return|return
 operator|(
 operator|(
@@ -1798,6 +1847,23 @@ name|int
 name|flags
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|FAST_HI
+name|int
+name|select
+decl_stmt|;
+comment|/* the select register is 8 bits */
+name|int
+name|vector
+decl_stmt|;
+name|u_int32_t
+name|value
+decl_stmt|;
+comment|/* the window register is 32 bits */
+endif|#
+directive|endif
+comment|/* FAST_HI */
 name|u_long
 name|ef
 decl_stmt|;
@@ -1906,6 +1972,104 @@ name|int
 operator|)
 name|arg
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FAST_HI
+if|if
+condition|(
+name|flags
+operator|&
+name|INTR_FAST
+condition|)
+block|{
+name|vector
+operator|=
+name|TPR_FAST_INTS
+operator|+
+name|intr
+expr_stmt|;
+name|setidt
+argument_list|(
+name|vector
+argument_list|,
+name|fastintr
+index|[
+name|intr
+index|]
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX MULTIPLE_IOAPICSXXX 		 * Reprogram the vector in the IO APIC. 		 */
+name|select
+operator|=
+operator|(
+name|intr
+operator|*
+literal|2
+operator|)
+operator|+
+name|IOAPIC_REDTBL0
+expr_stmt|;
+name|value
+operator|=
+name|io_apic_read
+argument_list|(
+literal|0
+argument_list|,
+name|select
+argument_list|)
+operator|&
+operator|~
+name|IOART_INTVEC
+expr_stmt|;
+name|io_apic_write
+argument_list|(
+literal|0
+argument_list|,
+name|select
+argument_list|,
+name|value
+operator||
+name|vector
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|setidt
+argument_list|(
+name|TPR_SLOW_INTS
+operator|+
+name|intr
+argument_list|,
+name|slowintr
+index|[
+name|intr
+index|]
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|setidt
 argument_list|(
 name|ICU_OFFSET
@@ -1938,6 +2102,9 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FAST_HI */
 name|INTREN
 argument_list|(
 literal|1
