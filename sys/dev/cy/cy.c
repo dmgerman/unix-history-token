@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.29 1995/12/22 15:02:22 bde Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.30 1996/01/25 07:21:29 phk Exp $  */
 end_comment
 
 begin_include
@@ -2184,12 +2184,6 @@ decl_stmt|;
 name|cy_addr
 name|iobase
 decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|int
 name|ncyu
 decl_stmt|;
@@ -2671,7 +2665,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-comment|/* path, name, devsw, minor, type, uid, gid, perm */
 name|com
 operator|->
 name|devfs_token_ttyd
@@ -2685,9 +2678,9 @@ name|unit
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
@@ -2711,9 +2704,9 @@ name|CONTROL_INIT_STATE
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
@@ -2737,9 +2730,9 @@ name|CONTROL_LOCK_STATE
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
@@ -2763,9 +2756,9 @@ name|CALLOUT_MASK
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_UUCP
 argument_list|,
-literal|0
+name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
@@ -2791,9 +2784,9 @@ name|CONTROL_INIT_STATE
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_UUCP
 argument_list|,
-literal|0
+name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
@@ -2819,9 +2812,9 @@ name|CONTROL_LOCK_STATE
 argument_list|,
 name|DV_CHR
 argument_list|,
-literal|0
+name|UID_UUCP
 argument_list|,
-literal|0
+name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
