@@ -5033,11 +5033,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -5161,7 +5163,9 @@ operator|=
 name|indx
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|fp
@@ -5550,11 +5554,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+block|}
 name|fdrop
 argument_list|(
 name|fp
@@ -11795,7 +11801,9 @@ name|ni_vp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -11900,7 +11908,9 @@ name|ni_vp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -12187,7 +12197,9 @@ name|mp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -12360,7 +12372,9 @@ name|ni_vp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -12495,7 +12509,9 @@ name|ni_vp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -12795,7 +12811,9 @@ name|mp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -13469,7 +13487,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -13748,7 +13768,9 @@ name|mp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -18651,6 +18673,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|getdirentries
 argument_list|(
 name|td
@@ -18658,6 +18681,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -19674,8 +19698,8 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * from now on we have to make sure not 	 * to forget about the vnode 	 * any error that causes an abort must vput(vp)  	 * just set error = err and 'goto bad;'. 	 */
-comment|/*  	 * from vn_open  	 */
+comment|/* 	 * from now on we have to make sure not 	 * to forget about the vnode 	 * any error that causes an abort must vput(vp) 	 * just set error = err and 'goto bad;'. 	 */
+comment|/* 	 * from vn_open 	 */
 if|if
 condition|(
 name|vp
@@ -20051,7 +20075,7 @@ operator|->
 name|v_writecount
 operator|++
 expr_stmt|;
-comment|/* 	 * end of vn_open code  	 */
+comment|/* 	 * end of vn_open code 	 */
 if|if
 condition|(
 operator|(
@@ -20267,11 +20291,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 			 * release our private reference 			 */
 name|fdrop
 argument_list|(
@@ -21233,7 +21259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Set a named extended attribute on a file or directory  *   * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
+comment|/*-  * Set a named extended attribute on a file or directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
 end_comment
 
 begin_function
@@ -21902,7 +21928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Get a named extended attribute on a file or directory  *   * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
+comment|/*-  * Get a named extended attribute on a file or directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
 end_comment
 
 begin_function
@@ -22104,11 +22130,13 @@ name|nbytes
 expr_stmt|;
 block|}
 else|else
+block|{
 name|sizep
 operator|=
 operator|&
 name|size
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -22184,6 +22212,7 @@ name|cnt
 expr_stmt|;
 block|}
 else|else
+block|{
 name|td
 operator|->
 name|td_retval
@@ -22193,6 +22222,7 @@ index|]
 operator|=
 name|size
 expr_stmt|;
+block|}
 name|done
 label|:
 name|VOP_UNLOCK
@@ -22618,7 +22648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * extattr_delete_vp(): Delete a named extended attribute on a file or  *                      directory  *   * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", proc "p"  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
+comment|/*  * extattr_delete_vp(): Delete a named extended attribute on a file or  *                      directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", proc "p"  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
 end_comment
 
 begin_function
@@ -23359,11 +23389,13 @@ name|nbytes
 expr_stmt|;
 block|}
 else|else
+block|{
 name|sizep
 operator|=
 operator|&
 name|size
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -23432,6 +23464,7 @@ name|cnt
 expr_stmt|;
 block|}
 else|else
+block|{
 name|td
 operator|->
 name|td_retval
@@ -23441,6 +23474,7 @@ index|]
 operator|=
 name|size
 expr_stmt|;
+block|}
 name|done
 label|:
 name|VOP_UNLOCK
