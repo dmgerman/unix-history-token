@@ -506,21 +506,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
-name|vm_page_alloc_contig
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vm_set_page_size
 parameter_list|(
