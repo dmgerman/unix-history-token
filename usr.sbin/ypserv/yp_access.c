@@ -111,7 +111,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_access.c,v 1.1 1996/02/25 19:27:59 wpaul Exp $"
+literal|"$Id: yp_access.c,v 1.5 1996/02/26 02:34:23 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,7 @@ name|mask
 operator|.
 name|s_addr
 operator|=
-name|INADDR_BROADCAST
+name|INADDR_ANY
 expr_stmt|;
 name|securenets
 operator|->
