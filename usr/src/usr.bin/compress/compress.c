@@ -1451,7 +1451,11 @@ operator|)
 operator|(
 name|malloc
 argument_list|(
+operator|(
 name|argc
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
