@@ -428,19 +428,17 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -528,6 +526,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clear_screen
@@ -537,10 +538,6 @@ comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -628,19 +625,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -726,19 +721,17 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -862,6 +855,9 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -879,15 +875,10 @@ if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -1013,6 +1004,9 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -1097,15 +1091,10 @@ if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -1231,6 +1220,9 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -1248,15 +1240,10 @@ if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -1344,6 +1331,9 @@ argument_list|,
 name|result
 argument_list|)
 expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -1361,15 +1351,10 @@ if|if
 condition|(
 name|clear_screen
 condition|)
-block|{
 comment|/* clear screen before exit */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
-block|}
 name|end_dialog
 argument_list|()
 expr_stmt|;
@@ -1392,17 +1377,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/* End of main() */
-end_comment
-
-begin_comment
 comment|/*  * Print program usage  */
-end_comment
-
-begin_function
 name|void
 name|Usage
 parameter_list|(
