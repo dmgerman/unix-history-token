@@ -3823,11 +3823,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|nfsm_reply
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+goto|goto
+name|nfsmout
+goto|;
+block|}
 if|if
 condition|(
 name|rdonly
