@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1176,26 +1176,6 @@ decl_stmt|;
 name|int
 name|loselock
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UNION_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"union_root(mp = %x, lvp = %x, uvp = %x)\n"
-argument_list|,
-name|mp
-argument_list|,
-name|um
-operator|->
-name|um_lowervp
-argument_list|,
-name|um
-operator|->
-name|um_uppervp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Return locked reference to root. 	 */
 name|VREF
 argument_list|(
