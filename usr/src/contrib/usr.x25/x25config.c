@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)x25config.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)x25config.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,6 +82,9 @@ name|sethdlc
 argument_list|()
 decl_stmt|,
 name|setlwsize
+argument_list|()
+decl_stmt|,
+name|setlkeepalive
 argument_list|()
 decl_stmt|,
 name|setltrace
@@ -182,6 +185,12 @@ name|IEEEPROTO_802LLC
 block|,
 name|setlproto
 block|,
+literal|"llc2"
+block|,
+name|IEEEPROTO_802LLC
+block|,
+name|setlproto
+block|,
 literal|"lap"
 block|,
 name|HDLCPROTO_LAP
@@ -217,6 +226,18 @@ block|,
 literal|1
 block|,
 name|setltrace
+block|,
+literal|"keepalive"
+block|,
+literal|1
+block|,
+name|setlkeepalive
+block|,
+literal|"-keepalive"
+block|,
+literal|0
+block|,
+name|setlkeepalive
 block|,
 literal|"1976"
 block|,
@@ -1572,9 +1593,21 @@ operator|)
 operator|<=
 literal|0
 operator|||
+operator|(
 name|ws
 operator|>
 literal|31
+operator|&&
+name|x25conf
+operator|.
+name|xc_lproto
+operator|!=
+name|IEEEPROTO_802LLC
+operator|)
+operator|||
+name|ws
+operator|>
+literal|127
 condition|)
 name|abort
 argument_list|(
@@ -1587,6 +1620,25 @@ name|xc_lwsize
 operator|=
 name|ws
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|setlkeepalive
+argument_list|(
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* x25conf.xc_lkeepalive = arg; */
 block|}
 end_block
 
