@@ -444,6 +444,34 @@ literal|"HP NetRaid-4M"
 block|}
 block|,
 block|{
+literal|0x9005
+block|,
+literal|0x0285
+block|,
+literal|0x9005
+block|,
+literal|0x0285
+block|,
+name|AAC_HWIF_I960RX
+block|,
+literal|"Adaptec SCSI RAID 2200S"
+block|}
+block|,
+block|{
+literal|0x9005
+block|,
+literal|0x0285
+block|,
+literal|0x9005
+block|,
+literal|0x0286
+block|,
+name|AAC_HWIF_I960RX
+block|,
+literal|"Adaptec SCSI RAID 2120S"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
