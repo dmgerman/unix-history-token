@@ -5422,6 +5422,16 @@ condition|)
 goto|goto
 name|set
 goto|;
+name|bzero
+argument_list|(
+name|tiflist
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tiflist
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -5554,6 +5564,24 @@ name|MAC_BIBA_TYPE_HIGH
 expr_stmt|;
 break|break;
 block|}
+block|}
+else|else
+block|{
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mac_biba warning: interface name "
+literal|"\"%s\" is too long (must be< %d)\n"
+argument_list|,
+name|q
+argument_list|,
+name|IFNAMSIZ
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
