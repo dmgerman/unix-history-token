@@ -302,7 +302,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*__alpha__*/
+comment|/*!__alpha__*/
 end_comment
 
 begin_endif
