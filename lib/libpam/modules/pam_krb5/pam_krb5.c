@@ -310,16 +310,21 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|sourceuser
-decl_stmt|,
-modifier|*
 name|user
 decl_stmt|,
 modifier|*
 name|pass
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|sourceuser
 decl_stmt|,
 modifier|*
 name|service
+decl_stmt|,
+modifier|*
+name|item
 decl_stmt|;
 name|char
 modifier|*
@@ -377,12 +382,6 @@ name|pamh
 argument_list|,
 name|PAM_RUSER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|sourceuser
 argument_list|)
@@ -402,6 +401,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got ruser: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|sourceuser
 argument_list|)
 expr_stmt|;
@@ -415,12 +419,6 @@ name|pamh
 argument_list|,
 name|PAM_SERVICE
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|service
 argument_list|)
@@ -439,6 +437,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got service: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|service
 argument_list|)
 expr_stmt|;
@@ -559,6 +562,11 @@ name|principal
 argument_list|,
 literal|"%s/%s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|sourceuser
 argument_list|,
 name|user
@@ -806,14 +814,8 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|user
+name|item
 argument_list|)
 expr_stmt|;
 if|if
@@ -1170,14 +1172,8 @@ name|pamh
 argument_list|,
 literal|"ccache"
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|ccache_name
+name|item
 argument_list|)
 expr_stmt|;
 if|if
@@ -1429,9 +1425,14 @@ name|cache_name
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|void
 modifier|*
 name|user
+decl_stmt|,
+modifier|*
+name|cache_data
 decl_stmt|;
 name|char
 modifier|*
@@ -1509,12 +1510,6 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|user
 argument_list|)
@@ -1534,6 +1529,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 expr_stmt|;
@@ -1597,14 +1597,8 @@ name|pamh
 argument_list|,
 literal|"ccache"
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|cache_name
+name|cache_data
 argument_list|)
 expr_stmt|;
 if|if
@@ -1628,7 +1622,7 @@ name|krb5_cc_resolve
 argument_list|(
 name|pam_context
 argument_list|,
-name|cache_name
+name|cache_data
 argument_list|,
 operator|&
 name|ccache_temp
@@ -1645,7 +1639,12 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_resolve(\"%s\"): %s"
 argument_list|,
-name|cache_name
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|cache_data
 argument_list|,
 name|krb5_get_err_text
 argument_list|(
@@ -2485,7 +2484,7 @@ name|int
 name|retval
 decl_stmt|;
 specifier|const
-name|char
+name|void
 modifier|*
 name|user
 decl_stmt|,
@@ -2500,12 +2499,6 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|user
 argument_list|)
@@ -2525,6 +2518,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 expr_stmt|;
@@ -2536,12 +2534,6 @@ name|pamh
 argument_list|,
 literal|"ccache"
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|ccache_name
 argument_list|)
@@ -2599,6 +2591,11 @@ name|krb5_cc_resolve
 argument_list|(
 name|pam_context
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ccache_name
 argument_list|,
 operator|&
@@ -2616,6 +2613,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Error krb5_cc_resolve(\"%s\"): %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ccache_name
 argument_list|,
 name|krb5_get_err_text
@@ -2641,6 +2643,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got ccache %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ccache_name
 argument_list|)
 expr_stmt|;
@@ -2697,6 +2704,11 @@ name|pam_context
 argument_list|,
 name|princ
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 condition|)
@@ -2797,10 +2809,12 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|user
-decl_stmt|,
-modifier|*
 name|pass
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|user
 decl_stmt|;
 name|char
 modifier|*
@@ -2831,12 +2845,6 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|user
 argument_list|)
@@ -2856,6 +2864,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 expr_stmt|;
@@ -2908,6 +2921,11 @@ name|krb5_parse_name
 argument_list|(
 name|pam_context
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|,
 operator|&
