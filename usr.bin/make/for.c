@@ -107,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nesting level	*/
+comment|/* Nesting level */
 end_comment
 
 begin_decl_stmt
@@ -119,7 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Iteration variable	*/
+comment|/* Iteration variable */
 end_comment
 
 begin_decl_stmt
@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Commands in loop	*/
+comment|/* Commands in loop */
 end_comment
 
 begin_decl_stmt
@@ -142,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of items	*/
+comment|/* List of items */
 end_comment
 
 begin_comment
@@ -158,38 +158,24 @@ name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
-comment|/* Unexpanded buffer	*/
+comment|/* Unexpanded buffer */
 name|char
 modifier|*
 name|var
 decl_stmt|;
-comment|/* Index name		*/
+comment|/* Index name */
 name|Lst
 name|lst
 decl_stmt|;
-comment|/* List of variables	*/
+comment|/* List of variables */
 name|int
 name|lineno
 decl_stmt|;
-comment|/* Line #		*/
+comment|/* Line # */
 block|}
 name|For
 typedef|;
 end_typedef
-
-begin_function_decl
-specifier|static
-name|int
-name|ForExec
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * For_Eval --  *	Evaluate the for loop in the passed line. The line  *	looks like this:  *	    .for<variable> in<varlist>  *  * Results:  *	TRUE: We found a for loop, or we are inside a for loop  *	FALSE: We did not find a for loop, or we found the end of the for  *	       for loop.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -207,12 +193,12 @@ block|{
 name|char
 modifier|*
 name|ptr
-init|=
-name|line
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|sub
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|wrd
 decl_stmt|;
@@ -220,6 +206,10 @@ name|int
 name|level
 decl_stmt|;
 comment|/* Level at which to report errors. */
+name|ptr
+operator|=
+name|line
+expr_stmt|;
 name|level
 operator|=
 name|PARSE_FATAL
@@ -231,6 +221,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * maybe start of a for loop 		 */
 name|Buffer
 modifier|*
 name|buf
@@ -259,8 +250,8 @@ condition|;
 name|ptr
 operator|++
 control|)
-continue|continue;
-comment|/* 	 * If we are not in a for loop quickly determine if the statement is 	 * a for. 	 */
+empty_stmt|;
+comment|/* 		 * If we are not in a for loop quickly determine if 		 * the statement is a for. 		 */
 if|if
 condition|(
 name|ptr
@@ -306,7 +297,7 @@ name|ptr
 operator|+=
 literal|3
 expr_stmt|;
-comment|/* 	 * we found a for loop, and now we are going to parse it. 	 */
+comment|/* 		 * we found a for loop, and now we are going to parse it. 		 */
 while|while
 condition|(
 operator|*
@@ -325,7 +316,7 @@ condition|)
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* 	 * Grab the variable 	 */
+comment|/* 		 * Grab the variable 		 */
 name|buf
 operator|=
 name|Buf_Init
@@ -356,7 +347,7 @@ condition|;
 name|ptr
 operator|++
 control|)
-continue|continue;
+empty_stmt|;
 name|Buf_AppendRange
 argument_list|(
 name|buf
@@ -387,6 +378,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXXHB Buf_Destroy(buf, TRUE) */
 name|Parse_Error
 argument_list|(
 name|level
@@ -425,7 +417,7 @@ condition|)
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* 	 * Grab the `in' 	 */
+comment|/* 		 * Grab the `in' 		 */
 if|if
 condition|(
 name|ptr
@@ -456,6 +448,7 @@ index|]
 argument_list|)
 condition|)
 block|{
+comment|/* XXXHB free(forVar) */
 name|Parse_Error
 argument_list|(
 name|level
@@ -498,7 +491,7 @@ condition|)
 name|ptr
 operator|++
 expr_stmt|;
-comment|/* 	 * Make a list with the remaining words 	 */
+comment|/* 		 * Make a list with the remaining words 		 */
 name|Lst_Init
 argument_list|(
 operator|&
@@ -547,7 +540,7 @@ condition|;
 name|ptr
 operator|++
 control|)
-continue|continue;
+empty_stmt|;
 for|for
 control|(
 name|wrd
@@ -560,6 +553,7 @@ condition|;
 name|ptr
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|isspace
@@ -643,6 +637,7 @@ operator|=
 name|ptr
 operator|--
 expr_stmt|;
+block|}
 block|}
 name|DEBUGF
 argument_list|(
@@ -738,7 +733,6 @@ literal|1
 operator|)
 return|;
 block|}
-elseif|else
 if|if
 condition|(
 operator|*
@@ -747,6 +741,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
+comment|/* 		 * Need to check for 'endfor' and 'for' to find the end 		 * of our loop or to find embedded for loops. 		 */
 for|for
 control|(
 name|ptr
@@ -768,7 +763,7 @@ condition|;
 name|ptr
 operator|++
 control|)
-continue|continue;
+empty_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -886,6 +881,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * Still in loop - append the line 		 */
 name|Buf_Append
 argument_list|(
 name|forBuf
@@ -909,14 +905,11 @@ literal|1
 operator|)
 return|;
 block|}
-else|else
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_function
 
