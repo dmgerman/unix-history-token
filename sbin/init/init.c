@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: init.c,v 1.30 1998/07/06 06:56:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2410,6 +2410,17 @@ name|password
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|DEBUGSHELL
+name|char
+name|altshell
+index|[
+literal|128
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If the kernel is in secure mode, downgrade it to insecure mode. 	 */
 if|if
 condition|(
@@ -2603,11 +2614,6 @@ directive|ifdef
 name|DEBUGSHELL
 block|{
 name|char
-name|altshell
-index|[
-literal|128
-index|]
-decl_stmt|,
 modifier|*
 name|cp
 init|=
