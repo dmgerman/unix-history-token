@@ -280,6 +280,12 @@ begin_comment
 comment|/*  * We use a linked list rather than a bitmap because we need to be able to  * represent potentially huge objects (like all of a processor's physical  * address space).  That is also why the indices are defined to have type  * `unsigned long' -- that being the largest integral type in ISO C (1990).  * The 1999 version of C allows `long long'; we may need to switch to that  * at some point in the future, particularly if we want to support 36-bit  * addresses on IA32 hardware.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__RMAN_RESOURCE_VISIBLE
+end_ifdef
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -410,6 +416,34 @@ name|rman
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct_decl
+struct_decl|struct
+name|resource
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|rman
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|device
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

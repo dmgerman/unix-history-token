@@ -21,6 +21,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include
