@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	8.4 (Berkeley) %G%"
+literal|"@(#)route.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1180,8 +1180,6 @@ name|rnode_aux
 decl_stmt|;
 name|printf
 argument_list|(
-name|nbuf
-argument_list|,
 literal|"<normal>, "
 argument_list|)
 expr_stmt|;
