@@ -656,7 +656,7 @@ name|OID_AUTO
 argument_list|,
 name|name
 argument_list|,
-name|CTLFALG_RD
+name|CTLFLAG_RD
 argument_list|,
 name|SCHD_NAME
 argument_list|,
