@@ -8981,6 +8981,29 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* assert that vn_open created a backing object if one is needed */
+name|KASSERT
+argument_list|(
+operator|!
+name|vn_canvmio
+argument_list|(
+name|vp
+argument_list|)
+operator|||
+name|VOP_GETVOBJECT
+argument_list|(
+name|vp
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"open: vmio vnode has no backing object after vn_open"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fp
 operator|->
 name|f_data
@@ -9245,29 +9268,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* assert that vn_open created a backing object if one is needed */
-name|KASSERT
-argument_list|(
-operator|!
-name|vn_canvmio
-argument_list|(
-name|vp
-argument_list|)
-operator|||
-name|VOP_GETVOBJECT
-argument_list|(
-name|vp
-argument_list|,
-name|NULL
-argument_list|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"open: vmio vnode has no backing object after vn_open"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Release our private reference, leaving the one associated with 	 * the descriptor table intact. 	 */
 name|fdrop
 argument_list|(
