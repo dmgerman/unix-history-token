@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.57
+literal|3.58
 operator|%
 name|G
 operator|%
@@ -2221,6 +2221,11 @@ block|{
 specifier|extern
 name|bool
 name|atobool
+parameter_list|()
+function_decl|;
+specifier|extern
+name|time_t
+name|convtime
 parameter_list|()
 function_decl|;
 ifdef|#

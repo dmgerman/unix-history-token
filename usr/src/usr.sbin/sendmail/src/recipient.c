@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -1618,6 +1618,26 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+comment|/* look up this login name */
+if|if
+condition|(
+operator|(
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|name
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|pw
+operator|)
+return|;
+comment|/* search for a matching full name instead */
 name|setpwent
 argument_list|()
 expr_stmt|;
