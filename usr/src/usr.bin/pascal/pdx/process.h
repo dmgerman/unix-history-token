@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)process.h 1.3 %G%"; */
+comment|/* static char sccsid[] = "@(#)process.h 1.4 %G%"; */
 end_comment
 
 begin_comment
@@ -27,13 +27,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|start
+name|initstart
 argument_list|()
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* start up process */
+comment|/* initial process start up */
 end_comment
 
 begin_expr_stmt
