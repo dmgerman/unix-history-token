@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 1.3 1995/08/20 21:18:46 peter Exp $"
+literal|"$Id: ns_main.c,v 1.4 1995/10/23 11:11:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,6 +384,12 @@ begin_comment
 comment|/* open descriptors */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -408,6 +414,11 @@ end_decl_stmt
 begin_comment
 comment|/* end of argv */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -807,6 +818,9 @@ operator|.
 name|tv_usec
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
 comment|/* 	**  Save start and extent of argv for ns_setproctitle(). 	*/
 name|Argv
 operator|=
@@ -839,6 +853,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -7475,6 +7491,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
 begin_function
 name|void
 name|ns_setproctitle
@@ -7619,6 +7641,123 @@ literal|' '
 expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|ns_setproctitle
+parameter_list|(
+name|a
+parameter_list|,
+name|s
+parameter_list|)
+name|char
+modifier|*
+name|a
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+block|{
+name|int
+name|size
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getpeername
+argument_list|(
+name|s
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|sin
+argument_list|,
+operator|&
+name|size
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s [%s]"
+argument_list|,
+name|a
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"getpeername: %m"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s"
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+name|setproctitle
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|u_int32_t
