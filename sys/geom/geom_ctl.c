@@ -2241,7 +2241,16 @@ name|mp
 operator|==
 name|NULL
 condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Class not found"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|verb
 operator|=
 name|gctl_get_param
