@@ -199,20 +199,11 @@ begin_struct
 struct|struct
 name|buf
 block|{
-comment|/* XXX: b_io must be the first element of struct buf for now /phk */
-comment|/* XXX: if you change this, fix BIOTOBUF macro below */
 name|struct
 name|bio
 name|b_io
 decl_stmt|;
 comment|/* "Builtin" I/O request. */
-define|#
-directive|define
-name|BIOTOBUF
-parameter_list|(
-name|biop
-parameter_list|)
-value|((struct buf *)(biop))
 define|#
 directive|define
 name|b_bcount
