@@ -1061,14 +1061,6 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX - bnoble */
-name|struct
 name|proc
 modifier|*
 name|p
