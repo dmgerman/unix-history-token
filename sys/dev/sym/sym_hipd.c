@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.5.1-20000429"
+value|"sym-1.5.2-20000430"
 end_define
 
 begin_include
@@ -7137,7 +7137,7 @@ name|cpu_to_scr
 argument_list|(
 name|np
 operator|->
-name|scriptb_ba
+name|scripta_ba
 operator|+
 name|offsetof
 argument_list|(
@@ -7159,7 +7159,7 @@ name|cpu_to_scr
 argument_list|(
 name|np
 operator|->
-name|scriptb_ba
+name|scripta_ba
 operator|+
 name|offsetof
 argument_list|(
