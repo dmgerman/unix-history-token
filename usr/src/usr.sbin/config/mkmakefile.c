@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.10 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3000,8 +3000,6 @@ argument_list|(
 name|f
 argument_list|,
 literal|" ${INLINE}"
-argument_list|,
-name|machinename
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkglue.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkglue.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1714,7 +1714,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"_fltintrcnt:\n"
+literal|"_fltintrcnt: %d\n"
 argument_list|,
 name|cntcnt
 argument_list|)
