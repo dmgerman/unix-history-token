@@ -368,12 +368,6 @@ decl_stmt|;
 name|basex
 operator|=
 name|hpos
-operator|+
-operator|(
-name|hd
-operator|>>
-literal|1
-operator|)
 expr_stmt|;
 comment|/* bases == coordinates of center */
 name|hmot
@@ -382,11 +376,17 @@ name|hd
 argument_list|)
 expr_stmt|;
 comment|/* horizontal motion (hpos should */
+if|if
+condition|(
+operator|!
+name|output
+condition|)
+return|return;
+comment|/*   NOT be used after this) */
 name|basey
 operator|=
 name|vpos
 expr_stmt|;
-comment|/*   NOT be used after this) */
 comment|/* hd and vd are radii, not diameters */
 if|if
 condition|(
@@ -401,9 +401,15 @@ operator|<
 literal|1
 condition|)
 name|hd
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 comment|/* neither diameter can be zero. */
+name|basex
+operator|+=
+name|hd
+expr_stmt|;
+comment|/*   hd changed!! no hmot after this */
 if|if
 condition|(
 operator|(
@@ -417,9 +423,9 @@ operator|<
 literal|1
 condition|)
 name|vd
-operator|++
+operator|=
+literal|1
 expr_stmt|;
-comment|/*   hd changed!! no hmot after this */
 name|ys
 operator|=
 operator|(
@@ -1201,9 +1207,17 @@ literal|0
 condition|)
 name|picurve
 argument_list|(
+operator|&
 name|x
+index|[
+literal|0
+index|]
 argument_list|,
+operator|&
 name|y
+index|[
+literal|0
+index|]
 argument_list|,
 name|npts
 argument_list|)
@@ -1217,9 +1231,17 @@ literal|0
 condition|)
 name|polygon
 argument_list|(
+operator|&
 name|x
+index|[
+literal|0
+index|]
 argument_list|,
+operator|&
 name|y
+index|[
+literal|0
+index|]
 argument_list|,
 name|npts
 argument_list|)
@@ -1227,9 +1249,17 @@ expr_stmt|;
 else|else
 name|HGCurve
 argument_list|(
+operator|&
 name|x
+index|[
+literal|0
+index|]
 argument_list|,
+operator|&
 name|y
+index|[
+literal|0
+index|]
 argument_list|,
 name|npts
 argument_list|)
@@ -1294,32 +1324,27 @@ begin_comment
 comment|/*----------------------------------------------------------------------------  * Routine:	picurve (xpoints, ypoints, num_of_points)  *  * Results:	Draws a curve delimited by (not through) the line segments  *		traced by (xpoints, ypoints) point list.  This is the "Pic"  *		style curve.  *----------------------------------------------------------------------------*/
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|picurve
 argument_list|(
-argument|x
-argument_list|,
-argument|y
-argument_list|,
-argument|npts
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
 name|x
-index|[
-name|MAXPOINTS
-index|]
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|y
+argument_list|,
+name|npts
+argument_list|)
+specifier|register
+name|int
+operator|*
+name|x
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
+specifier|register
 name|int
+modifier|*
 name|y
-index|[
-name|MAXPOINTS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,24 +1358,14 @@ begin_block
 block|{
 specifier|register
 name|int
-name|i
-decl_stmt|;
-comment|/* line segment traverser */
-specifier|register
-name|int
 name|nseg
 decl_stmt|;
 comment|/* effective resolution for each curve */
 specifier|register
-name|float
-name|w
-decl_stmt|;
-comment|/* position factor */
-specifier|register
 name|int
 name|xp
 decl_stmt|;
-comment|/* current point (and intermediary) */
+comment|/* current point (and temporary) */
 specifier|register
 name|int
 name|yp
@@ -1361,7 +1376,15 @@ decl_stmt|,
 name|pyp
 decl_stmt|;
 comment|/* previous point (to make lines from) */
-name|float
+name|int
+name|i
+decl_stmt|;
+comment|/* inner curve segment traverser */
+name|double
+name|w
+decl_stmt|;
+comment|/* position factor */
+name|double
 name|t1
 decl_stmt|,
 name|t2
@@ -1369,10 +1392,6 @@ decl_stmt|,
 name|t3
 decl_stmt|;
 comment|/* calculation temps */
-name|int
-name|j
-decl_stmt|;
-comment|/* inner curve segment traverser */
 if|if
 condition|(
 name|x
@@ -1533,15 +1552,14 @@ expr_stmt|;
 comment|/* point to the start of the 1st line */
 for|for
 control|(
-name|i
-operator|=
-literal|0
 init|;
-name|i
-operator|<
 name|npts
+operator|--
 condition|;
-name|i
+name|x
+operator|++
+operator|,
+name|y
 operator|++
 control|)
 block|{
@@ -1550,13 +1568,11 @@ name|xp
 operator|=
 name|x
 index|[
-name|i
+literal|0
 index|]
 operator|-
 name|x
 index|[
-name|i
-operator|+
 literal|1
 index|]
 expr_stmt|;
@@ -1564,13 +1580,11 @@ name|yp
 operator|=
 name|y
 index|[
-name|i
+literal|0
 index|]
 operator|-
 name|y
 index|[
-name|i
-operator|+
 literal|1
 index|]
 expr_stmt|;
@@ -1599,15 +1613,11 @@ name|xp
 operator|=
 name|x
 index|[
-name|i
-operator|+
 literal|1
 index|]
 operator|-
 name|x
 index|[
-name|i
-operator|+
 literal|2
 index|]
 expr_stmt|;
@@ -1615,15 +1625,11 @@ name|yp
 operator|=
 name|y
 index|[
-name|i
-operator|+
 literal|1
 index|]
 operator|-
 name|y
 index|[
-name|i
-operator|+
 literal|2
 index|]
 expr_stmt|;
@@ -1660,30 +1666,33 @@ literal|3
 expr_stmt|;
 for|for
 control|(
-name|j
+name|i
 operator|=
 literal|1
 init|;
-name|j
+name|i
 operator|<
 name|nseg
 condition|;
-name|j
+name|i
 operator|++
 control|)
 block|{
 name|w
 operator|=
 operator|(
-name|float
+name|double
 operator|)
-name|j
+name|i
 operator|/
 operator|(
-name|float
+name|double
 operator|)
 name|nseg
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|old_curve_calc
 name|t1
 operator|=
 literal|0.5
@@ -1722,8 +1731,6 @@ name|t1
 operator|*
 name|x
 index|[
-name|i
-operator|+
 literal|2
 index|]
 operator|+
@@ -1731,8 +1738,6 @@ name|t2
 operator|*
 name|x
 index|[
-name|i
-operator|+
 literal|1
 index|]
 operator|+
@@ -1740,7 +1745,7 @@ name|t3
 operator|*
 name|x
 index|[
-name|i
+literal|0
 index|]
 operator|+
 literal|0.5
@@ -1751,8 +1756,6 @@ name|t1
 operator|*
 name|y
 index|[
-name|i
-operator|+
 literal|2
 index|]
 operator|+
@@ -1760,8 +1763,6 @@ name|t2
 operator|*
 name|y
 index|[
-name|i
-operator|+
 literal|1
 index|]
 operator|+
@@ -1769,11 +1770,115 @@ name|t3
 operator|*
 name|y
 index|[
-name|i
+literal|0
 index|]
 operator|+
 literal|0.5
 expr_stmt|;
+else|#
+directive|else
+name|t1
+operator|=
+name|w
+operator|*
+name|w
+expr_stmt|;
+name|t3
+operator|=
+name|t1
+operator|+
+literal|1.0
+operator|-
+operator|(
+name|w
+operator|+
+name|w
+operator|)
+expr_stmt|;
+name|t2
+operator|=
+literal|2.0
+operator|-
+operator|(
+name|t3
+operator|+
+name|t1
+operator|)
+expr_stmt|;
+name|xp
+operator|=
+operator|(
+operator|(
+call|(
+name|int
+call|)
+argument_list|(
+name|t1
+operator|*
+name|x
+index|[
+literal|2
+index|]
+operator|+
+name|t2
+operator|*
+name|x
+index|[
+literal|1
+index|]
+operator|+
+name|t3
+operator|*
+name|x
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+operator|+
+literal|1
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+name|yp
+operator|=
+operator|(
+operator|(
+call|(
+name|int
+call|)
+argument_list|(
+name|t1
+operator|*
+name|y
+index|[
+literal|2
+index|]
+operator|+
+name|t2
+operator|*
+name|y
+index|[
+literal|1
+index|]
+operator|+
+name|t3
+operator|*
+name|y
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+operator|+
+literal|1
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+endif|#
+directive|endif
 name|HGtline
 argument_list|(
 name|pxp
@@ -2619,19 +2724,15 @@ argument_list|,
 argument|n
 argument_list|)
 name|int
+operator|*
 name|x
-index|[
-name|MAXPOINTS
-index|]
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
 name|int
+modifier|*
 name|y
-index|[
-name|MAXPOINTS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2831,10 +2932,8 @@ end_comment
 
 begin_decl_stmt
 name|int
+modifier|*
 name|z
-index|[
-name|MAXPOINTS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -3567,10 +3666,8 @@ end_comment
 
 begin_decl_stmt
 name|int
+modifier|*
 name|z
-index|[
-name|MAXPOINTS
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -4064,19 +4161,15 @@ end_macro
 
 begin_decl_stmt
 name|int
+modifier|*
 name|x
-index|[
-name|MAXPOINTS
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
+modifier|*
 name|y
-index|[
-name|MAXPOINTS
-index|]
 decl_stmt|;
 end_decl_stmt
 
