@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.11 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -950,7 +950,7 @@ operator|)
 operator|>
 name|es
 condition|)
-name|nqsort
+name|qsort
 argument_list|(
 name|pn
 operator|-
