@@ -388,10 +388,6 @@ begin_struct
 struct|struct
 name|lp_data
 block|{
-name|unsigned
-name|short
-name|lp_unit
-decl_stmt|;
 name|struct
 name|ifnet
 name|sc_if
@@ -740,15 +736,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * lp dependent initialisation. 	 */
-name|lp
-operator|->
-name|lp_unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
