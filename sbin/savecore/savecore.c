@@ -200,7 +200,7 @@ directive|define
 name|X_TIME
 value|2
 block|{
-literal|"_time"
+literal|"_time_second"
 block|}
 block|,
 define|#
@@ -303,7 +303,7 @@ block|}
 block|,
 comment|/*	those in current_nl[].  */
 block|{
-literal|"_time"
+literal|"_time_second"
 block|}
 block|,
 block|{
