@@ -71,28 +71,35 @@ begin_define
 define|#
 directive|define
 name|SL1_BOARD
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|SL10_BOARD
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|EN100_BOARD
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|SLFIBER_BOARD
-value|3
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI5210_BOARD
+value|0x0055
 end_define
 
 begin_define
