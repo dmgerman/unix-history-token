@@ -107,16 +107,6 @@ end_include
 begin_escape
 end_escape
 
-begin_define
-define|#
-directive|define
-name|strip
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)&0x7f)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -7764,15 +7754,10 @@ operator|=
 operator|*
 name|tbp
 operator|++
-operator|&
-literal|0xff
 operator|,
 name|sc
 operator|=
-name|strip
-argument_list|(
 name|c
-argument_list|)
 operator|,
 name|tcc
 operator|--
@@ -7962,11 +7947,8 @@ if|if
 condition|(
 name|tcc
 operator|&&
-name|strip
-argument_list|(
 operator|*
 name|tbp
-argument_list|)
 operator|==
 name|escape
 condition|)
@@ -8050,11 +8032,8 @@ name|tcc
 operator|>
 literal|0
 operator|&&
-name|strip
-argument_list|(
 operator|*
 name|tbp
-argument_list|)
 operator|==
 name|echoc
 condition|)
