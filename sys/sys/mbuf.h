@@ -668,7 +668,7 @@ value|400
 end_define
 
 begin_comment
-comment|/* has externally maintained ref_cnt ptr*/
+comment|/* has externally maintained ref_cnt ptr */
 end_comment
 
 begin_comment
@@ -1337,7 +1337,7 @@ value|(!((m)->m_flags& M_RDONLY)&& (!((m)->m_flags  \& M_EXT) || !MEXT_IS_REF(m)
 end_define
 
 begin_comment
-comment|/*  * Check if the supplied mbuf has a packet header, or else panic.  */
+comment|/* Check if the supplied mbuf has a packet header, or else panic. */
 end_comment
 
 begin_define
@@ -1348,11 +1348,11 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT(m != NULL&& m->m_flags& M_PKTHDR,	\ 		("%s: no mbuf packet header!", __func__))
+value|KASSERT(m != NULL&& m->m_flags& M_PKTHDR,			\ 	    ("%s: no mbuf packet header!", __func__))
 end_define
 
 begin_comment
-comment|/*  * Ensure that the supplied mbuf is a valid, non-free mbuf.  */
+comment|/* Ensure that the supplied mbuf is a valid, non-free mbuf. */
 end_comment
 
 begin_define
@@ -1363,7 +1363,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|KASSERT((((struct mbuf *)m)->m_flags& M_FREELIST) == 0,			\ 		("%s: attempted use of a free mbuf!", __func__))
+value|KASSERT((((struct mbuf *)m)->m_flags& M_FREELIST) == 0,	\ 	    ("%s: attempted use of a free mbuf!", __func__))
 end_define
 
 begin_comment
@@ -1633,8 +1633,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 parameter_list|)
 parameter_list|,
 name|void
@@ -2159,19 +2158,16 @@ parameter_list|(
 name|struct
 name|uio
 modifier|*
-name|uio
 parameter_list|,
 name|int
-name|how
 parameter_list|,
 name|int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Packets may have annotations attached by affixing a list  * of "packet tags" to the pkthdr structure.  Packet tags are  * dynamically allocated semi-opaque data structures that have  * a fixed header (struct m_tag) that specifies the size of the  * memory block and a<cookie,type> pair that identifies it.  * The cookie is a 32-bit unique unsigned value used to identify  * a module or ABI.  By convention this value is chose as the  * date+time that the module is created, expressed as the number of  * seconds since the epoch (e.g., using date -u +'%s').  The type value  * is an ABI/module-specific value that identifies a particular annotation  * and is private to the module.  For compatibility with systems  * like OpenBSD that define packet tags w/o an ABI/module cookie,  * the value PACKET_ABI_COMPAT is used to implement m_tag_get and  * m_tag_find compatibility shim functions and several tag types are  * defined below.  Users that do not require compatibility should use  * a private cookie value so that packet tag-related definitions  * can be maintained privately.  *  * Note that the packet tag returned by m_tag_alloc has the default  * memory alignment implemented by malloc.  To reference private data  * one can use a construct like:  *  *	struct m_tag *mtag = m_tag_alloc(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members  * of struct foo.  Otherwise it is necessary to embed struct m_tag within  * the private data structure to insure proper alignment; e.g.,  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_alloc(...);  *	struct m_tag *mtag =&p->tag;  */
+comment|/*-  * Packets may have annotations attached by affixing a list  * of "packet tags" to the pkthdr structure.  Packet tags are  * dynamically allocated semi-opaque data structures that have  * a fixed header (struct m_tag) that specifies the size of the  * memory block and a<cookie,type> pair that identifies it.  * The cookie is a 32-bit unique unsigned value used to identify  * a module or ABI.  By convention this value is chose as the  * date+time that the module is created, expressed as the number of  * seconds since the epoch (e.g., using date -u +'%s').  The type value  * is an ABI/module-specific value that identifies a particular annotation  * and is private to the module.  For compatibility with systems  * like OpenBSD that define packet tags w/o an ABI/module cookie,  * the value PACKET_ABI_COMPAT is used to implement m_tag_get and  * m_tag_find compatibility shim functions and several tag types are  * defined below.  Users that do not require compatibility should use  * a private cookie value so that packet tag-related definitions  * can be maintained privately.  *  * Note that the packet tag returned by m_tag_alloc has the default  * memory alignment implemented by malloc.  To reference private data  * one can use a construct like:  *  *	struct m_tag *mtag = m_tag_alloc(...);  *	struct foo *p = (struct foo *)(mtag+1);  *  * if the alignment of struct m_tag is sufficient for referencing members  * of struct foo.  Otherwise it is necessary to embed struct m_tag within  * the private data structure to insure proper alignment; e.g.,  *  *	struct foo {  *		struct m_tag	tag;  *		...  *	};  *	struct foo *p = (struct foo *) m_tag_alloc(...);  *	struct m_tag *mtag =&p->tag;  */
 end_comment
 
 begin_comment
@@ -2197,7 +2193,11 @@ comment|/* Nadda */
 end_comment
 
 begin_comment
-comment|/* Packet tag for use with PACKET_ABI_COMPAT. */
+comment|/* Packet tags for use with PACKET_ABI_COMPAT. */
+end_comment
+
+begin_comment
+comment|/* XXX excessive indentation for most of these (was: all). */
 end_comment
 
 begin_define
@@ -2457,6 +2457,10 @@ begin_comment
 comment|/* Packet tag routines. */
 end_comment
 
+begin_comment
+comment|/* XXX totally disordered declarations. */
+end_comment
+
 begin_function_decl
 name|struct
 name|m_tag
@@ -2569,6 +2573,10 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* XXX sigh, we had uninlined everything. */
+end_comment
+
+begin_comment
 comment|/*  * Initialize the list of tags associated with an mbuf.  */
 end_comment
 
@@ -2598,7 +2606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Setup the contents of a tag.  Note that this does not  * fillin the free method; the caller is expected to do that.  *  * XXX probably should be called m_tag_init; but that was  * already taken.  */
+comment|/*  * Set up the contents of a tag.  Note that this does not  * fill in the free method; the caller is expected to do that.  *  * XXX probably should be called m_tag_init, but that was  * already taken.  */
 end_comment
 
 begin_function
@@ -2688,6 +2696,7 @@ argument|struct mbuf *m
 argument_list|)
 block|{
 return|return
+operator|(
 name|SLIST_FIRST
 argument_list|(
 operator|&
@@ -2697,6 +2706,7 @@ name|m_pkthdr
 operator|.
 name|tags
 argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2719,12 +2729,14 @@ argument|struct m_tag *t
 argument_list|)
 block|{
 return|return
+operator|(
 name|SLIST_NEXT
 argument_list|(
 name|t
 argument_list|,
 name|m_tag_link
 argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2838,6 +2850,7 @@ argument|int wait
 argument_list|)
 block|{
 return|return
+operator|(
 name|m_tag_alloc
 argument_list|(
 name|MTAG_ABI_COMPAT
@@ -2848,6 +2861,7 @@ name|length
 argument_list|,
 name|wait
 argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2868,6 +2882,7 @@ argument|struct m_tag *start
 argument_list|)
 block|{
 return|return
+operator|(
 name|SLIST_EMPTY
 argument_list|(
 operator|&
@@ -2890,12 +2905,13 @@ name|type
 argument_list|,
 name|start
 argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * Obtain next_hop information associated with the mbuf; if any.  * If a tag is present devalidate it also.  */
+comment|/*  * XXX gross style bugs in this function.  * Obtain next_hop information associated with the mbuf, if any.  * If a tag is present devalidate it also.  */
 end_comment
 
 begin_expr_stmt
@@ -2954,17 +2970,20 @@ operator|=
 name|PACKET_TAG_NONE
 expr_stmt|;
 return|return
+operator|(
 name|sin
+operator|)
 return|;
 block|}
 end_expr_stmt
 
-begin_else
-else|else
+begin_return
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
-end_else
+end_return
 
 begin_endif
 unit|}
