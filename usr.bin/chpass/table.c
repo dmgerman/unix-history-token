@@ -212,13 +212,13 @@ name|e2
 block|,   }
 block|,
 block|{
-literal|"location"
+literal|"office location"
 block|,
 name|p_gecos
 block|,
 literal|0
 block|,
-literal|8
+literal|15
 block|,
 name|e2
 block|,   }
