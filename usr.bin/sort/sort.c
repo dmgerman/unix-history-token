@@ -480,12 +480,6 @@ index|]
 operator|=
 name|REC_D_F
 expr_stmt|;
-name|SINGL_FLD
-operator|=
-name|SEP_FLAG
-operator|=
-literal|0
-expr_stmt|;
 name|d_mask
 index|[
 literal|'\t'
