@@ -132,6 +132,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_TITSB82AA2
+value|(0x8025<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_TIPCI4410A
 value|(0x8017<< 16)
 end_define
