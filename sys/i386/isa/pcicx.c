@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * TODO:  * [1] integrate into current if_ed.c  * [2] parse tuples to find out where to map the shared memory buffer,  *     and what to write into the configuration register  * [3] move pcic-specific code into a separate module.  *  * Device driver for IBM PCMCIA Credit Card Adapter for Ethernet,  * if_ze.c  *  * Based on the Device driver for National Semiconductor DS8390 ethernet  * adapters by David Greenman.  Modifications for PCMCIA by Keith Moore.  * Adapted for FreeBSD 1.1.5 by Jordan Hubbard.  *  * Currently supports only the IBM Credit Card Adapter for Ethernet, but  * could probably work with other PCMCIA cards also, if it were modified  * to get the locations of the PCMCIA configuration option register (COR)  * by parsing the configuration tuples, rather than by hard-coding in  * the value expected by IBM's card.  *  * Sources for data on the PCMCIA/IBM CCAE specific portions of the driver:  *  * [1] _Local Area Network Credit Card Adapters Technical Reference_,  *     IBM Corp., SC30-3585-00, part # 33G9243.  * [2] "pre-alpha" PCMCIA support code for Linux by Barry Jaspan.  * [3] Intel 82536SL PC Card Interface Controller Data Sheet, Intel  *     Order Number 290423-002  * [4] National Semiconductor DP83902A ST-NIC (tm) Serial Network  *     Interface Controller for Twisted Pair data sheet.  *  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*-  * TODO:  * [1] integrate into current if_ed.c  * [2] parse tuples to find out where to map the shared memory buffer,  *     and what to write into the configuration register  * [3] move pcic-specific code into a separate module.  *  * Device driver for IBM PCMCIA Credit Card Adapter for Ethernet,  * if_ze.c  *  * Based on the Device driver for National Semiconductor DS8390 ethernet  * adapters by David Greenman.  Modifications for PCMCIA by Keith Moore.  * Adapted for FreeBSD 1.1.5 by Jordan Hubbard.  *  * Currently supports only the IBM Credit Card Adapter for Ethernet, but  * could probably work with other PCMCIA cards also, if it were modified  * to get the locations of the PCMCIA configuration option register (COR)  * by parsing the configuration tuples, rather than by hard-coding in  * the value expected by IBM's card.  *  * Sources for data on the PCMCIA/IBM CCAE specific portions of the driver:  *  * [1] _Local Area Network Credit Card Adapters Technical Reference_,  *     IBM Corp., SC30-3585-00, part # 33G9243.  * [2] "pre-alpha" PCMCIA support code for Linux by Barry Jaspan.  * [3] Intel 82536SL PC Card Interface Controller Data Sheet, Intel  *     Order Number 290423-002  * [4] National Semiconductor DP83902A ST-NIC (tm) Serial Network  *     Interface Controller for Twisted Pair data sheet.  *  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -34,12 +34,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
 
 begin_include
 include|#

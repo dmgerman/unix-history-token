@@ -41,9 +41,6 @@ directive|include
 file|<sys/systm.h>
 include|#
 directive|include
-file|<sys/kernel.h>
-include|#
-directive|include
 file|<sys/conf.h>
 include|#
 directive|include
