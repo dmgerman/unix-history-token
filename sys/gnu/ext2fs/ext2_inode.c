@@ -1158,7 +1158,7 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Having written the new inode to disk, save its new configuration 	 * and put back the old block pointers long enough to process them. 	 * Note that we save the new block configuration so we can check it 	 * when we are done. 	 */
