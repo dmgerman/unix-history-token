@@ -367,7 +367,7 @@ name|isphonogram
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _T)
+value|__istype((c), _Q)
 end_define
 
 begin_define
@@ -377,7 +377,7 @@ name|isspecial
 parameter_list|(
 name|c
 parameter_list|)
-value|__istype((c), _Q)
+value|__istype((c), _T)
 end_define
 
 begin_define
