@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsmount.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -290,10 +290,9 @@ operator|,
 name|int
 name|cmds
 operator|,
-name|u_int
+name|uid_t
 name|uid
 operator|,
-comment|/* should be uid_t */
 name|caddr_t
 name|arg
 operator|,
@@ -344,6 +343,16 @@ name|mp
 operator|,
 name|int
 name|waitfor
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -364,9 +373,6 @@ expr|struct
 name|fid
 operator|*
 name|fhp
-operator|,
-name|int
-name|setgen
 operator|,
 expr|struct
 name|vnode
