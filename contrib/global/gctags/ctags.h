@@ -78,6 +78,29 @@ name|SETLINE
 value|{++lineno;lineftell = ftell(inf);}
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GLOBAL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GETC
+parameter_list|(
+name|op
+parameter_list|,
+name|exp
+parameter_list|)
+value|((((c = getc(inf)) == '\r') ? (c = getc(inf)) : c) op (int)exp)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -89,6 +112,11 @@ name|exp
 parameter_list|)
 value|((c = getc(inf)) op (int)exp)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -274,8 +302,19 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GTAGS
+name|GLOBAL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -c: compact index */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -310,14 +349,21 @@ begin_comment
 comment|/* -r: function reference */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -s: collect symbols */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* GTAGS */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -421,6 +467,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* ex search character */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* program name */
 end_comment
 
 begin_ifndef
@@ -610,7 +668,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GTAGS
+name|GLOBAL
 end_ifdef
 
 begin_decl_stmt
@@ -626,37 +684,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|gtagopen
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
-name|isdefined
+name|portable_getc
 name|__P
 argument_list|(
 operator|(
-name|char
+name|FILE
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|gtagclose
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
