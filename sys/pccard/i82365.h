@@ -810,7 +810,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Interrupt enable */
+comment|/* PCI CSC Interrupt enable */
 end_comment
 
 begin_comment
@@ -860,6 +860,56 @@ end_define
 begin_comment
 comment|/* Battery Dead */
 end_comment
+
+begin_comment
+comment|/* For the Card status change interrupt PCIC_STAT_INT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_CSCSELECT
+value|0xf0
+end_define
+
+begin_comment
+comment|/* CSCSELECT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_SI_IRQ_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_CDEN
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_READYEN
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_BATWARNEN
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_BATDEADEN
+value|0x1
+end_define
 
 begin_comment
 comment|/*  * For the Address Window Enable Register (PCIC_ADDRWINE)  * The lower 6 bits contain enable bits for the memory  * windows (LSB = memory window 0).  */
