@@ -67,6 +67,16 @@ name|int
 name|pid
 decl_stmt|;
 comment|/* The child's process ID */
+name|char
+name|tfile
+index|[
+sizeof|sizeof
+argument_list|(
+name|TMPPAT
+argument_list|)
+index|]
+decl_stmt|;
+comment|/* Temporary file to use for job */
 name|GNode
 modifier|*
 name|node
