@@ -351,6 +351,14 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
