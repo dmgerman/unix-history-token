@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.38 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5162,16 +5162,14 @@ argument_list|(
 name|mapname
 argument_list|)
 expr_stmt|;
+comment|/* XXX shouldn't open the map here -- wait until usage time */
 if|if
 condition|(
-call|(
-modifier|*
 name|class
 operator|->
 name|s_mapclass
 operator|.
 name|map_parse
-call|)
 argument_list|(
 operator|&
 name|map
@@ -5179,6 +5177,20 @@ operator|->
 name|s_map
 argument_list|,
 name|p
+argument_list|)
+operator|&&
+name|class
+operator|->
+name|s_mapclass
+operator|.
+name|map_open
+argument_list|(
+operator|&
+name|map
+operator|->
+name|s_map
+argument_list|,
+name|O_RDONLY
 argument_list|)
 condition|)
 name|map
@@ -5188,6 +5200,8 @@ operator|.
 name|map_mflags
 operator||=
 name|MF_VALID
+operator||
+name|MF_OPEN
 expr_stmt|;
 block|}
 end_function
