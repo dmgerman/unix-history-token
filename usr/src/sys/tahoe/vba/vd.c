@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.3	86/01/12	*/
+comment|/*	vd.c	1.4	86/01/12	*/
 end_comment
 
 begin_include
@@ -923,6 +923,25 @@ operator||
 name|CCF_ERR
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"vd%d: %s controller\n"
+argument_list|,
+name|vi
+operator|->
+name|ui_unit
+argument_list|,
+name|ci
+operator|->
+name|ctlr_type
+operator|==
+name|SMDCTLR
+condition|?
+literal|"smd"
+else|:
+literal|"xsmd"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vdnotrailer
