@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.50 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.51 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.50 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.51 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3319,7 +3319,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. **		pfunc -- processing function for second and subsequent **			lines of response -- if null, no special **			processing is done. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
+comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. **		pfunc -- processing function called on each line of response. **			If null, no special processing is done. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
 end_comment
 
 begin_macro
