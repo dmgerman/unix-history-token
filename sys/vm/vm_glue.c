@@ -359,8 +359,6 @@ decl_stmt|;
 name|vm_prot_t
 name|prot
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -507,6 +505,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|void
 name|vsunlock
@@ -522,8 +524,6 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_unwire
 argument_list|(
 operator|&
