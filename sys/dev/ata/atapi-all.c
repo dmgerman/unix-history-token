@@ -1550,9 +1550,13 @@ name|unit
 argument_list|,
 name|ATA_C_PACKET_CMD
 argument_list|,
+operator|(
 name|request
 operator|->
 name|bytecount
+operator|<<
+literal|8
+operator|)
 argument_list|,
 literal|0
 argument_list|,
