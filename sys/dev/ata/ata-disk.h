@@ -181,6 +181,11 @@ directive|define
 name|ATA_FLAG_64_70
 value|2
 comment|/* words 64-70 valid */
+define|#
+directive|define
+name|ATA_FLAG_88
+value|4
+comment|/* word 88 valid */
 name|int16_t
 name|currcyls
 decl_stmt|;

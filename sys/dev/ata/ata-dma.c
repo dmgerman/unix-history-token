@@ -215,9 +215,30 @@ block|{
 name|int32_t
 name|type
 decl_stmt|,
-name|devno
-decl_stmt|,
 name|error
+decl_stmt|;
+name|int32_t
+name|devno
+init|=
+operator|(
+name|scp
+operator|->
+name|unit
+operator|<<
+literal|1
+operator|)
+operator|+
+operator|(
+operator|(
+name|device
+operator|==
+name|ATA_MASTER
+operator|)
+condition|?
+literal|0
+else|:
+literal|1
+operator|)
 decl_stmt|;
 name|void
 modifier|*
@@ -234,32 +255,6 @@ return|return
 operator|-
 literal|1
 return|;
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"ata%d: dmainit: ioaddr=0x%x altioaddr=0x%x, bmaddr=0x%x\n"
-argument_list|,
-name|scp
-operator|->
-name|lun
-argument_list|,
-name|scp
-operator|->
-name|ioaddr
-argument_list|,
-name|scp
-operator|->
-name|altioaddr
-argument_list|,
-name|scp
-operator|->
-name|bmaddr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* if simplex controller, only allow DMA on primary channel */
 if|if
 condition|(
@@ -372,7 +367,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ata_dmainit: dmatab crosses page boundary, no DMA\n"
+literal|"ata%d-%s: dmatab crosses page boundary, no DMA\n"
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|,
+operator|(
+name|device
+operator|==
+name|ATA_MASTER
+operator|)
+condition|?
+literal|"master"
+else|:
+literal|"slave"
 argument_list|)
 expr_stmt|;
 name|free
@@ -420,6 +429,10 @@ case|case
 literal|0x71118086
 case|:
 comment|/* Intel PIIX4 */
+case|case
+literal|0x71998086
+case|:
+comment|/* Intel PIIX4 */
 if|if
 condition|(
 name|udmamode
@@ -461,7 +474,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA2 mode on PIIX4 chip\n"
+literal|"ata%d-%s: %s setting up UDMA2 mode on PIIX4 chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -492,28 +505,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|devno
-operator|=
-operator|(
-name|scp
-operator|->
-name|unit
-operator|<<
-literal|1
-operator|)
-operator|+
-operator|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-operator|)
-expr_stmt|;
 name|mask48
 operator|=
 operator|(
@@ -826,7 +817,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on PIIX4 chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on PIIX%s chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -849,6 +840,16 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+operator|(
+name|type
+operator|==
+literal|0x70108086
+operator|)
+condition|?
+literal|"3"
+else|:
+literal|"4"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1109,7 +1110,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on PIIX chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on PIIX chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -1245,7 +1246,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA2 mode on Aladdin chip\n"
+literal|"ata%d-%s: %s setting up UDMA2 mode on Aladdin chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -1409,7 +1410,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on Aladdin chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on Aladdin chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -1498,31 +1499,14 @@ case|case
 literal|0x05711106
 case|:
 comment|/* VIA Apollo 82C571 / 82C586 / 82C686 */
-name|devno
-operator|=
-operator|(
-name|scp
-operator|->
-name|unit
-operator|<<
-literal|1
-operator|)
-operator|+
-operator|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-operator|)
-expr_stmt|;
-comment|/* UDMA4 mode only on VT82C686 hardware */
+case|case
+literal|0x74091022
+case|:
+comment|/* AMD 756 */
+comment|/* UDMA4 mode only on 82C686 / AMD 756 hardware */
 if|if
 condition|(
+operator|(
 name|udmamode
 operator|>=
 literal|4
@@ -1535,46 +1519,19 @@ name|dev
 argument_list|,
 literal|0x06861106
 argument_list|)
+operator|)
+operator|||
+operator|(
+name|udmamode
+operator|>=
+literal|4
+operator|&&
+name|type
+operator|==
+literal|0x74091022
+operator|)
 condition|)
 block|{
-name|int8_t
-name|byte
-init|=
-name|pci_read_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-literal|1
-argument_list|)
-decl_stmt|;
-comment|/* enable UDMA transfer modes setting by SETFEATURES cmd */
-name|pci_write_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-operator|(
-name|byte
-operator|&
-literal|0x1c
-operator|)
-operator||
-literal|0x40
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ata_command
@@ -1604,7 +1561,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA4 mode on VIA chip\n"
+literal|"ata%d-%s: %s setting up UDMA4 mode on %s chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -1627,6 +1584,16 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+operator|(
+name|type
+operator|==
+literal|0x74091022
+operator|)
+condition|?
+literal|"AMD"
+else|:
+literal|"VIA"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1635,6 +1602,21 @@ operator|!
 name|error
 condition|)
 block|{
+name|pci_write_config
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x53
+operator|-
+name|devno
+argument_list|,
+literal|0xc3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|scp
 operator|->
 name|mode
@@ -1656,28 +1638,48 @@ return|return
 literal|0
 return|;
 block|}
-name|pci_write_config
+block|}
+comment|/* UDMA2 mode only on 82C686 and AMD 756 and rev 1 and better 82C586 */
+if|if
+condition|(
+operator|(
+name|udmamode
+operator|>=
+literal|2
+operator|&&
+name|ata_find_dev
 argument_list|(
 name|scp
 operator|->
 name|dev
 argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-name|byte
-argument_list|,
-literal|1
+literal|0x06861106
 argument_list|)
-expr_stmt|;
-block|}
-comment|/* UDMA2 mode only on rev 1 and better 82C586& 82C586 chips */
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|udmamode
 operator|>=
 literal|2
+operator|&&
+name|type
+operator|==
+literal|0x74091022
+operator|)
+operator|||
+operator|(
+name|udmamode
+operator|>=
+literal|2
+operator|&&
+name|ata_find_dev
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x05861106
+argument_list|)
 operator|&&
 name|pci_read_config
 argument_list|(
@@ -1691,66 +1693,9 @@ literal|1
 argument_list|)
 operator|>=
 literal|0x01
-operator|&&
-operator|(
-name|ata_find_dev
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x05861106
-argument_list|)
-operator|||
-name|ata_find_dev
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x06861106
-argument_list|)
 operator|)
 condition|)
 block|{
-name|int8_t
-name|byte
-init|=
-name|pci_read_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-literal|1
-argument_list|)
-decl_stmt|;
-comment|/* enable UDMA transfer modes setting by SETFEATURES cmd */
-name|pci_write_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-operator|(
-name|byte
-operator|&
-literal|0x1c
-operator|)
-operator||
-literal|0x40
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ata_command
@@ -1780,7 +1725,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA2 mode on VIA chip\n"
+literal|"ata%d-%s: %s setting up UDMA2 mode on %s chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -1803,95 +1748,22 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+operator|(
+name|type
+operator|==
+literal|0x74091022
+operator|)
+condition|?
+literal|"AMD"
+else|:
+literal|"VIA"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|error
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|&&
-name|scp
-operator|->
-name|devices
-operator|&
-name|ATA_ATA_MASTER
-operator|)
-operator|||
-operator|(
-name|device
-operator|==
-name|ATA_SLAVE
-operator|&&
-name|scp
-operator|->
-name|devices
-operator|&
-name|ATA_ATA_SLAVE
-operator|)
-condition|)
-block|{
-name|struct
-name|ata_params
-modifier|*
-name|ap
-init|=
-operator|(
-operator|(
-expr|struct
-name|ad_softc
-operator|*
-operator|)
-operator|(
-name|scp
-operator|->
-name|dev_softc
-index|[
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-index|]
-operator|)
-operator|)
-operator|->
-name|ata_parm
-decl_stmt|;
-if|if
-condition|(
-name|ata_find_dev
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x06861106
-argument_list|)
-operator|&&
-operator|(
-name|ap
-operator|->
-name|udmamodes
-operator|&
-literal|0x10
-operator|)
-operator|&&
-operator|!
-name|ap
-operator|->
-name|cblid
 condition|)
 block|{
 name|pci_write_config
@@ -1904,19 +1776,11 @@ literal|0x53
 operator|-
 name|devno
 argument_list|,
-operator|(
-name|byte
-operator|&
-literal|0x1c
-operator|)
-operator||
-literal|0x42
+literal|0xc0
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|scp
 operator|->
 name|mode
@@ -1938,21 +1802,6 @@ return|return
 literal|0
 return|;
 block|}
-name|pci_write_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-name|byte
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1966,21 +1815,6 @@ literal|4
 condition|)
 block|{
 comment|/* set WDMA2 mode timing */
-name|pci_write_config
-argument_list|(
-name|scp
-operator|->
-name|dev
-argument_list|,
-literal|0x4b
-operator|-
-name|devno
-argument_list|,
-literal|0x31
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ata_command
@@ -2010,7 +1844,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on VIA chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on %s chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2033,6 +1867,16 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+operator|(
+name|type
+operator|==
+literal|0x74091022
+operator|)
+condition|?
+literal|"AMD"
+else|:
+literal|"VIA"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2041,6 +1885,36 @@ operator|!
 name|error
 condition|)
 block|{
+name|pci_write_config
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x53
+operator|-
+name|devno
+argument_list|,
+literal|0x82
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|,
+literal|0x4b
+operator|-
+name|devno
+argument_list|,
+literal|0x31
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|scp
 operator|->
 name|mode
@@ -2069,28 +1943,6 @@ case|case
 literal|0x55131039
 case|:
 comment|/* SiS 5591 */
-name|devno
-operator|=
-operator|(
-name|scp
-operator|->
-name|unit
-operator|<<
-literal|1
-operator|)
-operator|+
-operator|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|udmamode
@@ -2127,7 +1979,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA2 mode on SiS chip\n"
+literal|"ata%d-%s: %s setting up UDMA2 mode on SiS chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2239,7 +2091,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on SiS chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on SiS chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2349,28 +2201,6 @@ name|ATA_ATAPI_SLAVE
 operator|)
 condition|)
 break|break;
-name|devno
-operator|=
-operator|(
-name|scp
-operator|->
-name|unit
-operator|<<
-literal|1
-operator|)
-operator|+
-operator|(
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|udmamode
@@ -2439,7 +2269,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA4 mode on Promise chip\n"
+literal|"ata%d-%s: %s setting up UDMA4 mode on Promise chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2573,7 +2403,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA2 mode on Promise chip\n"
+literal|"ata%d-%s: %s setting up UDMA2 mode on Promise chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2685,7 +2515,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on Promise chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on Promise chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2763,7 +2593,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: setting PIO mode on Promise chip\n"
+literal|"ata%d-%s: setting PIO mode on Promise chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -2832,18 +2662,6 @@ name|ATA_ATAPI_SLAVE
 operator|)
 condition|)
 break|break;
-name|devno
-operator|=
-operator|(
-name|device
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|udmamode
@@ -2896,7 +2714,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA4 mode on HPT366 chip\n"
+literal|"ata%d-%s: %s setting up UDMA4 mode on HPT366 chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -3010,7 +2828,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA3 mode on HPT366 chip\n"
+literal|"ata%d-%s: %s setting up UDMA3 mode on HPT366 chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -3108,7 +2926,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up UDMA2 mode on HPT366 chip\n"
+literal|"ata%d-%s: %s setting up UDMA2 mode on HPT366 chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -3210,7 +3028,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on HPT366 chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on HPT366 chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -3278,7 +3096,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: setting PIO mode on HPT366 chip\n"
+literal|"ata%d-%s: setting PIO mode on HPT366 chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -3412,7 +3230,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: %s: %s setting up WDMA2 mode on generic chip\n"
+literal|"ata%d-%s: %s setting up WDMA2 mode on generic chip\n"
 argument_list|,
 name|scp
 operator|->
@@ -3518,20 +3336,6 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"ata%d: dmasetup\n"
-argument_list|,
-name|scp
-operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -3559,12 +3363,9 @@ operator|!
 name|count
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
 name|printf
 argument_list|(
-literal|"ata%d: zero length DMA transfer attempt on %s\n"
+literal|"ata%d-%s: zero length DMA transfer attempted\n"
 argument_list|,
 name|scp
 operator|->
@@ -3583,8 +3384,6 @@ literal|"slave"
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|-
 literal|1
@@ -3681,7 +3480,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ata%d: too many segments in DMA table for %s\n"
+literal|"ata%d-%s: too many segments in DMA table\n"
 argument_list|,
 name|scp
 operator|->
@@ -3736,20 +3535,6 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"ata_dmasetup: base=%08x count%08x\n"
-argument_list|,
-name|dma_base
-argument_list|,
-name|dma_count
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|dmatab
 index|[
 name|i
@@ -3788,30 +3573,6 @@ name|dmatab
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"dmatab=%08x %08x\n"
-argument_list|,
-name|vtophys
-argument_list|(
-name|dmatab
-argument_list|)
-argument_list|,
-name|inl
-argument_list|(
-name|scp
-operator|->
-name|bmaddr
-operator|+
-name|ATA_BMDTP_PORT
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|scp
@@ -3869,20 +3630,6 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"ata%d: dmastart\n"
-argument_list|,
-name|scp
-operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|scp
 operator|->
 name|flags
@@ -3922,20 +3669,6 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"ata%d: dmadone\n"
-argument_list|,
-name|scp
-operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|scp
@@ -3989,20 +3722,6 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATA_DMADEBUG
-name|printf
-argument_list|(
-literal|"ata%d: dmastatus\n"
-argument_list|,
-name|scp
-operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|inb
 argument_list|(
@@ -4230,16 +3949,14 @@ name|scp
 operator|->
 name|dev
 argument_list|,
-literal|0x40
-operator|+
 operator|(
 name|device
 operator|==
 name|ATA_MASTER
 condition|?
-literal|0
+literal|0x40
 else|:
-literal|4
+literal|0x44
 operator|)
 argument_list|,
 name|timing

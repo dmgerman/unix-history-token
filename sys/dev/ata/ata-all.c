@@ -914,6 +914,9 @@ return|;
 case|case
 literal|0x71118086
 case|:
+case|case
+literal|0x71998086
+case|:
 return|return
 literal|"Intel PIIX4 ATA controller"
 return|;
@@ -959,6 +962,12 @@ literal|0x55131039
 case|:
 return|return
 literal|"SiS 5591 ATA controller"
+return|;
+case|case
+literal|0x74091022
+case|:
+return|return
+literal|"AMD 756 ATA controller"
 return|;
 case|case
 literal|0x4d33105a
@@ -1549,7 +1558,10 @@ break|break;
 case|case
 literal|0x05711106
 case|:
-comment|/* the VIA Apollo needs some sensible defaults */
+case|case
+literal|0x74091022
+case|:
+comment|/* the VIA 82C586, VIA 82C686& AMD 756 needs some sensible defaults */
 comment|/* set prefetch, postwrite */
 name|pci_write_config
 argument_list|(
@@ -2355,6 +2367,12 @@ name|altioaddr
 expr_stmt|;
 name|scp
 operator|->
+name|bmaddr
+operator|=
+name|bmaddr
+expr_stmt|;
+name|scp
+operator|->
 name|lun
 operator|=
 name|lun
@@ -2378,7 +2396,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ata%d: iobase=0x%04x altiobase=0x%04x\n"
+literal|"ata%d: iobase=0x%04x altiobase=0x%04x bmaddr=0x%04x\n"
 argument_list|,
 name|scp
 operator|->
@@ -2391,6 +2409,10 @@ argument_list|,
 name|scp
 operator|->
 name|altioaddr
+argument_list|,
+name|scp
+operator|->
+name|bmaddr
 argument_list|)
 expr_stmt|;
 comment|/* do we have any signs of ATA/ATAPI HW being present ? */
@@ -2893,16 +2915,6 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-if|if
-condition|(
-name|bmaddr
-condition|)
-name|scp
-operator|->
-name|bmaddr
-operator|=
-name|bmaddr
-expr_stmt|;
 name|atadevices
 index|[
 name|scp
@@ -3218,16 +3230,6 @@ name|atapi_request
 modifier|*
 name|atapi_request
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_DEBUG
-name|printf
-argument_list|(
-literal|"ata_start: entered\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|scp
@@ -3287,16 +3289,6 @@ argument_list|(
 name|ad_request
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_DEBUG
-name|printf
-argument_list|(
-literal|"ata_start: started ata, leaving\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 endif|#
@@ -3536,16 +3528,6 @@ argument_list|(
 name|atapi_request
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_DEBUG
-name|printf
-argument_list|(
-literal|"ata_start: started atapi, leaving\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 endif|#
@@ -4712,16 +4694,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ATA_DEBUG
-name|printf
-argument_list|(
-literal|"ata_command: leaving\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;

@@ -376,7 +376,7 @@ name|ap
 operator|->
 name|atavalid
 operator|&
-literal|2
+name|ATA_FLAG_64_70
 condition|)
 block|{
 if|if
@@ -427,7 +427,7 @@ name|ap
 operator|->
 name|atavalid
 operator|&
-literal|2
+name|ATA_FLAG_64_70
 condition|)
 block|{
 if|if
@@ -485,22 +485,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|ap
 operator|->
 name|atavalid
 operator|&
-literal|4
-operator|)
-operator|&&
-name|ad_version
-argument_list|(
-name|ap
-operator|->
-name|versmajor
-argument_list|)
-operator|>=
-literal|3
+name|ATA_FLAG_88
 condition|)
 block|{
 if|if
@@ -1801,20 +1790,6 @@ decl_stmt|;
 name|int32_t
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"adstrategy: entered count=%d\n"
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splbio
@@ -1840,16 +1815,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"adstrategy: leaving\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2210,16 +2175,6 @@ name|ad_request
 modifier|*
 name|request
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_start:\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2418,18 +2373,6 @@ operator|/
 name|DEV_BSIZE
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_transfer: blkno=%d\n"
-argument_list|,
-name|blkno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|request
@@ -2781,16 +2724,6 @@ operator|->
 name|controller
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_transfer: return waiting for DMA interrupt\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* calculate this transfer length */
@@ -2819,16 +2752,6 @@ operator|&
 name|AR_F_READ
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_transfer: return waiting for PIO read interrupt\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* ready to write PIO data ? */
@@ -2950,16 +2873,6 @@ name|request
 operator|->
 name|currentsize
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_transfer: return wrote data\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3527,16 +3440,6 @@ name|request
 operator|->
 name|currentsize
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_interrupt: read in data\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* if this was a DMA operation finish up */
 if|if
@@ -3614,28 +3517,6 @@ name|request
 operator|->
 name|currentsize
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_interrupt: %s cmd OK\n"
-argument_list|,
-operator|(
-name|request
-operator|->
-name|flags
-operator|&
-name|AR_F_READ
-operator|)
-condition|?
-literal|"read"
-else|:
-literal|"write"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|request
@@ -3713,16 +3594,6 @@ argument_list|(
 name|adp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AD_DEBUG
-name|printf
-argument_list|(
-literal|"ad_interrupt: completed\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ATA_OP_FINISHED
 return|;

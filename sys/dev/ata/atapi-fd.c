@@ -709,23 +709,6 @@ operator|)
 condition|)
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|AFD_DEBUG
-name|atapi_dump
-argument_list|(
-literal|"afd: sense"
-argument_list|,
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
