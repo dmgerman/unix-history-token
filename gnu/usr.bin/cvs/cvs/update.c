@@ -4258,9 +4258,15 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* skip joining identical revs */
+comment|/* skip joining identical revs or if the file is not present */
 if|if
 condition|(
+name|vers
+operator|->
+name|vn_user
+operator|==
+name|NULL
+operator|||
 name|strcmp
 argument_list|(
 name|rev2
