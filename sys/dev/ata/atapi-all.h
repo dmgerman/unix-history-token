@@ -970,7 +970,7 @@ name|replaceable_unit_code
 decl_stmt|;
 comment|/* replaceable unit code */
 name|u_int8_t
-name|sk_specific1
+name|sk_specific
 range|:
 literal|7
 decl_stmt|;
@@ -982,11 +982,11 @@ literal|1
 decl_stmt|;
 comment|/* sense key specific info OK */
 name|u_int8_t
-name|sk_specific2
+name|sk_specific1
 decl_stmt|;
 comment|/* sense key specific */
 name|u_int8_t
-name|sk_specific3
+name|sk_specific2
 decl_stmt|;
 comment|/* sense key specific */
 block|}
@@ -1115,6 +1115,10 @@ define|#
 directive|define
 name|ATPR_F_AT_HEAD
 value|0x0004
+define|#
+directive|define
+name|ATPR_F_INTERNAL
+value|0x0008
 name|caddr_t
 name|data
 decl_stmt|;
