@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  *  * BPF Packet Filter Support added by Marc Frajola, 12/30/92  * Input& other routines re-written by David Greenman, 1/2/93  * BPF trailer support added by David Greenman, 1/7/93  * we_attach enhanced with link level address by Rodney W. Grimes, 1/30/93  *  * $Log: if_we.c,v $  * Revision 1.1.1.1  1993/06/12  14:58:01  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  93/02/18  17:21:57  davidg  * Bugs in mbuf cluster allocation fixed  * Problem with nfs wanting mbufs aligned on longword boundries fixed  *   */
+comment|/*  * Modification history  *  * 8/28/89 - Initial version(if_wd.c), Tim L Tucker  *  * 92.09.19 - Changes to allow multiple we interfaces in one box.  *          Allowed interupt handler to look at unit other than 0  *            Bdry was static, made it into an array w/ one entry per  *          interface.  nerd@percival.rain.com (Michael Galassi)  *  * BPF Packet Filter Support added by Marc Frajola, 12/30/92  * Input& other routines re-written by David Greenman, 1/2/93  * BPF trailer support added by David Greenman, 1/7/93  * we_attach enhanced with link level address by Rodney W. Grimes, 1/30/93  *  * $Log: if_we.c,v $  * Revision 1.2  1993/07/29  12:07:10  davidg  * Added include of systm.h to get min/max/bcmp etc...  *  * Revision 1.1.1.1  1993/06/12  14:58:01  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.2  93/02/18  17:21:57  davidg  * Bugs in mbuf cluster allocation fixed  * Problem with nfs wanting mbufs aligned on longword boundries fixed  *   */
 end_comment
 
 begin_include
@@ -1283,7 +1283,7 @@ directive|endif
 comment|/* 	 * Banner... 	 */
 name|printf
 argument_list|(
-literal|" %saddr %s"
+literal|" %saddr %s\n"
 argument_list|,
 operator|(
 name|sc
@@ -3117,7 +3117,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"we%d: reject - bad length %d"
+literal|"we%d: reject - bad length %d\n"
 argument_list|,
 name|unit
 argument_list|,

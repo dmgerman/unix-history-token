@@ -890,7 +890,7 @@ expr_stmt|;
 comment|/*  * Weeee.. We get to tell people we exist...  */
 name|printf
 argument_list|(
-literal|" address %s"
+literal|" address %s\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -955,11 +955,7 @@ name|Bdry
 operator|=
 literal|0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ecinit"
-argument_list|)
-expr_stmt|;
+comment|/* printf("ecinit");  */
 comment|/*  * Address not known.  */
 if|if
 condition|(
