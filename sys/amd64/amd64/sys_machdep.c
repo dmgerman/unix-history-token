@@ -2801,8 +2801,6 @@ argument_list|()
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|uap
-operator|->
 name|descs
 argument_list|,
 operator|&
