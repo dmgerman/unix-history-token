@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.131 2000/12/29 01:24:56 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.132 2001/01/20 23:36:02 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3538,7 +3538,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splusb
+name|splhardusb
 argument_list|()
 expr_stmt|;
 name|cmd
@@ -6146,10 +6146,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
 name|ack
 condition|)
-block|{
-comment|/* acknowledge the ints */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* nothing to acknowledge */
 name|UWRITE2
 argument_list|(
 name|sc
@@ -6159,32 +6164,7 @@ argument_list|,
 name|ack
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* nothing to acknowledge */
-name|printf
-argument_list|(
-literal|"%s: UHCI interrupt, STS = 0x%04x, but ack == 0\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+comment|/* acknowledge the ints */
 name|sc
 operator|->
 name|sc_bus
@@ -7494,7 +7474,7 @@ literal|0
 expr_stmt|;
 name|s
 operator|=
-name|splusb
+name|splhardusb
 argument_list|()
 expr_stmt|;
 name|DPRINTF
