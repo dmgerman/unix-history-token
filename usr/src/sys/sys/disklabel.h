@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -482,6 +482,16 @@ value|6
 comment|/* ST506 etc. */
 define|#
 directive|define
+name|DTYPE_HPIB
+value|7
+comment|/* CS/80 on HP-IB */
+define|#
+directive|define
+name|DTYPE_HPFL
+value|8
+comment|/* HP Fiber-link */
+define|#
+directive|define
 name|DTYPE_FLOPPY
 value|10
 comment|/* floppy */
@@ -509,9 +519,9 @@ literal|"ESDI"
 block|,
 literal|"ST506"
 block|,
-literal|"type 7"
+literal|"HP-IB"
 block|,
-literal|"type 8"
+literal|"HP-FL"
 block|,
 literal|"type 9"
 block|,
