@@ -1783,5 +1783,112 @@ name|PCIC_MAX_SLOTS
 value|(PCIC_MAX_CARDS * PCIC_CARD_SLOTS)
 end_define
 
+begin_comment
+comment|/* Plug and play */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_ACTIONTEC
+value|0x1802A904
+end_define
+
+begin_comment
+comment|/* AEI0218 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_IBM3765
+value|0x65374d24
+end_define
+
+begin_comment
+comment|/* IBM3765 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_82365
+value|0x000ED041
+end_define
+
+begin_comment
+comment|/* PNP0E00 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_CL_PD6720
+value|0x010ED041
+end_define
+
+begin_comment
+comment|/* PNP0E01 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_VLSI_82C146
+value|0x020ED041
+end_define
+
+begin_comment
+comment|/* PNP0E02 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_82365_CARDBUS
+value|0x030ED041
+end_define
+
+begin_comment
+comment|/* PNP0E03 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PNP_SCM_SWAPBOX
+value|0x69046d4c
+end_define
+
+begin_comment
+comment|/* SMC0469 */
+end_comment
+
+begin_comment
+comment|/* C-Bus PnP Definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_NEC_PC9801_102
+value|0x9180a3b8
+end_define
+
+begin_comment
+comment|/* NEC8091 PC-9801-102 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_NEC_PC9821RA_E01
+value|0x2181a3b8
+end_define
+
+begin_comment
+comment|/* NEC8121 PC-9821RA-E01 */
+end_comment
+
 end_unit
 
