@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_gre.h,v 1.10 2002/02/24 17:22:20 martin Exp $ */
+comment|/*	$NetBSD: if_gre.h,v 1.13 2003/11/10 08:51:52 wiz Exp $ */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ block|{
 name|u_int16_t
 name|sre_family
 decl_stmt|;
-comment|/* adress family */
+comment|/* address family */
 name|u_char
 name|sre_offset
 decl_stmt|;
@@ -436,15 +436,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|u_short
+name|u_int16_t
 name|gre_in_cksum
 parameter_list|(
-name|u_short
+name|u_int16_t
 modifier|*
-name|p
 parameter_list|,
 name|u_int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl

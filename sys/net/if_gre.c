@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_gre.c,v 1.42 2002/08/14 00:23:27 itojun Exp $ */
+comment|/*	$NetBSD: if_gre.c,v 1.49 2003/12/11 00:22:29 itojun Exp $ */
 end_comment
 
 begin_comment
@@ -914,10 +914,7 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
-name|u_char
-name|osrc
-decl_stmt|;
-name|u_short
+name|u_int16_t
 name|etype
 init|=
 literal|0
@@ -1024,10 +1021,6 @@ expr_stmt|;
 name|ip
 operator|=
 name|NULL
-expr_stmt|;
-name|osrc
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1262,7 +1255,7 @@ operator|=
 name|gre_in_cksum
 argument_list|(
 operator|(
-name|u_short
+name|u_int16_t
 operator|*
 operator|)
 operator|&
@@ -1804,11 +1797,14 @@ name|gh
 operator|->
 name|gi_len
 operator|=
+name|htons
+argument_list|(
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
 block|}
 name|ifp
@@ -1842,8 +1838,18 @@ name|route
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|ip_moptions
+operator|*
+operator|)
 name|NULL
 argument_list|,
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3261,7 +3267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * computes a route to our destination that is not the one  * which would be taken by ip_output(), as this one will loop back to  * us. If the interface is p2p as  a--->b, then a routing entry exists  * If we now send a packet to b (e.g. ping b), this will come down here  * gets src=a, dst=b tacked on and would from ip_ouput() sent back to  * if_gre.  * Goal here is to compute a route to b that is less specific than  * a-->b. We know that this one exists as in normal operation we have  * at least a default route which matches.  */
+comment|/*  * computes a route to our destination that is not the one  * which would be taken by ip_output(), as this one will loop back to  * us. If the interface is p2p as  a--->b, then a routing entry exists  * If we now send a packet to b (e.g. ping b), this will come down here  * gets src=a, dst=b tacked on and would from ip_output() sent back to  * if_gre.  * Goal here is to compute a route to b that is less specific than  * a-->b. We know that this one exists as in normal operation we have  * at least a default route which matches.  */
 end_comment
 
 begin_function
@@ -3424,7 +3430,7 @@ directive|ifdef
 name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"%s: searching a route to %s"
+literal|"%s: searching for a route to %s"
 argument_list|,
 name|if_name
 argument_list|(
@@ -3595,10 +3601,10 @@ comment|/*  * do a checksum of a buffer - much like in_cksum, which operates on 
 end_comment
 
 begin_function
-name|u_short
+name|u_int16_t
 name|gre_in_cksum
 parameter_list|(
-name|u_short
+name|u_int16_t
 modifier|*
 name|p
 parameter_list|,
@@ -3606,7 +3612,7 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|u_int
+name|u_int32_t
 name|sum
 init|=
 literal|0
