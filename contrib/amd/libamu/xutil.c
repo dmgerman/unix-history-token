@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.11.2.6 2001/01/10 03:23:41 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: xutil.c,v 1.11.2.12 2003/04/04 15:53:35 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -241,6 +241,10 @@ begin_comment
 comment|/* forward definitions */
 end_comment
 
+begin_comment
+comment|/* for GCC format string auditing */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -266,41 +270,6 @@ parameter_list|,
 function_decl|2
 operator|,
 function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* for GCC format string auditing */
-end_comment
-
-begin_function_decl
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|expand_error
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|f
-parameter_list|,
-name|char
-modifier|*
-name|e
-parameter_list|,
-name|int
-name|maxlen
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__format_arg__
-parameter_list|(
-function_decl|1
 end_function_decl
 
 begin_empty_stmt
@@ -1144,17 +1113,6 @@ name|int
 name|maxlen
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|HAVE_STRERROR
-comment|/*    * XXX: we are assuming that if a system doesn't has strerror,    * then it has sys_nerr.  If this assumption turns out to be wrong on    * some systems, we'll have to write a separate test to detect if    * a system has sys_nerr.  -Erez    */
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_STRERROR */
 specifier|const
 name|char
 modifier|*
@@ -1223,83 +1181,14 @@ operator|==
 literal|'m'
 condition|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|errstr
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_STRERROR
-if|if
-condition|(
-name|error
-operator|<
-literal|0
-condition|)
-else|#
-directive|else
-comment|/* not HAVE_STRERROR */
-if|if
-condition|(
-name|error
-operator|<
-literal|0
-operator|||
-name|error
-operator|>=
-name|sys_nerr
-condition|)
-endif|#
-directive|endif
-comment|/* not HAVE_STRERROR */
-name|errstr
-operator|=
-name|NULL
-expr_stmt|;
-else|else
-ifdef|#
-directive|ifdef
-name|HAVE_STRERROR
-name|errstr
-operator|=
-name|strerror
-argument_list|(
-name|error
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* not HAVE_STRERROR */
-name|errstr
-operator|=
-name|sys_errlist
-index|[
-name|error
-index|]
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_STRERROR */
-if|if
-condition|(
-name|errstr
-condition|)
 name|strcpy
 argument_list|(
 name|q
 argument_list|,
-name|errstr
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
+name|strerror
 argument_list|(
-name|q
-argument_list|,
-literal|"Error %d"
-argument_list|,
 name|error
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|len
@@ -3241,6 +3130,10 @@ name|logfp
 operator|=
 name|new_logfp
 expr_stmt|;
+if|if
+condition|(
+name|logfile
+condition|)
 name|plog
 argument_list|(
 name|XLOG_INFO
@@ -3248,6 +3141,14 @@ argument_list|,
 literal|"switched to logfile \"%s\""
 argument_list|,
 name|logfile
+argument_list|)
+expr_stmt|;
+else|else
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"no logfile defined; using stderr"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3415,41 +3316,7 @@ comment|/* TIOCNOTTY */
 name|int
 name|tempfd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SETSID
-comment|/* XXX: one day maybe use vhangup(2) */
-if|if
-condition|(
-name|setsid
-argument_list|()
-operator|<
-literal|0
-condition|)
-block|{
-name|plog
-argument_list|(
-name|XLOG_WARNING
-argument_list|,
-literal|"Could not release controlling tty using setsid(): %m"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|plog
-argument_list|(
-name|XLOG_INFO
-argument_list|,
-literal|"released controlling tty using setsid()"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
-comment|/* HAVE_SETSID */
-comment|/*    * In daemon mode, leaving open file descriptors to terminals or pipes    * can be a really bad idea.    * Case in point: the redhat startup script calls us through their 'initlog'    * program, which exits as soon as the original amd process exits. If, at some    * point, a misbehaved library function decides to print something to the screen,    * we get a SIGPIPE and die.    * More precisely: NIS libc functions will attempt to print to stderr    * "YPBINDPROC_DOMAIN: Domain not bound" if ypbind is running but can't find    * a ypserver.    *    * So we close all of our "terminal" filedescriptors, i.e. 0, 1 and 2, then    * reopen them as /dev/null.    *    * XXX We should also probably set the SIGPIPE handler to SIG_IGN.    */
+comment|/*    * In daemon mode, leaving open file descriptors to terminals or pipes    * can be a really bad idea.    * Case in point: the redhat startup script calls us through their 'initlog'    * program, which exits as soon as the original amd process exits. If,    * at some point, a misbehaved library function decides to print something    * to the screen, we get a SIGPIPE and die.    * And guess what: NIS glibc functions will attempt to print to stderr    * "YPBINDPROC_DOMAIN: Domain not bound" if ypbind is running but can't find    * a ypserver.    *    * So we close all of our "terminal" filedescriptors, i.e. 0, 1 and 2, then    * reopen them as /dev/null.    *    * XXX We should also probably set the SIGPIPE handler to SIG_IGN.    */
 name|tempfd
 operator|=
 name|open
@@ -3515,6 +3382,40 @@ argument_list|(
 name|tempfd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETSID
+comment|/* XXX: one day maybe use vhangup(2) */
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"Could not release controlling tty using setsid(): %m"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"released controlling tty using setsid()"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_SETSID */
 ifdef|#
 directive|ifdef
 name|TIOCNOTTY

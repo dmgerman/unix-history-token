@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amq.c,v 1.7.2.5 2001/01/12 22:43:43 ro Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amq.c,v 1.7.2.8 2002/12/27 22:44:45 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"\ @(#)Copyright (c) 1997-2001 Erez Zadok\n\ @(#)Copyright (c) 1990 Jan-Simon Pendry\n\ @(#)Copyright (c) 1990 Imperial College of Science, Technology& Medicine\n\ @(#)Copyright (c) 1990 The Regents of the University of California.\n\ @(#)All rights reserved.\n"
+literal|"\ @(#)Copyright (c) 1997-2003 Erez Zadok\n\ @(#)Copyright (c) 1990 Jan-Simon Pendry\n\ @(#)Copyright (c) 1990 Imperial College of Science, Technology& Medicine\n\ @(#)Copyright (c) 1990 The Regents of the University of California.\n\ @(#)All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: amq.c,v 1.7.2.5 2001/01/12 22:43:43 ro Exp $"
+literal|"$Id: amq.c,v 1.7.2.8 2002/12/27 22:44:45 ezk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1098,21 +1098,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-if|if
-condition|(
-name|mi
-operator|->
-name|mi_error
-operator|<
-name|sys_nerr
-condition|)
-ifdef|#
-directive|ifdef
-name|HAVE_STRERROR
 name|printf
 argument_list|(
 literal|" (%s)"
@@ -1123,34 +1108,6 @@ name|mi
 operator|->
 name|mi_error
 argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* not HAVE_STRERROR */
-name|printf
-argument_list|(
-literal|" (%s)"
-argument_list|,
-name|sys_errlist
-index|[
-name|mi
-operator|->
-name|mi_error
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not HAVE_STRERROR */
-else|else
-name|printf
-argument_list|(
-literal|" (Error %d)"
-argument_list|,
-name|mi
-operator|->
-name|mi_error
 argument_list|)
 expr_stmt|;
 block|}

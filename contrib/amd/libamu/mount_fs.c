@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mount_fs.c,v 1.11.2.5 2001/04/14 21:08:25 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mount_fs.c,v 1.11.2.11 2003/05/08 17:57:53 ib42 Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -274,46 +274,7 @@ block|,
 endif|#
 directive|endif
 comment|/* defined(MNT2_GEN_OPT_OVERLAY)&& defined(MNTTAB_OPT_OVERLAY) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MNT2_NFS_OPT_PROPLIST
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MNTTAB_OPT_PROPLIST
-argument_list|)
-block|{
-name|MNTTAB_OPT_PROPLIST
-block|,
-name|MNT2_NFS_OPT_PROPLIST
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* defined(MNT2_NFS_OPT_PROPLIST)&& defined(MNTTAB_OPT_PROPLIST) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MNT2_NFS_OPT_NONLM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MNTTAB_OPT_NOLOCK
-argument_list|)
-block|{
-name|MNTTAB_OPT_NOLOCK
-block|,
-name|MNT2_NFS_OPT_NONLM
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* defined(MNT2_NFS_OPT_NONLM)&& defined(MNTTAB_OPT_NOLOCK) */
+comment|/*    * Do not define MNT2_NFS_OPT_* entries here!  This is for generic    * mount(2) options only, not for NFS mount options.    */
 block|{
 literal|0
 block|,
@@ -343,8 +304,9 @@ name|opt
 decl_stmt|;
 name|int
 name|flags
+init|=
+literal|0
 decl_stmt|;
-comment|/* start: this must come first */
 ifdef|#
 directive|ifdef
 name|MNT2_GEN_OPT_NEWTYPE
@@ -352,54 +314,19 @@ name|flags
 operator|=
 name|MNT2_GEN_OPT_NEWTYPE
 expr_stmt|;
-else|#
-directive|else
-comment|/* not MNT2_GEN_OPT_NEWTYPE */
-comment|/* Not all machines have MNT2_GEN_OPT_NEWTYPE (HP-UX 9.01) */
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
-comment|/* not MNT2_GEN_OPT_NEWTYPE */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MNT2_GEN_OPT_OVERLAY
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MNTTAB_OPT_OVERLAY
-argument_list|)
-comment|/*    * Overlay this amd mount (presumably on another amd which died    * before and left the machine hung).  This will allow a new amd or    * hlfsd to be remounted on top of another one.    */
-if|if
-condition|(
-name|hasmntopt
-argument_list|(
-name|mntp
-argument_list|,
-name|MNTTAB_OPT_OVERLAY
-argument_list|)
-condition|)
-block|{
+comment|/* MNT2_GEN_OPT_NEWTYPE */
+ifdef|#
+directive|ifdef
+name|MNT2_GEN_OPT_AUTOMOUNTED
 name|flags
 operator||=
-name|MNT2_GEN_OPT_OVERLAY
+name|MNT2_GEN_OPT_AUTOMOUNTED
 expr_stmt|;
-name|plog
-argument_list|(
-name|XLOG_INFO
-argument_list|,
-literal|"using an overlay mount"
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
-comment|/* defined(MNT2_GEN_OVERLAY)&& defined(MNTOPT_OVERLAY) */
+comment|/* not MNT2_GEN_OPT_AUTOMOUNTED */
 comment|/*    * Crack basic mount options    */
 for|for
 control|(
@@ -1027,7 +954,7 @@ expr_stmt|;
 comment|/*    * Additional fields in mntent_t    * are fixed up here    */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_MNTENT_T_MNT_CNODE
+name|HAVE_MNTENT_T_MNT_CNODE
 name|mnt
 operator|->
 name|mnt_cnode
@@ -1036,10 +963,10 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_MNTENT_T_MNT_CNODE */
+comment|/* HAVE_MNTENT_T_MNT_CNODE */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_MNTENT_T_MNT_RO
+name|HAVE_MNTENT_T_MNT_RO
 name|mnt
 operator|->
 name|mnt_ro
@@ -1057,13 +984,13 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_MNTENT_T_MNT_RO */
+comment|/* HAVE_MNTENT_T_MNT_RO */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_MNTENT_T_MNT_TIME
+name|HAVE_MNTENT_T_MNT_TIME
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_MNTENT_T_MNT_TIME_STRING
+name|HAVE_MNTENT_T_MNT_TIME_STRING
 block|{
 comment|/* allocate enough space for a long */
 name|char
@@ -1109,7 +1036,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* not HAVE_FIELD_MNTENT_T_MNT_TIME_STRING */
+comment|/* not HAVE_MNTENT_T_MNT_TIME_STRING */
 name|mnt
 operator|->
 name|mnt_time
@@ -1125,10 +1052,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not HAVE_FIELD_MNTENT_T_MNT_TIME_STRING */
+comment|/* not HAVE_MNTENT_T_MNT_TIME_STRING */
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_MNTENT_T_MNT_TIME */
+comment|/* HAVE_MNTENT_T_MNT_TIME */
 name|write_mntent
 argument_list|(
 name|mnt
@@ -1371,12 +1298,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_FIELD_NFS_ARGS_T_FHSIZE
+name|HAVE_NFS_ARGS_T_FHSIZE
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|HAVE_FIELD_NFS_ARGS_T_FH_LEN
+name|HAVE_NFS_ARGS_T_FH_LEN
 argument_list|)
 comment|/*      * Some systems (Irix/bsdi3) have a separate field in nfs_args for      * the length of the file handle for NFS V3.  They insist that      * the file handle set in nfs_args be plain bytes, and not      * include the length field.      */
 name|NFS_FH_DREF
@@ -1397,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* not defined(HAVE_FIELD_NFS_ARGS_T_FHSIZE) || defined(HAVE_FIELD_NFS_ARGS_T_FH_LEN) */
+comment|/* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
 name|NFS_FH_DREF
 argument_list|(
 name|nap
@@ -1410,7 +1337,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not defined(HAVE_FIELD_NFS_ARGS_T_FHSIZE) || defined(HAVE_FIELD_NFS_ARGS_T_FH_LEN) */
+comment|/* not defined(HAVE_NFS_ARGS_T_FHSIZE) || defined(HAVE_NFS_ARGS_T_FH_LEN) */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_NFSV3
@@ -1458,7 +1385,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_FHSIZE
+name|HAVE_NFS_ARGS_T_FHSIZE
 ifdef|#
 directive|ifdef
 name|HAVE_FS_NFS3
@@ -1488,11 +1415,11 @@ name|FHSIZE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_FHSIZE */
+comment|/* HAVE_NFS_ARGS_T_FHSIZE */
 comment|/* this is the version of the nfs_args structure, not of NFS! */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_FH_LEN
+name|HAVE_NFS_ARGS_T_FH_LEN
 ifdef|#
 directive|ifdef
 name|HAVE_FS_NFS3
@@ -1522,7 +1449,7 @@ name|FHSIZE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_FH_LEN */
+comment|/* HAVE_NFS_ARGS_T_FH_LEN */
 comment|/************************************************************************/
 comment|/***	HOST NAME							***/
 comment|/************************************************************************/
@@ -1574,7 +1501,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_ACREGMIN
+name|HAVE_NFS_ARGS_T_ACREGMIN
 name|nap
 operator|->
 name|acregmin
@@ -1591,10 +1518,10 @@ expr_stmt|;
 comment|/* max ac timeout for reg files (sec) */
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_ACREGMIN */
+comment|/* HAVE_NFS_ARGS_T_ACREGMIN */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_ACDIRMIN
+name|HAVE_NFS_ARGS_T_ACDIRMIN
 name|nap
 operator|->
 name|acdirmin
@@ -1611,7 +1538,7 @@ expr_stmt|;
 comment|/* max ac timeout for dirs (sec) */
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_ACDIRMIN */
+comment|/* HAVE_NFS_ARGS_T_ACDIRMIN */
 block|}
 else|else
 block|{
@@ -1842,7 +1769,7 @@ directive|endif
 comment|/* MNT2_NFS_OPT_TCP */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_SOTYPE
+name|HAVE_NFS_ARGS_T_SOTYPE
 comment|/* bsdi3 uses this */
 if|if
 condition|(
@@ -1883,10 +1810,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_SOTYPE */
+comment|/* HAVE_NFS_ARGS_T_SOTYPE */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_PROTO
+name|HAVE_NFS_ARGS_T_PROTO
 name|nap
 operator|->
 name|proto
@@ -1940,10 +1867,10 @@ directive|endif
 comment|/* IPPROTO_TCP */
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_SOTYPE */
+comment|/* HAVE_NFS_ARGS_T_SOTYPE */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_VERSION
+name|HAVE_NFS_ARGS_T_VERSION
 ifdef|#
 directive|ifdef
 name|NFS_ARGSVERSION
@@ -1972,7 +1899,7 @@ directive|endif
 comment|/* DG_MOUNT_NFS_VERSION */
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_VERSION */
+comment|/* HAVE_NFS_ARGS_VERSION */
 comment|/************************************************************************/
 comment|/***	OTHER NFS SOCKET RELATED OPTIONS AND FLAGS			***/
 comment|/************************************************************************/
@@ -2770,9 +2697,40 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(MNT2_NFS_OPT_MAXGRPS)&& defined(MNTTAB_OPT_MAXGROUPS) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MNT2_NFS_OPT_NONLM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MNTTAB_OPT_NOLOCK
+argument_list|)
+if|if
+condition|(
+name|hasmntopt
+argument_list|(
+name|mntp
+argument_list|,
+name|MNTTAB_OPT_NOLOCK
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_NONLM
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(MNT2_NFS_OPT_NONLM)&& defined(MNTTAB_OPT_NOLOCK) */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_OPTSTR
+name|HAVE_NFS_ARGS_T_OPTSTR
 name|nap
 operator|->
 name|optstr
@@ -2783,13 +2741,13 @@ name|mnt_opts
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_OPTSTR */
+comment|/* HAVE_NFS_ARGS_T_OPTSTR */
 comment|/************************************************************************/
 comment|/***	FINAL ACTIONS							***/
 comment|/************************************************************************/
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_GFS_FLAGS
+name|HAVE_NFS_ARGS_T_GFS_FLAGS
 comment|/* Ultrix stores generic flags in nfs_args.gfs_flags. */
 name|nap
 operator|->
@@ -2799,7 +2757,7 @@ name|genflags
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_FLAGS */
+comment|/* HAVE_NFS_ARGS_T_FLAGS */
 return|return;
 comment|/* end of compute_nfs_args() function */
 block|}
@@ -3308,8 +3266,7 @@ argument_list|,
 literal|"NA->knconf->semantics %lu"
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_long
 operator|)
 name|kncp
 operator|->
@@ -3344,6 +3301,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->knconf->rdev %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|kncp
 operator|->
 name|knc_rdev
@@ -3399,7 +3359,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN
+name|HAVE_STRUCT_SOCKADDR_SA_LEN
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3413,7 +3373,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN */
+comment|/* HAVE_STRUCT_SOCKADDR_SA_LEN */
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3484,7 +3444,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_NAMLEN
+name|HAVE_NFS_ARGS_T_NAMLEN
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3498,7 +3458,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_NAMLEN */
+comment|/* HAVE_NFS_ARGS_T_NAMLEN */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_FSNAME
@@ -3524,7 +3484,7 @@ directive|endif
 comment|/* MNT2_NFS_OPT_FSNAME */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_FHSIZE
+name|HAVE_NFS_ARGS_T_FHSIZE
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3544,10 +3504,10 @@ name|fhsize
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_FHSIZE */
+comment|/* HAVE_NFS_ARGS_T_FHSIZE */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_FH_LEN
+name|HAVE_NFS_ARGS_T_FH_LEN
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3567,7 +3527,7 @@ name|fh_len
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_FH_LEN */
+comment|/* HAVE_NFS_ARGS_T_FH_LEN */
 comment|/*    * XXX: need to figure out how to correctly print file handles,    * since some times they are pointers, and sometimes the real structure    * is stored in nfs_args.  Even if it is a pointer, it can be the actual    * char[] array, or a structure containing multiple fields.    */
 name|plog
 argument_list|(
@@ -3593,7 +3553,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_SOTYPE
+name|HAVE_NFS_ARGS_T_SOTYPE
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3607,10 +3567,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_SOTYPE */
+comment|/* HAVE_NFS_ARGS_T_SOTYPE */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_PROTO
+name|HAVE_NFS_ARGS_T_PROTO
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3627,10 +3587,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_PROTO */
+comment|/* HAVE_NFS_ARGS_T_PROTO */
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_VERSION
+name|HAVE_NFS_ARGS_T_VERSION
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3644,7 +3604,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_VERSION */
+comment|/* HAVE_NFS_ARGS_T_VERSION */
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3689,7 +3649,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_BSIZE
+name|HAVE_NFS_ARGS_T_BSIZE
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3703,7 +3663,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_BSIZE */
+comment|/* HAVE_NFS_ARGS_T_BSIZE */
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3734,7 +3694,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_NFS_ARGS_T_ACREGMIN
+name|HAVE_NFS_ARGS_T_ACREGMIN
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3793,7 +3753,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_NFS_ARGS_T_ACREGMIN */
+comment|/* HAVE_NFS_ARGS_T_ACREGMIN */
 ifdef|#
 directive|ifdef
 name|MNTTAB_OPT_SYMTTL

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mtab.c,v 1.3.2.3 2001/04/14 21:08:25 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2003 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mtab.c,v 1.3.2.7 2002/12/27 22:45:12 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -79,10 +79,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_MNTENT_T_MNT_TIME
+name|HAVE_MNTENT_T_MNT_TIME
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_MNTENT_T_MNT_TIME_STRING
+name|HAVE_MNTENT_T_MNT_TIME_STRING
 name|XFREE
 argument_list|(
 name|mp
@@ -92,10 +92,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_MNTENT_T_MNT_TIME_STRING */
+comment|/* HAVE_MNTENT_T_MNT_TIME_STRING */
 endif|#
 directive|endif
-comment|/* HAVE_FIELD_MNTENT_T_MNT_TIME */
+comment|/* HAVE_MNTENT_T_MNT_TIME */
 name|XFREE
 argument_list|(
 name|mp
@@ -391,29 +391,25 @@ decl_stmt|;
 comment|/* hex and octal allowed ;-) */
 if|if
 condition|(
-operator|(
 operator|!
 name|endptr
-operator|)
 operator|||
-comment|/* endptr == NULL means all chars valid */
-comment|/* 	   * endptr set means strtol saw a non-digit.  If the 	   * non-digit is a comma, it's probably the start of the next 	   * option.  If the comma is the first char though, complain about 	   * it (foo=,bar is made noticeable by this). 	   */
-operator|(
-operator|(
-name|endptr
-operator|==
-name|strchr
-argument_list|(
-name|eq
-argument_list|,
-literal|','
-argument_list|)
-operator|)
-operator|&&
+comment|/* 	   * endptr set means strtol saw a non-digit.  If the 	   * non-digit is a comma, it's probably the start of the next 	   * option.  If the comma is the first char though, complain about 	   * it (foo=,bar is made noticeable by this). 	   * 	   * Similar reasoning for '\0' instead of comma, it's the end 	   * of the string. 	   */
 operator|(
 name|endptr
 operator|!=
 name|eq
+operator|&&
+operator|(
+operator|*
+name|endptr
+operator|==
+literal|','
+operator|||
+operator|*
+name|endptr
+operator|==
+literal|'\0'
 operator|)
 operator|)
 condition|)
@@ -425,7 +421,7 @@ operator|)
 name|i
 operator|)
 return|;
-comment|/* whatever was after = wasn't a number */
+comment|/* whatever was after the '=' sign wasn't a number */
 name|plog
 argument_list|(
 name|XLOG_MAP
@@ -440,7 +436,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* No argument to option (= was missing) */
+comment|/* No argument to option ('=' sign was missing) */
 name|plog
 argument_list|(
 name|XLOG_MAP

@@ -427,6 +427,7 @@ begin_define
 define|#
 directive|define
 name|MFS
+value|1
 end_define
 
 begin_endif
