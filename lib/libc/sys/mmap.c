@@ -123,7 +123,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|long
+name|intptr_t
 operator|)
 name|__syscall
 argument_list|(
