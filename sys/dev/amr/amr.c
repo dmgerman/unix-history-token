@@ -1040,7 +1040,9 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Allocate enough s/g maps for all commands and permanently map them into      * controller-visible space.      *	      * XXX this assumes we can get enough space for all the s/g maps in one       * contiguous slab.  We may need to switch to a more complex arrangement where      * we allocate in smaller chunks and keep a lookup table from slot to bus address.      */
+comment|/*      * Allocate enough s/g maps for all commands and permanently map them into      * controller-visible space.      *	      * XXX this assumes we can get enough space for all the s/g maps in one       * contiguous slab.  We may need to switch to a more complex arrangement where      * we allocate in smaller chunks and keep a lookup table from slot to bus address.      *      * XXX HACK ALERT: at least some controllers don't like the s/g memory being      *                 allocated below 0x2000.  We leak some memory if we get some      *                 below this mark and allocate again.      */
+name|retry
+label|:
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -1110,6 +1112,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|amr_sgbusaddr
+operator|<
+literal|0x2000
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|amr_dev
+argument_list|,
+literal|"s/g table too low (0x%x), reallocating\n"
+argument_list|,
+name|sc
+operator|->
+name|amr_sgbusaddr
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 return|return
 operator|(
 literal|0
