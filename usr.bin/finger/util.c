@@ -2293,6 +2293,10 @@ modifier|*
 name|pw
 decl_stmt|;
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2329,11 +2333,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|access
+name|stat
 argument_list|(
 name|buf
 argument_list|,
-name|F_OK
+operator|&
+name|st
 argument_list|)
 operator|==
 literal|0
