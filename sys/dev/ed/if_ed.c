@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.27 1994/01/03 17:17:19 davidg Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.28 1994/01/11 23:28:21 ats Exp $  */
 end_comment
 
 begin_include
@@ -884,10 +884,9 @@ name|asic_addr
 operator|+
 name|ED_WD_MSR
 argument_list|,
-literal|0x2
+name|ED_WD_MSR_POW
 argument_list|)
 expr_stmt|;
-comment|/* set the power enable bit */
 name|DELAY
 argument_list|(
 literal|10000
@@ -980,7 +979,7 @@ name|ED_WD_MSR
 argument_list|,
 name|ED_WD_MSR_RST
 operator||
-literal|0x2
+name|ED_WD_MSR_POW
 argument_list|)
 expr_stmt|;
 else|#
@@ -1304,13 +1303,13 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|ED_TYPE_TOSHIBA2
+name|ED_TYPE_TOSHIBA4
 case|:
 name|sc
 operator|->
 name|type_str
 operator|=
-literal|"Toshiba2"
+literal|"Toshiba4"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1369,7 +1368,7 @@ name|sc
 operator|->
 name|type
 operator|!=
-name|ED_TYPE_TOSHIBA2
+name|ED_TYPE_TOSHIBA4
 operator|)
 endif|#
 directive|endif
@@ -2064,7 +2063,7 @@ name|ED_WD_MSR
 argument_list|,
 name|ED_WD_MSR_MENB
 operator||
-literal|0x2
+name|ED_WD_MSR_POW
 argument_list|)
 expr_stmt|;
 else|#
@@ -2313,7 +2312,7 @@ name|sc
 operator|->
 name|type
 operator|==
-name|ED_TYPE_TOSHIBA2
+name|ED_TYPE_TOSHIBA4
 operator|)
 operator|||
 endif|#
@@ -4309,7 +4308,7 @@ name|IFF_ALTPHYS
 operator|)
 operator|)
 condition|?
-literal|"tranceiver disabled"
+literal|" tranceiver disabled"
 else|:
 literal|""
 argument_list|)

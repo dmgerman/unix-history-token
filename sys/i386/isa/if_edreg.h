@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id: if_edreg.h,v 1.9 1993/11/29 17:07:33 davidg Exp $  *  * Modification history  *  * Revision 2.2  1993/11/29  16:33:39  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.1  1993/11/22  10:52:33  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
+comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id: if_edreg.h,v 1.10 1994/01/11 21:28:29 ats Exp $  *  * Modification history  *  * Revision 2.2  1993/11/29  16:33:39  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.1  1993/11/22  10:52:33  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
 end_comment
 
 begin_comment
@@ -1554,6 +1554,50 @@ begin_comment
 comment|/* Reset board */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TOSH_ETHER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ED_WD_MSR_POW
+value|0x02
+end_define
+
+begin_comment
+comment|/* 0 = power save, 1 = normal (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD_MSR_BSY
+value|0x04
+end_define
+
+begin_comment
+comment|/* gate array busy (R) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD_MSR_LEN
+value|0x20
+end_define
+
+begin_comment
+comment|/* data bus width, 0 = 16 bits, 				   1 = 8 bits (R/W) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Interface Configuration Register (ICR)  */
 end_comment
@@ -1652,6 +1696,47 @@ end_define
 begin_comment
 comment|/* store to non-volatile memory */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TOSH_ETHER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ED_WD_ICR_MEM
+value|0xe0
+end_define
+
+begin_comment
+comment|/* shared mem address A15-A13 (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_WD_ICR_MSZ1
+value|0x0f
+end_define
+
+begin_comment
+comment|/* memory size, 0x08 = 64K, 0x04 = 32K, 				   0x02 = 16K, 0x01 = 8K */
+end_comment
+
+begin_comment
+comment|/* 64K can only be used if mem address 				   above 1Mb */
+end_comment
+
+begin_comment
+comment|/* IAR holds address A23-A16 (R/W) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * IO Address Register (IAR)  */
@@ -1887,12 +1972,42 @@ name|ED_TYPE_TOSHIBA1
 value|0x11
 end_define
 
+begin_comment
+comment|/* named PCETA1 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ED_TYPE_TOSHIBA2
+value|0x12
+end_define
+
+begin_comment
+comment|/* named PCETA2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_TOSHIBA3
+value|0x13
+end_define
+
+begin_comment
+comment|/* named PCETB  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_TOSHIBA4
 value|0x14
 end_define
+
+begin_comment
+comment|/* named PCETC  */
+end_comment
 
 begin_define
 define|#
