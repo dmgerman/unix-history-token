@@ -990,7 +990,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* KERNEL */
 end_comment
 
 begin_endif
