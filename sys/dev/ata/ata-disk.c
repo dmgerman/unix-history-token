@@ -558,6 +558,16 @@ name|transfersize
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
+if|if
+condition|(
+name|ad_version
+argument_list|(
+name|AD_PARAM
+operator|->
+name|versmajor
+argument_list|)
+condition|)
+block|{
 name|secsperint
 operator|=
 name|max
@@ -623,6 +633,7 @@ name|transfersize
 operator|*=
 name|secsperint
 expr_stmt|;
+block|}
 comment|/* enable read/write cacheing if not default on device */
 if|if
 condition|(
@@ -2267,7 +2278,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ad%d: error executing command\n"
+literal|"ad%d: error executing command"
 argument_list|,
 name|adp
 operator|->
@@ -2466,6 +2477,38 @@ operator|->
 name|timeout_handle
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" - resetting\n"
+argument_list|)
+expr_stmt|;
+comment|/* if retries still permit, reinject this request */
+if|if
+condition|(
+name|request
+operator|->
+name|retries
+operator|++
+operator|<
+name|AD_MAX_RETRIES
+condition|)
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|adp
+operator|->
+name|controller
+operator|->
+name|ata_queue
+argument_list|,
+name|request
+argument_list|,
+name|chain
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* retries all used up, return error */
 name|request
 operator|->
 name|bp
@@ -2516,6 +2559,14 @@ argument_list|(
 name|request
 argument_list|,
 name|M_AD
+argument_list|)
+expr_stmt|;
+block|}
+name|ata_reinit
+argument_list|(
+name|adp
+operator|->
+name|controller
 argument_list|)
 expr_stmt|;
 block|}
