@@ -1228,56 +1228,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Initialize the console before printing anything. 	 */
-name|cninit
+name|init_param1
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Panic is there is no metadata.  Most likely the kernel was booted 	 * directly, instead of through loader(8). 	 */
-if|if
-condition|(
-name|mdp
-operator|==
-name|NULL
-operator|||
-name|kmdp
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sparc64_init: no loader metadata.\n"
-literal|"This probably means you are not using loader(8).\n"
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"sparc64_init"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Sanity check the kernel end, which is important. 	 */
-if|if
-condition|(
-name|end
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sparc64_init: warning, kernel end not specified.\n"
-literal|"Attempting to continue anyway.\n"
-argument_list|)
-expr_stmt|;
-name|end
-operator|=
-operator|(
-name|vm_offset_t
-operator|)
-name|_end
-expr_stmt|;
-block|}
 name|root
 operator|=
 name|OF_peer
@@ -1333,17 +1286,76 @@ literal|0
 condition|)
 break|break;
 block|}
+name|OF_getprop
+argument_list|(
+name|child
+argument_list|,
+literal|"clock-frequency"
+argument_list|,
+operator|&
+name|clock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|clock
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tick_init
+argument_list|(
+name|clock
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize the console before printing anything. 	 */
+name|cninit
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Panic is there is no metadata.  Most likely the kernel was booted 	 * directly, instead of through loader(8). 	 */
 if|if
 condition|(
-name|child
+name|mdp
+operator|==
+name|NULL
+operator|||
+name|kmdp
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sparc64_init: no loader metadata.\n"
+literal|"This probably means you are not using loader(8).\n"
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"sparc64_init"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Sanity check the kernel end, which is important. 	 */
+if|if
+condition|(
+name|end
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"cpu_startup: no cpu\n"
+literal|"sparc64_init: warning, kernel end not specified.\n"
+literal|"Attempting to continue anyway.\n"
 argument_list|)
 expr_stmt|;
+name|end
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|_end
+expr_stmt|;
+block|}
 name|cache_init
 argument_list|(
 name|child
@@ -1407,9 +1419,6 @@ name|end
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize tunables. 	 */
-name|init_param1
-argument_list|()
-expr_stmt|;
 name|init_param2
 argument_list|(
 name|physmem
@@ -1667,29 +1676,6 @@ argument_list|()
 expr_stmt|;
 name|intr_init2
 argument_list|()
-expr_stmt|;
-name|OF_getprop
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|node
-argument_list|)
-argument_list|,
-literal|"clock-frequency"
-argument_list|,
-operator|&
-name|clock
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|clock
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|tick_init
-argument_list|(
-name|clock
-argument_list|)
 expr_stmt|;
 name|OF_getprop
 argument_list|(
