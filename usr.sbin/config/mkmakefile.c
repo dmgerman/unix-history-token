@@ -665,17 +665,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hadtz
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"timezone not specified; gmt assumed\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|unsigned
 operator|)
