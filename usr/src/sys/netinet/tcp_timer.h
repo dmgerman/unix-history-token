@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.h	4.3	81/12/12	*/
+comment|/*	tcp_timer.h	4.4	81/12/21	*/
 end_comment
 
 begin_comment
@@ -169,9 +169,9 @@ init|=
 block|{
 literal|"REXMT"
 block|,
-literal|"KEEP"
-block|,
 literal|"PERSIST"
+block|,
+literal|"KEEP"
 block|,
 literal|"2MSL"
 block|}
