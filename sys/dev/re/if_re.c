@@ -502,6 +502,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -4130,11 +4131,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|RL_TX_LIST_SZ
+name|RL_RX_LIST_SZ
 argument_list|,
 literal|1
 argument_list|,
-name|RL_TX_LIST_SZ
+name|RL_RX_LIST_SZ
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
@@ -4235,7 +4236,7 @@ name|rl_ldata
 operator|.
 name|rl_rx_list
 argument_list|,
-name|RL_TX_LIST_SZ
+name|RL_RX_LIST_SZ
 argument_list|,
 name|re_dma_map_addr
 argument_list|,
@@ -5238,7 +5239,7 @@ name|rl_mtx
 argument_list|)
 argument_list|,
 operator|(
-literal|"rl mutex not initialized"
+literal|"re mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7579,20 +7580,17 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
 name|status
 operator|&
 name|RL_ISR_RX_OK
-condition|)
-name|re_rxeof
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|status
 operator|&
 name|RL_ISR_RX_ERR
+operator|)
 condition|)
 name|re_rxeof
 argument_list|(
@@ -7711,6 +7709,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|m_head
 decl_stmt|;
 name|int
@@ -7769,7 +7768,10 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -7785,7 +7787,10 @@ name|RL_TDESC_CMD_IPCSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -7801,7 +7806,10 @@ name|RL_TDESC_CMD_TCPCSUM
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
 name|m_head
+operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -7886,6 +7894,7 @@ name|rl_mtag
 argument_list|,
 name|map
 argument_list|,
+operator|*
 name|m_head
 argument_list|,
 name|re_dma_map_desc
@@ -7938,6 +7947,7 @@ name|m_new
 operator|=
 name|m_defrag
 argument_list|(
+operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
@@ -7951,10 +7961,11 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|1
+name|ENOBUFS
 operator|)
 return|;
 else|else
+operator|*
 name|m_head
 operator|=
 name|m_new
@@ -8004,6 +8015,7 @@ name|rl_mtag
 argument_list|,
 name|map
 argument_list|,
+operator|*
 name|m_head
 argument_list|,
 name|re_dma_map_desc
@@ -8083,6 +8095,7 @@ operator|.
 name|rl_idx
 index|]
 operator|=
+operator|*
 name|m_head
 expr_stmt|;
 name|sc
@@ -8107,6 +8120,7 @@ name|arpcom
 operator|.
 name|ac_if
 argument_list|,
+operator|*
 name|m_head
 argument_list|)
 expr_stmt|;
@@ -8338,6 +8352,7 @@ name|re_encap
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|m_head
 argument_list|,
 operator|&
@@ -8740,23 +8755,11 @@ name|if_flags
 operator|&
 name|IFF_PROMISC
 condition|)
-block|{
 name|rxcfg
 operator||=
 name|RL_RXCFG_RX_ALLPHYS
 expr_stmt|;
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|RL_RXCFG
-argument_list|,
-name|rxcfg
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|rxcfg
 operator|&=
 operator|~
@@ -8771,7 +8774,6 @@ argument_list|,
 name|rxcfg
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Set capture broadcast bit to capture broadcast frames. 	 */
 if|if
 condition|(
@@ -8781,23 +8783,11 @@ name|if_flags
 operator|&
 name|IFF_BROADCAST
 condition|)
-block|{
 name|rxcfg
 operator||=
 name|RL_RXCFG_RX_BROAD
 expr_stmt|;
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|RL_RXCFG
-argument_list|,
-name|rxcfg
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|rxcfg
 operator|&=
 operator|~
@@ -8812,7 +8802,6 @@ argument_list|,
 name|rxcfg
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Program the multicast filter, if necessary. 	 */
 name|re_setmulti
 argument_list|(
