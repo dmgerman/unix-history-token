@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -725,6 +725,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_AUTHENTICATION
+value|45
+end_define
+
+begin_comment
+comment|/* XXX Auto Authenticate */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
@@ -737,7 +748,7 @@ begin_define
 define|#
 directive|define
 name|NTELOPTS
-value|(1+TELOPT_LINEMODE)
+value|(1+TELOPT_AUTHENTICATION)
 end_define
 
 begin_ifdef
@@ -824,6 +835,28 @@ block|,
 literal|"LFLOW"
 block|,
 literal|"LINEMODE"
+block|,
+literal|"UNKNOWN 35"
+block|,
+literal|"UNKNOWN 36"
+block|,
+literal|"UNKNOWN 37"
+block|,
+literal|"UNKNOWN 38"
+block|,
+literal|"UNKNOWN 39"
+block|,
+literal|"UNKNOWN 40"
+block|,
+literal|"UNKNOWN 41"
+block|,
+literal|"UNKNOWN 42"
+block|,
+literal|"UNKNOWN 43"
+block|,
+literal|"UNKNOWN 44"
+block|,
+literal|"AUTHENTICATION"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -839,7 +872,7 @@ begin_define
 define|#
 directive|define
 name|TELOPT_LAST
-value|TELOPT_LINEMODE
+value|TELOPT_AUTHENTICATION
 end_define
 
 begin_define
@@ -1200,6 +1233,56 @@ define|#
 directive|define
 name|SLC_FLUSHOUT
 value|0x20
+end_define
+
+begin_comment
+comment|/*  * AUTHENTICATION suboptions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_AUTHTYPE_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_AUTHTYPE_PRIVATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_AUTHTYPE_KERBEROS
+value|2
+end_define
+
+begin_comment
+comment|/* Kerberos-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_AUTHTYPE_KERBEROS_V4
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_AUTHTYPE_KERBEROS_V5
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_AUTHTYPE_KERBEROS_USERNAME
+value|1
 end_define
 
 end_unit
