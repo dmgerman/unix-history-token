@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.76	83/05/12	*/
+comment|/*	tcp_usrreq.c	1.77	83/05/13	*/
 end_comment
 
 begin_include
@@ -1270,6 +1270,9 @@ operator|->
 name|t_state
 condition|)
 block|{
+case|case
+name|TCPS_CLOSED
+case|:
 case|case
 name|TCPS_LISTEN
 case|:
