@@ -6209,6 +6209,11 @@ name|kqueue
 modifier|*
 name|kq
 decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|kq_fp
+decl_stmt|;
 name|kevp
 operator|=
 operator|(
@@ -6271,7 +6276,7 @@ operator|->
 name|fd_nfiles
 operator|||
 operator|(
-name|fp
+name|kq_fp
 operator|=
 name|fdp
 operator|->
@@ -6286,7 +6291,7 @@ operator|==
 name|NULL
 operator|||
 operator|(
-name|fp
+name|kq_fp
 operator|->
 name|f_type
 operator|!=
@@ -6309,7 +6314,7 @@ expr|struct
 name|kqueue
 operator|*
 operator|)
-name|fp
+name|kq_fp
 operator|->
 name|f_data
 expr_stmt|;
