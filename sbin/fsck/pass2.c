@@ -19,6 +19,16 @@ literal|"@(#)pass2.c	5.17 (Berkeley) 12/28/90"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/fsck/pass2.c,v 1.3 1993/03/23 00:28:03 cgd Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

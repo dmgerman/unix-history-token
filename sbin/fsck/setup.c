@@ -19,6 +19,16 @@ literal|"@(#)setup.c	5.33 (Berkeley) 2/22/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/fsck/setup.c,v 1.3 1993/03/23 00:28:14 cgd Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

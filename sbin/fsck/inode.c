@@ -19,6 +19,16 @@ literal|"@(#)inode.c	5.18 (Berkeley) 3/19/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/fsck/inode.c,v 1.4 1993/06/13 21:09:16 mycroft Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -178,6 +188,12 @@ name|IFMT
 operator|)
 operator|==
 name|IFCHR
+operator|||
+name|DFASTLINK
+argument_list|(
+operator|*
+name|dp
+argument_list|)
 condition|)
 return|return
 operator|(

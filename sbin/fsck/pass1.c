@@ -19,6 +19,16 @@ literal|"@(#)pass1.c	5.16 (Berkeley) 3/19/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/fsck/pass1.c,v 1.4 1993/06/13 21:10:50 mycroft Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -431,6 +441,37 @@ name|lastino
 operator|=
 name|inumber
 expr_stmt|;
+comment|/* is fast symlink? */
+if|if
+condition|(
+name|DFASTLINK
+argument_list|(
+operator|*
+name|dp
+argument_list|)
+condition|)
+block|{
+name|lncntp
+index|[
+name|inumber
+index|]
+operator|=
+name|dp
+operator|->
+name|di_nlink
+expr_stmt|;
+name|statemap
+index|[
+name|inumber
+index|]
+operator|=
+name|FSTATE
+expr_stmt|;
+name|n_files
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 comment|/* dp->di_size< 0 || */
