@@ -857,6 +857,36 @@ name|Variable
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|NO_ECHO_OBJ
+parameter_list|(
+name|type
+parameter_list|)
+value|((type) | (DITEM_NO_ECHO<< 16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_OF_OBJ
+parameter_list|(
+name|type
+parameter_list|)
+value|((type)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_OF_OBJ
+parameter_list|(
+name|type
+parameter_list|)
+value|((type)>> 16)
+end_define
+
 begin_comment
 comment|/* A screen layout structure */
 end_comment
