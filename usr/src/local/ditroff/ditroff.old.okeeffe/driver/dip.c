@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.10	(Berkeley)	84/05/09  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.10	(Berkeley)	84/05/17  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
-comment|/* output language from troff: all numbers are character strings  sn	size in points fn	font as number from 1-n in	stipple `font' as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ...\n	draw operation 't': 	Dt d		line thickness set to d 	Ds d		line style (coordinate bit map) set to d 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	wiggly line by x,y then x,y ... 	Dg x y x y ...	gremlin spline by x,y then x,y ... 	Dp s x y ...	polygon filled with s by x,y then ... nb a	end of line (information only -- no action needed) 	b = space before line, a = after pn	new page begins -- set v to 0 #...\n	comment x ...\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init". */
+comment|/* output language from troff: all numbers are character strings  sn	size in points fn	font as number from 1-n in	stipple `font' as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ...\n	draw operation 't': 	Dt d		line thickness set to d 	Ds d		line style (coordinate bit map) set to d 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	wiggly line by x,y then x,y ... 	Dg x y x y ...	gremlin spline by x,y then x,y ... 	Dp s x y ...	polygon filled with s by x,y then ... 	DP s x y ...	unbordered polygon filled with s by x,y then ... nb a	end of line (information only -- no action needed) 	b = space before line, a = after pn	new page begins -- set v to 0 #...\n	comment x ...\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init". */
 end_comment
 
 begin_include
@@ -606,23 +606,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|linethickness
+name|polyborder
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* line drawing pars:  Thickness (pixels) */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|style
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*   and type (SOLID, DOTTED, . . . ) */
+comment|/* flag to turn off borders around a polygon */
 end_comment
 
 begin_typedef
@@ -1739,6 +1728,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'P'
+case|:
+name|polyborder
+operator|=
+literal|0
+expr_stmt|;
+comment|/* borderless polygon */
+case|case
 literal|'p'
 case|:
 comment|/* polygon */
@@ -1803,7 +1800,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* draw polygon */
+name|polyborder
+operator|=
+literal|1
+expr_stmt|;
+comment|/* assume polygons */
 break|break;
+comment|/*   all have borders */
 case|case
 literal|'g'
 case|:
@@ -2313,7 +2316,7 @@ name|error
 argument_list|(
 name|FATAL
 argument_list|,
-literal|"Input computed with wrong resolution"
+literal|"Input computed for wrong printer"
 argument_list|)
 expr_stmt|;
 break|break;
