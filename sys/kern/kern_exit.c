@@ -412,10 +412,8 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|->
-name|p_pid
 operator|==
-literal|1
+name|initproc
 condition|)
 block|{
 name|printf
