@@ -225,6 +225,14 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
+name|local
+decl_stmt|;
+name|int
+name|local_rid
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
 name|iobase
 decl_stmt|;
 name|int
@@ -245,6 +253,12 @@ name|mem
 decl_stmt|;
 name|int
 name|mem_rid
+decl_stmt|;
+name|bus_space_handle_t
+name|wi_localhandle
+decl_stmt|;
+name|bus_space_tag_t
+name|wi_localtag
 decl_stmt|;
 name|bus_space_handle_t
 name|wi_bhandle
@@ -452,15 +466,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_PCI_LOCALRES
+value|0x14
+end_define
+
+begin_comment
+comment|/* The PLX chip's local registers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WI_PCI_MEMRES
 value|0x18
 end_define
+
+begin_comment
+comment|/* The PCCard's attribute memory */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|WI_PCI_IORES
 value|0x1C
+end_define
+
+begin_comment
+comment|/* The PCCard's I/O space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_LOCAL_INTCSR
+value|0x4c
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_LOCAL_INTEN
+value|0x40
 end_define
 
 begin_define
