@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: eval.c,v 1.7 1997/07/23 06:50:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -879,7 +879,9 @@ block|{
 name|char
 name|temp
 index|[
-name|MAXTOK
+name|STRSPMAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -2170,6 +2172,11 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+else|else
+name|lquote
+operator|=
+name|LQUOTE
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -2192,6 +2199,11 @@ name|argv
 index|[
 literal|3
 index|]
+expr_stmt|;
+else|else
+name|rquote
+operator|=
+name|RQUOTE
 expr_stmt|;
 block|}
 else|else
@@ -2319,6 +2331,10 @@ name|int
 name|n
 decl_stmt|;
 block|{
+name|oindex
+operator|=
+name|n
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -2381,10 +2397,6 @@ name|m4temp
 argument_list|)
 expr_stmt|;
 block|}
-name|oindex
-operator|=
-name|n
-expr_stmt|;
 name|active
 operator|=
 name|outfile
