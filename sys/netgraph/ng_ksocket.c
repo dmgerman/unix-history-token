@@ -4989,6 +4989,11 @@ name|NGM_KSOCKET_COOKIE
 argument_list|,
 name|NG_KSOCKET_TAG_SOCKADDR
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ng_ID_t
+argument_list|)
+operator|+
 name|sa
 operator|->
 name|sa_len
