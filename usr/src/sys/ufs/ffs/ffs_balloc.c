@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_balloc.c	5.3	82/11/13	*/
+comment|/*	ffs_balloc.c	5.4	83/03/15	*/
 end_comment
 
 begin_include
@@ -265,6 +265,21 @@ operator|->
 name|fs_bsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|(
+name|daddr_t
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
 name|ip
 operator|->
 name|i_size
