@@ -1249,6 +1249,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|Static
+name|void
+name|ehci_dump
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|Static
 name|ehci_softc_t
@@ -6093,15 +6103,6 @@ end_function
 begin_comment
 comment|/*  * Unused function - this is meant to be called from a kernel  * debugger.  */
 end_comment
-
-begin_function_decl
-name|void
-name|ehci_dump
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
