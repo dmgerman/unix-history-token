@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.31 1995/07/13 09:25:09 root Exp root $  *  *  Copyright (C) 1995 by Serge Babkin<babkin@hq.icb.chel.su>  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *	Serge Babkin does not guarantee that this file is totally correct  *  for any given task and users of this file must accept responsibility  *  for any damage that occurs from the application of this file.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.1 1995/09/03 19:52:52 jkh Exp $  *  *  Copyright (C) 1995 by Serge Babkin<babkin@hq.icb.chel.su>  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *	Serge Babkin does not guarantee that this file is totally correct  *  for any given task and users of this file must accept responsibility  *  for any damage that occurs from the application of this file.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -181,17 +181,22 @@ directive|include
 file|"dgfep.h"
 end_include
 
-begin_function_decl
-name|void
-modifier|*
-name|pmap_mapdev
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * XXX temporary kludges for 2.0 (XXX TK2.0).  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|<
+literal|2
+end_if
 
 begin_define
 define|#
@@ -251,6 +256,11 @@ end_define
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7094,6 +7104,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* post 2.0.5 FreeBSD */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|tp
@@ -7141,6 +7162,8 @@ name|t_wsel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|setwin
 argument_list|(
 name|sc
@@ -7279,6 +7302,17 @@ operator|=
 name|whead
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* post 2.0.5 FreeBSD */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|tp
@@ -7311,6 +7345,8 @@ operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
+endif|#
+directive|endif
 name|end_of_buffer
 label|:
 block|}
@@ -10082,6 +10118,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* post 2.0.5 FreeBSD */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|tp
@@ -10129,6 +10176,8 @@ name|t_wsel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|setwin
 argument_list|(
 name|sc
@@ -10281,6 +10330,17 @@ operator|=
 name|head
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|TS_ASLEEP
+comment|/* post 2.0.5 FreeBSD */
+name|ttwwakeup
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|tp
@@ -10313,6 +10373,8 @@ operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
+endif|#
+directive|endif
 name|hidewin
 argument_list|(
 name|sc
