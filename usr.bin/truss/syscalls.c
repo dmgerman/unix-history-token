@@ -2588,9 +2588,6 @@ name|timediff
 operator|.
 name|tv_sec
 argument_list|,
-operator|(
-name|long
-operator|)
 name|timediff
 operator|.
 name|tv_nsec
@@ -2639,9 +2636,6 @@ name|timediff
 operator|.
 name|tv_sec
 argument_list|,
-operator|(
-name|long
-operator|)
 name|timediff
 operator|.
 name|tv_nsec
