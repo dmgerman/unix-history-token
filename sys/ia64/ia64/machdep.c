@@ -2966,6 +2966,7 @@ name|phys_avail
 index|[
 name|i
 operator|+
+literal|1
 index|]
 operator|=
 literal|0
