@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"../include/pte.h"
 end_include
 
 begin_comment
@@ -105,6 +105,12 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|machFPCurProcPtr
 decl_stmt|;
 name|p2
 operator|->
@@ -176,6 +182,18 @@ name|pte
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * Copy floating point state from the FP chip if this process 	 * has state stored there. 	 */
+if|if
+condition|(
+name|p1
+operator|==
+name|machFPCurProcPtr
+condition|)
+name|MachSaveCurFPState
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Copy pcb and stack from proc p1 to p2.  	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 */
 name|p2
 operator|->
