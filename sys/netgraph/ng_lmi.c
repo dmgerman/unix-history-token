@@ -1548,7 +1548,7 @@ operator|=
 literal|0x75
 expr_stmt|;
 comment|/* inquiry */
-comment|/* If we are Annex-D, there is this extra thing.. */
+comment|/* If we are Annex-D, and locking shift to codeset 5. */
 if|if
 condition|(
 name|ANNEXD
@@ -1562,7 +1562,7 @@ operator|++
 operator|=
 literal|0x95
 expr_stmt|;
-comment|/* ??? */
+comment|/* locking shift */
 comment|/* Add a request type */
 if|if
 condition|(
