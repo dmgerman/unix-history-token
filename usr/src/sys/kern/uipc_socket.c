@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2388,14 +2388,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|mbuf
@@ -2979,8 +2971,16 @@ goto|;
 block|}
 end_block
 
-begin_expr_stmt
-name|p
+begin_if
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_procp
+condition|)
+name|uio
+operator|->
+name|uio_procp
 operator|->
 name|p_stats
 operator|->
@@ -2989,7 +2989,7 @@ operator|.
 name|ru_msgrcv
 operator|++
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_expr_stmt
 name|nextrecord
