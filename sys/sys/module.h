@@ -448,35 +448,19 @@ name|cat
 parameter_list|,
 name|args
 parameter_list|)
-value|do {						\
+value|do {						\ 	if (mod_debug& MOD_DEBUG_##cat)				\ 		printf(args);						\ } while (0)
 end_define
 
-begin_if
-if|if
-condition|(
-name|mod_debug
-operator|&
-name|MOD_DEBUG_
-operator|#
-operator|#
-name|cat
-condition|)
-then|\
-name|printf
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_expr_stmt
-unit|\ } while
-operator|(
-literal|0
-operator|)
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* !MOD_DEBUG */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|MOD_DPF
@@ -485,39 +469,55 @@ name|cat
 parameter_list|,
 name|args
 parameter_list|)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|MAXMODNAME
 value|32
-expr|struct
+end_define
+
+begin_struct
+struct|struct
 name|module_stat
 block|{
 name|int
 name|version
-block|;
+decl_stmt|;
 comment|/* set to sizeof(struct module_stat) */
 name|char
 name|name
 index|[
 name|MAXMODNAME
 index|]
-block|;
+decl_stmt|;
 name|int
 name|refs
-block|;
+decl_stmt|;
 name|int
 name|id
-block|;
+decl_stmt|;
 name|modspecific_t
 name|data
-block|; }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifndef
 ifndef|#
