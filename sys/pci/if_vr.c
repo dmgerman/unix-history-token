@@ -1009,7 +1009,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|miibus
 argument_list|,
-name|vr
+name|if_vr
 argument_list|,
 name|miibus_driver
 argument_list|,

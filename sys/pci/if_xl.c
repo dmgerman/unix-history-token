@@ -1301,7 +1301,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|miibus
 argument_list|,
-name|xl
+name|if_xl
 argument_list|,
 name|miibus_driver
 argument_list|,

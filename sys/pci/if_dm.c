@@ -1055,7 +1055,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|miibus
 argument_list|,
-name|dm
+name|if_dm
 argument_list|,
 name|miibus_driver
 argument_list|,

@@ -964,7 +964,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|miibus
 argument_list|,
-name|rl
+name|if_rl
 argument_list|,
 name|miibus_driver
 argument_list|,
