@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.4  */
+comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.5  */
 end_comment
 
 begin_macro
@@ -47,6 +47,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 		 * If we are the original window, delete the space for 		 * all the subwindows, and the array of space as well. 		 */
 for|for
 control|(
 name|i
@@ -108,6 +109,39 @@ operator|=
 name|np
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+comment|/* 		 * If we are a subwindow, take ourself out of the 		 * list.  NOTE: if we are a subwindow, the minimum list 		 * is orig followed by this subwindow, so there are 		 * always at least two windows in the list. 		 */
+for|for
+control|(
+name|wp
+operator|=
+name|win
+operator|->
+name|_nextp
+init|;
+name|wp
+operator|->
+name|_nextp
+operator|!=
+name|win
+condition|;
+name|wp
+operator|=
+name|wp
+operator|->
+name|_nextp
+control|)
+continue|continue;
+name|wp
+operator|->
+name|_nextp
+operator|=
+name|win
+operator|->
+name|_nextp
+expr_stmt|;
 block|}
 name|cfree
 argument_list|(
