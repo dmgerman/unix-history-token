@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.50 1996/10/12 19:38:50 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51 1996/10/12 19:49:36 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1747,6 +1747,16 @@ comment|/* If src-addr doesn't match, not this rule. */
 if|if
 condition|(
 operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVSRC
+operator|)
+operator|!=
+literal|0
+operator|^
+operator|(
 name|src
 operator|.
 name|s_addr
@@ -1768,6 +1778,16 @@ continue|continue;
 comment|/* If dest-addr doesn't match, not this rule. */
 if|if
 condition|(
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVDST
+operator|)
+operator|!=
+literal|0
+operator|^
 operator|(
 name|dst
 operator|.

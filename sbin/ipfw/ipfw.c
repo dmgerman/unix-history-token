@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.33 1996/08/31 17:58:23 nate Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34 1996/10/17 01:05:03 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -646,7 +646,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" from "
+literal|" from %s"
+argument_list|,
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVSRC
+condition|?
+literal|"not "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|adrt
@@ -899,7 +909,17 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|" to "
+literal|" to %s"
+argument_list|,
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVDST
+condition|?
+literal|"not "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|adrt
@@ -3797,6 +3817,49 @@ argument_list|(
 literal|"missing ``from''\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"not"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_INVSRC
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|ac
+condition|)
+name|show_usage
+argument_list|(
+literal|"Missing arguments\n"
+argument_list|)
+expr_stmt|;
 name|fill_ip
 argument_list|(
 operator|&
@@ -3897,6 +3960,39 @@ argument_list|(
 literal|"missing ``to''\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"not"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_INVDST
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
