@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.3 83/08/22"
+literal|"@(#)cmd4.c	3.4 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,9 +342,18 @@ argument_list|(
 name|cmdwin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|dolongcmd
 argument_list|(
 name|buf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Out of memory."
 argument_list|)
 expr_stmt|;
 block|}
