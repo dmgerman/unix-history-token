@@ -209,6 +209,13 @@ name|DIST_DES_KERBEROS
 value|0x0008
 end_define
 
+begin_define
+define|#
+directive|define
+name|DIST_DES_SKERBEROS
+value|0x0010
+end_define
+
 begin_comment
 comment|/* Subtypes for SRC distribution */
 end_comment
