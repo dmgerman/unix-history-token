@@ -54,12 +54,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|FB_CURRENT
-end_define
-
-begin_define
-define|#
-directive|define
 name|SMBERROR
 parameter_list|(
 name|format

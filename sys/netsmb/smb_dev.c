@@ -304,16 +304,7 @@ operator|.
 name|d_maj
 operator|=
 name|NSMB_MAJOR
-block|,
-ifndef|#
-directive|ifndef
-name|FB_CURRENT
-comment|/* bmaj */
-operator|-
-literal|1
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

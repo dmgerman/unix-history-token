@@ -398,12 +398,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FB_RELENG3
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -416,11 +410,6 @@ name|ap
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|vop_t
@@ -746,9 +735,6 @@ operator|)
 name|smbfs_write
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|FB_RELENG3
 block|{
 operator|&
 name|vop_getextattr_desc
@@ -761,8 +747,6 @@ name|smbfs_getextattr
 block|}
 block|,
 comment|/*	{&vop_setextattr_desc,		(vop_t *) smbfs_setextattr },*/
-endif|#
-directive|endif
 block|{
 name|NULL
 block|,

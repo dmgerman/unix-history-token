@@ -99,16 +99,6 @@ begin_struct
 struct|struct
 name|smbnode
 block|{
-ifndef|#
-directive|ifndef
-name|FB_CURRENT
-name|struct
-name|lock
-name|n_lock
-decl_stmt|;
-comment|/* smbnode lock. (mbf) */
-endif|#
-directive|endif
 name|int
 name|n_flag
 decl_stmt|;
