@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -140,9 +140,11 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
-name|int
+comment|/* data */
+name|size_t
 name|size
 decl_stmt|;
+comment|/* data length */
 block|}
 name|DBT
 typedef|;
