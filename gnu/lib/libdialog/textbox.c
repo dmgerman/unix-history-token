@@ -3488,6 +3488,9 @@ name|x
 operator|+
 literal|1
 argument_list|,
+operator|-
+literal|1
+argument_list|,
 name|box_width
 argument_list|,
 name|searchbox_attr

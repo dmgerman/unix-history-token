@@ -570,6 +570,9 @@ name|box_y
 argument_list|,
 name|box_x
 argument_list|,
+operator|-
+literal|1
+argument_list|,
 name|box_width
 argument_list|,
 name|inputbox_attr

@@ -384,6 +384,9 @@ name|int
 name|box_x
 parameter_list|,
 name|int
+name|flen
+parameter_list|,
+name|int
 name|box_width
 parameter_list|,
 name|chtype
