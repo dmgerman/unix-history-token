@@ -2002,6 +2002,11 @@ operator|->
 name|td_sigmask
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|bsd_to_linux_sigset
 argument_list|(
 operator|&
@@ -2009,11 +2014,6 @@ name|bset
 argument_list|,
 operator|&
 name|lset
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 name|mask

@@ -4455,6 +4455,11 @@ operator|->
 name|td_siglist
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIG2OSIG
 argument_list|(
 name|siglist
@@ -4465,11 +4470,6 @@ name|td_retval
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 return|return
