@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -194,7 +188,7 @@ specifier|static
 name|u_int
 name|straycount
 index|[
-name|NHWI
+name|ICU_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
