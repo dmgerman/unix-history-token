@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.21	81/02/23	*/
+comment|/*	up.c	4.22	81/02/25	*/
 end_comment
 
 begin_include
@@ -145,6 +145,9 @@ name|sc_ndrive
 decl_stmt|;
 name|int
 name|sc_wticks
+decl_stmt|;
+name|int
+name|sc_recal
 decl_stmt|;
 block|}
 name|up_softc
@@ -565,6 +568,12 @@ end_comment
 begin_decl_stmt
 name|int
 name|upseek
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|updrydel
 decl_stmt|;
 end_decl_stmt
 
@@ -1140,6 +1149,10 @@ return|return;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Unit start routine.  * Seek the drive to be where the data is  * and then generate another interrupt  * to actually start the transfer.  * If there is only one drive on the controller,  * or we are very close to the data, don't  * bother with the search.  If called after  * searching once, don't bother to look where  * we are, just queue for transfer (to avoid  * positioning forever without transferrring.)  */
+end_comment
+
 begin_expr_stmt
 name|upustart
 argument_list|(
@@ -1169,6 +1182,10 @@ name|struct
 name|uba_minfo
 modifier|*
 name|um
+init|=
+name|ui
+operator|->
+name|ui_mi
 decl_stmt|;
 specifier|register
 name|struct
@@ -1188,10 +1205,9 @@ decl_stmt|;
 name|int
 name|sn
 decl_stmt|,
-name|cn
-decl_stmt|,
 name|csn
 decl_stmt|;
+comment|/* 	 * The SC21 cancels commands if you just say 	 *	cs1 = UP_IE 	 * so we are cautious about handling of cs1. 	 * Also don't bother to clear as bits other than in upintr(). 	 */
 name|int
 name|didie
 init|=
@@ -1208,7 +1224,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * The SC21 cancels commands if you just say 	 *	cs1 = UP_IE 	 * so we are cautious about handling of cs1. 	 * Also don't bother to clear as bits other than in upintr(). 	 */
 name|dk_busy
 operator|&=
 operator|~
@@ -1245,13 +1260,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* dont confuse controller by giving SEARCH while dt in progress */
-name|um
-operator|=
-name|ui
-operator|->
-name|ui_mi
-expr_stmt|;
+comment|/* 	 * If the controller is active, just remember 	 * that this device would like to be positioned... 	 * if we tried to position now we would confuse the SC21. 	 */
 if|if
 condition|(
 name|um
@@ -1282,6 +1291,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * If we have already positioned this drive, 	 * then just put it on the ready queue. 	 */
 if|if
 condition|(
 name|dp
@@ -1316,6 +1326,7 @@ name|ui
 operator|->
 name|ui_slave
 expr_stmt|;
+comment|/* 	 * If drive has just come up, 	 * setup the pack. 	 */
 if|if
 condition|(
 operator|(
@@ -1361,6 +1372,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * If drive is offline, forget about positioning. 	 */
 if|if
 condition|(
 operator|(
@@ -1384,6 +1396,7 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* 	 * If there is only one drive, 	 * dont bother searching. 	 */
 if|if
 condition|(
 name|up_softc
@@ -1400,6 +1413,7 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* 	 * Figure out where this transfer is going to 	 * and see if we are close enough to justify not searching. 	 */
 name|st
 operator|=
 operator|&
@@ -1416,12 +1430,6 @@ name|dkblock
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|cn
-operator|=
-name|bp
-operator|->
-name|b_cylin
 expr_stmt|;
 name|sn
 operator|=
@@ -1449,7 +1457,9 @@ name|nsect
 expr_stmt|;
 if|if
 condition|(
-name|cn
+name|bp
+operator|->
+name|b_cylin
 operator|-
 name|upaddr
 operator|->
@@ -1513,8 +1523,11 @@ name|upaddr
 operator|->
 name|updc
 operator|=
-name|cn
+name|bp
+operator|->
+name|b_cylin
 expr_stmt|;
+comment|/* 	 * Not on cylinder at correct position, 	 * seek/search. 	 */
 if|if
 condition|(
 name|upseek
@@ -1552,6 +1565,7 @@ name|didie
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Mark unit busy for iostat. 	 */
 if|if
 condition|(
 name|ui
@@ -1583,6 +1597,7 @@ name|out
 goto|;
 name|done
 label|:
+comment|/* 	 * Device is ready to go. 	 * Put it on the ready queue for the controller 	 * (unless its already there.) 	 */
 if|if
 condition|(
 name|dp
@@ -1652,6 +1667,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Start up a transfer on a drive.  */
+end_comment
+
 begin_expr_stmt
 name|upstart
 argument_list|(
@@ -1707,6 +1726,7 @@ name|cmd
 decl_stmt|;
 name|loop
 label|:
+comment|/* 	 * Pull a request off the controller queue 	 */
 if|if
 condition|(
 operator|(
@@ -1753,6 +1773,7 @@ goto|goto
 name|loop
 goto|;
 block|}
+comment|/* 	 * Mark controller busy, and 	 * determine destination of this request. 	 */
 name|um
 operator|->
 name|um_tab
@@ -1826,12 +1847,26 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
+comment|/* 	 * Select drive if not selected already. 	 */
+if|if
+condition|(
+operator|(
+name|upaddr
+operator|->
+name|upcs2
+operator|&
+literal|07
+operator|)
+operator|!=
+name|dn
+condition|)
 name|upaddr
 operator|->
 name|upcs2
 operator|=
 name|dn
 expr_stmt|;
+comment|/* 	 * Check that it is ready and online 	 */
 if|if
 condition|(
 operator|(
@@ -1934,12 +1969,14 @@ goto|goto
 name|loop
 goto|;
 block|}
+comment|/* 		 * Oh, well, sometimes this 		 * happens, for reasons unknown. 		 */
 name|printf
 argument_list|(
 literal|" (flakey)\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * After 16th retry, do offset positioning 	 */
 if|if
 condition|(
 name|um
@@ -2002,6 +2039,7 @@ literal|25
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Setup for the transfer, and get in the 	 * UNIBUS adaptor queue. 	 */
 name|upaddr
 operator|->
 name|updc
@@ -2080,6 +2118,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Now all ready to go, stuff the registers.  */
+end_comment
+
 begin_macro
 name|updgo
 argument_list|(
@@ -2142,6 +2184,10 @@ operator|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Handle a disk interrupt.  */
+end_comment
 
 begin_expr_stmt
 name|scintr
@@ -2244,6 +2290,7 @@ name|sc_softas
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * If controller wasn't transferring, then this is an 	 * interrupt for attention status on seeking drives. 	 * Just service them. 	 */
 if|if
 condition|(
 name|um
@@ -2251,8 +2298,28 @@ operator|->
 name|um_tab
 operator|.
 name|b_active
+operator|==
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|upaddr
+operator|->
+name|upcs1
+operator|&
+name|UP_TRE
+condition|)
+name|upaddr
+operator|->
+name|upcs1
+operator|=
+name|UP_TRE
+expr_stmt|;
+goto|goto
+name|doattn
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2270,6 +2337,8 @@ argument_list|(
 literal|"upintr !RDY\n"
 argument_list|)
 expr_stmt|;
+comment|/* shouldn't happen */
+comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_dinfo for the drive.  Select the drive. 	 */
 name|dp
 operator|=
 name|um
@@ -2305,6 +2374,20 @@ operator|->
 name|ui_dk
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|upaddr
+operator|->
+name|upcs2
+operator|&
+literal|07
+operator|)
+operator|!=
+name|ui
+operator|->
+name|ui_slave
+condition|)
 name|upaddr
 operator|->
 name|upcs2
@@ -2313,6 +2396,7 @@ name|ui
 operator|->
 name|ui_slave
 expr_stmt|;
+comment|/* 	 * Check for and process errors on 	 * either the drive or the controller. 	 */
 if|if
 condition|(
 operator|(
@@ -2332,9 +2416,6 @@ name|UP_TRE
 operator|)
 condition|)
 block|{
-name|int
-name|cs2
-decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -2347,10 +2428,8 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|DELAY
-argument_list|(
-literal|25
-argument_list|)
+name|updrydel
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2360,6 +2439,8 @@ name|uper1
 operator|&
 name|UP_WLE
 condition|)
+block|{
+comment|/* 			 * Give up on write locked devices 			 * immediately. 			 */
 name|printf
 argument_list|(
 literal|"up%d is write locked\n"
@@ -2370,6 +2451,14 @@ name|bp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|++
@@ -2379,21 +2468,80 @@ name|um_tab
 operator|.
 name|b_errcnt
 operator|>
-literal|28
-operator|||
+literal|27
+condition|)
+block|{
+comment|/* 			 * After 28 retries (16 without offset, and 			 * 12 with offset positioning) give up. 			 */
+if|if
+condition|(
+name|upaddr
+operator|->
+name|upcs2
+operator|&
+operator|(
+name|UP_NEM
+operator||
+name|UP_MXF
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"FLAKEY UP "
+argument_list|)
+expr_stmt|;
+name|ubareset
+argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|harderr
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"up%d cs2 %b er1 %b er2 %b\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+name|upaddr
+operator|->
+name|upcs2
+argument_list|,
+name|UPCS2_BITS
+argument_list|,
 name|upaddr
 operator|->
 name|uper1
-operator|&
-name|UP_WLE
-condition|)
+argument_list|,
+name|UPER1_BITS
+argument_list|,
+name|upaddr
+operator|->
+name|uper2
+argument_list|,
+name|UPER2_BITS
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+block|}
 else|else
+block|{
+comment|/* 			 * Retriable error. 			 * If a soft ecc, correct it (continuing 			 * by returning if necessary. 			 * Otherwise fall through and retry the transfer 			 */
 name|um
 operator|->
 name|um_tab
@@ -2403,41 +2551,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* force retry */
-if|if
-condition|(
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_errcnt
-operator|>
-literal|27
-condition|)
-block|{
-name|cs2
-operator|=
-operator|(
-name|int
-operator|)
-name|upaddr
-operator|->
-name|upcs2
-expr_stmt|;
-name|deverror
-argument_list|(
-name|bp
-argument_list|,
-name|cs2
-argument_list|,
-operator|(
-name|int
-operator|)
-name|upaddr
-operator|->
-name|uper1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2462,6 +2575,8 @@ name|ui
 argument_list|)
 condition|)
 return|return;
+block|}
+comment|/* 		 * Clear drive error and, every eight attempts, 		 * (starting with the fourth) 		 * recalibrate to clear the slate. 		 */
 name|upaddr
 operator|->
 name|upcs1
@@ -2503,59 +2618,53 @@ name|UP_IE
 operator||
 name|UP_GO
 expr_stmt|;
-while|while
-condition|(
-name|upaddr
-operator|->
-name|upds
-operator|&
-name|UP_PIP
-condition|)
-name|DELAY
-argument_list|(
-literal|25
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|um
 operator|->
 name|um_tab
 operator|.
-name|b_errcnt
-operator|==
-literal|28
-operator|&&
-name|cs2
-operator|&
-operator|(
-name|UP_NEM
-operator||
-name|UP_MXF
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"FLAKEY UP "
-argument_list|)
+name|b_active
+operator|=
+literal|1
 expr_stmt|;
-name|ubareset
-argument_list|(
-name|um
+name|sc
 operator|->
-name|um_ubanum
-argument_list|)
+name|sc_recal
+operator|=
+literal|1
 expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* 	 * Done retrying transfer... release 	 * resources... if we were recalibrating, 	 * then retry the transfer. 	 * Mathematical note: 28%8 != 4. 	 */
 name|ubadone
 argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_recal
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_recal
+operator|=
+literal|0
+expr_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|0
+expr_stmt|;
+comment|/* force retry */
+block|}
+comment|/* 	 * If still ``active'', then don't need any more retries. 	 */
 if|if
 condition|(
 name|um
@@ -2565,6 +2674,7 @@ operator|.
 name|b_active
 condition|)
 block|{
+comment|/* 		 * If we were offset positioning, 		 * return to centerline. 		 */
 if|if
 condition|(
 name|um
@@ -2576,6 +2686,12 @@ operator|>=
 literal|16
 condition|)
 block|{
+name|upaddr
+operator|->
+name|upof
+operator|=
+name|UP_FMT22
+expr_stmt|;
 name|upaddr
 operator|->
 name|upcs1
@@ -2671,6 +2787,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If this unit has more work to do, 		 * then start it up right away. 		 */
 if|if
 condition|(
 name|dp
@@ -2700,24 +2817,9 @@ operator|->
 name|ui_slave
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|upaddr
-operator|->
-name|upcs1
-operator|&
-name|UP_TRE
-condition|)
-name|upaddr
-operator|->
-name|upcs1
-operator|=
-name|UP_TRE
-expr_stmt|;
-block|}
+name|doattn
+label|:
+comment|/* 	 * Process other units which need attention. 	 * For each unit which needs attention, call 	 * the unit start routine to place the slave 	 * on the controller device queue. 	 */
 for|for
 control|(
 name|unit
@@ -2766,6 +2868,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * If the controller is not transferring, but 	 * there are devices ready to transfer, start 	 * the controller. 	 */
 if|if
 condition|(
 name|um

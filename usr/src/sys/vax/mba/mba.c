@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.8	81/02/21	*/
+comment|/*	mba.c	4.9	81/02/25	*/
 end_comment
 
 begin_comment
@@ -99,6 +99,15 @@ include|#
 directive|include
 file|"../h/vm.h"
 end_include
+
+begin_decl_stmt
+name|char
+name|mbasr_bits
+index|[]
+init|=
+name|MBASR_BITS
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Start activity on a massbus device.  * We are given the device's mba_info structure and activate  * the device via the unit start routine.  The unit start  * routine may indicate that it is finished (e.g. if the operation  * was a ``sense'' on a tape drive), that the (multi-ported) unit  * is busy (we will get an interrupt later), that it started the  * unit (e.g. for a non-data transfer operation), or that it has  * set up a data transfer operation and we should start the massbus adaptor.  */

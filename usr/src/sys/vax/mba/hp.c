@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.13	81/02/25	*/
+comment|/*	hp.c	4.14	81/02/25	*/
 end_comment
 
 begin_include
@@ -1345,7 +1345,7 @@ name|hpdtint
 argument_list|(
 name|mi
 argument_list|,
-name|mbastat
+name|mbasr
 argument_list|)
 specifier|register
 expr|struct
@@ -1357,7 +1357,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|mbastat
+name|mbasr
 decl_stmt|;
 end_decl_stmt
 
@@ -1416,7 +1416,7 @@ name|hpds
 operator|&
 name|HP_ERR
 operator|||
-name|mbastat
+name|mbasr
 operator|&
 name|MBAEBITS
 condition|)
@@ -1542,16 +1542,44 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|deverror
+name|harderr
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"hp%d mbasr %b er1 %b er2 %b\n"
 argument_list|,
-name|mbastat
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+name|mbasr
+argument_list|,
+name|mbasr_bits
 argument_list|,
 name|hpaddr
 operator|->
 name|hper1
+argument_list|,
+name|HPER1_BITS
+argument_list|,
+name|hpaddr
+operator|->
+name|hper2
+argument_list|,
+name|HPER2_BITS
 argument_list|)
+expr_stmt|;
+name|hpaddr
+operator|->
+name|hpcs1
+operator|=
+name|HP_DCLR
+operator||
+name|HP_GO
 expr_stmt|;
 name|bp
 operator|->

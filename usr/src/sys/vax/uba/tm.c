@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.17	%G%	*/
+comment|/*	tm.c	4.18	%G%	*/
 end_comment
 
 begin_include
@@ -2333,17 +2333,25 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 		 * Couldn't recover error 		 */
-name|deverror
+name|harderr
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"tm%d er %b\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
 argument_list|,
 name|sc
 operator|->
 name|sc_erreg
 argument_list|,
-name|sc
-operator|->
-name|sc_dsreg
+name|TMEREG_BITS
 argument_list|)
 expr_stmt|;
 name|bp
