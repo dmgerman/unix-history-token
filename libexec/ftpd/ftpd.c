@@ -6733,8 +6733,20 @@ if|if
 condition|(
 name|logging
 condition|)
+block|{
 name|syslog
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"FTP LOGIN FAILED FROM %s"
+argument_list|,
+name|remotehost
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_AUTHPRIV
+operator||
 name|LOG_NOTICE
 argument_list|,
 literal|"FTP LOGIN FAILED FROM %s, %s"
@@ -6744,6 +6756,7 @@ argument_list|,
 name|curname
 argument_list|)
 expr_stmt|;
+block|}
 name|pw
 operator|=
 name|NULL
