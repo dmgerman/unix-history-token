@@ -4315,6 +4315,9 @@ name|i_number
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|ipref
 operator|>=
 name|fs
