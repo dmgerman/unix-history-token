@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -493,107 +493,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_LINK_MAX
-value|21
-end_define
-
-begin_comment
-comment|/* int: max file link count */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_MAX_CANON
-value|22
-end_define
-
-begin_comment
-comment|/* int: max bytes in term canon input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_MAX_INPUT
-value|23
-end_define
-
-begin_comment
-comment|/* int: max bytes in term input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_NAME_MAX
-value|24
-end_define
-
-begin_comment
-comment|/* int: max bytes in file name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_PATH_MAX
-value|25
-end_define
-
-begin_comment
-comment|/* int: max bytes in pathname */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_PIPE_BUF
-value|26
-end_define
-
-begin_comment
-comment|/* int: max bytes for atomic pipe  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_CHOWN_RESTRICTED
-value|27
-end_define
-
-begin_comment
-comment|/* int: chown requires privilege */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_NO_TRUNC
-value|28
-end_define
-
-begin_comment
-comment|/* int: no path truncation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_VDISABLE
-value|29
-end_define
-
-begin_comment
-comment|/* int: terminal character disable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|KERN_BOOTTIME
-value|30
+value|21
 end_define
 
 begin_comment
@@ -604,7 +505,7 @@ begin_define
 define|#
 directive|define
 name|KERN_MAXID
-value|31
+value|22
 end_define
 
 begin_comment
@@ -615,7 +516,7 @@ begin_define
 define|#
 directive|define
 name|CTL_KERN_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "link_max", CTLTYPE_INT }, \ 	{ "max_canon", CTLTYPE_INT }, \ 	{ "max_input", CTLTYPE_INT }, \ 	{ "name_max", CTLTYPE_INT }, \ 	{ "path_max", CTLTYPE_INT }, \ 	{ "pipe_buf", CTLTYPE_INT }, \ 	{ "chown_restricted", CTLTYPE_INT }, \ 	{ "no_trunc", CTLTYPE_INT }, \ 	{ "vdisable", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_comment
