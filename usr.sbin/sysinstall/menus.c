@@ -8327,6 +8327,12 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PC98
 end_ifdef
 
@@ -8512,6 +8518,15 @@ end_endif
 
 begin_comment
 comment|/* PC98 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
 end_comment
 
 begin_comment
