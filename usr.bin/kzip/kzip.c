@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kzip.c,v 1.10 1997/07/18 06:40:46 charnier Exp $"
+literal|"$Id: kzip.c,v 1.11 1998/06/01 18:34:19 jhay Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,6 +1085,8 @@ argument_list|(
 literal|"ld"
 argument_list|,
 literal|"ld"
+argument_list|,
+literal|"-aout"
 argument_list|,
 literal|"-Bstatic"
 argument_list|,
