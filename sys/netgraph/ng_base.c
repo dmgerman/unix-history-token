@@ -1064,7 +1064,7 @@ argument_list|(
 name|filename
 argument_list|)
 argument_list|,
-literal|"/boot/kernel/ng_%s"
+literal|"ng_%s"
 argument_list|,
 name|typename
 argument_list|)
