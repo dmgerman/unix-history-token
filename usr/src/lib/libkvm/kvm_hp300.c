@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.9 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1158,13 +1158,13 @@ decl_stmt|;
 name|char
 name|dbversion
 index|[
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
 name|char
 name|kversion
 index|[
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
 name|int
@@ -5192,7 +5192,7 @@ specifier|static
 name|char
 name|errbuf
 index|[
-name|_BSD_LINE_MAX
+name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
