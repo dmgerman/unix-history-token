@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mt.c	8.1 (Berkeley) %G%"
+literal|"@(#)mt.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -102,13 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_struct
