@@ -425,7 +425,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* compatibility w/GNU headers*/
+comment|/* compat. with GNU headers */
 end_comment
 
 begin_endif
@@ -438,11 +438,43 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|__va_list
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* non-functional */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_error
 error|#
 directive|error
 error|Must add va_list support for this non-GCC compiler.
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_endif
 endif|#
