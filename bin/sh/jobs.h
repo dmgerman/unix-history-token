@@ -124,6 +124,10 @@ name|char
 name|changed
 decl_stmt|;
 comment|/* true if status has changed */
+name|char
+name|foreground
+decl_stmt|;
+comment|/* true if running in the foreground */
 if|#
 directive|if
 name|JOBS
