@@ -6173,7 +6173,7 @@ name|q
 operator|->
 name|p_ucred
 operator|->
-name|cr_ruidinfo
+name|cr_uidinfo
 argument_list|,
 operator|-
 literal|1
