@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Datakit driver  * KMC assistance, with or without DR11C  */
+comment|/*  * Datakit driver  * KMC assistance, with or without DR11C  *	@(#)dkit_kmc.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -914,7 +914,10 @@ call|(
 name|short
 call|)
 argument_list|(
+name|UBAI_ADDR
+argument_list|(
 name|kt
+argument_list|)
 operator|&
 literal|0xFFFF
 argument_list|)
@@ -938,11 +941,10 @@ call|(
 name|char
 call|)
 argument_list|(
-operator|(
+name|UBAI_ADDR
+argument_list|(
 name|kt
-operator|&
-literal|0xFF0000
-operator|)
+argument_list|)
 operator|>>
 literal|16
 argument_list|)
@@ -950,7 +952,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* bits 16-23 */
+comment|/* bits 16-17 */
 end_comment
 
 begin_expr_stmt
@@ -1126,19 +1128,23 @@ name|caddr_t
 call|)
 argument_list|(
 operator|(
+name|UBAI_ADDR
+argument_list|(
 name|t
+argument_list|)
 operator|<<
 literal|16
 operator|)
-operator|+
+operator||
 operator|(
 operator|(
+name|UBAI_ADDR
+argument_list|(
 name|t
+argument_list|)
 operator|>>
 literal|16
 operator|)
-operator|&
-literal|03
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1181,19 +1187,21 @@ name|caddr_t
 call|)
 argument_list|(
 operator|(
+name|UBAI_ADDR
+argument_list|(
 name|t
+argument_list|)
 operator|<<
 literal|16
 operator|)
-operator|+
+operator||
 operator|(
-operator|(
+name|UBAI_ADDR
+argument_list|(
 name|t
+argument_list|)
 operator|>>
 literal|16
-operator|)
-operator|&
-literal|03
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1219,7 +1227,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|t
+name|dkubmbuf
 operator|==
 literal|0
 condition|)
@@ -1235,19 +1243,21 @@ name|caddr_t
 call|)
 argument_list|(
 operator|(
+name|UBAI_ADDR
+argument_list|(
 name|dkubmbuf
+argument_list|)
 operator|<<
 literal|16
 operator|)
-operator|+
+operator||
 operator|(
-operator|(
+name|UBAI_ADDR
+argument_list|(
 name|dkubmbuf
+argument_list|)
 operator|>>
 literal|16
-operator|)
-operator|&
-literal|03
 operator|)
 argument_list|)
 expr_stmt|;
