@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.63 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.64 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2815,11 +2815,12 @@ name|nfp
 expr_stmt|;
 name|fmode
 operator|=
+name|FFLAGS
+argument_list|(
 name|uap
 operator|->
 name|mode
-operator|-
-name|FOPEN
+argument_list|)
 expr_stmt|;
 name|cmode
 operator|=
