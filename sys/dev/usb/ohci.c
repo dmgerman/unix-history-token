@@ -5804,7 +5804,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ohci_process_done: cancel/timeout %p\n"
+literal|"ohci_process_done: cancel/timeout, xfer=%p\n"
 operator|,
 name|xfer
 operator|)
@@ -5820,6 +5820,15 @@ operator|==
 name|OHCI_CC_NO_ERROR
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ohci_process_done: no error, xfer=%p\n"
+operator|,
+name|xfer
+operator|)
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|std
@@ -5935,7 +5944,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ohci_process_done: error cc=%d (%s)\n"
+literal|"ohci_process_done: err cc=%d (%s), xfer=%p\n"
 operator|,
 name|OHCI_TD_GET_CC
 argument_list|(
@@ -5963,6 +5972,8 @@ name|td_flags
 argument_list|)
 argument_list|)
 index|]
+operator|,
+name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7632,7 +7643,7 @@ if|if
 condition|(
 name|ohcidebug
 operator|>
-literal|5
+literal|25
 condition|)
 block|{
 name|usb_delay_ms
@@ -7982,6 +7993,7 @@ name|ohci_soft_td_t
 modifier|*
 name|std
 decl_stmt|;
+comment|/* if these are present they should be masked out at an earlier 	 * stage. 	 */
 name|KASSERT
 argument_list|(
 name|a
@@ -8301,8 +8313,8 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ED(%p) at %08lx: addr=%d endpt=%d maxp=%d %b\ntailp=0x%08lx "
-literal|"headp=%b nexted=0x%08lx\n"
+literal|"ED(%p) at %08lx: addr=%d endpt=%d maxp=%d %b\n"
+literal|"tailp=0x%8b headp=0x%8b nexted=0x%08lx\n"
 operator|,
 name|sed
 operator|,
@@ -8364,7 +8376,10 @@ operator|,
 literal|"\20\14OUT\15IN\16LOWSPEED\17SKIP\20ISO"
 operator|,
 operator|(
-name|u_long
+name|int
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|LE
 argument_list|(
@@ -8374,6 +8389,8 @@ name|ed
 operator|.
 name|ed_tailp
 argument_list|)
+operator|,
+literal|"\20\1BIT1\2BIT2"
 operator|,
 operator|(
 name|int
@@ -9291,17 +9308,6 @@ name|opipe
 operator|->
 name|sed
 expr_stmt|;
-name|DPRINTFN
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"ohci_abort_xfer: stop ed=%p\n"
-operator|,
-name|sed
-operator|)
-argument_list|)
-expr_stmt|;
 name|sed
 operator|->
 name|ed
@@ -9314,6 +9320,27 @@ name|OHCI_ED_SKIP
 argument_list|)
 expr_stmt|;
 comment|/* force hardware skip */
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"ohci_abort_xfer: stop ed=%p\n"
+operator|,
+name|sed
+operator|)
+argument_list|)
+expr_stmt|;
+name|ohci_dump_ed
+argument_list|(
+name|sed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|1
