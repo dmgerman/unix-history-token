@@ -14182,7 +14182,7 @@ name|LOCAL_AUTH
 block|,
 literal|"log level"
 block|,
-literal|"set log [local] [+|-]async|cbcp|ccp|chat|command|connect|debug|dns|hdlc|"
+literal|"set log [local] [+|-]all|async|cbcp|ccp|chat|command|connect|debug|dns|hdlc|"
 literal|"id0|ipcp|lcp|lqm|phase|physical|sync|tcp/ip|timer|tun..."
 block|}
 block|,
