@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.65 (Berkeley) %G%"
+literal|"@(#)headers.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -900,12 +900,42 @@ operator|->
 name|h_flags
 argument_list|)
 condition|)
+block|{
 name|h
 operator|->
 name|h_value
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cond
+condition|)
+block|{
+comment|/* copy conditions from default case */
+name|bcopy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|h
+operator|->
+name|h_mflags
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|mopts
+argument_list|,
+sizeof|sizeof
+name|mopts
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* create a new node */
 name|h
