@@ -130,6 +130,27 @@ name|BUFFERSIZE
 value|(1024*1024)
 end_define
 
+begin_define
+define|#
+directive|define
+name|STATUS_BAD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATUS_GOOD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATUS_UNKNOWN
+value|2
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -205,6 +226,10 @@ name|device
 parameter_list|,
 name|int
 name|bounds
+parameter_list|,
+specifier|const
+name|int
+name|status
 parameter_list|)
 block|{
 name|uint64_t
@@ -213,11 +238,16 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|stat_str
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"Good dump found on device %s\n"
+literal|"Dump header from device %s\n"
 argument_list|,
 name|device
 argument_list|)
@@ -237,14 +267,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  Architecture version: %d\n"
+literal|"  Architecture Version: %u\n"
 argument_list|,
-name|dtoh32
-argument_list|(
 name|h
 operator|->
 name|architectureversion
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dumplen
@@ -260,7 +287,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  Dump length: %lldB (%lld MB)\n"
+literal|"  Dump Length: %lldB (%lld MB)\n"
 argument_list|,
 operator|(
 name|long
@@ -330,7 +357,18 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  Versionstring: %s"
+literal|"  Magic: %s\n"
+argument_list|,
+name|h
+operator|->
+name|magic
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"  Version String: %s"
 argument_list|,
 name|h
 operator|->
@@ -341,7 +379,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  Panicstring: %s\n"
+literal|"  Panic String: %s\n"
 argument_list|,
 name|h
 operator|->
@@ -352,9 +390,56 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
+literal|"  Dump Parity: %u\n"
+argument_list|,
+name|h
+operator|->
+name|parity
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
 literal|"  Bounds: %d\n"
 argument_list|,
 name|bounds
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|status
+condition|)
+block|{
+case|case
+name|STATUS_BAD
+case|:
+name|stat_str
+operator|=
+literal|"bad"
+expr_stmt|;
+break|break;
+case|case
+name|STATUS_GOOD
+case|:
+name|stat_str
+operator|=
+literal|"good"
+expr_stmt|;
+break|break;
+default|default:
+name|stat_str
+operator|=
+literal|"unknown"
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"  Dump Status: %s\n"
+argument_list|,
+name|stat_str
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -905,6 +990,8 @@ literal|0
 decl_stmt|;
 name|int
 name|bounds
+decl_stmt|,
+name|status
 decl_stmt|;
 name|u_int
 name|sectorsize
@@ -912,6 +999,11 @@ decl_stmt|;
 name|mode_t
 name|oumask
 decl_stmt|;
+name|bounds
+operator|=
+name|getbounds
+argument_list|()
+expr_stmt|;
 name|dmpcnt
 operator|=
 literal|0
@@ -919,6 +1011,10 @@ expr_stmt|;
 name|mediasize
 operator|=
 literal|0
+expr_stmt|;
+name|status
+operator|=
+name|STATUS_UNKNOWN
 expr_stmt|;
 if|if
 condition|(
@@ -1143,6 +1239,10 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|STATUS_BAD
+expr_stmt|;
 if|if
 condition|(
 name|force
@@ -1239,6 +1339,16 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|STATUS_BAD
+expr_stmt|;
+if|if
+condition|(
+name|force
+operator|==
+literal|0
+condition|)
 goto|goto
 name|closefd
 goto|;
@@ -1274,6 +1384,16 @@ expr_stmt|;
 name|nerr
 operator|++
 expr_stmt|;
+name|status
+operator|=
+name|STATUS_BAD
+expr_stmt|;
+if|if
+condition|(
+name|force
+operator|==
+literal|0
+condition|)
 goto|goto
 name|closefd
 goto|;
@@ -1350,6 +1470,59 @@ goto|;
 block|}
 if|if
 condition|(
+name|verbose
+operator|>=
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"First dump headers:\n"
+argument_list|)
+expr_stmt|;
+name|printheader
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+name|kdhf
+argument_list|,
+name|device
+argument_list|,
+name|bounds
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nLast dump headers:\n"
+argument_list|)
+expr_stmt|;
+name|printheader
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+name|kdhl
+argument_list|,
+name|device
+argument_list|,
+name|bounds
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|memcmp
 argument_list|(
 operator|&
@@ -1375,9 +1548,26 @@ expr_stmt|;
 name|nerr
 operator|++
 expr_stmt|;
+name|status
+operator|=
+name|STATUS_BAD
+expr_stmt|;
+if|if
+condition|(
+name|force
+operator|==
+literal|0
+condition|)
 goto|goto
 name|closefd
 goto|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|STATUS_GOOD
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1457,11 +1647,6 @@ goto|goto
 name|closefd
 goto|;
 block|}
-name|bounds
-operator|=
-name|getbounds
-argument_list|()
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
@@ -1471,7 +1656,7 @@ argument_list|,
 name|bounds
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create or overwrite any existing files. 	 */
+comment|/* 	 * Create or overwrite any existing dump header files. 	 */
 name|fdinfo
 operator|=
 name|open
@@ -1624,6 +1809,8 @@ argument_list|,
 name|device
 argument_list|,
 name|bounds
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 name|printheader
@@ -1636,6 +1823,8 @@ argument_list|,
 name|device
 argument_list|,
 name|bounds
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -2144,6 +2333,28 @@ name|char
 modifier|*
 name|savedir
 decl_stmt|;
+name|checkfor
+operator|=
+name|compress
+operator|=
+name|clear
+operator|=
+name|force
+operator|=
+name|keep
+operator|=
+name|verbose
+operator|=
+literal|0
+expr_stmt|;
+name|nfound
+operator|=
+name|nsaved
+operator|=
+name|nerr
+operator|=
+literal|0
+expr_stmt|;
 name|openlog
 argument_list|(
 literal|"savecore"
@@ -2231,8 +2442,7 @@ case|case
 literal|'v'
 case|:
 name|verbose
-operator|=
-literal|1
+operator|++
 expr_stmt|;
 break|break;
 case|case
