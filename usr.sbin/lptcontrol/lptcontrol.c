@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lptcontrol.c,v 1.6 1997/09/25 06:36:29 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,20 @@ name|USE_IRQ
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|USE_EXT_MODE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_STD_MODE
+value|3
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -146,7 +160,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lptcontrol -i | -p  [-u<unit no.>]\n"
+literal|"usage: lptcontrol -i | -p | -s | -e [-u<unit no.>]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -324,7 +338,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ipu:"
+literal|"ipesu:"
 argument_list|)
 operator|)
 operator|!=
@@ -350,6 +364,22 @@ case|:
 name|irq_status
 operator|=
 name|DO_POLL
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|irq_status
+operator|=
+name|USE_EXT_MODE
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|irq_status
+operator|=
+name|USE_STD_MODE
 expr_stmt|;
 break|break;
 case|case

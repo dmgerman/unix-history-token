@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpoio.c,v 1.3 1998/09/20 14:41:54 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpoio.c,v 1.4 1998/12/07 21:58:16 archie Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -68,6 +68,12 @@ end_endif
 begin_comment
 comment|/*KERNEL */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_vpo.h"
+end_include
 
 begin_include
 include|#
@@ -1219,9 +1225,23 @@ name|how
 argument_list|)
 operator|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|VP0_DEBUG
+name|printf
+argument_list|(
+literal|"%s: can't request bus!\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|error
 return|;
+block|}
 if|if
 condition|(
 name|PPB_IN_EPP_MODE
@@ -1725,9 +1745,16 @@ directive|if
 literal|0
 comment|/* XXX EPP 1.9 not implemented with microsequences */
 block|else {  			ppb_reset_epp_timeout(&vpo->vpo_dev); 			ppb_wctr(&vpo->vpo_dev, 				H_AUTO | H_SELIN | H_INIT | H_STROBE);  			if (((long) buffer | size)& 0x03) 				ppb_outsb_epp(&vpo->vpo_dev, 						buffer, size); 			else 				ppb_outsl_epp(&vpo->vpo_dev, 						buffer, size/4);  			if ((ppb_rstr(&vpo->vpo_dev)& TIMEOUT)) { 				error = VP0_EPPDATA_TIMEOUT; 				goto error; 			}  			ppb_wctr(&vpo->vpo_dev, 				H_AUTO | H_nSELIN | H_INIT | H_STROBE); 		}
-comment|/* ppb_ecp_sync(&vpo->vpo_dev); */
 endif|#
 directive|endif
+name|ppb_ecp_sync
+argument_list|(
+operator|&
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1787,9 +1814,16 @@ directive|if
 literal|0
 comment|/* XXX EPP 1.9 not implemented with microsequences */
 block|else {  			ppb_reset_epp_timeout(&vpo->vpo_dev); 			ppb_wctr(&vpo->vpo_dev, PCD | 				H_AUTO | H_SELIN | H_INIT | H_STROBE);  			if (((long) buffer | size)& 0x03) 				ppb_insb_epp(&vpo->vpo_dev, 						buffer, size); 			else 				ppb_insl_epp(&vpo->vpo_dev, 						buffer, size/4);  			if ((ppb_rstr(&vpo->vpo_dev)& TIMEOUT)) { 				error = VP0_EPPDATA_TIMEOUT; 				goto error; 			}  			ppb_wctr(&vpo->vpo_dev, PCD | 				H_AUTO | H_nSELIN | H_INIT | H_STROBE); 		}
-comment|/* ppb_ecp_sync(&vpo->vpo_dev); */
 endif|#
 directive|endif
+name|ppb_ecp_sync
+argument_list|(
+operator|&
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2580,6 +2614,18 @@ name|vpo
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|VP0_DEBUG
+name|printf
+argument_list|(
+literal|"%s: not in disk mode!\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* release ppbus */
 name|vpoio_disconnect
 argument_list|(
