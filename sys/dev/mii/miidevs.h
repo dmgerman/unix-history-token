@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.10 2001/03/12 02:27:10 jlemon Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.12 2001/05/11 19:56:36 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -555,6 +555,34 @@ define|#
 directive|define
 name|MII_STR_NATSEMI_DP83843
 value|"DP83843 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_NATSEMI_DP83891
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_NATSEMI_DP83891
+value|"DP83891 10/100/1000 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_NATSEMI_DP83861
+value|0x0006
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_NATSEMI_DP83861
+value|"DP83861 10/100/1000 media interface"
 end_define
 
 begin_comment
