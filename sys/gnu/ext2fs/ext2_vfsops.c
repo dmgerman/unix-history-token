@@ -4900,13 +4900,13 @@ operator|==
 literal|0
 operator|&&
 operator|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-operator|.
-name|lh_first
-operator|==
-name|NULL
+argument_list|)
 operator|||
 name|waitfor
 operator|==

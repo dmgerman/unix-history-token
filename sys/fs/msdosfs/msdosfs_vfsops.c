@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.36 1998/09/07 13:17:02 bde Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.37 1998/10/25 19:26:18 bde Exp $ */
 end_comment
 
 begin_comment
@@ -4094,17 +4094,21 @@ name|printf
 argument_list|(
 literal|"cleanblkhd %p, dirtyblkhd %p, numoutput %ld, type %d\n"
 argument_list|,
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_cleanblkhd
-operator|.
-name|lh_first
+argument_list|)
 argument_list|,
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-operator|.
-name|lh_first
+argument_list|)
 argument_list|,
 name|vp
 operator|->
@@ -4699,13 +4703,13 @@ operator|==
 literal|0
 operator|&&
 operator|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-operator|.
-name|lh_first
-operator|==
-name|NULL
+argument_list|)
 operator|||
 name|waitfor
 operator|==

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.75 1998/07/11 07:45:50 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.76 1998/09/13 15:39:01 dt Exp $ */
 end_comment
 
 begin_comment
@@ -4011,11 +4011,13 @@ for|for
 control|(
 name|bp
 operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-operator|.
-name|lh_first
+argument_list|)
 init|;
 name|bp
 condition|;
@@ -4026,11 +4028,12 @@ control|)
 block|{
 name|nbp
 operator|=
+name|TAILQ_NEXT
+argument_list|(
 name|bp
-operator|->
+argument_list|,
 name|b_vnbufs
-operator|.
-name|le_next
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4129,11 +4132,14 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
 name|vp
 operator|->
 name|v_dirtyblkhd
-operator|.
-name|lh_first
+argument_list|)
 condition|)
 block|{
 name|vprint
