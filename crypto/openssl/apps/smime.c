@@ -1683,6 +1683,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|"-passin arg    input file pass phrase source\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|"-rand file%cfile%c...\n"
 argument_list|,
 name|LIST_SEPARATOR_CHAR
@@ -2344,11 +2351,33 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|BIO_reset
 argument_list|(
 name|in
 argument_list|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|flags
+operator|&
+name|PKCS7_DETACHED
+operator|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Can't rewind input file\n"
+argument_list|)
 expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
 block|}
 else|else
 block|{
@@ -2568,7 +2597,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Verification Successful\n"
+literal|"Verification successful\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2578,7 +2607,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Verification Failure\n"
+literal|"Verification failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto

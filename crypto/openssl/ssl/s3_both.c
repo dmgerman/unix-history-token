@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -1383,10 +1383,18 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
+name|s
+operator|->
+name|init_num
+operator|=
+literal|0
+expr_stmt|;
 name|skip_message
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
@@ -1600,6 +1608,12 @@ operator|->
 name|tmp
 operator|.
 name|message_size
+expr_stmt|;
+name|n
+operator|-=
+name|s
+operator|->
+name|init_num
 expr_stmt|;
 while|while
 condition|(
@@ -1958,6 +1972,12 @@ case|:
 case|case
 name|X509_V_ERR_CRL_NOT_YET_VALID
 case|:
+case|case
+name|X509_V_ERR_CERT_UNTRUSTED
+case|:
+case|case
+name|X509_V_ERR_CERT_REJECTED
+case|:
 name|al
 operator|=
 name|SSL_AD_BAD_CERTIFICATE
@@ -2016,6 +2036,12 @@ case|:
 case|case
 name|X509_V_ERR_CERT_CHAIN_TOO_LONG
 case|:
+case|case
+name|X509_V_ERR_PATH_LENGTH_EXCEEDED
+case|:
+case|case
+name|X509_V_ERR_INVALID_CA
+case|:
 name|al
 operator|=
 name|SSL_AD_UNKNOWN_CA
@@ -2027,6 +2053,14 @@ case|:
 name|al
 operator|=
 name|SSL_AD_HANDSHAKE_FAILURE
+expr_stmt|;
+break|break;
+case|case
+name|X509_V_ERR_INVALID_PURPOSE
+case|:
+name|al
+operator|=
+name|SSL_AD_UNSUPPORTED_CERTIFICATE
 expr_stmt|;
 break|break;
 default|default:
@@ -2062,6 +2096,9 @@ name|unsigned
 name|int
 name|extra
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|s
@@ -2092,6 +2129,12 @@ name|extra
 operator|=
 literal|0
 expr_stmt|;
+name|len
+operator|=
+name|SSL3_RT_MAX_PACKET_SIZE
+operator|+
+name|extra
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2099,9 +2142,7 @@ name|p
 operator|=
 name|OPENSSL_malloc
 argument_list|(
-name|SSL3_RT_MAX_PACKET_SIZE
-operator|+
-name|extra
+name|len
 argument_list|)
 operator|)
 operator|==
@@ -2120,6 +2161,14 @@ name|buf
 operator|=
 name|p
 expr_stmt|;
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf_len
+operator|=
+name|len
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2134,6 +2183,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|len
+operator|=
+name|SSL3_RT_MAX_PACKET_SIZE
+expr_stmt|;
+name|len
+operator|+=
+name|SSL3_RT_HEADER_LENGTH
+operator|+
+literal|256
+expr_stmt|;
+comment|/* extra space for empty fragment */
 if|if
 condition|(
 operator|(
@@ -2141,7 +2201,7 @@ name|p
 operator|=
 name|OPENSSL_malloc
 argument_list|(
-name|SSL3_RT_MAX_PACKET_SIZE
+name|len
 argument_list|)
 operator|)
 operator|==
@@ -2159,6 +2219,14 @@ operator|.
 name|buf
 operator|=
 name|p
+expr_stmt|;
+name|s
+operator|->
+name|s3
+operator|->
+name|wbuf_len
+operator|=
+name|len
 expr_stmt|;
 block|}
 name|s

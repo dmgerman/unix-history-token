@@ -238,11 +238,19 @@ begin_comment
 comment|/* Prior to using the dlopen() function, we should decide on the flag  * we send. There's a few different ways of doing this and it's a  * messy venn-diagram to match up which platforms support what. So  * as we don't have autoconf yet, I'm implementing a hack that could  * be hacked further relatively easily to deal with cases as we find  * them. Initially this is to cope with OpenBSD. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__OpenBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#

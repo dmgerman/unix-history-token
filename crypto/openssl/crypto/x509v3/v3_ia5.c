@@ -157,6 +157,10 @@ condition|)
 return|return
 name|NULL
 return|;
+if|if
+condition|(
+operator|!
+operator|(
 name|tmp
 operator|=
 name|OPENSSL_malloc
@@ -167,7 +171,11 @@ name|length
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+name|NULL
+return|;
 name|memcpy
 argument_list|(
 name|tmp

@@ -525,6 +525,12 @@ name|defined
 argument_list|(
 name|NeXT
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_DARWIN
+argument_list|)
 end_if
 
 begin_function

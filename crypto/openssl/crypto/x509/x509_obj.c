@@ -1004,6 +1004,17 @@ name|p
 operator|=
 name|buf
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
 name|p

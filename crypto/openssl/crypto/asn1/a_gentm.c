@@ -961,6 +961,12 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_DARWIN
+argument_list|)
 name|gmtime_r
 argument_list|(
 operator|&

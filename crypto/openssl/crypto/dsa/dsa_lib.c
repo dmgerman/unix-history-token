@@ -57,6 +57,8 @@ specifier|static
 name|DSA_METHOD
 modifier|*
 name|default_DSA_method
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

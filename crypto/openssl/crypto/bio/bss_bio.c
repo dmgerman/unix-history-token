@@ -7,27 +7,64 @@ begin_comment
 comment|/* Special method for a BIO where the other endpoint is also a BIO  * of this kind, handled by the same thread (i.e. the "peer" is actually  * ourselves, wearing a different hat).  * Such "BIO pairs" are mainly for using the SSL library with I/O interfaces  * for which no specific BIO method is available.  * See ssl/ssltest.c for some hints on how this can be used. */
 end_comment
 
+begin_comment
+comment|/* BIO_DEBUG implies BIO_PAIR_DEBUG */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIO_DEBUG
+end_ifdef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|BIO_PAIR_DEBUG
 end_ifndef
 
-begin_undef
-undef|#
-directive|undef
-name|NDEBUG
-end_undef
+begin_define
+define|#
+directive|define
+name|BIO_PAIR_DEBUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* avoid conflicting definitions */
+comment|/* disable assert() unless BIO_PAIR_DEBUG has been defined */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIO_PAIR_DEBUG
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|NDEBUG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -88,11 +125,41 @@ directive|include
 file|"openssl/e_os.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* VxWorks defines SSiZE_MAX with an empty value causing compile errors */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VXWORKS
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
 name|SSIZE_MAX
-end_ifndef
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SSIZE_MAX
+value|INT_MAX
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|SSIZE_MAX
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -1920,7 +1987,7 @@ break|break;
 case|case
 name|BIO_C_GET_WRITE_BUF_SIZE
 case|:
-name|num
+name|ret
 operator|=
 operator|(
 name|long
@@ -1929,6 +1996,7 @@ name|b
 operator|->
 name|size
 expr_stmt|;
+break|break;
 case|case
 name|BIO_C_MAKE_BIO_PAIR
 case|:

@@ -113,7 +113,7 @@ parameter_list|,
 name|int
 name|sep
 parameter_list|,
-name|char
+name|int
 name|binout
 parameter_list|,
 name|EVP_PKEY
@@ -210,11 +210,13 @@ decl_stmt|;
 define|#
 directive|define
 name|PROG_NAME_SIZE
-value|16
+value|39
 name|char
 name|pname
 index|[
 name|PROG_NAME_SIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -251,7 +253,7 @@ name|randfile
 init|=
 name|NULL
 decl_stmt|;
-name|char
+name|int
 name|out_bin
 init|=
 operator|-
@@ -1556,7 +1558,7 @@ parameter_list|,
 name|int
 name|sep
 parameter_list|,
-name|char
+name|int
 name|binout
 parameter_list|,
 name|EVP_PKEY

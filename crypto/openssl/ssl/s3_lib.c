@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -96,6 +96,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -127,6 +129,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -192,6 +196,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_MEDIUM
 block|,
 literal|0
 block|,
@@ -256,6 +262,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_LOW
 block|,
 literal|0
 block|,
@@ -287,6 +295,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_HIGH
 block|,
 literal|0
 block|,
@@ -982,6 +992,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -1013,6 +1025,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_STRONG_NONE
 block|,
 literal|0
 block|,
@@ -1044,6 +1058,8 @@ operator||
 name|SSL_SSLV3
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_MEDIUM
 block|,
 literal|0
 block|,
@@ -1277,6 +1293,8 @@ operator||
 name|SSL_TLSV1
 block|,
 name|SSL_NOT_EXP
+operator||
+name|SSL_MEDIUM
 block|,
 literal|0
 block|,
@@ -1495,6 +1513,17 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+if|if
+condition|(
+name|s
+operator|->
+name|rstate
+operator|==
+name|SSL_ST_READ_BODY
+condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|(
 name|s
@@ -1784,6 +1813,11 @@ decl_stmt|,
 modifier|*
 name|wp
 decl_stmt|;
+name|size_t
+name|rlen
+decl_stmt|,
+name|wlen
+decl_stmt|;
 name|ssl3_cleanup_key_block
 argument_list|(
 name|s
@@ -1897,6 +1931,22 @@ name|wbuf
 operator|.
 name|buf
 expr_stmt|;
+name|rlen
+operator|=
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf_len
+expr_stmt|;
+name|wlen
+operator|=
+name|s
+operator|->
+name|s3
+operator|->
+name|wbuf_len
+expr_stmt|;
 name|memset
 argument_list|(
 name|s
@@ -1912,12 +1962,6 @@ operator|->
 name|s3
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rp
-operator|!=
-name|NULL
-condition|)
 name|s
 operator|->
 name|s3
@@ -1928,12 +1972,6 @@ name|buf
 operator|=
 name|rp
 expr_stmt|;
-if|if
-condition|(
-name|wp
-operator|!=
-name|NULL
-condition|)
 name|s
 operator|->
 name|s3
@@ -1943,6 +1981,22 @@ operator|.
 name|buf
 operator|=
 name|wp
+expr_stmt|;
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf_len
+operator|=
+name|rlen
+expr_stmt|;
+name|s
+operator|->
+name|s3
+operator|->
+name|wbuf_len
+operator|=
+name|wlen
 expr_stmt|;
 name|ssl_free_wbio_buffer
 argument_list|(
@@ -4425,11 +4479,11 @@ name|s3
 operator|->
 name|in_read_app_data
 operator|==
-literal|0
+literal|2
 operator|)
 condition|)
 block|{
-comment|/* ssl3_read_bytes decided to call s->handshake_func, which 		 * called ssl3_read_bytes to read handshake data. 		 * However, ssl3_read_bytes actually found application data 		 * and thinks that application data makes sense here (signalled 		 * by resetting 'in_read_app_data', strangely); so disable 		 * handshake processing and try to read application data again. */
+comment|/* ssl3_read_bytes decided to call s->handshake_func, which 		 * called ssl3_read_bytes to read handshake data. 		 * However, ssl3_read_bytes actually found application data 		 * and thinks that application data makes sense here; so disable 		 * handshake processing and try to read application data again. */
 name|s
 operator|->
 name|in_handshake

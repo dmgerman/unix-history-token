@@ -487,6 +487,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* blat the '\n' */
+if|if
+condition|(
+operator|!
+operator|(
 name|p
 operator|=
 operator|(
@@ -499,7 +503,11 @@ name|add
 operator|+
 name|offset
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|offset
 operator|=
 literal|0

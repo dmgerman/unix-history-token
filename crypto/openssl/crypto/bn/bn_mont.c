@@ -1055,6 +1055,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+operator|!
 name|BN_rshift
 argument_list|(
 name|ret
@@ -1065,7 +1068,10 @@ name|mont
 operator|->
 name|ri
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 endif|#
 directive|endif
 comment|/* MONT_WORD */
@@ -1379,18 +1385,34 @@ name|BN_BITS2
 operator|*
 name|BN_BITS2
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_zero
 argument_list|(
 name|R
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_set_bit
 argument_list|(
 name|R
 argument_list|,
 name|BN_BITS2
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* R */
 name|buf
 index|[
@@ -1461,6 +1483,11 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* R*Ri */
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_lshift
 argument_list|(
 operator|&
@@ -1471,8 +1498,11 @@ name|Ri
 argument_list|,
 name|BN_BITS2
 argument_list|)
-expr_stmt|;
-comment|/* R*Ri */
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!
@@ -1482,6 +1512,10 @@ operator|&
 name|Ri
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|BN_sub_word
 argument_list|(
 operator|&
@@ -1489,9 +1523,18 @@ name|Ri
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
+block|}
 else|else
 comment|/* if N mod word size == 1 */
+comment|/* Ri-- (mod word size) */
+block|{
+if|if
+condition|(
+operator|!
 name|BN_set_word
 argument_list|(
 operator|&
@@ -1499,8 +1542,16 @@ name|Ri
 argument_list|,
 name|BN_MASK2
 argument_list|)
-expr_stmt|;
-comment|/* Ri-- (mod word size) */
+condition|)
+goto|goto
+name|err
+goto|;
+block|}
+comment|/* Ni = (R*Ri-1)/N, keep only least significant word: */
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_div
 argument_list|(
 operator|&
@@ -1516,8 +1567,11 @@ name|tmod
 argument_list|,
 name|ctx
 argument_list|)
-expr_stmt|;
-comment|/* Ni = (R*Ri-1)/N, 		                                 * keep only least significant word: */
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|mont
 operator|->
 name|n0
@@ -1550,11 +1604,24 @@ argument_list|(
 name|mod
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_zero
 argument_list|(
 name|R
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
+comment|/* R = 2^ri */
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_set_bit
 argument_list|(
 name|R
@@ -1563,8 +1630,11 @@ name|mont
 operator|->
 name|ri
 argument_list|)
-expr_stmt|;
-comment|/* R = 2^ri */
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* Ri = R^-1 mod N*/
 if|if
 condition|(
@@ -1587,6 +1657,11 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* R*Ri */
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_lshift
 argument_list|(
 operator|&
@@ -1599,8 +1674,15 @@ name|mont
 operator|->
 name|ri
 argument_list|)
-expr_stmt|;
-comment|/* R*Ri */
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_sub_word
 argument_list|(
 operator|&
@@ -1608,8 +1690,16 @@ name|Ri
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* Ni = (R*Ri-1) / N */
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_div
 argument_list|(
 operator|&
@@ -1628,7 +1718,11 @@ name|mod
 argument_list|,
 name|ctx
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|BN_free
 argument_list|(
 operator|&
@@ -1639,6 +1733,10 @@ block|}
 endif|#
 directive|endif
 comment|/* setup RR for conversions */
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_zero
 argument_list|(
 operator|&
@@ -1648,7 +1746,15 @@ operator|->
 name|RR
 operator|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_set_bit
 argument_list|(
 operator|&
@@ -1664,7 +1770,15 @@ name|ri
 operator|*
 literal|2
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_mod
 argument_list|(
 operator|&
@@ -1690,7 +1804,11 @@ operator|)
 argument_list|,
 name|ctx
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 return|return
 operator|(
 literal|1
@@ -1731,6 +1849,10 @@ operator|(
 name|to
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_copy
 argument_list|(
 operator|&
@@ -1747,7 +1869,15 @@ operator|->
 name|RR
 operator|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_copy
 argument_list|(
 operator|&
@@ -1764,7 +1894,15 @@ operator|->
 name|N
 operator|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_copy
 argument_list|(
 operator|&
@@ -1781,7 +1919,11 @@ operator|->
 name|Ni
 operator|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+name|NULL
+return|;
 name|to
 operator|->
 name|ri

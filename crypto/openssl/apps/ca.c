@@ -150,10 +150,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|VXWORKS
+argument_list|)
+end_elif
 
 begin_include
 include|#
@@ -5855,7 +5860,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"cannot lookup how long until the next CRL is issuer\n"
+literal|"cannot lookup how long until the next CRL is issued\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6474,6 +6479,9 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VMS
 name|strcat
 argument_list|(
 name|buf
@@ -6484,6 +6492,20 @@ argument_list|,
 literal|".new"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|strcat
+argument_list|(
+name|buf
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-new"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|BIO_write_filename
@@ -6549,6 +6571,9 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VMS
 name|strcat
 argument_list|(
 name|buf
@@ -6559,6 +6584,20 @@ argument_list|,
 literal|".old"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|strcat
+argument_list|(
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-old"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rename

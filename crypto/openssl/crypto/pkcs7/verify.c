@@ -557,6 +557,9 @@ decl_stmt|,
 modifier|*
 name|str2
 decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
 name|si
 operator|=
 name|sk_PKCS7_SIGNER_INFO_value
@@ -566,7 +569,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|i
+name|rc
 operator|=
 name|PKCS7_dataVerify
 argument_list|(
@@ -584,7 +587,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|rc
 operator|<=
 literal|0
 condition|)

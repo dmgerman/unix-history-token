@@ -238,6 +238,12 @@ literal|"data too large for key size"
 block|}
 block|,
 block|{
+name|DSA_R_MISSING_PARAMETERS
+block|,
+literal|"missing parameters"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
