@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.16 1999/04/27 02:30:27 jkh Exp $"
+literal|"$Id: main.c,v 1.17 1999/06/23 16:54:38 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fikrRpLqImvh?l:"
+literal|"acdDe:fikrRpLqImvhl:"
 decl_stmt|;
 end_decl_stmt
 
