@@ -162,19 +162,19 @@ end_endif
 
 begin_decl_stmt
 name|u_int32_t
-name|acpi_no_reset_video
+name|acpi_reset_video
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.acpi.no_reset_video"
+literal|"hw.acpi.reset_video"
 argument_list|,
 operator|&
-name|acpi_no_reset_video
+name|acpi_reset_video
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1400,18 +1400,18 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"no_reset_video"
+literal|"reset_video"
 argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|acpi_no_reset_video
+name|acpi_reset_video
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable calling the VESA reset BIOS vector on the resume path"
+literal|"Call the VESA reset BIOS vector on the resume path"
 argument_list|)
 expr_stmt|;
 return|return

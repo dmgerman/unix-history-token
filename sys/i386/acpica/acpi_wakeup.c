@@ -178,8 +178,8 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|u_int32_t
-name|acpi_no_reset_video
+name|uint32_t
+name|acpi_reset_video
 decl_stmt|;
 end_decl_stmt
 
@@ -763,11 +763,11 @@ argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
 argument_list|(
-name|no_reset_video
+name|reset_video
 argument_list|,
-name|u_int32_t
+name|uint32_t
 argument_list|,
-name|acpi_no_reset_video
+name|acpi_reset_video
 argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
