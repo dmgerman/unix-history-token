@@ -273,7 +273,7 @@ name|ifaddrhead
 name|if_addrhead
 decl_stmt|;
 comment|/* linked list of addresses per if */
-comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. The first element of the list must be 		 * of type AF_LINK, and contains sockaddr_dl addresses, 		 * which include the link-level address and the name 		 * of the interface. 		 */
+comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use ifaddr_byindex() instead. 		 */
 name|struct
 name|klist
 name|if_klist
@@ -1570,6 +1570,10 @@ name|idx
 parameter_list|)
 value|ifindex_table[(idx)].ife_ifnet
 end_define
+
+begin_comment
+comment|/*  * Given the index, ifaddr_byindex() returns the one and only  * link-level ifaddr for the interface. You are not supposed to use  * it to traverse the list of addresses associated to the interface.  */
+end_comment
 
 begin_define
 define|#
