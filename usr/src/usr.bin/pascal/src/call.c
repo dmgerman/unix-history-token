@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.5 %G%"
+literal|"@(#)call.c 1.4.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -238,14 +241,16 @@ operator|==
 name|FUNC
 condition|)
 comment|/* 		     * Push some space 		     * for the function return type 		     */
-name|put2
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_PUSH
 argument_list|,
-name|even
+name|leven
 argument_list|(
 operator|-
-name|width
+name|lwidth
 argument_list|(
 name|p
 operator|->
@@ -1308,7 +1313,7 @@ argument_list|)
 expr_stmt|;
 name|cnt
 operator|+=
-name|even
+name|leven
 argument_list|(
 name|lwidth
 argument_list|(
@@ -1594,6 +1599,9 @@ literal|8
 operator|+
 name|INDX
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|value
@@ -1608,6 +1616,9 @@ literal|2
 argument_list|,
 name|O_FCALL
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
@@ -1619,7 +1630,7 @@ name|O_FRTN
 argument_list|,
 name|even
 argument_list|(
-name|lwidth
+name|width
 argument_list|(
 name|p
 operator|->
@@ -1631,7 +1642,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* put(2, O_CALL | psbn<< 8+INDX, p->entloc); */
+comment|/* put(2, O_CALL | psbn<< 8+INDX, (long)p->entloc); */
 name|put
 argument_list|(
 literal|2
@@ -1642,6 +1653,9 @@ name|psbn
 operator|<<
 literal|8
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|entloc
