@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socketvar.h>
 end_include
 
@@ -148,6 +160,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* registered protocol domains */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|dom_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* domain list lock */
+end_comment
+
+begin_comment
 comment|/*  * Add a new protocol domain to the list of supported domains  * Note: you cant unload it again because  a socket may be using it.  * XXX can't fail at this time.  */
 end_comment
 
@@ -162,20 +189,11 @@ modifier|*
 name|dp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -264,11 +282,6 @@ name|MHLEN
 operator|-
 name|max_hdr
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -285,9 +298,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|domain
 modifier|*
@@ -302,10 +312,11 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
+name|mtx_lock
+argument_list|(
+operator|&
+name|dom_mtx
+argument_list|)
 expr_stmt|;
 name|dp
 operator|->
@@ -317,9 +328,10 @@ name|domains
 operator|=
 name|dp
 expr_stmt|;
-name|splx
+name|mtx_unlock
 argument_list|(
-name|s
+operator|&
+name|dom_mtx
 argument_list|)
 expr_stmt|;
 name|net_init_domain
@@ -375,6 +387,18 @@ argument_list|(
 name|socket_zone
 argument_list|,
 name|maxsockets
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|dom_mtx
+argument_list|,
+literal|"domain list lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
