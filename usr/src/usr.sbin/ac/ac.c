@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.4 (Berkeley) %G%"
+literal|"@(#)ac.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,7 +509,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'}'
+literal|'{'
 condition|)
 block|{
 if|if
