@@ -357,6 +357,14 @@ operator||
 name|ZERO_ALLOWED
 block|}
 block|,
+block|{
+literal|"retension"
+block|,
+name|MTRETENS
+block|,
+literal|1
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* defined(__FreeBSD__) */
