@@ -727,12 +727,16 @@ name|hash_rand
 argument_list|)
 condition|)
 do|;
+name|atomic_add_int
+argument_list|(
+operator|&
 name|object
 operator|->
 name|generation
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
-comment|/* atomicity needed? XXX */
 name|mtx_lock
 argument_list|(
 operator|&

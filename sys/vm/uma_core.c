@@ -4963,6 +4963,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
+name|ZONE_LOCK
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 name|uma_dbg_alloc
 argument_list|(
 name|zone
@@ -4970,6 +4975,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|item
+argument_list|)
+expr_stmt|;
+name|ZONE_UNLOCK
+argument_list|(
+name|zone
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6238,6 +6248,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
+name|ZONE_LOCK
+argument_list|(
+name|zone
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|zone
@@ -6263,6 +6278,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|item
+argument_list|)
+expr_stmt|;
+name|ZONE_UNLOCK
+argument_list|(
+name|zone
 argument_list|)
 expr_stmt|;
 endif|#
