@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,139 +10,133 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/endian.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<nfs/rpcv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rpcv2.h"
+file|<nfs/nfsv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|<nfs/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfs.h"
+file|<nfs/nfsm_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsm_subs.h"
+file|<nfs/xdr_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xdr_subs.h"
+file|<nfs/nqnfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nqnfs.h"
+file|<nfs/nfsnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"nfsmount.h"
+file|<nfs/nfsmount.h>
 end_include
 
 begin_comment
@@ -2058,7 +2052,7 @@ name|LC_UDP
 condition|)
 name|ret
 operator|=
-name|nfs_netaddr_match
+name|netaddr_match
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -2088,7 +2082,7 @@ name|LC_CLTP
 condition|)
 name|ret
 operator|=
-name|nfs_netaddr_match
+name|netaddr_match
 argument_list|(
 name|AF_ISO
 argument_list|,
@@ -2174,7 +2168,7 @@ name|ns_nam
 expr_stmt|;
 name|ret
 operator|=
-name|nfs_netaddr_match
+name|netaddr_match
 argument_list|(
 name|saddr
 operator|->
