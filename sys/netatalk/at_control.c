@@ -347,6 +347,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+comment|/*      * If we have an ifp, then find the matching at_ifaddr if it exists      */
 if|if
 condition|(
 name|ifp
@@ -378,6 +379,7 @@ condition|)
 break|break;
 block|}
 block|}
+comment|/*      * In this first switch table we are basically getting ready for      * the second one, by getting the atalk-specific things set up      * so that they start to look more similar to other protocols etc.      */
 switch|switch
 condition|(
 name|cmd
@@ -389,6 +391,7 @@ case|:
 case|case
 name|SIOCDIFADDR
 case|:
+comment|/* 	 * If we have an appletalk sockaddr, scan forward of where 	 * we are now on the at_ifaddr list to find one with a matching  	 * address on this interface. 	 * This may leave aa pointing to the first address on the 	 * NEXT interface! 	 */
 if|if
 condition|(
 name|ifra
@@ -438,6 +441,7 @@ break|break;
 block|}
 block|}
 block|}
+comment|/* 	 * If we a retrying to delete an addres but didn't find such, 	 * then rewurn with an error 	 */
 if|if
 condition|(
 name|cmd
@@ -459,6 +463,7 @@ comment|/*FALLTHROUGH*/
 case|case
 name|SIOCSIFADDR
 case|:
+comment|/*  	 * If we are not superuser, then we don't get to do these ops. 	 */
 if|if
 condition|(
 name|suser
@@ -510,6 +515,7 @@ operator|==
 literal|1
 condition|)
 block|{
+comment|/* 	     * Look for a phase 1 address on this interface. 	     * This may leave aa pointing to the first address on the 	     * NEXT interface! 	     */
 for|for
 control|(
 init|;
@@ -548,6 +554,7 @@ block|}
 else|else
 block|{
 comment|/* default to phase 2 */
+comment|/* 	     * Look for a phase 2 address on this interface. 	     * This may leave aa pointing to the first address on the 	     * NEXT interface! 	     */
 for|for
 control|(
 init|;
@@ -592,6 +599,7 @@ argument_list|(
 literal|"at_control"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we failed to find an existing at_ifaddr entry, then we  	 * allocate a fresh one.  	 * XXX change this to use malloc 	 */
 if|if
 condition|(
 name|aa
@@ -642,7 +650,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Don't let the loopback be first, since the first 		 * address is the machine's default address for 		 * binding. 		 */
+comment|/* 		 * Don't let the loopback be first, since the first 		 * address is the machine's default address for 		 * binding. 		 * If it is, stick ourself in front, otherwise 		 * go to the back of the list. 		 */
 if|if
 condition|(
 name|at_ifaddr
@@ -732,6 +740,7 @@ name|at_ifaddr
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/* 	     * Find the end of the interface's addresses 	     * and link our new one on the end  	     */
 if|if
 condition|(
 operator|(
@@ -785,6 +794,7 @@ operator|)
 name|aa
 expr_stmt|;
 block|}
+comment|/* 	     * As the at_ifaddr contains the actual sockaddrs, 	     * and the ifaddr itself, link them al together correctly. 	     */
 name|aa
 operator|->
 name|aa_ifa
@@ -860,6 +870,7 @@ operator||=
 name|AFA_PHASE2
 expr_stmt|;
 block|}
+comment|/* 	     * and link it all together 	     */
 name|aa
 operator|->
 name|aa_ifp
@@ -869,6 +880,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 	     * If we DID find one then we clobber any routes dependent on it.. 	     */
 name|at_scrub
 argument_list|(
 name|ifp
@@ -911,6 +923,7 @@ operator|==
 literal|1
 condition|)
 block|{
+comment|/* 	     * If the request is specifying phase 1, then 	     * only look at a phase one address 	     */
 for|for
 control|(
 init|;
@@ -948,7 +961,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* default to phase 2 */
+comment|/* 	     * default to phase 2 	     */
 for|for
 control|(
 init|;
@@ -1000,6 +1013,7 @@ operator|)
 return|;
 break|break;
 block|}
+comment|/*      * By the time this switch is run we should be able to assume that      * the "aa" pointer is valid when needed.      */
 switch|switch
 condition|(
 name|cmd
@@ -1008,6 +1022,7 @@ block|{
 case|case
 name|SIOCGIFADDR
 case|:
+comment|/* 	 * copy the contents of the sockaddr blindly. 	 */
 name|sat
 operator|=
 operator|(
@@ -1027,6 +1042,7 @@ name|aa
 operator|->
 name|aa_addr
 expr_stmt|;
+comment|/*  	 * and do some cleanups 	 */
 operator|(
 operator|(
 expr|struct
@@ -1161,6 +1177,7 @@ return|;
 case|case
 name|SIOCDIFADDR
 case|:
+comment|/* 	 * scrub all routes.. didn't we just DO this? XXX yes, del it 	 */
 name|at_scrub
 argument_list|(
 name|ifp
@@ -1168,6 +1185,7 @@ argument_list|,
 name|aa
 argument_list|)
 expr_stmt|;
+comment|/* 	 * remove the ifaddr from the interface 	 */
 if|if
 condition|(
 operator|(
@@ -1224,6 +1242,7 @@ operator|->
 name|ifa_next
 expr_stmt|;
 block|}
+comment|/* 	     * if we found it, remove it, otherwise we screwed up. 	     */
 if|if
 condition|(
 name|ifa
@@ -1256,6 +1275,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Now remove the at_ifaddr from the parallel structure 	 * as well, or we'd be in deep trouble 	 */
 name|aa0
 operator|=
 name|aa
@@ -1302,6 +1322,7 @@ operator|->
 name|aa_next
 expr_stmt|;
 block|}
+comment|/* 	     * if we found it, remove it, otherwise we screwed up. 	     */
 if|if
 condition|(
 name|aa
@@ -1327,6 +1348,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Now dump the memory we were using 	 */
 name|m_free
 argument_list|(
 name|dtom
@@ -1379,6 +1401,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*   * Given an interface and an at_ifaddr (supposedly on that interface)  * remove  any routes that depend on this.  * Why ifp is needed I'm not sure,  * as aa->at_ifaddr.ifa_ifp should be the same.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1476,6 +1502,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * given an at_ifaddr,a sockaddr_at and an ifp,  * bang them all together at high speed and see what happens  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1541,12 +1571,30 @@ decl_stmt|;
 name|u_short
 name|net
 decl_stmt|;
+comment|/*       * save the old addresses in the at_ifaddr just in case we need them.      */
 name|oldaddr
 operator|=
 name|aa
 operator|->
 name|aa_addr
 expr_stmt|;
+name|onr
+operator|.
+name|nr_firstnet
+operator|=
+name|aa
+operator|->
+name|aa_firstnet
+expr_stmt|;
+name|onr
+operator|.
+name|nr_lastnet
+operator|=
+name|aa
+operator|->
+name|aa_lastnet
+expr_stmt|;
+comment|/*      * take the address supplied as an argument, and add it to the       * at_ifnet (also given). Remember ing to update      * those parts of the at_ifaddr that need special processing      */
 name|bzero
 argument_list|(
 name|AA_SAT
@@ -1614,22 +1662,6 @@ name|nr_firstnet
 argument_list|)
 operator|+
 literal|1
-expr_stmt|;
-name|onr
-operator|.
-name|nr_firstnet
-operator|=
-name|aa
-operator|->
-name|aa_firstnet
-expr_stmt|;
-name|onr
-operator|.
-name|nr_lastnet
-operator|=
-name|aa
-operator|->
-name|aa_lastnet
 expr_stmt|;
 name|aa
 operator|->
@@ -1763,17 +1795,20 @@ directive|if
 literal|0
 block|} else if ( fp->if_flags& IFF_POINTOPOINT) {
 comment|/* unimplemented */
+comment|/* 	 * we'd have to copy the dstaddr field over from the sat  	 * but it's not clear that it would contain the right info.. 	 */
 endif|#
 directive|endif
 block|}
 else|else
 block|{
+comment|/* 	 * We are a normal (probably ethernet) interface. 	 * apply the new address to the interface structures etc. 	 * We will probe this address on the net first, before 	 * applying it to ensure that it is free.. If it is not, then 	 * we will try a number of other randomly generated addresses 	 * in this net and then increment the net.  etc.etc. until 	 * we find an unused address. 	 */
 name|aa
 operator|->
 name|aa_flags
 operator||=
 name|AFA_PROBING
 expr_stmt|;
+comment|/* if not loopback we Must probe? */
 name|AA_SAT
 argument_list|(
 name|aa
@@ -1816,6 +1851,7 @@ operator|==
 name|ATADDR_ANYNET
 condition|)
 block|{
+comment|/* 		 * If we are phase 2, and the net was not specified 		 * then we select a random net within the supplied netrange. 		 * XXX use /dev/random? 		 */
 if|if
 condition|(
 name|nnets
@@ -1858,6 +1894,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 		 * if a net was supplied, then check that it is within 		 * the netrange. If it is not then replace the old values 		 * and return an error 		 */
 if|if
 condition|(
 name|ntohs
@@ -1921,6 +1958,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 		 * otherwise just use the new net number.. 		 */
 name|net
 operator|=
 name|ntohs
@@ -1936,6 +1974,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 	     * we must be phase one, so just use whatever we were given. 	     * I guess it really isn't going to be used... RIGHT? 	     */
 name|net
 operator|=
 name|ntohs
@@ -1948,6 +1987,7 @@ name|s_net
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  	 * set the node part of the address into the ifaddr. 	 * If it's not specified, be random about it... 	 * XXX use /dev/random? 	 */
 if|if
 condition|(
 name|sat
@@ -1991,6 +2031,7 @@ operator|.
 name|s_node
 expr_stmt|;
 block|}
+comment|/*  	 * step through the nets in the range 	 * starting at the (possibly random) start point. 	 */
 for|for
 control|(
 name|i
@@ -2049,6 +2090,7 @@ argument_list|(
 name|net
 argument_list|)
 expr_stmt|;
+comment|/* 	     * using a rather strange stepping method, 	     * stagger through the possible node addresses 	     * Once again, starting at the (possibly random) 	     * initial node address. 	     */
 for|for
 control|(
 name|j
@@ -2115,6 +2157,7 @@ name|aa_probcnt
 operator|=
 literal|10
 expr_stmt|;
+comment|/* 		 * start off the probes as an asynchronous activity. 		 * though why wait 200mSec? 		 */
 name|timeout
 argument_list|(
 operator|(
@@ -2153,6 +2196,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
+comment|/* 		     * theoretically we shouldn't time out here 		     * so if we returned with an error.. 		     */
 name|printf
 argument_list|(
 literal|"at_ifinit: why did this happen?!\n"
@@ -2186,6 +2230,7 @@ name|EINTR
 operator|)
 return|;
 block|}
+comment|/*  		 * The async activity should have woken us up. 		 * We need to see if it was successful in finding 		 * a free spot, or if we need to iterate to the next  		 * address to try. 		 */
 name|s
 operator|=
 name|splimp
@@ -2207,6 +2252,7 @@ block|{
 break|break;
 block|}
 block|}
+comment|/* 	     * of course we need to break out through two loops... 	     */
 if|if
 condition|(
 operator|(
@@ -2237,6 +2283,7 @@ operator|.
 name|tv_sec
 expr_stmt|;
 block|}
+comment|/* 	 * if we are still trying to probe, then we have finished all 	 * the possible addresses, so we need to give up 	 */
 if|if
 condition|(
 name|aa
@@ -2280,6 +2327,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/*       * Now that we have selected an address, we need to tell the interface      * about it, just in case it needs to adjust something.      */
 if|if
 condition|(
 name|ifp
@@ -2308,6 +2356,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* 	 * of course this could mean that it objects violently 	 * so if it does, we back out again.. 	 */
 name|aa
 operator|->
 name|aa_addr
@@ -2341,18 +2390,33 @@ name|error
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|1
-comment|/* this works */
+comment|/*       * set up the netmask part of the at_ifaddr      * and point the appropriate pointer in the ifaddr to it.      */
+name|bzero
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_netmask
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|aa
+operator|->
+name|aa_netmask
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|aa
 operator|->
 name|aa_netmask
 operator|.
 name|sat_len
 operator|=
-literal|6
-comment|/*sizeof(struct sockaddr_at)*/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_at
+argument_list|)
 expr_stmt|;
 name|aa
 operator|->
@@ -2401,81 +2465,7 @@ name|aa_netmask
 operator|)
 expr_stmt|;
 comment|/* XXX */
-else|#
-directive|else
-comment|/* this doesn't */
-comment|/* Initialize netmask and broadcast address */
-name|bzero
-argument_list|(
-operator|&
-name|aa
-operator|->
-name|aa_netmask
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|aa
-operator|->
-name|aa_netmask
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|aa
-operator|->
-name|aa_netmask
-operator|.
-name|sat_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_at
-argument_list|)
-expr_stmt|;
-name|aa
-operator|->
-name|aa_netmask
-operator|.
-name|sat_family
-operator|=
-name|AF_APPLETALK
-expr_stmt|;
-name|aa
-operator|->
-name|aa_netmask
-operator|.
-name|sat_addr
-operator|.
-name|s_net
-operator|=
-literal|0xffff
-expr_stmt|;
-name|aa
-operator|->
-name|aa_netmask
-operator|.
-name|sat_addr
-operator|.
-name|s_node
-operator|=
-literal|0
-expr_stmt|;
-name|aa
-operator|->
-name|aa_ifa
-operator|.
-name|ifa_netmask
-operator|=
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|aa
-operator|->
-name|aa_netmask
-expr_stmt|;
+comment|/*      * Initialize broadcast (or remote p2p) address      */
 name|bzero
 argument_list|(
 operator|&
@@ -2490,22 +2480,6 @@ operator|->
 name|aa_broadaddr
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|aa
-operator|->
-name|aa_ifa
-operator|.
-name|ifa_broadaddr
-operator|=
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|aa
-operator|->
-name|aa_broadaddr
 expr_stmt|;
 name|aa
 operator|->
@@ -2527,7 +2501,6 @@ name|sat_family
 operator|=
 name|AF_APPLETALK
 expr_stmt|;
-comment|/* "Add a route to the network" */
 name|aa
 operator|->
 name|aa_ifa
@@ -2595,59 +2568,33 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-block|}
-elseif|else
-if|if
-condition|(
-name|ifp
+name|aa
 operator|->
-name|if_flags
+name|aa_ifa
+operator|.
+name|ifa_broadaddr
+operator|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
-name|IFF_LOOPBACK
-condition|)
-block|{
 name|aa
 operator|->
-name|aa_ifa
-operator|.
-name|ifa_dstaddr
-operator|=
-name|aa
-operator|->
-name|aa_ifa
-operator|.
-name|ifa_addr
-expr_stmt|;
-name|aa
-operator|->
-name|aa_netmask
-operator|.
-name|sat_addr
-operator|.
-name|s_net
-operator|=
-name|htons
-argument_list|(
-literal|0xffff
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|aa
-operator|->
-name|aa_netmask
-operator|.
-name|sat_addr
-operator|.
-name|s_node
-operator|=
-literal|0xff
-expr_stmt|;
-comment|/* XXX */
-name|flags
-operator||=
-name|RTF_HOST
+name|aa_broadaddr
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+if|else if (ifp->if_flags& IFF_LOOPBACK) { 	aa->aa_ifa.ifa_dstaddr = aa->aa_ifa.ifa_addr; 	aa->aa_netmask.sat_addr.s_net = htons(0xffff);
+comment|/* XXX */
+if|aa->aa_netmask.sat_addr.s_node = 0xff;
+comment|/* XXX */
+if|flags |= RTF_HOST;     }
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -2664,11 +2611,15 @@ name|aa_ifa
 operator|.
 name|ifa_dstaddr
 operator|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
 name|aa
 operator|->
-name|aa_ifa
-operator|.
-name|ifa_addr
+name|aa_dstaddr
 expr_stmt|;
 name|aa
 operator|->
@@ -2698,8 +2649,19 @@ operator||=
 name|RTF_HOST
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+comment|/*      * Now that we have selected an address, it becomes      * important that we start setting up the routing table so that      * we can actually USE that address.      */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LOOPBACK
+condition|)
+block|{
+if|#
+directive|if
+literal|1
 name|error
 operator|=
 name|rtinit
@@ -2714,14 +2676,263 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ( ifp->if_flags& IFF_LOOPBACK ) { 	struct at_addr	rtaddr, rtmask;  	bzero(&rtaddr, sizeof(rtaddr)); 	bzero(&rtmask, sizeof(rtmask)); 	rtaddr.s_net = AA_SAT( aa )->sat_addr.s_net; 	rtaddr.s_node = AA_SAT( aa )->sat_addr.s_node; 	rtmask.s_net = 0xffff; 	rtmask.s_node = 0xff;  	error = aa_addsingleroute(&aa->aa_ifa,&rtaddr,&rtmask);      } else {
-comment|/* Install routes for our own network, and then also for        all networks above and below it in the network range */
-block|error = aa_addrangeroute(&aa->aa_ifa, 		ntohs(aa->aa_addr.sat_addr.s_net), 		ntohs(aa->aa_addr.sat_addr.s_net) + 1); 	if (!error&& ntohs(aa->aa_firstnet)< ntohs(aa->aa_addr.sat_addr.s_net)) 	    error = aa_addrangeroute(&aa->aa_ifa, 		  ntohs(aa->aa_firstnet), ntohs(aa->aa_addr.sat_addr.s_net)); 	if (!error&& ntohs(aa->aa_addr.sat_addr.s_net)< ntohs(aa->aa_lastnet)) 	    error = aa_addrangeroute(&aa->aa_ifa, 		  ntohs(aa->aa_addr.sat_addr.s_net) + 1, 		  ntohs(aa->aa_lastnet) + 1);     }
+else|#
+directive|else
+name|struct
+name|at_addr
+name|rtaddr
+decl_stmt|,
+name|rtmask
+decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|rtaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rtaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|rtmask
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rtmask
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|rtaddr
+operator|.
+name|s_net
+operator|=
+name|AA_SAT
+argument_list|(
+name|aa
+argument_list|)
+operator|->
+name|sat_addr
+operator|.
+name|s_net
+expr_stmt|;
+name|rtaddr
+operator|.
+name|s_node
+operator|=
+name|AA_SAT
+argument_list|(
+name|aa
+argument_list|)
+operator|->
+name|sat_addr
+operator|.
+name|s_node
+expr_stmt|;
+name|rtmask
+operator|.
+name|s_net
+operator|=
+literal|0xffff
+expr_stmt|;
+name|rtmask
+operator|.
+name|s_node
+operator|=
+literal|0x0
+expr_stmt|;
+name|flags
+operator||=
+name|RTF_HOST
+expr_stmt|;
+name|error
+operator|=
+name|aa_addsingleroute
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|,
+operator|&
+name|rtaddr
+argument_list|,
+operator|&
+name|rtmask
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+block|}
+else|else
+block|{
+if|#
+directive|if
+literal|1
+name|error
+operator|=
+name|rtinit
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|,
+name|RTM_ADD
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* Install routes for our own network, and then also for        all networks above and below it in the network range */
+name|error
+operator|=
+name|aa_addrangeroute
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|,
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_addr
+operator|.
+name|sat_addr
+operator|.
+name|s_net
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_addr
+operator|.
+name|sat_addr
+operator|.
+name|s_net
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_firstnet
+argument_list|)
+operator|<
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_addr
+operator|.
+name|sat_addr
+operator|.
+name|s_net
+argument_list|)
+condition|)
+name|error
+operator|=
+name|aa_addrangeroute
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|,
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_firstnet
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_addr
+operator|.
+name|sat_addr
+operator|.
+name|s_net
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_addr
+operator|.
+name|sat_addr
+operator|.
+name|s_net
+argument_list|)
+operator|<
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_lastnet
+argument_list|)
+condition|)
+name|error
+operator|=
+name|aa_addrangeroute
+argument_list|(
+operator|&
+name|aa
+operator|->
+name|aa_ifa
+argument_list|,
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_addr
+operator|.
+name|sat_addr
+operator|.
+name|s_net
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|ntohs
+argument_list|(
+name|aa
+operator|->
+name|aa_lastnet
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/*      * of course if we can't add these routes we back out, but it's getting      * risky by now XXX      */
 if|if
 condition|(
 name|error
@@ -2760,6 +2971,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/*      * note that the address has a route associated with it....      */
 name|aa
 operator|->
 name|aa_ifa
@@ -2787,6 +2999,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * check whether a given address is a broadcast address for us..  */
+end_comment
+
 begin_function
 name|int
 name|at_broadcast
@@ -2804,6 +3020,7 @@ name|at_ifaddr
 modifier|*
 name|aa
 decl_stmt|;
+comment|/*      * If the node is not right, it can't be a broadcast       */
 if|if
 condition|(
 name|sat
@@ -2821,6 +3038,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/*      * If the node was right then if the net is right, it's a broadcast      */
 if|if
 condition|(
 name|sat
@@ -2838,8 +3056,7 @@ literal|1
 operator|)
 return|;
 block|}
-else|else
-block|{
+comment|/*      * failing that, if the net is one we have, it's a broadcast as well.      */
 for|for
 control|(
 name|aa
@@ -2907,7 +3124,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return
@@ -3568,6 +3784,22 @@ name|s_node
 expr_stmt|;
 name|mask
 operator|.
+name|sat_family
+operator|=
+name|AF_APPLETALK
+expr_stmt|;
+name|mask
+operator|.
+name|sat_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_at
+argument_list|)
+expr_stmt|;
+name|mask
+operator|.
 name|sat_addr
 operator|.
 name|s_net
@@ -3610,9 +3842,23 @@ operator|)
 operator|&
 name|addr
 argument_list|,
+operator|(
+name|flags
+operator|&
+name|RTF_HOST
+operator|)
+condition|?
+operator|(
+name|ifa
+operator|->
+name|ifa_dstaddr
+operator|)
+else|:
+operator|(
 name|ifa
 operator|->
 name|ifa_addr
+operator|)
 argument_list|,
 operator|(
 expr|struct
