@@ -2074,6 +2074,13 @@ name|flow_mask
 operator|.
 name|proto
 expr_stmt|;
+name|last_pkt
+operator|.
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we don't care about this one */
 comment|/* then, hash function */
 name|i
 operator|=
