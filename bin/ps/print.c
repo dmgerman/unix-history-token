@@ -4097,7 +4097,7 @@ modifier|*
 name|string
 decl_stmt|;
 name|mac_t
-name|label
+name|proclabel
 decl_stmt|;
 name|int
 name|error
@@ -4121,7 +4121,7 @@ condition|(
 name|mac_prepare_process_label
 argument_list|(
 operator|&
-name|label
+name|proclabel
 argument_list|)
 operator|==
 operator|-
@@ -4147,7 +4147,7 @@ name|ki_p
 operator|->
 name|ki_pid
 argument_list|,
-name|label
+name|proclabel
 argument_list|)
 expr_stmt|;
 if|if
@@ -4161,7 +4161,7 @@ if|if
 condition|(
 name|mac_to_text
 argument_list|(
-name|label
+name|proclabel
 argument_list|,
 operator|&
 name|string
@@ -4177,7 +4177,7 @@ expr_stmt|;
 block|}
 name|mac_free
 argument_list|(
-name|label
+name|proclabel
 argument_list|)
 expr_stmt|;
 name|out
@@ -4244,7 +4244,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|mac_t
-name|label
+name|proclabel
 decl_stmt|;
 name|int
 name|error
@@ -4258,7 +4258,7 @@ condition|(
 name|mac_prepare_process_label
 argument_list|(
 operator|&
-name|label
+name|proclabel
 argument_list|)
 operator|==
 operator|-
@@ -4286,7 +4286,7 @@ name|ki_p
 operator|->
 name|ki_pid
 argument_list|,
-name|label
+name|proclabel
 argument_list|)
 expr_stmt|;
 if|if
@@ -4297,7 +4297,7 @@ literal|0
 operator|&&
 name|mac_to_text
 argument_list|(
-name|label
+name|proclabel
 argument_list|,
 operator|&
 name|string
@@ -4321,7 +4321,7 @@ expr_stmt|;
 block|}
 name|mac_free
 argument_list|(
-name|label
+name|proclabel
 argument_list|)
 expr_stmt|;
 return|return
