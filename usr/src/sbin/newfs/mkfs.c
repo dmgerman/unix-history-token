@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.3 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5081,6 +5081,12 @@ block|}
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STANDALONE
+end_ifndef
+
 begin_comment
 comment|/*  * copy a block  */
 end_comment
@@ -5117,6 +5123,11 @@ block|{
 asm|asm("	movc3	12(ap),*4(ap),*8(ap)");
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * check if a block is available  */
@@ -5277,6 +5288,20 @@ name|mask
 operator|)
 return|;
 default|default:
+ifdef|#
+directive|ifdef
+name|STANDALONE
+name|printf
+argument_list|(
+literal|"isblock bad fs_frag %d\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_frag
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -5288,6 +5313,8 @@ operator|->
 name|fs_frag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}
@@ -5427,6 +5454,20 @@ operator|)
 expr_stmt|;
 return|return;
 default|default:
+ifdef|#
+directive|ifdef
+name|STANDALONE
+name|printf
+argument_list|(
+literal|"clrblock bad fs_frag %d\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_frag
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -5438,6 +5479,8 @@ operator|->
 name|fs_frag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}
@@ -5572,6 +5615,20 @@ operator|)
 expr_stmt|;
 return|return;
 default|default:
+ifdef|#
+directive|ifdef
+name|STANDALONE
+name|printf
+argument_list|(
+literal|"setblock bad fs_frag %d\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_frag
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -5583,6 +5640,8 @@ operator|->
 name|fs_frag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}
