@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -62,16 +62,17 @@ name|vm_size_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Basic integral types.  Omit the typedef if  * not possible for a machine/compiler combination.  */
+end_comment
+
 begin_typedef
 typedef|typedef
+name|signed
 name|char
 name|int8
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Basic integral types. */
-end_comment
 
 begin_typedef
 typedef|typedef
