@@ -370,10 +370,6 @@ name|ACPI_STATUS
 name|status
 decl_stmt|;
 comment|/* XXX ACPI_WAIT_FOREVER is probably a bad idea, what is a better time? */
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
 name|status
 operator|=
 name|AcpiAcquireGlobalLock
@@ -385,11 +381,15 @@ name|sc
 operator|->
 name|ec_lockhandle
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
 argument_list|)
 condition|)
-operator|(
 name|sc
-operator|)
 operator|->
 name|ec_locked
 operator|=
@@ -415,9 +415,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-operator|(
 name|sc
-operator|)
 operator|->
 name|ec_locked
 operator|=
@@ -447,9 +445,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
 name|sc
-operator|)
 operator|->
 name|ec_locked
 operator|!=
@@ -778,8 +774,6 @@ name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* XXX implement - need an ACPI 2.0 system to test this */
-name|return_VOID
-expr_stmt|;
 block|}
 end_function
 
@@ -798,14 +792,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|acpi_get_type
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
-operator|)
 operator|&&
 operator|!
 name|acpi_disabled
@@ -918,9 +910,6 @@ name|ec_data_rid
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|->
 name|ec_data_res
@@ -947,7 +936,12 @@ literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ec_data_res
 operator|==
 name|NULL
 condition|)
@@ -995,9 +989,6 @@ name|ec_csr_rid
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|sc
 operator|->
 name|ec_csr_res
@@ -1024,7 +1015,12 @@ literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ec_csr_res
 operator|==
 name|NULL
 condition|)
@@ -1076,10 +1072,6 @@ literal|"attaching GPE\n"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|acpi_EvaluateInteger
@@ -1095,6 +1087,12 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -1119,10 +1117,6 @@ name|out
 goto|;
 block|}
 comment|/*      * Install a handler for this EC's GPE bit.  Note that EC SCIs are       * treated as both edge- and level-triggered interrupts; in other words      * we clear the status bit immediately after getting an EC-SCI, then      * again after we're done processing the event.  This guarantees that      * events we cause while performing a transaction (e.g. IBE/OBF) get       * cleared before re-enabling the GPE.      */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|AcpiInstallGpeHandler
@@ -1139,6 +1133,12 @@ name|EcGpeHandler
 argument_list|,
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -1179,10 +1179,6 @@ literal|"attaching address space handler\n"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|AcpiInstallAddressSpaceHandler
@@ -1199,6 +1195,12 @@ name|EcSpaceSetup
 argument_list|,
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -1359,7 +1361,6 @@ block|{
 comment|/* 	 * Check EC_SCI. 	 *  	 * Bail out if the EC_SCI bit of the status register is not set. 	 * Note that this function should only be called when 	 * this bit is set (polling is used to detect IBE/OBF events). 	 * 	 * It is safe to do this without locking the controller, as it's 	 * OK to call EcQuery when there's no data ready; in the worst 	 * case we should just find nothing waiting for us and bail. 	 */
 if|if
 condition|(
-operator|!
 operator|(
 name|EC_GET_CSR
 argument_list|(
@@ -1368,6 +1369,8 @@ argument_list|)
 operator|&
 name|EC_EVENT_SCI
 operator|)
+operator|==
+literal|0
 condition|)
 break|break;
 comment|/* 	 * Find out why the EC is signalling us 	 */
@@ -1528,8 +1531,6 @@ argument_list|(
 literal|"EcGpeQueryHandler:EnableEvent Failed\n"
 argument_list|)
 expr_stmt|;
-name|return_VOID
-expr_stmt|;
 block|}
 end_function
 
@@ -1592,13 +1593,16 @@ name|csrvalue
 operator|&
 name|EC_FLAG_OUTPUT_BUFFER
 operator|)
+operator|!=
+literal|0
 operator|||
-operator|!
 operator|(
 name|csrvalue
 operator|&
 name|EC_FLAG_INPUT_BUFFER
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|sc
@@ -1609,10 +1613,6 @@ name|csrvalue
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|sc
 operator|->
@@ -1646,7 +1646,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -1766,31 +1765,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|Address
 operator|>
 literal|0xFF
-operator|)
 operator|||
-operator|(
 name|width
 operator|%
 literal|8
 operator|!=
 literal|0
-operator|)
 operator|||
-operator|(
 name|Value
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|Context
 operator|==
 name|NULL
-operator|)
 condition|)
 name|return_ACPI_STATUS
 argument_list|(
@@ -1904,10 +1895,6 @@ operator|>>
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcTransaction
@@ -1917,13 +1904,17 @@ argument_list|,
 operator|&
 name|EcRequest
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 break|break;
-operator|(
 operator|*
 name|Value
-operator|)
 operator||=
 operator|(
 name|ACPI_INTEGER
@@ -2023,6 +2014,7 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2039,6 +2031,7 @@ argument_list|,
 literal|"EcWaitEventIntr called without EC lock!\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|EcStatus
 operator|=
 name|EC_GET_CSR
@@ -2075,6 +2068,8 @@ name|EcStatus
 operator|&
 name|EC_FLAG_OUTPUT_BUFFER
 operator|)
+operator|!=
+literal|0
 condition|)
 name|return_ACPI_STATUS
 argument_list|(
@@ -2089,12 +2084,13 @@ operator|==
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 operator|)
 operator|&&
-operator|!
 operator|(
 name|EcStatus
 operator|&
 name|EC_FLAG_INPUT_BUFFER
 operator|)
+operator|==
+literal|0
 condition|)
 name|return_ACPI_STATUS
 argument_list|(
@@ -2107,17 +2103,15 @@ name|ec_csrvalue
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX sleeping with Acpi Global Lock held */
 if|if
 condition|(
-name|ACPI_MSLEEP
+name|tsleep
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|ec_csrvalue
-argument_list|,
-operator|&
-name|acpi_mutex
 argument_list|,
 name|PZERO
 argument_list|,
@@ -2185,6 +2179,7 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2201,6 +2196,7 @@ argument_list|,
 literal|"EcWaitEvent called without EC lock!\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*      * Stall 1us:      * ----------      * Stall for 1 microsecond before reading the status register      * for the first time.  This allows the EC to set the IBF/OBF      * bit to its proper state.      *      * XXX it is not clear why we read the CSR twice.      */
 name|AcpiOsStall
 argument_list|(
@@ -2238,17 +2234,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|Event
 operator|==
 name|EC_EVENT_OUTPUT_BUFFER_FULL
-operator|)
 operator|&&
 operator|(
 name|EcStatus
 operator|&
 name|EC_FLAG_OUTPUT_BUFFER
 operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -2257,18 +2253,17 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
 name|Event
 operator|==
 name|EC_EVENT_INPUT_BUFFER_EMPTY
-operator|)
 operator|&&
-operator|!
 operator|(
 name|EcStatus
 operator|&
 name|EC_FLAG_INPUT_BUFFER
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -2307,16 +2302,18 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcLock
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 return|return
@@ -2331,10 +2328,6 @@ argument_list|,
 name|EC_COMMAND_QUERY
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
 name|Status
 operator|=
 name|EcWaitEvent
@@ -2343,6 +2336,12 @@ name|sc
 argument_list|,
 name|EC_EVENT_OUTPUT_BUFFER_FULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 operator|*
@@ -2365,6 +2364,7 @@ argument_list|(
 name|Status
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2381,6 +2381,7 @@ argument_list|,
 literal|"timeout waiting for EC to respond to EC_COMMAND_QUERY\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -2407,17 +2408,18 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/*      * Lock the EC      */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcLock
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 return|return
@@ -2447,11 +2449,9 @@ operator|->
 name|Address
 argument_list|,
 operator|&
-operator|(
 name|EcRequest
 operator|->
 name|Data
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2469,11 +2469,9 @@ operator|->
 name|Address
 argument_list|,
 operator|&
-operator|(
 name|EcRequest
 operator|->
 name|Data
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2484,7 +2482,6 @@ name|AE_SUPPORT
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Unlock the EC      */
 name|EcUnlock
 argument_list|(
 name|sc
@@ -2538,6 +2535,7 @@ name|ACPI_EVENT_GPE
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2554,6 +2552,7 @@ argument_list|,
 literal|"EcRequest: Unable to clear the EC GPE.\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -2570,6 +2569,7 @@ literal|0
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2586,6 +2586,7 @@ argument_list|,
 literal|"EcRequest: Unable to re-enable the EC GPE.\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -2623,6 +2624,7 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2639,6 +2641,7 @@ argument_list|,
 literal|"EcRead called without EC lock!\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*EcBurstEnable(EmbeddedController);*/
 name|EC_SET_CSR
 argument_list|(
@@ -2647,10 +2650,6 @@ argument_list|,
 name|EC_COMMAND_READ
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2659,6 +2658,12 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -2691,10 +2696,6 @@ argument_list|,
 name|Address
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2703,6 +2704,12 @@ name|sc
 argument_list|,
 name|EC_EVENT_OUTPUT_BUFFER_FULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -2728,10 +2735,8 @@ name|Status
 operator|)
 return|;
 block|}
-operator|(
 operator|*
 name|Data
-operator|)
 operator|=
 name|EC_GET_DATA
 argument_list|(
@@ -2776,6 +2781,7 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
 name|ACPI_VPRINT
 argument_list|(
 name|sc
@@ -2792,6 +2798,7 @@ argument_list|,
 literal|"EcWrite called without EC lock!\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*EcBurstEnable(EmbeddedController);*/
 name|EC_SET_CSR
 argument_list|(
@@ -2800,10 +2807,6 @@ argument_list|,
 name|EC_COMMAND_WRITE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2812,6 +2815,12 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -2844,10 +2853,6 @@ argument_list|,
 name|Address
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2856,6 +2861,12 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -2889,10 +2900,6 @@ operator|*
 name|Data
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2901,6 +2908,12 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
