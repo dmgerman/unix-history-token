@@ -470,7 +470,11 @@ modifier|*
 name|fakechan
 decl_stmt|;
 name|unsigned
+name|devcount
+decl_stmt|,
 name|chancount
+decl_stmt|,
+name|vchancount
 decl_stmt|;
 name|unsigned
 name|flags
@@ -1104,6 +1108,9 @@ name|struct
 name|pcm_channel
 modifier|*
 name|ch
+parameter_list|,
+name|int
+name|mkdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1121,6 +1128,9 @@ name|struct
 name|pcm_channel
 modifier|*
 name|ch
+parameter_list|,
+name|int
+name|rmdev
 parameter_list|)
 function_decl|;
 end_function_decl
