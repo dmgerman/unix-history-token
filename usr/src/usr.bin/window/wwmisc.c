@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwmisc.c	3.4 83/11/28"
+literal|"@(#)wwmisc.c	3.5 83/12/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ name|w
 operator|->
 name|ww_i
 operator|.
-name|b
+name|t
 operator|&&
 name|w
 operator|->
@@ -111,7 +111,7 @@ name|w
 operator|->
 name|ww_i
 operator|.
-name|t
+name|b
 operator|&&
 name|w
 operator|->
