@@ -10324,6 +10324,13 @@ specifier|register
 name|int
 name|delta
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_rttupdated
