@@ -12,19 +12,19 @@ struct|struct
 name|uudevice
 block|{
 name|short
-name|uurcs
+name|rcs
 decl_stmt|;
 comment|/* receiver status register */
 name|short
-name|uurdb
+name|rdb
 decl_stmt|;
 comment|/* receiver data buffer register */
 name|short
-name|uutcs
+name|tcs
 decl_stmt|;
 comment|/* transmitter status register */
 name|short
-name|uutdb
+name|tdb
 decl_stmt|;
 comment|/* transmitter data buffer register */
 block|}
@@ -32,29 +32,58 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Receiver status register status/command bits  */
+comment|/*  * Receiver/transmitter status register status/command bits  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UURCS_DONE
+name|UUCS_DONE
 value|0x80
 end_define
 
 begin_comment
-comment|/* Receiver done (byte ready) */
+comment|/* done/ready */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UURCS_INTR
+name|UUCS_READY
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|UUCS_INTR
 value|0x40
 end_define
 
 begin_comment
-comment|/* Receiver interrupt enable */
+comment|/* interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUCS_MAINT
+value|0x02
+end_define
+
+begin_comment
+comment|/* maintenance check (xmitter only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUCS_BREAK
+value|0x01
+end_define
+
+begin_comment
+comment|/* send break (xmitter only) */
 end_comment
 
 begin_comment
@@ -92,54 +121,6 @@ end_define
 
 begin_comment
 comment|/* TU58 break */
-end_comment
-
-begin_comment
-comment|/*  * Transmitter status register status/command bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UUTCS_READY
-value|0x80
-end_define
-
-begin_comment
-comment|/* transmitter ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UUTCS_INTR
-value|0x40
-end_define
-
-begin_comment
-comment|/* transmitter interrupt enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UUTCS_MAINT
-value|0x02
-end_define
-
-begin_comment
-comment|/* maintenance check */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UUTCS_BREAK
-value|0x01
-end_define
-
-begin_comment
-comment|/* send break */
 end_comment
 
 begin_define
