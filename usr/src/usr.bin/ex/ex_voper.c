@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_voper.c	7.5 (Berkeley) %G%"
+literal|"@(#)ex_voper.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1075,7 +1075,7 @@ case|:
 case|case
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 case|:
 name|dir
@@ -1320,7 +1320,7 @@ case|:
 case|case
 name|CTRL
 argument_list|(
-name|p
+literal|'p'
 argument_list|)
 case|:
 name|wdot
@@ -1453,7 +1453,7 @@ comment|/* 	 * ^N		To next line, same column if possible. 	 * 	 * LF		Linefeed i
 case|case
 name|CTRL
 argument_list|(
-name|n
+literal|'n'
 argument_list|)
 case|:
 case|case

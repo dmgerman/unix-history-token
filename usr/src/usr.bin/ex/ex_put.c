@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.10 (Berkeley) %G%"
+literal|"@(#)ex_put.c	7.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3400,7 +3400,7 @@ name|t_startc
 operator|!=
 name|CTRL
 argument_list|(
-name|q
+literal|'q'
 argument_list|)
 condition|)
 name|nttyc
@@ -3417,7 +3417,7 @@ name|t_stopc
 operator|!=
 name|CTRL
 argument_list|(
-name|s
+literal|'s'
 argument_list|)
 condition|)
 name|nttyc
@@ -3504,7 +3504,7 @@ index|]
 operator|!=
 name|CTRL
 argument_list|(
-name|q
+literal|'q'
 argument_list|)
 condition|)
 name|tty
@@ -3527,7 +3527,7 @@ index|]
 operator|!=
 name|CTRL
 argument_list|(
-name|s
+literal|'s'
 argument_list|)
 condition|)
 name|tty

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vops2.c	6.9 (Berkeley) %G%"
+literal|"@(#)ex_vops2.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1677,7 +1677,7 @@ name|c
 operator|=
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1711,7 +1711,7 @@ name|c
 operator|=
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1757,7 +1757,7 @@ comment|/* 			 * ^H		Backs up a character in the input. 			 * 			 * BUG:		Can't 
 case|case
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 case|:
 name|bakchar
@@ -1802,7 +1802,7 @@ comment|/* 			 * ^W		Back up a white/non-white word. 			 */
 case|case
 name|CTRL
 argument_list|(
-name|w
+literal|'w'
 argument_list|)
 case|:
 name|wdkind
@@ -2034,13 +2034,13 @@ comment|/* 			 * ^Q		Super quote following character 			 *		Only ^@ is verboten 
 case|case
 name|CTRL
 argument_list|(
-name|q
+literal|'q'
 argument_list|)
 case|:
 case|case
 name|CTRL
 argument_list|(
-name|v
+literal|'v'
 argument_list|)
 case|:
 name|x
@@ -2532,13 +2532,13 @@ comment|/* 		 * ^D		Backtab. 		 * ^T		Software forward tab. 		 * 		 *		Unless in
 case|case
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 case|:
 case|case
 name|CTRL
 argument_list|(
-name|t
+literal|'t'
 argument_list|)
 case|:
 if|if
@@ -2553,7 +2553,7 @@ comment|/* 		 * ^D|QUOTE	Is a backtab (in a repeated command). 		 */
 case|case
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 operator||
 name|QUOTE
@@ -2583,7 +2583,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|t
+literal|'t'
 argument_list|)
 condition|)
 block|{

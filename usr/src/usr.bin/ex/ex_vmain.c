@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	7.8 (Berkeley) %G%"
+literal|"@(#)ex_vmain.c	7.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,13 +523,13 @@ comment|/* 		 * ^R		Retype screen, getting rid of @ lines. 		 *		If in open, equ
 case|case
 name|CTRL
 argument_list|(
-name|l
+literal|'l'
 argument_list|)
 case|:
 case|case
 name|CTRL
 argument_list|(
-name|r
+literal|'r'
 argument_list|)
 case|:
 if|if
@@ -538,7 +538,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|l
+literal|'l'
 argument_list|)
 operator|||
 operator|(
@@ -549,7 +549,7 @@ name|KR
 operator|==
 name|CTRL
 argument_list|(
-name|l
+literal|'l'
 argument_list|)
 operator|)
 condition|)
@@ -797,7 +797,7 @@ comment|/* 		 * ^U		Scroll up.  A count sticks around for 		 *		future scrolls a
 case|case
 name|CTRL
 argument_list|(
-name|u
+literal|'u'
 argument_list|)
 case|:
 if|if
@@ -854,7 +854,7 @@ comment|/* 		 * ^D		Scroll down.  Like scroll up. 		 */
 case|case
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 case|:
 ifdef|#
@@ -1008,7 +1008,7 @@ comment|/* 		 * ^E		Glitch the screen down (one) line. 		 *		Cursor left on same
 case|case
 name|CTRL
 argument_list|(
-name|e
+literal|'e'
 argument_list|)
 case|:
 if|if
@@ -1072,7 +1072,7 @@ comment|/* 		 * ^Y		Like ^E but up 		 */
 case|case
 name|CTRL
 argument_list|(
-name|y
+literal|'y'
 argument_list|)
 case|:
 if|if
@@ -1191,7 +1191,7 @@ comment|/* 		 * ^F		Window forwards, with 2 lines of continuity. 		 *		Count rep
 case|case
 name|CTRL
 argument_list|(
-name|f
+literal|'f'
 argument_list|)
 case|:
 name|vsave
@@ -1256,7 +1256,7 @@ comment|/* 		 * ^B		Window backwards, with 2 lines of continuity. 		 *		Inverse 
 case|case
 name|CTRL
 argument_list|(
-name|b
+literal|'b'
 argument_list|)
 case|:
 name|vsave
@@ -2270,7 +2270,7 @@ comment|/* 		 * ^^		Return to previous file. 		 *		Like a :e #, and thus can be 
 case|case
 name|CTRL
 argument_list|(
-operator|^
+literal|'^'
 argument_list|)
 case|:
 name|forbid
@@ -2310,7 +2310,9 @@ goto|;
 comment|/* 		 * ^]		Takes word after cursor as tag, and then does 		 *		tag command.  Read ``go right to''. 		 */
 case|case
 name|CTRL
-argument_list|(])
+argument_list|(
+literal|']'
+argument_list|)
 case|:
 name|grabtag
 argument_list|()
@@ -2345,7 +2347,7 @@ comment|/* 		 * ^G		Bring up a status line at the bottom of 		 *		the screen, li
 case|case
 name|CTRL
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 case|:
 name|oglobp
@@ -2375,7 +2377,7 @@ comment|/* 		 * ^Z:	suspend editor session and temporarily return 		 * 	to shell
 case|case
 name|CTRL
 argument_list|(
-name|z
+literal|'z'
 argument_list|)
 case|:
 name|forbid

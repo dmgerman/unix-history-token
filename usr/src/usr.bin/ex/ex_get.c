@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_get.c	7.7 (Berkeley) %G%"
+literal|"@(#)ex_get.c	7.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 condition|)
 do|;
@@ -157,7 +157,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 condition|)
 name|setlastchar
@@ -407,7 +407,7 @@ index|]
 operator|=
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 expr_stmt|;
 if|if
@@ -661,7 +661,7 @@ operator|)
 operator|==
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 condition|)
 block|{
@@ -727,7 +727,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 condition|)
 block|{

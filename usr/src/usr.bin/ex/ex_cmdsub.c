@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	7.8 (Berkeley) %G%"
+literal|"@(#)ex_cmdsub.c	7.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4585,7 +4585,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|v
+literal|'v'
 argument_list|)
 condition|)
 block|{
@@ -4705,7 +4705,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|v
+literal|'v'
 argument_list|)
 condition|)
 block|{

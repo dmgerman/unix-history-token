@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	7.11 (Berkeley) %G%"
+literal|"@(#)ex_tty.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -913,7 +913,7 @@ name|t_suspc
 operator|==
 name|CTRL
 argument_list|(
-name|z
+literal|'z'
 argument_list|)
 condition|)
 block|{
@@ -951,7 +951,7 @@ index|]
 operator|==
 name|CTRL
 argument_list|(
-name|z
+literal|'z'
 argument_list|)
 condition|)
 name|addmac

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vget.c	6.9 (Berkeley) %G%"
+literal|"@(#)ex_vget.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,7 +495,7 @@ name|c
 operator|=
 name|CTRL
 argument_list|(
-name|c
+literal|'c'
 argument_list|)
 expr_stmt|;
 name|Peek2key
@@ -765,13 +765,13 @@ block|{
 case|case
 name|CTRL
 argument_list|(
-name|v
+literal|'v'
 argument_list|)
 case|:
 case|case
 name|CTRL
 argument_list|(
-name|q
+literal|'q'
 argument_list|)
 case|:
 name|c
@@ -1034,7 +1034,7 @@ name|Peek_key
 operator|!=
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 condition|)
 block|{
@@ -1059,7 +1059,7 @@ name|Peek_key
 operator|==
 name|CTRL
 argument_list|(
-name|h
+literal|'h'
 argument_list|)
 condition|?
 literal|0
@@ -1564,7 +1564,7 @@ name|vputc
 argument_list|(
 name|CTRL
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 argument_list|)
 expr_stmt|;

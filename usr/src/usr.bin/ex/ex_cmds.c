@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	7.11 (Berkeley) %G%"
+literal|"@(#)ex_cmds.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,7 +452,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 operator|||
 name|c
@@ -2659,7 +2659,7 @@ name|c
 operator|=
 name|CTRL
 argument_list|(
-name|k
+literal|'k'
 argument_list|)
 expr_stmt|;
 if|if
@@ -2721,7 +2721,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|k
+literal|'k'
 argument_list|)
 condition|)
 block|{
@@ -2936,7 +2936,7 @@ comment|/* EOF */
 case|case
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 case|:
 case|case

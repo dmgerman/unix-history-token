@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds2.c	7.5 (Berkeley) %G%"
+literal|"@(#)ex_cmds2.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1742,7 +1742,7 @@ argument_list|()
 operator|==
 name|CTRL
 argument_list|(
-name|Q
+literal|'Q'
 argument_list|)
 operator|||
 name|peekkey
@@ -1750,7 +1750,7 @@ argument_list|()
 operator|==
 name|CTRL
 argument_list|(
-name|S
+literal|'S'
 argument_list|)
 condition|)
 name|ignore
