@@ -1691,6 +1691,9 @@ operator|.
 name|report_ID
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|id
 condition|)
 name|id
 operator|=
