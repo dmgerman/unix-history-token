@@ -156,7 +156,7 @@ name|t
 decl_stmt|;
 if|if
 condition|(
-name|strnchr
+name|strncmp
 argument_list|(
 name|tty
 argument_list|,
