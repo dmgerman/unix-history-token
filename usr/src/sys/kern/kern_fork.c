@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_fork.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_fork.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -411,12 +411,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* child */
-name|u
-operator|.
-name|u_start
-operator|=
-name|time
-expr_stmt|;
 name|u
 operator|.
 name|u_acflag
@@ -951,6 +945,40 @@ name|p_time
 operator|=
 literal|0
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|rpp
+operator|->
+name|p_utime
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timeval
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|rpp
+operator|->
+name|p_stime
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|timeval
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|rpp
 operator|->
 name|p_cpu
@@ -1296,11 +1324,31 @@ argument_list|,
 name|isvfork
 argument_list|)
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|splclock
+argument_list|()
+expr_stmt|;
+name|u
+operator|.
+name|u_start
+operator|=
+name|time
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 	 * Make child runnable and add to run queue. 	 */
 operator|(
 name|void
