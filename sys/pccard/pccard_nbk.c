@@ -40,18 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -107,18 +95,6 @@ begin_include
 include|#
 directive|include
 file|<pccard/cardinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/driver.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/pcic.h>
 end_include
 
 begin_include
