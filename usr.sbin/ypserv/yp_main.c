@@ -879,7 +879,7 @@ name|struct
 name|sockaddr_in
 name|saddr
 decl_stmt|;
-name|int
+name|socklen_t
 name|asize
 init|=
 sizeof|sizeof

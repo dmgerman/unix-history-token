@@ -1254,7 +1254,7 @@ name|struct
 name|sockaddr_in
 name|check
 decl_stmt|;
-name|int
+name|socklen_t
 name|checklen
 init|=
 sizeof|sizeof
@@ -2666,7 +2666,7 @@ name|struct
 name|sockaddr_in
 name|check
 decl_stmt|;
-name|int
+name|socklen_t
 name|checklen
 init|=
 sizeof|sizeof

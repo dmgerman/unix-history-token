@@ -71,12 +71,13 @@ name|struct
 name|sockaddr_in
 name|remote
 decl_stmt|;
+name|socklen_t
+name|namelen
+decl_stmt|;
 name|int
 name|s
 decl_stmt|,
 name|rv
-decl_stmt|,
-name|namelen
 decl_stmt|;
 name|memcpy
 argument_list|(

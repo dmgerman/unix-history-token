@@ -1368,11 +1368,11 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
-name|int
-name|rval
+name|socklen_t
+name|len
 decl_stmt|;
 name|int
-name|len
+name|rval
 decl_stmt|;
 name|HEADER
 modifier|*
@@ -1638,10 +1638,11 @@ name|circleq_dnsentry
 modifier|*
 name|q
 decl_stmt|;
+name|socklen_t
+name|len
+decl_stmt|;
 name|int
 name|type
-decl_stmt|,
-name|len
 decl_stmt|;
 comment|/* Check for SOCK_DGRAM or SOCK_STREAM -- we need to know later */
 name|type
@@ -1924,6 +1925,9 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+name|socklen_t
+name|len
+decl_stmt|;
 name|int
 name|a
 decl_stmt|,
@@ -1935,8 +1939,6 @@ name|d
 decl_stmt|;
 name|int
 name|type
-decl_stmt|,
-name|len
 decl_stmt|;
 comment|/* Check for SOCK_DGRAM or SOCK_STREAM -- we need to know later */
 name|type

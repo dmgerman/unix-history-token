@@ -1708,13 +1708,11 @@ argument|) 		err(
 literal|1
 argument|,
 literal|"kevent"
-argument|); 	return; }  static int dconschat_accept_socket(struct dcons_state *dc, struct dcons_port *p) { 	int foo
-argument_list|,
-argument|ns
+argument|); 	return; }  static int dconschat_accept_socket(struct dcons_state *dc, struct dcons_port *p) { 	socklen_t addrlen; 	int ns
 argument_list|,
 argument|flags; 	struct kevent kev;
 comment|/* accept connection */
-argument|foo = p->res->ai_addrlen; 	ns = accept(p->s, p->res->ai_addr,&foo); 	if (ns<
+argument|addrlen = p->res->ai_addrlen; 	ns = accept(p->s, p->res->ai_addr,&addrlen); 	if (ns<
 literal|0
 argument|) 		err(
 literal|1
