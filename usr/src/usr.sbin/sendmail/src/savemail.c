@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -71,10 +71,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -85,6 +81,14 @@ specifier|static
 name|int
 name|exclusive
 decl_stmt|;
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|fnptr
+function_decl|)
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|exclusive
@@ -474,6 +478,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -487,6 +495,9 @@ name|deliver
 argument_list|(
 name|q
 argument_list|,
+operator|(
+name|fnptr
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;

@@ -39,7 +39,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -1602,6 +1602,9 @@ operator|(
 name|NULL
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
