@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -11627,10 +11633,9 @@ operator|&
 name|MAP_ENTRY_IS_SUB_MAP
 condition|)
 block|{
-comment|/* XXX no %qd in kernel.  Truncate entry->offset. */
 name|db_printf
 argument_list|(
-literal|", share=%p, offset=0x%lx\n"
+literal|", share=%p, offset=0x%jx\n"
 argument_list|,
 operator|(
 name|void
@@ -11643,7 +11648,7 @@ operator|.
 name|sub_map
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|entry
 operator|->
@@ -11720,10 +11725,9 @@ block|}
 block|}
 else|else
 block|{
-comment|/* XXX no %qd in kernel.  Truncate entry->offset. */
 name|db_printf
 argument_list|(
-literal|", object=%p, offset=0x%lx"
+literal|", object=%p, offset=0x%jx"
 argument_list|,
 operator|(
 name|void
@@ -11736,7 +11740,7 @@ operator|.
 name|vm_object
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|entry
 operator|->
