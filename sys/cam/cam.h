@@ -343,7 +343,13 @@ comment|/* SIM has this command in it's queue */
 name|CAM_STATUS_MASK
 init|=
 literal|0x3F
+block|,
 comment|/* Mask bits for just the status # */
+comment|/* Target Specific Adjunct Status */
+name|CAM_SENT_SENSE
+init|=
+literal|0x40000000
+comment|/* sent sense with status */
 block|}
 name|cam_status
 typedef|;
