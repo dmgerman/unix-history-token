@@ -1550,9 +1550,11 @@ decl_stmt|;
 name|int
 name|bufsize
 decl_stmt|,
-name|i
-decl_stmt|,
 name|fd
+decl_stmt|;
+name|unsigned
+name|int
+name|i
 decl_stmt|;
 name|int
 name|need_close
@@ -5131,6 +5133,7 @@ name|BUS_MATCH_ANY
 expr_stmt|;
 do|do
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -5282,6 +5285,9 @@ expr_stmt|;
 comment|/* 			 * We don't want to rescan or reset the xpt bus. 			 * See above. 			 */
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|bus_result
 operator|->
 name|path_id
@@ -6041,6 +6047,7 @@ decl_stmt|;
 name|u_int8_t
 name|returned_format
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -8573,7 +8580,7 @@ name|CAM_ARG_CMD_OUT
 operator|)
 condition|)
 block|{
-name|size_t
+name|ssize_t
 name|amt_read
 decl_stmt|;
 name|int
@@ -8910,7 +8917,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|size_t
+name|ssize_t
 name|amt_written
 decl_stmt|;
 name|int
