@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tread2.c	5.1 (Berkeley) %G%"
+literal|"@(#)tread2.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,7 @@ literal|1
 expr_stmt|;
 name|ctl
 operator|.
-name|ncached
+name|cachesize
 operator|=
 name|atoi
 argument_list|(

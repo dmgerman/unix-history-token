@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tdel.c	5.1 (Berkeley) %G%"
+literal|"@(#)tdel.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,7 +192,7 @@ argument_list|)
 expr_stmt|;
 name|ctl
 operator|.
-name|ncached
+name|cachesize
 operator|=
 literal|1024
 operator|*
