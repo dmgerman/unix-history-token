@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1993 Eric Young - see README for more details */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: 3ecb_enc.c,v 1.2 1994/07/19 19:21:38 g89r4222 Exp $  */
+comment|/*-  *	$Id: 3ecb_enc.c,v 1.1.1.1 1994/09/30 14:49:50 csgr Exp $  */
 end_comment
 
 begin_include
@@ -54,8 +54,6 @@ name|long
 name|l0
 decl_stmt|,
 name|l1
-decl_stmt|,
-name|t
 decl_stmt|;
 specifier|register
 name|unsigned

@@ -8,8 +8,26 @@ comment|/* Copyright (C) 1993 Eric Young - see README for more details */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: rand_key.c,v 1.1.1.1 1994/09/30 14:49:51 csgr Exp $  */
+comment|/*-  *	$Id: rand_key.c,v 1.2 1995/05/09 18:05:15 wollman Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#

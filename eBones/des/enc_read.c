@@ -8,8 +8,26 @@ comment|/* Copyright (C) 1993 Eric Young - see README for more details */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: enc_read.c,v 1.1.1.1 1994/09/30 14:49:50 csgr Exp $  */
+comment|/*-  *	$Id: enc_read.c,v 1.2 1995/05/30 06:40:11 rgrimes Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
