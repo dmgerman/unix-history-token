@@ -59,6 +59,20 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_OEM
+end_define
+
+begin_macro
+name|ACPI_MODULE_NAME
+argument_list|(
+literal|"Toshiba"
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*  * Toshiba HCI interface definitions  *  * HCI is Toshiba's "Hardware Control Interface" which is supposed to  * be uniform across all their models.  Ideally we would just call  * dedicated ACPI methods instead of using this primitive interface.  * However, the ACPI methods seem to be incomplete in some areas (for  * example they allow setting, but not reading, the LCD brightness  * value), so this is still useful.  */
 end_comment

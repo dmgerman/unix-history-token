@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|ACPI_ASUS
+value|ACPI_OEM
 end_define
 
 begin_macro

@@ -71,6 +71,20 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_OEM
+end_define
+
+begin_macro
+name|ACPI_MODULE_NAME
+argument_list|(
+literal|"Panasonic"
+argument_list|)
+end_macro
+
 begin_comment
 comment|/* Debug */
 end_comment
