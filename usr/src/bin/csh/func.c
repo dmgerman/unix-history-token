@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.1 %G%"
+literal|"@(#)func.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3822,7 +3822,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|<sys/limit.h>
+file|<sys/vlimit.h>
 end_include
 
 begin_struct
