@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.9 1996/01/30 22:57:01 mpp Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.10 1996/09/10 08:27:42 bde Exp $  */
 end_comment
 
 begin_comment
@@ -339,6 +339,13 @@ name|DEV_SLNK
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEV_PIPE
+value|7
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|vop_t
@@ -461,9 +468,22 @@ name|len
 decl_stmt|;
 comment|/* of any associated info (e.g. dir data) */
 name|devnm_p
+name|linklist
+decl_stmt|;
+comment|/* circular list of hardlinks to this node */
+name|devnm_p
 name|last_lookup
 decl_stmt|;
 comment|/* name I was last looked up from */
+name|dn_p
+name|nextsibling
+decl_stmt|;
+comment|/* the list of equivelent nodes */
+name|dn_p
+modifier|*
+name|prevsiblingp
+decl_stmt|;
+comment|/* backpointer for the above */
 union|union
 name|typeinfo
 block|{
@@ -560,6 +580,16 @@ decl_stmt|;
 block|}
 name|Alias
 struct|;
+struct|struct
+block|{
+name|struct
+name|socket
+modifier|*
+name|sock
+decl_stmt|;
+block|}
+name|Pipe
+struct|;
 block|}
 name|by
 union|;
@@ -603,6 +633,15 @@ modifier|*
 name|prevp
 decl_stmt|;
 comment|/* previous pointer in directory linked list */
+name|devnm_p
+name|nextlink
+decl_stmt|;
+comment|/* next hardlink to this node */
+name|devnm_p
+modifier|*
+name|prevlinkp
+decl_stmt|;
+comment|/* previous hardlink pointer for this node */
 comment|/*-----------------------aliases or backing nodes----------*/
 union|union
 block|{
@@ -627,16 +666,6 @@ struct|;
 block|}
 name|as
 union|;
-comment|/*-----------------------the front-back chain-------------*/
-name|devnm_p
-name|next_front
-decl_stmt|;
-comment|/* the linked list of all our front nodes */
-name|devnm_p
-modifier|*
-name|prev_frontp
-decl_stmt|;
-comment|/* the end of the front node chain */
 block|}
 struct|;
 end_struct

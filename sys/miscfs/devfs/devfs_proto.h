@@ -91,6 +91,11 @@ parameter_list|,
 name|dn_p
 modifier|*
 name|dn_pp
+parameter_list|,
+name|struct
+name|devfsmount
+modifier|*
+name|dvm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -118,7 +123,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|devfs_add_fronts
+name|devfs_propogate
 parameter_list|(
 name|devnm_p
 name|parent
@@ -176,8 +181,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|dev_free_name
+parameter_list|(
+name|devnm_p
+name|devnmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dev_free_hier
 parameter_list|(
 name|devnm_p
 name|devnmp
@@ -235,6 +250,14 @@ name|union
 name|typeinfo
 modifier|*
 name|by
+parameter_list|,
+name|dn_p
+name|proto
+parameter_list|,
+name|struct
+name|devfsmount
+modifier|*
+name|dvm
 parameter_list|,
 name|devnm_p
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.31 1996/10/17 22:47:23 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.32 1996/10/28 11:36:06 phk Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -4424,6 +4424,10 @@ argument_list|,
 operator|&
 name|by
 argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|nm_p
 argument_list|)
@@ -6963,7 +6967,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_bwrite
+name|vn_bwrite
 block|}
 block|,
 comment|/* bwrite */
