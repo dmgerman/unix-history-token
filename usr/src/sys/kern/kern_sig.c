@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4259,6 +4259,17 @@ operator|.
 name|va_size
 operator|=
 literal|0
+expr_stmt|;
+name|LEASE_CHECK
+argument_list|(
+name|vp
+argument_list|,
+name|p
+argument_list|,
+name|cred
+argument_list|,
+name|LEASE_WRITE
+argument_list|)
 expr_stmt|;
 name|VOP_SETATTR
 argument_list|(
