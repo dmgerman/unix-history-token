@@ -3183,7 +3183,7 @@ name|pci
 argument_list|,
 name|ata_pci_driver
 argument_list|,
-name|ata_devclass
+name|ata_pci_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -3376,7 +3376,7 @@ name|atapci
 argument_list|,
 name|ata_pcisub_driver
 argument_list|,
-name|ata_pci_devclass
+name|ata_devclass
 argument_list|,
 literal|0
 argument_list|,
