@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cat.c	4.8 (Berkeley) %G%"
+literal|"@(#)cat.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/* #define OPTSIZE BUFSIZ	/* define this only if not 4.2 BSD */
+comment|/* #define OPTSIZE BUFSIZ	/* define this only if not 4.2 BSD or beyond */
 end_comment
 
 begin_decl_stmt
@@ -288,12 +288,17 @@ operator|.
 name|st_ino
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPTSIZE
 name|obsize
 operator|=
 name|statb
 operator|.
 name|st_blksize
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|obsize
@@ -450,12 +455,17 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+ifndef|#
+directive|ifndef
+name|OPTSIZE
 name|ibsize
 operator|=
 name|statb
 operator|.
 name|st_blksize
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ibsize
@@ -501,6 +511,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+name|retval
+operator||=
 name|fastcat
 argument_list|(
 name|fileno
@@ -807,21 +819,17 @@ directive|ifndef
 name|OPTSIZE
 if|if
 condition|(
-name|ibsize
-operator|==
-literal|0
+name|obsize
 condition|)
 name|buffsize
 operator|=
-name|BUFSIZ
+name|obsize
 expr_stmt|;
-comment|/* handle reads from a pipe */
+comment|/* common case, use output blksize */
 elseif|else
 if|if
 condition|(
-name|obsize
-operator|==
-literal|0
+name|ibsize
 condition|)
 name|buffsize
 operator|=
@@ -830,9 +838,8 @@ expr_stmt|;
 else|else
 name|buffsize
 operator|=
-name|obsize
+name|BUFSIZ
 expr_stmt|;
-comment|/* common case, use output blksize */
 else|#
 directive|else
 name|buffsize
@@ -854,11 +861,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"cat: no memory"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Note that on some systems (V7), very large writes to a pipe 	 * return less than the requested size of the write. 	 * In this case, multiple writes are required. 	 */
 while|while
 condition|(
@@ -908,11 +922,18 @@ name|nwritten
 operator|<=
 literal|0
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"cat: write error"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|offset
 operator|+=
 name|nwritten
@@ -930,22 +951,34 @@ literal|0
 condition|)
 do|;
 block|}
+name|free
+argument_list|(
+name|buff
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
 operator|<
 literal|0
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"cat: read error"
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|buff
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
