@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|NG_XXX_STATS_TYPE_INFO
-value|{				\ 	{							\ 	  { "packets_in",&ng_parse_uint32_type	},	\ 	  { "packets_out",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	  { "packets_in",&ng_parse_uint32_type	},	\ 	  { "packets_out",&ng_parse_uint32_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_endif

@@ -778,10 +778,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_parse_generic_sockaddr_type_info
+name|ng_parse_struct_field
+name|ng_parse_generic_sockaddr_type_fields
+index|[]
 init|=
-block|{
 block|{
 block|{
 literal|"len"
@@ -808,7 +808,6 @@ block|{
 name|NULL
 block|}
 block|}
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -824,7 +823,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_parse_generic_sockaddr_type_info
+name|ng_parse_generic_sockaddr_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2068,8 +2067,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ksocket_sockopt_type_info
+name|ng_parse_struct_field
+name|ng_ksocket_sockopt_type_fields
+index|[]
 init|=
 name|NG_KSOCKET_SOCKOPT_INFO
 argument_list|(
@@ -2091,8 +2091,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ksocket_sockopt_type_info
-block|, }
+name|ng_ksocket_sockopt_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2104,8 +2104,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ksocket_accept_type_info
+name|ng_parse_struct_field
+name|ng_ksocket_accept_type_fields
+index|[]
 init|=
 name|NGM_KSOCKET_ACCEPT_INFO
 decl_stmt|;
@@ -2123,7 +2124,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ksocket_accept_type_info
+name|ng_ksocket_accept_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

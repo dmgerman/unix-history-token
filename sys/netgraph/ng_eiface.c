@@ -123,6 +123,18 @@ directive|include
 file|<net/if_arp.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_struct_field
+name|ng_eiface_par_fields
+index|[]
+init|=
+name|NG_EIFACE_PAR_FIELDS
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Node private data */
 end_comment

@@ -1139,8 +1139,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ppp_mp_state_type_info
+name|ng_parse_struct_field
+name|ng_ppp_mp_state_type_fields
+index|[]
 init|=
 name|NG_PPP_MP_STATE_TYPE_INFO
 argument_list|(
@@ -1162,8 +1163,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ppp_mp_state_type_info
-block|, }
+name|ng_ppp_mp_state_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,8 +1176,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ppp_link_type_info
+name|ng_parse_struct_field
+name|ng_ppp_link_type_fields
+index|[]
 init|=
 name|NG_PPP_LINK_TYPE_INFO
 decl_stmt|;
@@ -1194,8 +1196,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ppp_link_type_info
-block|, }
+name|ng_ppp_link_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,8 +1209,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ppp_bund_type_info
+name|ng_parse_struct_field
+name|ng_ppp_bund_type_fields
+index|[]
 init|=
 name|NG_PPP_BUND_TYPE_INFO
 decl_stmt|;
@@ -1226,8 +1229,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ppp_bund_type_info
-block|, }
+name|ng_ppp_bund_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1272,8 +1275,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ppp_conf_type_info
+name|ng_parse_struct_field
+name|ng_ppp_conf_type_fields
+index|[]
 init|=
 name|NG_PPP_CONFIG_TYPE_INFO
 argument_list|(
@@ -1298,7 +1302,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ppp_conf_type_info
+name|ng_ppp_conf_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1311,8 +1315,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ppp_stats_type_info
+name|ng_parse_struct_field
+name|ng_ppp_stats_type_fields
+index|[]
 init|=
 name|NG_PPP_STATS_TYPE_INFO
 decl_stmt|;
@@ -1330,7 +1335,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ppp_stats_type_info
+name|ng_ppp_stats_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

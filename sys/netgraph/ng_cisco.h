@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|NG_CISCO_IPADDR_TYPE_INFO
-value|{			\ 	{							\ 	  { "ipaddr",&ng_parse_ipaddr_type	},	\ 	  { "netmask",&ng_parse_ipaddr_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	  { "ipaddr",&ng_parse_ipaddr_type	},	\ 	  { "netmask",&ng_parse_ipaddr_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_struct
@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|NG_CISCO_STATS_TYPE_INFO
-value|{			\ 	{							\ 	  { "seqRetries",&ng_parse_uint32_type	},	\ 	  { "keepAlivePeriod",&ng_parse_uint32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	  { "seqRetries",&ng_parse_uint32_type	},	\ 	  { "keepAlivePeriod",&ng_parse_uint32_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_endif

@@ -299,8 +299,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|nga_config_type_info
+name|ng_parse_struct_field
+name|nga_config_type_fields
+index|[]
 init|=
 name|NG_ASYNC_CONFIG_TYPE_INFO
 decl_stmt|;
@@ -318,7 +319,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|nga_config_type_info
+name|nga_config_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -331,8 +332,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|nga_stats_type_info
+name|ng_parse_struct_field
+name|nga_stats_type_fields
+index|[]
 init|=
 name|NG_ASYNC_STATS_TYPE_INFO
 decl_stmt|;
@@ -350,8 +352,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|nga_stats_type_info
-block|, }
+name|nga_stats_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 

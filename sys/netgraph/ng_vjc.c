@@ -264,8 +264,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_vjc_config_type_info
+name|ng_parse_struct_field
+name|ng_vjc_config_type_fields
+index|[]
 init|=
 name|NG_VJC_CONFIG_TYPE_INFO
 decl_stmt|;
@@ -283,7 +284,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_vjc_config_type_info
+name|ng_vjc_config_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -383,10 +384,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_vjc_cstate_type_info
+name|ng_parse_struct_field
+name|ng_vjc_cstate_type_fields
+index|[]
 init|=
-block|{
 block|{
 block|{
 literal|"cs_next"
@@ -425,7 +426,6 @@ block|,
 block|{
 name|NULL
 block|}
-block|,     }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -442,7 +442,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_vjc_cstate_type_info
+name|ng_vjc_cstate_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -492,10 +492,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_vjc_slcompress_type_info
+name|ng_parse_struct_field
+name|ng_vjc_slcompress_type_fields
+index|[]
 init|=
-block|{
 block|{
 block|{
 literal|"last_cs"
@@ -602,7 +602,6 @@ block|,
 block|{
 name|NULL
 block|}
-block|,     }
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -619,7 +618,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_vjc_slcompress_type_info
+name|ng_vjc_slcompress_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

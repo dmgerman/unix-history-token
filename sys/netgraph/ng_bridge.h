@@ -116,7 +116,7 @@ name|NG_BRIDGE_CONFIG_TYPE_INFO
 parameter_list|(
 name|ainfo
 parameter_list|)
-value|{		\ 	{							\ 	  { "ipfw",		(ainfo)			},	\ 	  { "debugLevel",&ng_parse_uint8_type	},	\ 	  { "loopTimeout",&ng_parse_uint32_type	},	\ 	  { "maxStaleness",&ng_parse_uint32_type	},	\ 	  { "minStableAge",&ng_parse_uint32_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	  { "ipfw",		(ainfo)			},	\ 	  { "debugLevel",&ng_parse_uint8_type	},	\ 	  { "loopTimeout",&ng_parse_uint32_type	},	\ 	  { "maxStaleness",&ng_parse_uint32_type	},	\ 	  { "minStableAge",&ng_parse_uint32_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|NG_BRIDGE_STATS_TYPE_INFO
-value|{			\ 	{							\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "recvMulticast",&ng_parse_uint64_type	},	\ 	  { "recvBroadcast",&ng_parse_uint64_type	},	\ 	  { "recvUnknown",&ng_parse_uint64_type	},	\ 	  { "recvRunts",&ng_parse_uint64_type	},	\ 	  { "recvInvalid",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { "xmitMulticasts",&ng_parse_uint64_type	},	\ 	  { "xmitBroadcasts",&ng_parse_uint64_type	},	\ 	  { "loopDrops",&ng_parse_uint64_type	},	\ 	  { "loopDetects",&ng_parse_uint64_type	},	\ 	  { "memoryFailures",&ng_parse_uint64_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{			\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "recvMulticast",&ng_parse_uint64_type	},	\ 	  { "recvBroadcast",&ng_parse_uint64_type	},	\ 	  { "recvUnknown",&ng_parse_uint64_type	},	\ 	  { "recvRunts",&ng_parse_uint64_type	},	\ 	  { "recvInvalid",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { "xmitMulticasts",&ng_parse_uint64_type	},	\ 	  { "xmitBroadcasts",&ng_parse_uint64_type	},	\ 	  { "loopDrops",&ng_parse_uint64_type	},	\ 	  { "loopDetects",&ng_parse_uint64_type	},	\ 	  { "memoryFailures",&ng_parse_uint64_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -240,7 +240,7 @@ name|NG_BRIDGE_HOST_TYPE_INFO
 parameter_list|(
 name|entype
 parameter_list|)
-value|{		\ 	{							\ 	  { "addr",		(entype)		},	\ 	  { "linkNum",&ng_parse_uint16_type	},	\ 	  { "age",&ng_parse_uint16_type	},	\ 	  { "staleness",&ng_parse_uint16_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	  { "addr",		(entype)		},	\ 	  { "linkNum",&ng_parse_uint16_type	},	\ 	  { "age",&ng_parse_uint16_type	},	\ 	  { "staleness",&ng_parse_uint16_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -276,7 +276,7 @@ name|NG_BRIDGE_HOST_ARY_TYPE_INFO
 parameter_list|(
 name|harytype
 parameter_list|)
-value|{		\ 	{							\ 	  { "numHosts",&ng_parse_uint32_type	},	\ 	  { "hosts",		(harytype)		},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	  { "numHosts",&ng_parse_uint32_type	},	\ 	  { "hosts",		(harytype)		},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment

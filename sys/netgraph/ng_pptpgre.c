@@ -790,8 +790,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_pptpgre_conf_type_info
+name|ng_parse_struct_field
+name|ng_pptpgre_conf_type_fields
+index|[]
 init|=
 name|NG_PPTPGRE_CONF_TYPE_INFO
 decl_stmt|;
@@ -809,7 +810,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_pptpgre_conf_type_info
+name|ng_pptpgre_conf_type_fields
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -822,8 +823,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_pptpgre_stats_type_info
+name|ng_parse_struct_field
+name|ng_pptpgre_stats_type_fields
+index|[]
 init|=
 name|NG_PPTPGRE_STATS_TYPE_INFO
 decl_stmt|;
@@ -841,7 +843,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_pptpgre_stats_type_info
+name|ng_pptpgre_stats_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

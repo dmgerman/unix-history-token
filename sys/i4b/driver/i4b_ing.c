@@ -475,7 +475,7 @@ begin_define
 define|#
 directive|define
 name|NG_ING_STATS_TYPE_INFO
-value|{				\ 	{							\ 	  { "packets_in",&ng_parse_int32_type	},	\ 	  { "packets_out",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	  { "packets_in",&ng_parse_int32_type	},	\ 	  { "packets_out",&ng_parse_int32_type	},	\ 	  { NULL },						\ }
 end_define
 
 begin_comment
@@ -539,8 +539,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_ing_stat_type_info
+name|ng_parse_struct_field
+name|ng_ing_stat_type_fields
+index|[]
 init|=
 name|NG_ING_STATS_TYPE_INFO
 decl_stmt|;
@@ -558,7 +559,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_ing_stat_type_info
+name|ng_ing_stat_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
