@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.6 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,17 +53,6 @@ end_define
 
 begin_comment
 comment|/* max number of labels */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MXSIG
-value|200
-end_define
-
-begin_comment
-comment|/* max bytes in aggregate signal */
 end_comment
 
 begin_decl_stmt
@@ -527,10 +516,6 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|sort
-condition|)
 name|sprintf
 argument_list|(
 name|t
@@ -542,16 +527,6 @@ argument_list|,
 name|nref
 argument_list|,
 name|FLAG
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%d"
-argument_list|,
-name|nref
 argument_list|)
 expr_stmt|;
 block|}
@@ -847,6 +822,11 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|labels
+condition|)
+block|{
 name|strcat
 argument_list|(
 name|sig
@@ -854,6 +834,32 @@ argument_list|,
 literal|",\\|"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * Seperate reference numbers with AFLAG 				 * for later sorting and condensing. 				 */
+name|t1
+index|[
+literal|0
+index|]
+operator|=
+name|AFLAG
+expr_stmt|;
+name|t1
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strcat
+argument_list|(
+name|sig
+argument_list|,
+name|t1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fo

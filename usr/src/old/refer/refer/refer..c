@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	refer..c	4.2	83/08/11	*/
+comment|/*	refer..c	4.3	86/04/23	*/
 end_comment
 
 begin_include
@@ -26,6 +26,13 @@ define|#
 directive|define
 name|FLAG
 value|003
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFLAG
+value|007
 end_define
 
 begin_define
@@ -76,6 +83,17 @@ directive|define
 name|NSERCH
 value|20
 end_define
+
+begin_define
+define|#
+directive|define
+name|MXSIG
+value|200
+end_define
+
+begin_comment
+comment|/* max bytes in aggregate signal */
+end_comment
 
 begin_decl_stmt
 specifier|extern
