@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: pcmciadevs,v 1.33 1999/02/19 21:49:43 abs Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.2 1999/11/28 05:49:27 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $NetBSD: pcmciadevs,v 1.59 1999/11/27 01:03:18 soren Exp $ */
 end_comment
 
 begin_comment
@@ -124,6 +124,27 @@ unit|},
 block|{
 name|PCCARD_VENDOR_3COM
 operator|,
+name|PCCARD_PRODUCT_3COM_3CXM056BNW
+operator|,
+name|PCCARD_CIS_3COM_3CXM056BNW
+operator|,
+literal|0
+operator|,
+literal|"3Com Corporation"
+operator|,
+literal|"3Com/NoteWorthy 3CXM056-BNW 56K Modem"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_3COM
+operator|,
 name|PCCARD_PRODUCT_3COM_3CXEM556
 operator|,
 name|PCCARD_CIS_3COM_3CXEM556
@@ -133,6 +154,48 @@ operator|,
 literal|"3Com Corporation"
 operator|,
 literal|"3Com/Megahertz 3CXEM556 Ethernet/Modem"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_3COM
+operator|,
+name|PCCARD_PRODUCT_3COM_3CXEM556INT
+operator|,
+name|PCCARD_CIS_3COM_3CXEM556INT
+operator|,
+literal|0
+operator|,
+literal|"3Com Corporation"
+operator|,
+literal|"3Com/Megahertz 3CXEM556-INT Ethernet/Modem"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_3COM
+operator|,
+name|PCCARD_PRODUCT_3COM_3CCFEM556BI
+operator|,
+name|PCCARD_CIS_3COM_3CCFEM556BI
+operator|,
+literal|0
+operator|,
+literal|"3Com Corporation"
+operator|,
+literal|"3Com/Megahertz 3CCFEM556BI Ethernet/Modem"
 block|}
 end_block
 
@@ -154,6 +217,27 @@ operator|,
 literal|"Compex Corporation"
 operator|,
 literal|"Compex Linkport ENET-B Ethernet"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_LASAT
+operator|,
+name|PCCARD_PRODUCT_LASAT_CREDIT_288
+operator|,
+name|PCCARD_CIS_LASAT_CREDIT_288
+operator|,
+literal|0
+operator|,
+literal|""
+operator|,
+literal|"Lasat Credit 288 Modem"
 block|}
 end_block
 
@@ -290,6 +374,69 @@ end_operator
 begin_block
 unit|},
 block|{
+name|PCCARD_VENDOR_FUJITSU
+operator|,
+name|PCCARD_PRODUCT_FUJITSU_LA501
+operator|,
+name|PCCARD_CIS_FUJITSU_LA501
+operator|,
+literal|0
+operator|,
+literal|"Fujitsu Corporation"
+operator|,
+literal|"Fujitsu Towa LA501 Ethernet"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_FUJITSU
+operator|,
+name|PCCARD_PRODUCT_FUJITSU_LA10S
+operator|,
+name|PCCARD_CIS_FUJITSU_LA10S
+operator|,
+literal|0
+operator|,
+literal|"Fujitsu Corporation"
+operator|,
+literal|"Fujitsu Compact Flash Ethernet"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_IBM
+operator|,
+name|PCCARD_PRODUCT_IBM_3270
+operator|,
+name|PCCARD_CIS_IBM_3270
+operator|,
+literal|0
+operator|,
+literal|"IBM Corporation"
+operator|,
+literal|"3270 Emulation"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
 name|PCCARD_VENDOR_IBM
 operator|,
 name|PCCARD_PRODUCT_IBM_INFOMOVER
@@ -301,6 +448,48 @@ operator|,
 literal|"IBM Corporation"
 operator|,
 literal|"National Semiconductor InfoMover"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_IBM
+operator|,
+name|PCCARD_PRODUCT_IBM_5250
+operator|,
+name|PCCARD_CIS_IBM_5250
+operator|,
+literal|0
+operator|,
+literal|"IBM Corporation"
+operator|,
+literal|"5250 Emulation"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_IBM
+operator|,
+name|PCCARD_PRODUCT_IBM_TROPIC
+operator|,
+name|PCCARD_CIS_IBM_TROPIC
+operator|,
+literal|0
+operator|,
+literal|"IBM Corporation"
+operator|,
+literal|"Token Ring 4/16"
 block|}
 end_block
 
@@ -355,9 +544,9 @@ unit|},
 block|{
 name|PCCARD_VENDOR_IBM
 operator|,
-name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM_DRIVE
+name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM
 operator|,
-name|PCCARD_CIS_IBM_PORTABLE_CDROM_DRIVE
+name|PCCARD_CIS_IBM_PORTABLE_CDROM
 operator|,
 literal|0
 operator|,
@@ -374,17 +563,38 @@ end_operator
 begin_block
 unit|},
 block|{
+name|PCCARD_VENDOR_IBM
+operator|,
+name|PCCARD_PRODUCT_IBM_ETHERJET
+operator|,
+name|PCCARD_CIS_IBM_ETHERJET
+operator|,
+literal|0
+operator|,
+literal|"IBM Corporation"
+operator|,
+literal|"IBM EtherJet Ethernet"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
 name|PCCARD_VENDOR_IODATA
 operator|,
-name|PCCARD_PRODUCT_IODATA_PCLAT
+name|PCCARD_PRODUCT_IODATA_PCLATE
 operator|,
-name|PCCARD_CIS_IODATA_PCLAT
+name|PCCARD_CIS_IODATA_PCLATE
 operator|,
 literal|0
 operator|,
 literal|"I-O DATA"
 operator|,
-literal|"I-O DATA PCLA/T"
+literal|"I-O DATA PCLA/TE"
 block|}
 end_block
 
@@ -469,6 +679,27 @@ operator|,
 literal|"Megahertz Corporation"
 operator|,
 literal|"Megahertz XJ4288 Modem"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_MEGAHERTZ
+operator|,
+name|PCCARD_PRODUCT_MEGAHERTZ_XJ4336
+operator|,
+name|PCCARD_CIS_MEGAHERTZ_XJ4336
+operator|,
+literal|0
+operator|,
+literal|"Megahertz Corporation"
+operator|,
+literal|"Megahertz XJ4336 Modem"
 block|}
 end_block
 
@@ -605,6 +836,27 @@ end_operator
 begin_block
 unit|},
 block|{
+name|PCCARD_VENDOR_SIMPLETECH
+operator|,
+name|PCCARD_PRODUCT_SIMPLETECH_SPECTRUM24
+operator|,
+name|PCCARD_CIS_SIMPLETECH_SPECTRUM24
+operator|,
+literal|0
+operator|,
+literal|"Simple Technology"
+operator|,
+literal|"Symbol Spectrum24 WLAN Adapter"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
 name|PCCARD_VENDOR_SOCKET
 operator|,
 name|PCCARD_PRODUCT_SOCKET_PAGECARD
@@ -637,6 +889,27 @@ operator|,
 literal|"Socket Communications"
 operator|,
 literal|"Socket Communications Dual RS232"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_SOCEKT
+operator|,
+name|PCCARD_PRODUCT_SOCEKT_LP_ETHER_CF
+operator|,
+name|PCCARD_CIS_SOCEKT_LP_ETHER_CF
+operator|,
+literal|0
+operator|,
+literal|""
+operator|,
+literal|"Socket Communications Low Power Ethernet CF"
 block|}
 end_block
 
@@ -775,15 +1048,15 @@ unit|},
 block|{
 name|PCCARD_VENDOR_TDK
 operator|,
-name|PCCARD_PRODUCT_TDK_XIR_CE3_100
+name|PCCARD_PRODUCT_TDK_XIR_CE3_10_100
 operator|,
-name|PCCARD_CIS_TDK_XIR_CE3_100
+name|PCCARD_CIS_TDK_XIR_CE3_10_100
 operator|,
 literal|0
 operator|,
 literal|"TDK Corporation"
 operator|,
-literal|"Xircom CreditCard Ethernet 10/100"
+literal|"Xircom CreditCard CE3 10/100 Ethernet"
 block|}
 end_block
 
@@ -825,7 +1098,28 @@ literal|0
 operator|,
 literal|"NewMedia Corporation"
 operator|,
-literal|"NewMedia BASICS Ethernet"
+literal|"New Media BASICS Ethernet"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_NEWMEDIA
+operator|,
+name|PCCARD_PRODUCT_NEWMEDIA_BUSTOASTER
+operator|,
+name|PCCARD_CIS_NEWMEDIA_BUSTOASTER
+operator|,
+literal|0
+operator|,
+literal|"NewMedia Corporation"
+operator|,
+literal|"New Media BusToaster SCSI Host Adapter"
 block|}
 end_block
 
@@ -857,6 +1151,69 @@ end_operator
 begin_block
 unit|},
 block|{
+name|PCCARD_VENDOR_SMC
+operator|,
+name|PCCARD_PRODUCT_SMC_EZCARD
+operator|,
+name|PCCARD_CIS_SMC_EZCARD
+operator|,
+literal|0
+operator|,
+literal|"Standard Microsystems Corporation"
+operator|,
+literal|"SMC EXCard 10 PCMCIA"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_CONTEC
+operator|,
+name|PCCARD_PRODUCT_CONTEC_CNETPC
+operator|,
+name|PCCARD_CIS_CONTEC_CNETPC
+operator|,
+literal|0
+operator|,
+literal|"Contec"
+operator|,
+literal|"Contec C-NET(PC)C"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_ALLIEDTELESIS
+operator|,
+name|PCCARD_PRODUCT_ALLIEDTELESIS_LA_PCM
+operator|,
+name|PCCARD_CIS_ALLIEDTELESIS_LA_PCM
+operator|,
+literal|0
+operator|,
+literal|"Allied Telesis K.K."
+operator|,
+literal|"Allied Telesis LA-PCM"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
 name|PCCARD_VENDOR_RATOC
 operator|,
 name|PCCARD_PRODUCT_RATOC_REX_R280
@@ -868,6 +1225,48 @@ operator|,
 literal|"RATOC System Inc."
 operator|,
 literal|"RATOC REX-R280"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_LUCENT
+operator|,
+name|PCCARD_PRODUCT_LUCENT_WAVELAN_IEEE
+operator|,
+name|PCCARD_CIS_LUCENT_WAVELAN_IEEE
+operator|,
+literal|0
+operator|,
+literal|"Lucent Technologies"
+operator|,
+literal|"WaveLAN/IEEE"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_BAY
+operator|,
+name|PCCARD_PRODUCT_BAY_STACK_650
+operator|,
+name|PCCARD_CIS_BAY_STACK_650
+operator|,
+literal|0
+operator|,
+literal|"Bay Networks"
+operator|,
+literal|"BayStack 650 Wireless LAN"
 block|}
 end_block
 
@@ -931,6 +1330,27 @@ operator|,
 literal|"Planet"
 operator|,
 literal|"Planet SmartCOM 2000"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_UNKNOWN
+operator|,
+name|PCCARD_PRODUCT_PLANEX_FNW3600T
+operator|,
+name|PCCARD_CIS_PLANEX_FNW3600T
+operator|,
+literal|0
+operator|,
+literal|"Planex Communications Inc"
+operator|,
+literal|"Planex FNW-3600-T"
 block|}
 end_block
 
@@ -1111,9 +1531,51 @@ unit|},
 block|{
 name|PCCARD_VENDOR_UNKNOWN
 operator|,
-name|PCCARD_PRODUCT_COREGA_PCC_2
+name|PCCARD_PRODUCT_COREGA_ETHER_PCC_T
 operator|,
-name|PCCARD_CIS_COREGA_PCC_2
+name|PCCARD_CIS_COREGA_ETHER_PCC_T
+operator|,
+literal|0
+operator|,
+literal|"Corega K.K."
+operator|,
+literal|"Corega"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_UNKNOWN
+operator|,
+name|PCCARD_PRODUCT_COREGA_ETHER_II_PCC_T
+operator|,
+name|PCCARD_CIS_COREGA_ETHER_II_PCC_T
+operator|,
+literal|0
+operator|,
+literal|"Corega K.K."
+operator|,
+literal|"Corega"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_UNKNOWN
+operator|,
+name|PCCARD_PRODUCT_COREGA_FAST_ETHER_PCC_TX
+operator|,
+name|PCCARD_CIS_COREGA_FAST_ETHER_PCC_TX
 operator|,
 literal|0
 operator|,
@@ -1183,6 +1645,48 @@ operator|,
 literal|"NAKAGAWA METAL"
 operator|,
 literal|"NAKAGAWA METAL LNT-10TN NE2000 Compatible Card"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_UNKNOWN
+operator|,
+name|PCCARD_PRODUCT_AMBICOM_AMB8002T
+operator|,
+name|PCCARD_CIS_AMBICOM_AMB8002T
+operator|,
+literal|0
+operator|,
+literal|"AmbiCom Inc"
+operator|,
+literal|"AmbiCom AMB8002T"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_UNKNOWN
+operator|,
+name|PCCARD_PRODUCT_IODATA_PCLAT
+operator|,
+name|PCCARD_CIS_IODATA_PCLAT
+operator|,
+literal|0
+operator|,
+literal|"I-O DATA"
+operator|,
+literal|"IO-DATA PCLA/T"
 block|}
 end_block
 
@@ -1550,6 +2054,27 @@ end_operator
 
 begin_block
 block|{
+name|PCCARD_VENDOR_LUCENT
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"Lucent Technologies"
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 name|PCCARD_VENDOR_COMPAQ2
 operator|,
 literal|0
@@ -1613,6 +2138,27 @@ end_operator
 
 begin_block
 block|{
+name|PCCARD_VENDOR_BAY
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"Bay Networks"
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 name|PCCARD_VENDOR_COMPEX
 operator|,
 literal|0
@@ -1634,6 +2180,27 @@ end_operator
 
 begin_block
 block|{
+name|PCCARD_VENDOR_CONTEC
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"Contec"
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 name|PCCARD_VENDOR_COREGA
 operator|,
 literal|0
@@ -1643,6 +2210,27 @@ operator|,
 name|PCCARD_CIS_INVALID
 operator|,
 literal|"Corega K.K."
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+name|PCCARD_VENDOR_ALLIEDTELESIS
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"Allied Telesis K.K."
 operator|,
 name|NULL
 operator|,
@@ -1727,6 +2315,27 @@ operator|,
 name|PCCARD_CIS_INVALID
 operator|,
 literal|"Planet"
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+name|PCCARD_VENDOR_PLANEX
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"Planex Communications Inc"
 operator|,
 name|NULL
 operator|,
@@ -1895,6 +2504,27 @@ operator|,
 name|PCCARD_CIS_INVALID
 operator|,
 literal|"NAKAGAWA METAL"
+operator|,
+name|NULL
+operator|,
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+name|PCCARD_VENDOR_AMBICOM
+operator|,
+literal|0
+operator|,
+name|PCCARD_KNOWNDEV_NOPROD
+operator|,
+name|PCCARD_CIS_INVALID
+operator|,
+literal|"AmbiCom Inc"
 operator|,
 name|NULL
 operator|,

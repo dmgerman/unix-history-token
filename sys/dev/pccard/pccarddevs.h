@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: pcmciadevs,v 1.33 1999/02/19 21:49:43 abs Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.2 1999/11/28 05:49:27 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $NetBSD: pcmciadevs,v 1.59 1999/11/27 01:03:18 soren Exp $ */
 end_comment
 
 begin_comment
@@ -209,6 +209,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_LUCENT
+value|0x0156
+end_define
+
+begin_comment
+comment|/* Lucent Technologies */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COMPAQ2
 value|0x0183
 end_define
@@ -242,6 +253,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_BAY
+value|0x01eb
+end_define
+
+begin_comment
+comment|/* Bay Networks */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COMPEX
 value|0x8a01
 end_define
@@ -253,12 +275,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_CONTEC
+value|0xc001
+end_define
+
+begin_comment
+comment|/* Contec */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COREGA
 value|0xc00f
 end_define
 
 begin_comment
 comment|/* Corega K.K. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_ALLIEDTELESIS
+value|0xc00f
+end_define
+
+begin_comment
+comment|/* Allied Telesis K.K. */
 end_comment
 
 begin_define
@@ -403,6 +447,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCCARD_CIS_3COM_3CXM056BNW
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_3COM_3CXM056BNW
+value|0x002f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_3COM_3CXM056BNW
+value|"3Com/NoteWorthy 3CXM056-BNW 56K Modem"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_3COM_3CXEM556
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -419,6 +484,48 @@ define|#
 directive|define
 name|PCCARD_STR_3COM_3CXEM556
 value|"3Com/Megahertz 3CXEM556 Ethernet/Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_3COM_3CXEM556INT
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_3COM_3CXEM556INT
+value|0x003d
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_3COM_3CXEM556INT
+value|"3Com/Megahertz 3CXEM556-INT Ethernet/Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_3COM_3CCFEM556BI
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_3COM_3CCFEM556BI
+value|0x0556
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_3COM_3CCFEM556BI
+value|"3Com/Megahertz 3CCFEM556BI Ethernet/Modem"
 end_define
 
 begin_comment
@@ -444,6 +551,31 @@ define|#
 directive|define
 name|PCCARD_STR_COMPEX_LINKPORT_ENET_B
 value|"Compex Linkport ENET-B Ethernet"
+end_define
+
+begin_comment
+comment|/* Lasat Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_LASAT_CREDIT_288
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_LASAT_CREDIT_288
+value|0x2811
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_LASAT_CREDIT_288
+value|"Lasat Credit 288 Modem"
 end_define
 
 begin_comment
@@ -589,8 +721,75 @@ value|"Motorola Personal Messenger 100C CDPD Modem"
 end_define
 
 begin_comment
+comment|/* Fujitsu Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_FUJITSU_LA501
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_FUJITSU_LA501
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_FUJITSU_LA501
+value|"Fujitsu Towa LA501 Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_FUJITSU_LA10S
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_FUJITSU_LA10S
+value|0x1003
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_FUJITSU_LA10S
+value|"Fujitsu Compact Flash Ethernet"
+end_define
+
+begin_comment
 comment|/* IBM Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IBM_3270
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IBM_3270
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IBM_3270
+value|"3270 Emulation"
+end_define
 
 begin_define
 define|#
@@ -611,6 +810,48 @@ define|#
 directive|define
 name|PCCARD_STR_IBM_INFOMOVER
 value|"National Semiconductor InfoMover"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IBM_5250
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IBM_5250
+value|0x000b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IBM_5250
+value|"5250 Emulation"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IBM_TROPIC
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IBM_TROPIC
+value|0x001e
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IBM_TROPIC
+value|"Token Ring 4/16"
 end_define
 
 begin_define
@@ -658,22 +899,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_PORTABLE_CDROM_DRIVE
+name|PCCARD_CIS_IBM_PORTABLE_CDROM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM_DRIVE
+name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM
 value|0x002d
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_PORTABLE_CDROM_DRIVE
+name|PCCARD_STR_IBM_PORTABLE_CDROM
 value|"PCMCIA Portable CD-ROM Drive"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IBM_ETHERJET
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IBM_ETHERJET
+value|0x003f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IBM_ETHERJET
+value|"IBM EtherJet Ethernet"
 end_define
 
 begin_comment
@@ -683,22 +945,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IODATA_PCLAT
+name|PCCARD_CIS_IODATA_PCLATE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IODATA_PCLAT
+name|PCCARD_PRODUCT_IODATA_PCLATE
 value|0x2216
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IODATA_PCLAT
-value|"I-O DATA PCLA/T"
+name|PCCARD_STR_IODATA_PCLATE
+value|"I-O DATA PCLA/TE"
 end_define
 
 begin_comment
@@ -791,6 +1053,27 @@ define|#
 directive|define
 name|PCCARD_STR_MEGAHERTZ_XJ4288
 value|"Megahertz XJ4288 Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_MEGAHERTZ_XJ4336
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_MEGAHERTZ_XJ4336
+value|0x0027
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_MEGAHERTZ_XJ4336
+value|"Megahertz XJ4336 Modem"
 end_define
 
 begin_define
@@ -932,6 +1215,31 @@ value|"Simple Technology 28.8 Communicator"
 end_define
 
 begin_comment
+comment|/* Simpletech ID also used by Symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SIMPLETECH_SPECTRUM24
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SIMPLETECH_SPECTRUM24
+value|0x801
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SIMPLETECH_SPECTRUM24
+value|"Symbol Spectrum24 WLAN Adapter"
+end_define
+
+begin_comment
 comment|/* Socket Communications Products */
 end_comment
 
@@ -975,6 +1283,27 @@ define|#
 directive|define
 name|PCCARD_STR_SOCKET_DUAL_RS232
 value|"Socket Communications Dual RS232"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SOCEKT_LP_ETHER_CF
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SOCEKT_LP_ETHER_CF
+value|0x0075
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SOCEKT_LP_ETHER_CF
+value|"Socket Communications Low Power Ethernet CF"
 end_define
 
 begin_comment
@@ -1114,22 +1443,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CE3_100
+name|PCCARD_CIS_TDK_XIR_CE3_10_100
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CE3_100
+name|PCCARD_PRODUCT_TDK_XIR_CE3_10_100
 value|0x010a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_CE3_100
-value|"Xircom CreditCard Ethernet 10/100"
+name|PCCARD_STR_TDK_XIR_CE3_10_100
+value|"Xircom CreditCard CE3 10/100 Ethernet"
 end_define
 
 begin_define
@@ -1154,7 +1483,7 @@ value|"Xircom CreditCard Netwave"
 end_define
 
 begin_comment
-comment|/* NewMedia Products */
+comment|/* New Media Products */
 end_comment
 
 begin_define
@@ -1175,7 +1504,28 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_NEWMEDIA_BASICS
-value|"NewMedia BASICS Ethernet"
+value|"New Media BASICS Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_NEWMEDIA_BUSTOASTER
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_NEWMEDIA_BUSTOASTER
+value|0xc102
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_NEWMEDIA_BUSTOASTER
+value|"New Media BusToaster SCSI Host Adapter"
 end_define
 
 begin_comment
@@ -1201,6 +1551,77 @@ define|#
 directive|define
 name|PCCARD_STR_SMC_8016
 value|"SMC 8016 EtherCard"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SMC_EZCARD
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SMC_EZCARD
+value|0x8022
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SMC_EZCARD
+value|"SMC EXCard 10 PCMCIA"
+end_define
+
+begin_comment
+comment|/* Contec C-NET(PC) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_CONTEC_CNETPC
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_CONTEC_CNETPC
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_CONTEC_CNETPC
+value|"Contec C-NET(PC)C"
+end_define
+
+begin_comment
+comment|/* Allied Telesis K.K. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ALLIEDTELESIS_LA_PCM
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ALLIEDTELESIS_LA_PCM
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ALLIEDTELESIS_LA_PCM
+value|"Allied Telesis LA-PCM"
 end_define
 
 begin_comment
@@ -1229,6 +1650,52 @@ value|"RATOC REX-R280"
 end_define
 
 begin_comment
+comment|/* Lucent WaveLAN/IEEE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_LUCENT_WAVELAN_IEEE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_LUCENT_WAVELAN_IEEE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_LUCENT_WAVELAN_IEEE
+value|"WaveLAN/IEEE"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_BAY_STACK_650
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_BAY_STACK_650
+value|0x804
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_BAY_STACK_650
+value|"BayStack 650 Wireless LAN"
+end_define
+
+begin_comment
 comment|/* Cards we know only by their cis */
 end_comment
 
@@ -1252,6 +1719,17 @@ end_define
 
 begin_comment
 comment|/* Planet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_PLANEX
+value|-1
+end_define
+
+begin_comment
+comment|/* Planex Communications Inc */
 end_comment
 
 begin_define
@@ -1345,6 +1823,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_AMBICOM
+value|-1
+end_define
+
+begin_comment
+comment|/* AmbiCom Inc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_MEGAHERTZ_XJ2288
 value|{ "MEGAHERTZ", "MODEM XJ2288", NULL, NULL }
 end_define
@@ -1403,6 +1892,31 @@ define|#
 directive|define
 name|PCCARD_STR_PLANET_SMARTCOM2000
 value|"Planet SmartCOM 2000"
+end_define
+
+begin_comment
+comment|/*  * vendor ID of FNW-3600-T is LINKSYS(0x0149) and product ID is 0xc1ab, but  * it conflicts with LINKSYS Combo EhternetCard.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_PLANEX_FNW3600T
+value|{ "Fast Ethernet", "Adapter", "1.0", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_PLANEX_FNW3600T
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_PLANEX_FNW3600T
+value|"Planex FNW-3600-T"
 end_define
 
 begin_define
@@ -1576,21 +2090,63 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_PCC_2
+name|PCCARD_CIS_COREGA_ETHER_PCC_T
 value|{ "corega K.K.", "corega Ether PCC-T", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_PCC_2
+name|PCCARD_PRODUCT_COREGA_ETHER_PCC_T
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_PCC_2
+name|PCCARD_STR_COREGA_ETHER_PCC_T
+value|"Corega"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_COREGA_ETHER_II_PCC_T
+value|{ "corega K.K.", "corega EtherII PCC-T", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COREGA_ETHER_II_PCC_T
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COREGA_ETHER_II_PCC_T
+value|"Corega"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_COREGA_FAST_ETHER_PCC_TX
+value|{ "corega K.K.", "corega FastEther PCC-TX", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COREGA_FAST_ETHER_PCC_TX
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COREGA_FAST_ETHER_PCC_TX
 value|"Corega"
 end_define
 
@@ -1655,6 +2211,48 @@ define|#
 directive|define
 name|PCCARD_STR_NAKAGAWAMETAL_LNT10TN
 value|"NAKAGAWA METAL LNT-10TN NE2000 Compatible Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_AMBICOM_AMB8002T
+value|{ "AmbiCom Inc", "AMB8002T", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_AMBICOM_AMB8002T
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_AMBICOM_AMB8002T
+value|"AmbiCom AMB8002T"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IODATA_PCLAT
+value|{ "I-O DATA", "PCLA", "ETHERNET", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IODATA_PCLAT
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IODATA_PCLAT
+value|"IO-DATA PCLA/T"
 end_define
 
 end_unit
