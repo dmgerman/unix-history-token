@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.32 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1955,6 +1955,27 @@ condition|)
 name|fatal
 argument_list|(
 literal|"%s: `%c' partition is unavailable"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|p_fstype
+operator|==
+name|FS_BOOT
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: `%c' partition overlaps boot program"
 argument_list|,
 name|argv
 index|[
