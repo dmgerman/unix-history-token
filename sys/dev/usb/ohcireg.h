@@ -1027,6 +1027,10 @@ name|OHCI_TD_NOINTR
 value|0x00e00000
 define|#
 directive|define
+name|OHCI_TD_INTR_MASK
+value|0x00e00000
+define|#
+directive|define
 name|OHCI_TD_TOGGLE_CARRY
 value|0x00000000
 define|#
@@ -1036,6 +1040,10 @@ value|0x02000000
 define|#
 directive|define
 name|OHCI_TD_TOGGLE_1
+value|0x03000000
+define|#
+directive|define
+name|OHCI_TD_TOGGLE_MASK
 value|0x03000000
 define|#
 directive|define

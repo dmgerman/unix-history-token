@@ -151,6 +151,16 @@ decl_stmt|;
 name|u_int16_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|OHCI_ITD_ACTIVE
+value|0x0010
+comment|/* Hardware op in progress */
+define|#
+directive|define
+name|OHCI_ITD_INTFIN
+value|0x0020
+comment|/* Hw completion interrupt seen.*/
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -413,9 +423,19 @@ name|struct
 name|usb_task
 name|abort_task
 decl_stmt|;
+name|u_int32_t
+name|ohci_xfer_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|OHCI_ISOC_DIRTY
+value|0x01
+end_define
 
 begin_define
 define|#
@@ -424,7 +444,7 @@ name|OXFER
 parameter_list|(
 name|xfer
 parameter_list|)
-value|((struct ehci_xfer *)(xfer))
+value|((struct ohci_xfer *)(xfer))
 end_define
 
 begin_function_decl
