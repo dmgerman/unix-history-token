@@ -63,14 +63,14 @@ begin_define
 define|#
 directive|define
 name|GPLUSPLUS_INCLUDE_DIR
-value|PREFIX"/include/g++"
+value|PREFIX"/include/c++/3.3"
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPLUSPLUS_BACKWARD_INCLUDE_DIR
-value|PREFIX"/include/g++/backward"
+value|PREFIX"/include/c++/3.3/backward"
 end_define
 
 begin_define

@@ -162,6 +162,50 @@ value|1
 end_define
 
 begin_comment
+comment|// Define if drand48 exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DRAND48
+value|1
+end_define
+
+begin_comment
+comment|// Define if getpagesize exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPAGESIZE
+value|1
+end_define
+
+begin_comment
+comment|// Define if setenv exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETENV
+value|1
+end_define
+
+begin_comment
+comment|// Define if sigsetjmp exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGSETJMP
+value|1
+end_define
+
+begin_comment
 comment|// Define if mbstate_t exists in wchar.h.
 end_comment
 
@@ -255,25 +299,34 @@ begin_comment
 comment|// Define if the compiler/host combination has __builtin_cos
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___BUILTIN_COS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_COS
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_cosf
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___BUILTIN_COSF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_COSF
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_cosl
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___BUILTIN_COSL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_COSL
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_fabs
@@ -312,25 +365,34 @@ begin_comment
 comment|// Define if the compiler/host combination has __builtin_sin
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___BUILTIN_SIN */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SIN
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_sinf
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___BUILTIN_SINF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SINF
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_sinl
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___BUILTIN_SINL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE___BUILTIN_SINL
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_sqrt
@@ -354,6 +416,36 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE___BUILTIN_SQRTL */
+end_comment
+
+begin_comment
+comment|// Define if poll is available in<poll.h>.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_POLL
+value|1
+end_define
+
+begin_comment
+comment|// Define if S_ISREG (Posix) is available in<sys/stat.h>.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_S_ISREG
+value|1
+end_define
+
+begin_comment
+comment|// Define if S_IFREG is available in<sys/stat.h>.
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_S_IFREG */
 end_comment
 
 begin_comment
@@ -2349,6 +2441,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/filio.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_FILIO_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/ioctl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<sys/isa_defs.h> header file.  */
 end_comment
 
@@ -2383,6 +2497,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/time.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TIME_H
 value|1
 end_define
 
@@ -2460,7 +2585,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"3.2.2"
+value|"3.3.1"
 end_define
 
 begin_comment

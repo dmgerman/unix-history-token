@@ -14,7 +14,7 @@ comment|/* auto-host.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.in.  Generated automatically from configure.in by autoheader 2.13.  */
+comment|/* config.in.  Generated automatically from configure.in by autoheader.  */
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ comment|/* Define if cpp should also search $prefix/include.  */
 end_comment
 
 begin_comment
-comment|/* #define PREFIX_INCLUDE_DIR "NONE/include" */
+comment|/* #undef PREFIX_INCLUDE_DIR */
 end_comment
 
 begin_comment
@@ -267,6 +267,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE___ARGZ_STRINGIFY */
 end_comment
+
+begin_comment
+comment|/* Define if you have the alphasort function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ALPHASORT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the atoll function.  */
@@ -338,9 +349,12 @@ begin_comment
 comment|/* Define if you have the feof_unlocked function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FEOF_UNLOCKED */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FEOF_UNLOCKED
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the fgets_unlocked function.  */
@@ -526,9 +540,12 @@ begin_comment
 comment|/* Define if you have the putc_unlocked function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PUTC_UNLOCKED */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PUTC_UNLOCKED
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the putenv function.  */
@@ -538,6 +555,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_PUTENV
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the scandir function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SCANDIR
 value|1
 end_define
 
@@ -900,88 +928,6 @@ begin_comment
 comment|/* #undef DEFAULT_ASSEMBLER */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WANT_COMPILER_INVARIANTS
-end_ifdef
-
-begin_comment
-comment|//#warning WANT_COMPILER_INVARIANTS turned on
-end_comment
-
-begin_comment
-comment|/* Define if you want more run-time sanity checks.  This one gets a grab    bag of miscellaneous but relatively cheap checks. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_CHECKING
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you want all operations on trees (the basic data    structure of the front ends) to be checked for dynamic type safety    at runtime.  This is moderately expensive. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_TREE_CHECKING
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you want all operations on RTL (the basic data structure    of the optimizer and back end) to be checked for dynamic type safety    at runtime.  This is quite expensive. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_RTL_CHECKING
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you want the garbage collector to do object poisoning and    other memory allocation checks.  This is quite expensive. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_GC_CHECKING
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you want the garbage collector to operate in maximally    paranoid mode, validating the entire heap and collecting garbage at    every opportunity.  This is extremely expensive. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_GC_ALWAYS_COLLECT
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WANT_COMPILER_INVARIANTS */
-end_comment
-
-begin_comment
-comment|/* Define if you want the C and C++ compilers to support multibyte    character sets for source code. */
-end_comment
-
-begin_comment
-comment|/* #undef MULTIBYTE_CHARS */
-end_comment
-
 begin_comment
 comment|/* Define if your compiler understands volatile. */
 end_comment
@@ -1027,9 +973,12 @@ begin_comment
 comment|/* Define if the `_Bool' type is built-in. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE__BOOL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE__BOOL
+value|1
+end_define
 
 begin_comment
 comment|/* The number of bytes in type short */
@@ -1159,6 +1108,115 @@ end_comment
 
 begin_comment
 comment|/* #undef HOST_EBCDIC */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WANT_COMPILER_INVARIANTS
+end_ifdef
+
+begin_comment
+comment|//#warning WANT_COMPILER_INVARIANTS turned on
+end_comment
+
+begin_comment
+comment|/* Define if you want more run-time sanity checks.  This one gets a grab    bag of miscellaneous but relatively cheap checks. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_CHECKING
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want all operations on trees (the basic data    structure of the front ends) to be checked for dynamic type safety    at runtime.  This is moderately expensive. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_TREE_CHECKING
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want all operations on RTL (the basic data structure    of the optimizer and back end) to be checked for dynamic type safety    at runtime.  This is quite expensive. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_RTL_CHECKING
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want RTL flag accesses to be checked against the RTL    codes that are supported for each access macro.  This is relatively    cheap. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_RTL_FLAG_CHECKING
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want the garbage collector to do object poisoning and    other memory allocation checks.  This is quite expensive. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_GC_CHECKING
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want the garbage collector to operate in maximally    paranoid mode, validating the entire heap and collecting garbage at    every opportunity.  This is extremely expensive. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_GC_ALWAYS_COLLECT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you want to run subprograms and generated programs    through valgrind (a memory checker).  This is extremely expensive. */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_VALGRIND_CHECKING */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WANT_COMPILER_INVARIANTS */
+end_comment
+
+begin_comment
+comment|/* Define if you want to use __cxa_atexit, rather than atexit, to    register C++ destructors for local statics and global objects.    This is essential for fully standards-compliant handling of    destructors, but requires __cxa_atexit in libc. */
+end_comment
+
+begin_comment
+comment|/* #undef DEFAULT_USE_CXA_ATEXIT */
+end_comment
+
+begin_comment
+comment|/* Define if you want the C and C++ compilers to support multibyte    character sets for source code. */
+end_comment
+
+begin_comment
+comment|/* #undef MULTIBYTE_CHARS */
 end_comment
 
 begin_comment
@@ -1479,6 +1537,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HAVE_DECL_VASPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if we found this declaration otherwise define to 0. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HAVE_DECL_MALLOC
 value|1
 end_define
@@ -1583,6 +1652,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to `long' if<sys/resource.h> doesn't define. */
+end_comment
+
+begin_comment
+comment|/* #undef rlim_t */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if we found this declaration otherwise define to 0. */
 end_comment
 
@@ -1614,6 +1691,14 @@ directive|define
 name|HAVE_CLOCK_T
 value|1
 end_define
+
+begin_comment
+comment|/* Define .init_array/.fini_array sections are available and working. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_INITFINI_ARRAY */
+end_comment
 
 begin_comment
 comment|/* Define if host mkdir takes a single argument. */
@@ -1666,7 +1751,7 @@ comment|/* Define to 1 if translation of program messages to the user's native l
 end_comment
 
 begin_comment
-comment|/* #define ENABLE_NLS 1 */
+comment|/* #undef ENABLE_NLS */
 end_comment
 
 begin_comment
@@ -1690,7 +1775,7 @@ comment|/* Define to use the libintl included with this package instead of any  
 end_comment
 
 begin_comment
-comment|/* #define USE_INCLUDED_LIBINTL 1 */
+comment|/* #undef USE_INCLUDED_LIBINTL */
 end_comment
 
 begin_comment
@@ -1765,14 +1850,21 @@ begin_comment
 comment|/* Define if your assembler supports marking sections with SHF_MERGE flag. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_GAS_SHF_MERGE
+value|1
+end_define
+
 begin_comment
-comment|/* XXX:DEO new; caused Peter IA-64 trouble until he adjusted    sys/boot/efi/libefi/arch/ia64/ldscript.ia64.  */
+comment|/* Define if your assembler supports thread-local storage. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_GAS_SHF_MERGE
+name|HAVE_AS_TLS
 value|1
 end_define
 
@@ -1809,11 +1901,11 @@ comment|/* #undef HAVE_AS_SPARC_UA_PCREL */
 end_comment
 
 begin_comment
-comment|/* Define if the assembler supports 64bit sparc. */
+comment|/* Define if your assembler and linker support unaligned PC relative relocs against hidden symbols. */
 end_comment
 
 begin_comment
-comment|/* #undef AS_SPARC64_FLAG */
+comment|/* #undef HAVE_AS_SPARC_UA_PCREL_HIDDEN */
 end_comment
 
 begin_comment
@@ -1836,12 +1928,23 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if your assembler supports dwarf2 .file/.loc directives,    and preserves file table indices exactly as given. */
+comment|/* Define if your assembler supports ltoffx and ldxmov relocations. */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_AS_DWARF2_DEBUG_LINE */
+comment|/* #undef HAVE_AS_LTOFFX_LDXMOV_RELOCS */
 end_comment
+
+begin_comment
+comment|/* Define if your assembler supports dwarf2 .file/.loc directives,    and preserves file table indices exactly as given. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_AS_DWARF2_DEBUG_LINE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if your assembler supports the --gdwarf2 option. */
@@ -1866,6 +1969,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your linker links a mix of read-only    and read-write sections into a read-write section. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LD_RO_RW_SECTION_MIXING
+value|1
+end_define
+
+begin_comment
 comment|/* Define if your linker supports --eh-frame-hdr option. */
 end_comment
 
@@ -1877,11 +1991,27 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if your MIPS libgloss linker scripts consistently include STARTUP directives. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MIPS_LIBGLOSS_STARTUP_DIRECTIVES */
+end_comment
+
+begin_comment
 comment|/* Define 0/1 to force the choice for exception handling model. */
 end_comment
 
 begin_comment
 comment|/* #undef CONFIG_SJLJ_EXCEPTIONS */
+end_comment
+
+begin_comment
+comment|/* Define if gcc should use -lunwind. */
+end_comment
+
+begin_comment
+comment|/* #undef USE_LIBUNWIND_EXCEPTIONS */
 end_comment
 
 begin_comment

@@ -8,7 +8,11 @@ comment|// Predefined symbols and macros -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -130,15 +134,11 @@ begin_define
 define|#
 directive|define
 name|__GLIBCPP__
-value|20030205
+value|20030513
 end_define
 
 begin_comment
-comment|// This is necessary until GCC supports separate template
-end_comment
-
-begin_comment
-comment|// compilation.
+comment|// This is necessary until GCC supports separate template compilation.
 end_comment
 
 begin_define
@@ -182,6 +182,48 @@ directive|define
 name|_GLIBCPP_FULLY_COMPLIANT_HEADERS
 value|1
 end_define
+
+begin_comment
+comment|// Allow use of the GNU syntax extension, "extern template." This
+end_comment
+
+begin_comment
+comment|// extension is fully documented in the g++ manual, but in a nutshell,
+end_comment
+
+begin_comment
+comment|// it inhibits all implicit instantiations and is used throughout the
+end_comment
+
+begin_comment
+comment|// library to avoid multiple weak definitions for required types that
+end_comment
+
+begin_comment
+comment|// are already explicitly instantiated in the library binary. This
+end_comment
+
+begin_comment
+comment|// substantially reduces the binary size of resulting executables.
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCPP_EXTERN_TEMPLATE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_EXTERN_TEMPLATE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// To enable older, ARM-style iostreams and other anachronisms use this.
@@ -278,7 +320,7 @@ end_ifdef
 begin_error
 error|#
 directive|error
-error|__USE_MALLOC should only be defined within \ libstdc++-v3/include/bits/c++config before full recompilation of the library.
+error|__USE_MALLOC should never be defined.  Read the release notes.
 end_error
 
 begin_endif
@@ -287,20 +329,38 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Define __USE_MALLOC after this point in the file in order to aid debugging
+comment|// Create a boolean flag to be used to determine if --fast-math is set.
 end_comment
 
-begin_comment
-comment|// or globally change allocation policy.  This breaks the ABI, thus
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FAST_MATH__
+end_ifdef
 
-begin_comment
-comment|// completely recompile the library.  A patch to better support
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_FAST_MATH
+value|1
+end_define
 
-begin_comment
-comment|// changing the global allocator policy would be probably be accepted.
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_FAST_MATH
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// The remainder of the prewritten config is mostly automatic; all the
@@ -473,6 +533,50 @@ value|1
 end_define
 
 begin_comment
+comment|// Define if drand48 exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_DRAND48
+value|1
+end_define
+
+begin_comment
+comment|// Define if getpagesize exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_GETPAGESIZE
+value|1
+end_define
+
+begin_comment
+comment|// Define if setenv exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SETENV
+value|1
+end_define
+
+begin_comment
+comment|// Define if sigsetjmp exists.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SIGSETJMP
+value|1
+end_define
+
+begin_comment
 comment|// Define if mbstate_t exists in wchar.h.
 end_comment
 
@@ -566,25 +670,34 @@ begin_comment
 comment|// Define if the compiler/host combination has __builtin_cos
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___BUILTIN_COS */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___BUILTIN_COS
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_cosf
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___BUILTIN_COSF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___BUILTIN_COSF
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_cosl
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___BUILTIN_COSL */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___BUILTIN_COSL
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_fabs
@@ -623,25 +736,34 @@ begin_comment
 comment|// Define if the compiler/host combination has __builtin_sin
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___BUILTIN_SIN */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___BUILTIN_SIN
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_sinf
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___BUILTIN_SINF */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___BUILTIN_SINF
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_sinl
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___BUILTIN_SINL */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___BUILTIN_SINL
+value|1
+end_define
 
 begin_comment
 comment|// Define if the compiler/host combination has __builtin_sqrt
@@ -665,6 +787,36 @@ end_comment
 
 begin_comment
 comment|/* #undef _GLIBCPP_HAVE___BUILTIN_SQRTL */
+end_comment
+
+begin_comment
+comment|// Define if poll is available in<poll.h>.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_POLL
+value|1
+end_define
+
+begin_comment
+comment|// Define if S_ISREG (Posix) is available in<sys/stat.h>.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_S_ISREG
+value|1
+end_define
+
+begin_comment
+comment|// Define if S_IFREG is available in<sys/stat.h>.
+end_comment
+
+begin_comment
+comment|/* #undef _GLIBCPP_HAVE_S_IFREG */
 end_comment
 
 begin_comment
@@ -2660,6 +2812,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/filio.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SYS_FILIO_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/ioctl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<sys/isa_defs.h> header file.  */
 end_comment
 
@@ -2694,6 +2868,17 @@ begin_define
 define|#
 directive|define
 name|_GLIBCPP_HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/time.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_SYS_TIME_H
 value|1
 end_define
 
@@ -2771,7 +2956,7 @@ begin_define
 define|#
 directive|define
 name|_GLIBCPP_VERSION
-value|"3.2.2"
+value|"3.3.1"
 end_define
 
 begin_comment
