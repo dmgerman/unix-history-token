@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.10	(Berkeley)	83/05/15"
+literal|"@(#)main.c	3.11	(Berkeley)	83/06/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -1254,6 +1254,9 @@ break|break;
 comment|/* 	 * Quit. 	 */
 case|case
 literal|'q'
+case|:
+case|case
+literal|'x'
 case|:
 return|return;
 comment|/* 	 * Toggle verbose mode. 	 */
