@@ -1138,6 +1138,13 @@ operator|->
 name|base
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|imgp
+operator|->
+name|proc
+argument_list|)
+expr_stmt|;
 name|AUXARGS_ENTRY
 argument_list|(
 name|pos
@@ -1196,6 +1203,13 @@ operator|->
 name|p_cred
 operator|->
 name|p_svgid
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|imgp
+operator|->
+name|proc
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
@@ -1352,6 +1366,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Allocate space for the signal handler context. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1419,6 +1438,11 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
 if|if
 condition|(
@@ -1455,6 +1479,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIGACTION
 argument_list|(
 name|p
@@ -1489,6 +1518,11 @@ operator|->
 name|p_sigmask
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1635,6 +1669,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX ??? */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|frame
 operator|.
 name|sf_sc
@@ -1690,6 +1729,11 @@ literal|0
 operator|)
 else|:
 name|LINUX_SS_DISABLE
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|bsd_to_linux_sigset
 argument_list|(
@@ -2209,6 +2253,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Allocate space for the signal handler context. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2276,6 +2325,11 @@ name|tf_esp
 operator|-
 literal|1
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
 if|if
 condition|(
@@ -2312,6 +2366,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SIGACTION
 argument_list|(
 name|p
@@ -2346,6 +2405,11 @@ operator|->
 name|p_sigmask
 argument_list|,
 name|SIGILL
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|psignal
@@ -2975,6 +3039,11 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|linux_to_bsd_sigset
 argument_list|(
 operator|&
@@ -2991,6 +3060,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore signal context. 	 */
@@ -3352,6 +3426,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|linux_to_bsd_sigset
 argument_list|(
 operator|&
@@ -3370,6 +3449,11 @@ argument_list|(
 name|p
 operator|->
 name|p_sigmask
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore signal context 	 */

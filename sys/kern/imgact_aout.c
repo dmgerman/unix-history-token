@@ -517,6 +517,14 @@ name|EFAULT
 operator|)
 return|;
 comment|/* 	 * text/data/bss must not exceed limits 	 */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 comment|/* text can't exceed maximum text size */
@@ -906,10 +914,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
 decl_stmt|;
 specifier|register
 name|struct
@@ -956,6 +960,27 @@ operator|->
 name|p_addr
 operator|->
 name|u_kproc
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|cred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
+name|crhold
+argument_list|(
+name|cred
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -1091,6 +1116,11 @@ operator|)
 name|NULL
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|crfree
+argument_list|(
+name|cred
 argument_list|)
 expr_stmt|;
 return|return

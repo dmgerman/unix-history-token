@@ -885,6 +885,14 @@ operator|)
 return|;
 block|}
 comment|/* 	 * text/data/bss must not exceed limits 	 */
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNWED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 comment|/* text can't exceed maximum text size */
