@@ -304,6 +304,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AN_CMD_SET_MODE
+value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
 name|AN_CMD_ALLOC_MEM
 value|0x000A
 end_define
@@ -1515,6 +1522,20 @@ name|AN_TXPOWER_250MW
 value|250
 end_define
 
+begin_define
+define|#
+directive|define
+name|AN_HOME_NETWORK
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_HOME_INSTALL_AP
+value|0x0002
+end_define
+
 begin_comment
 comment|/*  * Valid SSID list. You can specify up to three SSIDs denoting  * the service sets that you want to join. The first SSID always  * defaults to "tsunami" which is a handy way to detect the  * card.  */
 end_comment
@@ -2178,7 +2199,7 @@ comment|/* 0x7E */
 name|u_int16_t
 name|an_spare
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 block|}
