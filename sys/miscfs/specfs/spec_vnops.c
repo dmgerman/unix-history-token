@@ -66,19 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -109,18 +97,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vnode_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
 end_include
 
 begin_decl_stmt
