@@ -1587,7 +1587,7 @@ argument_list|)
 expr_stmt|;
 name|key
 operator|=
-name|edit_line
+name|line_edit
 argument_list|(
 name|window
 argument_list|,
@@ -1619,7 +1619,13 @@ index|[
 name|x_pos
 index|]
 operator|.
-name|field
+name|width
+argument_list|,
+literal|20
+argument_list|,
+name|item_selected_attr
+argument_list|,
+literal|1
 argument_list|,
 name|label_fields
 index|[
@@ -1629,9 +1635,7 @@ index|[
 name|x_pos
 index|]
 operator|.
-name|width
-argument_list|,
-literal|20
+name|field
 argument_list|)
 expr_stmt|;
 switch|switch
