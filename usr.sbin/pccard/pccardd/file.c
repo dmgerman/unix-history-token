@@ -1262,6 +1262,7 @@ expr_stmt|;
 block|}
 name|generic_done
 label|:
+empty_stmt|;
 block|}
 comment|/* save the initial state of resource pool */
 name|bcopy
@@ -2551,6 +2552,13 @@ name|newstr
 argument_list|(
 name|name
 argument_list|)
+expr_stmt|;
+name|drvp
+operator|->
+name|unit
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|p
 operator|=

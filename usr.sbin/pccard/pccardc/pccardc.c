@@ -47,6 +47,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|int
@@ -86,6 +92,14 @@ begin_expr_stmt
 name|DECL
 argument_list|(
 name|dumpcis_main
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DECL
+argument_list|(
+name|dumpcisfile_main
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -195,6 +209,14 @@ block|,
 name|dumpcis_main
 block|,
 literal|"Prints CIS for all cards"
+block|}
+block|,
+block|{
+literal|"dumpcisfile"
+block|,
+name|dumpcisfile_main
+block|,
+literal|"Prints CIS from a file"
 block|}
 block|,
 block|{

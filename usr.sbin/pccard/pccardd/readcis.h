@@ -309,6 +309,15 @@ name|unsigned
 name|long
 name|reg_addr
 decl_stmt|;
+name|u_int
+name|manufacturer
+decl_stmt|;
+name|u_int
+name|product
+decl_stmt|;
+name|u_int
+name|prodext
+decl_stmt|;
 name|unsigned
 name|char
 name|func_id1
@@ -456,6 +465,12 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|isdumpcisfile
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

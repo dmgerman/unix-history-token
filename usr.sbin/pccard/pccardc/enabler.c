@@ -540,7 +540,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drv %s%d, mem 0x%lx, size %d, io %d, irq 0x%x, flags 0x%x\n"
+literal|"drv %s%d, mem 0x%lx, size %d, io 0x%x, irq 0x%x, flags 0x%x\n"
 argument_list|,
 name|drv
 operator|.
