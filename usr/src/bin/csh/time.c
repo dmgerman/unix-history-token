@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	5.2 (Berkeley) %G%"
+literal|"@(#)time.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+name|nval
+decl_stmt|;
 name|v
 operator|++
 operator|,
@@ -220,17 +223,9 @@ name|cp
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|setpriority
-argument_list|(
-name|PRIO_PROCESS
-argument_list|,
-literal|0
-argument_list|,
+name|nval
+operator|=
 literal|4
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -250,6 +245,13 @@ argument_list|,
 literal|"+-"
 argument_list|)
 condition|)
+name|nval
+operator|=
+name|getn
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -266,10 +268,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|+
-name|getn
-argument_list|(
-name|cp
-argument_list|)
+name|nval
 argument_list|)
 expr_stmt|;
 block|}

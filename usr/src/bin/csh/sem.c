@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	5.2 (Berkeley) %G%"
+literal|"@(#)sem.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1080,6 +1080,13 @@ name|PRIO_PROCESS
 argument_list|,
 literal|0
 argument_list|,
+name|getpriority
+argument_list|(
+name|PRIO_PROCESS
+argument_list|,
+literal|0
+argument_list|)
+operator|+
 name|t
 operator|->
 name|t_nice
