@@ -1919,6 +1919,13 @@ name|aq_entfree
 operator|=
 name|aln
 expr_stmt|;
+else|else
+name|alq
+operator|->
+name|aq_entfree
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 name|ALQ_UNLOCK
