@@ -15,6 +15,17 @@ directive|define
 name|_SYS_DMAP_H_
 end_define
 
+begin_typedef
+typedef|typedef
+name|int32_t
+name|swblk_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* swap offset */
+end_comment
+
 begin_comment
 comment|/*  * Definitions for the mapping of vitual swap space to the physical swap  * area - the disk map.  */
 end_comment

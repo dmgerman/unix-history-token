@@ -636,17 +636,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__int32_t
-name|swblk_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* swap offset */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|__u_register_t
 name|u_register_t
 typedef|;
