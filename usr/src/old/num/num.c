@@ -5,14 +5,14 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)num.c	4.1 (Berkeley) %G%"
+literal|"@(#)num.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<stdio.h>
 end_include
 
 begin_define
