@@ -382,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|LOCK_DIR
-value|"/usr/spool/uucp"
+value|"/var/spool/lock"
 end_define
 
 begin_endif
