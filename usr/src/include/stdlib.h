@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -143,6 +143,7 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+name|__dead
 name|void
 name|abort
 name|__P
@@ -155,6 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__pure
 name|int
 name|abs
 name|__P
@@ -279,6 +281,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__pure
 name|div_t
 name|div
 name|__P
@@ -293,6 +296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__dead
 name|void
 name|exit
 name|__P
@@ -333,6 +337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__pure
 name|long
 name|labs
 name|__P
@@ -345,6 +350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|__pure
 name|ldiv_t
 name|ldiv
 name|__P
