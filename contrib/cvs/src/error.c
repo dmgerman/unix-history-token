@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* error.c -- error handler for noninteractive utilities    Copyright (C) 1990-1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* error.c -- error handler for noninteractive utilities    Copyright (C) 1990-1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_comment
@@ -39,11 +39,11 @@ directive|ifdef
 name|HAVE_VPRINTF
 end_ifdef
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -196,11 +196,11 @@ begin_comment
 comment|/* ! STDC_HEADERS */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -246,6 +246,12 @@ begin_comment
 comment|/* STDC_HEADERS */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|strerror
+end_ifndef
+
 begin_function_decl
 specifier|extern
 name|char
@@ -255,6 +261,11 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|int
@@ -263,59 +274,52 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
+begin_decl_stmt
 name|void
-argument_list|(
-argument|*fn_returning_void
-argument_list|)
+name|error_exit
 name|PROTO
 argument_list|(
 operator|(
 name|void
 operator|)
 argument_list|)
+block|{
+name|Lock_Cleanup
+argument_list|()
 expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/* Function to call before exiting.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|fn_returning_void
-name|cleanup_fn
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+condition|)
+name|server_cleanup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SYSTEM_CLEANUP
+comment|/* Hook for OS-specific behavior, for example socket subsystems on        NT and OS2 or dealing with windows and arguments on Mac.  */
+name|SYSTEM_CLEANUP
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 end_decl_stmt
 
-begin_function
-name|fn_returning_void
-name|error_set_cleanup
-parameter_list|(
-name|arg
-parameter_list|)
-name|fn_returning_void
-name|arg
-decl_stmt|;
-block|{
-name|fn_returning_void
-name|retval
-init|=
-name|cleanup_fn
-decl_stmt|;
-name|cleanup_fn
-operator|=
-name|arg
-expr_stmt|;
-return|return
-name|retval
-return|;
-block|}
-end_function
-
 begin_comment
-comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status EXIT_FAILURE if STATUS is nonzero.  */
+comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status EXIT_FAILURE if STATUS is nonzero.  If MESSAGE is "",    no need to print a message.  */
 end_comment
 
 begin_comment
@@ -331,7 +335,10 @@ argument_list|(
 name|HAVE_VPRINTF
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 name|error
 argument_list|(
 name|int
@@ -389,39 +396,22 @@ end_endif
 
 begin_block
 block|{
-name|FILE
-modifier|*
-name|out
-init|=
-name|stderr
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_VPRINTF
+if|if
+condition|(
+name|message
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
 name|va_list
 name|args
 decl_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|error_use_protocol
-condition|)
-block|{
-name|out
-operator|=
-name|stdout
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"E "
-argument_list|)
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|HAVE_VPRINTF
-block|{
 name|char
 modifier|*
 name|mess
@@ -659,29 +649,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|error_use_protocol
-condition|)
-name|fputs
-argument_list|(
-name|entire
-condition|?
-name|entire
-else|:
-literal|"out of memory"
-argument_list|,
-name|out
-argument_list|)
-expr_stmt|;
-else|else
 name|cvs_outerr
 argument_list|(
 name|entire
 condition|?
 name|entire
 else|:
-literal|"out of memory"
+literal|"out of memory\n"
 argument_list|,
 literal|0
 argument_list|)
@@ -702,6 +676,37 @@ else|#
 directive|else
 comment|/* No HAVE_VPRINTF */
 comment|/* I think that all relevant systems have vprintf these days.  But        just in case, I'm leaving this code here.  */
+if|if
+condition|(
+name|message
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|FILE
+modifier|*
+name|out
+init|=
+name|stderr
+decl_stmt|;
+if|if
+condition|(
+name|error_use_protocol
+condition|)
+block|{
+name|out
+operator|=
+name|stdout
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"E "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|command_name
@@ -839,36 +844,23 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* No HAVE_VPRINTF */
-comment|/* In the error_use_protocol case, this probably does something useful.        In most other cases, I suspect it is a noop (either stderr is line        buffered or we haven't written anything to stderr) or unnecessary        (if stderr is not line buffered, maybe there is a reason....).  */
+comment|/* In the error_use_protocol case, this probably does 	   something useful.  In most other cases, I suspect it is a 	   noop (either stderr is line buffered or we haven't written 	   anything to stderr) or unnecessary (if stderr is not line 	   buffered, maybe there is a reason....).  */
 name|fflush
 argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* No HAVE_VPRINTF */
 if|if
 condition|(
 name|status
 condition|)
-block|{
-if|if
-condition|(
-name|cleanup_fn
-condition|)
-call|(
-modifier|*
-name|cleanup_fn
-call|)
+name|error_exit
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -889,7 +881,10 @@ argument_list|(
 name|HAVE_VPRINTF
 argument_list|)
 operator|&&
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 name|fperror
 parameter_list|(
 name|FILE
@@ -1057,23 +1052,9 @@ if|if
 condition|(
 name|status
 condition|)
-block|{
-if|if
-condition|(
-name|cleanup_fn
-condition|)
-call|(
-modifier|*
-name|cleanup_fn
-call|)
+name|error_exit
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

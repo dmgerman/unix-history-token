@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Release: "cancel" a checkout in the history log.  *   * - Don't allow release if anything is active - Don't allow release if not  * above or inside repository. - Don't allow release if ./CVS/Repository is  * not the same as the directory specified in the module database.  *   * - Enter a line in the history log indicating the "release". - If asked to,  * delete the local working directory.  */
+comment|/*  * Release: "cancel" a checkout in the history log.  *   * - Enter a line in the history log indicating the "release". - If asked to,  * delete the local working directory.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"cvs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getline.h"
 end_include
 
 begin_decl_stmt
@@ -34,7 +40,7 @@ name|release_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-d] modules...\n"
+literal|"Usage: %s %s [-d] directories...\n"
 block|,
 literal|"\t-d\tDelete the given directory.\n"
 block|,
@@ -43,15 +49,106 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
-name|short
-name|delete_flag
+name|int
+name|release_server
+name|PROTO
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+operator|*
+name|argv
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FIXME: This implementation is cheezy in quite a few ways:     1.  The whole "cvs update" junk could be checked locally with a    fairly simple start_recursion/classify_file loop--a win for    portability, performance, and cleanliness.     2.  Should be like edit/unedit in terms of working well if disconnected    from the network, and then sending a delayed notification.     3.  Way too many network turnarounds.  More than one for each argument.    Puh-leeze.     4.  Oh, and as a purely stylistic nit, break this out into separate    functions for client/local and for server.  Those #ifdefs are a mess.  */
+comment|/* This is the server side of cvs release.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|release_server
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* Note that we skip argv[0].  */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+operator|++
+name|i
+control|)
+name|history_write
+argument_list|(
+literal|'F'
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|""
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SERVER_SUPPORT */
+end_comment
+
+begin_comment
+comment|/* There are various things to improve about this implementation:     1.  Using run_popen to run "cvs update" could be replaced by a    fairly simple start_recursion/classify_file loop--a win for    portability, performance, and cleanliness.  In particular, there is    no particularly good way to find the right "cvs".     2.  The fact that "cvs update" contacts the server slows things down;    it undermines the case for using "cvs release" rather than "rm -rf".    However, for correctly printing "? foo" and correctly handling    CVSROOTADM_IGNORE, we currently need to contact the server.     3.  Would be nice to take processing things on the client side one step    further, and making it like edit/unedit in terms of working well if    disconnected from the network, and then sending a delayed    notification.     4.  Having separate network turnarounds for the "Notify" request    which we do as part of unedit, and for the "release" itself, is slow    and unnecessary.  */
 end_comment
 
 begin_function
@@ -75,7 +172,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -84,20 +180,21 @@ decl_stmt|;
 name|char
 modifier|*
 name|repository
-decl_stmt|,
-modifier|*
-name|srepos
 decl_stmt|;
 name|char
+modifier|*
 name|line
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|size_t
+name|line_allocated
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
 name|update_cmd
-index|[
-name|PATH_MAX
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -111,18 +208,29 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|short
+name|delete_flag
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
 if|if
 condition|(
-operator|!
 name|server_active
 condition|)
-block|{
+return|return
+name|release_server
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+return|;
 endif|#
 directive|endif
-comment|/* SERVER_SUPPORT */
+comment|/* Everything from here on is client or local.  */
 if|if
 condition|(
 name|argc
@@ -150,7 +258,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Qdq"
+literal|"+Qdq"
 argument_list|)
 operator|)
 operator|!=
@@ -169,17 +277,6 @@ case|:
 case|case
 literal|'q'
 case|:
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-comment|/* The CVS 1.5 client sends these options (in addition to 		   Global_option requests), so we must ignore them.  */
-if|if
-condition|(
-operator|!
-name|server_active
-condition|)
-endif|#
-directive|endif
 name|error
 argument_list|(
 literal|1
@@ -219,15 +316,25 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-block|}
-endif|#
-directive|endif
-comment|/* SERVER_SUPPORT */
 comment|/* We're going to run "cvs -n -q update" and check its output; if      * the output is sufficiently unalarming, then we release with no      * questions asked.  Else we prompt, then maybe release.      */
 comment|/* Construct the update command. */
+name|update_cmd
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|program_path
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|CVSroot_original
+argument_list|)
+operator|+
+literal|20
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|update_cmd
@@ -236,7 +343,7 @@ literal|"%s -n -q -d %s update"
 argument_list|,
 name|program_path
 argument_list|,
-name|CVSroot
+name|CVSroot_original
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -258,22 +365,6 @@ block|}
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */
-comment|/* If !server_active, we already skipped over argv[0] in the "argc        -= optind;" statement above.  But if server_active, we need to        skip it now.  */
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-if|if
-condition|(
-name|server_active
-condition|)
-name|arg_start_idx
-operator|=
-literal|1
-expr_stmt|;
-else|else
-endif|#
-directive|endif
-comment|/* SERVER_SUPPORT */
 name|arg_start_idx
 operator|=
 literal|0
@@ -299,36 +390,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-if|if
-condition|(
-name|server_active
-condition|)
-block|{
-comment|/* Just log the release -- all the interesting stuff happened          * on the client.          */
-name|history_write
-argument_list|(
-literal|'F'
-argument_list|,
-name|thisarg
-argument_list|,
-literal|""
-argument_list|,
-name|thisarg
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-comment|/* F == Free */
-block|}
-else|else
-block|{
-endif|#
-directive|endif
-comment|/* SERVER_SUPPORT */
-comment|/*          * If we are in a repository, do it.  Else if we are in the parent of          * a directory with the same name as the module, "cd" into it and          * look for a repository there.          */
 if|if
 condition|(
 name|isdir
@@ -339,7 +400,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|chdir
+name|CVS_CHDIR
 argument_list|(
 name|thisarg
 argument_list|)
@@ -356,7 +417,7 @@ name|error
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|errno
 argument_list|,
 literal|"can't chdir to: %s"
 argument_list|,
@@ -385,7 +446,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"no repository module: %s"
+literal|"no repository directory: %s"
 argument_list|,
 name|thisarg
 argument_list|)
@@ -430,20 +491,13 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|srepos
-operator|=
-name|Short_Repository
-argument_list|(
-name|repository
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|really_quiet
 condition|)
 block|{
-comment|/* The "release" command piggybacks on "update", which            * does the real work of finding out if anything is not            * up-to-date with the repository.  Then "release" prompts            * the user, telling her how many files have been            * modified, and asking if she still wants to do the            * release.            */
+comment|/* The "release" command piggybacks on "update", which 	       does the real work of finding out if anything is not 	       up-to-date with the repository.  Then "release" prompts 	       the user, telling her how many files have been 	       modified, and asking if she still wants to do the 	       release.  */
 name|fp
 operator|=
 name|run_popen
@@ -459,17 +513,18 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|line
-argument_list|)
+operator|&
+name|line_allocated
 argument_list|,
 name|fp
 argument_list|)
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -494,7 +549,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the update exited with an error, then we just want to            * complain and go on to the next arg.  Especially, we do            * not want to delete the local copy, since it's obviously            * not what the user thinks it is.            */
+comment|/* If the update exited with an error, then we just want to 	       complain and go on to the next arg.  Especially, we do 	       not want to delete the local copy, since it's obviously 	       not what the user thinks it is.  */
 if|if
 condition|(
 operator|(
@@ -520,9 +575,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"You have [%d] altered files in this repository.\n"
@@ -530,12 +582,9 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
-literal|"Are you sure you want to release %smodule `%s': "
+literal|"Are you sure you want to release %sdirectory `%s': "
 argument_list|,
 name|delete_flag
 condition|?
@@ -583,14 +632,6 @@ condition|(
 literal|1
 ifdef|#
 directive|ifdef
-name|SERVER_SUPPORT
-operator|&&
-operator|!
-name|server_active
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|CLIENT_SUPPORT
 operator|&&
 operator|!
@@ -615,7 +656,7 @@ endif|#
 directive|endif
 condition|)
 block|{
-comment|/* We are chdir'ed into the directory in question.   	     So don't pass args to unedit.  */
+comment|/* We are chdir'ed into the directory in question.   	       So don't pass args to unedit.  */
 name|int
 name|argc
 init|=
@@ -690,10 +731,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */
+block|{
 name|history_write
 argument_list|(
 literal|'F'
@@ -708,14 +749,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* F == Free */
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
 block|}
-comment|/* else client not active */
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
 name|free
 argument_list|(
 name|repository
@@ -737,29 +771,56 @@ if|if
 condition|(
 name|client_active
 condition|)
-return|return
-name|get_responses_and_close
+name|err
+operator|+=
+name|get_server_responses
 argument_list|()
-return|;
-else|else
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|}
 ifdef|#
 directive|ifdef
-name|SERVER_SUPPORT
+name|CLIENT_SUPPORT
+if|if
+condition|(
+name|client_active
+condition|)
+block|{
+comment|/* Unfortunately, client.c doesn't offer a way to close 	   the connection without waiting for responses.  The extra 	   network turnaround here is quite unnecessary other than 	   that....  */
+name|send_to_server
+argument_list|(
+literal|"noop\012"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|err
+operator|+=
+name|get_responses_and_close
+argument_list|()
+expr_stmt|;
 block|}
-comment|/* else server not active */
 endif|#
 directive|endif
-comment|/* SERVER_SUPPORT */
-block|}
-comment|/* `for' loop */
+comment|/* CLIENT_SUPPORT */
+name|free
+argument_list|(
+name|update_cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|line
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 return|return
 name|err
 return|;
@@ -792,7 +853,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|stat
+name|CVS_STAT
 argument_list|(
 literal|"."
 argument_list|,
@@ -809,7 +870,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|chdir
+name|CVS_CHDIR
 argument_list|(
 literal|".."
 argument_list|)
@@ -817,7 +878,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|stat
+name|CVS_STAT
 argument_list|(
 name|dir
 argument_list|,

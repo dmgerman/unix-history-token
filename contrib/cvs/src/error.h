@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* error.h -- declaration for error-reporting function    Copyright (C) 1995 Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* error.h -- declaration for error-reporting function    Copyright (C) 1995 Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,67 @@ define|#
 directive|define
 name|_error_h_
 end_define
+
+begin_comment
+comment|/* Add prototype support.  Normally this is done in cvs.h, but that    doesn't get included from lib/savecwd.c.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PROTO
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_PROTOTYPES
+argument_list|)
+condition|?
+name|USE_PROTOTYPES
+expr|:
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PROTO
+parameter_list|(
+name|ARGS
+parameter_list|)
+value|ARGS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PROTO
+parameter_list|(
+name|ARGS
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -109,11 +170,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -161,6 +222,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Exit due to an error.  Similar to error (1, 0, "message"), but call    it in the case where the message has already been printed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|error_exit
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* If non-zero, error will use the CVS protocol to report error    messages.  This will only be set in the CVS server parent process;    most other code is run via do_cvs_command, which forks off a child    process and packages up its stderr in the protocol.  */
