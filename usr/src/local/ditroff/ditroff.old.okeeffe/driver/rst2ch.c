@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rst2ch.c	(Berkeley)	1.1	85/02/04  *  * Font translation for Imagen-style fonts (RST format) to character format.  *  *	Use:  rst2ch fontfile  [ character_list ]  *  *		Reads "fontfile" from current directory (or if not found,  *	from BITDIR defined below) and converts it to a character font format  *	editable by real people, and convertable BACK to rst format by the  *	ch2rst program.  Output goes to stdout.  */
+comment|/*	rst2ch.c	(Berkeley)	1.2	86/03/04  *  * Font translation for Imagen-style fonts (RST format) to character format.  *  *	Use:  rst2ch fontfile  [ character_list ]  *  *		Reads "fontfile" from current directory (or if not found,  *	from BITDIR defined below) and converts it to a character font format  *	editable by real people, and convertable BACK to rst format by the  *	ch2rst program.  Output goes to stdout.  */
 end_comment
 
 begin_include
@@ -430,26 +430,6 @@ operator|=
 name|rd4
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fixtowdth
-operator|=
-name|FIXPIX
-operator|*
-name|p
-operator|.
-name|p_mag
-operator|/
-literal|1000.0
-operator|)
-operator|==
-literal|0.0
-condition|)
-name|fixtowdth
-operator|=
-name|FIXPIX
-expr_stmt|;
 name|p
 operator|.
 name|p_desiz
@@ -508,22 +488,31 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|fixtowdth
+operator|=
+name|FIXIN
+operator|*
 name|p
 operator|.
 name|p_res
-operator|!=
-name|RES
+operator|*
+name|p
+operator|.
+name|p_mag
+operator|/
+literal|1000.0
+operator|)
+operator|==
+literal|0.0
 condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rst2ch: Warning, wrong resolution (%d)\n"
-argument_list|,
+name|fixtowdth
+operator|=
+name|FIXIN
+operator|*
 name|p
 operator|.
 name|p_res
-argument_list|)
 expr_stmt|;
 name|i
 operator|=
