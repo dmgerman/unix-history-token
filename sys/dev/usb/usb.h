@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb/usb.h,v 1.60 2001/12/29 15:44:11 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.63 2002/02/25 00:46:37 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -55,6 +55,11 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -79,103 +84,12 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USB
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBDEV
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBHC
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_port.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_comment
-comment|/* these three defines are used by usbd to autoload the usb kld */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|USB_KLD
-value|"usb"
+name|USB_STACK_VERSION
+value|2
 end_define
-
-begin_comment
-comment|/* name of usb module */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_UHUB
-value|"usb/uhub"
-end_define
-
-begin_comment
-comment|/* root hub */
-end_comment
 
 begin_define
 define|#
@@ -2241,6 +2155,13 @@ define|#
 directive|define
 name|UICLASS_APPL_SPEC
 value|0xfe
+end_define
+
+begin_define
+define|#
+directive|define
+name|UISUBCLASS_FIRMWARE_DOWNLOAD
+value|1
 end_define
 
 begin_define
