@@ -162,26 +162,8 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * PC-98 machines wire the slave 8259A to pin 7 on the master PIC, and  * PC-AT machines wire the slave PIC to pin 2 on the master PIC.  */
+comment|/*  * PC-AT machines wire the slave PIC to pin 2 on the master PIC.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ICU_SLAVEID
-value|7
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -189,11 +171,6 @@ directive|define
 name|ICU_SLAVEID
 value|2
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Determine the base master and slave modes not including auto EOI support.  * All machines that FreeBSD supports use 8086 mode.  */
