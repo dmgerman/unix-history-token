@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socketvar.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socketvar.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,7 +107,7 @@ comment|/* max chars of mbufs to use */
 name|u_long
 name|sb_lowat
 decl_stmt|;
-comment|/* low water mark (not used yet) */
+comment|/* low water mark */
 name|struct
 name|mbuf
 modifier|*
@@ -137,7 +137,7 @@ define|#
 directive|define
 name|SB_MAX
 value|(64*1024)
-comment|/* max chars in sockbuf */
+comment|/* max chars in sockbuf (default) */
 define|#
 directive|define
 name|SB_LOCK
@@ -155,14 +155,14 @@ value|0x04
 comment|/* someone is waiting for data/space */
 define|#
 directive|define
-name|SB_SEL
+name|SB_COLL
 value|0x08
-comment|/* buffer is selected */
+comment|/* collision selecting */
 define|#
 directive|define
-name|SB_COLL
+name|SB_NOINTR
 value|0x10
-comment|/* collision selecting */
+comment|/* operations not interruptible */
 name|caddr_t
 name|so_tpcb
 decl_stmt|;
@@ -342,7 +342,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc || ((so)->so_state& SS_CANTRCVMORE) || \ 	(so)->so_qlen || (so)->so_error)
+value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_state& SS_CANTRCVMORE) || \ 	(so)->so_qlen || (so)->so_error)
 end_define
 
 begin_comment
@@ -357,7 +357,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(sbspace(&(so)->so_snd)> 0&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  ((so)->so_proto->pr_flags&PR_CONNREQUIRED)==0) || \      ((so)->so_state& SS_CANTSENDMORE) || \      (so)->so_error)
+value|(sbspace(&(so)->so_snd)>= (so)->so_snd.sb_lowat&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  ((so)->so_proto->pr_flags&PR_CONNREQUIRED)==0) || \      ((so)->so_state& SS_CANTSENDMORE) || \      (so)->so_error)
 end_define
 
 begin_comment
@@ -392,25 +392,8 @@ parameter_list|)
 value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= MCLBYTES; \ }
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TSLEEP_
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"tsleep.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* set lock on sockbuf sb */
+comment|/*  * Set lock on sockbuf sb; sleep if lock is already held.  * Unless SB_NOINTR is set on sockbuf, sleep is interruptible.  * Returns error without lock if sleep is interrupted.  */
 end_comment
 
 begin_define
@@ -420,7 +403,7 @@ name|sblock
 parameter_list|(
 name|sb
 parameter_list|)
-value|{ \ 	while ((sb)->sb_flags& SB_LOCK) { \ 		(sb)->sb_flags |= SB_WANT; \ 		tsleep((caddr_t)&(sb)->sb_flags, PZERO+1, SLP_SO_SBLOCK, 0); \ 	} \ 	(sb)->sb_flags |= SB_LOCK; \ }
+value|((sb)->sb_flags& SB_LOCK ? sb_lock(sb) : \ 		((sb)->sb_flags |= SB_LOCK), 0)
 end_define
 
 begin_comment
@@ -463,14 +446,54 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_decl_stmt
+name|u_long
+name|sb_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* to catch callers missing new second argument to sonewconn: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sonewconn
+parameter_list|(
+name|head
+parameter_list|,
+name|connstatus
+parameter_list|)
+value|sonewconn1((head), (connstatus))
+end_define
+
 begin_function_decl
 name|struct
 name|socket
 modifier|*
-name|sonewconn
+name|sonewconn1
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* strings for sleep message: */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|netio
+index|[]
+decl_stmt|,
+name|netcon
+index|[]
+decl_stmt|,
+name|netcls
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
