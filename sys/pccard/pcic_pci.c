@@ -861,6 +861,14 @@ literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+case|:
+name|desc
+operator|=
+literal|"Toshiba ToPIC100 PCI-CardBus Bridge"
+expr_stmt|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_RICOH_RL5C465
 case|:
 name|desc

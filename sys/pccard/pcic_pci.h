@@ -157,6 +157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+value|0x06171179ul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_RICOH_RL5C465
 value|0x04651180ul
 end_define
