@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	4.1 %G%"
+literal|"@(#)query.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,7 +344,8 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|printf
