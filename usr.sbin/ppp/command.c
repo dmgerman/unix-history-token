@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.199 1999/06/08 20:11:57 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.200 1999/06/09 08:47:32 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -683,57 +683,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|NEG_LQR
+name|NEG_DNS
 value|45
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PAP
+name|NEG_ENDDISC
 value|46
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PPPDDEFLATE
+name|NEG_LQR
 value|47
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PRED1
+name|NEG_PAP
 value|48
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_PROTOCOMP
+name|NEG_PPPDDEFLATE
 value|49
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_SHORTSEQ
+name|NEG_PRED1
 value|50
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_VJCOMP
+name|NEG_PROTOCOMP
 value|51
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEG_DNS
+name|NEG_SHORTSEQ
 value|52
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEG_VJCOMP
+value|53
 end_define
 
 begin_decl_stmt
@@ -752,7 +759,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/06/08 20:11:57 $"
+literal|"$Date: 1999/06/09 08:47:32 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -15224,6 +15231,38 @@ name|add
 expr_stmt|;
 break|break;
 case|case
+name|NEG_ENDDISC
+case|:
+name|arg
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
+operator|.
+name|cfg
+operator|.
+name|negenddisc
+operator|&=
+name|keep
+expr_stmt|;
+name|arg
+operator|->
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
+operator|.
+name|cfg
+operator|.
+name|negenddisc
+operator||=
+name|add
+expr_stmt|;
+break|break;
+case|case
 name|NEG_LQR
 case|:
 name|cx
@@ -15896,6 +15935,27 @@ name|void
 operator|*
 operator|)
 name|NEG_DNS
+block|}
+block|,
+block|{
+literal|"enddisc"
+block|,
+name|NULL
+block|,
+name|NegotiateSet
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"ENDDISC negotiation"
+block|,
+literal|"accept|deny|disable|enable"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|NEG_ENDDISC
 block|}
 block|,
 block|{
