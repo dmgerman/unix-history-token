@@ -16,7 +16,7 @@ comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translato
 end_comment
 
 begin_comment
-comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - AI_ADDRCONFIG support is supplied  * - EDNS0 support is not available due to resolver differences  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
+comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - AI_ADDRCONFIG support is supplied  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
 end_comment
 
 begin_include
@@ -114,6 +114,23 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -7761,6 +7778,38 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+operator|&&
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_USE_EDNS0
+operator|)
+operator|!=
+literal|0
+condition|)
+name|n
+operator|=
+name|res_opt
+argument_list|(
+name|n
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|anslen
 argument_list|)
 expr_stmt|;
 if|if

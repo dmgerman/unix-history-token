@@ -488,6 +488,21 @@ begin_comment
 comment|/* Don't query TLD names */
 end_comment
 
+begin_comment
+comment|/* KAME extensions: use higher bit to avoid conflict with ISC use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_USE_EDNS0
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* use EDNS0 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1084,6 +1099,13 @@ define|#
 directive|define
 name|res_close
 value|__res_close
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_opt
+value|__res_opt
 end_define
 
 begin_define
@@ -1899,6 +1921,25 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_opt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

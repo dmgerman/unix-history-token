@@ -976,6 +976,11 @@ init|=
 literal|35
 block|,
 comment|/* Naming Authority PoinTeR */
+name|ns_t_opt
+init|=
+literal|41
+block|,
+comment|/* OPT pseudo-RR, RFC2761 */
 comment|/* Query type values which do not appear in resource records. */
 name|ns_t_ixfr
 init|=
