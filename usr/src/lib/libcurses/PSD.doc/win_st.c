@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)win_st.c	5.1 (Berkeley) %G%";  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)win_st.c	6.1 (Berkeley) %G%";  */
 end_comment
 
 begin_define
@@ -32,6 +32,9 @@ decl_stmt|;
 name|short
 name|_flags
 decl_stmt|;
+name|short
+name|_ch_off
+decl_stmt|;
 name|bool
 name|_clear
 decl_stmt|;
@@ -54,6 +57,14 @@ name|short
 modifier|*
 name|_lastch
 decl_stmt|;
+name|struct
+name|_win_st
+modifier|*
+name|_nextp
+decl_stmt|,
+modifier|*
+name|_orig
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -61,29 +72,43 @@ end_struct
 begin_define
 define|#
 directive|define
-name|_SUBWIN
-value|01
-end_define
-
-begin_define
-define|#
-directive|define
 name|_ENDLINE
-value|02
+value|001
 end_define
 
 begin_define
 define|#
 directive|define
 name|_FULLWIN
-value|04
+value|002
 end_define
 
 begin_define
 define|#
 directive|define
 name|_SCROLLWIN
+value|004
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FLUSH
 value|010
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FULLLINE
+value|020
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IDLINE
+value|040
 end_define
 
 begin_define
@@ -91,6 +116,13 @@ define|#
 directive|define
 name|_STANDOUT
 value|0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NOCHANGE
+value|-1
 end_define
 
 end_unit
