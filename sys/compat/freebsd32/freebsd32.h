@@ -196,12 +196,16 @@ end_struct
 begin_define
 define|#
 directive|define
-name|FREEBSD32_MNAMELEN
+name|FREEBSD4_MNAMELEN
 value|(88 - 2 * sizeof(int32_t))
 end_define
 
 begin_comment
 comment|/* size of on/from name bufs */
+end_comment
+
+begin_comment
+comment|/* 4.x version */
 end_comment
 
 begin_struct
@@ -259,7 +263,7 @@ decl_stmt|;
 name|char
 name|f_mntonname
 index|[
-name|FREEBSD32_MNAMELEN
+name|FREEBSD4_MNAMELEN
 index|]
 decl_stmt|;
 name|int32_t
@@ -274,7 +278,7 @@ decl_stmt|;
 name|char
 name|f_mntfromname
 index|[
-name|FREEBSD32_MNAMELEN
+name|FREEBSD4_MNAMELEN
 index|]
 decl_stmt|;
 name|int16_t
