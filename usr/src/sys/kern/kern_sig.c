@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.2	82/07/24	*/
+comment|/*	kern_sig.c	5.3	82/08/10	*/
 end_comment
 
 begin_include
@@ -2544,6 +2544,8 @@ block|{
 name|itrunc
 argument_list|(
 name|ip
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|u
