@@ -3252,7 +3252,7 @@ name|defined
 argument_list|(
 name|d_ino
 argument_list|)
-comment|/* d_ino is a sunos4 #define for d_fileno */
+comment|/* d_ino is a sunos4 #define	for d_fileno */
 comment|/* 		 * The sun directory library doesn't check for a 0 inode 		 * (0-inode slots just take up space), so we have to do 		 * it ourselves. 		 */
 if|if
 condition|(
