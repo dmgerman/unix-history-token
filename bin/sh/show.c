@@ -75,6 +75,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|DEBUG
+operator|==
+literal|2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
