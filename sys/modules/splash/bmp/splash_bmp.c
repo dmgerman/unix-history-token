@@ -45,6 +45,12 @@ directive|include
 file|<dev/fb/splashreg.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -56,6 +62,11 @@ include|#
 directive|include
 file|<isa/isareg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -213,6 +224,18 @@ name|modes
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* 			 * As 640x400 doesn't generally look great, 			 * it's least preferred here. 			 */
+name|M_PC98_PEGC640x400
+block|,
+name|M_PC98_PEGC640x480
+block|,
+name|M_PC98_EGC640x400
+block|,
+else|#
+directive|else
 name|M_VESA_CG640x480
 block|,
 name|M_VESA_CG800x600
@@ -224,6 +247,8 @@ block|,
 comment|/* 			 * As 320x200 doesn't generally look great, 			 * it's least preferred here. 			 */
 name|M_VGA_CG320
 block|,
+endif|#
+directive|endif
 operator|-
 literal|1
 block|,     }
@@ -1102,6 +1127,14 @@ decl_stmt|;
 name|int
 name|bank
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|u_char
+name|prev_val
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|BMP_INFO
 typedef|;
@@ -1233,6 +1266,158 @@ operator|->
 name|sdepth
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+case|case
+literal|4
+case|:
+name|x
+operator|+=
+operator|(
+name|info
+operator|->
+name|swidth
+operator|-
+name|info
+operator|->
+name|width
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+name|sofs
+operator|+=
+operator|(
+name|x
+operator|>>
+literal|3
+operator|)
+expr_stmt|;
+name|bofs
+operator|=
+name|x
+operator|&
+literal|0x7
+expr_stmt|;
+comment|/* offset within byte */
+name|outb
+argument_list|(
+literal|0x7c
+argument_list|,
+literal|0x80
+operator||
+literal|0x40
+argument_list|)
+expr_stmt|;
+comment|/* GRCG on& RMW mode */
+if|if
+condition|(
+name|val
+operator|!=
+name|info
+operator|->
+name|prev_val
+condition|)
+block|{
+name|outb
+argument_list|(
+literal|0x7e
+argument_list|,
+operator|(
+name|val
+operator|&
+literal|1
+operator|)
+condition|?
+literal|0xff
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* tile B */
+name|outb
+argument_list|(
+literal|0x7e
+argument_list|,
+operator|(
+name|val
+operator|&
+literal|2
+operator|)
+condition|?
+literal|0xff
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* tile R */
+name|outb
+argument_list|(
+literal|0x7e
+argument_list|,
+operator|(
+name|val
+operator|&
+literal|4
+operator|)
+condition|?
+literal|0xff
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* tile G */
+name|outb
+argument_list|(
+literal|0x7e
+argument_list|,
+operator|(
+name|val
+operator|&
+literal|8
+operator|)
+condition|?
+literal|0xff
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* tile I */
+name|info
+operator|->
+name|prev_val
+operator|=
+name|val
+expr_stmt|;
+block|}
+operator|*
+operator|(
+name|info
+operator|->
+name|vidmem
+operator|+
+name|sofs
+operator|)
+operator|=
+operator|(
+literal|0x80
+operator|>>
+name|bofs
+operator|)
+expr_stmt|;
+comment|/* write new bit */
+name|outb
+argument_list|(
+literal|0x7c
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* GRCG off */
+break|break;
+else|#
+directive|else
 case|case
 literal|4
 case|:
@@ -1357,6 +1542,8 @@ literal|0xff
 expr_stmt|;
 comment|/* read-modify-write */
 break|break;
+endif|#
+directive|endif
 case|case
 literal|8
 case|:
@@ -2826,6 +3013,17 @@ name|bmp_info
 operator|.
 name|data
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|bmp_info
+operator|.
+name|prev_val
+operator|=
+literal|255
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* set the palette for our image */
 operator|(
 operator|*
@@ -2851,6 +3049,9 @@ operator|.
 name|palette
 operator|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* XXX: this is ugly, but necessary for EGA/VGA 1bpp/4bpp modes */
 if|if
 condition|(
@@ -2967,6 +3168,8 @@ argument_list|)
 expr_stmt|;
 comment|/* unmask plane #0 */
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|line
