@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.77
+literal|3.78
 operator|%
 name|G
 operator|%
@@ -1088,6 +1088,10 @@ operator|&&
 name|anglecnt
 operator|<=
 literal|0
+operator|&&
+name|state
+operator|!=
+name|QST
 condition|)
 break|break;
 name|newstate
