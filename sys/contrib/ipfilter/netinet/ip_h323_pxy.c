@@ -328,6 +328,8 @@ begin_block
 block|{
 name|u_32_t
 name|addr
+decl_stmt|,
+name|netaddr
 decl_stmt|;
 name|u_char
 modifier|*
@@ -363,6 +365,13 @@ name|u_char
 operator|*
 operator|)
 name|data
+expr_stmt|;
+name|netaddr
+operator|=
+name|ntohl
+argument_list|(
+name|ipaddr
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -419,7 +428,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|ipaddr
+name|netaddr
 operator|==
 name|addr
 condition|)

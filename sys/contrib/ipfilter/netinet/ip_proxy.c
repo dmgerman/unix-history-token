@@ -469,7 +469,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.9.2.22 2002/04/26 10:23:17 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 2.9.2.23 2002/06/04 14:45:42 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,7 +793,7 @@ block|,
 operator|(
 name|char
 operator|)
-name|IPPROTO_TCP
+name|IPPROTO_UDP
 block|,
 literal|0
 block|,
@@ -2382,6 +2382,9 @@ name|tcphdr_t
 modifier|*
 name|tcp
 decl_stmt|;
+name|short
+name|inc2
+decl_stmt|;
 name|tcp
 operator|=
 operator|(
@@ -2421,6 +2424,17 @@ name|th_off
 operator|<<
 literal|2
 operator|)
+expr_stmt|;
+name|inc2
+operator|=
+name|inc
+expr_stmt|;
+name|inc
+operator|=
+operator|(
+name|int
+operator|)
+name|inc2
 expr_stmt|;
 if|if
 condition|(

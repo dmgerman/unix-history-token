@@ -695,7 +695,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 2.37.2.67 2002/04/27 15:23:39 darrenr Exp $"
+literal|"@(#)$Id: ip_nat.c,v 2.37.2.68 2002/06/04 14:46:08 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2718,7 +2718,26 @@ argument_list|,
 name|IPN_CMPSIZ
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|->
+name|in_redir
+operator|==
+name|NAT_REDIRECT
+operator|&&
+name|n
+operator|->
+name|in_pnext
+operator|!=
+name|nat
+operator|->
+name|in_pnext
+condition|)
+continue|continue;
 break|break;
+block|}
 block|}
 switch|switch
 condition|(
