@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: boot.c,v 1.5 1997/10/17 11:19:23 ws Exp $"
+literal|"$NetBSD: boot.c,v 1.9 2003/07/24 19:25:46 ws Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1019,15 +1019,30 @@ return|return
 name|FSFATAL
 return|;
 block|}
+name|backup
+index|[
+literal|65
+index|]
+operator|=
+name|block
+index|[
+literal|65
+index|]
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|memcmp
 argument_list|(
 name|block
+operator|+
+literal|11
 argument_list|,
 name|backup
+operator|+
+literal|11
 argument_list|,
-name|DOSBOOTBLOCKSIZE
+literal|79
 argument_list|)
 condition|)
 block|{
@@ -1037,6 +1052,16 @@ argument_list|(
 literal|"backup doesn't compare to primary bootblock"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|alwaysno
+condition|)
+name|pfatal
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+else|else
 return|return
 name|FSFATAL
 return|;
@@ -1612,7 +1637,7 @@ return|return
 name|FSFATAL
 return|;
 block|}
-comment|/* 	 * Technically, we should return FSBOOTMOD here. 	 * 	 * However, since Win95 OSR2 (the first M$ OS that has 	 * support for FAT32) doesn't maintain the FSINFO block 	 * correctly, it has to be fixed pretty often. 	 * 	 * Therefor, we handle the FSINFO block only informally, 	 * fixing it if neccessary, but otherwise ignoring the 	 * fact that it was incorrect. 	 */
+comment|/* 	 * Technically, we should return FSBOOTMOD here. 	 * 	 * However, since Win95 OSR2 (the first M$ OS that has 	 * support for FAT32) doesn't maintain the FSINFO block 	 * correctly, it has to be fixed pretty often. 	 * 	 * Therefor, we handle the FSINFO block only informally, 	 * fixing it if necessary, but otherwise ignoring the 	 * fact that it was incorrect. 	 */
 return|return
 literal|0
 return|;
