@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.28 (Berkeley) %G%"
+literal|"@(#)print.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,6 +1446,31 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+condition|)
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|name
+argument_list|,
+name|MAXPATHLEN
+argument_list|,
+literal|"%s"
+argument_list|,
+name|p
+operator|->
+name|fts_name
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
