@@ -93,13 +93,6 @@ define|\
 value|{									  \ 	q_util.q = sum;							  \ 	l_util.l = q_util.s[0] + q_util.s[1] + q_util.s[2] + q_util.s[3]; \ 	sum = l_util.s[0] + l_util.s[1];				  \ 	ADDCARRY(sum);							  \     }
 end_define
 
-begin_define
-define|#
-directive|define
-name|INVERT
-value|sum == 0xffff ? sum : ~sum& 0xffff
-end_define
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -909,7 +902,10 @@ name|REDUCE16
 expr_stmt|;
 return|return
 operator|(
-name|INVERT
+operator|~
+name|sum
+operator|&
+literal|0xffff
 operator|)
 return|;
 block|}

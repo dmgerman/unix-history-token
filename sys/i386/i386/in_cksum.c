@@ -72,13 +72,6 @@ name|REDUCE
 value|{sum = (sum& 0xffff) + (sum>> 16); ADDCARRY(sum);}
 end_define
 
-begin_define
-define|#
-directive|define
-name|INVERT
-value|sum == 0xffff ? sum : ~sum& 0xffff
-end_define
-
 begin_comment
 comment|/*  * Thanks to gcc we don't have to guess  * which registers contain sum& w.  */
 end_comment
@@ -881,7 +874,10 @@ name|REDUCE
 expr_stmt|;
 return|return
 operator|(
-name|INVERT
+operator|~
+name|sum
+operator|&
+literal|0xffff
 operator|)
 return|;
 block|}
