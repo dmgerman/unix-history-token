@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)write.c	4.16 (Berkeley) %G%"
+literal|"@(#)write.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,28 +118,12 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|STRCPY
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-define|\
-value|{ (void)strncpy(s1, s2, sizeof(s1)); s1[sizeof(s1) - 1] = '\0'; }
-end_define
-
 begin_decl_stmt
+specifier|extern
 name|int
-name|uid
+name|errno
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* myuid */
-end_comment
 
 begin_function
 name|main
@@ -157,30 +141,28 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|char
-name|tty
-index|[
-name|MAXPATHLEN
-index|]
+name|time_t
+name|atime
+decl_stmt|;
+name|uid_t
+name|myuid
 decl_stmt|;
 name|int
 name|msgsok
 decl_stmt|,
 name|myttyfd
 decl_stmt|;
-name|time_t
-name|atime
-decl_stmt|;
 name|char
+name|tty
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
 modifier|*
 name|mytty
 decl_stmt|,
@@ -196,7 +178,7 @@ name|void
 name|done
 parameter_list|()
 function_decl|;
-comment|/* check that sender has write enabled. */
+comment|/* check that sender has write enabled */
 if|if
 condition|(
 name|isatty
@@ -356,7 +338,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|uid
+name|myuid
 operator|=
 name|getuid
 argument_list|()
@@ -380,6 +362,8 @@ argument_list|,
 name|tty
 argument_list|,
 name|mytty
+argument_list|,
+name|myuid
 argument_list|)
 expr_stmt|;
 name|do_write
@@ -387,6 +371,8 @@ argument_list|(
 name|tty
 argument_list|,
 name|mytty
+argument_list|,
+name|myuid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -482,7 +468,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|uid
+name|myuid
 operator|&&
 operator|!
 name|msgsok
@@ -522,6 +508,8 @@ literal|2
 index|]
 argument_list|,
 name|mytty
+argument_list|,
+name|myuid
 argument_list|)
 expr_stmt|;
 break|break;
@@ -707,6 +695,8 @@ argument_list|,
 argument|tty
 argument_list|,
 argument|mytty
+argument_list|,
+argument|myuid
 argument_list|)
 end_macro
 
@@ -720,6 +710,12 @@ name|tty
 decl_stmt|,
 modifier|*
 name|mytty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uid_t
+name|myuid
 decl_stmt|;
 end_decl_stmt
 
@@ -842,14 +838,26 @@ block|{
 operator|++
 name|nloggedttys
 expr_stmt|;
-name|STRCPY
+operator|(
+name|void
+operator|)
+name|strncpy
 argument_list|(
 name|atty
 argument_list|,
 name|u
 operator|.
 name|ut_line
+argument_list|,
+name|UT_LINESIZE
 argument_list|)
+expr_stmt|;
+name|atty
+index|[
+name|UT_LINESIZE
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -870,7 +878,7 @@ continue|continue;
 comment|/* bad term? skip */
 if|if
 condition|(
-name|uid
+name|myuid
 operator|&&
 operator|!
 name|msgsok
@@ -1171,6 +1179,8 @@ argument_list|(
 argument|tty
 argument_list|,
 argument|mytty
+argument_list|,
+argument|myuid
 argument_list|)
 end_macro
 
@@ -1181,6 +1191,12 @@ name|tty
 decl_stmt|,
 modifier|*
 name|mytty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uid_t
+name|myuid
 decl_stmt|;
 end_decl_stmt
 
@@ -1277,7 +1293,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* catch ^C. */
 operator|(
 name|void
 operator|)
@@ -1288,7 +1303,17 @@ argument_list|,
 name|done
 argument_list|)
 expr_stmt|;
-comment|/* print greeting. */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|done
+argument_list|)
+expr_stmt|;
+comment|/* print greeting */
 if|if
 condition|(
 operator|(
@@ -1306,8 +1331,7 @@ name|pwd
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
-argument_list|()
+name|myuid
 argument_list|)
 condition|)
 name|login
@@ -1405,7 +1429,7 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|massage_fputs
+name|wr_fputs
 argument_list|(
 name|line
 argument_list|)
@@ -1439,11 +1463,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * massage_fputs - like fputs(), but makes control characters visible and  *     turns \n into \r\n  */
+comment|/*  * wr_fputs - like fputs(), but makes control characters visible and  *     turns \n into \r\n  */
 end_comment
 
 begin_expr_stmt
-name|massage_fputs
+name|wr_fputs
 argument_list|(
 name|s
 argument_list|)
