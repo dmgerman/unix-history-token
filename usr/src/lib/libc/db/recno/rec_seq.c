@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_seq.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_seq.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +273,12 @@ return|;
 block|}
 if|if
 condition|(
+name|t
+operator|->
+name|bt_nrecs
+operator|==
+literal|0
+operator|||
 name|nrec
 operator|>
 name|t
@@ -304,6 +310,12 @@ operator|)
 return|;
 if|if
 condition|(
+name|t
+operator|->
+name|bt_nrecs
+operator|==
+literal|0
+operator|||
 name|nrec
 operator|>
 name|t
@@ -358,6 +370,30 @@ operator|==
 name|RET_SUCCESS
 condition|)
 block|{
+name|key
+operator|->
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|recno_t
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|nrec
+argument_list|,
+name|key
+operator|->
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|recno_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|t
 operator|->
 name|bt_rcursor
