@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: proc.h,v 1.3 1998/07/15 20:16:27 dfr Exp $ */
+comment|/* $Id: proc.h,v 1.4 1998/11/15 18:25:16 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -60,6 +60,11 @@ name|u_int64_t
 name|md_hae
 decl_stmt|;
 comment|/* user HAE register value */
+name|void
+modifier|*
+name|osf_sigtramp
+decl_stmt|;
+comment|/* user-level signal trampoline */
 block|}
 struct|;
 end_struct
