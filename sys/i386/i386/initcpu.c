@@ -274,6 +274,27 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
+begin_decl_stmt
+name|u_int
+name|cpu_fxsr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SSE enabled */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|I486_CPU
 end_ifdef
 
