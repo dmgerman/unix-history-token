@@ -2275,6 +2275,15 @@ name|jp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* No command inside the backqotes, so do nothing. */
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|n
