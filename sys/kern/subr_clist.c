@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.13 1995/09/09 18:10:10 davidg Exp $  */
+comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.14 1995/10/25 17:59:58 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1423,11 +1423,29 @@ name|c_cbreserved
 operator|<
 literal|1
 condition|)
-name|panic
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
 argument_list|(
 literal|"putc to a clist with no reserved cblocks"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|cblockp
 operator|=
 name|cblock_alloc
@@ -1753,11 +1771,28 @@ name|c_cbreserved
 operator|<
 literal|1
 condition|)
-name|panic
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
 argument_list|(
 literal|"b_to_q to a clist with no reserved cblocks"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|amount
+operator|)
+return|;
+block|}
 name|cblockp
 operator|=
 name|cblock_alloc
