@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.21 1994/08/29 21:25:11 ache Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.22 1994/08/31 06:17:43 davidg Exp $  */
 end_comment
 
 begin_define
@@ -229,7 +229,9 @@ begin_define
 define|#
 directive|define
 name|Debugger
-parameter_list|()
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -267,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|CDOUTSTANDING
-value|2
+value|1
 end_define
 
 begin_define
@@ -375,6 +377,10 @@ modifier|*
 name|sc_link
 decl_stmt|;
 comment|/* address of scsi low level switch */
+name|u_int32
+name|ad_info
+decl_stmt|;
+comment|/* info about the adapter */
 name|u_int32
 name|cmdscount
 decl_stmt|;
@@ -753,7 +759,94 @@ name|sc_link
 operator|=
 name|sc_link
 expr_stmt|;
-comment|/* only allow 1 outstanding command on tapes */
+name|sc_link
+operator|->
+name|device
+operator|=
+operator|&
+name|cd_switch
+expr_stmt|;
+name|sc_link
+operator|->
+name|dev_unit
+operator|=
+name|unit
+expr_stmt|;
+if|if
+condition|(
+name|cd
+operator|->
+name|sc_link
+operator|->
+name|adapter
+operator|->
+name|adapter_info
+condition|)
+block|{
+name|cd
+operator|->
+name|ad_info
+operator|=
+operator|(
+operator|(
+operator|*
+operator|(
+name|cd
+operator|->
+name|sc_link
+operator|->
+name|adapter
+operator|->
+name|adapter_info
+operator|)
+operator|)
+operator|(
+name|sc_link
+operator|->
+name|adapter_unit
+operator|)
+operator|)
+expr_stmt|;
+name|cd
+operator|->
+name|cmdscount
+operator|=
+name|cd
+operator|->
+name|ad_info
+operator|&
+name|AD_INF_MAX_CMDS
+expr_stmt|;
+if|if
+condition|(
+name|cd
+operator|->
+name|cmdscount
+operator|>
+name|CDOUTSTANDING
+condition|)
+name|cd
+operator|->
+name|cmdscount
+operator|=
+name|CDOUTSTANDING
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cd
+operator|->
+name|ad_info
+operator|=
+literal|1
+expr_stmt|;
+name|cd
+operator|->
+name|cmdscount
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|sc_link
 operator|->
 name|opennings
@@ -761,8 +854,6 @@ operator|=
 name|cd
 operator|->
 name|cmdscount
-operator|=
-name|CDOUTSTANDING
 expr_stmt|;
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
 name|cd_get_parms
