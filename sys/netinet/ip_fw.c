@@ -10019,12 +10019,6 @@ name|ip_fw_ctl_ptr
 operator|=
 name|NULL
 expr_stmt|;
-block|{
-name|struct
-name|ip_fw
-modifier|*
-name|fcp
-decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -10044,7 +10038,6 @@ argument_list|(
 name|fcp
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
