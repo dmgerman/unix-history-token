@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.6 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	2.7 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -310,18 +310,7 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|mailname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Name of system mailbox */
-end_comment
-
-begin_decl_stmt
-name|char
-name|mailspace
 index|[
 name|PATHSIZE
 index|]
@@ -329,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Space norm alloc'd for name */
+comment|/* Name of system mailbox */
 end_comment
 
 begin_decl_stmt
