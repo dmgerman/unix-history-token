@@ -2744,17 +2744,7 @@ argument_list|)
 operator|&
 literal|0x10
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Keyboard: %s\n"
-argument_list|,
-name|i
-condition|?
-literal|"yes"
-else|:
-literal|"no"
-argument_list|)
-expr_stmt|;
+comment|/* printf("Keyboard: %s\n", i ? "yes" : "no"); XXX GCC31 size */
 if|if
 condition|(
 operator|!
