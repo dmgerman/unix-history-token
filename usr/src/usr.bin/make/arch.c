@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arch.c	5.3 (Berkeley) %G%"
+literal|"@(#)arch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +31,6 @@ end_comment
 begin_comment
 comment|/*-  * arch.c --  *	Functions to manipulate libraries, archives and their members.  *  *	Once again, cacheing/hashing comes into play in the manipulation  * of archives. The first time an archive is referenced, all of its members'  * headers are read and hashed and the archive closed again. All hashed  * archives are kept on a list which is searched each time an archive member  * is referenced.  *  * The interface to this module is:  *	Arch_ParseArchive   	Given an archive specification, return a list  *	    	  	    	of GNode's, one for each member in the spec.  *	    	  	    	FAILURE is returned if the specification is  *	    	  	    	invalid for some reason.  *  *	Arch_Touch	    	Alter the modification time of the archive  *	    	  	    	member described by the given node to be  *	    	  	    	the current time.  *  *	Arch_TouchLib	    	Update the modification time of the library  *	    	  	    	described by the given node. This is special  *	    	  	    	because it also updates the modification time  *	    	  	    	of the library's table of contents.  *  *	Arch_MTime	    	Find the modification time of a member of  *	    	  	    	an archive *in the archive*. The time is also  *	    	  	    	placed in the member's GNode. Returns the  *	    	  	    	modification time.  *  *	Arch_MemTime	    	Find the modification time of a member of  *	    	  	    	an archive. Called when the member doesn't  *	    	  	    	already exist. Looks in the archive for the  *	    	  	    	modification time. Returns the modification  *	    	  	    	time.  *  *	Arch_FindLib	    	Search for a library along a path. The  *	    	  	    	library name in the GNode should be in  *	    	  	    	-l<name> format.  *  *	Arch_LibOODate	    	Special function to decide if a library node  *	    	  	    	is out-of-date.  *  *	Arch_Init 	    	Initialize this module.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -66,6 +60,18 @@ begin_include
 include|#
 directive|include
 file|<ar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ranlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -2190,7 +2196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_TouchLib --  *	Given a node which represents a library, touch the thing, making  *	sure that the table of contents also is touched.  *  * Results:  *	None.  *  * Side Effects:  *	Both the modification time of the library and of the LIBTOC  *	member are set to 'now'.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_TouchLib --  *	Given a node which represents a library, touch the thing, making  *	sure that the table of contents also is touched.  *  * Results:  *	None.  *  * Side Effects:  *	Both the modification time of the library and of the RANLIBMAG  *	member are set to 'now'.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2231,7 +2237,7 @@ name|gn
 operator|->
 name|path
 argument_list|,
-name|LIBTOC
+name|RANLIBMAG
 argument_list|,
 operator|&
 name|arh
@@ -2736,7 +2742,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *	    	  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *	    	  make began (i.e. it's been modified in the course  *	    	  of the make, probably by archiving).  *	    Its modification time doesn't agree with the modification  *	    	  time of its LIBTOC member (i.e. its table of contents  *	    	  is out-of-date).  *  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *	    	  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *	    	  make began (i.e. it's been modified in the course  *	    	  of the make, probably by archiving).  *	    Its modification time doesn't agree with the modification  *	    	  time of its RANLIBMAG member (i.e. its table of contents  *	    	  is out-of-date).  *  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2823,7 +2829,7 @@ name|gn
 operator|->
 name|path
 argument_list|,
-name|LIBTOC
+name|RANLIBMAG
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2872,7 +2878,7 @@ name|printf
 argument_list|(
 literal|"%s modified %s..."
 argument_list|,
-name|LIBTOC
+name|RANLIBMAG
 argument_list|,
 name|Targ_FmtTime
 argument_list|(

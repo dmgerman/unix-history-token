@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)config.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)config.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -101,31 +101,8 @@ comment|/*#define DEF_OLD_VARS*/
 end_comment
 
 begin_comment
-comment|/*  * NEED_FD_SET  *	Define this if your system doesn't define the fd_set type for select  *	masks in<sys/types.h>  *  * FD_SETSIZE  *	Define this to be the maximum number of files a process can have  *	open at once. It defaults to 256.  *  * NO_WAIT3  *	Define this if your system doesn't support the non-blocking wait3  *	system call of BSD UNIX. This is not implemented yet.  *  * NO_VFORK  *	Define this if your system doesn't support (or you shouldn't use)  *	the vfork system call found in BSD UNIX.  *  * LIBTOC  *	This is the name by which the table of contents in a ranlib'ed  *	library is known. Some systems have changed it from __.SYMDEF,  *	for whatever reason.  *  * LIBSUFF  *	Is the suffix used to denote libraries and is used by the Suff module  *	to find the search path on which to seek any -l<xx> targets.  *  * RECHECK  *	If defined, Make_Update will check a target for its current  *	modification time after it has been re-made, setting it to the  *	starting time of the make only if the target still doesn't exist.  *	Unfortunately, under NFS the modification time often doesn't  *	get updated in time, so a target will appear to not have been  *	re-made, causing later targets to appear up-to-date. On systems  *	that don't have this problem, you should defined this. Under  *	NFS you probably should not, unless you aren't exporting jobs.  *  * POSIX  *	If the POSIX standard for Make is to be followed. There are  *	several areas that I dislike, hence this constant.  */
+comment|/*  * LIBSUFF  *	Is the suffix used to denote libraries and is used by the Suff module  *	to find the search path on which to seek any -l<xx> targets.  *  * RECHECK  *	If defined, Make_Update will check a target for its current  *	modification time after it has been re-made, setting it to the  *	starting time of the make only if the target still doesn't exist.  *	Unfortunately, under NFS the modification time often doesn't  *	get updated in time, so a target will appear to not have been  *	re-made, causing later targets to appear up-to-date. On systems  *	that don't have this problem, you should defined this. Under  *	NFS you probably should not, unless you aren't exporting jobs.  *  * POSIX  *	If the POSIX standard for Make is to be followed. There are  *	several areas that I dislike, hence this constant.  */
 end_comment
-
-begin_comment
-comment|/*#define NEED_FD_SET*/
-end_comment
-
-begin_comment
-comment|/*#define FD_SETSIZE 32*/
-end_comment
-
-begin_comment
-comment|/*#define NO_WAIT3*/
-end_comment
-
-begin_comment
-comment|/*#define NO_VFORK*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LIBTOC
-value|"__.SYMDEF"
-end_define
 
 begin_define
 define|#

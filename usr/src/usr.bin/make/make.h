@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)make.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)make.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -54,50 +54,6 @@ include|#
 directive|include
 file|"config.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_VFORK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|vfork
-value|fork
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<vfork.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_VFORK */
-end_comment
 
 begin_comment
 comment|/*-  * The structure for an individual graph node. Each node has several  * pieces of data associated with it.  *	1) the name of the target it describes  *	2) the location of the target file in the file system.  *	3) the type of operator used to define its sources (qv. parse.c)  *	4) whether it is involved in this invocation of make  *	5) whether the target has been remade  *	6) whether any of its children has been remade  *	7) the number of its children that are, as yet, unmade  *	8) its modification time  *	9) the modification time of its youngest child (qv. make.c)  *	10) a list of nodes for which this is a source  *	11) a list of nodes on which this depends  *	12) a list of nodes that depend on this, as gleaned from the  *	    transformation rules.  *	13) a list of nodes of the same name created by the :: operator  *	14) a list of nodes that must be made (if they're made) before  *	    this node can be, but that do no enter into the datedness of  *	    this node.  *	15) a list of nodes that must be made (if they're made) after  *	    this node is, but that do not depend on this node, in the  *	    normal sense.  *	16) a Lst of ``local'' variables that are specific to this target  *	   and this target only (qv. var.c [$@ $< $?, etc.])  *	17) a Lst of strings that are commands to be given to a shell  *	   to create this target.   */
