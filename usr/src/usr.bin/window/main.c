@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.5 83/07/20"
+literal|"@(#)main.c	1.6 83/07/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +91,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|WCols
+name|wwncol
 argument_list|,
 literal|0
 argument_list|,
@@ -131,7 +131,7 @@ literal|0
 init|;
 name|n
 operator|<
-name|WCols
+name|wwncol
 condition|;
 name|n
 operator|++
