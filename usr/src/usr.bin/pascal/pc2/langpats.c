@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.1	(Berkeley)	%G%"
+literal|"@(#)langpats.c	2.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,43 +221,55 @@ comment|/*  * General Pascal library routines  */
 block|{
 literal|"_ACTFILE\n"
 block|,
-literal|"	movl	sp@,a0\n\ 	movl	a0@(12),d0\n"
+literal|"	movl	sp@+,a0\n\ 	movl	a0@(12),d0\n"
 block|}
 block|,
 block|{
 literal|"_ADDT\n"
 block|,
-literal|"	movl	a2,sp@-\n\ 	movl	sp@(8),a2\n\ 	movl	sp@(12),a1\n\ 	movl	sp@(4),a0\n\ 	movl	sp@(16),d1\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a2@+,d0\n\ 	orl	a1@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@,d0\n"
+literal|"	movl	sp@+,a0\n\ 	movl	sp@+,d0\n\ 	movl	sp@+,a1\n\ 	movl	sp@+,d1\n\ 	movl	a0,sp@-\n\ 	movl	a2,sp@-\n\ 	movl	d0,a2\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a2@+,d0\n\ 	orl	a1@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@+,d0\n"
 block|}
 block|,
 block|{
 literal|"_SUBT\n"
 block|,
-literal|"	movl	a2,sp@-\n\ 	movl	sp@(8),a2\n\ 	movl	sp@(12),a1\n\ 	movl	sp@(4),a0\n\ 	movl	sp@(16),d1\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a1@+,d0\n\ 	notl	d0\n\ 	andl	a2@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@,d0\n"
+literal|"	movl	sp@+,a0\n\ 	movl	sp@+,d0\n\ 	movl	sp@+,a1\n\ 	movl	sp@+,d1\n\ 	movl	a0,sp@-\n\ 	movl	a2,sp@-\n\ 	movl	d0,a2\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a1@+,d0\n\ 	notl	d0\n\ 	andl	a2@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@+,d0\n"
 block|}
 block|,
 block|{
 literal|"_MULT\n"
 block|,
-literal|"	movl	a2,sp@-\n\ 	movl	sp@(8),a2\n\ 	movl	sp@(12),a1\n\ 	movl	sp@(4),a0\n\ 	movl	sp@(16),d1\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a2@+,d0\n\ 	andl	a1@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@,d0\n"
+literal|"	movl	sp@+,a0\n\ 	movl	sp@+,d0\n\ 	movl	sp@+,a1\n\ 	movl	sp@+,d1\n\ 	movl	a0,sp@-\n\ 	movl	a2,sp@-\n\ 	movl	d0,a2\n\ 	subql	#1,d1\n\ 1:\n\ 	movl	a2@+,d0\n\ 	andl	a1@+,d0\n\ 	movl	d0,a0@+\n\ 	dbra	d1,1b\n\ 	movl	sp@+,a2\n\ 	movl	sp@+,d0\n"
 block|}
 block|,
 block|{
 literal|"_IN\n"
 block|,
-literal|"	movl	sp@,d1\n\ 	subl	sp@(4),d1\n\ 	cmpl	sp@(8),d1\n\ 	jhi	1f\n\ 	movl	sp@(12),a0\n\ 	movl	d1,d0\n\ 	lsrl	#3,d0\n\ 	btst	d1,a0@(0,d0:l)\n\ 	jeq	1f\n\ 	moveq	#1,d0\n\ 	jra	2f\n\ 1:\n\ 	moveq	#0,d0\n\ 2:\n"
+literal|"	movl	sp@+,d0\n\ 	movl	sp@+,a0\n\ 	movl	sp@+,d1\n\ 	movl	sp@+,a1\n\ 	subl	a0,d0\n\ 	cmpl	d1,d0\n\ 	jhi	1f\n\ 	movl	d0,d1\n\ 	lsrl	#3,d1\n\ 	btst	d0,a1@(0,d1:l)\n\ 	jeq	1f\n\ 	moveq	#1,d0\n\ 	jra	2f\n\ 1:\n\ 	moveq	#0,d0\n\ 2:\n"
 block|}
 block|,
 block|{
 literal|"_RANG4\n"
 block|,
-literal|"	movl	sp@,d0\n\ 	cmpl	sp@(4),d0\n\ 	jlt	1f\n\ 	cmpl	sp@(8),d0\n\ 	jle	2f\n\ 1:\n\ 	pea	_ERANG\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 2:\n"
+literal|"	movl	sp@+,d0\n\ 	movl	sp@+,a0\n\ 	movl	sp@+,a1\n\ 	cmpl	a0,d0\n\ 	jlt	1f\n\ 	cmpl	a1,d0\n\ 	jle	2f\n\ 1:\n\ 	pea	_ERANG\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 2:\n"
 block|}
 block|,
 block|{
 literal|"_RSNG4\n"
 block|,
-literal|"	movl	sp@,d0\n\ 	cmpl	sp@(4),d0\n\ 	jls	1f\n\ 	pea	_ERANG\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 1:\n"
+literal|"	movl	sp@+,a0\n\ 	movl	sp@+,a1\n\ 	cmpl	a1,a0\n\ 	jls	1f\n\ 	pea	_ERANG\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|"_SUBSC\n"
+block|,
+literal|"	movl	sp@+,d0\n\ 	movl	sp@+,a0\n\ 	movl	sp@+,a1\n\ 	cmpl	a0,d0\n\ 	jlt	1f\n\ 	cmpl	a1,d0\n\ 	jle	2f\n\ 1:\n\ 	pea	_ESUBSC\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 2:\n"
+block|}
+block|,
+block|{
+literal|"_SUBSCZ\n"
+block|,
+literal|"	movl	sp@+,a0\n\ 	movl	sp@+,a1\n\ 	cmpl	a1,a0\n\ 	jls	1f\n\ 	pea	_ESUBSC\n\ 	jbsr	_ERROR\n\ 	addqw	#4,sp\n\ 1:\n"
 block|}
 block|,
 endif|#
