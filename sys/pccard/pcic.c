@@ -566,28 +566,6 @@ begin_comment
 comment|/* MECIA_SUPPORT */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GET_UNIT
-parameter_list|(
-name|d
-parameter_list|)
-value|*(int *)device_get_softc(d)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_UNIT
-parameter_list|(
-name|d
-parameter_list|,
-name|u
-parameter_list|)
-value|*(int *)device_get_softc(d) = (u)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|char
