@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	4.3	81/03/16	*/
+comment|/*	boot.c	4.4	81/03/22	*/
 end_comment
 
 begin_include
@@ -109,6 +109,14 @@ literal|"xx(0,0)vmunix"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|retry
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|()
@@ -121,8 +129,6 @@ expr_stmt|;
 comment|/* howto=r11, devtype=r10 */
 name|int
 name|io
-decl_stmt|,
-name|retry
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -225,10 +231,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|retry
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -278,6 +280,8 @@ literal|0
 condition|)
 name|copyunix
 argument_list|(
+name|howto
+argument_list|,
 name|io
 argument_list|)
 expr_stmt|;
@@ -298,12 +302,20 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|copyunix
 argument_list|(
+name|howto
+argument_list|,
 name|io
 argument_list|)
 specifier|register
+name|howto
+operator|,
 name|io
 expr_stmt|;
 end_expr_stmt
