@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 1.1.1.12 2002/04/10 03:04:48 gshapiro Exp $"
+literal|"@(#)$Id: conf.c,v 8.969 2002/05/24 23:48:55 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -9643,6 +9643,94 @@ begin_comment
 comment|/* ! SPT_BUFSIZE */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_SPT_ALIGN
+end_if
+
+begin_comment
+comment|/* **  It looks like the Compaq Tru64 5.1A now aligns argv and envp to **  64 bit alignment, so unless each piece of argv and envp is a multiple **  of 8 bytes (including terminating NULL), initsetproctitle() won't use **  any of the space beyond argv[0].  Be sure to set SPT_ALIGN_SIZE if **  you use this FFR. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPT_ALIGN_SIZE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SPT_ALIGN
+parameter_list|(
+name|x
+parameter_list|,
+name|align
+parameter_list|)
+value|((((x) + SPT_ALIGN_SIZE)>> (align))<< (align))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SPT_ALIGN_SIZE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPT_ALIGN
+parameter_list|(
+name|x
+parameter_list|,
+name|align
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SPT_ALIGN_SIZE */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_SPT_ALIGN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPT_ALIGN
+parameter_list|(
+name|x
+parameter_list|,
+name|align
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SPT_ALIGN */
+end_comment
+
 begin_comment
 comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. */
 end_comment
@@ -9738,6 +9826,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|int
+name|align
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -9826,6 +9917,40 @@ operator|=
 name|argv
 expr_stmt|;
 comment|/* 	**  Determine how much space we can use for setproctitle. 	**  Use all contiguous argv and envp pointers starting at argv[0] 	*/
+name|align
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_SPT_ALIGN
+ifdef|#
+directive|ifdef
+name|SPT_ALIGN_SIZE
+for|for
+control|(
+name|i
+operator|=
+name|SPT_ALIGN_SIZE
+init|;
+name|i
+operator|>
+literal|0
+condition|;
+name|i
+operator|>>=
+literal|1
+control|)
+name|align
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SPT_ALIGN_SIZE */
+endif|#
+directive|endif
+comment|/* _FFR_SPT_ALIGN */
 for|for
 control|(
 name|i
@@ -9862,12 +9987,17 @@ index|[
 name|i
 index|]
 operator|+
+name|SPT_ALIGN
+argument_list|(
 name|strlen
 argument_list|(
 name|argv
 index|[
 name|i
 index|]
+argument_list|)
+argument_list|,
+name|align
 argument_list|)
 expr_stmt|;
 block|}
@@ -9910,12 +10040,17 @@ index|[
 name|i
 index|]
 operator|+
+name|SPT_ALIGN
+argument_list|(
 name|strlen
 argument_list|(
 name|envp
 index|[
 name|i
 index|]
+argument_list|)
+argument_list|,
+name|align
 argument_list|)
 expr_stmt|;
 block|}
@@ -11248,7 +11383,8 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|buf
 argument_list|,
-name|MAXLINE
+sizeof|sizeof
+name|buf
 argument_list|)
 operator|!=
 name|NULL
@@ -21037,8 +21173,21 @@ comment|/* PIPELINING */
 if|#
 directive|if
 name|SASL
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+literal|"SASLv2"
+block|,
+else|#
+directive|else
+comment|/* SASL>= 20000 */
 literal|"SASL"
 block|,
+endif|#
+directive|endif
+comment|/* SASL>= 20000 */
 endif|#
 directive|endif
 comment|/* SASL */
@@ -21750,6 +21899,14 @@ directive|endif
 comment|/* _FFR_CHECK_EOM */
 if|#
 directive|if
+name|_FFR_CHK_QUEUE
+literal|"_FFR_CHK_QUEUE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CHK_QUEUE */
+if|#
+directive|if
 name|_FFR_CONTROL_MSTAT
 literal|"_FFR_CONTROL_MSTAT"
 block|,
@@ -22044,12 +22201,29 @@ directive|endif
 comment|/* _FFR_RESET_MACRO_GLOBALS */
 if|#
 directive|if
+name|_FFR_RESPOND_ALL
+comment|/* in vacation */
+literal|"_FFR_RESPOND_ALL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_RESPOND_ALL */
+if|#
+directive|if
 name|_FFR_RHS
 literal|"_FFR_RHS"
 block|,
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
+if|#
+directive|if
+name|_FFR_SASL_OPT_M
+literal|"_FFR_SASL_OPT_M"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SASL_OPT_M */
 if|#
 directive|if
 name|_FFR_SELECT_SHM
@@ -22068,6 +22242,14 @@ directive|endif
 comment|/* _FFR_SHM_STATUS */
 if|#
 directive|if
+name|_FFR_SMFI_OPENSOCKET
+literal|"_FFR_SMFI_OPENSOCKET"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SMFI_OPENSOCKET */
+if|#
+directive|if
 name|_FFR_SMTP_SSL
 literal|"_FFR_SMTP_SSL"
 block|,
@@ -22082,6 +22264,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SOFT_BOUNCE */
+if|#
+directive|if
+name|_FFR_SPT_ALIGN
+comment|/* Chris Adams of HiWAAY Informations Services */
+literal|"_FFR_SPT_ALIGN"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SPT_ALIGN */
 if|#
 directive|if
 name|_FFR_TIMERS

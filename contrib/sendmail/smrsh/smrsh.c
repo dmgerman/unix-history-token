@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1993 Eric P. Allman.  All rights reserved.  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1993 Eric P. Allman.  All rights reserved.  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smrsh.c,v 1.1.1.8 2002/02/17 21:56:43 gshapiro Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.58 2002/05/25 02:41:31 ca Exp $"
 argument_list|)
 end_macro
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sm/io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/limits.h>
 end_include
 
 begin_include
@@ -378,26 +384,14 @@ if|if
 condition|(
 name|cmd
 condition|)
-block|{
 operator|(
 name|void
 operator|)
-name|sm_strlcat
+name|sm_strlcat2
 argument_list|(
 name|newcmdbuf
 argument_list|,
 name|CMDDIR
-argument_list|,
-sizeof|sizeof
-name|newcmdbuf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_strlcat
-argument_list|(
-name|newcmdbuf
 argument_list|,
 literal|"/"
 argument_list|,
@@ -405,7 +399,6 @@ sizeof|sizeof
 name|newcmdbuf
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -473,12 +466,6 @@ literal|2
 index|]
 decl_stmt|;
 name|char
-name|cmdbuf
-index|[
-literal|1000
-index|]
-decl_stmt|;
-name|char
 name|pathbuf
 index|[
 literal|1000
@@ -526,27 +513,18 @@ comment|/* ! DEBUG */
 operator|(
 name|void
 operator|)
-name|sm_strlcpy
+name|sm_strlcpyn
 argument_list|(
 name|pathbuf
+argument_list|,
+sizeof|sizeof
+name|pathbuf
+argument_list|,
+literal|2
 argument_list|,
 literal|"PATH="
 argument_list|,
-sizeof|sizeof
-name|pathbuf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_strlcat
-argument_list|(
-name|pathbuf
-argument_list|,
 name|PATH
-argument_list|,
-sizeof|sizeof
-name|pathbuf
 argument_list|)
 expr_stmt|;
 name|newenv
@@ -785,6 +763,8 @@ while|while
 condition|(
 operator|*
 name|q
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* 		**  Strip off a leading pathname on the command name.  For 		**  example, change /usr/ucb/vacation to vacation. 		*/
@@ -1011,46 +991,90 @@ comment|/* test following chars */
 block|}
 else|else
 block|{
+name|char
+name|cmdbuf
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 comment|/* 			**  Check to see if the command name is legal. 			*/
-operator|(
-name|void
-operator|)
-name|sm_strlcpy
+if|if
+condition|(
+name|sm_strlcpyn
 argument_list|(
 name|cmdbuf
+argument_list|,
+sizeof|sizeof
+name|cmdbuf
+argument_list|,
+literal|3
 argument_list|,
 name|CMDDIR
 argument_list|,
-sizeof|sizeof
-name|cmdbuf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_strlcat
-argument_list|(
-name|cmdbuf
-argument_list|,
 literal|"/"
 argument_list|,
+name|cmd
+argument_list|)
+operator|>=
 sizeof|sizeof
 name|cmdbuf
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* too long */
 operator|(
 name|void
 operator|)
-name|sm_strlcat
+name|sm_io_fprintf
 argument_list|(
-name|cmdbuf
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"%s: %s not available for sendmail programs (filename too long)\n"
+argument_list|,
+name|prg
 argument_list|,
 name|cmd
-argument_list|,
-sizeof|sizeof
-name|cmdbuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|=
+literal|' '
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEBUG
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"uid %d: attempt to use %s (filename too long)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|getuid
+argument_list|()
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! DEBUG */
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1337,7 +1361,6 @@ name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end of while *q */
 if|if
 condition|(
 name|isexec
