@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iiconf.c,v 1.5 1999/01/28 15:59:15 roger Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iiconf.c,v 1.6 1999/02/06 10:56:09 roger Exp $  *  */
 end_comment
 
 begin_include
@@ -274,8 +274,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* first, ask the underlying layers if the request is ok */
-do|do
-block|{
 name|error
 operator|=
 name|IICBUS_CALLBACK
@@ -294,25 +292,6 @@ operator|&
 name|how
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|error
-operator|=
-name|iicbus_poll
-argument_list|(
-name|sc
-argument_list|,
-name|how
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|error
-condition|)
-do|;
 while|while
 condition|(
 operator|!
@@ -329,6 +308,12 @@ condition|(
 name|sc
 operator|->
 name|owner
+operator|&&
+name|sc
+operator|->
+name|owner
+operator|!=
+name|dev
 condition|)
 block|{
 name|splx
@@ -365,6 +350,27 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* free any allocated resource */
+if|if
+condition|(
+name|error
+condition|)
+name|IICBUS_CALLBACK
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|bus
+argument_list|)
+argument_list|,
+name|IIC_RELEASE_BUS
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|how
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
