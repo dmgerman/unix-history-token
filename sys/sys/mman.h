@@ -583,8 +583,56 @@ comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_comment
-comment|/*  * XXX missing POSIX_MADV_* macros, POSIX_TYPED_MEM_* macros, and  * posix_typed_mem_info structure.  */
+comment|/*  * XXX missing POSIX_TYPED_MEM_* macros and  * posix_typed_mem_info structure.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_define
+define|#
+directive|define
+name|POSIX_MADV_NORMAL
+value|MADV_NORMAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSIX_MADV_RANDOM
+value|MADV_RANDOM
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSIX_MADV_SEQUENTIAL
+value|MADV_SEQUENTIAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSIX_MADV_WILLNEED
+value|MADV_WILLNEED
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSIX_MADV_DONTNEED
+value|MADV_DONTNEED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -666,7 +714,7 @@ end_ifndef
 
 begin_function_decl
 name|__BEGIN_DECLS
-comment|/*  * XXX not yet implemented: mlockall(), munlockall(), posix_madvise(),  * posix_mem_offset(), posix_typed_mem_get_info(), posix_typed_mem_open().  */
+comment|/*  * XXX not yet implemented: mlockall(), munlockall(),  * posix_mem_offset(), posix_typed_mem_get_info(), posix_typed_mem_open().  */
 if|#
 directive|if
 name|__BSD_VISIBLE
@@ -822,6 +870,33 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_function_decl
+name|int
+name|posix_madvise
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

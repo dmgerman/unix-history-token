@@ -25,9 +25,7 @@ end_include
 
 begin_function
 name|int
-function|(
 name|posix_madvise
-function|)
 parameter_list|(
 name|void
 modifier|*
@@ -41,7 +39,7 @@ name|how
 parameter_list|)
 block|{
 return|return
-name|posix_madvise
+name|madvise
 argument_list|(
 name|address
 argument_list|,
