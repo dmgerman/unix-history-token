@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)svi_refresh.c	8.43 (Berkeley) 12/23/93"
+literal|"@(#)svi_refresh.c	8.49 (Berkeley) 3/11/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -49,6 +67,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -56,6 +92,24 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
 end_include
 
 begin_include
@@ -160,15 +214,14 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Lose any svi_screens() cached information. */
+comment|/* Invalidate the line size cache. */
+name|SVI_SCR_CFLUSH
+argument_list|(
 name|SVP
 argument_list|(
 name|sp
 argument_list|)
-operator|->
-name|ss_lno
-operator|=
-name|OOBLNO
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Fill the map, incidentally losing any svi_line() 		 * cached information. 		 */
 if|if
@@ -477,6 +530,8 @@ name|int
 name|ch
 decl_stmt|,
 name|didpaint
+decl_stmt|,
+name|leftright_warp
 decl_stmt|;
 name|char
 modifier|*
@@ -504,6 +559,8 @@ name|SCNO
 value|svp->sc_col
 name|didpaint
 operator|=
+name|leftright_warp
+operator|=
 literal|0
 expr_stmt|;
 name|svp
@@ -524,15 +581,14 @@ name|S_REFORMAT
 argument_list|)
 condition|)
 block|{
-comment|/* Toss svi_screens() cached information. */
+comment|/* Invalidate the line size cache. */
+name|SVI_SCR_CFLUSH
+argument_list|(
 name|SVP
 argument_list|(
 name|sp
 argument_list|)
-operator|->
-name|ss_lno
-operator|=
-name|OOBLNO
+argument_list|)
 expr_stmt|;
 comment|/* Toss svi_line() cached information. */
 if|if
@@ -567,7 +623,7 @@ operator|&&
 operator|(
 name|cnt
 operator|=
-name|svi_screens
+name|svi_opt_screens
 argument_list|(
 name|sp
 argument_list|,
@@ -694,7 +750,7 @@ name|HMAP
 operator|->
 name|off
 operator|=
-name|svi_screens
+name|svi_opt_screens
 argument_list|(
 name|sp
 argument_list|,
@@ -995,7 +1051,7 @@ name|adjust
 goto|;
 block|}
 block|}
-comment|/* 	 * 3a: Line down. 	 */
+comment|/* 	 * 3a: Line down, or current screen. 	 */
 if|if
 condition|(
 name|LNO
@@ -1005,6 +1061,7 @@ operator|->
 name|lno
 condition|)
 block|{
+comment|/* Current screen. */
 if|if
 condition|(
 name|LNO
@@ -1016,7 +1073,7 @@ condition|)
 goto|goto
 name|adjust
 goto|;
-comment|/* 		 * If less than half a screen away, scroll down until the 		 * line is on the screen. 		 */
+comment|/* 		 * If less than half a screen above the line, scroll down 		 * until the line is on the screen. 		 */
 name|lcnt
 operator|=
 name|svi_sm_nlines
@@ -1068,7 +1125,85 @@ goto|goto
 name|adjust
 goto|;
 block|}
-comment|/* 		 * If less than a full screen from the bottom of the file, put 		 * the last line of the file on the bottom of the screen.  The 		 * calculation is safe because we know there's at least one 		 * full screen of lines, otherwise couldn't have gotten here. 		 */
+goto|goto
+name|bottom
+goto|;
+block|}
+comment|/* 	 * 3b: Line up. 	 */
+name|lcnt
+operator|=
+name|svi_sm_nlines
+argument_list|(
+name|sp
+argument_list|,
+name|ep
+argument_list|,
+name|HMAP
+argument_list|,
+name|LNO
+argument_list|,
+name|HALFTEXT
+argument_list|(
+name|sp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lcnt
+operator|<
+name|HALFTEXT
+argument_list|(
+name|sp
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * If less than half a screen below the line, scroll up until 		 * the line is the first line on the screen.  Special check so 		 * that if the screen has been emptied, we refill it. 		 */
+if|if
+condition|(
+name|file_gline
+argument_list|(
+name|sp
+argument_list|,
+name|ep
+argument_list|,
+name|HMAP
+operator|->
+name|lno
+argument_list|,
+operator|&
+name|len
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+while|while
+condition|(
+name|lcnt
+operator|--
+condition|)
+if|if
+condition|(
+name|svi_sm_1down
+argument_list|(
+name|sp
+argument_list|,
+name|ep
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+goto|goto
+name|adjust
+goto|;
+block|}
+comment|/* 		 * If less than a full screen from the bottom of the file, 		 * put the last line of the file on the bottom of the screen. 		 */
+name|bottom
+label|:
 if|if
 condition|(
 name|file_lline
@@ -1154,61 +1289,9 @@ goto|goto
 name|adjust
 goto|;
 block|}
-comment|/* 		 * If more than a full screen from the last line of the file, 		 * put the new line in the middle of the screen. 		 */
+comment|/* It's not close, just put the line in the middle. */
 goto|goto
 name|middle
-goto|;
-block|}
-comment|/* 	 * 3b: Line up. 	 * 	 * If less than half a screen away, scroll up until the line is 	 * the first line on the screen. 	 */
-name|lcnt
-operator|=
-name|svi_sm_nlines
-argument_list|(
-name|sp
-argument_list|,
-name|ep
-argument_list|,
-name|HMAP
-argument_list|,
-name|LNO
-argument_list|,
-name|HALFTEXT
-argument_list|(
-name|sp
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lcnt
-operator|<
-name|HALFTEXT
-argument_list|(
-name|sp
-argument_list|)
-condition|)
-block|{
-while|while
-condition|(
-name|lcnt
-operator|--
-condition|)
-if|if
-condition|(
-name|svi_sm_1down
-argument_list|(
-name|sp
-argument_list|,
-name|ep
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-goto|goto
-name|adjust
 goto|;
 block|}
 comment|/* 	 * If less than half a screen from the top of the file, put the first 	 * line of the file at the top of the screen.  Otherwise, put the line 	 * in the middle of the screen. 	 */
@@ -1330,7 +1413,7 @@ condition|)
 block|{
 name|cnt
 operator|=
-name|svi_screens
+name|svi_opt_screens
 argument_list|(
 name|sp
 argument_list|,
@@ -1512,7 +1595,7 @@ condition|)
 goto|goto
 name|paint
 goto|;
-comment|/* 	 * 4: Cursor movements. 	 * 	 * Decide cursor position.  If the line has changed, the cursor has 	 * moved over a tab, or don't know where the cursor was, reparse the 	 * line.  Note, if we think that the cursor "hasn't moved", reparse 	 * the line.  This is 'cause if it hasn't moved, we've almost always 	 * lost track of it. 	 * 	 * Otherwise, we've just moved over fixed-width characters, and can 	 * calculate the left/right scrolling and cursor movement without 	 * reparsing the line.  Note that we don't know which (if any) of 	 * the characters between the old and new cursor positions changed. 	 * 	 * XXX 	 * With some work, it should be possible to handle tabs quickly, at 	 * least in obvious situations, like moving right and encountering 	 * a tab, without reparsing the whole line. 	 */
+comment|/* 	 * 4: Cursor movements. 	 * 	 * Decide cursor position.  If the line has changed, the cursor has 	 * moved over a tab, or don't know where the cursor was, reparse the 	 * line.  Otherwise, we've just moved over fixed-width characters, 	 * and can calculate the left/right scrolling and cursor movement 	 * without reparsing the line.  Note that we don't know which (if any) 	 * of the characters between the old and new cursor positions changed. 	 * 	 * XXX 	 * With some work, it should be possible to handle tabs quickly, at 	 * least in obvious situations, like moving right and encountering 	 * a tab, without reparsing the whole line. 	 */
 comment|/* If the line we're working with has changed, reparse. */
 if|if
 condition|(
@@ -1699,7 +1782,7 @@ condition|)
 goto|goto
 name|slow
 goto|;
-comment|/* 		 * Quit sanity check -- it's hard to figure out exactly when 		 * we cross a screen boundary as we do in the cursor right 		 * movement.  If cnt is so large that we're going to cross the 		 * boundary no matter what, stop now. 		 */
+comment|/* 		 * Quick sanity check -- it's hard to figure out exactly when 		 * we cross a screen boundary as we do in the cursor right 		 * movement.  If cnt is so large that we're going to cross the 		 * boundary no matter what, stop now. 		 */
 if|if
 condition|(
 name|SCNO
@@ -1779,7 +1862,7 @@ name|len
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 		 * If the new column moved us out of the current screen, 		 * calculate a new screen. 		 */
+comment|/* 		 * If the new column moved us off of the current logical line, 		 * calculate a new one.  If doing leftright scrolling, we've 		 * moved off of the current screen, as well.  Since most files 		 * don't have more than two screens, we optimize moving from 		 * screen 2 to screen 1. 		 */
 if|if
 condition|(
 name|SCNO
@@ -1799,6 +1882,28 @@ name|O_LEFTRIGHT
 argument_list|)
 condition|)
 block|{
+name|cnt
+operator|=
+name|HMAP
+operator|->
+name|off
+operator|==
+literal|2
+condition|?
+literal|1
+else|:
+name|svi_opt_screens
+argument_list|(
+name|sp
+argument_list|,
+name|ep
+argument_list|,
+name|LNO
+argument_list|,
+operator|&
+name|CNO
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|smp
@@ -1812,10 +1917,15 @@ condition|;
 operator|++
 name|smp
 control|)
-operator|--
 name|smp
 operator|->
 name|off
+operator|=
+name|cnt
+expr_stmt|;
+name|leftright_warp
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|paint
@@ -1901,7 +2011,7 @@ name|SCNO
 operator|=
 name|cwtotal
 expr_stmt|;
-comment|/* 		 * If the new column moved us out of the current screen, 		 * calculate a new screen. 		 */
+comment|/* See screen change comment in section 4a. */
 if|if
 condition|(
 name|SCNO
@@ -1922,11 +2032,18 @@ name|O_LEFTRIGHT
 argument_list|)
 condition|)
 block|{
-name|SCNO
-operator|-=
-name|SCREEN_COLS
+name|cnt
+operator|=
+name|svi_opt_screens
 argument_list|(
 name|sp
+argument_list|,
+name|ep
+argument_list|,
+name|LNO
+argument_list|,
+operator|&
+name|CNO
 argument_list|)
 expr_stmt|;
 for|for
@@ -1942,10 +2059,15 @@ condition|;
 operator|++
 name|smp
 control|)
-operator|++
 name|smp
 operator|->
 name|off
+operator|=
+name|cnt
+expr_stmt|;
+name|leftright_warp
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|paint
@@ -2008,7 +2130,7 @@ condition|)
 block|{
 name|cnt
 operator|=
-name|svi_screens
+name|svi_opt_screens
 argument_list|(
 name|sp
 argument_list|,
@@ -2050,6 +2172,7 @@ operator|=
 name|cnt
 expr_stmt|;
 else|else
+block|{
 for|for
 control|(
 name|smp
@@ -2069,6 +2192,11 @@ name|off
 operator|=
 name|cnt
 expr_stmt|;
+name|leftright_warp
+operator|=
+literal|1
+expr_stmt|;
+block|}
 goto|goto
 name|paint
 goto|;
@@ -2411,6 +2539,26 @@ comment|/* Flush it all out. */
 name|refresh
 argument_list|()
 expr_stmt|;
+comment|/* 	 * XXX 	 * Recalculate the "most favorite" cursor position.  Vi doesn't know 	 * that we've warped the screen and it's going to have a completely 	 * wrong idea about where the cursor should be.  This is vi's problem, 	 * and fixing it here is a gross violation of layering. 	 */
+if|if
+condition|(
+name|leftright_warp
+condition|)
+operator|(
+name|void
+operator|)
+name|svi_column
+argument_list|(
+name|sp
+argument_list|,
+name|ep
+argument_list|,
+operator|&
+name|sp
+operator|->
+name|rcm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2564,15 +2712,21 @@ expr_stmt|;
 comment|/* 		 * Print up to the "more" message.  Avoid the last character 		 * in the last line, some hardware doesn't like it. 		 */
 if|if
 condition|(
-name|svi_ncols
+name|svi_screens
 argument_list|(
 name|sp
+argument_list|,
+name|sp
+operator|->
+name|ep
 argument_list|,
 name|p
 argument_list|,
 name|mp
 operator|->
 name|len
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)svi_screen.c	8.57 (Berkeley) 1/9/94"
+literal|"@(#)svi_screen.c	8.69 (Berkeley) 3/16/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<curses.h>
 end_include
 
@@ -44,6 +62,24 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -68,6 +104,18 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
 end_include
 
 begin_include
@@ -135,35 +183,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|svi_keypad
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|svi_keypad_pc
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * svi_screen_init --  *	Initialize a screen.  */
 end_comment
@@ -206,15 +225,15 @@ name|svi_change
 expr_stmt|;
 name|sp
 operator|->
-name|s_chposition
-operator|=
-name|svi_chposition
-expr_stmt|;
-name|sp
-operator|->
 name|s_clear
 operator|=
 name|svi_clear
+expr_stmt|;
+name|sp
+operator|->
+name|s_colpos
+operator|=
+name|svi_cm_public
 expr_stmt|;
 name|sp
 operator|->
@@ -227,6 +246,12 @@ operator|->
 name|s_confirm
 operator|=
 name|svi_confirm
+expr_stmt|;
+name|sp
+operator|->
+name|s_crel
+operator|=
+name|svi_crel
 expr_stmt|;
 name|sp
 operator|->
@@ -308,21 +333,15 @@ name|svi_rabs
 expr_stmt|;
 name|sp
 operator|->
+name|s_rcm
+operator|=
+name|svi_rcm
+expr_stmt|;
+name|sp
+operator|->
 name|s_refresh
 operator|=
 name|svi_refresh
-expr_stmt|;
-name|sp
-operator|->
-name|s_relative
-operator|=
-name|svi_relative
-expr_stmt|;
-name|sp
-operator|->
-name|s_rrel
-operator|=
-name|svi_rrel
 expr_stmt|;
 name|sp
 operator|->
@@ -405,12 +424,11 @@ operator|=
 name|nsvi
 expr_stmt|;
 comment|/* INITIALIZED AT SCREEN CREATE. */
-comment|/* Lose svi_screens() cached information. */
+comment|/* Invalidate the line size cache. */
+name|SVI_SCR_CFLUSH
+argument_list|(
 name|nsvi
-operator|->
-name|ss_lno
-operator|=
-name|OOBLNO
+argument_list|)
 expr_stmt|;
 comment|/* PARTIALLY OR COMPLETELY COPIED FROM PREVIOUS SCREEN. */
 if|if
@@ -1100,7 +1118,7 @@ name|sp
 argument_list|,
 name|M_SYSERR
 argument_list|,
-literal|"initscr failed"
+literal|"Initscr failed"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1110,7 +1128,7 @@ name|sp
 argument_list|,
 name|M_ERR
 argument_list|,
-literal|"Error: initscr failed."
+literal|"Initscr failed."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1125,6 +1143,14 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"unknown"
+argument_list|)
 condition|)
 name|msgq
 argument_list|(
@@ -1132,7 +1158,7 @@ name|sp
 argument_list|,
 name|M_ERR
 argument_list|,
-literal|"Error: no terminal environment variable set."
+literal|"No TERM environment variable set, or TERM set to \"unknown\"."
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1153,7 +1179,7 @@ name|sp
 argument_list|,
 name|M_ERR
 argument_list|,
-literal|"Error: %s: unknown terminal type, or terminal lacking necessary features."
+literal|"%s: unknown terminal type, or terminal lacks necessary features."
 argument_list|,
 name|p
 argument_list|)
@@ -1165,7 +1191,7 @@ name|sp
 argument_list|,
 name|M_ERR
 argument_list|,
-literal|"Error: %s: terminal type lacking necessary features."
+literal|"%s: terminal type lacks necessary features."
 argument_list|,
 name|p
 argument_list|)
@@ -1197,7 +1223,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Use hardware insert/delete line. */
-comment|/* 	 * Vi wants the cursor keys in application mode.  The historic version 	 * of curses had no way to do this, and the newer versions (System V) 	 * only enable it through the wgetch() interface.  Do it roughly, here. 	 */
+comment|/* 	 * Put the cursor keys into application mode.  Historic versions 	 * of curses had no way to do this, and the newer versions (SunOS, 	 * System V) only enable it through the wgetch() interface. 	 */
 name|svi_keypad
 argument_list|(
 name|sp
@@ -1400,54 +1426,20 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Create the screen map. */
-if|if
-condition|(
-operator|(
-name|HMAP
-operator|=
-name|malloc
-argument_list|(
-name|SIZE_HMAP
+name|CALLOC_RET
 argument_list|(
 name|sp
-argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
+argument_list|,
+name|HMAP
+argument_list|,
 name|SMAP
-argument_list|)
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|msgq
-argument_list|(
-name|sp
-argument_list|,
-name|M_SYSERR
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
-name|HMAP
-argument_list|,
-literal|0
+operator|*
 argument_list|,
 name|SIZE_HMAP
 argument_list|(
 name|sp
 argument_list|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|SMAP
@@ -1496,12 +1488,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * svi_rrel --  *	Change the relative size of the current screen.  */
+comment|/*  * svi_crel --  *	Change the relative size of the current screen.  */
 end_comment
 
 begin_function
 name|int
-name|svi_rrel
+name|svi_crel
 parameter_list|(
 name|sp
 parameter_list|,
@@ -1704,6 +1696,7 @@ argument_list|,
 name|G_CURSES_S5CB
 argument_list|)
 expr_stmt|;
+comment|/* Restore the cursor keys to normal mode. */
 name|svi_keypad
 argument_list|(
 name|sp
@@ -1719,142 +1712,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * svi_keypad --  *	Put the keypad/cursor arrows into or out of application mode.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|svi_keypad
-parameter_list|(
-name|sp
-parameter_list|,
-name|on
-parameter_list|)
-name|SCR
-modifier|*
-name|sp
-decl_stmt|;
-name|int
-name|on
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|sbp
-decl_stmt|,
-modifier|*
-name|t
-decl_stmt|,
-name|kbuf
-index|[
-literal|2048
-index|]
-decl_stmt|,
-name|sbuf
-index|[
-literal|128
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|tgetent
-argument_list|(
-name|kbuf
-argument_list|,
-name|O_STR
-argument_list|(
-name|sp
-argument_list|,
-name|O_TERM
-argument_list|)
-argument_list|)
-operator|!=
-literal|1
-condition|)
-return|return;
-name|sbp
-operator|=
-name|sbuf
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|t
-operator|=
-name|tgetstr
-argument_list|(
-name|on
-condition|?
-literal|"ks"
-else|:
-literal|"ke"
-argument_list|,
-operator|&
-name|sbp
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return;
-operator|(
-name|void
-operator|)
-name|tputs
-argument_list|(
-name|t
-argument_list|,
-literal|0
-argument_list|,
-name|svi_keypad_pc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * svi_keypad_pc --  *	putchar routine for tputs().  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|svi_keypad_pc
-parameter_list|(
-name|argch
-parameter_list|)
-name|int
-name|argch
-decl_stmt|;
-block|{
-name|char
-name|ch
-decl_stmt|;
-name|ch
-operator|=
-name|argch
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-operator|&
-name|ch
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ch
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2044,6 +1901,7 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|FREE
 argument_list|(
 name|_HMAP
@@ -2062,6 +1920,14 @@ name|SMAP
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|_HMAP
+argument_list|(
+name|tsp
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|CIRCLEQ_REMOVE
 argument_list|(
 operator|&
