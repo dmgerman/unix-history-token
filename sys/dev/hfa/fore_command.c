@@ -984,7 +984,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 				 * Copy PROM info into config areas 				 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|fp

@@ -1060,7 +1060,7 @@ name|cp
 operator|-
 name|align
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,
