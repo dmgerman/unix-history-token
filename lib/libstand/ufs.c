@@ -2695,6 +2695,10 @@ name|offset
 expr_stmt|;
 break|break;
 default|default:
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 operator|-

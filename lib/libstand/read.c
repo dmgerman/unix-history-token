@@ -264,9 +264,8 @@ operator|)
 condition|)
 return|return
 operator|(
-name|bcount
 operator|-
-name|resid
+literal|1
 operator|)
 return|;
 return|return
@@ -306,12 +305,10 @@ operator|)
 condition|)
 return|return
 operator|(
-name|bcount
 operator|-
-name|resid
+literal|1
 operator|)
 return|;
-comment|/* behave like fread() */
 name|f
 operator|->
 name|f_raoffset

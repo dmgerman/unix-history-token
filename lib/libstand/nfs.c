@@ -2813,6 +2813,10 @@ name|offset
 expr_stmt|;
 break|break;
 default|default:
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -3212,7 +3216,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-literal|1
+name|EIO
 return|;
 block|}
 name|roff
@@ -3259,7 +3263,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-literal|1
+name|ENOENT
 return|;
 block|}
 goto|goto

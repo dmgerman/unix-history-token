@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: fstat.c,v 1.1 1996/01/13 22:25:38 leo Exp $	*/
 end_comment
 
@@ -105,6 +109,16 @@ argument_list|,
 name|sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0
