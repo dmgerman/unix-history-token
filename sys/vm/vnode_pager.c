@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2704,15 +2710,14 @@ operator|.
 name|vnp_size
 condition|)
 block|{
-comment|/* XXX no %qd in kernel. */
 name|panic
 argument_list|(
-literal|"vnode_pager_getpages: unexpected missing page: firstaddr: %d, foff: 0x%lx%08lx, vnp_size: 0x%lx%08lx"
+literal|"vnode_pager_getpages: unexpected missing page: firstaddr: %d, foff: 0x%jx%08jx, vnp_size: 0x%jx%08jx"
 argument_list|,
 name|firstaddr
 argument_list|,
 call|(
-name|u_long
+name|uintmax_t
 call|)
 argument_list|(
 name|foff
@@ -2721,19 +2726,13 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
-operator|)
-operator|(
-name|u_int32_t
+name|uintmax_t
 operator|)
 name|foff
 argument_list|,
 call|(
-name|u_long
+name|uintmax_t
 call|)
-argument_list|(
-name|u_int32_t
-argument_list|)
 argument_list|(
 name|object
 operator|->
@@ -2747,10 +2746,7 @@ literal|32
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
-operator|)
-operator|(
-name|u_int32_t
+name|uintmax_t
 operator|)
 name|object
 operator|->
