@@ -8024,7 +8024,7 @@ name|td_status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 operator||
 name|ls
@@ -8092,7 +8092,7 @@ name|td_status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 operator||
 name|ls
