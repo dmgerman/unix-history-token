@@ -204,6 +204,20 @@ modifier|*
 name|krb_get_phost
 parameter_list|()
 function_decl|;
+specifier|extern
+name|int
+name|noticketsdontcomplain
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KLOGIN_PARANOID
+name|noticketsdontcomplain
+operator|=
+literal|0
+expr_stmt|;
+comment|/* enable warning message */
+endif|#
+directive|endif
 comment|/* 	 * Root logins don't use Kerberos. 	 * If we have a realm, try getting a ticket-granting ticket 	 * and using it to authenticate.  Otherwise, return 	 * failure so that we can try the normal passwd file 	 * for a password.  If that's ok, log the user in 	 * without issuing any tickets. 	 */
 if|if
 condition|(
@@ -232,6 +246,11 @@ operator|(
 literal|1
 operator|)
 return|;
+name|noticketsdontcomplain
+operator|=
+literal|0
+expr_stmt|;
+comment|/* enable warning message */
 comment|/* 	 * get TGT for local realm 	 * tickets are stored in a file named TKT_ROOT plus uid 	 * except for user.root tickets. 	 */
 if|if
 condition|(
@@ -431,6 +450,9 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KLOGIN_PARANOID
 comment|/* 	 * if the "VERIFY_SERVICE" doesn't exist in the KDC for this host, 	 * still allow login with tickets, but log the error condition. 	 */
 name|kerror
 operator|=
@@ -671,6 +693,15 @@ operator|(
 literal|1
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_block
 

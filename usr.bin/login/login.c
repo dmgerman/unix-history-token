@@ -422,6 +422,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|noticketsdontcomplain
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|instance
@@ -2165,6 +2173,9 @@ operator|&&
 name|notickets
 operator|==
 literal|1
+operator|&&
+operator|!
+name|noticketsdontcomplain
 condition|)
 operator|(
 name|void
