@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.32 1995/04/14 15:10:44 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.33 1995/04/23 22:07:54 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -697,10 +697,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* AKL */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -5178,6 +5174,44 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MTEOD
+case|:
+comment|/* space to end of recorded medium */
+name|errcode
+operator|=
+name|st_chkeod
+argument_list|(
+name|unit
+argument_list|,
+name|FALSE
+argument_list|,
+operator|&
+name|nmarks
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errcode
+operator|==
+name|ESUCCESS
+condition|)
+name|errcode
+operator|=
+name|st_space
+argument_list|(
+name|unit
+argument_list|,
+literal|0
+argument_list|,
+name|SP_EOM
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MTREW
 case|:
 comment|/* rewind */
@@ -5196,7 +5230,7 @@ break|break;
 case|case
 name|MTERASE
 case|:
-comment|/* erase - AKL */
+comment|/* erase */
 name|errcode
 operator|=
 name|st_erase
@@ -7146,6 +7180,39 @@ operator|++
 expr_stmt|;
 comment|/* dubious */
 block|}
+break|break;
+case|case
+name|SP_EOM
+case|:
+if|if
+condition|(
+name|st
+operator|->
+name|flags
+operator|&
+name|ST_EIO_PENDING
+condition|)
+block|{
+comment|/* we are already at EOM */
+name|st
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ST_EIO_PENDING
+expr_stmt|;
+return|return
+operator|(
+name|ESUCCESS
+operator|)
+return|;
+block|}
+name|number
+operator|=
+literal|1
+expr_stmt|;
+comment|/* we have only one end-of-medium */
+break|break;
 block|}
 if|if
 condition|(
@@ -7891,7 +7958,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  Erase the device - AKL: Andreas Klemm<andreas@knobel.gun.de> */
+comment|/* **  Erase the device */
 end_comment
 
 begin_function
@@ -7970,7 +8037,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	** AKL: Archive Viper 2525 technical manual 5.7 (ERASE 19h): 	**	tape has to be positioned to BOT first before erase command 	**	is issued or command is rejected. So we rewind the tape first 	**	and exit with an error, if the tape can't be rewinded. 	*/
+comment|/* 	**      Archive Viper 2525 technical manual 5.7 (ERASE 19h): 	**	tape has to be positioned to BOT first before erase command 	**	is issued or command is rejected. So we rewind the tape first 	**	and exit with an error, if the tape can't be rewinded. 	*/
 name|error
 operator|=
 name|st_rewind
@@ -8023,7 +8090,7 @@ name|byte2
 operator|=
 name|SE_LONG
 expr_stmt|;
-comment|/* LONG_ERASE - AKL */
+comment|/* LONG_ERASE */
 name|scsi_cmd
 operator|.
 name|byte2

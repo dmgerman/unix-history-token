@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.10 1994/10/28 13:19:34 jkh Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.11 1995/03/21 11:21:03 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -330,20 +330,12 @@ name|ERASE
 value|0x19
 end_define
 
-begin_comment
-comment|/* AKL */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LOAD_UNLOAD
 value|0x1b
 end_define
-
-begin_comment
-comment|/* same as above */
-end_comment
 
 begin_struct
 struct|struct
