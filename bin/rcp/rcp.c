@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2681,7 +2687,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"C%04o %qd %s\n"
+literal|"C%04o %jd %s\n"
 argument_list|,
 name|stb
 operator|.
@@ -2689,6 +2695,9 @@ name|st_mode
 operator|&
 name|MODEMASK
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|stb
 operator|.
 name|st_size
