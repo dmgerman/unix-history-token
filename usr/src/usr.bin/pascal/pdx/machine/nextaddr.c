@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nextaddr.c 1.1 %G%"
+literal|"@(#)nextaddr.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +199,7 @@ directive|if
 operator|(
 name|isvaxpx
 operator|)
-comment|/* 	 * The version of px on the VAX assumes that the instruction 	 * at the entry point of a function is a TRA4 to the beginning 	 * of the block. 	 */
+comment|/*      * The version of px on the VAX assumes that the instruction      * at the entry point of a function is a TRA4 to the beginning      * of the block.      */
 endif|#
 directive|endif
 case|case
@@ -611,6 +611,54 @@ operator|+=
 name|offset
 expr_stmt|;
 break|break;
+case|case
+name|O_CON
+case|:
+block|{
+name|short
+name|consize
+decl_stmt|;
+if|if
+condition|(
+name|nextbyte
+operator|==
+literal|0
+condition|)
+block|{
+name|iread
+argument_list|(
+operator|&
+name|consize
+argument_list|,
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|consize
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|addr
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|consize
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|consize
+operator|=
+name|nextbyte
+expr_stmt|;
+block|}
+name|addr
+operator|+=
+name|consize
+expr_stmt|;
+break|break;
+block|}
 case|case
 name|O_CASE1OP
 case|:
@@ -1469,7 +1517,7 @@ name|addr
 operator|+=
 name|size
 expr_stmt|;
-comment|/*  * It is very slow to go through the loop again and again.  * So for the time being, we just skip to the end.  * 	if ((incr> 0&& i< limit) || (incr< 0&& i> limit)) { 		iread(&offset, addr, sizeof(offset)); 		return(addr + offset); 	} else {  */
+comment|/*  * It is very slow to go through the loop again and again.  * So for the time being, we just skip to the end.  *     if ((incr> 0&& i< limit) || (incr< 0&& i> limit)) { 	iread(&offset, addr, sizeof(offset)); 	return(addr + offset);     } else {  */
 return|return
 operator|(
 name|addr
@@ -1480,7 +1528,7 @@ name|short
 argument_list|)
 operator|)
 return|;
-comment|/* 	}  */
+comment|/*     }  */
 block|}
 end_function
 

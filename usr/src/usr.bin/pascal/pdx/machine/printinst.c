@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printinst.c 1.1 %G%"
+literal|"@(#)printinst.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,6 +544,14 @@ condition|(
 name|op
 condition|)
 block|{
+case|case
+name|O_CON
+case|:
+name|addr
+operator|+=
+name|arg
+expr_stmt|;
+break|break;
 case|case
 name|O_CASE1OP
 case|:
