@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.1 (Berkeley) %G%"
+literal|"@(#)output.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -676,29 +676,6 @@ expr_stmt|;
 name|so_exit
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|ONLY_RETURN
-while|while
-condition|(
-operator|(
-name|c
-operator|=
-name|getchr
-argument_list|()
-operator|)
-operator|!=
-literal|'\n'
-operator|&&
-name|c
-operator|!=
-literal|'\r'
-condition|)
-name|bell
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
 name|c
 operator|=
 name|getchr
@@ -735,8 +712,6 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|lower_left
 argument_list|()
 expr_stmt|;
