@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.12.2.3 1997/01/03 07:24:16 jkh Exp $"
+literal|"$Id: syslogd.c,v 1.12.2.4 1997/03/02 14:59:49 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5372,12 +5372,19 @@ name|filed
 modifier|*
 name|f
 decl_stmt|;
+name|int
+name|was_initialized
+decl_stmt|;
 name|char
 name|buf
 index|[
 literal|100
 index|]
 decl_stmt|;
+name|was_initialized
+operator|=
+name|Initialized
+expr_stmt|;
 name|Initialized
 operator|=
 literal|0
@@ -5439,6 +5446,10 @@ name|f_file
 argument_list|)
 expr_stmt|;
 block|}
+name|Initialized
+operator|=
+name|was_initialized
+expr_stmt|;
 if|if
 condition|(
 name|signo
