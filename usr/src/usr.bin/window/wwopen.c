@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwopen.c	3.17 %G%"
+literal|"@(#)wwopen.c	3.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,6 +434,13 @@ name|ww_pty
 argument_list|,
 operator|&
 name|wwwintty
+argument_list|,
+operator|(
+expr|struct
+name|ww_tty
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|<
 literal|0

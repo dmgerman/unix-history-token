@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwinit.c	3.21 %G%"
+literal|"@(#)wwinit.c	3.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,6 +360,9 @@ literal|0
 argument_list|,
 operator|&
 name|wwnewtty
+argument_list|,
+operator|&
+name|wwoldtty
 argument_list|)
 operator|<
 literal|0
@@ -1104,6 +1107,9 @@ literal|0
 argument_list|,
 operator|&
 name|wwoldtty
+argument_list|,
+operator|&
+name|wwnewtty
 argument_list|)
 expr_stmt|;
 operator|(

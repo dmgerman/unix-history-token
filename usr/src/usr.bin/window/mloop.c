@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.5 %G%"
+literal|"@(#)mloop.c	3.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,10 @@ end_macro
 
 begin_block
 block|{
+name|wwrint
+argument_list|()
+expr_stmt|;
+comment|/* catch typeahead before we set ASYNC */
 while|while
 condition|(
 operator|!

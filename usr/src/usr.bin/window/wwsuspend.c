@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsuspend.c	3.5 %G%"
+literal|"@(#)wwsuspend.c	3.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,9 @@ literal|0
 argument_list|,
 operator|&
 name|wwnewtty
+argument_list|,
+operator|&
+name|wwoldtty
 argument_list|)
 expr_stmt|;
 call|(

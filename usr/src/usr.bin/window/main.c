@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.26 %G%"
+literal|"@(#)main.c	3.27 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,6 +449,9 @@ literal|0
 argument_list|,
 operator|&
 name|wwnewtty
+argument_list|,
+operator|&
+name|wwoldtty
 argument_list|)
 expr_stmt|;
 if|if

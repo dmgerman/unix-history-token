@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwtty.c	3.7 %G%"
+literal|"@(#)wwtty.c	3.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,18 +217,27 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Set the modes of tty 'd' to 't'  * 'o' is the current modes.  We set the line discipline only if  * it changes, to avoid unnecessary flushing of typeahead.  */
+end_comment
+
 begin_expr_stmt
 name|wwsettty
 argument_list|(
 name|d
 argument_list|,
 name|t
+argument_list|,
+name|o
 argument_list|)
 specifier|register
 expr|struct
 name|ww_tty
 operator|*
 name|t
+operator|,
+operator|*
+name|o
 expr_stmt|;
 end_expr_stmt
 
@@ -340,6 +349,20 @@ name|bad
 goto|;
 if|if
 condition|(
+operator|(
+name|o
+operator|==
+literal|0
+operator|||
+name|t
+operator|->
+name|ww_ldisc
+operator|!=
+name|o
+operator|->
+name|ww_ldisc
+operator|)
+operator|&&
 name|ioctl
 argument_list|(
 name|d
