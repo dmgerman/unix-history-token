@@ -11319,7 +11319,7 @@ case|case
 literal|4
 case|:
 default|default:
-comment|/* 		     * Clear the flag and force the previous switch to finish, 		     * but return now with error. 		     */
+comment|/* 		     * Act as if the controlling program returned 		     * VT_FALSE. 		     */
 name|DPRINTF
 argument_list|(
 literal|5
@@ -11338,14 +11338,11 @@ operator|&=
 operator|~
 name|SWITCH_WAIT_REL
 expr_stmt|;
-name|s
-operator|=
-name|do_switch_scr
-argument_list|(
 name|sc
-argument_list|,
-name|s
-argument_list|)
+operator|->
+name|switch_in_progress
+operator|=
+literal|0
 expr_stmt|;
 name|splx
 argument_list|(
@@ -11357,7 +11354,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"force finishing previous switch\n"
+literal|"act as if VT_FALSE was seen\n"
 operator|)
 argument_list|)
 expr_stmt|;
