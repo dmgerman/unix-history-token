@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.7 (Berkeley) %G%"
+literal|"@(#)wall.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,7 +113,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_define
@@ -388,6 +388,16 @@ argument_list|(
 name|tmpname
 argument_list|,
 name|_PATH_TMP
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|tmpname
+argument_list|,
+literal|"/wall.XXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
