@@ -271,12 +271,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|HAVE_INET6_STRUCTS
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
