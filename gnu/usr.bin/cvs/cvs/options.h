@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * This file holds (most of) the configuration tweaks that can be made to  * customize CVS for your site.  CVS comes configured for a typical SunOS 4.x  * environment.  The comments for each configurable item are intended to be  * self-explanatory.  All #defines are tested first to see if an over-riding  * option was specified on the "make" command line.  *   * If special libraries are needed, you will have to edit the Makefile.in file  * or the configure script directly.  Sorry.  */
 end_comment
 
 begin_comment
-comment|/*  * For portability and heterogeneity reasons, CVS is shipped by  * default using my own text-file version of the ndbm database library  * in the src/myndbm.c file.  If you want better performance and are  * not concerned about heterogeneous hosts accessing your modules  * file, turn this option off.  */
+comment|/* By default, CVS stores its modules and other such items in flat    text files (MY_NDBM enables this).  Turning off MY_NDBM causes CVS    to look for a system-supplied ndbm database library and use it    instead.  That may speed things up, but the default setting    generally works fine too.  */
 end_comment
 
 begin_ifndef
@@ -135,23 +139,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The Repository file holds the path to the directory within the  * source repository that contains the RCS ,v files for each CVS  * working directory.  This path is either a full-path or a path  * relative to CVSROOT.  *   * The big advantage that I can see to having a relative path is that  * one can change the physical location of the master source  * repository, change the contents of CVS/Root files in your  * checked-out code, and CVS will work without problems.  *  * This is likely to be the default in the future, but we want to give  * people who may be relying on absolute pathnames time to update  * their scripts/software.  */
+comment|/*  * The Repository file holds the path to the directory within the  * source repository that contains the RCS ,v files for each CVS  * working directory.  This path is either a full-path or a path  * relative to CVSROOT.  *   * The big advantage that I can see to having a relative path is that  * one can change the physical location of the master source  * repository, change the contents of CVS/Root files in your  * checked-out code, and CVS will work without problems.  *  * Therefore, RELATIVE_REPOS is now the default.  In the future, this  * is likely to disappear entirely as a compile-time (or other) option,  * so if you have other software which relies on absolute pathnames,  * update them.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_define
+define|#
+directive|define
 name|RELATIVE_REPOS
-end_ifndef
-
-begin_comment
-comment|/* #define	RELATIVE_REPOS	 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+value|1
+end_define
 
 begin_comment
 comment|/*  * When committing or importing files, you must enter a log message.  * Normally, you can do this either via the -m flag on the command  * line or an editor will be started for you.  If you like to use  * logging templates (the rcsinfo file within the $CVSROOT/CVSROOT  * directory), you might want to force people to use the editor even  * if they specify a message with -m.  Enabling FORCE_USE_EDITOR will  * cause the -m message to be appended to the temp file when the  * editor is started.  */
