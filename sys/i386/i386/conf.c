@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.115 1995/12/14 09:52:37 phk Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.116 1995/12/14 22:02:41 bde Exp $  */
 end_comment
 
 begin_include
@@ -99,80 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Routine that identifies /dev/mem and /dev/kmem.  *  * A minimal stub routine can always return 0.  */
-end_comment
-
-begin_function
-name|int
-name|iskmemdev
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|2
-operator|&&
-operator|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|1
-operator|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|iszerodev
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|2
-operator|&&
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|12
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Routine to determine if a device is a disk.  *  * A minimal stub routine can always return 0.  */
+comment|/*  * Routine to determine if a device is a disk.  *  * KLUDGE XXX add flags to cdevsw entries for disks XXX  * A minimal stub routine can always return 0.  */
 end_comment
 
 begin_function
@@ -322,181 +249,6 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEW_STUFF_JRE
-end_ifndef
-
-begin_comment
-comment|/*  * Routine to convert from character to block device number.  *  * A minimal stub routine can always return NODEV.  */
-end_comment
-
-begin_function
-name|dev_t
-name|chrtoblk
-parameter_list|(
-name|dev
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-block|{
-name|int
-name|blkmaj
-decl_stmt|;
-switch|switch
-condition|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-case|case
-literal|3
-case|:
-name|blkmaj
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-comment|/* wd */
-case|case
-literal|9
-case|:
-name|blkmaj
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-comment|/* fd */
-case|case
-literal|10
-case|:
-name|blkmaj
-operator|=
-literal|3
-expr_stmt|;
-break|break;
-comment|/* wt */
-case|case
-literal|13
-case|:
-name|blkmaj
-operator|=
-literal|4
-expr_stmt|;
-break|break;
-comment|/* sd */
-case|case
-literal|14
-case|:
-name|blkmaj
-operator|=
-literal|5
-expr_stmt|;
-break|break;
-comment|/* st */
-case|case
-literal|15
-case|:
-name|blkmaj
-operator|=
-literal|6
-expr_stmt|;
-break|break;
-comment|/* cd */
-case|case
-literal|29
-case|:
-name|blkmaj
-operator|=
-literal|7
-expr_stmt|;
-break|break;
-comment|/* mcd */
-case|case
-literal|43
-case|:
-name|blkmaj
-operator|=
-literal|15
-expr_stmt|;
-break|break;
-comment|/* vn */
-case|case
-literal|45
-case|:
-name|blkmaj
-operator|=
-literal|16
-expr_stmt|;
-break|break;
-comment|/* scd */
-case|case
-literal|46
-case|:
-name|blkmaj
-operator|=
-literal|17
-expr_stmt|;
-break|break;
-comment|/* matcd */
-case|case
-literal|69
-case|:
-name|blkmaj
-operator|=
-literal|19
-expr_stmt|;
-break|break;
-comment|/* wcd */
-case|case
-literal|70
-case|:
-name|blkmaj
-operator|=
-literal|20
-expr_stmt|;
-break|break;
-comment|/* od */
-default|default:
-return|return
-operator|(
-name|NODEV
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|makedev
-argument_list|(
-name|blkmaj
-argument_list|,
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NEW_STUFF_JRE */
-end_comment
-
-begin_comment
-comment|/*===============================================*/
-end_comment
-
 begin_comment
 comment|/*  * Routine to convert from character to block device number.  *  * A minimal stub routine can always return NODEV.  */
 end_comment
@@ -517,7 +269,14 @@ name|bdevsw
 modifier|*
 name|bd
 decl_stmt|;
-name|bd
+name|struct
+name|cdevsw
+modifier|*
+name|cd
+decl_stmt|;
+if|if
+condition|(
+name|cd
 operator|=
 name|cdevsw
 index|[
@@ -526,12 +285,17 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
-operator|->
-name|d_bdev
-expr_stmt|;
+condition|)
+block|{
 if|if
 condition|(
+operator|(
 name|bd
+operator|=
+name|cd
+operator|->
+name|d_bdev
+operator|)
 condition|)
 return|return
 operator|(
@@ -548,7 +312,7 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-else|else
+block|}
 return|return
 operator|(
 name|NODEV
@@ -556,15 +320,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEW_STUFF_JRE */
-end_comment
 
 end_unit
 
