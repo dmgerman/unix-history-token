@@ -570,9 +570,6 @@ name|execf
 decl_stmt|,
 modifier|*
 name|coref
-decl_stmt|,
-modifier|*
-name|swapf
 decl_stmt|;
 name|int
 name|debug_opt
@@ -793,8 +790,6 @@ expr_stmt|;
 name|execf
 operator|=
 name|coref
-operator|=
-name|swapf
 operator|=
 name|_PATH_DEVNULL
 expr_stmt|;
@@ -1111,7 +1106,7 @@ name|execf
 argument_list|,
 name|coref
 argument_list|,
-name|swapf
+name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
