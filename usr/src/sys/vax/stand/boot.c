@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	4.8	82/07/15	*/
+comment|/*	boot.c	4.9	83/04/08	*/
 end_comment
 
 begin_include
@@ -117,6 +117,11 @@ block|,
 literal|'t'
 block|,
 comment|/* 10 = ut */
+literal|'r'
+block|,
+literal|'b'
+block|,
+comment|/* 11 = rb */
 block|}
 decl_stmt|;
 end_decl_stmt
