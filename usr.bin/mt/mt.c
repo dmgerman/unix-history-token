@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.22 1999/03/02 06:27:59 mjacob Exp $"
+literal|"$Id: mt.c,v 1.23 1999/03/10 00:48:03 mjacob Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3326,14 +3326,14 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Mode      Density         Blocksize      bpi      "
+literal|"Mode      Density              Blocksize      bpi      "
 literal|"Compression\n"
-literal|"Current:  %-12s    %-12s   %-7d  %s\n"
+literal|"Current:  %-17s    %-12s   %-7d  %s\n"
 literal|"---------available modes---------\n"
-literal|"0:        %-12s    %-12s   %-7d  %s\n"
-literal|"1:        %-12s    %-12s   %-7d  %s\n"
-literal|"2:        %-12s    %-12s   %-7d  %s\n"
-literal|"3:        %-12s    %-12s   %-7d  %s\n"
+literal|"0:        %-17s    %-12s   %-7d  %s\n"
+literal|"1:        %-17s    %-12s   %-7d  %s\n"
+literal|"2:        %-17s    %-12s   %-7d  %s\n"
+literal|"3:        %-17s    %-12s   %-7d  %s\n"
 argument_list|,
 name|denstostring
 argument_list|(
