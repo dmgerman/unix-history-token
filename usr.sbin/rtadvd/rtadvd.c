@@ -867,6 +867,8 @@ name|int
 name|fflag
 init|=
 literal|0
+decl_stmt|,
+name|logopt
 decl_stmt|;
 name|FILE
 modifier|*
@@ -875,17 +877,6 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-name|openlog
-argument_list|(
-literal|"rtadvd"
-argument_list|,
-name|LOG_NDELAY
-operator||
-name|LOG_PID
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
-expr_stmt|;
 comment|/* get command line options and arguments */
 while|while
 condition|(
@@ -1004,6 +995,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|logopt
+operator|=
+name|LOG_NDELAY
+operator||
+name|LOG_PID
+expr_stmt|;
+if|if
+condition|(
+name|fflag
+condition|)
+name|logopt
+operator||=
+name|LOG_PERROR
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"rtadvd"
+argument_list|,
+name|logopt
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 comment|/* set log level */
 if|if
 condition|(
