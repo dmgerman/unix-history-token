@@ -1067,6 +1067,12 @@ name|defined
 argument_list|(
 name|EXCLUDE_SB16
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EXCLUDE_SBPRO
+argument_list|)
 ifndef|#
 directive|ifndef
 name|EXCLUDE_AUDIO
