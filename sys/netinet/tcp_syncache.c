@@ -399,6 +399,11 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2282,6 +2287,8 @@ parameter_list|(
 name|sc
 parameter_list|,
 name|lso
+parameter_list|,
+name|m
 parameter_list|)
 name|struct
 name|syncache
@@ -2292,6 +2299,11 @@ name|struct
 name|socket
 modifier|*
 name|lso
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 block|{
 name|struct
@@ -3338,6 +3350,8 @@ name|sc
 argument_list|,
 operator|*
 name|sop
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 if|if
@@ -4255,6 +4269,8 @@ name|sc
 argument_list|,
 operator|*
 name|sop
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 if|if
