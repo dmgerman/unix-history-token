@@ -578,6 +578,8 @@ begin_decl_stmt
 name|COMMON
 name|subsegT
 name|now_subseg
+decl_stmt|,
+name|prev_subseg
 decl_stmt|;
 end_decl_stmt
 
@@ -589,6 +591,8 @@ begin_decl_stmt
 name|COMMON
 name|segT
 name|now_seg
+decl_stmt|,
+name|prev_seg
 decl_stmt|;
 end_decl_stmt
 

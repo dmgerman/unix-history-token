@@ -559,6 +559,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|s_previous
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|s_org
 parameter_list|(
 name|void
@@ -850,6 +859,13 @@ end_function_decl
 begin_function_decl
 name|void
 name|s_lsym
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|s_previous
 parameter_list|()
 function_decl|;
 end_function_decl
