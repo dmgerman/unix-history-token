@@ -890,6 +890,9 @@ literal|"%s: a_midmag = 0x%lx\n"
 argument_list|,
 name|fname
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_midmag
@@ -899,12 +902,18 @@ name|printf
 argument_list|(
 literal|"  magic = 0x%lx = 0%lo, netmagic = 0x%lx = 0%lo\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|N_GETMAGIC
 argument_list|(
 operator|*
 name|ex
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|N_GETMAGIC
 argument_list|(
 operator|*
@@ -964,6 +973,9 @@ name|printf
 argument_list|(
 literal|"  a_text   = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_text
@@ -973,6 +985,9 @@ name|printf
 argument_list|(
 literal|"  a_data   = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_data
@@ -982,6 +997,9 @@ name|printf
 argument_list|(
 literal|"  a_bss    = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_bss
@@ -991,6 +1009,9 @@ name|printf
 argument_list|(
 literal|"  a_syms   = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_syms
@@ -1000,6 +1021,9 @@ name|printf
 argument_list|(
 literal|"  a_entry  = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_entry
@@ -1009,6 +1033,9 @@ name|printf
 argument_list|(
 literal|"  a_trsize = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_trsize
@@ -1018,6 +1045,9 @@ name|printf
 argument_list|(
 literal|"  a_drsize = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_drsize
@@ -1190,6 +1220,9 @@ name|printf
 argument_list|(
 literal|"  Entry = 0x%lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ex
 operator|->
 name|a_entry
@@ -1205,6 +1238,9 @@ operator|*
 name|ex
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|N_TXTADDR
 argument_list|(
 operator|*
@@ -1216,12 +1252,18 @@ name|printf
 argument_list|(
 literal|"  Data offset = %lx, address = %lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|N_DATOFF
 argument_list|(
 operator|*
 name|ex
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|N_DATADDR
 argument_list|(
 operator|*
