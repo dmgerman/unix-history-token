@@ -1113,6 +1113,17 @@ name|ELF_TARG_VER
 value|1
 end_define
 
+begin_comment
+comment|/* Processor specific dynmamic section tags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_IA64_PLT_RESERVE
+value|0x70000000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
