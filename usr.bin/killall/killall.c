@@ -132,14 +132,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: killall [-l] [-v] [-m] [-sig] [-j jid]\n"
+literal|"usage: killall [-dlmsvz] [-help] [-j jid]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"               [-u user] [-t tty] [-c cmd] [cmd]...\n"
+literal|"               [-u user] [-t tty] [-c cmd] [-SIGNAL] [cmd]...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
