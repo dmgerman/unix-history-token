@@ -4650,6 +4650,19 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|devinfo
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"c->init() failed"
+argument_list|)
+expr_stmt|;
 name|chn_setdir
 argument_list|(
 name|c

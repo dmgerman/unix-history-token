@@ -4628,7 +4628,7 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|DSP_BUFFSIZE
+name|MSS_BUFFSIZE
 argument_list|,
 comment|/*nsegments*/
 literal|1
