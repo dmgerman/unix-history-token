@@ -213,6 +213,18 @@ parameter_list|()
 value|do {							\ 	__asm __volatile("flushw" : :);					\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mov
+parameter_list|(
+name|val
+parameter_list|,
+name|reg
+parameter_list|)
+value|do {						\ 	__asm __volatile("mov %0, %" __XSTRING(reg) : : "r" (val));	\ } while (0)
+end_define
+
 begin_comment
 comment|/* Generate ld*a/st*a functions for non-constant ASI's. */
 end_comment
