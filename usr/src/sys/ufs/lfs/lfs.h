@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -36,30 +36,48 @@ begin_comment
 comment|/* XXX move from fs.h to mount.h */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LFS_BLKSIZE
-value|4096
-end_define
-
 begin_comment
-comment|/* LFS block size */
-end_comment
-
-begin_comment
-comment|/* On-disk super block. */
+comment|/* On-disk and in-memory checkpoint segment usage structure. */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|lfs_super
+name|segusage
+block|{
+name|u_long
+name|su_nbytes
+decl_stmt|;
+comment|/* number of live bytes */
+name|u_long
+name|su_lastmod
+decl_stmt|;
+comment|/* last modified timestamp */
+define|#
+directive|define
+name|SEGUSE_DIRTY
+value|0x1
+name|u_long
+name|su_flags
+decl_stmt|;
+block|}
+name|SEGUSE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* On-disk and in-memory super block. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|lfs
 block|{
 define|#
 directive|define
 name|LFS_MAGIC
-value|0xdeadbeef
+value|0xbedead
 name|u_long
 name|lfs_magic
 decl_stmt|;
@@ -96,15 +114,19 @@ name|u_long
 name|lfs_frag
 decl_stmt|;
 comment|/* number of frags in a block in fs */
-name|u_long
-name|lfs_sbsize
-decl_stmt|;
-comment|/* actual size of super block */
 comment|/* Checkpoint region. */
 name|ino_t
 name|lfs_free
 decl_stmt|;
 comment|/* start of the free list */
+name|u_long
+name|lfs_bfree
+decl_stmt|;
+comment|/* number of free blocks */
+name|u_long
+name|lfs_nfiles
+decl_stmt|;
+comment|/* number of allocated inodes */
 name|daddr_t
 name|lfs_idaddr
 decl_stmt|;
@@ -117,6 +139,10 @@ name|daddr_t
 name|lfs_lastseg
 decl_stmt|;
 comment|/* last segment written */
+name|daddr_t
+name|lfs_nextseg
+decl_stmt|;
+comment|/* next segment to write */
 name|u_long
 name|lfs_tstamp
 decl_stmt|;
@@ -189,375 +215,88 @@ decl_stmt|;
 comment|/* fsbtodb and dbtofsb shift constant */
 define|#
 directive|define
-name|LFS_MAXNUMSB
-value|10
-define|#
-directive|define
 name|LFS_MIN_SBINTERVAL
 value|5
+comment|/* minimum superblock segment spacing */
+define|#
+directive|define
+name|LFS_MAXNUMSB
+value|10
+comment|/* superblock disk offsets */
 name|daddr_t
 name|lfs_sboffs
 index|[
 name|LFS_MAXNUMSB
 index|]
 decl_stmt|;
-comment|/* super-block disk offsets */
-block|}
-name|LFS_SUPER
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|blksize
-parameter_list|(
-name|fs
-parameter_list|,
-name|ip
-parameter_list|,
-name|lbn
-parameter_list|)
-value|LFSBLKSIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|blkoff
-parameter_list|(
-name|fs
-parameter_list|,
-name|loc
-parameter_list|)
-comment|/* calculates (loc % fs->fs_bsize) */
-define|\
-value|((loc)& ~(fs)->fs_bmask)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fsbtodb
-parameter_list|(
-name|fs
-parameter_list|,
-name|b
-parameter_list|)
-value|((b)<< (fs)->fs_fsbtodb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|lblkno
-parameter_list|(
-name|fs
-parameter_list|,
-name|loc
-parameter_list|)
-comment|/* calculates (loc / fs->fs_bsize) */
-define|\
-value|((loc)>> (fs)->fs_bshift)
-end_define
-
-begin_define
-define|#
-directive|define
-name|itoo
-parameter_list|(
-name|fs
-parameter_list|,
-name|x
-parameter_list|)
-value|((x) % INOPB(fs))
-end_define
-
-begin_define
-define|#
-directive|define
-name|itod
-parameter_list|(
-name|fs
-parameter_list|,
-name|x
-parameter_list|)
-value|LFS -- IMPLEMENT
-end_define
-
-begin_comment
-comment|/* In-memory super block. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|lfs
-block|{
+comment|/* These fields are set at mount time and are meaningless on disk. */
 name|struct
-name|fs
+name|vnode
 modifier|*
-name|fs_link
+name|lfs_ivnode
 decl_stmt|;
-comment|/* linked list of file systems */
-name|struct
-name|fs
+comment|/* vnode for the ifile */
+name|SEGUSE
 modifier|*
-name|fs_rlink
+name|lfs_segtab
 decl_stmt|;
-comment|/*     used for incore super blocks */
-name|time_t
-name|fs_time
-decl_stmt|;
-comment|/* last time written */
-comment|/* These fields are cleared at mount time. */
+comment|/* in-memory segment usage table */
 name|u_char
-name|fs_fmod
+name|lfs_fmod
 decl_stmt|;
 comment|/* super block modified flag */
 name|u_char
-name|fs_clean
+name|lfs_clean
 decl_stmt|;
 comment|/* file system is clean flag */
 name|u_char
-name|fs_ronly
+name|lfs_ronly
 decl_stmt|;
 comment|/* mounted read-only flag */
 name|u_char
-name|fs_flags
+name|lfs_flags
 decl_stmt|;
 comment|/* currently unused flag */
 name|u_char
-name|fs_fsmnt
+name|lfs_fsmnt
 index|[
 name|MAXMNTLEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
-comment|/* On-disk structure. */
-name|LFS_SUPER
-name|fs_super
+name|u_char
+name|pad
+index|[
+literal|3
+index|]
 decl_stmt|;
+comment|/* long-align */
+comment|/* Checksum; valid on disk. */
+name|u_long
+name|lfs_cksum
+decl_stmt|;
+comment|/* checksum for superblock checking */
 block|}
 name|LFS
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * The root inode is the root of the file system.  Inode 0 is the out-of-band  * inode, and inode 1 is the inode number for the ifile.  Thus the root inode  * is 2.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|fs_bmask
-value|fs_super.lfs_bmask
+name|ROOTINO
+value|((ino_t)2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|fs_bshift
-value|fs_super.lfs_bshift
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_bsize
-value|fs_super.lfs_bsize
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_dsize
-value|fs_super.lfs_dsize
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_fbmask
-value|fs_super.lfs_fbmask
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_fbshift
-value|fs_super.lfs_fbshift
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_ffmask
-value|fs_super.lfs_ffmask
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_ffshift
-value|fs_super.lfs_ffshift
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_frag
-value|fs_super.lfs_frag
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_free
-value|fs_super.lfs_free
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_fsbtodb
-value|fs_super.lfs_fsbtodb
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_fsize
-value|fs_super.lfs_fsize
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_idaddr
-value|fs_super.lfs_idaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_ifile
-value|fs_super.lfs_ifile
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_ifpb
-value|fs_super.lfs_ifpb
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_inopb
-value|fs_super.lfs_inopb
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_lastseg
-value|fs_super.lfs_lastseg
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_magic
-value|fs_super.lfs_magic
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_minfree
-value|fs_super.lfs_minfree
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_nindir
-value|fs_super.lfs_nindir
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_nseg
-value|fs_super.lfs_nseg
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_nspf
-value|fs_super.lfs_nspf
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_sboffs
-value|fs_super.lfs_sboffs
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_sbsize
-value|fs_super.lfs_sbsize
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_segmask
-value|fs_super.lfs_segmask
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_segshift
-value|fs_super.lfs_segshift
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_segtabsz
-value|fs_super.lfs_segtabsz
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_size
-value|fs_super.lfs_size
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_ssize
-value|fs_super.lfs_ssize
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_tstamp
-value|fs_super.lfs_tstamp
-end_define
-
-begin_define
-define|#
-directive|define
-name|fs_version
-value|fs_super.lfs_version
+name|LOSTFOUNDINO
+value|((ino_t)3)
 end_define
 
 begin_comment
@@ -586,19 +325,19 @@ begin_comment
 comment|/* Inode number of the ifile. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LFS_FIRST_INUM
-value|2
-end_define
-
 begin_comment
 comment|/* First free inode number. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LFS_FIRST_INUM
+value|(LOSTFOUNDINO + 1)
+end_define
+
 begin_comment
-comment|/*   * Used to access the first spare of the dinode which we use to store  * the ifile number so we can identify them  */
+comment|/*  * Used to access the first spare of the dinode which we use to store  * the ifile number so we can identify them  */
 end_comment
 
 begin_define
@@ -619,7 +358,7 @@ decl_stmt|;
 comment|/* inode version number */
 define|#
 directive|define
-name|UNUSED_DADDR
+name|LFS_UNUSED_DADDR
 value|0
 comment|/* out-of-band daddr */
 name|daddr_t
@@ -664,7 +403,7 @@ parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(((fs)->fs_nseg * sizeof(SEGUSAGE) + \ 	    ((fs)->fs_bsize - 1))<< (fs)->fs_bshift)
+value|(((fs)->fs_nseg * sizeof(SEGUSE) + \ 	    ((fs)->fs_bsize - 1))>> (fs)->fs_bshift)
 end_define
 
 begin_define
@@ -675,37 +414,8 @@ parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(((fs)->lfs_nseg * sizeof(SEGUSAGE) + \ 	    ((fs)->lfs_bsize - 1))>> (fs)->lfs_bshift)
+value|(((fs)->lfs_nseg * sizeof(SEGUSE) + \ 	    ((fs)->lfs_bsize - 1))>> (fs)->lfs_bshift)
 end_define
-
-begin_comment
-comment|/* In-memory and on-disk checkpoint segment usage structure. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|segusage
-block|{
-name|u_long
-name|su_nbytes
-decl_stmt|;
-comment|/* number of live bytes */
-name|u_long
-name|su_lastmod
-decl_stmt|;
-comment|/* last modified timestamp */
-define|#
-directive|define
-name|SEGUSAGE_DIRTY
-value|0x1
-name|u_long
-name|su_flags
-decl_stmt|;
-block|}
-name|SEGUSAGE
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * All summary blocks are the same size, so we can always read a summary  * block easily from a segment  */
@@ -727,6 +437,10 @@ typedef|typedef
 struct|struct
 name|segsum
 block|{
+name|u_long
+name|ss_cksum
+decl_stmt|;
+comment|/* check sum */
 name|daddr_t
 name|ss_next
 decl_stmt|;
@@ -748,13 +462,10 @@ name|ss_nfinfo
 decl_stmt|;
 comment|/* number of file info structures */
 name|u_long
-name|ss_niinfo
+name|ss_ninos
 decl_stmt|;
-comment|/* number of inode info structures */
-name|u_long
-name|ss_cksum
-decl_stmt|;
-comment|/* check sum */
+comment|/* number of inode blocks */
+comment|/* FINFO's... */
 block|}
 name|SEGSUM
 typedef|;
@@ -794,26 +505,104 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* On-disk inode information.  One per block of inodes in the segment. */
+comment|/* NINDIR is the number of indirects in a file system block. */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|iinfo
-block|{
-name|u_long
-name|ii_ninodes
-decl_stmt|;
-comment|/* number of inodes */
-name|ino_t
-name|ii_inodes
-decl_stmt|;
-comment|/* array of inode numbers */
-block|}
-name|IINFO
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|NINDIR
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->lfs_nindir)
+end_define
+
+begin_comment
+comment|/* INOPB is the number of inodes in a secondary storage block. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INOPB
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->lfs_inopb)
+end_define
+
+begin_comment
+comment|/* IFPB -- IFILE's per block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFPB
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->lfs_ifpb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blksize
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->lfs_bsize)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blkoff
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+value|((loc)& (fs)->lfs_bmask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fsbtodb
+parameter_list|(
+name|fs
+parameter_list|,
+name|b
+parameter_list|)
+value|((b)<< (fs)->lfs_fsbtodb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lblkno
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+value|((loc)>> (fs)->lfs_bshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|lblktosize
+parameter_list|(
+name|fs
+parameter_list|,
+name|blk
+parameter_list|)
+value|((blk)<< (fs)->lfs_bshift)
+end_define
 
 end_unit
 
