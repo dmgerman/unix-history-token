@@ -3039,6 +3039,7 @@ block|}
 comment|/* 		 * If the key/data pairs are substantial fractions of the max 		 * possible size for the page, it's possible to get situations 		 * where we decide to try and copy too much onto the left page. 		 * Make sure that doesn't happen. 		 */
 if|if
 condition|(
+operator|(
 name|skip
 operator|<=
 name|off
@@ -3053,6 +3054,7 @@ name|indx_t
 argument_list|)
 operator|>=
 name|full
+operator|)
 operator|||
 name|nxt
 operator|==

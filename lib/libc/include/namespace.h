@@ -153,6 +153,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|fpathconf
+value|_fpathconf
+end_define
+
+begin_define
+define|#
+directive|define
 name|fstat
 value|_fstat
 end_define
@@ -614,13 +621,6 @@ define|#
 directive|define
 name|fchmod
 value|_fchmod
-end_define
-
-begin_define
-define|#
-directive|define
-name|fpathconf
-value|_fpathconf
 end_define
 
 begin_define

@@ -114,6 +114,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|fpathconf
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|fstat
 end_undef
 
@@ -511,12 +517,6 @@ begin_undef
 undef|#
 directive|undef
 name|fchmod
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|fpathconf
 end_undef
 
 begin_undef

@@ -113,6 +113,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nope
+name|__unused
 init|=
 literal|0
 decl_stmt|;

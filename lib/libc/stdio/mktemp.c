@@ -51,9 +51,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* #include "namespace.h" */
-end_comment
+begin_include
+include|#
+directive|include
+file|"namespace.h"
+end_include
 
 begin_include
 include|#
@@ -109,9 +111,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_comment
-comment|/* #include "un-namespace.h" */
-end_comment
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_function_decl
 name|char

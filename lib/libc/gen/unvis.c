@@ -189,7 +189,7 @@ name|ishex
 parameter_list|(
 name|c
 parameter_list|)
-value|(((u_char)(c))>= '0'&& ((u_char)(c))<= '9' || ((u_char)(c))>= 'a'&& ((u_char)(c))<= 'f')
+value|((((u_char)(c))>= '0'&& ((u_char)(c))<= '9') || (((u_char)(c))>= 'a'&& ((u_char)(c))<= 'f'))
 end_define
 
 begin_comment

@@ -3,6 +3,12 @@ begin_comment
 comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -20,6 +26,7 @@ specifier|static
 name|char
 name|elsieid
 index|[]
+name|__unused
 init|=
 literal|"@(#)asctime.c	7.7"
 decl_stmt|;
@@ -42,12 +49,6 @@ end_endif
 begin_comment
 comment|/* !defined lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_expr_stmt
 name|__FBSDID

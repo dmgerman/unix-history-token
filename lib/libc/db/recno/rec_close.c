@@ -230,6 +230,7 @@ argument_list|,
 name|R_INMEM
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|F_ISSET
@@ -268,6 +269,7 @@ name|status
 operator|=
 name|RET_ERROR
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|__bt_close

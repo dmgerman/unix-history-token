@@ -419,6 +419,7 @@ condition|(
 operator|!
 name|key_size
 condition|)
+block|{
 if|if
 condition|(
 name|FREESPACE
@@ -513,6 +514,7 @@ index|]
 operator|=
 name|FULL_KEY
 expr_stmt|;
+block|}
 name|p
 operator|=
 operator|(

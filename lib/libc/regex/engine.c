@@ -919,6 +919,9 @@ name|stop
 operator|&&
 name|charjump
 index|[
+operator|(
+name|int
+operator|)
 operator|*
 name|dp
 index|]
@@ -927,6 +930,9 @@ name|dp
 operator|+=
 name|charjump
 index|[
+operator|(
+name|int
+operator|)
 operator|*
 name|dp
 index|]
@@ -978,6 +984,9 @@ name|cj
 operator|=
 name|charjump
 index|[
+operator|(
+name|int
+operator|)
 operator|*
 name|dp
 index|]

@@ -939,6 +939,7 @@ name|bt_order
 operator|==
 name|NOT
 condition|)
+block|{
 if|if
 condition|(
 name|h
@@ -1027,6 +1028,7 @@ name|h
 operator|->
 name|pgno
 expr_stmt|;
+block|}
 block|}
 block|}
 name|mpool_put
