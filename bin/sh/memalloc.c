@@ -529,26 +529,6 @@ operator|->
 name|stackp
 condition|)
 block|{
-if|if
-condition|(
-name|stackp
-operator|==
-name|NULL
-condition|)
-block|{
-name|write
-argument_list|(
-literal|2
-argument_list|,
-literal|"Oops, stackp deleted\n"
-argument_list|,
-literal|21
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 name|sp
 operator|=
 name|stackp

@@ -781,11 +781,6 @@ decl_stmt|;
 name|int
 name|something
 decl_stmt|;
-specifier|extern
-name|EditLine
-modifier|*
-name|el
-decl_stmt|;
 name|char
 name|savec
 decl_stmt|;
@@ -1345,9 +1340,14 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s"
+literal|"Can't open %s: %s"
 argument_list|,
 name|fname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

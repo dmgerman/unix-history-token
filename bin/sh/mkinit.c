@@ -113,6 +113,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_comment
 comment|/*  * OUTFILE is the name of the output file.  Output is initially written  * to the file OUTTEMP, which is then moved to OUTFILE.  */
 end_comment
@@ -2237,9 +2243,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't open %s\n"
+literal|"Can't open %s: %s\n"
 argument_list|,
 name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit

@@ -366,19 +366,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|STATIC
-name|void
-name|clearcmdentry
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|STATIC
 name|struct
 name|tblentry
 modifier|*
@@ -2891,7 +2878,6 @@ comment|/*  * Clear out command entries.  The argument specifies the first entry
 end_comment
 
 begin_function
-name|STATIC
 name|void
 name|clearcmdentry
 parameter_list|(

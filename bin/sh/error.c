@@ -78,6 +78,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"nodes.h"
+end_include
+
+begin_comment
+comment|/* show.h needs nodes.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"show.h"
 end_include
 

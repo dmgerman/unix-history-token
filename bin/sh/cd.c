@@ -1413,7 +1413,12 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Pipe call failed"
+literal|"Pipe call failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|jp

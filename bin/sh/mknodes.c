@@ -89,6 +89,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -592,12 +598,17 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s"
+literal|"Can't open %s: %s"
 argument_list|,
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1193,9 +1204,14 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-literal|"Can't open %s"
+literal|"Can't open %s: %s"
 argument_list|,
 name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1215,7 +1231,12 @@ name|NULL
 condition|)
 name|error
 argument_list|(
-literal|"Can't create nodes.h"
+literal|"Can't create nodes.h: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -2665,7 +2665,12 @@ name|INTON
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Cannot fork"
+literal|"Cannot fork: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2924,7 +2929,12 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open /dev/null"
+literal|"Can't open /dev/null: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2985,7 +2995,12 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Can't open /dev/null"
+literal|"Can't open /dev/null: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
