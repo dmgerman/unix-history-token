@@ -341,11 +341,6 @@ modifier|*
 name|ata_parm
 decl_stmt|;
 comment|/* ata device params */
-name|struct
-name|diskslices
-modifier|*
-name|slices
-decl_stmt|;
 name|int32_t
 name|unit
 decl_stmt|;
@@ -410,6 +405,11 @@ name|devstat
 name|stats
 decl_stmt|;
 comment|/* devstat entry */
+name|struct
+name|disk
+name|disk
+decl_stmt|;
+comment|/* disklabel/slice stuff */
 block|}
 struct|;
 end_struct
@@ -484,28 +484,6 @@ comment|/* list management */
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|void
-name|ad_transfer
-parameter_list|(
-name|struct
-name|ad_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int32_t
-name|ad_interrupt
-parameter_list|(
-name|struct
-name|ad_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

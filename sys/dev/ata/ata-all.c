@@ -206,12 +206,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ata/ata-disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ata/atapi-all.h>
 end_include
 

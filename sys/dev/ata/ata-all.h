@@ -989,5 +989,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ad_transfer
+parameter_list|(
+name|struct
+name|ad_request
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|ad_interrupt
+parameter_list|(
+name|struct
+name|ad_request
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
