@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.9 1997/05/28 18:44:11 fsmp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.10 1997/05/29 05:57:43 fsmp Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -288,6 +288,22 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|SMP_prvpt
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|SMP_ioapic
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* functions in mp_machdep.c */
 end_comment
@@ -541,39 +557,10 @@ end_comment
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|u_int
-modifier|*
-name|apic_base
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/** XXX APIC_STRUCT */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
 name|lapic_t
-modifier|*
 name|lapic
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** XXX APIC_STRUCT */
-end_comment
 
 begin_if
 if|#
@@ -598,39 +585,12 @@ end_else
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|u_int
-modifier|*
-name|io_apic_base
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/** XXX APIC_STRUCT */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
 name|ioapic_t
 modifier|*
 name|ioapic
+index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** XXX APIC_STRUCT */
-end_comment
 
 begin_endif
 endif|#
@@ -829,99 +789,21 @@ name|invltlb_ok
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* in pmap.c FIXME: belongs in pmap.h??? */
-end_comment
-
 begin_decl_stmt
-name|void
-name|pmap_bootstrap_apics
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+specifier|extern
+specifier|volatile
+name|u_int
+name|cpuid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|pmap_bootstrap2
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+specifier|extern
+specifier|volatile
+name|u_int
+name|cpu_lockid
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* chicken and egg problem... */
-end_comment
-
-begin_else
-unit|static __inline unsigned cpunumber(void) { 	return (unsigned)ID_TO_CPU((apic_base[APIC_ID]& APIC_ID_MASK)>> 24); }
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * we 'borrow' this info from apic.h  * this will go away soon...  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|unsigned
-name|cpunumber
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-block|return (unsigned)(apic_id_to_logical[(apic_base[8]& 0x0f000000)>> 24]);
-else|#
-directive|else
-return|return
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|apic_id_to_logical
-index|[
-operator|(
-name|lapic__id
-operator|&
-literal|0x0f000000
-operator|)
-operator|>>
-literal|24
-index|]
-argument_list|)
-return|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_endif
 endif|#

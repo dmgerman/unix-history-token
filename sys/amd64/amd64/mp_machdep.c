@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.16 1997/05/29 05:58:41 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.17 1997/06/02 10:44:08 dfr Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_smp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_serial.h"
 end_include
 
 begin_include
@@ -92,6 +86,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -126,8 +132,14 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_DEFAULT_CONFIG, LATE_START */
+comment|/** TEST_DEFAULT_CONFIG */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/tss.h>
+end_include
 
 begin_include
 include|#
@@ -151,7 +163,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/include/md_var.h>
+file|<machine/md_var.h>
 end_include
 
 begin_comment
@@ -640,42 +652,6 @@ name|r_idt
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* global data */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|SMPcurproc
-index|[
-name|NCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcb
-modifier|*
-name|SMPcurpcb
-index|[
-name|NCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|timeval
-name|SMPruntime
-index|[
-name|NCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|mp_ncpus
@@ -791,6 +767,40 @@ name|apic_id_to_logical
 index|[
 name|NAPICID
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Boot of AP uses this PTD */
+end_comment
+
+begin_decl_stmt
+name|u_int
+modifier|*
+name|bootPTD
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Hotwire a 0->4MB V==P mapping */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|pt_entry_t
+name|KPTphys
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual address of per-cpu common_tss */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|i386tss
+name|common_tss
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,19 +1153,6 @@ argument_list|(
 literal|"you must reconfigure your kernel"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LATE_START
-argument_list|)
-comment|/* create pages for (address common) cpu APIC and each IO APIC */
-name|pmap_bootstrap_apics
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* LATE_START */
 comment|/* flag fact that we are running multiple processors */
 name|mp_capable
 operator|=
@@ -1194,10 +1191,6 @@ argument_list|(
 literal|"MP hardware not found!"
 argument_list|)
 expr_stmt|;
-comment|/* finish pmap initialization - turn off V==P mapping at zero */
-name|pmap_bootstrap2
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -1232,12 +1225,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", version: 0x%08x\n"
+literal|", version: 0x%08x"
 argument_list|,
 name|cpu_apic_versions
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", at 0x%08x\n"
+argument_list|,
+name|cpu_apic_address
 argument_list|)
 expr_stmt|;
 for|for
@@ -1268,12 +1268,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", version: 0x%08x\n"
+literal|", version: 0x%08x"
 argument_list|,
 name|cpu_apic_versions
 index|[
 name|x
 index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", at 0x%08x\n"
+argument_list|,
+name|cpu_apic_address
 argument_list|)
 expr_stmt|;
 block|}
@@ -1311,9 +1318,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", version: 0x%08x\n"
+literal|", version: 0x%08x"
 argument_list|,
 name|io_apic_versions
+index|[
+name|x
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", at 0x%08x\n"
+argument_list|,
+name|io_apic_address
 index|[
 name|x
 index|]
@@ -1400,8 +1417,7 @@ name|slot
 operator|=
 name|NGDT
 operator|+
-name|cpunumber
-argument_list|()
+name|cpuid
 expr_stmt|;
 name|gsel_tss
 operator|=
@@ -1423,6 +1439,35 @@ name|sd_type
 operator|=
 name|SDT_SYS386TSS
 expr_stmt|;
+name|common_tss
+operator|.
+name|tss_esp0
+operator|=
+literal|0
+expr_stmt|;
+comment|/* not used until after switch */
+name|common_tss
+operator|.
+name|tss_ss0
+operator|=
+name|GSEL
+argument_list|(
+name|GDATA_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+expr_stmt|;
+name|common_tss
+operator|.
+name|tss_ioopt
+operator|=
+operator|(
+sizeof|sizeof
+name|common_tss
+operator|)
+operator|<<
+literal|16
+expr_stmt|;
 name|ltr
 argument_list|(
 name|gsel_tss
@@ -1434,6 +1479,16 @@ literal|0x8005003b
 argument_list|)
 expr_stmt|;
 comment|/* XXX! */
+name|PTD
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|invltlb
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1497,13 +1552,17 @@ block|}
 comment|/* mask the LVT1 */
 name|temp
 operator|=
-name|lapic__lvt_lint0
+name|lapic
+operator|.
+name|lvt_lint0
 expr_stmt|;
 name|temp
 operator||=
 name|APIC_LVT_M
 expr_stmt|;
-name|lapic__lvt_lint0
+name|lapic
+operator|.
+name|lvt_lint0
 operator|=
 name|temp
 expr_stmt|;
@@ -1554,26 +1613,48 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
-comment|/* examine the MP table for needed info */
+comment|/* Turn on 4MB of V == P addressing so we can get to MP table */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|PTD
+operator|=
+name|PG_V
+operator||
+name|PG_RW
+operator||
+operator|(
+operator|(
+name|u_long
+operator|)
+name|KPTphys
+operator|&
+name|PG_FRAME
+operator|)
+expr_stmt|;
+name|invltlb
+argument_list|()
+expr_stmt|;
+comment|/* examine the MP table for needed info, uses physical addresses */
 name|x
 operator|=
 name|mptable_pass2
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|LATE_START
-argument_list|)
-comment|/* create pages for (address common) cpu APIC and each IO APIC */
-name|pmap_bootstrap_apics
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|PTD
+operator|=
+literal|0
+expr_stmt|;
+name|invltlb
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LATE_START */
 comment|/* can't process default configs till the CPU APIC is pmapped */
 if|if
 condition|(
@@ -4881,7 +4962,9 @@ comment|/* 0 */
 name|boot_cpu_id
 operator|=
 operator|(
-name|lapic__id
+name|lapic
+operator|.
+name|id
 operator|&
 name|APIC_ID_MASK
 operator|)
@@ -5351,6 +5434,8 @@ parameter_list|)
 block|{
 name|int
 name|x
+decl_stmt|,
+name|i
 decl_stmt|;
 name|u_char
 name|mpbiosreason
@@ -5358,11 +5443,23 @@ decl_stmt|;
 name|u_long
 name|mpbioswarmvec
 decl_stmt|;
+name|pd_entry_t
+name|newptd
+decl_stmt|;
+name|pt_entry_t
+name|newpt
+decl_stmt|;
+name|int
+modifier|*
+name|newpp
+decl_stmt|;
 comment|/**          * NOTE: this needs further thought:          *        where does it get released?          *        should it be set to empy?          *          * get the initial mp_lock with a count of 1 for the BSP          */
 name|mp_lock
 operator|=
 operator|(
-name|lapic__id
+name|lapic
+operator|.
+name|id
 operator|&
 name|APIC_ID_MASK
 operator|)
@@ -5422,6 +5519,248 @@ operator|++
 name|x
 control|)
 block|{
+comment|/* HACK HACK HACK !!! */
+comment|/* alloc new page table directory */
+name|newptd
+operator|=
+call|(
+name|pd_entry_t
+call|)
+argument_list|(
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* clone currently active one (ie: IdlePTD) */
+name|bcopy
+argument_list|(
+name|PTD
+argument_list|,
+name|newptd
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* inc prv page pde */
+comment|/* set up 0 -> 4MB P==V mapping for AP boot */
+name|newptd
+index|[
+literal|0
+index|]
+operator|=
+name|PG_V
+operator||
+name|PG_RW
+operator||
+operator|(
+operator|(
+name|u_long
+operator|)
+name|KPTphys
+operator|&
+name|PG_FRAME
+operator|)
+expr_stmt|;
+comment|/* store PTD for this AP */
+name|bootPTD
+operator|=
+operator|(
+name|pd_entry_t
+operator|)
+name|vtophys
+argument_list|(
+name|newptd
+argument_list|)
+expr_stmt|;
+comment|/* alloc new page table page */
+name|newpt
+operator|=
+call|(
+name|pt_entry_t
+call|)
+argument_list|(
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* set the new PTD's private page to point there */
+name|newptd
+index|[
+name|MPPTDI
+index|]
+operator|=
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|newpt
+argument_list|)
+expr_stmt|;
+comment|/* install self referential entry */
+name|newptd
+index|[
+name|PTDPTDI
+index|]
+operator|=
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|newptd
+argument_list|)
+expr_stmt|;
+comment|/* get a new private data page */
+name|newpp
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* wire it into the private page table page */
+name|newpt
+index|[
+literal|0
+index|]
+operator|=
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|newpp
+argument_list|)
+expr_stmt|;
+comment|/* wire the ptp into itself for access */
+name|newpt
+index|[
+literal|1
+index|]
+operator|=
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|newpt
+argument_list|)
+expr_stmt|;
+comment|/* and the local apic */
+name|newpt
+index|[
+literal|2
+index|]
+operator|=
+name|SMP_prvpt
+index|[
+literal|2
+index|]
+expr_stmt|;
+comment|/* and the IO apic mapping[s] */
+for|for
+control|(
+name|i
+operator|=
+literal|16
+init|;
+name|i
+operator|<
+literal|32
+condition|;
+name|i
+operator|++
+control|)
+name|newpt
+index|[
+name|i
+index|]
+operator|=
+name|SMP_prvpt
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* prime data page for it to use */
+name|newpp
+index|[
+literal|0
+index|]
+operator|=
+name|x
+expr_stmt|;
+comment|/* cpuid */
+name|newpp
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* curproc */
+name|newpp
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* curpcb */
+name|newpp
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* npxproc */
+name|newpp
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* runtime.tv_sec */
+name|newpp
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* runtime.tv_usec */
+name|newpp
+index|[
+literal|6
+index|]
+operator|=
+name|x
+operator|<<
+literal|24
+expr_stmt|;
+comment|/* cpu_lockid */
+comment|/* XXX NOTE: ABANDON bootPTD for now!!!! */
+comment|/* END REVOLTING HACKERY */
 comment|/* setup a vector to our boot code */
 operator|*
 operator|(
@@ -5545,7 +5884,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|lapic__version
+name|lapic
+operator|.
+name|version
 expr_stmt|;
 comment|/* restore the warmstart vector */
 operator|*
@@ -5960,7 +6301,9 @@ comment|/* 	 * first we do an INIT/RESET IPI this INIT IPI might be run, resetin
 comment|/* setup the address for the target AP */
 name|icr_hi
 operator|=
-name|lapic__icr_hi
+name|lapic
+operator|.
+name|icr_hi
 operator|&
 operator|~
 name|APIC_ID_MASK
@@ -5973,18 +6316,24 @@ operator|<<
 literal|24
 operator|)
 expr_stmt|;
-name|lapic__icr_hi
+name|lapic
+operator|.
+name|icr_hi
 operator|=
 name|icr_hi
 expr_stmt|;
 comment|/* do an INIT IPI: assert RESET */
 name|icr_lo
 operator|=
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|&
 literal|0xfff00000
 expr_stmt|;
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -5993,14 +6342,18 @@ expr_stmt|;
 comment|/* wait for pending status end */
 while|while
 condition|(
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
 comment|/* spin */
 empty_stmt|;
 comment|/* do an INIT IPI: deassert RESET */
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6015,7 +6368,9 @@ expr_stmt|;
 comment|/* wait ~10mS */
 while|while
 condition|(
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
@@ -6023,7 +6378,9 @@ comment|/* spin */
 empty_stmt|;
 comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
 comment|/* do a STARTUP IPI */
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6033,7 +6390,9 @@ name|vector
 expr_stmt|;
 while|while
 condition|(
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
@@ -6046,7 +6405,9 @@ argument_list|)
 expr_stmt|;
 comment|/* wait ~200uS */
 comment|/* 	 * finally we do a 2nd STARTUP IPI: this 2nd STARTUP IPI should run IF 	 * the previous STARTUP IPI was cancelled by a latched INIT IPI. OR 	 * this STARTUP IPI will be ignored, as only ONE STARTUP IPI is 	 * recognized after hardware RESET or INIT IPI. 	 */
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6056,7 +6417,9 @@ name|vector
 expr_stmt|;
 while|while
 condition|(
-name|lapic__icr_lo
+name|lapic
+operator|.
+name|icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)

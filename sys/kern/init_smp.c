@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Peter Wemm<peter@freebsd.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: init_smp.c,v 1.5 1997/05/04 02:08:09 peter Exp $  */
+comment|/*  * Copyright (c) 1996, Peter Wemm<peter@freebsd.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: init_smp.c,v 1.6 1997/05/06 07:10:06 fsmp Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_smp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_smp_autostart.h"
 end_include
 
 begin_include
@@ -658,7 +652,7 @@ define|#
 directive|define
 name|MSG_CPU_MADEIT
 define|\
-value|printf("SMP: TADA! CPU #%d made it into the scheduler!.\n", \ 	       cpunumber())
+value|printf("SMP: TADA! CPU #%d made it into the scheduler!.\n", \ 	       cpuid)
 end_define
 
 begin_define
@@ -700,8 +694,7 @@ expr_stmt|;
 comment|/* 	 * Record our ID so we know when we've released the mp_stk. 	 * We must remain single threaded through this. 	 */
 name|cpu_starting
 operator|=
-name|cpunumber
-argument_list|()
+name|cpuid
 expr_stmt|;
 name|smp_cpus
 operator|++
@@ -710,8 +703,7 @@ name|printf
 argument_list|(
 literal|"SMP: AP CPU #%d LAUNCHED!!  Starting Scheduling...\n"
 argument_list|,
-name|cpunumber
-argument_list|()
+name|cpuid
 argument_list|)
 expr_stmt|;
 name|curproc
@@ -754,6 +746,9 @@ name|dcnt
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|apic_id
+decl_stmt|;
 comment|/* 	 * This code is executed only on startup of the idleprocs 	 * The fact that this is executed is an indication that the 	 * idle procs are online and it's safe to kick off the first 	 * AP cpu. 	 */
 if|if
 condition|(
@@ -768,12 +763,9 @@ argument_list|(
 literal|"SMP: All idle procs online.\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP_AUTOSTART
-argument_list|)
+ifndef|#
+directive|ifndef
+name|NO_AUTOSTART
 name|printf
 argument_list|(
 literal|"SMP: *** AUTO *** starting 1st AP!\n"
@@ -802,7 +794,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SMP_AUTOSTART */
 block|}
 name|spl0
 argument_list|()
@@ -817,14 +808,9 @@ condition|)
 block|{
 comment|/* 		 * make the optimiser assume nothing about the 		 * which*qs variables 		 */
 asm|__asm __volatile("" : : : "memory");
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SMP_AUTOSTART
-argument_list|)
-comment|/* 		 * Alternate code to enable a lockstep startup 		 * via sysctl instead of automatically. 		 */
+ifdef|#
+directive|ifdef
+name|NO_AUTOSTART
 if|if
 condition|(
 name|smp_cpus
@@ -862,7 +848,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !SMP_AUTOSTART */
 comment|/* 		 * If smp_active is set to (say) 1, we want cpu id's 		 * 1,2,etc to freeze here. 		 */
 if|if
 condition|(
@@ -870,8 +855,7 @@ name|smp_active
 operator|&&
 name|smp_active
 operator|<=
-name|cpunumber
-argument_list|()
+name|cpuid
 condition|)
 block|{
 name|get_mplock
@@ -881,8 +865,7 @@ name|printf
 argument_list|(
 literal|"SMP: cpu#%d freezing\n"
 argument_list|,
-name|cpunumber
-argument_list|()
+name|cpuid
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -901,8 +884,7 @@ while|while
 condition|(
 name|smp_active
 operator|<=
-name|cpunumber
-argument_list|()
+name|cpuid
 condition|)
 block|{
 asm|__asm __volatile("" : : : "memory");
@@ -914,14 +896,69 @@ name|printf
 argument_list|(
 literal|"SMP: cpu#%d waking up!\n"
 argument_list|,
-name|cpunumber
-argument_list|()
+name|cpuid
 argument_list|)
 expr_stmt|;
 name|rel_mplock
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* XXX DEBUG */
+name|apic_id
+operator|=
+operator|(
+name|apic_id_to_logical
+index|[
+operator|(
+name|lapic
+operator|.
+name|id
+operator|&
+literal|0x0f000000
+operator|)
+operator|>>
+literal|24
+index|]
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuid
+operator|!=
+name|apic_id
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SMP: cpuid = %d\n"
+argument_list|,
+name|cpuid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SMP: apic_id = %d\n"
+argument_list|,
+name|apic_id
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"PTD[MPPTDI] = %08x\n"
+argument_list|,
+name|PTD
+index|[
+name|MPPTDI
+index|]
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"cpuid mismatch! boom!!"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* XXX END DEBUG */
 if|if
 condition|(
 name|whichqs
@@ -993,8 +1030,7 @@ literal|1
 operator|&&
 name|cpu_starting
 operator|==
-name|cpunumber
-argument_list|()
+name|cpuid
 condition|)
 block|{
 comment|/* 					 * TADA! we have arrived! unlock the 					 * next cpu now that we have released 					 * the single mp_stk. 					 */
@@ -1091,8 +1127,7 @@ name|curproc
 operator|->
 name|p_pid
 argument_list|,
-name|cpunumber
-argument_list|()
+name|cpuid
 argument_list|,
 name|mp_lock
 argument_list|)
