@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.37.2.9 1998/01/21 06:08:58 jkh Exp $"
+literal|"$Id: perform.c,v 1.37.2.10 1998/02/16 17:41:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -502,8 +502,10 @@ condition|(
 operator|!
 name|Home
 condition|)
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unable to make playpen for %d bytes"
 argument_list|,
 name|sb
@@ -516,6 +518,24 @@ expr_stmt|;
 name|where_to
 operator|=
 name|Home
+expr_stmt|;
+comment|/* Since we can call ourselves recursively, keep notes on where we came from */
+if|if
+condition|(
+operator|!
+name|getenv
+argument_list|(
+literal|"_TOP"
+argument_list|)
+condition|)
+name|setenv
+argument_list|(
+literal|"_TOP"
+argument_list|,
+name|Home
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1039,7 +1059,10 @@ name|FILENAME_MAX
 argument_list|,
 literal|"%s/%s.tgz"
 argument_list|,
-name|Home
+name|getenv
+argument_list|(
+literal|"_TOP"
+argument_list|)
 argument_list|,
 name|p
 operator|->
