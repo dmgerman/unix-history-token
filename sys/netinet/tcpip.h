@@ -37,50 +37,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_comment
-comment|/*  * Tcp+ip header, after ip options removed but including TCP options.  */
-end_comment
-
-begin_struct
-struct|struct
-name|full_tcpiphdr
-block|{
-name|struct
-name|ipovly
-name|ti_i
-decl_stmt|;
-comment|/* overlaid ip structure */
-name|struct
-name|tcphdr
-name|ti_t
-decl_stmt|;
-comment|/* tcp header */
-name|char
-name|ti_o
-index|[
-name|TCP_MAXOLEN
-index|]
-decl_stmt|;
-comment|/* space for tcp options */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notyet */
-end_comment
-
 begin_define
 define|#
 directive|define
