@@ -857,13 +857,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|itf
 argument_list|,
-operator|(
-name|long
-operator|)
 name|positionof
 argument_list|(
 name|mp
@@ -875,7 +872,7 @@ operator|->
 name|m_offset
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
