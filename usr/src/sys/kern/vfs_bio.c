@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.45 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -298,13 +298,31 @@ name|bp
 operator|->
 name|b_flags
 operator|=
-name|B_BUSY
-operator||
 name|B_INVAL
 expr_stmt|;
-name|brelse
+name|dp
+operator|=
+name|bp
+operator|->
+name|b_bufsize
+condition|?
+operator|&
+name|bfreelist
+index|[
+name|BQ_AGE
+index|]
+else|:
+operator|&
+name|bfreelist
+index|[
+name|BQ_EMPTY
+index|]
+expr_stmt|;
+name|binsheadfree
 argument_list|(
 name|bp
+argument_list|,
+name|dp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1095,6 +1113,8 @@ name|int
 name|s
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|flag
 operator|=
@@ -1275,15 +1295,21 @@ operator|&
 name|B_DELWRI
 condition|)
 block|{
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags
 operator||=
 name|B_AGE
 expr_stmt|;
-name|error
-operator|=
-literal|0
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -1541,6 +1567,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Retry I/O for locked buffers rather than invalidating them. 	 */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1628,11 +1659,6 @@ name|B_DELWRI
 expr_stmt|;
 block|}
 comment|/* 	 * Stick the buffer back on a free list. 	 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|bp
