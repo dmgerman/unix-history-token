@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.1 (Berkeley) %G%"
+literal|"@(#)strip.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,9 +368,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|fputs
 argument_list|(
 literal|"strip: "
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|perror
