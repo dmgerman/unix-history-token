@@ -2001,8 +2001,6 @@ name|m
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|intrsave
 decl_stmt|;
 comment|/* 	 * Attempt to maintain approximately 1/2 of our free pages in a 	 * PG_ZERO'd state.   Add some hysteresis to (attempt to) avoid 	 * generally zeroing a page when the system is near steady-state. 	 * Otherwise we might get 'flutter' during disk I/O / IPC or  	 * fast sleeps.  We also do not want to be continuously zeroing 	 * pages because doing so may flush our L1 and L2 caches too much. 	 */
 if|if
@@ -2053,14 +2051,6 @@ block|{
 name|s
 operator|=
 name|splvm
-argument_list|()
-expr_stmt|;
-name|intrsave
-operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|enable_intr
 argument_list|()
 expr_stmt|;
 name|zero_state
@@ -2228,11 +2218,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|restore_intr
-argument_list|(
-name|intrsave
-argument_list|)
-expr_stmt|;
 name|mtx_exit
 argument_list|(
 operator|&
@@ -2247,8 +2232,6 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * We have to enable interrupts for a moment if the try_mplock fails 	 * in order to potentially take an IPI.   XXX this should be in  	 * swtch.s 	 */
-asm|__asm __volatile("sti; nop; cli" : : : "memory");
 return|return
 operator|(
 literal|0
