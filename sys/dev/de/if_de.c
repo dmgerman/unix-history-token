@@ -8594,60 +8594,11 @@ begin_comment
 comment|/*  * Code the read the SROM and MII bit streams (I2C)  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|tulip_delay_300ns
-parameter_list|(
-name|tulip_softc_t
-modifier|*
-specifier|const
-name|sc
-parameter_list|)
-block|{
-name|int
-name|idx
-decl_stmt|;
-for|for
-control|(
-name|idx
-operator|=
-operator|(
-literal|300
-operator|/
-literal|33
-operator|)
-operator|+
-literal|1
-init|;
-name|idx
-operator|>
-literal|0
-condition|;
-name|idx
-operator|--
-control|)
-operator|(
-name|void
-operator|)
-name|TULIP_CSR_READ
-argument_list|(
-name|sc
-argument_list|,
-name|csr_busmode
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
 begin_define
 define|#
 directive|define
 name|EMIT
-value|do { TULIP_CSR_WRITE(sc, csr_srom_mii, csr); tulip_delay_300ns(sc); } while (0)
+value|do { TULIP_CSR_WRITE(sc, csr_srom_mii, csr); DELAY(1); } while (0)
 end_define
 
 begin_function
@@ -9051,7 +9002,7 @@ begin_define
 define|#
 directive|define
 name|MII_EMIT
-value|do { TULIP_CSR_WRITE(sc, csr_srom_mii, csr); tulip_delay_300ns(sc); } while (0)
+value|do { TULIP_CSR_WRITE(sc, csr_srom_mii, csr); DELAY(1); } while (0)
 end_define
 
 begin_function
