@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.26 1996/10/31 14:24:35 phk Exp $ */
+comment|/* $Id: main.c,v 1.27 1996/11/10 14:46:50 peter Exp $ */
 end_comment
 
 begin_include
@@ -1307,6 +1307,9 @@ argument_list|,
 literal|0
 argument_list|,
 name|ftp_verbose
+argument_list|,
+operator|&
+name|status
 argument_list|)
 expr_stmt|;
 if|if
@@ -1314,15 +1317,36 @@ condition|(
 operator|!
 name|ftp
 condition|)
+block|{
+if|if
+condition|(
+name|status
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|host
+argument_list|,
+name|ftpErrString
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"couldn't open FTP connection or login to %s."
+literal|"couldn't open FTP connection to %s."
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Time to set our defaults */
 name|ftpBinary
 argument_list|(
