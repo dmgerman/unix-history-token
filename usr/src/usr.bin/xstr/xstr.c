@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xstr.c	5.6 (Berkeley) %G%"
+literal|"@(#)xstr.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -74,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -96,14 +114,6 @@ parameter_list|)
 value|((void) a)
 end_define
 
-begin_function_decl
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|off_t
 name|tellpt
@@ -118,15 +128,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+name|void
 name|onintr
 parameter_list|()
 function_decl|;
@@ -136,22 +138,6 @@ begin_function_decl
 name|char
 modifier|*
 name|savestr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strcat
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|strcpy
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -341,7 +327,7 @@ name|strings
 operator|=
 name|mktemp
 argument_list|(
-name|savestr
+name|strdup
 argument_list|(
 name|_PATH_TMP
 argument_list|)
@@ -1456,15 +1442,42 @@ name|hpt
 operator|=
 name|mesgpt
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|hp
 operator|->
 name|hstr
 operator|=
-name|savestr
+name|strdup
 argument_list|(
 name|str
 argument_list|)
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"xstr: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|mesgpt
 operator|+=
 name|strlen
@@ -2118,73 +2131,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_function
-name|char
-modifier|*
-name|savestr
-parameter_list|(
-name|cp
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|dp
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|dp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|calloc
-argument_list|(
-literal|1
-argument_list|,
-name|strlen
-argument_list|(
-name|cp
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"xstr"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|strcpy
-argument_list|(
-name|dp
-argument_list|,
-name|cp
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_expr_stmt
 name|lastchr
 argument_list|(
@@ -2289,12 +2235,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|ignore
 argument_list|(
@@ -2345,7 +2289,7 @@ literal|7
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
