@@ -21,7 +21,6 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 name|integer
 typedef|;
@@ -30,7 +29,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|unsigned
-name|long
+name|int
 name|uinteger
 typedef|;
 end_typedef
@@ -95,7 +94,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 name|logical
 typedef|;
@@ -250,7 +248,6 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 name|flag
 typedef|;
@@ -258,7 +255,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 name|ftnlen
 typedef|;
@@ -266,7 +262,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 name|ftnint
 typedef|;
