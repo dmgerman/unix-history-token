@@ -2291,7 +2291,7 @@ argument_list|(
 literal|"486"
 argument_list|)
 expr_stmt|;
-name|bzero
+name|bzero_vector
 operator|=
 name|i486_bzero
 expr_stmt|;

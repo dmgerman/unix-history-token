@@ -19,24 +19,6 @@ begin_comment
 comment|/*  * Miscellaneous machine-dependent declarations.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|Maxmem
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|atdevbase
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* offset in virtual memory of ISA io mem */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|void
@@ -60,12 +42,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
-name|busdma_swi_pending
-decl_stmt|;
-end_decl_stmt
+name|void
+function_decl|(
+modifier|*
+name|bzero_vector
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -112,6 +105,31 @@ name|len
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|Maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|atdevbase
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* offset in virtual memory of ISA io mem */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|busdma_swi_pending
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -210,29 +228,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|ovbcopy_vector
-function_decl|)
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|from
-parameter_list|,
-name|void
-modifier|*
-name|to
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern

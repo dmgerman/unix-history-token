@@ -1965,16 +1965,10 @@ operator|&
 name|NPX_DISABLE_I586_OPTIMIZED_BCOPY
 operator|)
 condition|)
-block|{
 name|bcopy_vector
 operator|=
 name|i586_bcopy
 expr_stmt|;
-name|ovbcopy_vector
-operator|=
-name|i586_bcopy
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1984,7 +1978,7 @@ operator|&
 name|NPX_DISABLE_I586_OPTIMIZED_BZERO
 operator|)
 condition|)
-name|bzero
+name|bzero_vector
 operator|=
 name|i586_bzero
 expr_stmt|;
