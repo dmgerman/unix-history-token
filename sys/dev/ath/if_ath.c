@@ -6932,12 +6932,15 @@ argument_list|(
 name|ATH_DEBUG_ANY
 argument_list|,
 operator|(
-literal|"%s: DMA map: %p (%d) -> %p (%lu)\n"
+literal|"%s: DMA map: %p (%lu) -> %p (%lu)\n"
 operator|,
 name|__func__
 operator|,
 name|ds
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sc
 operator|->
 name|sc_desc_len
@@ -10820,6 +10823,9 @@ operator|,
 operator|(
 name|caddr_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ath_hal_gettxbuf
 argument_list|(
 name|sc
@@ -11308,6 +11314,9 @@ operator|,
 operator|(
 name|caddr_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|ath_hal_gettxbuf
 argument_list|(
 name|ah
@@ -11346,6 +11355,9 @@ name|__func__
 operator|,
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ath_hal_gettxbuf
 argument_list|(
@@ -11625,6 +11637,9 @@ name|__func__
 argument_list|,
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|ath_hal_getrxbuf
 argument_list|(
