@@ -98,14 +98,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ID_81801AA
+name|ID_82801AA
 value|0x24138086
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID_81801AB
+name|ID_82801AB
 value|0x24238086
 end_define
 
@@ -340,7 +340,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|ID_81801AA
+name|ID_82801AA
 case|:
 name|device_set_desc
 argument_list|(
@@ -351,7 +351,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ID_81801AB
+name|ID_82801AB
 case|:
 name|device_set_desc
 argument_list|(
