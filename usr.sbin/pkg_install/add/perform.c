@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.24 1995/04/28 04:16:30 jkh Exp $"
+literal|"$Id: perform.c,v 1.25 1995/05/30 03:49:54 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1848,16 +1848,15 @@ condition|(
 operator|!
 name|cfile
 condition|)
-block|{
 name|whinge
 argument_list|(
-literal|"Can't open dependency file '%s'!\n\tDependency registration incomplete."
+literal|"Warning: Can't open dependency file '%s'!\n\tDependency registration is incomplete."
 argument_list|,
 name|contents
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|cfile
@@ -1886,6 +1885,7 @@ argument_list|,
 name|contents
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
