@@ -525,9 +525,7 @@ argument_list|(
 name|atadev
 argument_list|)
 condition|)
-goto|goto
-name|notfound
-goto|;
+return|return;
 break|break;
 endif|#
 directive|endif
@@ -546,9 +544,7 @@ argument_list|(
 name|atadev
 argument_list|)
 condition|)
-goto|goto
-name|notfound
-goto|;
+return|return;
 break|break;
 endif|#
 directive|endif
@@ -567,15 +563,11 @@ argument_list|(
 name|atadev
 argument_list|)
 condition|)
-goto|goto
-name|notfound
-goto|;
+return|return;
 break|break;
 endif|#
 directive|endif
-name|notfound
-label|:
-default|default:
+block|}
 name|ata_prtdev
 argument_list|(
 name|atadev
@@ -619,7 +611,6 @@ name|driver
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 

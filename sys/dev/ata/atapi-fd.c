@@ -347,8 +347,7 @@ literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 name|fdp
@@ -402,8 +401,7 @@ name|M_AFD
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 if|if
@@ -512,7 +510,7 @@ operator|=
 name|fdp
 expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function

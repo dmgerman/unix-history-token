@@ -712,8 +712,7 @@ literal|"acd: out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 name|ata_set_name
@@ -833,8 +832,7 @@ name|M_ACD
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 if|if
@@ -947,8 +945,7 @@ name|M_ACD
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 for|for
@@ -1156,7 +1153,7 @@ operator|=
 name|cdp
 expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function
