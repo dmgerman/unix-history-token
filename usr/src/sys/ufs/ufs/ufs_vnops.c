@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4460,21 +4460,12 @@ goto|goto
 name|abortit
 goto|;
 block|}
+comment|/* Release destination completely. */
 name|VOP_ABORTOP
 argument_list|(
-name|fdvp
+name|tdvp
 argument_list|,
-name|fcnp
-argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-name|fdvp
-argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-name|fvp
+name|tcnp
 argument_list|)
 expr_stmt|;
 name|vput
@@ -4487,14 +4478,25 @@ argument_list|(
 name|tvp
 argument_list|)
 expr_stmt|;
-name|tcnp
+comment|/* Delete source. */
+name|vrele
+argument_list|(
+name|fdvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|fvp
+argument_list|)
+expr_stmt|;
+name|fcnp
 operator|->
 name|cn_flags
 operator|&=
 operator|~
 name|MODMASK
 expr_stmt|;
-name|tcnp
+name|fcnp
 operator|->
 name|cn_flags
 operator||=
@@ -4505,7 +4507,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tcnp
+name|fcnp
 operator|->
 name|cn_flags
 operator|&
@@ -4519,7 +4521,7 @@ argument_list|(
 literal|"ufs_rename: lost from startdir"
 argument_list|)
 expr_stmt|;
-name|tcnp
+name|fcnp
 operator|->
 name|cn_nameiop
 operator|=
@@ -4530,23 +4532,23 @@ name|void
 operator|)
 name|relookup
 argument_list|(
-name|tdvp
+name|fdvp
 argument_list|,
 operator|&
-name|tvp
+name|fvp
 argument_list|,
-name|tcnp
+name|fcnp
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|VOP_REMOVE
 argument_list|(
-name|tdvp
+name|fdvp
 argument_list|,
-name|tvp
+name|fvp
 argument_list|,
-name|tcnp
+name|fcnp
 argument_list|)
 operator|)
 return|;
