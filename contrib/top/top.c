@@ -1413,7 +1413,7 @@ break|break;
 case|case
 literal|'m'
 case|:
-comment|/* select sort order */
+comment|/* select display mode */
 if|if
 condition|(
 name|strcmp
