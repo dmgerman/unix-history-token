@@ -542,6 +542,40 @@ name|PS_SUSPENDED
 case|:
 comment|/* Nothing to do here. */
 break|break;
+comment|/* 	 * The wait state is a special case due to the handling of 	 * SIGCHLD signals. 	 */
+case|case
+name|PS_WAIT_WAIT
+case|:
+comment|/* 		 * Check for signals other than the death of a child 		 * process: 		 */
+if|if
+condition|(
+name|sig
+operator|!=
+name|SIGCHLD
+condition|)
+comment|/* Flag the operation as interrupted: */
+name|pthread
+operator|->
+name|interrupted
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+break|break;
 comment|/* 	 * States that are interrupted by the occurrence of a signal 	 * other than the scheduling alarm:  	 */
 case|case
 name|PS_FDR_WAIT
@@ -554,9 +588,6 @@ name|PS_SLEEP_WAIT
 case|:
 case|case
 name|PS_SIGWAIT
-case|:
-case|case
-name|PS_WAIT_WAIT
 case|:
 case|case
 name|PS_SELECT_WAIT
