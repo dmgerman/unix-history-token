@@ -1720,7 +1720,7 @@ name|CHUNK_IS_ROOT
 expr_stmt|;
 name|newfs
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
