@@ -141,6 +141,10 @@ modifier|*
 name|mbuf
 decl_stmt|;
 comment|/* mbuf receiving packet */
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* DMA map */
 block|}
 struct|;
 end_struct
@@ -155,6 +159,10 @@ modifier|*
 name|mbuf
 decl_stmt|;
 comment|/* mbuf contained packet */
+name|bus_dmamap_t
+name|map
+decl_stmt|;
+comment|/* DMA map */
 block|}
 struct|;
 end_struct
@@ -243,6 +251,30 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_sh
 decl_stmt|;
+name|bus_dma_tag_t
+name|mtag
+decl_stmt|;
+name|bus_dma_tag_t
+name|rtag
+decl_stmt|;
+name|bus_dmamap_t
+name|rmap
+decl_stmt|;
+name|bus_dma_tag_t
+name|ttag
+decl_stmt|;
+name|bus_dmamap_t
+name|tmap
+decl_stmt|;
+name|bus_dma_tag_t
+name|ftag
+decl_stmt|;
+name|bus_dmamap_t
+name|fmap
+decl_stmt|;
+name|bus_dmamap_t
+name|sparemap
+decl_stmt|;
 name|struct
 name|epic_rx_buffer
 name|rx_buffer
@@ -273,6 +305,15 @@ name|struct
 name|epic_frag_list
 modifier|*
 name|tx_flist
+decl_stmt|;
+name|u_int32_t
+name|rx_addr
+decl_stmt|;
+name|u_int32_t
+name|tx_addr
+decl_stmt|;
+name|u_int32_t
+name|frag_addr
 decl_stmt|;
 name|u_int32_t
 name|flags
