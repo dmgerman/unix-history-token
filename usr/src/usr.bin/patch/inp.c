@@ -1519,7 +1519,7 @@ argument_list|(
 name|tifd
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|baseline
 operator|/
