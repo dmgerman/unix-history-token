@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dvar.c	1.9	83/12/18  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dvar.c	1.10	84/02/27  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -195,7 +195,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dvar.c	1.9	83/12/18"
+literal|"dvar.c	1.10	84/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -3161,6 +3161,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGABLE
+end_ifdef
+
 begin_macro
 name|fontprint
 argument_list|(
@@ -3427,6 +3433,11 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|loadfont
 argument_list|(
@@ -3563,7 +3574,16 @@ parameter_list|,
 name|y
 parameter_list|)
 value|{ c = (char*) (x); x = y; y = c; }
-name|ptrswap
+define|#
+directive|define
+name|ptrfswap
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|{ c = (char*) (x); x = y; y = (struct font *) c; }
+name|ptrfswap
 argument_list|(
 name|fontbase
 index|[
@@ -5121,24 +5141,19 @@ expr_stmt|;
 comment|/* get the width */
 block|}
 else|else
-comment|/* on another font (we hope) */
+block|{
+comment|/* on another font - run down the font list */
 for|for
 control|(
-name|k
-operator|=
-name|font
-operator|,
 name|j
 operator|=
 literal|0
 init|;
 name|j
+operator|++
 operator|<=
 name|nfonts
 condition|;
-name|j
-operator|++
-operator|,
 name|k
 operator|=
 operator|(
@@ -5205,28 +5220,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
 if|if
 condition|(
 name|i
 operator|==
 literal|0
-operator|||
-operator|(
-name|code
-operator|=
-name|p
-index|[
-name|i
-index|]
-operator|&
-name|BMASK
-operator|)
-operator|==
-literal|0
-operator|||
-name|k
-operator|>
-name|nfonts
 condition|)
 block|{
 ifdef|#
@@ -5251,6 +5250,15 @@ endif|#
 directive|endif
 return|return;
 block|}
+name|code
+operator|=
+name|p
+index|[
+name|i
+index|]
+operator|&
+name|BMASK
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUGABLE
