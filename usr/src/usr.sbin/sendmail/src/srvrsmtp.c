@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -295,6 +295,10 @@ literal|"expn"
 block|,
 name|CMDVRFY
 block|,
+literal|"expn"
+block|,
+name|CMDVRFY
+block|,
 literal|"help"
 block|,
 name|CMDHELP
@@ -450,6 +454,18 @@ name|HostName
 argument_list|,
 name|Version
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|TopFrame
+argument_list|)
+expr_stmt|;
+name|QuickAbort
+operator|=
+name|FALSE
 expr_stmt|;
 for|for
 control|(

@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -24,7 +24,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_ifdef
@@ -198,6 +198,17 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|QuickAbort
+condition|)
+name|longjmp
+argument_list|(
+name|TopFrame
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -205,7 +216,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		none ** **	Side Effects: **		increments Errors. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -285,6 +296,17 @@ expr_stmt|;
 name|putmsg
 argument_list|(
 name|MsgBuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|QuickAbort
+condition|)
+name|longjmp
+argument_list|(
+name|TopFrame
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
