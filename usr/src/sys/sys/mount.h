@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -294,7 +294,7 @@ modifier|*
 name|vfs_fhtovp
 function_decl|)
 parameter_list|(
-comment|/* mp, fhp, vpp */
+comment|/* mp, fidp, vpp */
 parameter_list|)
 function_decl|;
 name|int
@@ -303,7 +303,7 @@ modifier|*
 name|vfs_vptofh
 function_decl|)
 parameter_list|(
-comment|/* vp, fhp */
+comment|/* vp, fidp */
 parameter_list|)
 function_decl|;
 block|}
@@ -382,11 +382,11 @@ name|VFS_FHTOVP
 parameter_list|(
 name|MP
 parameter_list|,
-name|FHP
+name|FIDP
 parameter_list|,
 name|VPP
 parameter_list|)
-value|(*(MP)->m_op->vfs_fhtovp)(MP, FHP, VPP)
+value|(*(MP)->m_op->vfs_fhtovp)(MP, FIDP, VPP)
 end_define
 
 begin_define
@@ -396,9 +396,9 @@ name|VFS_VPTOFH
 parameter_list|(
 name|VP
 parameter_list|,
-name|FHP
+name|FIDP
 parameter_list|)
-value|(*(VP)->v_mount->m_op->vfs_vptofh)(VP, FHP)
+value|(*(VP)->v_mount->m_op->vfs_vptofh)(VP, FIDP)
 end_define
 
 begin_comment
@@ -572,6 +572,35 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Generic file handle  */
+end_comment
+
+begin_struct
+struct|struct
+name|fhandle
+block|{
+name|fsid_t
+name|fh_fsid
+decl_stmt|;
+comment|/* File system id of mount point */
+name|struct
+name|fid
+name|fh_fid
+decl_stmt|;
+comment|/* Id of file */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fhandle
+name|fhandle_t
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -584,7 +613,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|fhandle
+name|nfsv2fh
 block|{
 name|u_char
 name|fh_bytes
@@ -599,8 +628,8 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|fhandle
-name|fhandle_t
+name|nfsv2fh
+name|nfsv2fh_t
 typedef|;
 end_typedef
 
@@ -618,7 +647,7 @@ modifier|*
 name|addr
 decl_stmt|;
 comment|/* file server address */
-name|fhandle_t
+name|nfsv2fh_t
 modifier|*
 name|fh
 decl_stmt|;
