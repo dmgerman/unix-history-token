@@ -32,6 +32,18 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"include.h"
 end_include
 
@@ -1908,22 +1920,14 @@ name|shell
 decl_stmt|,
 modifier|*
 name|base
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strrchr
-argument_list|()
 decl_stmt|;
-name|setuid
+comment|/* revoke */
+name|setgid
 argument_list|(
-name|getuid
+name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* turn off setuid bit */
 name|done_screen
 argument_list|()
 expr_stmt|;
