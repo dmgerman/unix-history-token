@@ -4083,10 +4083,6 @@ expr_stmt|;
 name|reassignbuf
 argument_list|(
 name|tbp
-argument_list|,
-name|tbp
-operator|->
-name|b_vp
 argument_list|)
 expr_stmt|;
 comment|/* put on clean list */

@@ -15295,10 +15295,6 @@ expr_stmt|;
 name|reassignbuf
 argument_list|(
 name|bp
-argument_list|,
-name|bp
-operator|->
-name|b_vp
 argument_list|)
 expr_stmt|;
 name|splx

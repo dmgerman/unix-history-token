@@ -2504,10 +2504,6 @@ parameter_list|(
 name|struct
 name|buf
 modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
