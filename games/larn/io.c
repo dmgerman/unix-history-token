@@ -2811,10 +2811,6 @@ name|struct
 name|sgttyb
 name|tt
 decl_stmt|;
-specifier|extern
-name|short
-name|ospeed
-decl_stmt|;
 switch|switch
 condition|(
 name|tgetent
@@ -2900,12 +2896,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|ospeed
-operator|=
-name|tt
-operator|.
-name|sg_ospeed
-expr_stmt|;
+comment|/* ospeed = tt.sg_ospeed */
+empty_stmt|;
 name|CM
 operator|=
 name|tgetstr
