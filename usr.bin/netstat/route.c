@@ -3273,33 +3273,15 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" %6d%s"
+literal|" %6d"
 argument_list|,
 operator|(
 name|int
 operator|)
 name|expire_time
-argument_list|,
-name|rt
-operator|->
-name|rt_nodes
-index|[
-literal|0
-index|]
-operator|.
-name|rn_dupedkey
-condition|?
-literal|" =>"
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
-else|else
-goto|goto
-name|ifandkey
-goto|;
 block|}
-elseif|else
 if|if
 condition|(
 name|rt
@@ -3311,16 +3293,11 @@ index|]
 operator|.
 name|rn_dupedkey
 condition|)
-block|{
-name|ifandkey
-label|:
-empty_stmt|;
 name|printf
 argument_list|(
 literal|" =>"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|putchar
 argument_list|(
