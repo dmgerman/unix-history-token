@@ -121,25 +121,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|_DIST_XDEVELOPER
-define|\
-value|(_DIST_DEVELOPER | DIST_XF86)
-end_define
-
-begin_define
-define|#
-directive|define
 name|_DIST_USER
 define|\
 value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_DIST_XUSER
-define|\
-value|(_DIST_USER | DIST_XF86)
 end_define
 
 begin_comment
@@ -247,20 +231,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_SRC_XF86
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_SRC_ALL
-value|0x3FFF
+value|0xFFFF
 end_define
-
-begin_comment
-comment|/* Don't include XFree86 source by default */
-end_comment
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
@@ -460,6 +433,13 @@ define|#
 directive|define
 name|DIST_XF86_FONTS_SERVER
 value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SRC
+value|0x2000
 end_define
 
 begin_define
