@@ -558,10 +558,10 @@ define|#
 directive|define
 name|CMD
 parameter_list|(
-name|unit
+name|sc
 parameter_list|)
 define|\
-value|{ \ 		   outw(HACR(WLSOFTC(unit)->base),WLSOFTC(unit)->hacr); \
+value|{ \ 		   outw(HACR(sc->base),sc->hacr); \
 comment|/* delay for 50 us, might only be needed sometimes */
 value|\ 		   DELAY(DELAYCONST); \ 	        }
 end_define
@@ -575,10 +575,10 @@ define|#
 directive|define
 name|SET_CHAN_ATTN
 parameter_list|(
-name|unit
+name|sc
 parameter_list|)
 define|\
-value|{ \          outw(HACR(WLSOFTC(unit)->base),WLSOFTC(unit)->hacr | HACR_CA); \       }
+value|{ \          outw(HACR(sc->base),sc->hacr | HACR_CA); \       }
 end_define
 
 begin_define
@@ -591,7 +591,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|while(inw(HASR(WLSOFTC(unit)->base))& HASR_MMC_BUSY) ; \ 	outw(MMCR(WLSOFTC(unit)->base), \ 	     (u_short)(((u_short)(val)<< 8) | ((cmd)<< 1) | 1))
+value|while(inw(HASR(sc->base))& HASR_MMC_BUSY) ; \ 	outw(MMCR(sc->base), \ 	     (u_short)(((u_short)(val)<< 8) | ((cmd)<< 1) | 1))
 end_define
 
 begin_endif
