@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*static	char sccsid[] = "@(#)c2.h 4.6 %G%";*/
-end_comment
-
-begin_comment
-comment|/* @(#)c2.h 1.19 80/08/26 13:39:07 */
+comment|/*	c2.h	4.7	83/08/11	*/
 end_comment
 
 begin_comment

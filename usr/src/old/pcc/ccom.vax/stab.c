@@ -1,7 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * Symbolic debugging info interface.  *  * Here we generate pseudo-ops that cause the assembler to put  * symbolic debugging information into the object file.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +11,18 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.8 (Berkeley) %G%"
+literal|"@(#)stab.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Symbolic debugging info interface.  *  * Here we generate pseudo-ops that cause the assembler to put  * symbolic debugging information into the object file.  */
+end_comment
 
 begin_include
 include|#
