@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.12.2.4 2000/08/07 12:32:22 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.12.2.5 2000/10/19 15:41:41 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4481,12 +4481,9 @@ name|ip_dst
 expr_stmt|;
 name|plen
 operator|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 expr_stmt|;
 block|}
 else|else

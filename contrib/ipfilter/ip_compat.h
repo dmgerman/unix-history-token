@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.4 2000/08/13 03:51:03 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.6 2000/10/19 15:39:05 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1548,6 +1548,40 @@ argument_list|)
 operator|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFILTER_LKM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ACTUALLY_LKM_NOT_KERNEL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1698,6 +1732,77 @@ directive|define
 name|ATOMIC_DEC16
 value|ATOMIC_DEC
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|hz
+value|HZ
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/ksynch.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|IPF_LOCK_PL
+value|plhi
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/sema.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|kmutex_t
+end_undef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|lock_t
+modifier|*
+name|l
+decl_stmt|;
+name|int
+name|pl
+decl_stmt|;
+block|}
+name|kmutex_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|MUTEX_INIT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MUTEX_DESTROY
+end_undef
 
 begin_endif
 endif|#
@@ -2113,7 +2218,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|copyin((a), (b), (c))
+value|copyin((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -2127,7 +2232,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|copyout((a), (b), (c))
+value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -2428,54 +2533,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|hz
-value|HZ
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/ksynch.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|IPF_LOCK_PL
-value|plhi
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/sema.h>
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|kmutex_t
-end_undef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|lock_t
-modifier|*
-name|l
-decl_stmt|;
-name|int
-name|pl
-decl_stmt|;
-block|}
-name|kmutex_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
 name|ATOMIC_INC
 parameter_list|(
 name|x
@@ -2581,7 +2638,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-value|(x).l = LOCK_ALLOC((uchar_t)-1, IPF_LOCK_PL, (lkinfo_t *)-1, KM_NOSLEEP)
+value|(x)->l = LOCK_ALLOC((uchar_t)-1, IPF_LOCK_PL, (lkinfo_t *)-1, KM_NOSLEEP)
 end_define
 
 begin_define
@@ -2591,7 +2648,7 @@ name|MUTEX_DESTROY
 parameter_list|(
 name|x
 parameter_list|)
-value|LOCK_DEALLOC((x).l)
+value|LOCK_DEALLOC((x)->l)
 end_define
 
 begin_else

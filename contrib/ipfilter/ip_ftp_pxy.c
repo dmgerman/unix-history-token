@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.7.2.13 2000/08/07 12:35:27 darrenr Exp $  */
+comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.7.2.17 2000/10/19 15:40:40 darrenr Exp $  */
 end_comment
 
 begin_if
@@ -862,6 +862,10 @@ name|a5
 operator|>>=
 literal|8
 expr_stmt|;
+name|a5
+operator|&=
+literal|0xff
+expr_stmt|;
 comment|/* 	 * Calculate new address parts for PORT command 	 */
 name|a1
 operator|=
@@ -1272,8 +1276,6 @@ operator|->
 name|ip_sum
 argument_list|,
 name|sum2
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2228,7 +2230,7 @@ name|__sgi
 argument_list|)
 block|register u_32_t	sum1, sum2;  		sum1 = ip->ip_len; 		sum2 = ip->ip_len + inc;
 comment|/* Because ~1 == -2, We really need ~1 == -1 */
-block|if (sum1> sum2) 			sum2--; 		sum2 -= sum1; 		sum2 = (sum2& 0xffff) + (sum2>> 16);  		fix_outcksum(&ip->ip_sum, sum2, 0);
+block|if (sum1> sum2) 			sum2--; 		sum2 -= sum1; 		sum2 = (sum2& 0xffff) + (sum2>> 16);  		fix_outcksum(&ip->ip_sum, sum2);
 endif|#
 directive|endif
 comment|/* SOLARIS || defined(__sgi) */
@@ -3544,20 +3546,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|*
 name|rptr
 operator|==
 literal|'\r'
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|rptr
 operator|+
 literal|1
 operator|<
 name|wptr
-operator|)
 condition|)
 block|{
 if|if
@@ -3588,13 +3589,16 @@ name|rptr
 operator|++
 expr_stmt|;
 block|}
+else|else
+break|break;
+block|}
+block|}
 name|f
 operator|->
 name|ftps_rptr
 operator|=
 name|rptr
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|rptr
@@ -3985,6 +3989,14 @@ operator|*
 name|ptr
 operator|=
 name|s
+expr_stmt|;
+name|i
+operator|&=
+literal|0xff
+expr_stmt|;
+name|j
+operator|&=
+literal|0xff
 expr_stmt|;
 return|return
 operator|(
