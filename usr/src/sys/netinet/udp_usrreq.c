@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -273,10 +273,7 @@ operator|.
 name|udps_ipackets
 operator|++
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|notyet
-comment|/* should skip this, make available& use on returned packets */
+comment|/* 	 * Strip IP options, if any; should skip this, 	 * make available to user, and use on returned packets, 	 * but we don't yet have a way to check the checksum 	 * with options still present. 	 */
 if|if
 condition|(
 name|iphlen
@@ -287,6 +284,7 @@ expr|struct
 name|ip
 argument_list|)
 condition|)
+block|{
 name|ip_stripoptions
 argument_list|(
 name|m
@@ -299,8 +297,15 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|iphlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Get IP and UDP header together in first mbuf. 	 */
 name|ip
 operator|=
@@ -665,6 +670,12 @@ name|ip
 operator|=
 name|save_ip
 expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|+=
+name|iphlen
+expr_stmt|;
 name|icmp_error
 argument_list|(
 name|m
@@ -861,14 +872,6 @@ block|}
 endif|#
 directive|endif
 block|}
-name|iphlen
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
 name|iphlen
 operator|+=
 sizeof|sizeof
