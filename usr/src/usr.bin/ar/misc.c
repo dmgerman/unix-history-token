@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -55,19 +55,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|"archive.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"archive.h"
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
