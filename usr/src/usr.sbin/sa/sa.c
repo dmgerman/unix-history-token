@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.10 (Berkeley) %G%"
+literal|"@(#)sa.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -772,21 +778,21 @@ begin_define
 define|#
 directive|define
 name|USRACCT
-value|"/usr/adm/usracct"
+value|_PATH_USRACCT
 end_define
 
 begin_define
 define|#
 directive|define
 name|SAVACCT
-value|"/usr/adm/savacct"
+value|_PATH_SAVACCT
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACCT
-value|"/usr/adm/acct"
+value|_PATH_ACCT
 end_define
 
 begin_endif

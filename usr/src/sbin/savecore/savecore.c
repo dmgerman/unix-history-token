@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.14 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,18 +55,6 @@ end_comment
 begin_comment
 comment|/*  * savecore  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
-end_include
 
 begin_include
 include|#
@@ -102,6 +90,24 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -1077,11 +1083,11 @@ name|system
 condition|?
 name|system
 else|:
-literal|"/vmunix"
+name|_PATH_UNIX
 expr_stmt|;
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|current_nl
 argument_list|)
@@ -1130,7 +1136,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"/vmunix: %s not in namelist\n"
+literal|"%s: %s not in namelist\n"
+argument_list|,
+name|_PATH_UNIX
 argument_list|,
 name|current_nl
 index|[
@@ -1210,7 +1218,7 @@ name|kmem
 operator|=
 name|Open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1508,7 +1516,9 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Warning: vmunix version mismatch:\n"
+literal|"Warning: %s version mismatch:\n"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|log
@@ -2183,7 +2193,7 @@ name|system
 condition|?
 name|system
 else|:
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|O_RDONLY
 argument_list|)
