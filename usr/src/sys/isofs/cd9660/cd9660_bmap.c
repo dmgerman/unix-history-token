@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_bmap.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_bmap.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -218,34 +218,6 @@ name|a_runp
 operator|=
 name|nblk
 expr_stmt|;
-block|{
-specifier|extern
-name|int
-name|doclusterread
-decl_stmt|;
-if|if
-condition|(
-name|doclusterread
-condition|)
-name|printf
-argument_list|(
-literal|"ip=%x, size=%x, lblkno=%x, runp=%x\n"
-argument_list|,
-name|ip
-argument_list|,
-name|ip
-operator|->
-name|i_size
-argument_list|,
-name|lblkno
-argument_list|,
-operator|*
-name|ap
-operator|->
-name|a_runp
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 literal|0
