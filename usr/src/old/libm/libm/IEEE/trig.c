@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trig.c	1.1 (Berkeley) %G%"
+literal|"@(#)trig.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* SIN(X), COS(X), TAN(X)  * RETURN THE SINE, COSINE, AND TANGENT OF X RESPECTIVELY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 1/31/85, 3/17/85, 3/24/85.  *  * Required system supported functions:  *      copysign(x,y)  *      finite(x)  *      drem(x,p)  *  * Kernel functions:  *      sin__S(z)       ....sin__S(x*x) return (sin(x)-x)/x  *      cos__C(z)       ....cos__C(x*x) return cos(x)-1-x*x/2  *  * Method :  *      Let S and C denote the polynomial approximations to sin and cos   *      respectively on [-PI/4, +PI/4].  *      1. Reduce the argument into [-PI , +PI] by the remainder function.    *      2. For x in (-PI,+PI), let k=|x|*4/PI rounded. According to the value   *         of k,  sin, cos, and tan of x are computed by:  *  *         k         sin(x)      cos(x)       tan (x)        remark  *     -----------------------------------------------------------------------  *        k=0        S(x)         C(x)       S(x)/C(x)  *        k=1,2  sign(x)*C(y)     S(y)   sign(x)*C(y)/S(y)  y=PI/2-|x|  *        k=3        S(y)        -C(y)      S(-y)/C(-y)      y=sign(x)*(PI-|x|)  *     -----------------------------------------------------------------------  *  *   Notes:  *      1. S(y) and C(y) were computed by:  *              S(y) = y+y*sin__S(y*y)   *              C(y) = 1-(y*y/2-cos__C(x*x))              ... if y*y<  0.5,  *                   = 0.5-((y*y/2-0.5)-cos__C(x*x))      ... if y*y>= 0.5.  *  *      2. For better accuracy, we use the following formula for S/C for tan  *         (k=0,3): let ss=sin__S(y*y), and cc=cos__C(y*y), then  *  *                            y+y*ss             (y*y/2-cc)+ss  *             S(y)/C(y)   = -------- = y + y * ---------------.  *                               C                     C   *  *  * Special cases:  *      Let trig be any of sin, cos, or tan.  *      trig(+-INF) is NAN, with signals;  *      trig(NAN)   is that NAN;  *      trig(n*PI/2) is exact for any integer n, provided n*PI is representable;  *      otherwise, trig(x) is inexact.   *  * Accuracy:  *      trig(x) returns the exact trig(x*pi/PI) nearly rounded, where  *  *      Decimal:  *              pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *      Hexadecimal:  *              pi = 3.243F6A8885A308D313198A2E....  *              pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18    error=.276ulps  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2    error=.206ulps  *  *      In a test run with 1,024,000 random arguments on a VAX, the maximum  *      observed errors (compared with the exact trig(x*pi/PI)) were  *                      tan(x) : 2.08 ulps (units in the last place)  *                      sin(x) : .861 ulps  *                      cos(x) : .857 ulps  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* SIN(X), COS(X), TAN(X)  * RETURN THE SINE, COSINE, AND TANGENT OF X RESPECTIVELY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY W. Kahan and K.C. NG, 8/17/85.  *  * Required system supported functions:  *      copysign(x,y)  *      finite(x)  *      drem(x,p)  *  * Static kernel functions:  *      sin__S(z)       ....sin__S(x*x) return (sin(x)-x)/x  *      cos__C(z)       ....cos__C(x*x) return cos(x)-1-x*x/2  *  * Method.  *      Let S and C denote the polynomial approximations to sin and cos   *      respectively on [-PI/4, +PI/4].  *  *      SIN and COS:  *      1. Reduce the argument into [-PI , +PI] by the remainder function.    *      2. For x in (-PI,+PI), there are three cases:  *			case 1:	|x|< PI/4  *			case 2:	PI/4<= |x|< 3PI/4  *			case 3:	3PI/4<= |x|.  *	   SIN and COS of x are computed by:  *  *                   sin(x)      cos(x)       remark  *     ----------------------------------------------------------  *        case 1     S(x)         C(x)         *        case 2 sign(x)*C(y)     S(y)      y=PI/2-|x|  *        case 3     S(y)        -C(y)      y=sign(x)*(PI-|x|)  *     ----------------------------------------------------------  *  *      TAN:  *      1. Reduce the argument into [-PI/2 , +PI/2] by the remainder function.    *      2. For x in (-PI/2,+PI/2), there are two cases:  *			case 1:	|x|< PI/4  *			case 2:	PI/4<= |x|< PI/2  *         TAN of x is computed by:  *  *                   tan (x)            remark  *     ----------------------------------------------------------  *        case 1     S(x)/C(x)  *        case 2     C(y)/S(y)     y=sign(x)*(PI/2-|x|)  *     ----------------------------------------------------------  *  *   Notes:  *      1. S(y) and C(y) were computed by:  *              S(y) = y+y*sin__S(y*y)   *              C(y) = 1-(y*y/2-cos__C(x*x))          ... if y*y/2<  thresh,  *                   = 0.5-((y*y/2-0.5)-cos__C(x*x))  ... if y*y/2>= thresh.  *         where  *              thresh = 0.5*(acos(3/4)**2)  *  *      2. For better accuracy, we use the following formula for S/C for tan  *         (k=0): let ss=sin__S(y*y), and cc=cos__C(y*y), then  *  *                            y+y*ss             (y*y/2-cc)+ss  *             S(y)/C(y)   = -------- = y + y * ---------------.  *                               C                     C   *  *  * Special cases:  *      Let trig be any of sin, cos, or tan.  *      trig(+-INF)  is NaN, with signals;  *      trig(NaN)    is that NaN;  *      trig(n*PI/2) is exact for any integer n, provided n*PI is   *      representable; otherwise, trig(x) is inexact.   *  * Accuracy:  *      trig(x) returns the exact trig(x*pi/PI) nearly rounded, where  *  *      Decimal:  *              pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *      Hexadecimal:  *              pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18    error=.276ulps  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2    error=.206ulps  *  *      In a test run with 1,024,000 random arguments on a VAX, the maximum  *      observed errors (compared with the exact trig(x*pi/PI)) were  *                      tan(x) : 2.09 ulps (around 4.716340404662354)  *                      sin(x) : .861 ulps  *                      cos(x) : .857 ulps  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -38,15 +38,19 @@ name|VAX
 end_ifdef
 
 begin_comment
-comment|/*thresh =  5.2234479296242364299E-1    , Hex  2^  0   *  .85B8636B026EA0 */
+comment|/*thresh =  2.6117239648121182150E-1    , Hex  2^ -1   *  .85B8636B026EA0 */
 end_comment
 
 begin_comment
-comment|/*ivPIo4 =  1.2732395447351626816E0     , Hex  2^  1   *  .A2F9836E4E4415 */
+comment|/*PIo4   =  7.8539816339744830676E-1    , Hex  2^  0   *  .C90FDAA22168C2 */
 end_comment
 
 begin_comment
 comment|/*PIo2   =  1.5707963267948966135E0     , Hex  2^  1   *  .C90FDAA22168C2 */
+end_comment
+
+begin_comment
+comment|/*PI3o4  =  2.3561944901923449203E0     , Hex  2^  2   *  .96CBE3F9990E92 */
 end_comment
 
 begin_comment
@@ -64,7 +68,7 @@ name|threshx
 index|[]
 init|=
 block|{
-literal|0xb8634005
+literal|0xb8633f85
 block|,
 literal|0x6ea06b02
 block|}
@@ -81,13 +85,13 @@ end_define
 begin_decl_stmt
 specifier|static
 name|long
-name|ivPIo4x
+name|PIo4x
 index|[]
 init|=
 block|{
-literal|0xf98340a2
+literal|0x0fda4049
 block|,
-literal|0x44156e4e
+literal|0x68c2a221
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -95,8 +99,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|ivPIo4
-value|(*(double*)ivPIo4x)
+name|PIo4
+value|(*(double*)PIo4x)
 end_define
 
 begin_decl_stmt
@@ -118,6 +122,27 @@ define|#
 directive|define
 name|PIo2
 value|(*(double*)PIo2x)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|long
+name|PI3o4x
+index|[]
+init|=
+block|{
+literal|0xcbe34116
+block|,
+literal|0x0e92f999
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PI3o4
+value|(*(double*)PI3o4x)
 end_define
 
 begin_decl_stmt
@@ -176,21 +201,28 @@ specifier|static
 name|double
 name|thresh
 init|=
-literal|5.2234479296242364299E
+literal|2.6117239648121182150E
 operator|-
 literal|1
 decl_stmt|,
-comment|/*Hex  2^ -1   *  1.0B70C6D604DD4 */
-name|ivPIo4
+comment|/*Hex  2^ -2   *  1.0B70C6D604DD4 */
+name|PIo4
 init|=
-literal|1.2732395447351627649E0
+literal|7.8539816339744827900E
+operator|-
+literal|1
 decl_stmt|,
-comment|/*Hex  2^  0   *  1.45F306DC9C883 */
+comment|/*Hex  2^ -1   *  1.921FB54442D18 */
 name|PIo2
 init|=
 literal|1.5707963267948965580E0
 decl_stmt|,
 comment|/*Hex  2^  0   *  1.921FB54442D18 */
+name|PI3o4
+init|=
+literal|2.3561944901923448370E0
+decl_stmt|,
+comment|/*Hex  2^  1   *  1.2D97C7F3321D2 */
 name|PI
 init|=
 literal|3.1415926535897931160E0
@@ -237,13 +269,18 @@ name|small
 init|=
 literal|1E
 operator|-
-literal|9
+literal|10
 decl_stmt|,
+comment|/* 1+small**2==1; better values for small: 					small = 1.5E-9 for VAX D 					      = 1.2E-8 for IEEE Double 					      = 2.8E-10 for IEEE Extended */
 name|big
 init|=
 literal|1E20
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* big = 1/(small**2) */
+end_comment
 
 begin_function
 name|double
@@ -276,7 +313,7 @@ name|ss
 decl_stmt|,
 name|cc
 decl_stmt|,
-name|t
+name|c
 decl_stmt|;
 name|int
 name|finite
@@ -284,36 +321,32 @@ argument_list|()
 decl_stmt|,
 name|k
 decl_stmt|;
+comment|/* tan(NaN) and tan(INF) must be NaN */
 if|if
 condition|(
-name|x
-operator|!=
-name|x
-condition|)
-return|return
-operator|(
-name|x
-operator|)
-return|;
-comment|/* tan(NAN) is NAN */
-if|if
-condition|(
+operator|!
 name|finite
 argument_list|(
 name|x
 argument_list|)
 condition|)
-block|{
+return|return
+operator|(
+name|x
+operator|-
+name|x
+operator|)
+return|;
 name|x
 operator|=
 name|drem
 argument_list|(
 name|x
 argument_list|,
-name|PI2
+name|PI
 argument_list|)
 expr_stmt|;
-comment|/* reduce x into [-PI, PI] */
+comment|/* reduce x into [-PI/2, PI/2] */
 name|a
 operator|=
 name|copysign
@@ -323,213 +356,46 @@ argument_list|,
 name|one
 argument_list|)
 expr_stmt|;
-name|k
-operator|=
-name|a
-operator|*
-name|ivPIo4
-expr_stmt|;
-switch|switch
+comment|/* ... = abs(x) */
+if|if
 condition|(
-name|k
+name|a
+operator|>=
+name|PIo4
 condition|)
 block|{
-case|case
-literal|0
-case|:
-break|break;
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
-name|a
+name|k
 operator|=
+literal|1
+expr_stmt|;
+name|x
+operator|=
+name|copysign
+argument_list|(
 name|PIo2
 operator|-
 name|a
-expr_stmt|;
-name|z
-operator|=
-name|a
-operator|*
-name|a
-expr_stmt|;
-name|cc
-operator|=
-name|cos__C
-argument_list|(
-name|z
-argument_list|)
-expr_stmt|;
-name|ss
-operator|=
-name|copysign
-argument_list|(
-name|a
-operator|+
-name|a
-operator|*
-name|sin__S
-argument_list|(
-name|z
-argument_list|)
 argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-comment|/* return C(y)/S(y), y=sign(x)*PI-x */
-return|return
-operator|(
-operator|(
-operator|(
-name|z
-operator|>=
-name|thresh
-operator|)
-condition|?
-name|half
-operator|-
-operator|(
-operator|(
-name|z
-operator|*
-name|half
-operator|-
-name|half
-operator|)
-operator|-
-name|cc
-operator|)
-else|:
-name|one
-operator|-
-operator|(
-name|z
-operator|*
-name|half
-operator|-
-name|cc
-operator|)
-operator|)
-operator|/
-name|ss
-operator|)
-return|;
-default|default :
-name|x
-operator|=
-name|copysign
-argument_list|(
-name|PI
-operator|-
-name|a
-argument_list|,
-operator|-
 name|x
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* return S/C */
+else|else
+block|{
+name|k
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|copysign
-argument_list|(
-name|x
-argument_list|,
-name|one
-argument_list|)
-operator|>
+name|a
+operator|<
 name|small
 condition|)
 block|{
-name|z
-operator|=
-name|x
-operator|*
-name|x
-expr_stmt|;
-name|cc
-operator|=
-name|cos__C
-argument_list|(
-name|z
-argument_list|)
-expr_stmt|;
-name|ss
-operator|=
-name|sin__S
-argument_list|(
-name|z
-argument_list|)
-expr_stmt|;
-name|t
-operator|=
-name|z
-operator|*
-name|half
-expr_stmt|;
-return|return
-operator|(
-name|x
-operator|+
-operator|(
-name|x
-operator|*
-operator|(
-name|t
-operator|-
-operator|(
-name|cc
-operator|-
-name|ss
-operator|)
-operator|)
-operator|)
-operator|/
-operator|(
-operator|(
-name|z
-operator|>=
-name|thresh
-operator|)
-condition|?
-name|half
-operator|-
-operator|(
-operator|(
-name|t
-operator|-
-name|half
-operator|)
-operator|-
-name|cc
-operator|)
-else|:
-name|one
-operator|-
-operator|(
-name|t
-operator|-
-name|cc
-operator|)
-operator|)
-operator|)
-return|;
-block|}
-else|else
-comment|/* tan(x) := x for small x (inexact if x is not zero) */
-block|{
-if|if
-condition|(
-name|x
-operator|!=
-name|zero
-condition|)
 name|big
 operator|+
-name|small
+name|a
 expr_stmt|;
 return|return
 operator|(
@@ -538,15 +404,103 @@ operator|)
 return|;
 block|}
 block|}
-else|else
+name|z
+operator|=
+name|x
+operator|*
+name|x
+expr_stmt|;
+name|cc
+operator|=
+name|cos__C
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
+name|ss
+operator|=
+name|sin__S
+argument_list|(
+name|z
+argument_list|)
+expr_stmt|;
+name|z
+operator|=
+name|z
+operator|*
+name|half
+expr_stmt|;
+comment|/* Next get c = cos(x) accurately */
+name|c
+operator|=
+operator|(
+name|z
+operator|>=
+name|thresh
+operator|)
+condition|?
+name|half
+operator|-
+operator|(
+operator|(
+name|z
+operator|-
+name|half
+operator|)
+operator|-
+name|cc
+operator|)
+else|:
+name|one
+operator|-
+operator|(
+name|z
+operator|-
+name|cc
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
-name|zero
+name|x
+operator|+
+operator|(
+name|x
+operator|*
+operator|(
+name|z
+operator|-
+operator|(
+name|cc
+operator|-
+name|ss
+operator|)
+operator|)
+operator|)
 operator|/
-name|zero
+name|c
 operator|)
 return|;
-comment|/* tan(INF) is NAN with signal */
+comment|/* sin/cos */
+return|return
+operator|(
+name|c
+operator|/
+operator|(
+name|x
+operator|+
+name|x
+operator|*
+name|ss
+operator|)
+operator|)
+return|;
+comment|/*                  ... cos/sin */
 block|}
 end_function
 
@@ -581,30 +535,24 @@ name|z
 decl_stmt|;
 name|int
 name|finite
-argument_list|()
-decl_stmt|,
-name|k
-decl_stmt|;
+parameter_list|()
+function_decl|;
+comment|/* sin(NaN) and sin(INF) must be NaN */
 if|if
 condition|(
-name|x
-operator|!=
-name|x
-condition|)
-return|return
-operator|(
-name|x
-operator|)
-return|;
-comment|/* sin(NAN) is NAN */
-if|if
-condition|(
+operator|!
 name|finite
 argument_list|(
 name|x
 argument_list|)
 condition|)
-block|{
+return|return
+operator|(
+name|x
+operator|-
+name|x
+operator|)
+return|;
 name|x
 operator|=
 name|drem
@@ -614,7 +562,7 @@ argument_list|,
 name|PI2
 argument_list|)
 expr_stmt|;
-comment|/* reduce x into [-PI, PI] */
+comment|/*    reduce x into [-PI, PI] */
 name|a
 operator|=
 name|copysign
@@ -624,33 +572,45 @@ argument_list|,
 name|one
 argument_list|)
 expr_stmt|;
-name|k
-operator|=
-name|a
-operator|*
-name|ivPIo4
-expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|k
+name|a
+operator|>=
+name|PIo4
 condition|)
 block|{
-case|case
-literal|0
-case|:
-break|break;
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
+if|if
+condition|(
+name|a
+operator|>=
+name|PI3o4
+condition|)
+comment|/* 	.. in [3PI/4,  PI ]  */
+name|x
+operator|=
+name|copysign
+argument_list|(
+operator|(
+name|a
+operator|=
+name|PI
+operator|-
+name|a
+operator|)
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* 	.. in [PI/4, 3PI/4]  */
 name|a
 operator|=
 name|PIo2
 operator|-
 name|a
 expr_stmt|;
+comment|/* return sign(x)*C(PI/2-|x|) */
 name|z
 operator|=
 name|a
@@ -663,6 +623,12 @@ name|cos__C
 argument_list|(
 name|z
 argument_list|)
+expr_stmt|;
+name|z
+operator|=
+name|z
+operator|*
+name|half
 expr_stmt|;
 name|a
 operator|=
@@ -677,8 +643,6 @@ operator|-
 operator|(
 operator|(
 name|z
-operator|*
-name|half
 operator|-
 name|half
 operator|)
@@ -690,13 +654,10 @@ name|one
 operator|-
 operator|(
 name|z
-operator|*
-name|half
 operator|-
 name|c
 operator|)
 expr_stmt|;
-comment|/* return sign(x)*C(PI/2-|x|) */
 return|return
 operator|(
 name|copysign
@@ -707,31 +668,26 @@ name|x
 argument_list|)
 operator|)
 return|;
-default|default:
-name|x
-operator|=
-name|copysign
-argument_list|(
-name|PI
-operator|-
-name|a
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 comment|/* return S(x) */
 if|if
 condition|(
-name|copysign
-argument_list|(
-name|x
-argument_list|,
-name|one
-argument_list|)
-operator|>
+name|a
+operator|<
 name|small
 condition|)
+block|{
+name|big
+operator|+
+name|a
+expr_stmt|;
+return|return
+operator|(
+name|x
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|x
@@ -746,35 +702,6 @@ name|x
 argument_list|)
 operator|)
 return|;
-else|else
-comment|/* sin(x) := x for small x (inexact if x is not zero) */
-block|{
-if|if
-condition|(
-name|x
-operator|!=
-name|zero
-condition|)
-name|big
-operator|+
-name|small
-expr_stmt|;
-return|return
-operator|(
-name|x
-operator|)
-return|;
-block|}
-block|}
-else|else
-return|return
-operator|(
-name|zero
-operator|/
-name|zero
-operator|)
-return|;
-comment|/* sin(INF) is NAN with signal */
 block|}
 end_function
 
@@ -806,33 +733,31 @@ decl_stmt|,
 name|c
 decl_stmt|,
 name|z
+decl_stmt|,
+name|s
+init|=
+literal|1.0
 decl_stmt|;
 name|int
 name|finite
-argument_list|()
-decl_stmt|,
-name|k
-decl_stmt|;
+parameter_list|()
+function_decl|;
+comment|/* cos(NaN) and cos(INF) must be NaN */
 if|if
 condition|(
-name|x
-operator|!=
-name|x
-condition|)
-return|return
-operator|(
-name|x
-operator|)
-return|;
-comment|/* cos(NAN) is NAN */
-if|if
-condition|(
+operator|!
 name|finite
 argument_list|(
 name|x
 argument_list|)
 condition|)
-block|{
+return|return
+operator|(
+name|x
+operator|-
+name|x
+operator|)
+return|;
 name|x
 operator|=
 name|drem
@@ -842,7 +767,7 @@ argument_list|,
 name|PI2
 argument_list|)
 expr_stmt|;
-comment|/* reduce x into [-PI, PI] */
+comment|/*    reduce x into [-PI, PI] */
 name|a
 operator|=
 name|copysign
@@ -852,38 +777,42 @@ argument_list|,
 name|one
 argument_list|)
 expr_stmt|;
-name|k
-operator|=
-name|a
-operator|*
-name|ivPIo4
-expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|k
+name|a
+operator|>=
+name|PIo4
 condition|)
 block|{
-case|case
-literal|0
-case|:
-name|x
+if|if
+condition|(
+name|a
+operator|>=
+name|PI3o4
+condition|)
+comment|/* 	.. in [3PI/4,  PI ]  */
+block|{
+name|a
 operator|=
-name|one
+name|PI
+operator|-
+name|a
 expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-case|case
-literal|2
-case|:
+name|s
+operator|=
+name|negone
+expr_stmt|;
+block|}
+else|else
+comment|/* 	.. in [PI/4, 3PI/4]  */
+comment|/*        return  S(PI/2-|x|) */
+block|{
 name|a
 operator|=
 name|PIo2
 operator|-
 name|a
 expr_stmt|;
-comment|/* return S(PI/2-|x|) */
 return|return
 operator|(
 name|a
@@ -898,31 +827,26 @@ name|a
 argument_list|)
 operator|)
 return|;
-default|default:
-name|a
-operator|=
-name|PI
-operator|-
-name|a
-expr_stmt|;
-name|x
-operator|=
-name|negone
-expr_stmt|;
 block|}
-comment|/* return C or -C */
+block|}
+comment|/* return s*C(a) */
 if|if
 condition|(
-name|copysign
-argument_list|(
 name|a
-argument_list|,
-name|one
-argument_list|)
-operator|>
+operator|<
 name|small
 condition|)
 block|{
+name|big
+operator|+
+name|a
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
 name|z
 operator|=
 name|a
@@ -935,6 +859,12 @@ name|cos__C
 argument_list|(
 name|z
 argument_list|)
+expr_stmt|;
+name|z
+operator|=
+name|z
+operator|*
+name|half
 expr_stmt|;
 name|a
 operator|=
@@ -949,8 +879,6 @@ operator|-
 operator|(
 operator|(
 name|z
-operator|*
-name|half
 operator|-
 name|half
 operator|)
@@ -962,8 +890,6 @@ name|one
 operator|-
 operator|(
 name|z
-operator|*
-name|half
 operator|-
 name|c
 operator|)
@@ -974,50 +900,15 @@ name|copysign
 argument_list|(
 name|a
 argument_list|,
-name|x
+name|s
 argument_list|)
 operator|)
 return|;
-block|}
-else|else
-comment|/* cos(x) := 1 for small x (inexact if x is not zero) */
-block|{
-if|if
-condition|(
-name|x
-operator|!=
-name|zero
-condition|)
-name|big
-operator|+
-name|small
-expr_stmt|;
-return|return
-operator|(
-name|copysign
-argument_list|(
-name|one
-argument_list|,
-name|x
-argument_list|)
-operator|)
-return|;
-block|}
-block|}
-else|else
-return|return
-operator|(
-name|zero
-operator|/
-name|zero
-operator|)
-return|;
-comment|/* cos(INF) is NAN with signal */
 block|}
 end_function
 
 begin_comment
-comment|/* sin__S(x*x)  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * KERNEL FUNCTION OF SIN(X), COS(X), AND TAN(X)   * CODED IN C BY K.C. NG, 1/21/85;   * REVISED BY K.C. NG on 1/31/85, 3/7/85.  *  *	    sin(x*k) - x  * RETURN  --------------- on [-PI/4,PI/4] , where k=pi/PI, PI is the rounded  *	            x	  * value of pi in machine precision:  *  *	Decimal:  *		pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *	Hexadecimal:  *		pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2      *  * Method:  *	1. Let z=x*x. Create a polynomial approximation to   *	    (sin(k*x)-x)/x  =  z*(S0 + S1*z^1 + ... + S5*z^5).  *	Then  *      sin__S(x*x) = z*(S0 + S1*z^1 + ... + S5*z^5)  *  *	The coefficient S's are obtained by a special Remez algorithm.  *  * Accuracy:  *	In the absence of rounding error, the approximation has absolute error   *	less than 2**(-61.11) for VAX D FORMAT, 2**(-57.45) for IEEE DOUBLE.   *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  *  */
+comment|/* sin__S(x*x)  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * STATIC KERNEL FUNCTION OF SIN(X), COS(X), AND TAN(X)   * CODED IN C BY K.C. NG, 1/21/85;   * REVISED BY K.C. NG on 8/13/85.  *  *	    sin(x*k) - x  * RETURN  --------------- on [-PI/4,PI/4] , where k=pi/PI, PI is the rounded  *	            x	  * value of pi in machine precision:  *  *	Decimal:  *		pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *	Hexadecimal:  *		pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2      *  * Method:  *	1. Let z=x*x. Create a polynomial approximation to   *	    (sin(k*x)-x)/x  =  z*(S0 + S1*z^1 + ... + S5*z^5).  *	Then  *      sin__S(x*x) = z*(S0 + S1*z^1 + ... + S5*z^5)  *  *	The coefficient S's are obtained by a special Remez algorithm.  *  * Accuracy:  *	In the absence of rounding error, the approximation has absolute error   *	less than 2**(-61.11) for VAX D FORMAT, 2**(-57.45) for IEEE DOUBLE.   *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  *  */
 end_comment
 
 begin_ifdef
@@ -1269,6 +1160,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|double
 name|sin__S
 parameter_list|(
@@ -1370,7 +1262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* cos__C(x*x)  * DOUBLE PRECISION (VAX D FORMAT 56 BITS, IEEE DOUBLE 53 BITS)  * KERNEL FUNCTION OF SIN(X), COS(X), AND TAN(X)   * CODED IN C BY K.C. NG, 1/21/85;   * REIVSED BY K.C. NG on 1/31/85, 3/7/85.  *  *	   		    x*x	  * RETURN   cos(k*x) - 1 + ----- on [-PI/4,PI/4],  where k = pi/PI,  *	  		     2	  * PI is the rounded value of pi in machine precision :  *  *	Decimal:  *		pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *	Hexadecimal:  *		pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2      *  *  * Method:  *	1. Let z=x*x. Create a polynomial approximation to   *	    cos(k*x)-1+z/2  =  z*z*(C0 + C1*z^1 + ... + C5*z^5)  *	then  *      cos__C(z) =  z*z*(C0 + C1*z^1 + ... + C5*z^5)  *  *	The coefficient C's are obtained by a special Remez algorithm.  *  * Accuracy:  *	In the absence of rounding error, the approximation has absolute error   *	less that 2**(-64) for VAX D FORMAT, 2**(-58.3) for IEEE DOUBLE.   *	  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  *  */
+comment|/* cos__C(x*x)  * DOUBLE PRECISION (VAX D FORMAT 56 BITS, IEEE DOUBLE 53 BITS)  * STATIC KERNEL FUNCTION OF SIN(X), COS(X), AND TAN(X)   * CODED IN C BY K.C. NG, 1/21/85;   * REVISED BY K.C. NG on 8/13/85.  *  *	   		    x*x	  * RETURN   cos(k*x) - 1 + ----- on [-PI/4,PI/4],  where k = pi/PI,  *	  		     2	  * PI is the rounded value of pi in machine precision :  *  *	Decimal:  *		pi = 3.141592653589793 23846264338327 .....   *    53 bits   PI = 3.141592653589793 115997963 ..... ,  *    56 bits   PI = 3.141592653589793 227020265 ..... ,    *  *	Hexadecimal:  *		pi = 3.243F6A8885A308D313198A2E....  *    53 bits   PI = 3.243F6A8885A30  =  2 * 1.921FB54442D18  *    56 bits   PI = 3.243F6A8885A308 =  4 * .C90FDAA22168C2      *  *  * Method:  *	1. Let z=x*x. Create a polynomial approximation to   *	    cos(k*x)-1+z/2  =  z*z*(C0 + C1*z^1 + ... + C5*z^5)  *	then  *      cos__C(z) =  z*z*(C0 + C1*z^1 + ... + C5*z^5)  *  *	The coefficient C's are obtained by a special Remez algorithm.  *  * Accuracy:  *	In the absence of rounding error, the approximation has absolute error   *	less than 2**(-64) for VAX D FORMAT, 2**(-58.3) for IEEE DOUBLE.   *	  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  *  */
 end_comment
 
 begin_ifdef
@@ -1597,6 +1489,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|double
 name|cos__C
 parameter_list|(
