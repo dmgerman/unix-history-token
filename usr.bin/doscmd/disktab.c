@@ -7,6 +7,12 @@ begin_comment
 comment|/* XXX goaway (requires change to config.c) */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"doscmd.h"
+end_include
+
 begin_struct
 specifier|static
 struct|struct

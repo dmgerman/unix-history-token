@@ -69,6 +69,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+specifier|inline
+name|void
+name|showstate
+parameter_list|(
+name|long
+parameter_list|,
+name|long
+parameter_list|,
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Before exiting to VM86 mode:  * 1) Always set the trap flag.  * 2) If this is a POPF or IRET instruction, set the trap flag in the saved  *    flag state on the stack.  * On enterint from VM86 mode:  * 1) Restore the trap flag from our saved flag state.  * 2) If we just finished a POPF or IRET unstruction, patch the saved flag  *    state on the stack.  */
 end_comment
@@ -565,6 +580,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|showstate

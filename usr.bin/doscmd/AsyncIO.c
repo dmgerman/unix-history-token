@@ -484,10 +484,6 @@ specifier|static
 name|struct
 name|timeval
 name|tv
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 comment|/* 	 * For every file des in fd_set, we check to see if it 	 * causes a fault on select().  If so, we unregister it 	 * for the user. 	 */
 for|for
@@ -682,10 +678,6 @@ specifier|static
 name|struct
 name|timeval
 name|tv
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 name|fd_set
 name|readset

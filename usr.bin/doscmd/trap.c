@@ -191,6 +191,8 @@ comment|/* user_int: */
 name|debug
 argument_list|(
 name|D_TRAPS
+operator||
+name|intnum
 argument_list|,
 literal|"INT %02x:%02x [%04lx:%04lx] %04x %04x %04x %04x from %04x:%04x\n"
 argument_list|,

@@ -258,7 +258,6 @@ comment|/* ParseBuffer.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|ParseBuffer
 parameter_list|(
@@ -330,7 +329,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|bios_init
 parameter_list|(
@@ -340,7 +338,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|wakeup_poll
 parameter_list|(
@@ -350,7 +347,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|reset_poll
 parameter_list|(
@@ -360,7 +356,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|sleep_poll
 parameter_list|(
@@ -381,7 +376,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|cmos_init
 parameter_list|(
@@ -395,7 +389,6 @@ comment|/* config.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|read_config
 parameter_list|(
@@ -411,7 +404,6 @@ comment|/* cpu.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|cpu_init
 parameter_list|(
@@ -421,9 +413,48 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|emu_instr
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|int00
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|int01
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|int03
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|int0d
 parameter_list|(
 name|regcontext_t
 modifier|*
@@ -714,7 +745,6 @@ value|(TTYF_ECHO | TTYF_CTRL | TTYF_REDIRECT | TTYF_BLOCK)
 end_define
 
 begin_function_decl
-specifier|extern
 name|void
 name|unknown_int2
 parameter_list|(
@@ -724,13 +754,11 @@ name|int
 parameter_list|,
 name|regcontext_t
 modifier|*
-name|REGS
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|unknown_int3
 parameter_list|(
@@ -742,13 +770,11 @@ name|int
 parameter_list|,
 name|regcontext_t
 modifier|*
-name|REGS
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|unknown_int4
 parameter_list|(
@@ -762,19 +788,16 @@ name|int
 parameter_list|,
 name|regcontext_t
 modifier|*
-name|REGS
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|fatal
 parameter_list|(
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -791,16 +814,13 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|debug
 parameter_list|(
 name|int
-name|flags
 parameter_list|,
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -817,46 +837,38 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_regs
 parameter_list|(
 name|regcontext_t
 modifier|*
-name|REGS
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|debug_set
 parameter_list|(
 name|int
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|debug_unset
 parameter_list|(
 name|int
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|u_long
 name|debug_isset
 parameter_list|(
 name|int
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -866,7 +878,6 @@ comment|/* disktab.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|map_type
 parameter_list|(
@@ -887,16 +898,6 @@ end_function_decl
 begin_comment
 comment|/* doscmd.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|squirrel_fd
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -966,44 +967,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|int
-name|open_prog
+name|_prog
 parameter_list|(
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|done
-parameter_list|(
-name|regcontext_t
-modifier|*
-name|REGS
-parameter_list|,
-name|int
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|quit
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|call_on_quit
 parameter_list|(
@@ -1023,15 +996,52 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|done
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|iomap_port
 parameter_list|(
 name|int
-name|port
 parameter_list|,
 name|int
-name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|open_prog
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|quit
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|squirrel_fd
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1041,27 +1051,25 @@ comment|/* ems.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|ems_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ems_entry
 parameter_list|(
 name|regcontext_t
 modifier|*
-name|REGS
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|extern
 name|u_long
 name|ems_frame_addr
 decl_stmt|;
@@ -1275,11 +1283,34 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* int16.c */
+end_comment
+
+begin_function_decl
+name|void
+name|int16
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* int17.c */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|void
+name|int17
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|lpt_poll
 parameter_list|(
@@ -1289,7 +1320,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|printer_direct
 parameter_list|(
@@ -1300,7 +1330,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|printer_spool
 parameter_list|(
@@ -1315,7 +1344,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|printer_timeout
 parameter_list|(
@@ -1325,6 +1353,20 @@ parameter_list|,
 name|char
 modifier|*
 name|time_out
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* int1a.c */
+end_comment
+
+begin_function_decl
+name|void
+name|int1a
+parameter_list|(
+name|regcontext_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1460,7 +1502,16 @@ comment|/* mouse.c */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|void
+name|int33
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|mouse_init
 parameter_list|(
@@ -1474,7 +1525,6 @@ comment|/* net.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|net_init
 parameter_list|(
@@ -1488,7 +1538,6 @@ comment|/* port.c */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|void
 name|define_input_port_handler
 argument_list|(
@@ -1507,7 +1556,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|define_output_port_handler
 parameter_list|(
@@ -1528,7 +1576,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|inb
 parameter_list|(
@@ -1541,7 +1588,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|unsigned
+name|char
+name|inb_port
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|char
+name|inb_speaker
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|char
+name|inb_traceport
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|init_io_port_handlers
 parameter_list|(
@@ -1551,7 +1627,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|insb
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|insx
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|inx
 parameter_list|(
@@ -1564,7 +1663,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|outb
 parameter_list|(
@@ -1577,54 +1675,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|outx
-parameter_list|(
-name|regcontext_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|speaker_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|outb_traceport
-parameter_list|(
-name|int
-parameter_list|,
-name|unsigned
-name|char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|unsigned
-name|char
-name|inb_traceport
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|outb_port
 parameter_list|(
@@ -1637,12 +1687,70 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|unsigned
-name|char
-name|inb_port
+name|void
+name|outb_speaker
 parameter_list|(
 name|int
+parameter_list|,
+name|unsigned
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|outb_traceport
+parameter_list|(
+name|int
+parameter_list|,
+name|unsigned
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|outsb
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|outsx
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|outx
+parameter_list|(
+name|regcontext_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|speaker_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

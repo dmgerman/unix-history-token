@@ -93,13 +93,6 @@ directive|include
 file|"tty.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_long
-name|upcase_vector
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Country Info */
 end_comment
@@ -315,6 +308,21 @@ begin_comment
 comment|/* locals */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|fcb_to_string
+parameter_list|(
+name|struct
+name|fcb
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -354,6 +362,13 @@ end_decl_stmt
 begin_comment
 comment|/* first fit (we ignore this) */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|upcase_vector
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -7883,6 +7898,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fcb_to_string
 parameter_list|(

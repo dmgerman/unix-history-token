@@ -32,14 +32,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KbdEmpty
-parameter_list|()
-value|(K_NEXT == K_FREE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|HWM
 value|16
 end_define

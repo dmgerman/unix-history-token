@@ -75,6 +75,57 @@ directive|include
 file|"cwd.h"
 end_include
 
+begin_comment
+comment|/* Local functions */
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|isvalid
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|isdot
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|isslash
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|to_dos_fcb
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -2189,6 +2240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|isvalid
@@ -2213,6 +2265,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|isdot
@@ -2237,6 +2290,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|isslash
@@ -4151,6 +4205,7 @@ comment|/*  * Convert a dos filename into normal form (8.3 format, space padded)
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|to_dos_fcb
 parameter_list|(
