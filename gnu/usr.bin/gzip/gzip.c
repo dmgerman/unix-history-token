@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: gzip.c,v 1.6 1997/02/22 15:45:57 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7764,16 +7764,6 @@ name|ERROR
 return|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|ofname
-argument_list|,
-literal|0777
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unlink
@@ -8021,16 +8011,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* It's now safe to remove the input file: */
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|ifname
-argument_list|,
-literal|0777
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unlink
