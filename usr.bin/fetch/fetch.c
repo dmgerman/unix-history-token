@@ -175,16 +175,6 @@ comment|/*    -f: file to fetch */
 end_comment
 
 begin_decl_stmt
-name|int
-name|H_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*    -H: use high port */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|h_hostname
@@ -307,15 +297,13 @@ comment|/*    -r: restart previously interrupted transfer */
 end_comment
 
 begin_decl_stmt
-name|u_int
-name|T_secs
-init|=
-literal|0
+name|off_t
+name|S_size
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    -T: transfer timeout in seconds */
+comment|/*    -S: require size to match */
 end_comment
 
 begin_decl_stmt
@@ -329,13 +317,15 @@ comment|/*    -s: show size, don't fetch */
 end_comment
 
 begin_decl_stmt
-name|off_t
-name|S_size
+name|u_int
+name|T_secs
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    -S: require size to match */
+comment|/*    -T: transfer timeout in seconds */
 end_comment
 
 begin_decl_stmt
@@ -346,6 +336,16 @@ end_decl_stmt
 
 begin_comment
 comment|/*!   -t: workaround TCP bug */
+end_comment
+
+begin_decl_stmt
+name|int
+name|U_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    -U: do not use high ports */
 end_comment
 
 begin_decl_stmt
@@ -1208,13 +1208,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|H_flag
+name|U_flag
 condition|)
 name|strcat
 argument_list|(
 name|flags
 argument_list|,
-literal|"h"
+literal|"l"
 argument_list|)
 expr_stmt|;
 name|timeout
@@ -2608,7 +2608,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"146AaB:bc:dFf:h:lHMmnPpo:qRrS:sT:tvw:"
+literal|"146AaB:bc:dFf:Hh:lMmnPpo:qRrS:sT:tUvw:"
 argument_list|)
 operator|)
 operator|!=
@@ -2731,9 +2731,10 @@ break|break;
 case|case
 literal|'H'
 case|:
-name|H_flag
-operator|=
-literal|1
+name|warnx
+argument_list|(
+literal|"The -H option is now implicit, use -U to disable\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2907,6 +2908,14 @@ name|warnx
 argument_list|(
 literal|"warning: the -t option is deprecated"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|U_flag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
