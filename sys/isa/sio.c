@@ -3157,9 +3157,14 @@ name|mcr_image
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some pcmcia cards have the "TXRDY bug", so we check everyone 	 * for IIR_TXRDY implementation ( Palido 321s, DC-1S... ) 	 */
-if|#
-directive|if
-literal|1
+if|if
+condition|(
+name|COM_NOPROBE
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+block|{
 comment|/* Reading IIR register twice */
 for|for
 control|(
@@ -3259,22 +3264,6 @@ name|COM_C_IIR_TXRDYBUG
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|result
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|COM_NOPROBE
-argument_list|(
-name|flags
-argument_list|)
-condition|)
-block|{
 name|outb
 argument_list|(
 name|iobase
