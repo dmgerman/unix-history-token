@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.9 1998/02/14 13:34:59 peter Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.10 1998/05/28 09:29:48 phk Exp $  */
 end_comment
 
 begin_include
@@ -348,7 +348,7 @@ name|PROCSIZE
 parameter_list|(
 name|pp
 parameter_list|)
-value|(VP((pp), vm_tsize) + VP((pp), vm_dsize) + VP((pp), vm_ssize))
+value|(VP((pp), vm_map.size) / 1024)
 end_define
 
 begin_comment
@@ -2929,12 +2929,9 @@ operator|)
 argument_list|,
 name|format_k2
 argument_list|(
-name|pagetok
-argument_list|(
 name|PROCSIZE
 argument_list|(
 name|pp
-argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
