@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uucpd.c,v 1.16 1999/03/30 10:23:35 joerg Exp $"
+literal|"$Id: uucpd.c,v 1.17 1999/04/06 23:06:00 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,7 +517,9 @@ argument_list|(
 name|remotehost
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|remotehost
+argument_list|)
 operator|-
 literal|1
 argument_list|,
@@ -530,7 +532,9 @@ expr_stmt|;
 name|remotehost
 index|[
 sizeof|sizeof
+argument_list|(
 name|remotehost
+argument_list|)
 operator|-
 literal|1
 index|]

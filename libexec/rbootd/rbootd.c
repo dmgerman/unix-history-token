@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rbootd.c,v 1.9 1997/11/24 07:33:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,6 +526,8 @@ argument_list|(
 name|MyHost
 argument_list|,
 name|MAXHOSTNAMELEN
+operator|-
+literal|1
 argument_list|)
 operator|<
 literal|0
@@ -547,6 +549,8 @@ block|}
 name|MyHost
 index|[
 name|MAXHOSTNAMELEN
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'

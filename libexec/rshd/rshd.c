@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rshd.c,v 1.23 1998/12/16 07:20:45 peter Exp $"
+literal|"$Id: rshd.c,v 1.24 1999/04/06 23:05:58 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -965,11 +965,7 @@ decl_stmt|;
 name|char
 name|fromhost
 index|[
-literal|2
-operator|*
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 ifdef|#
@@ -1670,31 +1666,14 @@ name|errorstr
 operator|=
 name|NULL
 expr_stmt|;
-name|strncpy
-argument_list|(
-name|fromhost
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|fromp
-operator|->
-name|sin_addr
-argument_list|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fromhost
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 name|realhostname
 argument_list|(
 name|fromhost
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|fromhost
+argument_list|)
 operator|-
 literal|1
 argument_list|,
@@ -4096,7 +4075,21 @@ sizeof|sizeof
 argument_list|(
 name|localhost
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|localhost
+index|[
+sizeof|sizeof
+argument_list|(
+name|localhost
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|p1
 operator|=

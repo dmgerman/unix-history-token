@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.52 1998/10/13 20:42:01 des Exp $"
+literal|"$Id: ftpd.c,v 1.53 1999/04/06 23:05:57 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,8 +769,6 @@ name|char
 name|remotehost
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2803,7 +2801,18 @@ argument_list|(
 name|hostname
 argument_list|,
 name|MAXHOSTNAMELEN
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|hostname
+index|[
+name|MAXHOSTNAMELEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
@@ -9429,7 +9438,9 @@ argument_list|(
 name|remotehost
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|remotehost
+argument_list|)
 operator|-
 literal|1
 argument_list|,

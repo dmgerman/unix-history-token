@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************           Copyright 1988, 1991 by Carnegie Mellon University                            All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Carnegie Mellon University not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL CMU BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  	$Id: bootpd.c,v 1.9 1998/12/12 20:56:53 dillon Exp $  ************************************************************************/
+comment|/************************************************************************           Copyright 1988, 1991 by Carnegie Mellon University                            All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Carnegie Mellon University not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL CMU BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  	$Id: bootpd.c,v 1.10 1998/12/13 21:02:28 eivind Exp $  ************************************************************************/
 end_comment
 
 begin_comment
@@ -665,15 +665,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|hostname
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|default_hostname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -994,7 +999,12 @@ name|gethostname
 argument_list|(
 name|default_hostname
 argument_list|,
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|default_hostname
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|<
 literal|0
@@ -1013,6 +1023,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|default_hostname
+index|[
+sizeof|sizeof
+argument_list|(
+name|default_hostname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|hostname
 operator|=
 name|default_hostname

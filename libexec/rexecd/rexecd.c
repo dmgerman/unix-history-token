@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rexecd.c,v 1.15 1997/11/26 07:29:04 charnier Exp $"
+literal|"$Id: rexecd.c,v 1.16 1999/04/06 23:05:57 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,8 +272,6 @@ name|char
 name|remote
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -426,7 +424,9 @@ argument_list|(
 name|remote
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|remote
+argument_list|)
 operator|-
 literal|1
 argument_list|,

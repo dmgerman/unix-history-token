@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tftpd.c,v 1.12 1998/10/30 16:17:39 dg Exp $"
+literal|"$Id: tftpd.c,v 1.13 1999/04/06 23:05:59 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1423,8 +1423,6 @@ name|char
 name|host
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|realhostname
@@ -1432,7 +1430,9 @@ argument_list|(
 name|host
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 operator|-
 literal|1
 argument_list|,
@@ -1445,7 +1445,9 @@ expr_stmt|;
 name|host
 index|[
 sizeof|sizeof
+argument_list|(
 name|host
+argument_list|)
 operator|-
 literal|1
 index|]

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: conf.c,v 1.3 1997/11/24 07:33:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,8 +80,6 @@ name|char
 name|MyHost
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt

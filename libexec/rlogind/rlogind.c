@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rlogind.c,v 1.20 1998/12/16 07:20:44 peter Exp $"
+literal|"$Id: rlogind.c,v 1.21 1999/04/06 23:05:58 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,11 +989,7 @@ decl_stmt|;
 name|char
 name|hostname
 index|[
-literal|2
-operator|*
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|char
@@ -1067,7 +1063,9 @@ argument_list|(
 name|hostname
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hostname
+argument_list|)
 operator|-
 literal|1
 argument_list|,

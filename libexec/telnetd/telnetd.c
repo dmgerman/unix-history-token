@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: telnetd.c,v 1.16 1999/04/06 00:29:41 brian Exp $"
+literal|"$Id: telnetd.c,v 1.17 1999/04/06 23:05:58 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,9 +326,26 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
+name|char
+name|remote_hostname
+index|[
+name|UT_HOSTSIZE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|utmp_len
+init|=
+sizeof|sizeof
+argument_list|(
+name|remote_hostname
+argument_list|)
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1385,6 +1402,35 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|utmp_len
+operator|<
+literal|0
+condition|)
+name|utmp_len
+operator|=
+operator|-
+name|utmp_len
+expr_stmt|;
+if|if
+condition|(
+name|utmp_len
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|remote_hostname
+argument_list|)
+condition|)
+name|utmp_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|remote_hostname
+argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3333,17 +3379,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|remote_hostname
-index|[
-name|UT_HOSTSIZE
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|telnet
@@ -3579,10 +3614,7 @@ name|realhostname
 argument_list|(
 name|remote_hostname
 argument_list|,
-sizeof|sizeof
-name|remote_hostname
-operator|-
-literal|1
+name|utmp_len
 argument_list|,
 operator|&
 name|who
@@ -3601,6 +3633,13 @@ argument_list|,
 literal|"Couldn't resolve your address into a host name.\r\n\          Please contact your net administrator"
 argument_list|)
 expr_stmt|;
+name|remote_hostname
+index|[
+name|utmp_len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3612,7 +3651,21 @@ sizeof|sizeof
 argument_list|(
 name|host_name
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|host_name
+index|[
+sizeof|sizeof
+argument_list|(
+name|host_name
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|hostname
 operator|=

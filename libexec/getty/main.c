@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.24 1999/03/09 22:04:44 brian Exp $"
+literal|"$Id: main.c,v 1.25 1999/04/04 04:36:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,7 +1094,21 @@ sizeof|sizeof
 argument_list|(
 name|hostname
 argument_list|)
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|hostname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(

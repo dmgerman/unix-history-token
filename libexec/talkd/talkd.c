@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: talkd.c,v 1.8 1997/12/02 12:33:42 charnier Exp $"
+literal|"$Id: talkd.c,v 1.9 1998/12/01 21:12:57 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,8 +192,6 @@ name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -320,6 +318,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|hostname
+index|[
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|chdir
