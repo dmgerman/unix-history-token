@@ -1,17 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+end_comment
+
+begin_comment
+comment|/*  * Heavily modified by Søren Schmidt (sos@kmd-ac.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2d 930908  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|STAR_SAVER
 end_define
 
-begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
-end_comment
-
-begin_comment
-comment|/*  * Heavily modified by Søren Schmidt (sos@kmd-ac.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2b 930531  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * Further changes 29 July 93 by Jordan Hubbard - provide full pccons and  * FreeBSD compatability.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|FAT_CURSOR
+end_define
 
 begin_include
 include|#
@@ -365,7 +371,7 @@ begin_define
 define|#
 directive|define
 name|ATC
-value|0x3C0
+value|IO_VGA+0x00
 end_define
 
 begin_comment
@@ -376,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|TSIDX
-value|0x3C4
+value|IO_VGA+0x04
 end_define
 
 begin_comment
@@ -387,7 +393,7 @@ begin_define
 define|#
 directive|define
 name|TSREG
-value|0x3C5
+value|IO_VGA+0x05
 end_define
 
 begin_comment
@@ -398,7 +404,7 @@ begin_define
 define|#
 directive|define
 name|PIXMASK
-value|0x3C6
+value|IO_VGA+0x06
 end_define
 
 begin_comment
@@ -409,7 +415,7 @@ begin_define
 define|#
 directive|define
 name|PALRADR
-value|0x3C7
+value|IO_VGA+0x07
 end_define
 
 begin_comment
@@ -420,7 +426,7 @@ begin_define
 define|#
 directive|define
 name|PALWADR
-value|0x3C8
+value|IO_VGA+0x08
 end_define
 
 begin_comment
@@ -431,7 +437,7 @@ begin_define
 define|#
 directive|define
 name|PALDATA
-value|0x3C9
+value|IO_VGA+0x09
 end_define
 
 begin_comment
@@ -442,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|GDCIDX
-value|0x3CE
+value|IO_VGA+0x0E
 end_define
 
 begin_comment
@@ -453,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|GDCREG
-value|0x3CF
+value|IO_VGA+0x0F
 end_define
 
 begin_comment
@@ -1874,6 +1880,19 @@ condition|(
 name|crtc_vga
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|FAT_CURSOR
+name|start
+operator|=
+literal|0
+expr_stmt|;
+name|end
+operator|=
+literal|18
+expr_stmt|;
+else|#
+directive|else
 name|get_cursor_shape
 argument_list|(
 operator|&
@@ -1883,6 +1902,8 @@ operator|&
 name|end
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|save_palette
 argument_list|()
 expr_stmt|;
@@ -2120,6 +2141,28 @@ expr_stmt|;
 block|}
 block|}
 comment|/* get cursor going */
+ifdef|#
+directive|ifdef
+name|FAT_CURSOR
+name|cursor_shape
+argument_list|(
+name|cons_scr_stat
+index|[
+literal|0
+index|]
+operator|.
+name|cursor_start
+argument_list|,
+name|cons_scr_stat
+index|[
+literal|0
+index|]
+operator|.
+name|cursor_end
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|cursor_pos
 argument_list|()
 expr_stmt|;
@@ -4832,6 +4875,7 @@ return|;
 case|case
 name|CONSOLE_X_BELL
 case|:
+comment|/* more compatibility */
 comment|/*                  * if set, data is a pointer to a length 2 array of                  * integers. data[0] is the pitch in Hz and data[1]                  * is the duration in msec.                  */
 if|if
 condition|(
@@ -4839,7 +4883,7 @@ name|data
 condition|)
 name|sysbeep
 argument_list|(
-literal|1187500
+name|XTALSPEED
 operator|/
 operator|(
 operator|(
@@ -6046,7 +6090,7 @@ name|saves
 index|[]
 init|=
 block|{
-literal|"386BSD"
+literal|"FreeBSD"
 block|}
 decl_stmt|;
 specifier|static
@@ -10868,6 +10912,7 @@ name|void
 parameter_list|)
 block|{
 name|u_short
+specifier|volatile
 modifier|*
 name|cp
 init|=
@@ -11772,9 +11817,22 @@ name|code
 condition|)
 block|{
 case|case
+literal|0x1c
+case|:
+comment|/* right enter key */
+name|code
+operator|=
+literal|0x59
+expr_stmt|;
+break|break;
+case|case
 literal|0x1d
 case|:
 comment|/* right ctrl key */
+name|code
+operator|=
+literal|0x5a
+expr_stmt|;
 break|break;
 case|case
 literal|0x35
