@@ -123,7 +123,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
-name|vm86pcb_lock
+name|vm86_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -1784,9 +1784,9 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|vm86pcb_lock
+name|vm86_lock
 argument_list|,
-literal|"vm86pcb lock"
+literal|"vm86 lock"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -2626,7 +2626,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|vm86pcb_lock
+name|vm86_lock
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2639,7 +2639,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|vm86pcb_lock
+name|vm86_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -2699,7 +2699,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|vm86pcb_lock
+name|vm86_lock
 argument_list|)
 expr_stmt|;
 for|for
@@ -2831,7 +2831,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|vm86pcb_lock
+name|vm86_lock
 argument_list|)
 expr_stmt|;
 return|return
