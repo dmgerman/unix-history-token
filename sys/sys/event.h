@@ -84,7 +84,7 @@ begin_struct
 struct|struct
 name|kevent
 block|{
-name|u_long
+name|uintptr_t
 name|ident
 decl_stmt|;
 comment|/* identifier for this event */
@@ -98,7 +98,7 @@ decl_stmt|;
 name|u_int
 name|fflags
 decl_stmt|;
-name|long
+name|intptr_t
 name|data
 decl_stmt|;
 name|void
