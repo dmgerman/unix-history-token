@@ -729,7 +729,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|(F)disk then (D)isklabel"
+literal|"|(F)disk, (W)rite the bootcode"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -739,7 +739,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|in setting up your disk."
+literal|"|then (D)isklabel your disk."
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -759,7 +759,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|other than 0, read the"
+literal|"|other than 0, also read the"
 argument_list|)
 expr_stmt|;
 name|mvprintw
