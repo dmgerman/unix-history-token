@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)comsat.c	4.6 83/05/27"
+literal|"@(#)comsat.c	4.7 83/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -305,16 +305,18 @@ expr_stmt|;
 name|onalrm
 argument_list|()
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
 name|onalrm
 argument_list|)
 expr_stmt|;
-name|sigignore
+name|signal
 argument_list|(
 name|SIGTTOU
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|s
@@ -1115,7 +1117,7 @@ argument_list|,
 name|cr
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 name|cp
 operator|=

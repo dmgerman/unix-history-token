@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	4.8 83/02/21"
+literal|"@(#)rexecd.c	4.9 83/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +382,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sigset
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,

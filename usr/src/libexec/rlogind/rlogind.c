@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.15 83/06/02"
+literal|"@(#)rlogind.c	4.16 83/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,7 +529,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sigset
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -1221,7 +1221,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
