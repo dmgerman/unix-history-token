@@ -171,6 +171,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_OHCI_VENDORID_NVIDIA
+value|0x12D2
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_OHCI_VENDORID_OPTI
 value|0x1045
 end_define
@@ -269,6 +276,24 @@ modifier|*
 name|ohci_device_nec
 init|=
 literal|"NEC uPD 9210 USB controller"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCI_OHCI_DEVICEID_NFORCE3
+value|0x00d710de
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ohci_device_nforce3
+init|=
+literal|"nVidia nForce3 USB Controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +487,14 @@ case|:
 return|return
 operator|(
 name|ohci_device_nec
+operator|)
+return|;
+case|case
+name|PCI_OHCI_DEVICEID_NFORCE3
+case|:
+return|return
+operator|(
+name|ohci_device_nforce3
 operator|)
 return|;
 case|case
@@ -861,6 +894,19 @@ operator|->
 name|sc_vendor
 argument_list|,
 literal|"NEC"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_OHCI_VENDORID_NVIDIA
+case|:
+name|sprintf
+argument_list|(
+name|sc
+operator|->
+name|sc_vendor
+argument_list|,
+literal|"nVidia"
 argument_list|)
 expr_stmt|;
 break|break;
