@@ -698,6 +698,16 @@ name|eventhandler_list
 modifier|*
 name|list
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|eventhandler_lists_initted
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 comment|/* scan looking for the requested list */
 name|mtx_lock
 argument_list|(
