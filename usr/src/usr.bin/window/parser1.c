@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.1 83/11/22"
+literal|"@(#)parser1.c	3.2 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,26 +208,17 @@ block|{
 for|for
 control|(
 init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
 name|p_statement
 argument_list|(
 name|flag
 argument_list|)
-operator|<
+operator|>=
 literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
+condition|;
 name|p_clearerr
 argument_list|()
-expr_stmt|;
-block|}
+control|)
+empty_stmt|;
 block|}
 end_block
 
@@ -1288,6 +1279,45 @@ if|if
 condition|(
 name|ap
 operator|->
+name|arg_val
+operator|.
+name|v_type
+operator|!=
+name|V_ERR
+condition|)
+block|{
+name|p_error
+argument_list|(
+literal|"Argument %d (%s) multiply specified."
+argument_list|,
+name|ap
+operator|-
+name|c
+operator|->
+name|lc_arg
+operator|+
+literal|1
+argument_list|,
+name|ap
+operator|->
+name|arg_name
+argument_list|)
+expr_stmt|;
+name|p_varfree
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|flag
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ap
+operator|->
 name|arg_type
 operator|==
 name|ARG_NUM
@@ -1313,11 +1343,19 @@ condition|)
 block|{
 name|p_error
 argument_list|(
-literal|"%s: Argument type mismatch."
+literal|"Argument %d (%s) type mismatch."
 argument_list|,
-name|t
-operator|.
-name|v_str
+name|ap
+operator|-
+name|c
+operator|->
+name|lc_arg
+operator|+
+literal|1
+argument_list|,
+name|ap
+operator|->
+name|arg_name
 argument_list|)
 expr_stmt|;
 name|p_varfree
