@@ -376,8 +376,12 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|<
-literal|0
+operator|==
+operator|(
+name|size_t
+operator|)
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
