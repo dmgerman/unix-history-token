@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	8.5 (Berkeley) %G%"
+literal|"@(#)refresh.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1755,6 +1755,12 @@ operator|->
 name|ch
 operator|==
 literal|' '
+operator|&&
+name|nsp
+operator|->
+name|attr
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Check for clear to end-of-line. */
@@ -1862,16 +1868,32 @@ operator|-
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|__CTRACE
+if|if
+condition|(
+name|curscr
+operator|->
+name|flags
+operator|&
+name|__WSTANDOUT
+condition|)
+block|{
+name|tputs
 argument_list|(
-literal|"makech: using CE\n"
+name|SE
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|curscr
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__WSTANDOUT
+expr_stmt|;
+block|}
 name|tputs
 argument_list|(
 name|CE
@@ -2408,6 +2430,33 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+comment|/* Don't leave the screen in standout mode. */
+if|if
+condition|(
+name|curscr
+operator|->
+name|flags
+operator|&
+name|__WSTANDOUT
+condition|)
+block|{
+name|tputs
+argument_list|(
+name|SE
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
+argument_list|)
+expr_stmt|;
+name|curscr
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__WSTANDOUT
+expr_stmt|;
 block|}
 return|return
 operator|(
