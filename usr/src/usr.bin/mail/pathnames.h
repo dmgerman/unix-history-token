@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pathnames.h	5.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pathnames.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,14 +20,14 @@ begin_define
 define|#
 directive|define
 name|_PATH_HELP
-value|"/usr/share/misc/Mail.help"
+value|"/usr/share/misc/mail.help"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_TILDE
-value|"/usr/share/misc/Mail.tildehelp"
+value|"/usr/share/misc/mail.tildehelp"
 end_define
 
 begin_define
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_MASTER_RC
-value|"/usr/share/misc/Mail.rc"
+value|"/etc/mail.rc"
 end_define
 
 begin_define
