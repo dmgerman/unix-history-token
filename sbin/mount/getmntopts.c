@@ -247,6 +247,8 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 condition|)
 operator|*
 operator|++
