@@ -917,7 +917,7 @@ name|iocmd
 operator|.
 name|cmd
 operator|=
-name|ATAATTACH
+name|ATAREINIT
 expr_stmt|;
 if|if
 condition|(
