@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7 1999/01/12 16:43:52 eivind Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.1 1999/03/24 12:45:45 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -613,21 +613,16 @@ condition|(
 name|pkt
 condition|)
 block|{
-name|struct
-name|ip
-modifier|*
-name|ip
+name|int
+name|len
 init|=
-name|mtod
-argument_list|(
 name|pkt
 operator|->
 name|dn_m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 decl_stmt|;
 comment|/* 	     * queue limitation: pass packets down if the len is 	     * such that the pkt would go out before the next tick. 	     */
 if|if
@@ -643,18 +638,14 @@ name|pipe
 operator|->
 name|numbytes
 operator|<
-name|ip
-operator|->
-name|ip_len
+name|len
 condition|)
 break|break;
 name|pipe
 operator|->
 name|numbytes
 operator|-=
-name|ip
-operator|->
-name|ip_len
+name|len
 expr_stmt|;
 block|}
 name|pipe
@@ -1170,19 +1161,14 @@ name|dn_pipe
 modifier|*
 name|pipe
 decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
+name|int
+name|len
 init|=
-name|mtod
-argument_list|(
 name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 decl_stmt|;
 name|int
 name|s
@@ -1308,9 +1294,7 @@ name|pipe
 operator|->
 name|queue_size_bytes
 operator|&&
-name|ip
-operator|->
-name|ip_len
+name|len
 operator|+
 name|pipe
 operator|->
@@ -1535,9 +1519,7 @@ name|pipe
 operator|->
 name|r_len_bytes
 operator|+=
-name|ip
-operator|->
-name|ip_len
+name|len
 expr_stmt|;
 comment|/*       * here we could implement RED if we like to      */
 if|if
@@ -2784,7 +2766,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (980901) -- size dn_pkt %d\n"
+literal|"DUMMYNET initialized (990326) -- size dn_pkt %d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
