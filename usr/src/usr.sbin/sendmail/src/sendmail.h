@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.105		%G%"
+literal|"@(#)sendmail.h	3.106		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -879,6 +879,11 @@ modifier|*
 name|e_xfp
 decl_stmt|;
 comment|/* transcript file */
+name|char
+modifier|*
+name|e_message
+decl_stmt|;
+comment|/* error message */
 name|char
 modifier|*
 name|e_macro
