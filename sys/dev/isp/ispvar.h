@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|0
+value|1
 end_define
 
 begin_comment
@@ -258,7 +258,7 @@ operator|,
 name|XS_T
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 expr_stmt|;
