@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	8.4 (Berkeley) %G%"
+literal|"@(#)lfs.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,7 +264,7 @@ comment|/* lfs_bsize */
 name|DFL_LFSBLOCK
 block|,
 comment|/* lfs_fsize */
-name|DFL_LFSBLOCK
+name|DFL_LFSFRAG
 block|,
 comment|/* lfs_frag */
 literal|1
@@ -377,16 +377,16 @@ comment|/* lfs_bshift */
 name|DFL_LFSBLOCK_SHIFT
 block|,
 comment|/* lfs_ffmask */
-literal|0
+name|DFL_LFS_FFMASK
 block|,
 comment|/* lfs_ffshift */
-literal|0
+name|DFL_LFS_FFSHIFT
 block|,
 comment|/* lfs_fbmask */
-literal|0
+name|DFL_LFS_FBMASK
 block|,
 comment|/* lfs_fbshift */
-literal|0
+name|DFL_LFS_FBSHIFT
 block|,
 comment|/* lfs_fsbtodb */
 literal|0
@@ -652,6 +652,8 @@ name|minfree
 parameter_list|,
 name|block_size
 parameter_list|,
+name|frag_size
+parameter_list|,
 name|seg_size
 parameter_list|)
 name|int
@@ -672,6 +674,9 @@ name|minfree
 decl_stmt|;
 name|int
 name|block_size
+decl_stmt|;
+name|int
+name|frag_size
 decl_stmt|;
 name|int
 name|seg_size
@@ -787,6 +792,10 @@ name|bsize
 decl_stmt|;
 comment|/* Block size */
 name|int
+name|fsize
+decl_stmt|;
+comment|/* Fragment size */
+name|int
 name|db_per_fb
 decl_stmt|;
 comment|/* Disk blocks per file block */
@@ -837,6 +846,19 @@ if|if
 condition|(
 operator|!
 operator|(
+name|fsize
+operator|=
+name|frag_size
+operator|)
+condition|)
+name|fsize
+operator|=
+name|DFL_LFSFRAG
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|ssize
 operator|=
 name|seg_size
@@ -852,6 +874,10 @@ condition|(
 name|bsize
 operator|!=
 name|DFL_LFSBLOCK
+operator|||
+name|fsize
+operator|!=
+name|DFL_LFSFRAG
 condition|)
 block|{
 name|lfsp
@@ -890,7 +916,7 @@ name|lfsp
 operator|->
 name|lfs_fsize
 operator|=
-name|bsize
+name|fsize
 expr_stmt|;
 name|lfsp
 operator|->
@@ -910,6 +936,72 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|dinode
+argument_list|)
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_ffmask
+operator|=
+name|fsize
+operator|-
+literal|1
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_ffshift
+operator|=
+name|log2
+argument_list|(
+name|fsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+literal|1
+operator|<<
+name|lfsp
+operator|->
+name|lfs_ffshift
+operator|!=
+name|fsize
+condition|)
+name|fatal
+argument_list|(
+literal|"%d: frag size not a power of 2"
+argument_list|,
+name|fsize
+argument_list|)
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_frag
+operator|=
+name|numfrags
+argument_list|(
+name|lfsp
+argument_list|,
+name|bsize
+argument_list|)
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_fbmask
+operator|=
+name|lfsp
+operator|->
+name|lfs_frag
+operator|-
+literal|1
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_fbshift
+operator|=
+name|log2
+argument_list|(
+name|lfsp
+operator|->
+name|lfs_frag
 argument_list|)
 expr_stmt|;
 comment|/* MIS -- should I round to power of 2 */
@@ -2478,6 +2570,12 @@ literal|3
 expr_stmt|;
 name|summary
 operator|.
+name|ss_magic
+operator|=
+name|SS_MAGIC
+expr_stmt|;
+name|summary
+operator|.
 name|ss_datasum
 operator|=
 name|cksum
@@ -2647,6 +2745,14 @@ literal|1
 expr_stmt|;
 name|file_info
 operator|.
+name|fi_lastlength
+operator|=
+name|lfsp
+operator|->
+name|lfs_bsize
+expr_stmt|;
+name|file_info
+operator|.
 name|fi_ino
 operator|=
 name|LFS_IFILE_INUM
@@ -2720,6 +2826,14 @@ operator|.
 name|fi_version
 operator|=
 literal|1
+expr_stmt|;
+name|file_info
+operator|.
+name|fi_lastlength
+operator|=
+name|lfsp
+operator|->
+name|lfs_bsize
 expr_stmt|;
 name|file_info
 operator|.
@@ -2873,6 +2987,12 @@ operator|->
 name|ss_datasum
 operator|=
 literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|ss_magic
+operator|=
+name|SS_MAGIC
 expr_stmt|;
 comment|/* Now write the summary block for the next partial so it's invalid */
 name|lfsp
