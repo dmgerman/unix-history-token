@@ -6099,19 +6099,6 @@ decl_stmt|;
 name|ino_t
 name|inum
 decl_stmt|;
-comment|/* 	 * We only care about the leaf block numbers, not the 	 * meta-block numbers. 	 */
-if|if
-condition|(
-name|lblkno
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|ip
 operator|=
 name|VTOI
@@ -6157,6 +6144,11 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|lblkno
+operator|!=
+operator|-
+literal|1
+operator|&&
 name|expungetype
 operator|==
 name|BLK_SNAP
@@ -7810,19 +7802,6 @@ decl_stmt|;
 name|ino_t
 name|inum
 decl_stmt|;
-comment|/* 	 * We only care about the leaf block numbers, not the 	 * meta-block numbers. 	 */
-if|if
-condition|(
-name|lblkno
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|ip
 operator|=
 name|VTOI
@@ -7868,6 +7847,11 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|lblkno
+operator|!=
+operator|-
+literal|1
+operator|&&
 name|expungetype
 operator|==
 name|BLK_SNAP
