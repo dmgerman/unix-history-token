@@ -1229,7 +1229,6 @@ name|de
 operator|->
 name|de_vnode
 condition|)
-block|{
 name|de
 operator|->
 name|de_vnode
@@ -1238,14 +1237,6 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|de
-operator|->
-name|de_vnode
-argument_list|)
-expr_stmt|;
-block|}
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1551,7 +1542,6 @@ name|de
 operator|->
 name|de_vnode
 condition|)
-block|{
 name|de
 operator|->
 name|de_vnode
@@ -1560,14 +1550,6 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|de
-operator|->
-name|de_vnode
-argument_list|)
-expr_stmt|;
-block|}
 name|FREE
 argument_list|(
 name|de
