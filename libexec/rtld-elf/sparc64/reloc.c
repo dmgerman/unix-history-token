@@ -2698,6 +2698,14 @@ argument_list|,
 name|target
 argument_list|,
 name|defobj
+argument_list|,
+name|obj
+argument_list|,
+operator|(
+name|Elf_Rel
+operator|*
+operator|)
+name|rela
 argument_list|)
 expr_stmt|;
 block|}
@@ -2730,8 +2738,30 @@ specifier|const
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+specifier|const
+name|Obj_Entry
+modifier|*
+name|refobj
+parameter_list|,
+specifier|const
+name|Elf_Rel
+modifier|*
+name|rel
 parameter_list|)
 block|{
+specifier|const
+name|Elf_Rela
+modifier|*
+name|rela
+init|=
+operator|(
+specifier|const
+name|Elf_Rela
+operator|*
+operator|)
+name|rel
+decl_stmt|;
 name|Elf_Addr
 name|offset
 decl_stmt|;
@@ -2739,7 +2769,18 @@ name|Elf_Half
 modifier|*
 name|where
 decl_stmt|;
-comment|/* 	 * At the PLT entry pointed at by `where', we now construct 	 * a direct transfer to the now fully resolved function 	 * address. 	 * 	 * A PLT entry is supposed to start by looking like this: 	 * 	 *	sethi	%hi(. - .PLT0), %g1 	 *	ba,a	%xcc, .PLT1 	 *	nop 	 *	nop 	 *	nop 	 *	nop 	 *	nop 	 *	nop 	 * 	 * When we replace these entries we start from the second 	 * entry and do it in reverse order so the last thing we 	 * do is replace the branch.  That allows us to change this 	 * atomically. 	 * 	 * We now need to find out how far we need to jump.  We 	 * have a choice of several different relocation techniques 	 * which are increasingly expensive. 	 */
+if|if
+condition|(
+name|rela
+operator|-
+name|refobj
+operator|->
+name|pltrela
+operator|<
+literal|32764
+condition|)
+block|{
+comment|/* 		 * At the PLT entry pointed at by `where', we now construct 		 * a direct transfer to the now fully resolved function 		 * address. 		 * 		 * A PLT entry is supposed to start by looking like this: 		 * 		 *	sethi	(. - .PLT0), %g1 		 *	ba,a	%xcc, .PLT1 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 * 		 * When we replace these entries we start from the second 		 * entry and do it in reverse order so the last thing we 		 * do is replace the branch.  That allows us to change this 		 * atomically. 		 * 		 * We now need to find out how far we need to jump.  We 		 * have a choice of several different relocation techniques 		 * which are increasingly expensive. 		 */
 name|where
 operator|=
 operator|(
@@ -2779,7 +2820,7 @@ literal|20
 operator|)
 condition|)
 block|{
-comment|/*  		 * We're within 1MB -- we can use a direct branch insn. 		 * 		 * We can generate this pattern: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	ba,a	%xcc, addr 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 * 		 */
+comment|/*  			 * We're within 1MB -- we can use a direct branch insn. 			 * 			 * We can generate this pattern: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	ba,a	%xcc, addr 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|1
@@ -2821,7 +2862,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/*  		 * We're withing 32-bits of address zero. 		 * 		 * The resulting code in the jump slot is: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	sethi	%hi(addr), %g1 		 *	jmp	%g1+%lo(addr) 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 * 		 */
+comment|/*  			 * We're withing 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|2
@@ -2880,7 +2921,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/*  		 * We're withing 32-bits of address -1. 		 * 		 * The resulting code in the jump slot is: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	sethi	%hix(addr), %g1 		 *	xor	%g1, %lox(addr), %g1 		 *	jmp	%g1 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 * 		 */
+comment|/*  			 * We're withing 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -2966,7 +3007,7 @@ literal|4
 operator|)
 condition|)
 block|{
-comment|/*  		 * We're withing 32-bits -- we can use a direct call insn  		 * 		 * The resulting code in the jump slot is: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	mov	%o7, %g1 		 *	call	(.+offset) 		 *	 mov	%g1, %o7 		 *	nop 		 *	nop 		 *	nop 		 *	nop 		 * 		 */
+comment|/*  			 * We're withing 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -3036,7 +3077,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/*  		 * We're withing 44 bits.  We can generate this pattern: 		 * 		 * The resulting code in the jump slot is: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	sethi	%h44(addr), %g1 		 *	or	%g1, %m44(addr), %g1 		 *	sllx	%g1, 12, %g1	 		 *	jmp	%g1+%l44(addr)	 		 *	nop 		 *	nop 		 *	nop 		 * 		 */
+comment|/*  			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1	 			 *	jmp	%g1+%l44(addr)	 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3137,7 +3178,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/*  		 * We're withing 44 bits.  We can generate this pattern: 		 * 		 * The resulting code in the jump slot is: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	sethi	%h44(-addr), %g1 		 *	xor	%g1, %m44(-addr), %g1 		 *	sllx	%g1, 12, %g1	 		 *	jmp	%g1+%l44(addr)	 		 *	nop 		 *	nop 		 *	nop 		 * 		 */
+comment|/*  			 * We're withing 44 bits.  We can generate this pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1	 			 *	jmp	%g1+%l44(addr)	 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3225,7 +3266,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * We need to load all 64-bits 		 * 		 * The resulting code in the jump slot is: 		 * 		 *	sethi	%hi(. - .PLT0), %g1 		 *	sethi	%hh(addr), %g1 		 *	sethi	%lm(addr), %g5 		 *	or	%g1, %hm(addr), %g1 		 *	sllx	%g1, 32, %g1 		 *	or	%g1, %g5, %g1 		 *	jmp	%g1+%lo(addr) 		 *	nop 		 * 		 */
+comment|/*  			 * We need to load all 64-bits 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hh(addr), %g1 			 *	sethi	%lm(addr), %g5 			 *	or	%g1, %hm(addr), %g1 			 *	sllx	%g1, 32, %g1 			 *	or	%g1, %g5, %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|6
@@ -3339,6 +3380,27 @@ name|where
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * This is a high PLT slot; the relocation offset specifies a 		 * pointer that needs to be frobbed; no actual code needs to 		 * be modified. The pointer to be calculated needs the addend 		 * added and the reference object relocation base subtraced. 		 */
+operator|*
+name|wherep
+operator|=
+name|target
+operator|+
+name|rela
+operator|->
+name|r_addend
+operator|-
+operator|(
+name|Elf_Addr
+operator|)
+name|refobj
+operator|->
+name|relocbase
 expr_stmt|;
 block|}
 return|return

@@ -49,7 +49,15 @@ specifier|const
 name|struct
 name|Struct_Obj_Entry
 modifier|*
-name|obj
+parameter_list|,
+specifier|const
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+parameter_list|,
+specifier|const
+name|Elf_Rel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

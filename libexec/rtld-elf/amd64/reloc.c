@@ -1118,6 +1118,10 @@ argument_list|,
 name|target
 argument_list|,
 name|defobj
+argument_list|,
+name|obj
+argument_list|,
+name|rel
 argument_list|)
 expr_stmt|;
 block|}

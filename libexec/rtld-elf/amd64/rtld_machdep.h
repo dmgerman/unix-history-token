@@ -59,6 +59,17 @@ name|struct
 name|Struct_Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+specifier|const
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+name|refobj
+parameter_list|,
+specifier|const
+name|Elf_Rel
+modifier|*
+name|rel
 parameter_list|)
 block|{
 name|dbg
