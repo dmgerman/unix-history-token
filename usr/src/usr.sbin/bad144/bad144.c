@@ -148,12 +148,6 @@ name|MAXSECSIZE
 value|1024
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCS
-end_ifndef
-
 begin_decl_stmt
 name|struct
 name|dkbad
@@ -169,52 +163,6 @@ directive|define
 name|DKBAD_MAGIC
 value|0
 end_define
-
-begin_else
-else|#
-directive|else
-else|SCS
-end_else
-
-begin_union
-union|union
-block|{
-name|struct
-name|dkbad
-name|bd
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXSECSIZE
-index|]
-decl_stmt|;
-block|}
-name|currentbad
-union|,
-name|previousbad
-union|;
-end_union
-
-begin_define
-define|#
-directive|define
-name|curbad
-value|currentbad.bd
-end_define
-
-begin_define
-define|#
-directive|define
-name|oldbad
-value|previousbad.bd
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|SCS
-end_endif
 
 begin_decl_stmt
 name|char
@@ -724,7 +672,7 @@ argument_list|(
 name|f
 argument_list|,
 operator|&
-name|curbad
+name|oldbad
 argument_list|)
 expr_stmt|;
 name|printf
@@ -740,14 +688,14 @@ name|printf
 argument_list|(
 literal|"cartridge serial number: %d(10)\n"
 argument_list|,
-name|curbad
+name|oldbad
 operator|.
 name|bt_csn
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|curbad
+name|oldbad
 operator|.
 name|bt_flag
 condition|)
@@ -771,7 +719,7 @@ name|printf
 argument_list|(
 literal|"bt_flag=%x(16)?\n"
 argument_list|,
-name|curbad
+name|oldbad
 operator|.
 name|bt_flag
 argument_list|)
@@ -780,7 +728,7 @@ break|break;
 block|}
 name|bt
 operator|=
-name|curbad
+name|oldbad
 operator|.
 name|bt_bad
 expr_stmt|;
@@ -853,7 +801,10 @@ operator|(
 name|void
 operator|)
 name|checkold
-argument_list|()
+argument_list|(
+operator|&
+name|oldbad
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -881,7 +832,10 @@ expr_stmt|;
 name|i
 operator|=
 name|checkold
-argument_list|()
+argument_list|(
+operator|&
+name|oldbad
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1651,15 +1605,13 @@ name|bt
 operator|->
 name|bt_cyl
 operator|==
-operator|-
-literal|1
+literal|0xffff
 operator|&&
 name|bt
 operator|->
 name|bt_trksec
 operator|==
-operator|-
-literal|1
+literal|0xffff
 condition|)
 break|break;
 if|if
@@ -1792,7 +1744,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: bad sector file out of order\n"
+literal|"bad144: bad sector file is out of order\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -1817,7 +1769,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad144: bad sector file contains duplicates\n"
+literal|"bad144: bad sector file contains duplicates (sn %d)\n"
+argument_list|,
+name|sn
 argument_list|)
 expr_stmt|;
 name|errors
