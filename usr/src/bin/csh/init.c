@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	5.2 (Berkeley) %G%"
+literal|"@(#)init.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1377,11 +1377,11 @@ literal|"Urgent I/O condition"
 block|,
 literal|"STOP"
 block|,
-literal|"Stopped (signal)"
+literal|"Suspended (signal)"
 block|,
 literal|"TSTP"
 block|,
-literal|"Stopped"
+literal|"Suspended"
 block|,
 literal|"CONT"
 block|,
@@ -1393,11 +1393,11 @@ literal|"Child exited"
 block|,
 literal|"TTIN"
 block|,
-literal|"Stopped (tty input)"
+literal|"Suspended (tty input)"
 block|,
 literal|"TTOU"
 block|,
-literal|"Stopped (tty output)"
+literal|"Suspended (tty output)"
 block|,
 literal|"IO"
 block|,

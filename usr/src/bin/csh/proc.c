@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.7 (Berkeley) %G%"
+literal|"@(#)proc.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2920,7 +2920,7 @@ name|NAME
 condition|)
 name|format
 operator|=
-literal|"%-21s"
+literal|"%-23s"
 expr_stmt|;
 else|else
 name|format
@@ -4364,7 +4364,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Already stopped\n"
+literal|"%s: Already suspended\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -4803,7 +4803,7 @@ name|PSTOPPED
 condition|)
 name|error
 argument_list|(
-literal|"\nThere are stopped jobs"
+literal|"\nThere are suspended jobs"
 operator|+
 literal|1
 operator|-
