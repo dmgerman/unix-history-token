@@ -455,7 +455,7 @@ comment|/* Print "netdata" output in user readable format */
 name|termdata
 decl_stmt|,
 comment|/* Print out terminal data flow */
-name|debug
+name|telnet_debug
 decl_stmt|,
 comment|/* Debug level */
 name|doaddrlookup
