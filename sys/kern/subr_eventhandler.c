@@ -69,6 +69,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|eventhandler_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|eventhandler_entry_generic
