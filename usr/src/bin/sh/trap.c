@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	8.1 (Berkeley) %G%"
+literal|"@(#)trap.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,12 +72,6 @@ begin_include
 include|#
 directive|include
 file|"syntax.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"signames.h"
 end_include
 
 begin_include
@@ -194,7 +188,7 @@ name|char
 modifier|*
 name|trap
 index|[
-name|MAXSIG
+name|NSIG
 operator|+
 literal|1
 index|]
@@ -210,7 +204,7 @@ name|MKINIT
 name|char
 name|sigmode
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -223,7 +217,7 @@ begin_decl_stmt
 name|char
 name|gotsig
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -292,7 +286,7 @@ literal|0
 init|;
 name|signo
 operator|<=
-name|MAXSIG
+name|NSIG
 condition|;
 name|signo
 operator|++
@@ -371,7 +365,7 @@ literal|0
 operator|||
 name|signo
 operator|>
-name|MAXSIG
+name|NSIG
 condition|)
 name|error
 argument_list|(
@@ -464,7 +458,7 @@ operator|<=
 operator|&
 name|trap
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 condition|;
 name|tp
@@ -912,7 +906,11 @@ end_ifdef
 
 begin_expr_stmt
 name|INCLUDE
-literal|"signames.h"
+operator|<
+name|signal
+operator|.
+name|h
+operator|>
 name|INCLUDE
 literal|"trap.h"
 name|SHELLPROC
@@ -934,7 +932,7 @@ name|sm
 operator|<
 name|sigmode
 operator|+
-name|MAXSIG
+name|NSIG
 condition|;
 name|sm
 operator|++
@@ -1062,7 +1060,7 @@ if|if
 condition|(
 name|i
 operator|>=
-name|MAXSIG
+name|NSIG
 condition|)
 goto|goto
 name|done
