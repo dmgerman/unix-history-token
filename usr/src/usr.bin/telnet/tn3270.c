@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.7 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ end_comment
 
 begin_function
 name|void
-name|tn3270_init
+name|init_3270
 parameter_list|()
 block|{
 if|#
@@ -311,6 +311,7 @@ condition|(
 name|count
 condition|)
 block|{
+comment|/* If not enough room for EORs, IACs, etc., wait */
 if|if
 condition|(
 name|NETROOM
@@ -386,13 +387,27 @@ block|}
 block|}
 name|c
 operator|=
-name|loop
-operator|=
-name|ring_empty_consecutive
+name|ring_empty_count
 argument_list|(
 operator|&
 name|netoring
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|>
+name|count
+condition|)
+block|{
+name|c
+operator|=
+name|count
+expr_stmt|;
+block|}
+name|loop
+operator|=
+name|c
 expr_stmt|;
 while|while
 condition|(
@@ -459,6 +474,9 @@ expr_stmt|;
 name|count
 operator|--
 expr_stmt|;
+name|buffer
+operator|++
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -470,7 +488,7 @@ name|NET2ADD
 argument_list|(
 name|IAC
 argument_list|,
-name|IAC
+name|EOR
 argument_list|)
 expr_stmt|;
 name|netflush
@@ -536,7 +554,7 @@ comment|/*  * The following routines are places where the various tn3270  * rout
 end_comment
 
 begin_comment
-comment|/* DataToTerminal - queue up some data to go to terminal. */
+comment|/*  * DataToTerminal - queue up some data to go to terminal.  *  * Note: there are people who call us and depend on our processing  * *all* the data at one time (thus the select).  */
 end_comment
 
 begin_function
@@ -670,55 +688,27 @@ block|}
 block|}
 name|c
 operator|=
-name|loop
-operator|=
-name|ring_empty_consecutive
-argument_list|(
-operator|&
-name|ttyoring
-argument_list|)
+name|TTYROOM
+argument_list|()
 expr_stmt|;
-while|while
-condition|(
-name|loop
-condition|)
-block|{
 if|if
 condition|(
-operator|*
-name|buffer
-operator|==
-name|IAC
+name|c
+operator|>
+name|count
 condition|)
 block|{
-break|break;
-block|}
-name|buffer
-operator|++
-expr_stmt|;
-name|loop
-operator|--
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|c
 operator|=
-name|c
-operator|-
-name|loop
-operator|)
-condition|)
-block|{
+name|count
+expr_stmt|;
+block|}
 name|ring_supply_data
 argument_list|(
 operator|&
 name|ttyoring
 argument_list|,
 name|buffer
-operator|-
-name|c
 argument_list|,
 name|c
 argument_list|)
@@ -727,13 +717,14 @@ name|count
 operator|-=
 name|c
 expr_stmt|;
-block|}
+name|buffer
+operator|+=
+name|c
+expr_stmt|;
 block|}
 return|return
 operator|(
 name|origCount
-operator|-
-name|count
 operator|)
 return|;
 block|}
@@ -770,6 +761,8 @@ if|if
 condition|(
 name|TTYBYTES
 argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
 if|#
