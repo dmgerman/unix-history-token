@@ -499,6 +499,17 @@ condition|(
 name|error
 condition|)
 block|{
+name|VOP_UNLOCK
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|vn_close
 argument_list|(
 name|nd
