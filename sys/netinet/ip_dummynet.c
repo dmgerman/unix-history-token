@@ -596,7 +596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Heap management functions.  *  * In the heap, first node is element 0. Children of i are 2i+1 and 2i+2.  * Some macros help finding parent/children so we can optimize them.  #  * heap_init() is called to expand the heap when needed.  * Increment size in blocks of 256 entries (which make one 4KB page)  * XXX failure to allocate a new element is a pretty bad failure  * as we basically stall a whole queue forever!!  * Returns 1 on error, 0 on success  */
+comment|/*  * Heap management functions.  *  * In the heap, first node is element 0. Children of i are 2i+1 and 2i+2.  * Some macros help finding parent/children so we can optimize them.  *  * heap_init() is called to expand the heap when needed.  * Increment size in blocks of 256 entries (which make one 4KB page)  * XXX failure to allocate a new element is a pretty bad failure  * as we basically stall a whole queue forever!!  * Returns 1 on error, 0 on success  */
 end_comment
 
 begin_define
@@ -1146,7 +1146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * heapify() will reorganize data inside an array to maintain the  * heap property. It is needed when we delete a bunch of entries. 	     */
+comment|/*  * heapify() will reorganize data inside an array to maintain the  * heap property. It is needed when we delete a bunch of entries.  */
 end_comment
 
 begin_function
@@ -1245,7 +1245,7 @@ comment|/*  * --- end of heap management functions ---  */
 end_comment
 
 begin_comment
-comment|/*  * Scheduler functions -- transmit_event(), ready_event()  *  * transmit_event() is called when the delay-line needs to enter  * the scheduler, either because of existing pkts getting ready,  * or new packets entering the queue. The event handled is the delivery  * time of the packet.  *  * ready_event() does something similar with flow queues, and the  * event handled is the finish time of the head pkt.  *  * In both cases, we make sure that the data structures are consistent  * before passing pkts out, because this might trigger recursive  * invocations of the procedures.      */
+comment|/*  * Scheduler functions -- transmit_event(), ready_event()  *  * transmit_event() is called when the delay-line needs to enter  * the scheduler, either because of existing pkts getting ready,  * or new packets entering the queue. The event handled is the delivery  * time of the packet.  *  * ready_event() does something similar with flow queues, and the  * event handled is the finish time of the head pkt.  *  * In both cases, we make sure that the data structures are consistent  * before passing pkts out, because this might trigger recursive  * invocations of the procedures.  */
 end_comment
 
 begin_function
@@ -1634,16 +1634,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*      * If the delay line was empty call transmit_event(p) now.      * Otherwise, the scheduler will take care of it.      */
-if|if
-condition|(
-name|p_was_empty
-condition|)
-name|transmit_event
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/*      * If we have more packets queued, schedule next ready event      * (can only occur when bandwidth != 0, otherwise we would have      * flushed the whole queue in the previous loop).      * To this purpose compute how many ticks to go for the next      * event, accounting for packet size and residual credit. This means      * we compute the finish time of the packet.      */
 if|if
 condition|(
@@ -1722,11 +1712,21 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX should check errors on heap_insert, and drain the whole 	 * queue on error hoping next time we are luckier. 	 */
 block|}
+comment|/*      * If the delay line was empty call transmit_event(p) now.      * Otherwise, the scheduler will take care of it.      */
+if|if
+condition|(
+name|p_was_empty
+condition|)
+name|transmit_event
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * this is called once per tick, or HZ times per second. It is used to  * increment the current tick counter and schedule expired events.      */
+comment|/*  * this is called once per tick, or HZ times per second. It is used to  * increment the current tick counter and schedule expired events.  */
 end_comment
 
 begin_function
@@ -3623,7 +3623,7 @@ condition|(
 name|error
 condition|)
 break|break ;
-comment|/* 	     * The config program passes parameters as follows: 	 * bandwidth = bits/second (0 means no limits); 	 * delay = millisec.,   must be translated into ticks. 	 * queue_size = slots (0 means no limit) 	 * queue_size_bytes = bytes (0 means no limit) 	     *	  only one can be set, must be bound-checked 	     */
+comment|/* 	 * The config program passes parameters as follows: 	 * bandwidth = bits/second (0 means no limits); 	 * delay = millisec.,   must be translated into ticks. 	 * queue_size = slots (0 means no limit) 	 * queue_size_bytes = bytes (0 means no limit) 	 *	  only one can be set, must be bound-checked 	 */
 name|p
 operator|->
 name|delay
