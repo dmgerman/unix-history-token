@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1499,6 +1505,7 @@ if|if
 condition|(
 operator|(
 call|(
+name|unsigned
 name|long
 call|)
 argument_list|(
@@ -1546,6 +1553,7 @@ if|if
 condition|(
 operator|(
 call|(
+name|unsigned
 name|long
 call|)
 argument_list|(
@@ -1593,6 +1601,7 @@ if|if
 condition|(
 operator|(
 call|(
+name|unsigned
 name|long
 call|)
 argument_list|(
