@@ -5425,6 +5425,16 @@ index|]
 operator|=
 name|sig
 expr_stmt|;
+name|frame
+operator|->
+name|tf_regs
+index|[
+name|FRAME_FLAGS
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* full restore */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -6357,6 +6367,16 @@ operator|)
 name|catcher
 expr_stmt|;
 comment|/* t12 is pv */
+name|frame
+operator|->
+name|tf_regs
+index|[
+name|FRAME_FLAGS
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* full restore */
 name|alpha_pal_wrusp
 argument_list|(
 operator|(
@@ -6622,6 +6642,20 @@ operator|&
 operator|~
 name|ALPHA_PSL_USERCLR
 expr_stmt|;
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_regs
+index|[
+name|FRAME_FLAGS
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* full restore */
 name|alpha_pal_wrusp
 argument_list|(
 name|ksc
@@ -6881,6 +6915,20 @@ index|[
 name|R_PC
 index|]
 expr_stmt|;
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_regs
+index|[
+name|FRAME_FLAGS
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* full restore */
 name|alpha_pal_wrusp
 argument_list|(
 name|uc
@@ -7257,6 +7305,16 @@ name|FRAME_PC
 index|]
 expr_stmt|;
 comment|/* a.k.a. PV */
+name|tfp
+operator|->
+name|tf_regs
+index|[
+name|FRAME_FLAGS
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* full restore */
 name|p
 operator|->
 name|p_md
