@@ -294,6 +294,9 @@ operator|&
 name|e
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|i
 operator|=
 name|snprintf
@@ -306,7 +309,11 @@ literal|"%s: "
 argument_list|,
 name|s
 argument_list|)
-expr_stmt|;
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -315,6 +322,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -420,6 +428,13 @@ name|re_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -428,6 +443,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|RPC_VERSMISMATCH
@@ -455,6 +471,13 @@ operator|.
 name|high
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -463,6 +486,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|RPC_AUTHERROR
@@ -487,6 +511,13 @@ argument_list|,
 literal|"; why = "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -495,6 +526,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
@@ -537,6 +569,13 @@ name|re_why
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -545,6 +584,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|RPC_PROGVERSMISMATCH
@@ -572,6 +612,13 @@ operator|.
 name|high
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -580,6 +627,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 break|break;
 default|default:
 comment|/* unknown */
@@ -606,6 +654,13 @@ operator|.
 name|s2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|str
 operator|+=
 name|i
@@ -614,6 +669,7 @@ name|len
 operator|-=
 name|i
 expr_stmt|;
+block|}
 break|break;
 block|}
 name|strstart
@@ -904,6 +960,12 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|len
 operator|-=
 name|i
