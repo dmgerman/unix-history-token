@@ -215,21 +215,21 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ENTRY
+name|ALTENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x); 9: \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp
+value|_ENTRY(x); \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp; \ 			jmp 9f
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALTENTRY
+name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x) ; call PIC_PLT(HIDENAME(mcount)) ; jmp 9f
+value|_ENTRY(x); \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp; \ 			9:
 end_define
 
 begin_else
@@ -240,7 +240,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ENTRY
+name|ALTENTRY
 parameter_list|(
 name|x
 parameter_list|)
@@ -250,7 +250,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ALTENTRY
+name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
