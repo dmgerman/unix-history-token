@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tanh.c	4.3 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)tanh.c	4.3 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,9 +72,21 @@ name|int
 name|finite
 parameter_list|()
 function_decl|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x

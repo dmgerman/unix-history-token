@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log__L.c	1.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)log__L.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* log__L(Z)  *		LOG(1+X) - 2S			       X  * RETURN      ---------------  WHERE Z = S*S,  S = ------- , 0<= Z<= .0294...  *		      S				     2 + X  *		       * DOUBLE PRECISION (VAX D FORMAT 56 bits or IEEE DOUBLE 53 BITS)  * KERNEL FUNCTION FOR LOG; TO BE USED IN LOG1P, LOG, AND POW FUNCTIONS  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. Ng, 2/3/85, 4/16/85.  *  * Method :  *	1. Polynomial approximation: let s = x/(2+x).   *	   Based on log(1+x) = log(1+s) - log(1-s)  *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,  *  *	   (log(1+x) - 2s)/s is computed by  *  *	       z*(L1 + z*(L2 + z*(... (L7 + z*L8)...)))  *  *	   where z=s*s. (See the listing below for Lk's values.) The   *	   coefficients are obtained by a special Remez algorithm.   *  * Accuracy:  *	Assuming no rounding error, the maximum magnitude of the approximation   *	error (absolute) is 2**(-58.49) for IEEE double, and 2**(-63.63)  *	for VAX D format.  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* VAX D format (56 bits) */
@@ -324,9 +334,19 @@ name|double
 name|z
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 return|return
 operator|(
 name|z

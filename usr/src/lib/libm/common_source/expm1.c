@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expm1.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)expm1.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* EXPM1(X)  * RETURN THE EXPONENTIAL OF X MINUS ONE  * DOUBLE PRECISION (IEEE 53 BITS, VAX D FORMAT 56 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 3/7/85, 3/21/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)	  *	copysign(x,y)	  *	finite(x)  *  * Kernel function:  *	exp__E(x,c)  *  * Method:  *	1. Argument Reduction: given the input x, find r and integer k such   *	   that  *	                   x = k*ln2 + r,  |r|<= 0.5*ln2 .    *	   r will be represented as r := z+c for better accuracy.  *  *	2. Compute EXPM1(r)=exp(r)-1 by   *  *			EXPM1(r=z+c) := z + exp__E(z,c)  *  *	3. EXPM1(x) =  2^k * ( EXPM1(r) + 1-2^-k ).  *  * 	Remarks:   *	   1. When k=1 and z< -0.25, we use the following formula for  *	      better accuracy:  *			EXPM1(x) = 2 * ( (z+0.5) + exp__E(z,c) )  *	   2. To avoid rounding error in 1-2^-k where k is large, we use  *			EXPM1(x) = 2^k * { [z+(exp__E(z,c)-2^-k )] + 1 }  *	      when k>56.   *  * Special cases:  *	EXPM1(INF) is INF, EXPM1(NaN) is NaN;  *	EXPM1(-INF)= -1;  *	for finite argument, only EXPM1(0)=0 is exact.  *  * Accuracy:  *	EXPM1(x) returns the exact (exp(x)-1) nearly rounded. In a test run with  *	1,166,000 random arguments on a VAX, the maximum observed error was  *	.872 ulps (units of the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* VAX D format */
@@ -235,9 +245,19 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 specifier|static
 name|prec
 operator|=
@@ -253,9 +273,21 @@ literal|53
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x

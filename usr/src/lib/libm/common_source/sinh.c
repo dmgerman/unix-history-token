@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sinh.c	4.3 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)sinh.c	4.3 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* SINH(X)  * RETURN THE HYPERBOLIC SINE OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 2/8/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	scalb(x,N)  *  * Required kernel functions:  *	expm1(x)	...return exp(x)-1  *  * Method :  *	1. reduce x to non-negative by sinh(-x) = - sinh(x).  *	2.   *  *	                                      expm1(x) + expm1(x)/(expm1(x)+1)  *	    0<= x<= lnovfl     : sinh(x) := --------------------------------  *			       		                      2  *     lnovfl<= x<= lnovfl+ln2 : sinh(x) := expm1(x)/2 (avoid overflow)  * lnovfl+ln2<  x<  INF        :  overflow to INF  *	  *  * Special cases:  *	sinh(x) is x if x is +INF, -INF, or NaN.  *	only sinh(0)=0 is exact for finite argument.  *  * Accuracy:  *	sinh(x) returns the exact hyperbolic sine of x nearly rounded. In  *	a test run with 1,024,000 random arguments on a VAX, the maximum  *	observed error was 1.93 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* static double */
@@ -153,11 +163,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_expr_stmt
 specifier|static
@@ -225,9 +245,21 @@ argument_list|()
 decl_stmt|,
 name|sign
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x

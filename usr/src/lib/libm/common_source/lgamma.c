@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	4.4 (Berkeley) 9/11/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)lgamma.c	4.4 (Berkeley) 9/11/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,11 +31,14 @@ directive|include
 file|<math.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -393,9 +396,12 @@ operator|+=
 literal|1.e0
 expr_stmt|;
 comment|/* t := integer nearest arg */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
 if|if
 condition|(
 name|arg

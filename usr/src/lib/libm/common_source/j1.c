@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j1.c	4.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)j1.c	4.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,11 +31,21 @@ directive|include
 file|<math.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_include
 include|#
@@ -547,9 +557,19 @@ operator|<=
 literal|0.
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 specifier|extern
 name|double
 name|infnan

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.4 (ucb.elefunt) %G%"
+literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.5 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/*   * Some IEEE standard p754 recommended functions and remainder and sqrt for   * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each   * computer system should have its implementation of these functions using   * its own assembler.  ******************************************************************************  *  * IEEE p754 required operations:  *     drem(x,p)   *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)   *              returns the square root of x correctly rounded according to   *		the rounding mod.  *  * IEEE p754 recommended functions:  * (a) copysign(x,y)   *              returns x with the sign of y.   * (b) scalb(x,N)   *              returns  x * (2**N), for integer values N.  * (c) logb(x)   *              returns the unbiased exponent of x, a signed integer in   *              double precision, except that logb(0) is -INF, logb(INF)   *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)   *              returns the value TRUE if -INF< x< +INF and returns   *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* VAX D format */
@@ -195,7 +205,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|unsigned
 name|short
 modifier|*
@@ -222,9 +232,19 @@ operator|(
 name|x
 operator|)
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 operator|(
@@ -503,7 +523,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG,TAHOE */
 name|unsigned
 name|short
 modifier|*
@@ -530,9 +550,19 @@ name|y
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 operator|(
@@ -604,7 +634,7 @@ name|k
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|short
 modifier|*
 name|px
@@ -620,9 +650,19 @@ name|k
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 return|return
 call|(
 name|int
@@ -735,9 +775,19 @@ name|double
 name|x
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 return|return
 operator|(
 literal|1.0
@@ -889,7 +939,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|unsigned
 name|short
 modifier|*
@@ -943,9 +993,19 @@ name|pp
 operator|&=
 name|msign
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 operator|(
@@ -999,9 +1059,19 @@ name|zero
 operator|/
 name|zero
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 operator|(
@@ -1198,9 +1268,19 @@ name|pt
 operator|+=
 name|k
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x
@@ -1312,9 +1392,19 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 name|int
 name|k
 init|=
@@ -1749,7 +1839,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 end_comment
 
 begin_endif

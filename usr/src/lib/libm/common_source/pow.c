@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	4.5 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)pow.c	4.5 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* POW(X,Y)    * RETURN X**Y   * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 7/10/85.  *  * Required system supported functions:  *      scalb(x,n)        *      logb(x)           *	copysign(x,y)	  *	finite(x)	  *	drem(x,y)  *  * Required kernel functions:  *	exp__E(a,c)	...return  exp(a+c) - 1 - a*a/2  *	log__L(x)	...return  (log(1+x) - 2s)/s, s=x/(2+x)   *	pow_p(x,y)	...return  +(anything)**(finite non zero)  *  * Method  *	1. Compute and return log(x) in three pieces:  *		log(x) = n*ln2 + hi + lo,  *	   where n is an integer.  *	2. Perform y*log(x) by simulating muti-precision arithmetic and   *	   return the answer in three pieces:  *		y*log(x) = m*ln2 + hi + lo,  *	   where m is an integer.  *	3. Return x**y = exp(y*log(x))  *		= 2^m * ( exp(hi+lo) ).  *  * Special cases:  *	(anything) ** 0  is 1 ;  *	(anything) ** 1  is itself;  *	(anything) ** NaN is NaN;  *	NaN ** (anything except 0) is NaN;  *	+-(anything> 1) ** +INF is +INF;  *	+-(anything> 1) ** -INF is +0;  *	+-(anything< 1) ** +INF is +0;  *	+-(anything< 1) ** -INF is +INF;  *	+-1 ** +-INF is NaN and signal INVALID;  *	+0 ** +(anything except 0, NaN)  is +0;  *	-0 ** +(anything except 0, NaN, odd integer)  is +0;  *	+0 ** -(anything except 0, NaN)  is +INF and signal DIV-BY-ZERO;  *	-0 ** -(anything except 0, NaN, odd integer)  is +INF with signal;  *	-0 ** (odd integer) = -( +0 ** (odd integer) );  *	+INF ** +(anything except 0,NaN) is +INF;  *	+INF ** -(anything except 0,NaN) is +0;  *	-INF ** (odd integer) = -( +INF ** (odd integer) );  *	-INF ** (even integer) = ( +INF ** (even integer) );  *	-INF ** -(anything except integer,NaN) is NaN with signal;  *	-(x=anything) ** (k=integer) is (-1)**k * (x ** k);  *	-(anything except 0) ** (non-integer) is NaN with signal;  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular, on a SUN, a VAX,  *	and a Zilog Z8000,  *			pow(integer,integer)  *	always returns the correct integer provided it is representable.  *	In a test run with 100,000 random arguments with 0< x, y< 20.0  *	on a VAX, the maximum observed error was 1.79 ulps (units in the   *	last place).  *  * Constants :  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* VAX D format */
@@ -278,9 +288,21 @@ condition|(
 name|y
 operator|==
 name|one
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 operator|||
 name|x
 operator|!=
@@ -294,9 +316,21 @@ name|x
 operator|)
 return|;
 comment|/* if x is NaN or y=1 */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 elseif|else
 if|if
 condition|(
@@ -515,9 +549,19 @@ return|;
 else|else
 block|{
 comment|/* return NaN */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 return|return
 operator|(
 name|infnan
@@ -620,9 +664,19 @@ argument_list|)
 condition|)
 block|{
 comment|/* if x is +INF or +0 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 return|return
 operator|(
 operator|(
@@ -690,11 +744,22 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
-comment|/* IEEE double */
-comment|/* subnormal number */
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+comment|/* IEEE double; subnormal number */
 if|if
 condition|(
 name|n

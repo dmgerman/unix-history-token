@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log1p.c	1.3 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)log1p.c	1.3 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* LOG1P(x)   * RETURN THE LOGARITHM OF 1+x  * DOUBLE PRECISION (VAX D FORMAT 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 3/7/85, 3/24/85, 4/16/85.  *   * Required system supported functions:  *	scalb(x,n)   *	copysign(x,y)  *	logb(x)	  *	finite(x)  *  * Required kernel function:  *	log__L(z)  *  * Method :  *	1. Argument Reduction: find k and f such that   *			1+x  = 2^k * (1+f),   *	   where  sqrt(2)/2< 1+f< sqrt(2) .  *  *	2. Let s = f/(2+f) ; based on log(1+f) = log(1+s) - log(1-s)  *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,  *	   log(1+f) is computed by  *  *	     		log(1+f) = 2s + s*log__L(s*s)  *	   where  *		log__L(z) = z*(L1 + z*(L2 + z*(... (L6 + z*L7)...)))  *  *	   See log__L() for the values of the coefficients.  *  *	3. Finally,  log(1+x) = k*ln2 + log(1+f).    *  *	Remarks 1. In step 3 n*ln2 will be stored in two floating point numbers  *		   n*ln2hi + n*ln2lo, where ln2hi is chosen such that the last   *		   20 bits (for VAX D format), or the last 21 bits ( for IEEE   *		   double) is 0. This ensures n*ln2hi is exactly representable.  *		2. In step 1, f may not be representable. A correction term c  *	 	   for f is computed. It follows that the correction term for  *		   f - t (the leading term of log(1+f) in step 2) is c-c*x. We  *		   add this correction term to n*ln2lo to attenuate the error.  *  *  * Special cases:  *	log1p(x) is NaN with signal if x< -1; log1p(NaN) is NaN with no signal;  *	log1p(INF) is +INF; log1p(-1) is -INF with signal;  *	only log1p(0)=0 is exact for finite argument.  *  * Accuracy:  *	log1p(x) returns the exact log(1+x) nearly rounded. In a test run   *	with 1,536,000 random arguments on a VAX, the maximum observed  *	error was .846 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* VAX D format */
@@ -230,9 +240,21 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x
@@ -420,9 +442,19 @@ block|}
 comment|/* end of if (x> negone) */
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 specifier|extern
 name|double
 name|infnan

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	4.3 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
+literal|"@(#)exp.c	4.3 (Berkeley) 8/21/85; 1.6 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* EXP(X)  * RETURN THE EXPONENTIAL OF X  * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 2/15/85, 3/7/85, 3/24/85, 4/16/85, 6/14/86.  *  * Required system supported functions:  *	scalb(x,n)	  *	copysign(x,y)	  *	finite(x)  *  * Method:  *	1. Argument Reduction: given the input x, find r and integer k such   *	   that  *	                   x = k*ln2 + r,  |r|<= 0.5*ln2 .    *	   r will be represented as r := z+c for better accuracy.  *  *	2. Compute exp(r) by   *  *		exp(r) = 1 + r + r*R1/(2-R1),  *	   where  *		R1 = x - x^2*(p1+x^2*(p2+x^2*(p3+x^2*(p4+p5*x^2)))).  *  *	3. exp(x) = 2^k * exp(r) .  *  * Special cases:  *	exp(INF) is INF, exp(NaN) is NaN;  *	exp(-INF)=  0;  *	for finite argument, only exp(0)=1 is exact.  *  * Accuracy:  *	exp(x) returns the exponential of x nearly rounded. In a test run  *	with 1,156,000 random arguments on a VAX, the maximum observed  *	error was 0.869 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* VAX D format */
@@ -413,9 +423,21 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x

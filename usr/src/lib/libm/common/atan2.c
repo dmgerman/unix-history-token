@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atan2.c	1.3 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)atan2.c	1.3 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,9 +32,19 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|double
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 comment|/* VAX D format */
 name|athfhi
 init|=
@@ -910,9 +920,19 @@ name|t
 operator|*
 name|t
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 name|z
 operator|=
 name|t

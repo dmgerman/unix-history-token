@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atanh.c	1.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)atanh.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,11 +29,21 @@ begin_comment
 comment|/* ATANH(X)  * RETURN THE HYPERBOLIC ARC TANGENT OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 2/7/85, 3/7/85, 8/18/85.  *  * Required kernel function:  *	log1p(x) 	...return log(1+x)  *  * Method :  *	Return   *                          1              2x                          x  *		atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)  *                          2             1 - x                      1 - x  *  * Special cases:  *	atanh(x) is NaN if |x|> 1 with signal;  *	atanh(NaN) is that NaN with no signal;  *	atanh(+-1) is +-INF with signal.  *  * Accuracy:  *	atanh(x) returns the exact hyperbolic arc tangent of x nearly rounded.  *	In a test run with 512,000 random arguments on a VAX, the maximum  *	observed error was 1.87 ulps (units in the last place) at  *	x= -3.8962076028810414000e-03.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
 
 begin_include
 include|#
@@ -83,9 +93,19 @@ argument_list|,
 literal|1.0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x
