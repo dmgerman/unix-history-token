@@ -4310,7 +4310,7 @@ name|saved_ccb
 operator|->
 name|ccb_h
 operator|.
-name|flags
+name|status
 operator||=
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
