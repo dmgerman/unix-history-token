@@ -81,7 +81,11 @@ comment|/* gid to set as owner of the files */
 name|mode_t
 name|pm_mask
 decl_stmt|;
-comment|/* mask to and with file protection bits */
+comment|/* mask to and with file protection bits  				   for files */
+name|mode_t
+name|pm_dirmask
+decl_stmt|;
+comment|/* mask to and with file protection bits 				   for directories */
 name|struct
 name|vnode
 modifier|*
@@ -617,7 +621,11 @@ comment|/* gid that owns msdosfs files */
 name|mode_t
 name|mask
 decl_stmt|;
-comment|/* mask to be applied for msdosfs perms */
+comment|/* file mask to be applied for msdosfs perms */
+name|mode_t
+name|dirmask
+decl_stmt|;
+comment|/* dir  mask to be applied for msdosfs perms */
 name|int
 name|flags
 decl_stmt|;
