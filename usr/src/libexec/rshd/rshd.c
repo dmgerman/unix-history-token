@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.9 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,12 +596,6 @@ operator|->
 name|sin_family
 operator|!=
 name|AF_INET
-operator|||
-name|fromp
-operator|->
-name|sin_port
-operator|>=
-name|IPPORT_RESERVED
 condition|)
 block|{
 name|syslog
@@ -609,6 +603,36 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"malformed from address\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fromp
+operator|->
+name|sin_port
+operator|>=
+name|IPPORT_RESERVED
+operator|||
+name|fromp
+operator|->
+name|sin_port
+operator|<
+name|IPPORT_RESERVED
+operator|/
+literal|2
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"connection from bad port\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -640,6 +664,9 @@ name|c
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|cc
+operator|=
 name|read
 argument_list|(
 name|f
@@ -649,13 +676,20 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 operator|!=
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|cc
+operator|<
+literal|0
+condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"read: %m"
 argument_list|)
