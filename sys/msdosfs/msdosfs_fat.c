@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.4 1994/12/12 12:35:45 bde Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.5 1995/02/10 18:39:45 bde Exp $ */
 end_comment
 
 begin_comment
@@ -439,7 +439,7 @@ operator|*
 name|pmp
 operator|->
 name|pm_SectPerClust
-operator|>
+operator|>=
 name|pmp
 operator|->
 name|pm_rootdirsize
