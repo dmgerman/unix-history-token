@@ -529,14 +529,6 @@ name|isa16bit
 operator|*
 literal|8192
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* probably not useful - NE boards only come two ways */
-comment|/* allow kernel config file overrides */
-block|if (isa_dev->id_msize) 		memsize = isa_dev->id_msize;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|mem_size
