@@ -10994,6 +10994,13 @@ condition|(
 name|kid
 operator|>=
 name|IEEE80211_WEP_NKID
+operator|&&
+operator|(
+name|u_int16_t
+operator|)
+name|kid
+operator|!=
+name|IEEE80211_KEYIX_NONE
 condition|)
 return|return
 name|EINVAL
