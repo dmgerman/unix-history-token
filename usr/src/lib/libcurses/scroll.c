@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.3  */
+comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.4  */
 end_comment
 
 begin_macro
@@ -126,11 +126,6 @@ index|]
 operator|=
 name|temp
 expr_stmt|;
-name|win
-operator|->
-name|_cury
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|win
@@ -164,13 +159,34 @@ argument_list|,
 literal|"SCROLL: win == curscr\n"
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|outf
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|win
+operator|->
+name|_cury
+operator|--
+operator|<=
+literal|0
+condition|)
+name|win
+operator|->
+name|_cury
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-else|else
 name|fprintf
 argument_list|(
 name|outf
@@ -182,8 +198,14 @@ argument_list|,
 name|curscr
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|outf
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|touchwin
 argument_list|(
 name|win
