@@ -3191,6 +3191,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 				 * If we were unable to create a new socket 				 * for this SYN, we call sodropablereq to 				 * see if there are any other sockets we 				 * can kick out of the listen queue.  If 				 * so, we'll silently drop the socket 				 * sodropablereq told us to drop and 				 * create a new one. 				 * 				 * If sodropablereq returns 0, we'll 				 * simply drop the incoming SYN, as we 				 * can not allocate a socket for it. 				 */
 name|tcpstat
 operator|.
 name|tcps_listendrop
@@ -3221,14 +3222,12 @@ name|t_flags
 operator||=
 name|TF_LQ_OVERFLOW
 expr_stmt|;
-name|tcp_drop
+name|tcp_close
 argument_list|(
 name|sototcpcb
 argument_list|(
 name|so2
 argument_list|)
-argument_list|,
-name|ETIMEDOUT
 argument_list|)
 expr_stmt|;
 name|so2
