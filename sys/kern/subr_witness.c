@@ -4239,7 +4239,7 @@ name|mtx_file
 operator|=
 name|file
 expr_stmt|;
-comment|/* 	 * If this pays off it likely means that a mutex  being witnessed 	 * is acquired in hardclock. Put it in the ignore list. It is 	 * likely not the mutex this assert fails on. 	 */
+comment|/* 	 * If this pays off it likely means that a mutex being witnessed 	 * is acquired in hardclock. Put it in the ignore list. It is 	 * likely not the mutex this assert fails on. 	 */
 name|MPASS
 argument_list|(
 name|m
