@@ -2030,9 +2030,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: su [%s] [login [args]]\n"
+literal|"usage: su [-] %s%s[login [args]]\n"
 argument_list|,
-name|ARGSTR
+ifdef|#
+directive|ifdef
+name|KERBEROS
+literal|"[-Kflm] "
+argument_list|,
+else|#
+directive|else
+literal|"[-flm] "
+argument_list|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+literal|"[-c class] "
+else|#
+directive|else
+literal|""
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 name|exit
