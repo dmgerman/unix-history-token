@@ -260,5 +260,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|parsecolors
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|cs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|colortype
+name|__P
+argument_list|(
+operator|(
+name|mode_t
+name|mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

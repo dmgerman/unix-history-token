@@ -557,6 +557,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_color
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* add type in color for non-regular files */
+end_comment
+
+begin_decl_stmt
+name|int
 name|rval
 decl_stmt|;
 end_decl_stmt
@@ -737,7 +747,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFHLPRTWabcdfgiklnoqrstu"
+literal|"1ABCFGHLPRTWabcdfgiklnoqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -848,6 +858,21 @@ case|:
 name|fts_options
 operator||=
 name|FTS_COMFOLLOW
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+condition|)
+name|f_color
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1052,7 +1077,19 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* 	 * If not -F, -i, -l, -s or -t options, don't require stat 	 * information. 	 */
+if|if
+condition|(
+name|f_color
+condition|)
+name|parsecolors
+argument_list|(
+name|getenv
+argument_list|(
+literal|"LSCOLORS"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If not -F, -i, -l, -s or -t options, don't require stat 	 * information, unless in color mode in which case we do 	 * need this to determine which colors to display. 	 */
 if|if
 condition|(
 operator|!
@@ -1069,6 +1106,9 @@ name|f_timesort
 operator|&&
 operator|!
 name|f_type
+operator|&&
+operator|!
+name|f_color
 condition|)
 name|fts_options
 operator||=
