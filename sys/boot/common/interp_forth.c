@@ -671,7 +671,7 @@ name|ficlExec
 argument_list|(
 name|bf_vm
 argument_list|,
-literal|"also forth definitions"
+literal|"forth definitions builtins"
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -699,7 +699,7 @@ name|ficlExec
 argument_list|(
 name|bf_vm
 argument_list|,
-literal|"previous definitions"
+literal|"builtins definitions"
 argument_list|)
 expr_stmt|;
 block|}
