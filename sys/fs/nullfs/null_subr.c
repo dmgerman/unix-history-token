@@ -707,23 +707,6 @@ name|v_data
 operator|=
 name|xp
 expr_stmt|;
-comment|/* Though v_lock is inited by getnewvnode(), we want our own wmesg */
-name|lockinit
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_lock
-argument_list|,
-name|PVFS
-argument_list|,
-literal|"nunode"
-argument_list|,
-name|VLKTIMEOUT
-argument_list|,
-name|LK_NOPAUSE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * From NetBSD: 	 * Now lock the new node. We rely on the fact that we were passed 	 * a locked vnode. If the lower node is exporting a struct lock 	 * (v_vnlock != NULL) then we just set the upper v_vnlock to the 	 * lower one, and both are now locked. If the lower node is exporting 	 * NULL, then we copy that up and manually lock the new vnode. 	 */
 name|vp
 operator|->

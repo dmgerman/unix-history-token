@@ -1302,11 +1302,6 @@ struct|struct
 name|hpfsnode
 block|{
 name|struct
-name|lock
-name|h_lock
-decl_stmt|;
-comment|/* Must be first, for std vops */
-name|struct
 name|mtx
 name|h_interlock
 decl_stmt|;

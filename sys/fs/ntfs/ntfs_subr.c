@@ -3858,14 +3858,6 @@ argument_list|,
 name|M_NTFSDIR
 argument_list|)
 expr_stmt|;
-name|lockdestroy
-argument_list|(
-operator|&
-name|fp
-operator|->
-name|f_lock
-argument_list|)
-expr_stmt|;
 name|FREE
 argument_list|(
 name|fp

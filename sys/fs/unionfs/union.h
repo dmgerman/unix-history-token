@@ -126,17 +126,13 @@ value|((VRWMODE)|(VRWMODE>>3)|(VRWMODE>>6))
 end_define
 
 begin_comment
-comment|/*  * A cache of vnode references	(hangs off v_data)  *  * Placing un_lock as the first elements theoretically allows us to  * use the vop_stdlock functions.  However, we need to make sure of  * certain side effects so we will still punch in our own code.  */
+comment|/*  * A cache of vnode references	(hangs off v_data)  */
 end_comment
 
 begin_struct
 struct|struct
 name|union_node
 block|{
-name|struct
-name|lock
-name|un_lock
-decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|union_node

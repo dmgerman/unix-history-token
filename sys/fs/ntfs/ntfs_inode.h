@@ -245,11 +245,6 @@ begin_struct
 struct|struct
 name|fnode
 block|{
-name|struct
-name|lock
-name|f_lock
-decl_stmt|;
-comment|/* fnode lock>Keep this first< */
 name|LIST_ENTRY
 argument_list|(
 argument|fnode

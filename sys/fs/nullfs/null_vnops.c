@@ -2396,6 +2396,15 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
+name|vp
+operator|->
+name|v_vnlock
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_lock
+expr_stmt|;
 name|FREE
 argument_list|(
 name|xp

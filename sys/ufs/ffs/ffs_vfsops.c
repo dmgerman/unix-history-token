@@ -6057,30 +6057,14 @@ name|inode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * FFS supports lock sharing in the stack of vnodes 	 */
+comment|/* 	 * FFS supports recursive locking. 	 */
 name|vp
 operator|->
 name|v_vnlock
-operator|=
-operator|&
-name|vp
 operator|->
-name|v_lock
-expr_stmt|;
-name|lockinit
-argument_list|(
-name|vp
-operator|->
-name|v_vnlock
-argument_list|,
-name|PINOD
-argument_list|,
-literal|"inode"
-argument_list|,
-name|VLKTIMEOUT
-argument_list|,
+name|lk_flags
+operator||=
 name|LK_CANRECURSE
-argument_list|)
 expr_stmt|;
 name|vp
 operator|->

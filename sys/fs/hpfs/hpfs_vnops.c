@@ -3223,14 +3223,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|lockdestroy
-argument_list|(
-operator|&
-name|hp
-operator|->
-name|h_lock
-argument_list|)
-expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&

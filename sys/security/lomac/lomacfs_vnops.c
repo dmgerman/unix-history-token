@@ -784,10 +784,9 @@ return|return
 operator|(
 name|lockmgr
 argument_list|(
-operator|&
 name|vp
 operator|->
-name|v_lock
+name|v_vnlock
 argument_list|,
 name|flags
 argument_list|,
@@ -880,10 +879,9 @@ name|error
 operator|=
 name|lockmgr
 argument_list|(
-operator|&
 name|vp
 operator|->
-name|v_lock
+name|v_vnlock
 argument_list|,
 name|flags
 argument_list|,
@@ -992,10 +990,9 @@ name|error
 operator|=
 name|lockmgr
 argument_list|(
-operator|&
 name|vp
 operator|->
-name|v_lock
+name|v_vnlock
 argument_list|,
 name|flags
 operator||
@@ -1086,10 +1083,9 @@ return|return
 operator|(
 name|lockstatus
 argument_list|(
-operator|&
 name|vp
 operator|->
-name|v_lock
+name|v_vnlock
 argument_list|,
 name|td
 argument_list|)
