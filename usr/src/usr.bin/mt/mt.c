@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mt.c	5.5 (Berkeley) %G%"
+literal|"@(#)mt.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mtio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -426,9 +432,9 @@ name|comp
 operator|->
 name|c_ronly
 condition|?
-literal|0
+name|O_RDONLY
 else|:
-literal|2
+name|O_RDWR
 argument_list|)
 operator|)
 operator|<
