@@ -456,9 +456,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: fts_open"
-argument_list|,
-name|lineno
+literal|"fts_open()"
 argument_list|)
 expr_stmt|;
 while|while
@@ -923,9 +921,6 @@ operator|&
 name|F_UNAME
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|pw
 operator|=
 name|getpwuid
@@ -936,25 +931,13 @@ name|fts_statp
 operator|->
 name|st_uid
 argument_list|)
-operator|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|!=
 name|NULL
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"line %d: could not get uname for uid=%u"
-argument_list|,
-name|lineno
-argument_list|,
-name|p
-operator|->
-name|fts_statp
-operator|->
-name|st_uid
-argument_list|)
-expr_stmt|;
 name|output
 argument_list|(
 name|indent
@@ -967,6 +950,36 @@ argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wflag
+condition|)
+name|warnx
+argument_list|(
+literal|"Could not get uname for uid=%u"
+argument_list|,
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_uid
+argument_list|)
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not get uname for uid=%u"
+argument_list|,
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_uid
 argument_list|)
 expr_stmt|;
 block|}
@@ -1011,9 +1024,6 @@ operator|&
 name|F_GNAME
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|gr
 operator|=
 name|getgrgid
@@ -1024,25 +1034,13 @@ name|fts_statp
 operator|->
 name|st_gid
 argument_list|)
-operator|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|gr
+operator|!=
 name|NULL
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"line %d: could not get gname for gid=%u"
-argument_list|,
-name|lineno
-argument_list|,
-name|p
-operator|->
-name|fts_statp
-operator|->
-name|st_gid
-argument_list|)
-expr_stmt|;
 name|output
 argument_list|(
 name|indent
@@ -1055,6 +1053,36 @@ argument_list|,
 name|gr
 operator|->
 name|gr_name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wflag
+condition|)
+name|warnx
+argument_list|(
+literal|"Could not get gname for gid=%u"
+argument_list|,
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_gid
+argument_list|)
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not get gname for gid=%u"
+argument_list|,
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_gid
 argument_list|)
 expr_stmt|;
 block|}
@@ -1257,9 +1285,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: %s"
-argument_list|,
-name|lineno
+literal|"%s"
 argument_list|,
 name|p
 operator|->
@@ -1339,9 +1365,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: %s"
-argument_list|,
-name|lineno
+literal|"%s"
 argument_list|,
 name|p
 operator|->
@@ -1412,9 +1436,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: %s"
-argument_list|,
-name|lineno
+literal|"%s"
 argument_list|,
 name|p
 operator|->
@@ -1485,9 +1507,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: %s"
-argument_list|,
-name|lineno
+literal|"%s"
 argument_list|,
 name|p
 operator|->
@@ -1781,9 +1801,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: %s"
-argument_list|,
-name|lineno
+literal|"%s"
 argument_list|,
 name|RP
 argument_list|(
@@ -2155,16 +2173,16 @@ operator|&
 name|F_UNAME
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|pw
 operator|=
 name|getpwuid
 argument_list|(
 name|saveuid
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
 operator|!=
 name|NULL
 condition|)
@@ -2180,14 +2198,24 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wflag
+condition|)
+name|warnx
+argument_list|(
+literal|"Could not get uname for uid=%u"
+argument_list|,
+name|saveuid
+argument_list|)
+expr_stmt|;
 else|else
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: could not get uname for uid=%u"
-argument_list|,
-name|lineno
+literal|"Could not get uname for uid=%u"
 argument_list|,
 name|saveuid
 argument_list|)
@@ -2219,16 +2247,16 @@ operator|&
 name|F_GNAME
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|gr
 operator|=
 name|getgrgid
 argument_list|(
 name|savegid
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|gr
 operator|!=
 name|NULL
 condition|)
@@ -2244,14 +2272,24 @@ operator|->
 name|gr_name
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wflag
+condition|)
+name|warnx
+argument_list|(
+literal|"Could not get gname for gid=%u"
+argument_list|,
+name|savegid
+argument_list|)
+expr_stmt|;
 else|else
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"line %d: could not get gname for gid=%u"
-argument_list|,
-name|lineno
+literal|"Could not get gname for gid=%u"
 argument_list|,
 name|savegid
 argument_list|)

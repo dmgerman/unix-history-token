@@ -143,6 +143,8 @@ decl_stmt|,
 name|uflag
 decl_stmt|,
 name|Uflag
+decl_stmt|,
+name|wflag
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +236,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:LnPp:qrs:UuxX:"
+literal|"cdef:iK:k:LnPp:qrs:UuwxX:"
 argument_list|)
 operator|)
 operator|!=
@@ -539,6 +541,14 @@ case|case
 literal|'u'
 case|:
 name|uflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+name|wflag
 operator|=
 literal|1
 expr_stmt|;

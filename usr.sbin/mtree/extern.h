@@ -230,6 +230,8 @@ decl_stmt|,
 name|sflag
 decl_stmt|,
 name|uflag
+decl_stmt|,
+name|wflag
 decl_stmt|;
 end_decl_stmt
 
