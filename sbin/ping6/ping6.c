@@ -323,7 +323,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* icmp echo header len excluding time */
+comment|/* icmp echo header length excluding time */
 end_comment
 
 begin_define
@@ -1903,7 +1903,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1970,19 +1970,13 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|errno
-operator|=
-name|EPERM
-expr_stmt|;
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Must be superuser to flood ping"
+literal|"must be superuser to flood ping"
 argument_list|)
 expr_stmt|;
-block|}
 name|options
 operator||=
 name|F_FLOOD
@@ -2208,19 +2202,13 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|errno
-operator|=
-name|EPERM
-expr_stmt|;
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Must be superuser to preload"
+literal|"must be superuser to preload"
 argument_list|)
 expr_stmt|;
-block|}
 name|preload
 operator|=
 name|strtol
@@ -2798,12 +2786,11 @@ if|if
 condition|(
 name|ret_ga
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"ping6: %s\n"
+literal|"%s"
 argument_list|,
 name|gai_strerror
 argument_list|(
@@ -2811,12 +2798,6 @@ name|ret_ga
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|res
@@ -3197,11 +3178,11 @@ name|packlen
 argument_list|)
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unable to allocate packet"
+literal|"unable to allocate packet"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7314,7 +7295,7 @@ name|F_VERBOSE
 condition|)
 name|warnx
 argument_list|(
-literal|"packet too short (%d bytes) from %s\n"
+literal|"packet too short (%d bytes) from %s"
 argument_list|,
 name|cc
 argument_list|,
@@ -7388,7 +7369,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"failed to get receiving pakcet information"
+literal|"failed to get receiving packet information"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8242,7 +8223,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"unknwon qtype"
+literal|"unknown qtype"
 argument_list|)
 expr_stmt|;
 name|comma
@@ -13441,7 +13422,7 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"Unable to set IPSec policy"
+literal|"unable to set IPSec policy"
 argument_list|)
 expr_stmt|;
 name|free
@@ -13769,7 +13750,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-literal|"] [-a [aAclsg]] [-b sockbufsiz] [-c count] \n"
+literal|"] [-a [aAclsg]] [-b sockbufsiz] [-c count]\n"
 literal|"\t[-I interface] [-i wait] [-l preload] [-p pattern] "
 literal|"[-S sourceaddr]\n"
 literal|"\t[-s packetsize] [-h hoplimit] [hops...] host\n"
