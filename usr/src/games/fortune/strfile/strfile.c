@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -18,25 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"strfile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"random.h"
 end_include
 
 begin_ifndef
@@ -869,7 +863,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"There were %u strings\n"
+literal|"There were %d strings\n"
 argument_list|,
 name|Num_pts
 operator|-
@@ -878,7 +872,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Longest string: %u byte%s\n"
+literal|"Longest string: %lu byte%s\n"
 argument_list|,
 name|Tbl
 operator|.
@@ -897,7 +891,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shortest string: %u byte%s\n"
+literal|"Shortest string: %lu byte%s\n"
 argument_list|,
 name|Tbl
 operator|.
@@ -1921,13 +1915,10 @@ control|)
 block|{
 name|i
 operator|=
-name|rnd
-argument_list|(
-operator|(
-name|long
-operator|)
+name|random
+argument_list|()
+operator|%
 name|cnt
-argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
