@@ -8341,6 +8341,14 @@ name|m_header
 operator|=
 name|NULL
 expr_stmt|;
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 goto|goto
 name|retry_space
 goto|;
