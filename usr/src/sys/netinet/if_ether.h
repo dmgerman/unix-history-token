@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -246,6 +246,79 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|llinfo_arp
+block|{
+name|struct
+name|llinfo_arp
+modifier|*
+name|la_next
+decl_stmt|;
+name|struct
+name|llinfo_arp
+modifier|*
+name|la_prev
+decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|la_rt
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|la_hold
+decl_stmt|;
+comment|/* last packet until resolved/timeout */
+name|long
+name|la_asked
+decl_stmt|;
+comment|/* last time we QUERIED for this addr */
+define|#
+directive|define
+name|la_timer
+value|la_rt->rt_rmx.rmx_expire
+comment|/* deletion time in seconds */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sockaddr_inarp
+block|{
+name|u_char
+name|sin_len
+decl_stmt|;
+name|u_char
+name|sin_family
+decl_stmt|;
+name|u_short
+name|sin_port
+decl_stmt|;
+name|struct
+name|in_addr
+name|sin_addr
+decl_stmt|;
+name|struct
+name|in_addr
+name|sin_srcaddr
+decl_stmt|;
+name|u_short
+name|sin_tos
+decl_stmt|;
+name|u_short
+name|sin_other
+decl_stmt|;
+define|#
+directive|define
+name|SIN_PROXY
+value|1
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -263,7 +336,7 @@ end_decl_stmt
 
 begin_function_decl
 name|struct
-name|arptab
+name|llinfo_arp
 modifier|*
 name|arptnew
 parameter_list|()
@@ -271,11 +344,25 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|struct
+name|llinfo_arp
+name|llinfo_arp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head of the llinfo queue */
+end_comment
+
+begin_decl_stmt
 name|int
 name|ether_output
 argument_list|()
 decl_stmt|,
 name|ether_input
+argument_list|()
+decl_stmt|,
+name|arp_rtrequest
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -287,6 +374,13 @@ name|ether_sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|ifqueue
+name|arpintrq
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
