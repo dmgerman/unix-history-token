@@ -2122,6 +2122,10 @@ comment|/* void */
 empty_stmt|;
 if|if
 condition|(
+name|cp
+operator|==
+name|NULL
+operator|||
 operator|!
 operator|(
 name|v
