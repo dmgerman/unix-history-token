@@ -692,14 +692,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
-end_if
-
 begin_decl_stmt
 name|int
 name|installboot
@@ -770,11 +762,6 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum
@@ -882,11 +869,6 @@ condition|(
 name|ch
 condition|)
 block|{
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 case|case
 literal|'B'
 case|:
@@ -915,8 +897,6 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 endif|#
 directive|endif
 case|case
@@ -1001,11 +981,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 if|if
 condition|(
 name|installboot
@@ -1044,20 +1019,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-name|op
-operator|==
-name|UNSPEC
-condition|)
-name|op
-operator|=
-name|READ
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
@@ -1285,11 +1246,6 @@ break|break;
 case|case
 name|RESTORE
 case|:
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 if|if
 condition|(
 name|installboot
@@ -1332,8 +1288,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
@@ -1498,11 +1452,6 @@ name|lp
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 case|case
 name|WRITEBOOT
 case|:
@@ -1581,8 +1530,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 block|}
 name|exit
 argument_list|(
@@ -1956,11 +1903,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 comment|/* 	 * Output the remainder of the disklabel 	 */
 if|if
 condition|(
@@ -1989,8 +1931,6 @@ literal|1
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2318,11 +2258,6 @@ decl_stmt|;
 name|int
 name|b
 decl_stmt|;
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 name|char
 modifier|*
 name|dkbasename
@@ -2331,8 +2266,6 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|__alpha__
@@ -2416,11 +2349,6 @@ expr|*
 name|lp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 comment|/* 	 * If we are not installing a boot program but we are installing a 	 * label on disk then we must read the current bootarea so we don't 	 * clobber the existing boot. 	 */
 if|if
 condition|(
@@ -3255,9 +3183,6 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NUMBOOT> 0 */
 comment|/* 	 * Make sure no part of the bootstrap is written in the area 	 * reserved for the label. 	 */
 for|for
 control|(
@@ -8346,11 +8271,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NUMBOOT
-operator|>
-literal|0
 name|fprintf
 argument_list|(
 name|stderr
@@ -8406,33 +8326,6 @@ endif|#
 directive|endif
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
-argument_list|,
-literal|"usage: disklabel [-r] disk"
-argument_list|,
-literal|"(to read label)"
-argument_list|,
-literal|"       disklabel -w [-r] [-n] disk type [ packid ]"
-argument_list|,
-literal|"\t\t(to write label)"
-argument_list|,
-literal|"       disklabel -e [-r] [-n] disk"
-argument_list|,
-literal|"\t\t(to edit label)"
-argument_list|,
-literal|"       disklabel -R [-r] [-n] disk protofile"
-argument_list|,
-literal|"\t\t(to restore label)"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1
