@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.9 1998/08/06 20:57:33 eivind Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.10 1998/08/10 17:06:28 bde Exp $"
 end_empty
 
 begin_define
@@ -14377,7 +14377,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dpt%d: WARNING:  After sleeping for %d seconds, "
+literal|"dpt%d: WARNING:  After sleeping for about 100 seconds, "
 literal|"I am re-enabled\n"
 argument_list|,
 name|dpt
@@ -14387,7 +14387,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                Any further I/O is NOT guranteed to "
+literal|"                Any further I/O is NOT guaranteed to "
 literal|"complete!\n"
 argument_list|)
 expr_stmt|;
