@@ -2367,7 +2367,7 @@ name|PPAUSE
 operator||
 name|PCATCH
 argument_list|,
-literal|"kse_rel"
+literal|"kserel"
 argument_list|,
 operator|(
 name|uap
@@ -2843,6 +2843,11 @@ condition|)
 name|sa
 operator|=
 name|TDF_SA
+expr_stmt|;
+else|else
+name|ncpus
+operator|=
+literal|1
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(
