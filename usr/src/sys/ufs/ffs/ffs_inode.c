@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -269,7 +269,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Look up an vnode/inode by device,inumber.  * If it is in core (in the inode structure),  * honor the locking protocol.  * If it is not in core, read it in from the  * specified device.  * Callers must check for mount points!!  * In all cases, a pointer to a locked  * inode structure is returned.  */
+comment|/*  * Look up a UFS dinode number to find its incore vnode.  * If it is not in core, read it in from the specified device.  * If it is in core, wait for the lock bit to clear, then  * return the inode locked. Detection and handling of mount  * points must be done by the calling routine.  */
 end_comment
 
 begin_macro
@@ -1489,7 +1489,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check accessed and update flags on an inode structure.  * If any is on, update the inode with the current time.  * If waitfor is given, then must ensure I/O order,  * so wait for write to complete.  */
+comment|/*  * Update the access, modified, and inode change times as specified  * by the IACC, IMOD, and ICHG flags respectively. The IUPD flag  * is used to specify that the inode needs to be updated but that  * the times have already been set. The access and modified times  * are taken from the second and third parameters; the inode change  * time is always taken from the current time. If waitfor is set,  * then wait for the disk write of the inode to complete.  */
 end_comment
 
 begin_expr_stmt
