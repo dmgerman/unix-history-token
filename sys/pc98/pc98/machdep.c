@@ -11439,7 +11439,7 @@ comment|/*  * Get machine context.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|get_mcontext
 parameter_list|(
 name|struct
@@ -11629,6 +11629,11 @@ argument_list|,
 name|mcp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
