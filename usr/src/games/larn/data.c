@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)data.c	5.1 (Berkeley) %G%"
+literal|"@(#)data.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -985,7 +985,9 @@ operator|+
 name|MAXVLEVEL
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3434,7 +3436,9 @@ index|[
 name|SPNUM
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 

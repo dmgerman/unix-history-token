@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)store.c	5.1 (Berkeley) %G%"
+literal|"@(#)store.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1881,7 +1881,9 @@ index|[
 literal|26
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2981,7 +2983,9 @@ index|[
 literal|26
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2997,7 +3001,9 @@ index|[
 literal|26
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
