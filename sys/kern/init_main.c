@@ -1035,18 +1035,6 @@ name|td
 operator|=
 name|thread0
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_mtx
-argument_list|,
-literal|"process lock"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize magic number. 	 */
 name|p
 operator|->
