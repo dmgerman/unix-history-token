@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	4.6 (Berkeley) %G%"
+literal|"@(#)kill.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -432,17 +444,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|printsig
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|p
-block|;
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -489,10 +503,10 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_macro
-unit|}  static
 name|usage
 argument_list|()
 end_macro

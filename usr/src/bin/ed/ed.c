@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.13.1.1 (Berkeley) %G%"
+literal|"@(#)ed.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -51,7 +57,37 @@ end_undef
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -353,13 +389,6 @@ name|pflag
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|sig_t
 name|oldhup
@@ -611,33 +640,22 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|realloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|jmp_buf
 name|savej
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|onintr
+argument_list|()
+decl_stmt|,
+name|quit
+argument_list|()
+decl_stmt|,
+name|onhup
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -648,6 +666,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -661,17 +682,6 @@ name|p1
 decl_stmt|,
 modifier|*
 name|p2
-decl_stmt|;
-specifier|extern
-name|void
-name|onintr
-argument_list|()
-decl_stmt|,
-name|quit
-argument_list|()
-decl_stmt|,
-name|onhup
-argument_list|()
 decl_stmt|;
 name|sig_t
 name|oldintr

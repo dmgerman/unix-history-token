@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.22 (Berkeley) %G%"
+literal|"@(#)df.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,7 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -175,9 +175,6 @@ decl_stmt|,
 name|maxwidth
 decl_stmt|,
 name|mntsize
-decl_stmt|,
-name|getmntinfo
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*

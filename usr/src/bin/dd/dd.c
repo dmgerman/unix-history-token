@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	5.1 (Berkeley) %G%"
+literal|"@(#)dd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -1881,6 +1893,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|void
+name|stats
+argument_list|()
+decl_stmt|,
+name|term
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -1928,19 +1950,12 @@ decl_stmt|,
 name|cnull
 argument_list|()
 decl_stmt|,
-name|term
-argument_list|()
-decl_stmt|,
 name|block
 argument_list|()
 decl_stmt|,
 name|unblock
 argument_list|()
 decl_stmt|;
-name|int
-name|stats
-parameter_list|()
-function_decl|;
 name|int
 name|a
 decl_stmt|;
@@ -4025,12 +4040,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|term
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|stats
 argument_list|()
@@ -4041,14 +4054,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|stats
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -4086,7 +4097,7 @@ name|ntrunc
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|enum

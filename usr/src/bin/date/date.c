@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.1 (Berkeley) %G%"
+literal|"@(#)date.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,13 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -97,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<ctype.h>
 end_include
 
 begin_decl_stmt
