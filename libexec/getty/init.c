@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: init.c,v 1.9 1997/11/21 07:43:49 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,6 +371,11 @@ literal|"ac"
 block|}
 block|,
 comment|/* modem answer-chat */
+block|{
+literal|"al"
+block|}
+block|,
+comment|/* user to auto-login */
 block|{
 literal|0
 block|}
