@@ -487,9 +487,9 @@ decl_stmt|,
 modifier|*
 name|finet
 decl_stmt|,
-name|fromlen
-decl_stmt|,
 name|i
+decl_stmt|,
+name|lfd
 decl_stmt|,
 name|socket_debug
 decl_stmt|;
@@ -506,8 +506,8 @@ name|struct
 name|sockaddr_storage
 name|frominet
 decl_stmt|;
-name|int
-name|lfd
+name|socklen_t
+name|fromlen
 decl_stmt|;
 name|sigset_t
 name|omask
