@@ -3300,9 +3300,36 @@ name|struct
 name|callout_handle
 name|an_stat_ch
 decl_stmt|;
+name|struct
+name|mtx
+name|an_mtx
+decl_stmt|;
+name|device_t
+name|an_dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|AN_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->an_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->an_mtx, MTX_DEF)
+end_define
 
 begin_decl_stmt
 name|void

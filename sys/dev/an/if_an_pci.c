@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -402,9 +408,6 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|u_int32_t
 name|command
 decl_stmt|;
@@ -422,11 +425,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -657,11 +655,6 @@ argument_list|)
 expr_stmt|;
 name|fail
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
