@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vfsops.c	6.3	84/02/07	*/
+comment|/*	ffs_vfsops.c	6.4	84/06/26	*/
 end_comment
 
 begin_include
@@ -294,10 +294,6 @@ block|}
 end_block
 
 begin_comment
-comment|/* this routine has lousy error codes */
-end_comment
-
-begin_comment
 comment|/* this routine has races if running twice */
 end_comment
 
@@ -365,9 +361,10 @@ name|i
 decl_stmt|,
 name|size
 decl_stmt|;
-name|u
-operator|.
-name|u_error
+specifier|register
+name|error
+expr_stmt|;
+name|error
 operator|=
 operator|(
 operator|*
@@ -395,21 +392,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EIO
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 name|tp
 operator|=
 name|bread
@@ -472,6 +459,10 @@ name|mp
 operator|=
 literal|0
 expr_stmt|;
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -512,6 +503,11 @@ name|mp
 operator|=
 literal|0
 expr_stmt|;
+name|error
+operator|=
+name|EMFILE
+expr_stmt|;
+comment|/* needs translation */
 goto|goto
 name|out
 goto|;
@@ -538,6 +534,40 @@ name|b_un
 operator|.
 name|b_fs
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_magic
+operator|!=
+name|FS_MAGIC
+operator|||
+name|fs
+operator|->
+name|fs_bsize
+operator|>
+name|MAXBSIZE
+operator|||
+name|fs
+operator|->
+name|fs_bsize
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|fs
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* also needs translation */
+goto|goto
+name|out
+goto|;
+block|}
 name|bp
 operator|=
 name|geteblk
@@ -601,23 +631,6 @@ name|b_un
 operator|.
 name|b_fs
 expr_stmt|;
-if|if
-condition|(
-name|fs
-operator|->
-name|fs_magic
-operator|!=
-name|FS_MAGIC
-operator|||
-name|fs
-operator|->
-name|fs_bsize
-operator|>
-name|MAXBSIZE
-condition|)
-goto|goto
-name|out
-goto|;
 name|fs
 operator|->
 name|fs_ronly
@@ -673,9 +686,15 @@ name|space
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 for|for
 control|(
 name|i
@@ -853,11 +872,15 @@ operator|)
 return|;
 name|out
 label|:
-name|u
-operator|.
-name|u_error
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
 operator|=
-name|EBUSY
+name|EIO
 expr_stmt|;
 if|if
 condition|(
@@ -895,6 +918,12 @@ name|brelse
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|error
 expr_stmt|;
 return|return
 operator|(
