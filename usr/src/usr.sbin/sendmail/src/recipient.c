@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.7 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1314,13 +1314,9 @@ name|Arpa_Info
 argument_list|,
 literal|"including file %s"
 argument_list|,
-operator|&
 name|a
 operator|->
 name|q_user
-index|[
-literal|9
-index|]
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1328,13 +1324,9 @@ name|void
 operator|)
 name|include
 argument_list|(
-operator|&
 name|a
 operator|->
 name|q_user
-index|[
-literal|9
-index|]
 argument_list|,
 name|FALSE
 argument_list|,
@@ -2777,7 +2769,7 @@ name|e
 operator|->
 name|e_to
 operator|=
-name|oldto
+name|NULL
 expr_stmt|;
 name|message
 argument_list|(

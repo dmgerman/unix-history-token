@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.6 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.7 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.6 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.7 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -863,6 +863,32 @@ return|return
 name|EX_UNAVAILABLE
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|4
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"%s: SMTP MAIL protocol error: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* protocol error -- close up */
 name|smtpquit
 argument_list|(
@@ -1058,6 +1084,32 @@ operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|4
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"%s: SMTP RCPT protocol error: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|EX_PROTOCOL
@@ -1221,6 +1273,32 @@ operator|!=
 literal|354
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|4
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"%s: SMTP DATA-1 protocol error: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|smtprset
 argument_list|(
 name|m
@@ -1415,6 +1493,32 @@ operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|4
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"%s: SMTP DATA-2 protocol error: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|EX_PROTOCOL

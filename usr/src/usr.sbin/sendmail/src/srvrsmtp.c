@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.4 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.5 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.4 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.5 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,7 +937,9 @@ literal|0
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"Nested MAIL command"
+literal|"Nested MAIL command: MAIL %s"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1397,7 +1399,7 @@ expr_stmt|;
 comment|/* clean up a bit */
 name|hasmail
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 name|dropenvelope
 argument_list|(
