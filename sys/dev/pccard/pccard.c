@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pccard/pccardreg.h>
 end_include
 
@@ -2253,9 +2259,7 @@ operator|>
 literal|0
 condition|)
 block|{
-goto|goto
-name|not_this_one
-goto|;
+comment|/* 			 * Not implement yet, Fix me. 			 */
 block|}
 if|if
 condition|(
@@ -4659,11 +4663,17 @@ default|default:
 case|case
 name|PCCARD_IVAR_ETHADDR
 case|:
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
+name|bcopy
+argument_list|(
+name|func
+operator|->
+name|pf_funce_lan_nid
+argument_list|,
+name|result
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PCCARD_IVAR_VENDOR

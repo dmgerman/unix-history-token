@@ -2764,6 +2764,31 @@ value|"WLAN Adapter"
 end_define
 
 begin_comment
+comment|/* RATOC System Inc. Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_RATOC_REX_R280
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_RATOC_REX_R280
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_RATOC_REX_R280
+value|"RATOC REX-R280"
+end_define
+
+begin_comment
 comment|/* Samsung */
 end_comment
 
