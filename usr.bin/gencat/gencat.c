@@ -2306,6 +2306,10 @@ name|_nls_set_hdr
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|(
 name|char
 operator|*
@@ -2324,6 +2328,10 @@ operator|=
 operator|(
 expr|struct
 name|_nls_msg_hdr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
