@@ -15,7 +15,7 @@ operator|)
 name|stab
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -353,7 +353,7 @@ expr|*
 name|s
 argument_list|)
 expr_stmt|;
-name|clear
+name|bzero
 argument_list|(
 operator|(
 name|char

@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -1202,7 +1202,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 name|ErrorMode
-operator|==
+operator|=
 name|EM_MAIL
 expr_stmt|;
 block|}

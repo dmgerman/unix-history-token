@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -112,7 +112,7 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
-name|clear
+name|bzero
 argument_list|(
 operator|(
 name|char
@@ -128,7 +128,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|bmove
+name|bcopy
 argument_list|(
 operator|(
 name|char
@@ -234,7 +234,7 @@ expr|*
 name|bh
 argument_list|)
 expr_stmt|;
-name|bmove
+name|bcopy
 argument_list|(
 operator|(
 name|char

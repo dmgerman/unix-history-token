@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.6.1.1
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -2328,6 +2328,22 @@ operator|-
 literal|'1'
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|>=
+name|mlp
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"rewrite: ruleset %d: replacement out of bounds"
+argument_list|,
+name|ruleset
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG

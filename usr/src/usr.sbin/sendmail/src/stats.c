@@ -15,7 +15,7 @@ operator|)
 name|stats
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -381,7 +381,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|bmove
+name|bcopy
 argument_list|(
 operator|(
 name|char

@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -611,7 +611,7 @@ operator|(
 name|EX_NOHOST
 operator|)
 return|;
-name|bmove
+name|bcopy
 argument_list|(
 name|hp
 operator|->
@@ -939,6 +939,13 @@ case|case
 name|ENETUNREACH
 case|:
 comment|/* there are others, I'm sure..... */
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
+expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL

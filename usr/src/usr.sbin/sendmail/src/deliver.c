@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -2774,6 +2774,10 @@ block|{
 if|if
 condition|(
 name|ctladdr
+operator|==
+name|NULL
+operator|||
+name|ctladdr
 operator|->
 name|q_uid
 operator|==
@@ -4841,7 +4845,7 @@ name|e_errorqueue
 argument_list|)
 expr_stmt|;
 name|ErrorMode
-operator|==
+operator|=
 name|EM_MAIL
 expr_stmt|;
 break|break;

@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sgtty.h>
 end_include
 
 begin_include
@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.10
+literal|4.11
 operator|%
 name|G
 operator|%
@@ -54,8 +54,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|NextMailer
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
