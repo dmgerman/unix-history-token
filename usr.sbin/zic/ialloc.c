@@ -17,7 +17,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)ialloc.c	8.21"
+literal|"@(#)ialloc.c	8.28"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,56 +48,6 @@ include|#
 directive|include
 file|"private.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NULLMAL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) == NULL || (x) == MAL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined MAL */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULLMAL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) == NULL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined MAL */
-end_comment
 
 begin_define
 define|#
@@ -177,13 +127,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|void
 modifier|*
 name|irealloc
 name|P
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 name|pointer
 operator|,
@@ -220,48 +170,11 @@ name|int
 name|n
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|MAL
-specifier|register
-name|char
-modifier|*
-name|result
-decl_stmt|;
-name|result
-operator|=
-name|malloc
-argument_list|(
-operator|(
-name|alloc_size_t
-operator|)
-name|nonzero
-argument_list|(
-name|n
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|NULLMAL
-argument_list|(
-name|result
-argument_list|)
-condition|?
-name|NULL
-else|:
-name|result
-return|;
-endif|#
-directive|endif
-comment|/* defined MAL */
-ifndef|#
-directive|ifndef
-name|MAL
 return|return
 name|malloc
 argument_list|(
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nonzero
 argument_list|(
@@ -269,9 +182,6 @@ name|n
 argument_list|)
 argument_list|)
 return|;
-endif|#
-directive|endif
-comment|/* !defined MAL */
 block|}
 end_function
 
@@ -311,12 +221,12 @@ return|return
 name|calloc
 argument_list|(
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nelem
 argument_list|,
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|elsize
 argument_list|)
@@ -325,7 +235,7 @@ block|}
 end_function
 
 begin_function
-name|char
+name|void
 modifier|*
 name|irealloc
 parameter_list|(
@@ -333,7 +243,7 @@ name|pointer
 parameter_list|,
 name|size
 parameter_list|)
-name|char
+name|void
 modifier|*
 specifier|const
 name|pointer
@@ -345,10 +255,9 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|NULLMAL
-argument_list|(
 name|pointer
-argument_list|)
+operator|==
+name|NULL
 condition|)
 return|return
 name|imalloc
@@ -360,12 +269,13 @@ return|return
 name|realloc
 argument_list|(
 operator|(
-name|genericptr_t
+name|void
+operator|*
 operator|)
 name|pointer
 argument_list|,
 operator|(
-name|alloc_size_t
+name|size_t
 operator|)
 name|nonzero
 argument_list|(
@@ -410,10 +320,11 @@ name|newsize
 decl_stmt|;
 name|newsize
 operator|=
-name|NULLMAL
-argument_list|(
+operator|(
 name|new
-argument_list|)
+operator|==
+name|NULL
+operator|)
 condition|?
 literal|0
 else|:
@@ -424,10 +335,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULLMAL
-argument_list|(
 name|old
-argument_list|)
+operator|==
+name|NULL
 condition|)
 name|oldsize
 operator|=
@@ -472,11 +382,9 @@ name|NULL
 condition|)
 if|if
 condition|(
-operator|!
-name|NULLMAL
-argument_list|(
 name|new
-argument_list|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -539,11 +447,9 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|!
-name|NULLMAL
-argument_list|(
 name|p
-argument_list|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -570,11 +476,9 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|!
-name|NULLMAL
-argument_list|(
 name|p
-argument_list|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
