@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.4 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1109,11 +1109,16 @@ name|fprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%s\n\007New mail for %s@%s\007 has arrived:%s\n"
+literal|"%s\n\007New mail for %s@%.*s\007 has arrived:%s\n"
 argument_list|,
 name|cr
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
 argument_list|,
 name|hostname
 argument_list|,
