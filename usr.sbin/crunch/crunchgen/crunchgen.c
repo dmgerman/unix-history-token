@@ -1,11 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved.  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of U.M. not be used in advertising or  * publicity pertaining to distribution of the software without specific,  * written prior permission.  U.M. makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * U.M. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL U.M.  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Author: James da Silva, Systems Design and Analysis Group  *			   Computer Science Department  *			   University of Maryland at College Park  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1994 University of Maryland  * All Rights Reserved.  *  * Permission to use, copy, modify, distribute, and sell this software and its  * documentation for any purpose is hereby granted without fee, provided that  * the above copyright notice appear in all copies and that both that  * copyright notice and this permission notice appear in supporting  * documentation, and that the name of U.M. not be used in advertising or  * publicity pertaining to distribution of the software without specific,  * written prior permission.  U.M. makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * U.M. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL U.M.  * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION  * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Author: James da Silva, Systems Design and Analysis Group  *			   Computer Science Department  *			   University of Maryland at College Park  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
 comment|/*  * ========================================================================  * crunchgen.c  *  * Generates a Makefile and main C file for a crunched executable,  * from specs given in a .conf file.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -47,24 +65,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_define
@@ -694,7 +694,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*      * generate filenames      */
+comment|/* 	 * generate filenames 	 */
 name|strlcpy
 argument_list|(
 name|infilename
@@ -915,11 +915,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s%s\n\t%s%s\n"
 argument_list|,
-literal|"usage: crunchgen [-foq] [-h<makefile-header-name>] [-m<makefile>]"
+literal|"usage: crunchgen [-foq] "
 argument_list|,
-literal|"	[-p<obj-prefix>] [-c<c-file-name>] [-e<exec-file>]<conffile>"
+literal|"[-h<makefile-header-name>] [-m<makefile>]"
+argument_list|,
+literal|"[-p<obj-prefix>] [-c<c-file-name>] [-e<exec-file>] "
+argument_list|,
+literal|"<conffile>"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1419,7 +1423,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s:%d: %s command needs at least 1 argument, skipping"
+literal|"%s:%d: %s %s"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -1429,6 +1433,8 @@ name|fieldv
 index|[
 literal|0
 index|]
+argument_list|,
+literal|"command needs at least 1 argument, skipping"
 argument_list|)
 expr_stmt|;
 name|goterror
@@ -1855,10 +1861,20 @@ name|p2
 operator|->
 name|ident
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|srcdir
 operator|=
+name|NULL
+expr_stmt|;
+name|p2
+operator|->
+name|realsrcdir
+operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|objdir
@@ -1869,10 +1885,14 @@ name|p2
 operator|->
 name|links
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|objs
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|keeplist
@@ -2851,10 +2871,6 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
-modifier|*
-name|srcparent
-decl_stmt|;
-name|char
 name|line
 index|[
 name|MAXLINELEN
@@ -2900,6 +2916,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* look for the source directory if one wasn't specified by a special */
 if|if
 condition|(
 operator|!
@@ -2908,7 +2925,9 @@ operator|->
 name|srcdir
 condition|)
 block|{
-name|srcparent
+name|p
+operator|->
+name|srcdir
 operator|=
 name|dir_search
 argument_list|(
@@ -2917,52 +2936,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Determine the actual srcdir (maybe symlinked). */
 if|if
 condition|(
-name|srcparent
-condition|)
-name|snprintf
-argument_list|(
-name|line
-argument_list|,
-name|MAXLINELEN
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|srcparent
-argument_list|,
-name|p
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|is_dir
-argument_list|(
-name|line
-argument_list|)
-condition|)
-if|if
-condition|(
-operator|(
 name|p
 operator|->
 name|srcdir
-operator|=
-name|strdup
-argument_list|(
-name|line
-argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
-name|out_of_memory
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* Determine the actual srcdir (maybe symlinked). */
+block|{
 name|snprintf
 argument_list|(
 name|line
@@ -2987,9 +2969,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|f
 condition|)
-block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't execute: %s\n"
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 name|path
 index|[
 literal|0
@@ -3009,30 +3000,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pclose
 argument_list|(
 name|f
 argument_list|)
-condition|)
-block|{
-name|p
-operator|->
-name|realsrcdir
-operator|=
-name|strdup
-argument_list|(
-name|path
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|p
-operator|->
-name|realsrcdir
 condition|)
 name|errx
 argument_list|(
@@ -3043,7 +3014,34 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/* Unless the option to make object files was specified the      * the objects will be built in the source directory unless      * an object directory already exists.      */
+if|if
+condition|(
+operator|!
+operator|*
+name|path
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't perform pwd on: %s\n"
+argument_list|,
+name|p
+operator|->
+name|srcdir
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|realsrcdir
+operator|=
+name|strdup
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Unless the option to make object files was specified the 	* the objects will be built in the source directory unless 	* an object directory already exists. 	*/
 if|if
 condition|(
 operator|!
@@ -3112,7 +3110,7 @@ operator|->
 name|realsrcdir
 expr_stmt|;
 block|}
-comment|/*  * XXX look for a Makefile.{name} in local directory first.  * This lets us override the original Makefile.  */
+comment|/* 	* XXX look for a Makefile.{name} in local directory first. 	* This lets us override the original Makefile. 	*/
 name|snprintf
 argument_list|(
 name|path
@@ -3215,7 +3213,9 @@ name|verbose
 condition|)
 name|warnx
 argument_list|(
-literal|"%s: %s: warning: could not find source directory"
+literal|"%s: %s: %s"
+argument_list|,
+literal|"warning: could not find source directory"
 argument_list|,
 name|infilename
 argument_list|,
@@ -3243,6 +3243,24 @@ name|p
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+operator|->
+name|srcdir
+operator|||
+operator|!
+name|p
+operator|->
+name|objs
+condition|)
+name|p
+operator|->
+name|goterror
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -3360,7 +3378,7 @@ name|p
 operator|->
 name|objvar
 expr_stmt|;
-comment|/*      * XXX include outhdrname (e.g. to contain Make variables)      */
+comment|/* 	* XXX include outhdrname (e.g. to contain Make variables) 	*/
 if|if
 condition|(
 name|outhdrname
@@ -3841,7 +3859,8 @@ name|fprintf
 argument_list|(
 name|cachef
 argument_list|,
-literal|"# %s - parm cache generated from %s by crunchgen %s\n\n"
+literal|"# %s - parm cache generated from %s by crunchgen "
+literal|" %s\n\n"
 argument_list|,
 name|cachename
 argument_list|,
@@ -4390,7 +4409,7 @@ decl_stmt|,
 modifier|*
 name|d
 decl_stmt|;
-comment|/*      * generates a Makefile/C identifier from a program name, mapping '-' to      * '_' and ignoring all other non-identifier characters.  This leads to      * programs named "foo.bar" and "foobar" to map to the same identifier.      */
+comment|/* 	 * generates a Makefile/C identifier from a program name, 	 * mapping '-' to '_' and ignoring all other non-identifier 	 * characters.  This leads to programs named "foo.bar" and 	 * "foobar" to map to the same identifier. 	 */
 if|if
 condition|(
 operator|(
@@ -4490,6 +4509,10 @@ name|strlst_t
 modifier|*
 name|dir
 decl_stmt|;
+name|char
+modifier|*
+name|srcdir
+decl_stmt|;
 for|for
 control|(
 name|dir
@@ -4524,15 +4547,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|is_dir
 argument_list|(
 name|path
 argument_list|)
 condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+name|srcdir
+operator|=
+name|strdup
+argument_list|(
+name|path
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|out_of_memory
+argument_list|()
+expr_stmt|;
 return|return
-name|dir
-operator|->
-name|str
+name|srcdir
 return|;
 block|}
 return|return
@@ -4586,7 +4625,8 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"MAKE=env MAKEOBJDIRPREFIX=$(MAKEOBJDIRPREFIX) make\n"
+literal|"MAKE=env MAKEOBJDIRPREFIX=$(MAKEOBJDIRPREFIX) "
+literal|"make\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5019,8 +5059,26 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) depend&& \\\n"
-literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) $(%s_OBJS))\n"
+literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) depend&&"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\\\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) "
+literal|"$(%s_OBJS))"
 argument_list|,
 name|p
 operator|->
@@ -5029,10 +5087,13 @@ argument_list|,
 name|p
 operator|->
 name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
 argument_list|,
-name|p
-operator|->
-name|ident
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5059,11 +5120,23 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"%s_make:\n\t@echo \"** cannot make objs for %s\"\n\n"
+literal|"%s_make:\n"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\t@echo \"** cannot make objs for %s\"\n\n"
 argument_list|,
 name|p
 operator|->
@@ -5074,6 +5147,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|outmk
