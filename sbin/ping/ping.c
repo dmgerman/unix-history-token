@@ -4679,9 +4679,12 @@ name|printf
 argument_list|(
 literal|"frag needed and DF set (MTU %d)\n"
 argument_list|,
+name|ntohs
+argument_list|(
 name|icp
 operator|->
 name|icmp_nextmtu
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4870,13 +4873,14 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"(New addr: 0x%08lx)\n"
+literal|"(New addr: %s)\n"
 argument_list|,
+name|inet_ntoa
+argument_list|(
 name|icp
 operator|->
 name|icmp_gwaddr
-operator|.
-name|s_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifndef|#
