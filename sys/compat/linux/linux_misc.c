@@ -2670,6 +2670,28 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CLK_TCK
+value|1024
+end_define
+
+begin_comment
+comment|/* Linux uses 1024 on alpha */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -2680,6 +2702,11 @@ end_define
 begin_comment
 comment|/* Linux uses 100 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
