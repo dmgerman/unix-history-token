@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.208 1996/10/20 18:35:32 phk Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.209 1996/10/31 00:57:25 julian Exp $  */
 end_comment
 
 begin_include
@@ -937,53 +937,6 @@ name|RB_VERBOSE
 condition|)
 name|bootverbose
 operator|++
-expr_stmt|;
-comment|/* 	 * Initialize error message buffer (at end of core). 	 */
-comment|/* avail_end was pre-decremented in init386() to compensate */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|btoc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|msgbuf
-argument_list|)
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-name|pmap_enter
-argument_list|(
-name|pmap_kernel
-argument_list|()
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|msgbufp
-argument_list|,
-name|avail_end
-operator|+
-name|i
-operator|*
-name|PAGE_SIZE
-argument_list|,
-name|VM_PROT_ALL
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|msgbufmapped
-operator|=
-literal|1
 expr_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|printf
@@ -4533,6 +4486,9 @@ name|target_page
 decl_stmt|,
 name|pa_indx
 decl_stmt|;
+name|int
+name|off
+decl_stmt|;
 name|proc0
 operator|.
 name|p_addr
@@ -5929,6 +5885,52 @@ name|pa_indx
 index|]
 expr_stmt|;
 comment|/* now running on new page tables, configured,and u/iom is accessible */
+comment|/* Map the message buffer. */
+for|for
+control|(
+name|off
+operator|=
+literal|0
+init|;
+name|off
+operator|<
+name|round_page
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|msgbuf
+argument_list|)
+argument_list|)
+condition|;
+name|off
+operator|+=
+name|PAGE_SIZE
+control|)
+name|pmap_enter
+argument_list|(
+name|kernel_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|msgbufp
+operator|+
+name|off
+argument_list|,
+name|avail_end
+operator|+
+name|off
+argument_list|,
+name|VM_PROT_ALL
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|msgbufmapped
+operator|=
+literal|1
+expr_stmt|;
 comment|/* make a initial tss so microp can get interrupt stack on syscall! */
 name|proc0
 operator|.
