@@ -3080,6 +3080,10 @@ name|ICBXOPT_PTP_2_LOOP
 value|(3<< 4)
 end_define
 
+begin_comment
+comment|/*  * The lower 4 bits of the xfwoptions field are the OPERATION MODE bits.  * RIO is not defined for the 23XX cards  */
+end_comment
+
 begin_define
 define|#
 directive|define
