@@ -4032,6 +4032,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Prototype KLD load menu */
+end_comment
+
+begin_decl_stmt
+name|DMenu
+name|MenuKLD
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+block|,
+literal|"KLD Menu"
+block|,
+literal|"Load a KLD from a floppy\n"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The media selection menu */
 end_comment
 
@@ -7908,6 +7936,16 @@ block|,
 name|NULL
 block|,
 name|docBrowser
+block|}
+block|,
+block|{
+literal|" Load KLD"
+block|,
+literal|"Load a KLD from a floppy"
+block|,
+name|NULL
+block|,
+name|kldBrowser
 block|}
 block|,
 block|{
