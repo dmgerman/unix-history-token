@@ -329,11 +329,21 @@ name|acpi_button_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|ACPI_HANDLE
+name|h
+decl_stmt|;
 name|int
 name|ret
 init|=
 name|ENXIO
 decl_stmt|;
+name|h
+operator|=
+name|acpi_get_handle
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -361,7 +371,7 @@ if|if
 condition|(
 name|acpi_MatchHid
 argument_list|(
-name|dev
+name|h
 argument_list|,
 literal|"PNP0C0C"
 argument_list|)
@@ -390,7 +400,7 @@ if|if
 condition|(
 name|acpi_MatchHid
 argument_list|(
-name|dev
+name|h
 argument_list|,
 literal|"ACPI_FPB"
 argument_list|)
@@ -425,7 +435,7 @@ if|if
 condition|(
 name|acpi_MatchHid
 argument_list|(
-name|dev
+name|h
 argument_list|,
 literal|"PNP0C0E"
 argument_list|)
@@ -454,7 +464,7 @@ if|if
 condition|(
 name|acpi_MatchHid
 argument_list|(
-name|dev
+name|h
 argument_list|,
 literal|"ACPI_FSB"
 argument_list|)

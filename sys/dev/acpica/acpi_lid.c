@@ -306,7 +306,10 @@ argument_list|)
 operator|&&
 name|acpi_MatchHid
 argument_list|(
+name|acpi_get_handle
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 literal|"PNP0C0D"
 argument_list|)
