@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.9 1999/01/04 18:39:24 peter Exp $  */
+comment|/*  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp_forth.c,v 1.10 1999/01/22 23:50:14 msmith Exp $  */
 end_comment
 
 begin_include
@@ -153,6 +153,11 @@ modifier|*
 name|cmd
 decl_stmt|;
 name|int
+name|nstrings
+decl_stmt|,
+name|i
+decl_stmt|;
+name|int
 name|argc
 decl_stmt|,
 name|result
@@ -232,6 +237,138 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Check whether we have been compiled or are being interpreted */
+if|if
+condition|(
+name|stackPopINT32
+argument_list|(
+name|vm
+operator|->
+name|pStack
+argument_list|)
+condition|)
+block|{
+comment|/* 	 * Get parameters from stack, in the format: 	 * an un ... a2 u2 a1 u1 n -- 	 * Where n is the number of strings, a/u are pairs of 	 * address/size for strings, and they will be concatenated 	 * in LIFO order. 	 */
+name|nstrings
+operator|=
+name|stackPopINT32
+argument_list|(
+name|vm
+operator|->
+name|pStack
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|len
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nstrings
+condition|;
+name|i
+operator|++
+control|)
+name|len
+operator|+=
+name|stackFetch
+argument_list|(
+name|vm
+operator|->
+name|pStack
+argument_list|,
+name|i
+operator|*
+literal|2
+argument_list|)
+operator|.
+name|i
+operator|+
+literal|1
+expr_stmt|;
+name|line
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|+
+name|len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|line
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nstrings
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nstrings
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|len
+operator|=
+name|stackPopINT32
+argument_list|(
+name|vm
+operator|->
+name|pStack
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|stackPopPtr
+argument_list|(
+name|vm
+operator|->
+name|pStack
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|line
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+name|strncat
+argument_list|(
+name|line
+argument_list|,
+name|cp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 comment|/* Get remainder of invocation */
 name|tail
 operator|=
@@ -329,6 +466,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|DEBUG
 argument_list|(
 literal|"cmd '%s'"
@@ -407,6 +545,48 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Replace a word definition (a builtin command) with another  * one that:  *  *        - Throw error results instead of returning them on the stack  *        - Pass a flag indicating whether the word was compiled or is  *          being interpreted.  *  * There is one major problem with builtins that cannot be overcome  * in anyway, except by outlawing it, such as done below. We want  * builtins to behave differently depending on whether they have been  * compiled or they are being interpreted. Notice that this is *not*  * the current state. For example:  *  * : example ls ; immediate  * : problem example ;  * example  *  * Notice that the current state is different in the two invocations  * of "example", but, in both cases, "ls" has been *compiled in*, which  * is what we really want.  *  * The problem arises when you tick the builtin. For example:  *  * : example-1 ['] ls postpone literal ; immediate  * : example-2 example-1 execute ; immediate  * : problem example-2 ;  * example-2  *  * We have no way, when we get EXECUTEd, of knowing what our behavior  * should be. Thus, our only alternative is to "outlaw" this. See RFI  * 0007, and ANS Forth Standard's appendix D, item 6.7.  *  * The problem is compounded by the fact that ' builtin CATCH is valid  * and desirable. The only solution is to create an intermediary word.  * For example:  *  * : my-ls ls ;  * : example ['] my-ls catch ;  *  * As the this definition is particularly tricky, and it's side effects  * must be well understood by those playing with it, I'll be heavy on  * the comments.  *  * (if you edit this definition, pay attention to trailing spaces after  *  each word -- I warned you! :-) )  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_CONSTRUCTOR
+define|\
+value|": builtin: "		\   ">in @ "
+comment|/* save the tib index pointer */
+value|\   "' "
+comment|/* get next word's xt */
+value|\   "swap>in ! "
+comment|/* point again to next word */
+value|\   "create "
+comment|/* create a new definition of the next word */
+value|\   ", "
+comment|/* save previous definition's xt */
+value|\   "immediate "
+comment|/* make the new definition an immediate word */
+value|\ 			\   "does> "
+comment|/* Now, the *new* definition will: */
+value|\   "state @ if "
+comment|/* if in compiling state: */
+value|\     "1 postpone literal "
+comment|/* pass 1 flag to indicate compile */
+value|\     "@ compile, "
+comment|/* compile in previous definition */
+value|\     "postpone throw "
+comment|/* throw stack-returned result */
+value|\   "else "
+comment|/* if in interpreting state: */
+value|\     "0 swap "
+comment|/* pass 0 flag to indicate interpret */
+value|\     "@ execute "
+comment|/* call previous definition */
+value|\     "throw "
+comment|/* throw stack-returned result */
+value|\   "then ; "
+end_define
+
+begin_comment
 comment|/*  * Initialise the Forth interpreter, create all our commands as words.  */
 end_comment
 
@@ -444,12 +624,12 @@ operator|=
 name|ficlNewVM
 argument_list|()
 expr_stmt|;
-comment|/* Builtin word "creator" */
+comment|/* Builtin constructor word  */
 name|ficlExec
 argument_list|(
 name|bf_vm
 argument_list|,
-literal|": builtin:>in @ ' swap>in ! create , does> @ execute throw ;"
+name|BUILTIN_CONSTRUCTOR
 argument_list|,
 operator|-
 literal|1
