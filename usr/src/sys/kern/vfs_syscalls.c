@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	4.1	%G%	*/
+comment|/*	vfs_syscalls.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -1321,9 +1321,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|UCB
 if|if
 condition|(
 operator|!
@@ -1335,8 +1332,6 @@ operator|(
 name|NODEV
 operator|)
 return|;
-endif|#
-directive|endif
 name|ip
 operator|=
 name|namei
