@@ -1695,7 +1695,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Check the packet isn't too small before we mess with it */
+comment|/* Check that the packet isn't too big or too small. */
 if|if
 condition|(
 name|linux_args
@@ -1703,6 +1703,12 @@ operator|->
 name|len
 operator|<
 name|linux_ip_copysize
+operator|||
+name|linux_args
+operator|->
+name|len
+operator|>
+name|IP_MAXPACKET
 condition|)
 return|return
 operator|(
