@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_prot.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_prot.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -78,13 +78,6 @@ include|#
 directive|include
 file|"malloc.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|GRPSTART
-value|0
-end_define
 
 begin_include
 include|#
@@ -228,7 +221,9 @@ name|r_val1
 operator|=
 name|u
 operator|.
-name|u_ruid
+name|u_procp
+operator|->
+name|p_ruid
 expr_stmt|;
 name|u
 operator|.
@@ -238,7 +233,9 @@ name|r_val2
 operator|=
 name|u
 operator|.
-name|u_uid
+name|u_cred
+operator|->
+name|cr_uid
 expr_stmt|;
 block|}
 end_block
@@ -258,7 +255,9 @@ name|r_val1
 operator|=
 name|u
 operator|.
-name|u_rgid
+name|u_procp
+operator|->
+name|p_rgid
 expr_stmt|;
 name|u
 operator|.
@@ -268,7 +267,12 @@ name|r_val2
 operator|=
 name|u
 operator|.
-name|u_gid
+name|u_cred
+operator|->
+name|cr_groups
+index|[
+literal|0
+index|]
 expr_stmt|;
 block|}
 end_block
@@ -337,9 +341,9 @@ name|r_val1
 operator|=
 name|u
 operator|.
-name|u_ngroups
-operator|-
-name|GRPSTART
+name|u_cred
+operator|->
+name|cr_ngroups
 expr_stmt|;
 return|return;
 block|}
@@ -351,9 +355,9 @@ name|gidsetsize
 operator|<
 name|u
 operator|.
-name|u_ngroups
-operator|-
-name|GRPSTART
+name|u_cred
+operator|->
+name|cr_ngroups
 condition|)
 block|{
 name|u
@@ -370,19 +374,17 @@ name|gidsetsize
 operator|=
 name|u
 operator|.
-name|u_ngroups
-operator|-
-name|GRPSTART
+name|u_cred
+operator|->
+name|cr_ngroups
 expr_stmt|;
 name|gp
 operator|=
-operator|&
 name|u
 operator|.
-name|u_groups
-index|[
-name|GRPSTART
-index|]
+name|u_cred
+operator|->
+name|cr_groups
 expr_stmt|;
 for|for
 control|(
@@ -531,7 +533,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * set process group  *  * if target pid != caller's pid  *	pid must be an inferior  *	pid must be in same session  *	pid can't have done an exec  *	there must exist a pid with pgid in same session   * pid must not be session leader  */
+comment|/*  * set process group  *  * caller does setpgrp(pid, pgid)  *  * pid must be caller or child of caller (ESRCH)  * if a child  *	pid must be in same session (EPERM)  *	pid can't have done an exec (EACCES)  * if pgid != pid  * 	there must exist some pid in same session having pgid (EPERM)  * pid must not be session leader (EPERM)  */
 end_comment
 
 begin_macro
@@ -793,6 +795,16 @@ modifier|*
 name|uap
 struct|;
 specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
+specifier|register
 name|int
 name|ruid
 decl_stmt|,
@@ -822,12 +834,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|ruid
-operator|=
-name|u
-operator|.
-name|u_ruid
-expr_stmt|;
 return|return;
 name|euid
 operator|=
@@ -842,12 +848,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|euid
-operator|=
-name|u
-operator|.
-name|u_uid
-expr_stmt|;
 return|return;
 comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
 ifdef|#
@@ -908,23 +908,23 @@ argument_list|)
 expr_stmt|;
 name|u
 operator|.
-name|u_procp
+name|u_cred
+operator|->
+name|cr_uid
+operator|=
+name|euid
+expr_stmt|;
+name|p
 operator|->
 name|p_uid
 operator|=
 name|euid
 expr_stmt|;
-name|u
-operator|.
-name|u_ruid
+name|p
+operator|->
+name|p_ruid
 operator|=
 name|ruid
-expr_stmt|;
-name|u
-operator|.
-name|u_uid
-operator|=
-name|euid
 expr_stmt|;
 block|}
 end_block
@@ -956,6 +956,16 @@ name|rgid
 decl_stmt|,
 name|egid
 decl_stmt|;
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|u
+operator|.
+name|u_procp
+decl_stmt|;
 name|uap
 operator|=
 operator|(
@@ -980,12 +990,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|rgid
-operator|=
-name|u
-operator|.
-name|u_rgid
-expr_stmt|;
 return|return;
 name|egid
 operator|=
@@ -1000,12 +1004,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|egid
-operator|=
-name|u
-operator|.
-name|u_gid
-expr_stmt|;
 return|return;
 if|if
 condition|(
@@ -1028,15 +1026,20 @@ operator|.
 name|u_cred
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_rgid
+name|p
+operator|->
+name|p_rgid
 operator|=
 name|rgid
 expr_stmt|;
 name|u
 operator|.
-name|u_gid
+name|u_cred
+operator|->
+name|cr_groups
+index|[
+literal|0
+index|]
 operator|=
 name|egid
 expr_stmt|;
@@ -1116,29 +1119,12 @@ operator|=
 name|uap
 operator|->
 name|gidsetsize
-operator|+
-name|GRPSTART
 expr_stmt|;
 if|if
 condition|(
 name|ngrp
 operator|>
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_groups
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_groups
-index|[
-literal|0
-index|]
-argument_list|)
+name|NGROUPS
 condition|)
 block|{
 name|u
@@ -1189,13 +1175,11 @@ condition|)
 return|return;
 name|gp
 operator|=
-operator|&
 name|u
 operator|.
-name|u_groups
-index|[
-name|GRPSTART
-index|]
+name|u_cred
+operator|->
+name|cr_groups
 expr_stmt|;
 for|for
 control|(
@@ -1224,7 +1208,9 @@ operator|++
 expr_stmt|;
 name|u
 operator|.
-name|u_ngroups
+name|u_cred
+operator|->
+name|cr_ngroups
 operator|=
 name|ngrp
 expr_stmt|;
@@ -1615,11 +1601,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get login name of process owner, if available  */
+comment|/*  * Get login name, if available.  */
 end_comment
 
 begin_macro
-name|getlogname
+name|getlogin
 argument_list|()
 end_macro
 
@@ -1658,7 +1644,9 @@ sizeof|sizeof
 argument_list|(
 name|u
 operator|.
-name|u_logname
+name|u_procp
+operator|->
+name|p_logname
 argument_list|)
 condition|)
 name|uap
@@ -1669,7 +1657,9 @@ sizeof|sizeof
 argument_list|(
 name|u
 operator|.
-name|u_logname
+name|u_procp
+operator|->
+name|p_logname
 argument_list|)
 expr_stmt|;
 name|u
@@ -1683,7 +1673,9 @@ name|caddr_t
 operator|)
 name|u
 operator|.
-name|u_logname
+name|u_procp
+operator|->
+name|p_logname
 argument_list|,
 operator|(
 name|caddr_t
@@ -1701,11 +1693,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set login name of process owner  */
+comment|/*  * Set login name.  */
 end_comment
 
 begin_macro
-name|setlogname
+name|setlogin
 argument_list|()
 end_macro
 
@@ -1717,9 +1709,6 @@ block|{
 name|char
 modifier|*
 name|namebuf
-decl_stmt|;
-name|u_int
-name|namelen
 decl_stmt|;
 block|}
 modifier|*
@@ -1734,6 +1723,9 @@ name|u
 operator|.
 name|u_ap
 struct|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|u
@@ -1753,45 +1745,9 @@ name|u_acflag
 argument_list|)
 condition|)
 return|return;
-if|if
-condition|(
-name|uap
-operator|->
-name|namelen
-operator|>
-sizeof|sizeof
-argument_list|(
-name|u
-operator|.
-name|u_logname
-argument_list|)
-operator|-
-literal|1
-condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
-name|EINVAL
-expr_stmt|;
-else|else
-block|{
-name|u
-operator|.
-name|u_logname
-index|[
-name|uap
-operator|->
-name|namelen
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
-name|copyin
+name|copyinstr
 argument_list|(
 operator|(
 name|caddr_t
@@ -1805,14 +1761,45 @@ name|caddr_t
 operator|)
 name|u
 operator|.
-name|u_logname
-argument_list|,
-name|uap
+name|u_procp
 operator|->
-name|namelen
+name|p_logname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_logname
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|error
+operator|==
+name|ENOENT
+condition|)
+comment|/* name too long */
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|error
+expr_stmt|;
 block|}
 end_block
 
