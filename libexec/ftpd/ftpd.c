@@ -3312,6 +3312,8 @@ name|int
 name|addrsize
 decl_stmt|,
 name|error
+decl_stmt|,
+name|gothost
 decl_stmt|;
 name|void
 modifier|*
@@ -3481,6 +3483,10 @@ operator|->
 name|ai_next
 control|)
 block|{
+name|gothost
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|hrp
@@ -3549,6 +3555,16 @@ name|sa_len
 argument_list|)
 operator|==
 literal|0
+condition|)
+block|{
+name|gothost
+operator|++
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|gothost
 condition|)
 break|break;
 block|}
