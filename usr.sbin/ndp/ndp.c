@@ -4811,6 +4811,18 @@ argument_list|,
 name|ND6_IFF_PERFORMNUD
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ND6_IFF_ACCEPT_RTADV
+name|SETFLAG
+argument_list|(
+literal|"accept_rtadv"
+argument_list|,
+name|ND6_IFF_ACCEPT_RTADV
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ND
 operator|.
 name|flags
@@ -5065,14 +5077,32 @@ name|flags
 operator|&
 name|ND6_IFF_PERFORMNUD
 operator|)
-operator|!=
-literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"PERFORMNUD "
+literal|"nud "
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ND6_IFF_ACCEPT_RTADV
+if|if
+condition|(
+operator|(
+name|ND
+operator|.
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"accept_rtadv "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|putc
 argument_list|(
