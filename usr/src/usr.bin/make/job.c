@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.13 (Berkeley) %G%"
+literal|"@(#)job.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2839,7 +2839,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Can't figure out how to make %s (ignored)\n"
+literal|"make: don't know how to make %s (ignored)\n"
 argument_list|,
 name|gn
 operator|->
@@ -2855,7 +2855,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Can't figure out how to make %s (continuing)\n"
+literal|"make: don't know how to make %s (continuing)\n"
 argument_list|,
 name|gn
 operator|->
@@ -2875,7 +2875,7 @@ modifier|*
 name|abortProc
 call|)
 argument_list|(
-literal|"Can't figure out how to make %s. Stop"
+literal|"make: don't know how to make %s. Stop"
 argument_list|,
 name|gn
 operator|->
