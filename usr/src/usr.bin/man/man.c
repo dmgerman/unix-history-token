@@ -314,11 +314,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nomore
+decl_stmt|,
+comment|/* copy file to stdout */
+name|where
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* copy file to stdout */
+comment|/* just tell me where */
 end_comment
 
 begin_decl_stmt
@@ -595,6 +598,15 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+case|case
+literal|'w'
+case|:
+comment|/* 			 * Deliberately undocumented; really only useful when 			 * you're moving man pages around.  Not worth adding. 			 */
+name|where
+operator|=
+name|YES
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -1482,6 +1494,9 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+operator|&&
+operator|!
+name|where
 condition|)
 if|if
 condition|(
@@ -1830,7 +1845,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|access
 argument_list|(
 name|fname
@@ -1839,17 +1853,6 @@ name|R_OK
 argument_list|)
 condition|)
 block|{
-name|show
-argument_list|(
-name|fname
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|YES
-operator|)
-return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1870,7 +1873,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|access
 argument_list|(
 name|fname
@@ -1878,7 +1880,24 @@ argument_list|,
 name|R_OK
 argument_list|)
 condition|)
-block|{
+return|return
+operator|(
+name|NO
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|where
+condition|)
+name|printf
+argument_list|(
+literal|"man: found in %s.\n"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+else|else
 name|show
 argument_list|(
 name|fname
@@ -1886,13 +1905,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|YES
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|NO
+operator|!
+name|where
 operator|)
 return|;
 block|}
