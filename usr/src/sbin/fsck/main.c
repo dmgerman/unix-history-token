@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.11	(Berkeley)	%G%"
+literal|"@(#)main.c	2.12	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6098,48 +6098,9 @@ name|fixcg
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|preen
-condition|)
-name|pfatal
-argument_list|(
-literal|"DUP BLKS IN BIT MAPS."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|++
 name|dupblk
-operator|>=
-name|DUPTBLSIZE
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"EXCESSIVE DUP BLKS IN BIT MAPS."
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|reply
-argument_list|(
-literal|"CONTINUE"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|errexit
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|STOP
-operator|)
-return|;
-block|}
 block|}
 else|else
 block|{
