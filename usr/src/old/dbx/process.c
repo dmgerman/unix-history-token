@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.2 %G%"
+literal|"@(#)process.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reg.h>
+file|<machine/reg.h>
 end_include
 
 begin_include
@@ -1484,12 +1484,32 @@ name|public
 name|printstatus
 parameter_list|()
 block|{
+if|if
+condition|(
+name|process
+operator|->
+name|status
+operator|==
+name|FINISHED
+condition|)
+block|{
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|curfunc
 operator|=
 name|whatblock
 argument_list|(
 name|pc
 argument_list|)
+expr_stmt|;
+name|getsrcpos
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1508,6 +1528,7 @@ name|printerror
 argument_list|()
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|isbperr
@@ -1520,9 +1541,6 @@ name|printf
 argument_list|(
 literal|"stopped "
 argument_list|)
-expr_stmt|;
-name|getsrcpos
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1588,23 +1606,6 @@ expr_stmt|;
 name|fixintr
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|process
-operator|->
-name|status
-operator|==
-name|FINISHED
-condition|)
-block|{
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|isstopped
 operator|=
 name|true
