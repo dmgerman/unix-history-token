@@ -3,28 +3,6 @@ begin_comment
 comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SccsId
-index|[]
-init|=
-literal|"@(#)queue.c	5.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -61,27 +39,15 @@ directive|ifndef
 name|QUEUE
 end_ifndef
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|queue
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-operator|(
-name|no
-name|queueing
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)queue.c	5.2 (Berkeley) %G%	(no queueing)"
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -89,23 +55,15 @@ directive|else
 else|QUEUE
 end_else
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|queue
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)queue.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Work queue. */
@@ -2706,9 +2664,6 @@ name|dfsize
 init|=
 operator|-
 literal|1
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|char
 name|lf
