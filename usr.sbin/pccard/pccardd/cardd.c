@@ -2570,11 +2570,16 @@ index|[
 name|i
 index|]
 operator|&&
+operator|(
 name|res
 operator|.
 name|resource_addr
 operator|==
 name|i
+operator|||
+operator|!
+name|use_kern_irq
+operator|)
 condition|)
 block|{
 name|conf

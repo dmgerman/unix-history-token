@@ -578,6 +578,13 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|use_kern_irq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|debug_level
 decl_stmt|;
 end_decl_stmt
