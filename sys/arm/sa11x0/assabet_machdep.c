@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -320,8 +326,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERNEL_PT_VMDATA
+name|KERNEL_PT_L1
 value|4
+end_define
+
+begin_comment
+comment|/* Page table for mapping l1pt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL_PT_VMDATA
+value|5
 end_define
 
 begin_comment
@@ -332,7 +349,7 @@ begin_define
 define|#
 directive|define
 name|KERNEL_PT_VMDATA_NUM
-value|12
+value|4
 end_define
 
 begin_comment
@@ -609,6 +626,37 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|bus_dma_get_range_nb
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_reset
+parameter_list|()
+block|{
+name|cpu_halt
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+empty_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -664,6 +712,9 @@ name|l1pagetable
 decl_stmt|;
 name|vm_offset_t
 name|freemempos
+decl_stmt|;
+name|vm_offset_t
+name|lastalloced
 decl_stmt|;
 name|vm_size_t
 name|pt_size
@@ -1104,6 +1155,17 @@ argument_list|(
 name|physical_freestart
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"freemempos %p\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|freemempos
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|(
@@ -1267,6 +1329,12 @@ argument_list|,
 name|UAREA_PAGES
 argument_list|)
 expr_stmt|;
+name|lastalloced
+operator|=
+name|proc0_uarea
+operator|.
+name|pv_va
+expr_stmt|;
 comment|/* 	 * Now we start construction of the L1 page table 	 * We start by mapping the L2 page tables into the L1. 	 * This means that we can replace L1 mappings later on if necessary 	 */
 name|l1pagetable
 operator|=
@@ -1311,6 +1379,30 @@ operator|&
 name|kernel_pt_table
 index|[
 name|KERNEL_PT_IO
+index|]
+argument_list|)
+expr_stmt|;
+name|pmap_link_l2pt
+argument_list|(
+name|l1pagetable
+argument_list|,
+name|lastalloced
+operator|&
+operator|~
+operator|(
+operator|(
+name|L1_S_SIZE
+operator|*
+literal|4
+operator|)
+operator|-
+literal|1
+operator|)
+argument_list|,
+operator|&
+name|kernel_pt_table
+index|[
+name|KERNEL_PT_L1
 index|]
 argument_list|)
 expr_stmt|;
@@ -1393,6 +1485,27 @@ name|PTE_CACHE
 argument_list|)
 expr_stmt|;
 comment|/* Map the stack pages */
+name|printf
+argument_list|(
+literal|"avant irq %p %p\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|irqstack
+operator|.
+name|pv_va
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|irqstack
+operator|.
+name|pv_pa
+argument_list|)
+expr_stmt|;
 name|pmap_map_chunk
 argument_list|(
 name|l1pagetable
@@ -1414,6 +1527,11 @@ operator||
 name|VM_PROT_WRITE
 argument_list|,
 name|PTE_CACHE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"apres irq\n"
 argument_list|)
 expr_stmt|;
 name|pmap_map_chunk
@@ -1881,15 +1999,19 @@ argument_list|,
 name|ARM_VEC_ALL
 argument_list|)
 expr_stmt|;
-name|pmap_bootstrap
-argument_list|(
-name|KERNEL_VM_BASE
-argument_list|,
-name|KERNEL_VM_BASE
+name|pmap_curmaxkvaddr
+operator|=
+name|freemempos
 operator|+
 name|KERNEL_PT_VMDATA_NUM
 operator|*
 literal|0x400000
+expr_stmt|;
+name|pmap_bootstrap
+argument_list|(
+name|KERNEL_VM_BASE
+argument_list|,
+literal|0xd0000000
 argument_list|,
 operator|&
 name|kernel_l1pt
@@ -1941,6 +2063,9 @@ name|init_param2
 argument_list|(
 name|physmem
 argument_list|)
+expr_stmt|;
+name|kdb_init
+argument_list|()
 expr_stmt|;
 name|avail_end
 operator|=
