@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 64 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 69 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2003, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
 end_include
 
 begin_define
@@ -81,7 +87,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MTH_NUM_ARGS
+name|ACPI_METHOD_NUM_ARGS
 condition|;
 name|i
 operator|++
@@ -164,7 +170,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MTH_NUM_LOCALS
+name|ACPI_METHOD_NUM_LOCALS
 condition|;
 name|i
 operator|++
@@ -273,7 +279,7 @@ literal|0
 init|;
 name|Index
 operator|<
-name|MTH_NUM_LOCALS
+name|ACPI_METHOD_NUM_LOCALS
 condition|;
 name|Index
 operator|++
@@ -334,7 +340,7 @@ literal|0
 init|;
 name|Index
 operator|<
-name|MTH_NUM_ARGS
+name|ACPI_METHOD_NUM_ARGS
 condition|;
 name|Index
 operator|++
@@ -454,7 +460,7 @@ condition|(
 operator|(
 name|Index
 operator|<
-name|MTH_NUM_ARGS
+name|ACPI_METHOD_NUM_ARGS
 operator|)
 operator|&&
 operator|(
@@ -565,7 +571,7 @@ if|if
 condition|(
 name|Index
 operator|>
-name|MTH_MAX_LOCAL
+name|ACPI_METHOD_MAX_LOCAL
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -577,7 +583,7 @@ literal|"Local index %d is invalid (max %d)\n"
 operator|,
 name|Index
 operator|,
-name|MTH_MAX_LOCAL
+name|ACPI_METHOD_MAX_LOCAL
 operator|)
 argument_list|)
 expr_stmt|;
@@ -607,7 +613,7 @@ if|if
 condition|(
 name|Index
 operator|>
-name|MTH_MAX_ARG
+name|ACPI_METHOD_MAX_ARG
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -619,7 +625,7 @@ literal|"Arg index %d is invalid (max %d)\n"
 operator|,
 name|Index
 operator|,
-name|MTH_MAX_ARG
+name|ACPI_METHOD_MAX_ARG
 operator|)
 argument_list|)
 expr_stmt|;
@@ -669,7 +675,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataSetValue  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to get  *              Object              - Object to be inserted into the stack entry  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Insert an object onto the method stack at entry Opcode:Index.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataSetValue  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to get  *              Object              - Object to be inserted into the stack entry  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Insert an object onto the method stack at entry Opcode:Index.  *              Note: There is no "implicit conversion" for locals.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -698,9 +704,43 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|NewDesc
+init|=
+name|Object
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"DsMethodDataSetValue"
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"obj %p op %X, ref count = %d [%s]\n"
+operator|,
+name|Object
+operator|,
+name|Opcode
+operator|,
+name|Object
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|Object
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Get the namespace node for the arg/local */
@@ -732,22 +772,77 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * If the object has just been created and is not attached to anything,      * (the reference count is 1), then we can just store it directly into      * the arg/local.  Otherwise, we must copy it.      */
+if|if
+condition|(
+name|Object
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|>
+literal|1
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiUtCopyIobjectToIobject
+argument_list|(
+name|Object
+argument_list|,
+operator|&
+name|NewDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"Object Copied %p, new %p\n"
+operator|,
+name|Object
+operator|,
+name|NewDesc
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Increment ref count so object can't be deleted while installed */
 name|AcpiUtAddReference
 argument_list|(
-name|Object
+name|NewDesc
 argument_list|)
 expr_stmt|;
-comment|/* Install the object into the stack entry */
+block|}
+comment|/* Install the object */
 name|Node
 operator|->
 name|Object
 operator|=
-name|Object
+name|NewDesc
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1277,7 +1372,7 @@ operator|==
 name|AML_ARG_OP
 condition|)
 block|{
-comment|/*               * Make sure that the object is the correct type.  This may be overkill, but              * it is here because references were NS nodes in the past.  Now they are              * operand objects of type Reference.              */
+comment|/*              * Make sure that the object is the correct type.  This may be overkill, but              * it is here because references were NS nodes in the past.  Now they are              * operand objects of type Reference.              */
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -1307,7 +1402,7 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*               * If we have a valid reference object that came from RefOf(), do the              * indirect store              */
+comment|/*              * If we have a valid reference object that came from RefOf(), do the              * indirect store              */
 if|if
 condition|(
 operator|(
@@ -1344,33 +1439,20 @@ name|CurrentObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Detach an existing object from the referenced Node */
-name|AcpiNsDetachObject
-argument_list|(
-name|CurrentObjDesc
-operator|->
-name|Reference
-operator|.
-name|Object
-argument_list|)
-expr_stmt|;
-comment|/*                  * Store this object into the Node                  * (perform the indirect store)                  */
+comment|/*                  * Store this object to the Node                  * (perform the indirect store)                  */
 name|Status
 operator|=
-name|AcpiNsAttachObject
+name|AcpiExStoreObjectToNode
 argument_list|(
+name|ObjDesc
+argument_list|,
 name|CurrentObjDesc
 operator|->
 name|Reference
 operator|.
 name|Object
 argument_list|,
-name|ObjDesc
-argument_list|,
-name|ACPI_GET_OBJECT_TYPE
-argument_list|(
-name|ObjDesc
-argument_list|)
+name|WalkState
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
