@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.1 (Berkeley) %G%"
+literal|"@(#)main.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2805,6 +2805,11 @@ name|char
 modifier|*
 name|DelimChar
 decl_stmt|;
+specifier|extern
+name|bool
+name|invalidaddr
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|terminal
@@ -2905,12 +2910,36 @@ name|p
 operator|==
 literal|'\0'
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No address!\n"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|invalidaddr
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Invalid control characters in address\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 do|do
 block|{
 specifier|extern
