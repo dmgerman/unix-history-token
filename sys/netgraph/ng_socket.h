@@ -63,7 +63,7 @@ name|NGM_SOCK_CMD_NOLINGER
 init|=
 literal|1
 block|,
-comment|/* close the soket on with last hook */
+comment|/* close the socket with last hook */
 name|NGM_SOCK_CMD_LINGER
 comment|/* Keep socket even if 0 hooks */
 block|}
