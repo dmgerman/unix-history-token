@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.11.2.7 1997/01/04 18:42:46 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.11.2.8 1997/01/20 18:30:45 kato Exp $  */
 end_comment
 
 begin_include
@@ -2703,7 +2703,7 @@ operator|*
 name|fp
 argument_list|)
 argument_list|,
-literal|0
+name|B_WRITE
 argument_list|)
 operator|==
 literal|0
@@ -2931,7 +2931,7 @@ operator|*
 name|scp
 argument_list|)
 argument_list|,
-literal|0
+name|B_WRITE
 argument_list|)
 operator|==
 literal|0
@@ -3222,6 +3222,7 @@ index|]
 operator|=
 name|_ucodesel
 expr_stmt|;
+comment|/* 	 * Initialize the math emulator (if any) for the current process. 	 * Actually, just clear the bit that says that the emulator has 	 * been initialized.  Initialization is delayed until the process 	 * traps to the emulator (if it is done at all) mainly because 	 * emulators don't provide an entry point for initialization. 	 */
 name|p
 operator|->
 name|p_addr
@@ -3229,24 +3230,27 @@ operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|FP_SOFTFP
 expr_stmt|;
-comment|/* no fp at all */
+comment|/* 	 * Arrange to trap the next npx or `fwait' instruction (see npx.c 	 * for why fwait must be trapped at least if there is an npx or an 	 * emulator).  This is mainly to handle the case where npx0 is not 	 * configured, since the npx routines normally set up the trap 	 * otherwise.  It should be done only at boot time, but doing it 	 * here allows modifying `npx_exists' for testing the emulator on 	 * systems with an npx. 	 */
 name|load_cr0
 argument_list|(
 name|rcr0
 argument_list|()
 operator||
+name|CR0_MP
+operator||
 name|CR0_TS
 argument_list|)
 expr_stmt|;
-comment|/* start emulating */
 if|#
 directive|if
 name|NNPX
 operator|>
 literal|0
+comment|/* Initialize the npx (if any) for the current process. */
 name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
@@ -3254,7 +3258,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NNPX> 0 */
 block|}
 specifier|static
 name|int
@@ -5326,6 +5329,11 @@ literal|4
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|NNPX
+operator|>
+literal|0
 name|idp
 operator|=
 name|find_isadev
@@ -5358,6 +5366,8 @@ name|id_msize
 operator|/
 literal|4
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* call pmap initialization to make new kernel address space */
 name|pmap_bootstrap
 argument_list|(
