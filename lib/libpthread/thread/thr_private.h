@@ -131,24 +131,6 @@ begin_comment
 comment|/*   * Mutex definitions.  */
 end_comment
 
-begin_enum
-enum|enum
-name|pthread_mutextype
-block|{
-name|MUTEX_TYPE_FAST
-init|=
-literal|1
-block|,
-name|MUTEX_TYPE_COUNTING_FAST
-init|=
-literal|2
-block|,
-comment|/* Recursive */
-name|MUTEX_TYPE_MAX
-block|}
-enum|;
-end_enum
-
 begin_union
 union|union
 name|pthread_mutex_data
@@ -1298,6 +1280,41 @@ block|,
 name|NULL
 block|,
 name|PTHREAD_STACK_DEFAULT
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Default thread attributes: */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|pthread_mutex_attr
+name|pthread_mutexattr_default
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+block|{
+name|MUTEX_TYPE_FAST
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
