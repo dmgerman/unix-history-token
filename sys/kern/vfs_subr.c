@@ -13701,7 +13701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request.  Returns 0 on success, or an errno on failure.  */
+comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  */
 end_comment
 
 begin_function
