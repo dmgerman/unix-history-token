@@ -1627,11 +1627,6 @@ operator|)
 name|addr
 decl_stmt|;
 name|struct
-name|ata_device
-modifier|*
-name|atadev
-decl_stmt|;
-name|struct
 name|ata_channel
 modifier|*
 name|ch
@@ -1647,9 +1642,6 @@ name|iocmd
 operator|->
 name|channel
 argument_list|)
-decl_stmt|;
-name|caddr_t
-name|buf
 decl_stmt|;
 name|int
 name|error
@@ -2427,6 +2419,15 @@ argument_list|)
 case|case
 name|ATAPICMD
 case|:
+block|{
+name|struct
+name|ata_device
+modifier|*
+name|atadev
+decl_stmt|;
+name|caddr_t
+name|buf
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2696,6 +2697,7 @@ expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 endif|#
 directive|endif
 default|default:
