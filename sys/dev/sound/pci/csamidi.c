@@ -27,6 +27,18 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pci/pcivar.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -608,13 +620,15 @@ name|scp
 operator|->
 name|io_rid
 operator|=
-name|CS461x_IO_OFFSET
+name|PCIR_MAPS
 expr_stmt|;
 name|scp
 operator|->
 name|mem_rid
 operator|=
-name|CS461x_MEM_OFFSET
+name|PCIR_MAPS
+operator|+
+literal|4
 expr_stmt|;
 name|scp
 operator|->
@@ -2300,7 +2314,7 @@ argument_list|,
 operator|~
 literal|0
 argument_list|,
-name|CS461x_IO_SIZE
+literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2348,7 +2362,7 @@ argument_list|,
 operator|~
 literal|0
 argument_list|,
-name|CS461x_MEM_SIZE
+literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
