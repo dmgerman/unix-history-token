@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -2284,7 +2284,7 @@ if|if
 condition|(
 name|index
 argument_list|(
-literal|"acfimosv"
+literal|"acDfimosv"
 argument_list|,
 name|opt
 argument_list|)
@@ -2439,6 +2439,18 @@ case|case
 name|MD_TEST
 case|:
 comment|/* test addresses */
+case|case
+name|MD_PRINT
+case|:
+comment|/* print queue contents */
+case|case
+name|MD_INITALIAS
+case|:
+comment|/* initialize alias database */
+case|case
+name|MD_FREEZE
+case|:
+comment|/* freeze config file */
 break|break;
 default|default:
 name|syserr
@@ -2460,6 +2472,15 @@ literal|'c'
 case|:
 comment|/* don't connect to "expensive" mailers */
 name|NoConnect
+operator|=
+name|bval
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+comment|/* rebuild alias database as needed */
+name|AutoRebuild
 operator|=
 name|bval
 expr_stmt|;
