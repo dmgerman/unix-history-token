@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys.c	4.3 (Berkeley) %G%"
+literal|"@(#)hys.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,34 @@ ifdef|#
 directive|ifdef
 name|HAYES
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USR2400
+end_define
+
+begin_comment
+comment|/* U.S. Robotics Courier 2400 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USR2400
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DROPDTR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|USR2400
+end_endif
 
 begin_comment
 comment|/*  *	hyspopn(telno, flds, dev) connect to hayes smartmodem (pulse call)  *	hystopn(telno, flds, dev) connect to hayes smartmodem (tone call)  *	char *flds[], *dev[];  *  *	return codes:  *>0  -  file number  -  ok  *		CF_DIAL,CF_DEVICE  -  failed  */
@@ -340,9 +368,9 @@ name|write
 argument_list|(
 name|dh
 argument_list|,
-literal|"ATV1H\r"
+literal|"ATV1E0H\r"
 argument_list|,
-literal|6
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
@@ -364,7 +392,7 @@ argument_list|,
 literal|"HSM seems dead"
 argument_list|)
 expr_stmt|;
-name|close
+name|hyscls
 argument_list|(
 name|dh
 argument_list|)
@@ -373,6 +401,49 @@ return|return
 name|CF_DIAL
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|USR2400
+name|write
+argument_list|(
+name|dh
+argument_list|,
+literal|"ATX6\r"
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|expect
+argument_list|(
+literal|"OK\r\n"
+argument_list|,
+name|dh
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|logent
+argument_list|(
+name|dcname
+argument_list|,
+literal|"HSM seems dead"
+argument_list|)
+expr_stmt|;
+name|hyscls
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+return|return
+name|CF_DIAL
+return|;
+block|}
+endif|#
+directive|endif
+endif|USR2400
 if|if
 condition|(
 name|toneflag
@@ -457,6 +528,8 @@ argument_list|,
 name|alarmtr
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|alarm
 argument_list|(
 name|MAXMSGTIME
@@ -487,11 +560,9 @@ operator|>=
 literal|' '
 condition|)
 break|break;
-name|cp
-operator|++
-expr_stmt|;
 while|while
 condition|(
+operator|++
 name|cp
 operator|<
 operator|&
@@ -513,7 +584,6 @@ literal|1
 operator|&&
 operator|*
 name|cp
-operator|++
 operator|!=
 literal|'\n'
 condition|)
@@ -525,9 +595,46 @@ argument_list|)
 expr_stmt|;
 operator|*
 name|cp
+operator|--
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\r'
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"\nGOT: %s"
+argument_list|,
+name|cbuf
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|strncmp
+argument_list|(
+name|cbuf
+argument_list|,
+literal|"RING"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+do|;
 if|if
 condition|(
 name|strncmp
@@ -544,7 +651,7 @@ condition|)
 block|{
 name|logent
 argument_list|(
-literal|"HSM no carrier"
+name|cbuf
 argument_list|,
 name|_FAILED
 argument_list|)
@@ -567,15 +674,6 @@ return|return
 name|CF_DIAL
 return|;
 block|}
-name|DEBUG
-argument_list|(
-literal|4
-argument_list|,
-literal|"\nGOT: %s"
-argument_list|,
-name|cbuf
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|atoi
@@ -786,7 +884,14 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Since we have a getty sleeping on this line, when it wakes up it sends 		 * all kinds of garbage to the modem.  Unfortunatly, the modem likes to 		 * execute the previous command when it sees the garbage.  The previous 		 * command was to dial the phone, so let's make the last command reset 		 * the modem. 		 */
+name|stty
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|sav
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|sleep
