@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.13 (Berkeley) %G%"
+literal|"@(#)process.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,27 +328,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|iovec
-name|iov
-index|[
-literal|2
-index|]
-init|=
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-literal|"\n"
-block|,
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|regex_t
 modifier|*
 name|defpreg
@@ -365,8 +344,6 @@ begin_decl_stmt
 name|regmatch_t
 modifier|*
 name|match
-decl_stmt|,
-name|startend
 decl_stmt|;
 end_decl_stmt
 
@@ -377,7 +354,7 @@ name|OUT
 parameter_list|(
 name|s
 parameter_list|)
-value|{ fwrite(s, sizeof(u_char), psl, stdout); putchar('\n'); }
+value|{ fwrite(s, sizeof(u_char), psl, stdout); }
 end_define
 
 begin_function
@@ -686,7 +663,7 @@ name|hs
 argument_list|,
 name|hsl
 argument_list|,
-name|APPENDNL
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -718,7 +695,7 @@ name|ps
 argument_list|,
 name|psl
 argument_list|,
-name|APPENDNL
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -809,7 +786,7 @@ argument_list|(
 operator|&
 name|PS
 argument_list|,
-name|APPENDNL
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -1086,27 +1063,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|iov
-index|[
-literal|0
-index|]
-operator|.
-name|iov_base
-operator|=
-name|ps
-expr_stmt|;
-name|iov
-index|[
-literal|0
-index|]
-operator|.
-name|iov_len
-operator|=
-name|psl
-expr_stmt|;
 if|if
 condition|(
-name|writev
+name|write
 argument_list|(
 name|cp
 operator|->
@@ -1114,14 +1073,12 @@ name|u
 operator|.
 name|fd
 argument_list|,
-name|iov
+name|ps
 argument_list|,
-literal|2
+name|psl
 argument_list|)
 operator|!=
 name|psl
-operator|+
-literal|1
 condition|)
 name|err
 argument_list|(
@@ -1192,8 +1149,8 @@ name|len
 operator|=
 name|psl
 init|;
-name|len
 operator|--
+name|len
 condition|;
 operator|++
 name|p
@@ -1935,27 +1892,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|iov
-index|[
-literal|0
-index|]
-operator|.
-name|iov_base
-operator|=
-name|ps
-expr_stmt|;
-name|iov
-index|[
-literal|0
-index|]
-operator|.
-name|iov_len
-operator|=
-name|psl
-expr_stmt|;
 if|if
 condition|(
-name|writev
+name|write
 argument_list|(
 name|cp
 operator|->
@@ -1965,14 +1904,12 @@ name|s
 operator|->
 name|wfd
 argument_list|,
-name|iov
+name|ps
 argument_list|,
-literal|2
+name|psl
 argument_list|)
 operator|!=
 name|psl
-operator|+
-literal|1
 condition|)
 name|err
 argument_list|(
@@ -2397,10 +2334,11 @@ name|printf
 argument_list|(
 literal|"%03o"
 argument_list|,
+operator|*
 operator|(
 name|u_char
-operator|)
 operator|*
+operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -2490,30 +2428,6 @@ block|{
 name|int
 name|eval
 decl_stmt|;
-comment|/* So we can work with binary files */
-name|startend
-operator|.
-name|rm_so
-operator|=
-literal|0
-expr_stmt|;
-name|startend
-operator|.
-name|rm_eo
-operator|=
-name|slen
-expr_stmt|;
-name|match
-index|[
-literal|0
-index|]
-operator|=
-name|startend
-expr_stmt|;
-name|eflags
-operator||=
-name|REG_STARTEND
-expr_stmt|;
 if|if
 condition|(
 name|preg
@@ -2540,6 +2454,27 @@ name|defpreg
 operator|=
 name|preg
 expr_stmt|;
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+operator|=
+literal|0
+expr_stmt|;
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_eo
+operator|=
+name|slen
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Length minus trailing newline. */
 name|eval
 operator|=
 name|regexec
@@ -2559,6 +2494,8 @@ argument_list|,
 name|match
 argument_list|,
 name|eflags
+operator||
+name|REG_STARTEND
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2882,7 +2819,7 @@ block|{
 name|size_t
 name|tlen
 decl_stmt|;
-comment|/* 	 * Make sure SPACE has enough memory and ramp up quickly.  Appends 	 * need two extra bytes, one for the newline, one for a terminating 	 * NULL. 	 */
+comment|/* Make sure SPACE has enough memory and ramp up quickly. */
 name|tlen
 operator|=
 name|sp
@@ -2891,15 +2828,7 @@ name|len
 operator|+
 name|len
 operator|+
-operator|(
-name|spflag
-operator|==
-name|APPENDNL
-condition|?
-literal|2
-else|:
 literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2938,25 +2867,6 @@ name|blen
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|spflag
-operator|==
-name|APPENDNL
-condition|)
-name|sp
-operator|->
-name|space
-index|[
-name|sp
-operator|->
-name|len
-operator|++
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|spflag

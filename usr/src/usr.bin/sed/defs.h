@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -103,7 +103,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * An internally compiled command.  * Initialy, label references are stored in u.t, on a second pass they  * are updated to pointers.  */
+comment|/*  * An internally compiled command.  * Initialy, label references are stored in t, on a second pass they  * are updated to pointers.  */
 end_comment
 
 begin_struct
@@ -172,6 +172,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* True if in range */
+name|u_int
+name|lused
+range|:
+literal|1
+decl_stmt|;
+comment|/* True if label used. */
 block|}
 struct|;
 end_struct
@@ -240,6 +246,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -251,9 +260,6 @@ block|{
 name|APPEND
 block|,
 comment|/* Append to the contents. */
-name|APPENDNL
-block|,
-comment|/* Append, with newline. */
 name|REPLACE
 block|,
 comment|/* Replace the contents. */
