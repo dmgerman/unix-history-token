@@ -264,6 +264,12 @@ name|USB_PRODUCT_COREGA_FETHER_USB_TX
 block|}
 block|,
 block|{
+name|USB_VENDOR_KINGSTON
+block|,
+name|USB_PRODUCT_KINGSTON_KNU101TX
+block|, }
+block|,
+block|{
 literal|0
 block|,
 literal|0
