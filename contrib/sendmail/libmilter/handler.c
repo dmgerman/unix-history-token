@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: handler.c,v 8.30 2002/04/29 15:06:48 ca Exp $"
+literal|"@(#)$Id: handler.c,v 8.30.2.2 2002/12/18 23:15:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -58,7 +58,7 @@ operator|)
 name|sthread_get_id
 argument_list|()
 expr_stmt|;
-comment|/* 	**  detach so resources are free when the thread returns 	**  if we ever "wait" for threads, this call must be removed 	*/
+comment|/* 	**  Detach so resources are free when the thread returns. 	**  If we ever "wait" for threads, this call must be removed. 	*/
 if|if
 condition|(
 name|pthread_detach

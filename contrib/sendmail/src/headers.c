@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266.4.1 2002/08/16 14:56:01 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.2 2002/09/23 23:42:02 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4046,7 +4046,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.850s, relay=%.100s"
+literal|"%.850s, relay=%s"
 argument_list|,
 name|sbuf
 argument_list|,
@@ -4233,7 +4233,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.400srelay=%.100s"
+literal|"%.400srelay=%s"
 argument_list|,
 name|sbuf
 argument_list|,

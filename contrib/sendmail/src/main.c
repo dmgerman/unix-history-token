@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.887.2.1 2002/08/04 17:36:06 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.887.2.12 2002/12/05 17:38:44 ca Exp $"
 argument_list|)
 end_macro
 
@@ -849,6 +849,15 @@ name|sm_exc_newthread
 argument_list|(
 name|fatal_error
 argument_list|)
+expr_stmt|;
+comment|/* set the default in/out channel so errors reported to screen */
+name|InChannel
+operator|=
+name|smioin
+expr_stmt|;
+name|OutChannel
+operator|=
+name|smioout
 expr_stmt|;
 comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
 if|if
@@ -2409,14 +2418,6 @@ name|FFRCompileOptions
 argument_list|)
 expr_stmt|;
 block|}
-name|InChannel
-operator|=
-name|smioin
-expr_stmt|;
-name|OutChannel
-operator|=
-name|smioout
-expr_stmt|;
 comment|/* clear sendmail's environment */
 name|ExternalEnviron
 operator|=
@@ -3509,6 +3510,23 @@ name|EX_USAGE
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|optarg
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|from
+operator|=
+name|newstr
+argument_list|(
+literal|"<>"
+argument_list|)
+expr_stmt|;
+else|else
 name|from
 operator|=
 name|newstr
@@ -5813,6 +5831,12 @@ literal|10
 argument_list|)
 condition|)
 block|{
+name|char
+name|pidpath
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 comment|/* Now we know which .cf file we use */
 name|sm_dprintf
 argument_list|(
@@ -5830,11 +5854,24 @@ name|conffile
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|expand
+argument_list|(
+name|PidFile
+argument_list|,
+name|pidpath
+argument_list|,
+sizeof|sizeof
+name|pidpath
+argument_list|,
+operator|&
+name|BlankEnvelope
+argument_list|)
+expr_stmt|;
 name|sm_dprintf
 argument_list|(
 literal|"      Pid file:\t%s (selected)\n"
 argument_list|,
-name|PidFile
+name|pidpath
 argument_list|)
 expr_stmt|;
 block|}
@@ -8852,6 +8889,11 @@ operator|!=
 name|NOQGRP
 condition|)
 block|{
+name|int
+name|rwgflags
+init|=
+name|RWG_NONE
+decl_stmt|;
 comment|/* 				**  To run a specific queue group mark it to 				**  be run, select the work group it's in and 				**  increment the work counter. 				*/
 for|for
 control|(
@@ -8895,6 +8937,26 @@ name|qg_nextrun
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|rwgflags
+operator||=
+name|RWG_VERBOSE
+expr_stmt|;
+if|if
+condition|(
+name|queuepersistent
+condition|)
+name|rwgflags
+operator||=
+name|RWG_PERSISTENT
+expr_stmt|;
+name|rwgflags
+operator||=
+name|RWG_FORCE
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8907,13 +8969,7 @@ index|]
 operator|->
 name|qg_wgrp
 argument_list|,
-name|false
-argument_list|,
-name|Verbose
-argument_list|,
-name|queuepersistent
-argument_list|,
-name|false
+name|rwgflags
 argument_list|)
 expr_stmt|;
 block|}
@@ -9766,14 +9822,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* STARTTLS */
-if|#
-directive|if
-name|PROFILING
 name|nextreq
 label|:
-endif|#
-directive|endif
-comment|/* PROFILING */
 name|p_flags
 operator|=
 name|getrequests
@@ -9863,7 +9913,7 @@ name|LOG_INFO
 argument_list|,
 name|NULL
 argument_list|,
-literal|"connect from %.100s"
+literal|"connect from %s"
 argument_list|,
 name|authinfo
 argument_list|)
@@ -10172,9 +10222,16 @@ operator|&
 name|MainEnvelope
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|PROFILING
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|93
+argument_list|,
+literal|100
+argument_list|)
+condition|)
+block|{
 comment|/* turn off profiling */
 name|SM_PROF
 argument_list|(
@@ -10190,9 +10247,7 @@ condition|)
 goto|goto
 name|nextreq
 goto|;
-endif|#
-directive|endif
-comment|/* PROFILING */
+block|}
 block|}
 name|sm_rpool_free
 argument_list|(
@@ -15653,6 +15708,7 @@ argument_list|,
 sizeof|sizeof
 name|host
 argument_list|,
+operator|!
 name|HasWildcardMX
 argument_list|,
 name|NULL

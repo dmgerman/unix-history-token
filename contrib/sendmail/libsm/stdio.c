@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stdio.c,v 1.56 2002/04/03 21:55:15 ca Exp $"
+literal|"@(#)$Id: stdio.c,v 1.56.2.3 2002/10/22 23:07:19 ca Exp $"
 argument_list|)
 end_macro
 
@@ -83,12 +83,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sm/fdset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sm/setjmp.h>
 end_include
 
@@ -96,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<sm/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/fdset.h>
 end_include
 
 begin_include
@@ -833,6 +833,28 @@ name|struct
 name|timeval
 name|timeout
 decl_stmt|;
+if|if
+condition|(
+name|SM_FD_SETSIZE
+operator|>
+literal|0
+operator|&&
+name|fp
+operator|->
+name|f_file
+operator|>=
+name|SM_FD_SETSIZE
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|FD_ZERO
 argument_list|(
 operator|&

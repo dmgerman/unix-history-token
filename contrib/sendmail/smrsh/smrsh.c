@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smrsh.c,v 8.58 2002/05/25 02:41:31 ca Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.58.2.2 2002/09/24 21:40:05 ca Exp $"
 argument_list|)
 end_macro
 
@@ -59,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -472,6 +484,10 @@ name|specialbuf
 index|[
 literal|32
 index|]
+decl_stmt|;
+name|struct
+name|stat
+name|st
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -1026,7 +1042,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s not available for sendmail programs (filename too long)\n"
+literal|"%s: \"%s\" not available for sendmail programs (filename too long)\n"
 argument_list|,
 name|prg
 argument_list|,
@@ -1051,7 +1067,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"uid %d: attempt to use %s (filename too long)"
+literal|"uid %d: attempt to use \"%s\" (filename too long)"
 argument_list|,
 operator|(
 name|int
@@ -1093,17 +1109,18 @@ directive|endif
 comment|/* DEBUG */
 if|if
 condition|(
-name|access
+name|stat
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|X_OK
+operator|&
+name|st
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-comment|/* oops....  crack attack possiblity */
+comment|/* can't stat it */
 operator|(
 name|void
 operator|)
@@ -1113,7 +1130,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s not available for sendmail programs\n"
+literal|"%s: \"%s\" not available for sendmail programs (stat failed)\n"
 argument_list|,
 name|prg
 argument_list|,
@@ -1138,7 +1155,154 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"uid %d: attempt to use %s"
+literal|"uid %d: attempt to use \"%s\" (stat failed)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|getuid
+argument_list|()
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! DEBUG */
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+ifdef|#
+directive|ifdef
+name|S_ISLNK
+operator|&&
+operator|!
+name|S_ISLNK
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+endif|#
+directive|endif
+comment|/* S_ISLNK */
+condition|)
+block|{
+comment|/* can't stat it */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"%s: \"%s\" not available for sendmail programs (not a file)\n"
+argument_list|,
+name|prg
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|=
+literal|' '
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEBUG
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"uid %d: attempt to use \"%s\" (not a file)"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|getuid
+argument_list|()
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! DEBUG */
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|access
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|X_OK
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* oops....  crack attack possiblity */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"%s: \"%s\" not available for sendmail programs\n"
+argument_list|,
+name|prg
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|=
+literal|' '
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEBUG
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"uid %d: attempt to use \"%s\""
 argument_list|,
 operator|(
 name|int

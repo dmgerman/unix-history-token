@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.205 2002/05/24 18:53:48 gshapiro Exp $"
+literal|"@(#)$Id: mci.c,v 8.205.2.2 2002/11/26 19:15:19 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -4630,6 +4630,7 @@ name|mci_rstatus
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -4648,6 +4649,7 @@ operator|.
 name|mci_rstatus
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: smdb.h,v 8.40 2002/05/24 23:20:14 gshapiro Exp $  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: smdb.h,v 8.40.2.1 2002/10/05 17:04:51 ca Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -69,30 +69,8 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|"sm/bdb.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DB_VERSION_MAJOR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DB_VERSION_MAJOR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! DB_VERSION_MAJOR */
-end_comment
 
 begin_endif
 endif|#

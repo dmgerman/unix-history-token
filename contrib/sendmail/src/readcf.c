@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.607.2.2 2002/08/19 21:50:49 gshapiro Exp $"
+literal|"@(#)$Id: readcf.c,v 8.607.2.7 2002/11/10 19:13:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -8503,7 +8503,7 @@ directive|define
 name|O_CACERTFILE
 value|0xb8
 block|{
-literal|"CACERTFile"
+literal|"CACertFile"
 block|,
 name|O_CACERTFILE
 block|,
@@ -8515,7 +8515,7 @@ directive|define
 name|O_CACERTPATH
 value|0xb9
 block|{
-literal|"CACERTPath"
+literal|"CACertPath"
 block|,
 name|O_CACERTPATH
 block|,
@@ -8816,6 +8816,42 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SELECT_SHM */
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+define|#
+directive|define
+name|O_REJECTLOGINTERVAL
+value|0xd1
+block|{
+literal|"RejectLogInterval"
+block|,
+name|O_REJECTLOGINTERVAL
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
+if|#
+directive|if
+name|_FFR_REQ_DIR_FSYNC_OPT
+define|#
+directive|define
+name|O_REQUIRES_DIR_FSYNC
+value|0xd2
+block|{
+literal|"RequiresDirfsync"
+block|,
+name|O_REQUIRES_DIR_FSYNC
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REQ_DIR_FSYNC_OPT */
 block|{
 name|NULL
 block|,
@@ -13741,7 +13777,7 @@ name|O_SRVCERTFILE
 case|:
 name|SET_STRING_EXP
 argument_list|(
-name|SrvCERTfile
+name|SrvCertFile
 argument_list|)
 expr_stmt|;
 case|case
@@ -13749,7 +13785,7 @@ name|O_SRVKEYFILE
 case|:
 name|SET_STRING_EXP
 argument_list|(
-name|Srvkeyfile
+name|SrvKeyFile
 argument_list|)
 expr_stmt|;
 case|case
@@ -13757,7 +13793,7 @@ name|O_CLTCERTFILE
 case|:
 name|SET_STRING_EXP
 argument_list|(
-name|CltCERTfile
+name|CltCertFile
 argument_list|)
 expr_stmt|;
 case|case
@@ -13765,7 +13801,7 @@ name|O_CLTKEYFILE
 case|:
 name|SET_STRING_EXP
 argument_list|(
-name|Cltkeyfile
+name|CltKeyFile
 argument_list|)
 expr_stmt|;
 case|case
@@ -13773,7 +13809,7 @@ name|O_CACERTFILE
 case|:
 name|SET_STRING_EXP
 argument_list|(
-name|CACERTfile
+name|CACertFile
 argument_list|)
 expr_stmt|;
 case|case
@@ -13781,7 +13817,7 @@ name|O_CACERTPATH
 case|:
 name|SET_STRING_EXP
 argument_list|(
-name|CACERTpath
+name|CACertPath
 argument_list|)
 expr_stmt|;
 case|case
@@ -14248,6 +14284,53 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_SOFT_BOUNCE */
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+case|case
+name|O_REJECTLOGINTERVAL
+case|:
+comment|/* time btwn log msgs while refusing */
+name|RejectLogInterval
+operator|=
+name|convtime
+argument_list|(
+name|val
+argument_list|,
+literal|'h'
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
+if|#
+directive|if
+name|_FFR_REQ_DIR_FSYNC_OPT
+case|case
+name|O_REQUIRES_DIR_FSYNC
+case|:
+if|#
+directive|if
+name|REQUIRES_DIR_FSYNC
+name|RequiresDirfsync
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* REQUIRES_DIR_FSYNC */
+comment|/* silently ignored... required for cf file option */
+endif|#
+directive|endif
+comment|/* REQUIRES_DIR_FSYNC */
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_REQ_DIR_FSYNC_OPT */
 default|default:
 if|if
 condition|(

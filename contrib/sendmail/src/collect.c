@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.242.2.2 2002/08/16 14:56:01 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.242.2.3 2002/12/03 17:06:30 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1140,6 +1140,19 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|smtpmode
+condition|)
+block|{
+comment|/* 				**  Override e_message in usrerr() as this 				**  is the reason for failure that should 				**  be logged for undelivered recipients. 				*/
+name|e
+operator|->
+name|e_message
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|usrerr
 argument_list|(
 literal|"451 4.4.1 timeout waiting for input during message collect"

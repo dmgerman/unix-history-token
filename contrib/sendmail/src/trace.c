@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: trace.c,v 8.37 2001/09/11 04:05:17 gshapiro Exp $"
+literal|"@(#)$Id: trace.c,v 8.37.4.1 2002/12/05 17:28:05 ca Exp $"
 argument_list|)
 end_macro
 
@@ -607,6 +607,10 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|s
+operator|==
+name|NULL
+operator|||
 operator|*
 name|s
 operator|==

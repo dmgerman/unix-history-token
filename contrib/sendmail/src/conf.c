@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.972.2.5 2002/08/16 14:56:01 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.972.2.25 2002/12/12 21:19:29 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1574,6 +1574,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MILTER */
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+name|RejectLogInterval
+operator|=
+literal|3
+name|HOURS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
+if|#
+directive|if
+name|_FFR_REQ_DIR_FSYNC_OPT
+name|RequiresDirfsync
+operator|=
+name|true
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_REQ_DIR_FSYNC_OPT */
 name|setupmaps
 argument_list|()
 expr_stmt|;
@@ -8841,6 +8862,26 @@ index|]
 decl_stmt|;
 if|#
 directive|if
+name|_FFR_REJECT_LOG
+specifier|static
+name|time_t
+name|firstrejtime
+index|[
+name|MAXDAEMONS
+index|]
+decl_stmt|;
+specifier|static
+name|time_t
+name|nextlogtime
+index|[
+name|MAXDAEMONS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
+if|#
+directive|if
 name|XLA
 if|if
 condition|(
@@ -8990,6 +9031,19 @@ operator|>=
 name|RefuseLA
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+name|time_t
+name|now
+decl_stmt|;
+define|#
+directive|define
+name|R2_MSG_LA
+value|"have been rejecting connections on daemon %s for %s"
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
 define|#
 directive|define
 name|R_MSG_LA
@@ -9015,7 +9069,7 @@ literal|8
 condition|)
 name|sm_syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 name|NOQID
 argument_list|,
@@ -9026,10 +9080,106 @@ argument_list|,
 name|CurrentLA
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+name|now
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|firstrejtime
+index|[
+name|d
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|firstrejtime
+index|[
+name|d
+index|]
+operator|=
+name|now
+expr_stmt|;
+name|nextlogtime
+index|[
+name|d
+index|]
+operator|=
+name|now
+operator|+
+name|RejectLogInterval
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|nextlogtime
+index|[
+name|d
+index|]
+operator|<
+name|now
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+name|R2_MSG_LA
+argument_list|,
+name|name
+argument_list|,
+name|pintvl
+argument_list|(
+name|now
+operator|-
+name|firstrejtime
+index|[
+name|d
+index|]
+argument_list|,
+name|true
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|nextlogtime
+index|[
+name|d
+index|]
+operator|=
+name|now
+operator|+
+name|RejectLogInterval
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
 return|return
 name|true
 return|;
 block|}
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+else|else
+name|firstrejtime
+index|[
+name|d
+index|]
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
 if|if
 condition|(
 name|DelayLA
@@ -12192,7 +12342,7 @@ literal|"/usr/bin/sh"
 block|,
 literal|"/sbin/bsh"
 block|,
-comment|/* classic borne shell */
+comment|/* classic Bourne shell */
 literal|"/bin/bsh"
 block|,
 literal|"/usr/bin/bsh"
@@ -12206,7 +12356,7 @@ literal|"/usr/bin/csh"
 block|,
 literal|"/sbin/jsh"
 block|,
-comment|/* classic borne shell w/ job control*/
+comment|/* classic Bourne shell w/ job control*/
 literal|"/bin/jsh"
 block|,
 literal|"/usr/bin/jsh"
@@ -14165,16 +14315,6 @@ file|<sys/resource.h>
 endif|#
 directive|endif
 comment|/* HASSETRLIMIT */
-ifndef|#
-directive|ifndef
-name|FD_SETSIZE
-define|#
-directive|define
-name|FD_SETSIZE
-value|256
-endif|#
-directive|endif
-comment|/* ! FD_SETSIZE */
 name|void
 name|resetlimits
 parameter_list|()
@@ -21944,6 +22084,14 @@ directive|endif
 comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
+name|_FFR_DEAL_WITH_ERROR_SSL
+literal|"_FFR_DEAL_WITH_ERROR_SSL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DEAL_WITH_ERROR_SSL */
+if|#
+directive|if
 name|_FFR_DEPRECATE_MAILER_FLAG_I
 literal|"_FFR_DEPRECATE_MAILER_FLAG_I"
 block|,
@@ -22129,6 +22277,14 @@ directive|if
 name|MILTER
 if|#
 directive|if
+name|_FFR_MILTER_421
+literal|"_FFR_MILTER_421"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_421 */
+if|#
+directive|if
 name|_FFR_MILTER_PERDAEMON
 literal|"_FFR_MILTER_PERDAEMON"
 block|,
@@ -22147,15 +22303,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_NODELAYDSN_ON_HOLD */
-if|#
-directive|if
-name|_FFR_NONSTOP_PERSISTENCE
-comment|/* Suggested by Jan Krueger of digitalanswers communications consulting gmbh. */
-literal|"_FFR_NONSTOP_PERSISTENCE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_NONSTOP_PERSISTENCE */
 if|#
 directive|if
 name|_FFR_NO_PIPE
@@ -22221,6 +22368,22 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_REDIRECTEMPTY */
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+literal|"_FFR_REJECT_LOG"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_LOG */
+if|#
+directive|if
+name|_FFR_REQ_DIR_FSYNC_OPT
+literal|"_FFR_REQ_DIR_FSYNC_OPT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REQ_DIR_FSYNC_OPT */
 if|#
 directive|if
 name|_FFR_RESET_MACRO_GLOBALS
@@ -22303,6 +22466,14 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SPT_ALIGN */
+if|#
+directive|if
+name|_FFR_STRIPBACKSL
+literal|"_FFR_STRIPBACKSL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_STRIPBACKSL */
 if|#
 directive|if
 name|_FFR_TIMERS

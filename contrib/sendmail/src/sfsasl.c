@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.91.2.1 2002/08/27 01:35:17 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.91.2.2 2002/09/12 21:07:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -520,6 +520,7 @@ directive|if
 name|SASL
 operator|>=
 literal|20000
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -569,6 +570,20 @@ operator|->
 name|f_cookie
 decl_stmt|;
 comment|/* 	**  sasl_decode() may require more data than a single read() returns. 	**  Hence we have to put a loop around the decoding. 	**  This also requires that we may have to split up the returned 	**  data since it might be larger than the allowed size. 	**  Therefore we use a static pointer and return portions of it 	**  if necessary. 	*/
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+while|while
+condition|(
+name|outlen
+operator|==
+literal|0
+condition|)
+else|#
+directive|else
+comment|/* SASL>= 20000 */
 while|while
 condition|(
 name|outbuf
@@ -579,6 +594,9 @@ name|outlen
 operator|==
 literal|0
 condition|)
+endif|#
+directive|endif
+comment|/* SASL>= 20000 */
 block|{
 name|len
 operator|=
