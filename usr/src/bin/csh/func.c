@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	4.13 (Berkeley) %G%"
+literal|"@(#)func.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3415,6 +3415,9 @@ name|sep
 operator|==
 literal|' '
 operator|&&
+operator|*
+name|v
+operator|&&
 operator|!
 name|strcmp
 argument_list|(
@@ -4332,11 +4335,20 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setlim
 argument_list|(
 name|lp
 argument_list|,
 name|limit
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+name|NOSTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -4843,6 +4855,11 @@ name|limits
 modifier|*
 name|lp
 decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
 name|v
 operator|++
 expr_stmt|;
@@ -4871,6 +4888,8 @@ condition|;
 name|lp
 operator|++
 control|)
+if|if
+condition|(
 name|setlim
 argument_list|(
 name|lp
@@ -4879,6 +4898,20 @@ operator|(
 name|int
 operator|)
 name|RLIM_INFINITY
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|error
+argument_list|(
+name|NOSTR
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4898,6 +4931,8 @@ name|v
 operator|++
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|setlim
 argument_list|(
 name|lp
@@ -4906,6 +4941,13 @@ operator|(
 name|int
 operator|)
 name|RLIM_INFINITY
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+name|NOSTR
 argument_list|)
 expr_stmt|;
 block|}
@@ -4986,11 +5028,38 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+block|{
+name|printf
 argument_list|(
+literal|"%s: %s: Can't %s limit\n"
+argument_list|,
 name|bname
+argument_list|,
+name|lp
+operator|->
+name|limname
+argument_list|,
+name|limit
+operator|==
+name|RLIM_INFINITY
+condition|?
+literal|"remove"
+else|:
+literal|"set"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
