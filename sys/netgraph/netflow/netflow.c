@@ -235,6 +235,34 @@ parameter_list|)
 value|(fle->f.packets<= 4)
 end_define
 
+begin_comment
+comment|/*  * Cisco uses milliseconds for uptime. Bad idea, since it overflows  * every 48+ days. But we will do same to keep compatibility. This macro  * does overflowable multiplication to 1000.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MILLIUPTIME
+parameter_list|(
+name|t
+parameter_list|)
+value|(((t)<< 9) +
+comment|/* 512 */
+value|\ 			 ((t)<< 8) +
+comment|/* 256 */
+value|\ 			 ((t)<< 7) +
+comment|/* 128 */
+value|\ 			 ((t)<< 6) +
+comment|/* 64  */
+value|\ 			 ((t)<< 5) +
+comment|/* 32  */
+value|\ 			 ((t)<< 3))
+end_define
+
+begin_comment
+comment|/* 8   */
+end_comment
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -2672,7 +2700,10 @@ name|sys_uptime
 operator|=
 name|htonl
 argument_list|(
+name|MILLIUPTIME
+argument_list|(
 name|time_uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|getnanotime
@@ -3020,11 +3051,14 @@ name|first
 operator|=
 name|htonl
 argument_list|(
+name|MILLIUPTIME
+argument_list|(
 name|fle
 operator|->
 name|f
 operator|.
 name|first
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rec
@@ -3033,11 +3067,14 @@ name|last
 operator|=
 name|htonl
 argument_list|(
+name|MILLIUPTIME
+argument_list|(
 name|fle
 operator|->
 name|f
 operator|.
 name|last
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rec
