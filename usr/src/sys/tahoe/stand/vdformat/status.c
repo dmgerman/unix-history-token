@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)status.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)status.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|wait_for_char
+decl_stmt|;
 name|indent
 argument_list|()
 expr_stmt|;
@@ -184,6 +188,17 @@ operator|.
 name|drive
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wait_for_char
+condition|)
+name|print
+argument_list|(
+literal|"Waiting for operator response.\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|print
 argument_list|(
 literal|"Currently accessing cylinder %d, head %d.\n"
@@ -258,6 +273,15 @@ literal|"recovering from hardware error.\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|sub_wmap
+case|:
+name|printf
+argument_list|(
+literal|"writing relocation map.\n"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default :
 name|printf
 argument_list|(
@@ -265,6 +289,7 @@ literal|"I don't know what is happening.\n"
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|exdent
 argument_list|(
