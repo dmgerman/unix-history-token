@@ -1569,6 +1569,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DKMAXUNIT
+value|0x1ff
+end_define
+
+begin_comment
+comment|/* Highest disk unit number */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|dkmakeminor
 parameter_list|(
 name|unit
