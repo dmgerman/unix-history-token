@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -85,25 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -154,12 +142,6 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/lockf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -183,12 +165,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
@@ -196,12 +172,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/ffs_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<gnu/ext2fs/ext2_fs.h>
 end_include
 
 begin_include

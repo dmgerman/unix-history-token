@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/ext2_fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<gnu/ext2fs/ext2_fs_sb.h>
 end_include
 

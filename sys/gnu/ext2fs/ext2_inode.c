@@ -66,18 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
 end_include
 
@@ -97,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_if
@@ -123,12 +117,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -148,12 +136,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
