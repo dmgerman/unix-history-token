@@ -150,8 +150,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|_LC_LAST
+name|LC_MESSAGES
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LC_LAST
+value|7
 end_define
 
 begin_comment
