@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	5.9 (Berkeley) %G%"
+literal|"@(#)list.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,6 +884,13 @@ name|star
 operator|++
 expr_stmt|;
 break|break;
+case|case
+name|TERROR
+case|:
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|tok
 operator|=
@@ -1103,7 +1110,7 @@ else|else
 block|{
 if|if
 condition|(
-name|sender
+name|matchsender
 argument_list|(
 operator|*
 name|np
@@ -2376,7 +2383,12 @@ name|c
 operator|==
 name|quotec
 condition|)
+block|{
+name|cp
+operator|++
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|quotec
@@ -2425,6 +2437,7 @@ name|c
 operator|==
 literal|0
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -2434,6 +2447,10 @@ argument_list|,
 name|quotec
 argument_list|)
 expr_stmt|;
+return|return
+name|TERROR
+return|;
+block|}
 operator|*
 name|sp
 operator|=
@@ -2681,7 +2698,7 @@ comment|/*  * See if the passed name sent the passed message number.  Return tru
 end_comment
 
 begin_macro
-name|sender
+name|matchsender
 argument_list|(
 argument|str
 argument_list|,
@@ -2699,12 +2716,6 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|struct
-name|message
-modifier|*
-name|mp
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2715,8 +2726,22 @@ decl_stmt|,
 modifier|*
 name|backup
 decl_stmt|;
-name|mp
+if|if
+condition|(
+operator|!
+operator|*
+name|str
+condition|)
+comment|/* null string matches nothing instead of everything */
+return|return
+literal|0
+return|;
+name|backup
 operator|=
+name|cp2
+operator|=
+name|nameof
+argument_list|(
 operator|&
 name|message
 index|[
@@ -2724,14 +2749,6 @@ name|mesg
 operator|-
 literal|1
 index|]
-expr_stmt|;
-name|backup
-operator|=
-name|cp2
-operator|=
-name|nameof
-argument_list|(
-name|mp
 argument_list|,
 literal|0
 argument_list|)
