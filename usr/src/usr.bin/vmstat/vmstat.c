@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.17 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,6 +531,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|int
+name|lines
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -547,9 +555,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|int
-name|lines
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -1408,18 +1413,18 @@ argument_list|,
 name|printhdr
 argument_list|)
 expr_stmt|;
-name|reprint
+name|loop
 label|:
+if|if
+condition|(
+operator|--
 name|lines
-operator|=
-literal|20
-expr_stmt|;
-comment|/* s1 = z; */
+operator|==
+literal|0
+condition|)
 name|printhdr
 argument_list|()
 expr_stmt|;
-name|loop
-label|:
 name|lseek
 argument_list|(
 name|mf
@@ -1994,15 +1999,11 @@ name|nintv
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
 operator|--
 name|iter
-expr_stmt|;
-if|if
-condition|(
-name|iter
-condition|)
-if|if
-condition|(
+operator|&&
 name|argc
 operator|>
 literal|0
@@ -2019,16 +2020,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|--
-name|lines
-operator|<=
-literal|0
-condition|)
-goto|goto
-name|reprint
-goto|;
 goto|goto
 name|loop
 goto|;
@@ -2182,6 +2173,10 @@ name|printf
 argument_list|(
 literal|" in  sy  cs us sy id\n"
 argument_list|)
+expr_stmt|;
+name|lines
+operator|=
+literal|19
 expr_stmt|;
 block|}
 end_block
