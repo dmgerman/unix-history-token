@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.c	6.2	83/08/28	*/
+comment|/*	if_ether.c	6.3	83/12/15	*/
 end_comment
 
 begin_comment
@@ -635,10 +635,6 @@ operator|=
 sizeof|sizeof
 expr|*
 name|ea
-operator|+
-sizeof|sizeof
-expr|*
-name|eh
 expr_stmt|;
 name|m
 operator|->
