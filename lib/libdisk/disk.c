@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.28 1998/01/16 12:50:36 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.29 1998/03/05 03:08:16 obrien Exp $  *  */
 end_comment
 
 begin_include
@@ -691,6 +691,9 @@ literal|0x6
 case|:
 case|case
 literal|0x4
+case|:
+case|case
+literal|0xb
 case|:
 name|ce
 operator|=
@@ -1986,6 +1989,12 @@ literal|10
 case|:
 return|return
 literal|"OS/2 bootmgr"
+return|;
+case|case
+literal|11
+case|:
+return|return
+literal|"fat (32-bit)"
 return|;
 case|case
 literal|84
