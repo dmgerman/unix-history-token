@@ -266,7 +266,7 @@ name|bpt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Allocate bytes (1024 - malloc space) for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special * case the first stat, it's ".", not "..". 	 */
+comment|/* 	 * Allocate bytes (1024 - malloc space) for the string of "../"'s. 	 * Should always be enough (it's 340 levels).  If it's not, allocate 	 * as necessary.  Special case the first stat, it's ".", not "..". 	 */
 if|if
 condition|(
 operator|(
@@ -826,6 +826,10 @@ expr_stmt|;
 comment|/* FALLTHROUGH */
 name|err
 label|:
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|ptsize
@@ -851,6 +855,10 @@ name|free
 argument_list|(
 name|up
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 return|return
 operator|(
