@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wait.c	5.2 (Berkeley) %G%"
+literal|"@(#)wait.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,22 +61,17 @@ directive|include
 file|<sys/resource.h>
 end_include
 
-begin_macro
+begin_function
+name|pid_t
 name|wait
-argument_list|(
-argument|pstat
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pstat
+parameter_list|)
 name|union
 name|wait
 modifier|*
 name|pstat
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -98,7 +93,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
