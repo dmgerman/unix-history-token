@@ -5588,6 +5588,8 @@ name|dev
 argument_list|)
 decl_stmt|,
 name|val
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|disk
