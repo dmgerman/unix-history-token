@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id$  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.3 1995/11/05 04:42:49 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -208,17 +208,11 @@ block|{
 name|int
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|slot
 decl_stmt|;
 name|char
 modifier|*
 name|id_string
-decl_stmt|;
-name|unsigned
-name|int
-name|checkthese
 decl_stmt|;
 name|struct
 name|eisa_device_node
@@ -256,6 +250,11 @@ name|eisaBase
 init|=
 literal|0xC80
 decl_stmt|;
+name|int
+name|first_slot
+init|=
+literal|0
+decl_stmt|;
 name|eisa_id_t
 name|eisa_id
 decl_stmt|;
@@ -280,14 +279,95 @@ operator|&
 literal|0x80
 condition|)
 block|{
-comment|/* Not an EISA machine */
+comment|/*  	 * Not an EISA machine.  We still want to find boards like the 	 * Adaptec 284x that respond to EISA probes, so we "fake" the 	 * system board entry which the rest of the code uses as the  	 * sentinal node in the eisa_dev_list. 	 */
+name|first_slot
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Start at slot 1 just to be safe */
+name|eisaBase
+operator|+=
+literal|0x1000
+expr_stmt|;
+name|dev_node
+operator|=
+operator|(
+expr|struct
+name|eisa_device_node
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dev_node
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dev_node
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"eisa0: cannot malloc eisa_device_node"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
+name|bzero
+argument_list|(
+name|dev_node
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dev_node
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|e_dev
+operator|=
+operator|&
+operator|(
+name|dev_node
+operator|->
+name|dev
+operator|)
+expr_stmt|;
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|slot
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|eisa_dev_list_tail
+operator|=
+name|dev_node
+expr_stmt|;
+name|eisa_dev_list_tail
+operator|=
+operator|&
+name|dev_node
+operator|->
+name|next
+expr_stmt|;
 block|}
 for|for
 control|(
 name|slot
 operator|=
-literal|0
+name|first_slot
 init|;
 name|slot
 operator|<
@@ -471,7 +551,7 @@ name|e_dev
 operator|->
 name|full_name
 argument_list|,
-literal|"%c%c%c%lx rev %lx"
+literal|"%c%c%c%x rev %x"
 argument_list|,
 name|EISA_MFCTR_CHAR0
 argument_list|(
@@ -597,6 +677,14 @@ name|unit
 operator|)
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|e_dev
+operator|->
+name|full_name
+condition|)
+block|{
+comment|/* This is a real EISA system */
 name|id_string
 operator|=
 name|e_dev
@@ -666,7 +754,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d:<%s>\n"
+literal|"%s%ld:<%s>\n"
 argument_list|,
 name|e_dev
 operator|->
@@ -690,19 +778,34 @@ operator|&
 name|kdc_eisa0
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Hmm. Do I need to do this attach always 				 * in case I attach a 284x in an otherwise 				 * non-EISA machine? 				 */
 name|printf
 argument_list|(
 literal|"Probing for devices on the EISA bus\n"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|eisa_dev_list
+operator|->
+name|next
+condition|)
+block|{
+comment|/* 	 * No devices. 	 * We may be able to remove the sentinal node in the non-EISA 	 * system case here depending on whether we had to do the 	 * dev_attach(&kdc_eisa0) up above. 	 */
+return|return;
+block|}
 comment|/*      * See what devices we recognize.      */
 while|while
 condition|(
+operator|(
 name|e_drv
 operator|=
 operator|*
 name|e_drvp
 operator|++
+operator|)
 condition|)
 block|{
 call|(
@@ -796,7 +899,7 @@ block|{
 comment|/* Announce unattached device */
 name|printf
 argument_list|(
-literal|"%s%d:%d<%s> unknown device\n"
+literal|"%s%ld:%d<%s> unknown device\n"
 argument_list|,
 name|eisa_dev_list
 operator|->
@@ -870,6 +973,7 @@ if|if
 condition|(
 name|e_dev
 condition|)
+block|{
 comment|/* Start our search from the last successful match */
 name|e_node
 operator|=
@@ -880,7 +984,8 @@ operator|*
 operator|)
 name|e_dev
 expr_stmt|;
-comment|/* 	 * The first node in the list is the motherboard, so don't bother 	 * to look at it. 	 */
+block|}
+comment|/*      * The first node in the list is the motherboard, so don't bother      * to look at it.      */
 while|while
 condition|(
 name|e_node
@@ -908,8 +1013,10 @@ name|dev
 operator|.
 name|driver
 condition|)
+block|{
 comment|/* Already claimed */
 continue|continue;
+block|}
 name|result
 operator|=
 call|(
@@ -985,7 +1092,7 @@ block|{
 comment|/*      * Announce the device.      */
 name|printf
 argument_list|(
-literal|"%s%d:<%s>"
+literal|"%s%ld:<%s>"
 argument_list|,
 name|e_dev
 operator|->
@@ -1023,7 +1130,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|" on %s%d slot %d\n"
+literal|" on %s%ld slot %d\n"
 argument_list|,
 name|eisa_dev_list
 operator|->
@@ -1333,7 +1440,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: Attempted to release an interrupt (%d) it doesn't own\n"
+literal|"%s%ld: Attempted to release an interrupt (%d) it doesn't own\n"
 argument_list|,
 name|e_dev
 operator|->
@@ -1449,7 +1556,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: Attempted to enable an interrupt (%d) it doesn't own\n"
+literal|"%s%ld: Attempted to enable an interrupt (%d) it doesn't own\n"
 argument_list|,
 name|e_dev
 operator|->
@@ -1760,9 +1867,6 @@ modifier|*
 name|maxlen
 parameter_list|)
 block|{
-name|int
-name|rv
-decl_stmt|;
 if|if
 condition|(
 operator|*
