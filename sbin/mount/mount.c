@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.23 1998/03/08 09:56:02 julian Exp $"
+literal|"$Id: mount.c,v 1.24 1998/03/27 10:52:13 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +414,12 @@ block|{
 name|MNT_NOSUID
 block|,
 literal|"nosuid"
+block|}
+block|,
+block|{
+name|MNT_NOSYMFOLLOW
+block|,
+literal|"nosymfollow"
 block|}
 block|,
 block|{
@@ -3194,6 +3200,19 @@ condition|)
 name|printf
 argument_list|(
 literal|",noclusterw"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ent
+operator|->
+name|f_flags
+operator|&
+name|MNT_NOSYMFOLLOW
+condition|)
+name|printf
+argument_list|(
+literal|",nosymfollow"
 argument_list|)
 expr_stmt|;
 if|if
