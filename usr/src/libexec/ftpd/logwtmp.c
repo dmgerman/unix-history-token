@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logwtmp.c	5.1 (Berkeley) %G%"
+literal|"@(#)logwtmp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,13 @@ name|WTMPFILE
 value|"/usr/adm/wtmp"
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fd
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|logwtmp
 argument_list|(
@@ -99,9 +106,6 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 name|time_t
 name|time
 parameter_list|()
@@ -113,6 +117,9 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+operator|!
+name|fd
+operator|&&
 operator|(
 name|fd
 operator|=
@@ -250,14 +257,6 @@ name|st_size
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
