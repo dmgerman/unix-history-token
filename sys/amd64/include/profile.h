@@ -283,7 +283,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|u_long
 name|fptrdiff_t
 typedef|;
 end_typedef
