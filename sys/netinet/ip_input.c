@@ -491,22 +491,22 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ip_nfragpackets
+name|nipq
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* total # of reass queues */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
-name|ip_maxfragpackets
+name|maxnipq
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* initialized in ip_init() */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -520,7 +520,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|ip_maxfragpackets
+name|maxnipq
 argument_list|,
 literal|0
 argument_list|,
@@ -801,26 +801,6 @@ name|ipq
 index|[
 name|IPREASS_NHASH
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nipq
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total # of reass queues */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|maxnipq
 decl_stmt|;
 end_decl_stmt
 
@@ -1315,12 +1295,6 @@ name|i
 index|]
 expr_stmt|;
 name|maxnipq
-operator|=
-name|nmbclusters
-operator|/
-literal|4
-expr_stmt|;
-name|ip_maxfragpackets
 operator|=
 name|nmbclusters
 operator|/
@@ -3043,6 +3017,28 @@ name|IP_OFFMASK
 operator|)
 condition|)
 block|{
+comment|/* If maxnipq is 0, never accept fragments. */
+if|if
+condition|(
+name|maxnipq
+operator|==
+literal|0
+condition|)
+block|{
+name|ipstat
+operator|.
+name|ips_fragments
+operator|++
+expr_stmt|;
+name|ipstat
+operator|.
+name|ips_fragdropped
+operator|++
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|sum
 operator|=
 name|IPREASS_HASH
@@ -3133,12 +3129,20 @@ name|fp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* check if there's a place for the new queue */
+comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxnipq is -1, accept all fragments without limitation. 		 */
 if|if
 condition|(
+operator|(
 name|nipq
 operator|>
 name|maxnipq
+operator|)
+operator|&&
+operator|(
+name|maxnipq
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 		     * drop something from the tail of the current queue 		     * before proceeding further 		     */
@@ -3199,11 +3203,17 @@ operator|.
 name|prev
 argument_list|)
 expr_stmt|;
+name|ipstat
+operator|.
+name|ips_fragtimeout
+operator|++
+expr_stmt|;
 break|break;
 block|}
 block|}
 block|}
 else|else
+block|{
 name|ip_freef
 argument_list|(
 name|ipq
@@ -3214,6 +3224,12 @@ operator|.
 name|prev
 argument_list|)
 expr_stmt|;
+name|ipstat
+operator|.
+name|ips_fragtimeout
+operator|++
+expr_stmt|;
+block|}
 block|}
 name|found
 label|:
@@ -4075,27 +4091,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxfrag is 0, never accept fragments. 		 * If maxfrag is -1, accept all fragments without limitation. 		 */
-if|if
-condition|(
-operator|(
-name|ip_maxfragpackets
-operator|>=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|ip_nfragpackets
-operator|>=
-name|ip_maxfragpackets
-operator|)
-condition|)
-goto|goto
-name|dropfrag
-goto|;
-name|ip_nfragpackets
-operator|++
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4785,9 +4780,6 @@ name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ip_nfragpackets
-operator|--
-expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -4973,9 +4965,6 @@ name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ip_nfragpackets
-operator|--
-expr_stmt|;
 name|nipq
 operator|--
 expr_stmt|;
@@ -5085,6 +5074,17 @@ block|}
 block|}
 block|}
 comment|/* 	 * If we are over the maximum number of fragments 	 * (due to the limit being lowered), drain off 	 * enough to get down to the new limit. 	 */
+if|if
+condition|(
+name|maxnipq
+operator|>
+literal|0
+operator|&&
+name|nipq
+operator|>
+name|maxnipq
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -5099,20 +5099,11 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|ip_maxfragpackets
-operator|>=
-literal|0
-condition|)
-block|{
 while|while
 condition|(
-operator|(
-name|ip_nfragpackets
+name|nipq
 operator|>
-name|ip_maxfragpackets
-operator|)
+name|maxnipq
 operator|&&
 operator|(
 name|ipq
