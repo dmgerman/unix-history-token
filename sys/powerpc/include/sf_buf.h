@@ -18,39 +18,30 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<vm/vm.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
+end_include
+
+begin_comment
+comment|/*  * On this machine, the only purpose for which sf_buf is used is to implement  * an opaque pointer required by the machine-independent parts of the kernel.  * That pointer references the vm_page that is "mapped" by the sf_buf.  The  * actual mapping is provided by the direct virtual-to-physical mapping.    */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|vm_page
+name|sf_buf
 struct_decl|;
 end_struct_decl
-
-begin_struct
-struct|struct
-name|sf_buf
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|sf_buf
-argument_list|)
-name|free_list
-expr_stmt|;
-comment|/* list of free buffer slots */
-name|struct
-name|vm_page
-modifier|*
-name|m
-decl_stmt|;
-comment|/* currently mapped page */
-name|vm_offset_t
-name|kva
-decl_stmt|;
-comment|/* va of mapping */
-block|}
-struct|;
-end_struct
 
 begin_function
 specifier|static
@@ -66,34 +57,40 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+operator|(
+name|vm_page_t
+operator|)
 name|sf
-operator|->
-name|kva
+argument_list|)
 operator|)
 return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
 name|__inline
-expr|struct
-name|vm_page
-operator|*
+name|vm_page_t
 name|sf_buf_page
-argument_list|(
-argument|struct sf_buf *sf
-argument_list|)
+parameter_list|(
+name|struct
+name|sf_buf
+modifier|*
+name|sf
+parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
+name|vm_page_t
+operator|)
 name|sf
-operator|->
-name|m
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_endif
 endif|#
