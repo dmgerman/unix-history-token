@@ -1834,6 +1834,12 @@ operator|->
 name|matchjump
 operator|==
 name|NULL
+operator|&&
+name|g
+operator|->
+name|charjump
+operator|!=
+name|NULL
 condition|)
 block|{
 name|free
