@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.2 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -669,6 +669,48 @@ name|fs_minfree
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+literal|10
+operator|&&
+name|sblock
+operator|.
+name|fs_optim
+operator|==
+name|FS_OPTSPACE
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"should optimize %s"
+argument_list|,
+literal|"for time with minfree>= 10%\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|10
+operator|&&
+name|sblock
+operator|.
+name|fs_optim
+operator|==
+name|FS_OPTTIME
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"should optimize %s"
+argument_list|,
+literal|"for space with minfree< 10%\n"
+argument_list|)
+expr_stmt|;
 continue|continue;
 case|case
 literal|'o'
@@ -811,6 +853,48 @@ operator|.
 name|fs_optim
 operator|=
 name|i
+expr_stmt|;
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_minfree
+operator|>=
+literal|10
+operator|&&
+name|i
+operator|==
+name|FS_OPTSPACE
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"should optimize %s"
+argument_list|,
+literal|"for time with minfree>= 10%\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_minfree
+operator|<
+literal|10
+operator|&&
+name|i
+operator|==
+name|FS_OPTTIME
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"should optimize %s"
+argument_list|,
+literal|"for space with minfree< 10%\n"
+argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
