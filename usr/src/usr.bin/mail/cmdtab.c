@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	1.5 %G%"
+literal|"@(#)cmdtab.c	1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,8 @@ literal|"mail"
 block|,
 name|sendmail
 block|,
+name|R
+operator||
 name|M
 operator||
 name|I
@@ -564,6 +566,8 @@ literal|"Reply"
 block|,
 name|Respond
 block|,
+name|R
+operator||
 name|I
 operator||
 name|MSGLIST
@@ -576,6 +580,8 @@ literal|"Respond"
 block|,
 name|Respond
 block|,
+name|R
+operator||
 name|I
 operator||
 name|MSGLIST
@@ -588,6 +594,8 @@ literal|"reply"
 block|,
 name|respond
 block|,
+name|R
+operator||
 name|I
 operator||
 name|MSGLIST
@@ -600,6 +608,8 @@ literal|"respond"
 block|,
 name|respond
 block|,
+name|R
+operator||
 name|I
 operator||
 name|MSGLIST
