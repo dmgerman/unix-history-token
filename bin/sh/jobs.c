@@ -1129,6 +1129,11 @@ operator|==
 name|JOBDONE
 condition|)
 return|return;
+name|setcurjob
+argument_list|(
+name|jp
+argument_list|)
+expr_stmt|;
 name|INTOFF
 expr_stmt|;
 name|killpg
