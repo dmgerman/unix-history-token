@@ -3400,6 +3400,14 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
+literal|"outqlen: %d\n"
+argument_list|,
+name|ModemQlen
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"DialScript  = %s\n"
 argument_list|,
 name|VarDialScript
