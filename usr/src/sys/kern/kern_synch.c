@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.5	%G%	*/
+comment|/*	kern_synch.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -273,27 +273,6 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|runin
-operator|!=
-literal|0
-condition|)
-block|{
-name|runin
-operator|=
-literal|0
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|runin
-argument_list|)
-expr_stmt|;
-block|}
 name|swtch
 argument_list|()
 expr_stmt|;
@@ -1177,9 +1156,14 @@ name|p
 operator|<
 name|curpri
 condition|)
+block|{
 name|runrun
 operator|++
 expr_stmt|;
+name|aston
+argument_list|()
+expr_stmt|;
+block|}
 name|pp
 operator|->
 name|p_usrpri
