@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)yy.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)yy.h 1.2 %G%"; */
 end_comment
 
 begin_include
@@ -35,12 +35,43 @@ begin_comment
 comment|/*  * Line and token buffers.  Charbuf is the character buffer for  * input lines, token the buffer for tokens returned  * by the scanner.  CBSIZE defines the maximum line  * length allowed on input and is doubtless too small.  * The token buffer should be a local array in yylex.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR16
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|CBSIZE
 value|161
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|ADDR16
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CBSIZE
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|ADDR32
+end_endif
 
 begin_decl_stmt
 name|char
