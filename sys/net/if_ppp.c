@@ -143,6 +143,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_clone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -515,26 +521,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|if_clone
-name|ppp_cloner
-init|=
-name|IF_CLONE_INITIALIZER
+begin_expr_stmt
+name|IFC_SIMPLE_DECLARE
 argument_list|(
-name|PPPNAME
-argument_list|,
-name|ppp_clone_create
-argument_list|,
-name|ppp_clone_destroy
+name|ppp
 argument_list|,
 literal|0
-argument_list|,
-name|IF_MAXUNIT
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Some useful mbuf macros not in mbuf.h.  */

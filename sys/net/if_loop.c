@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_clone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -459,25 +465,15 @@ name|lo_list
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|if_clone
-name|lo_cloner
-init|=
-name|IF_CLONE_INITIALIZER
+begin_expr_stmt
+name|IFC_SIMPLE_DECLARE
 argument_list|(
-name|LONAME
-argument_list|,
-name|lo_clone_create
-argument_list|,
-name|lo_clone_destroy
+name|lo
 argument_list|,
 literal|1
-argument_list|,
-name|IF_MAXUNIT
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static

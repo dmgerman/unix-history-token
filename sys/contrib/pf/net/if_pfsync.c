@@ -203,6 +203,26 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_clone.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -719,25 +739,15 @@ name|pfsync_list
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|if_clone
-name|pfsync_cloner
-init|=
-name|IF_CLONE_INITIALIZER
+begin_expr_stmt
+name|IFC_SIMPLE_DECLARE
 argument_list|(
-name|PFSYNCNAME
-argument_list|,
-name|pfsync_clone_create
-argument_list|,
-name|pfsync_clone_destroy
+name|pfsync
 argument_list|,
 literal|1
-argument_list|,
-name|IF_MAXUNIT
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
