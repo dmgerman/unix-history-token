@@ -1496,22 +1496,6 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"node %d is myself."
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
 else|else
 name|buf
 operator|.
@@ -1546,6 +1530,13 @@ operator|.
 name|ptr
 operator|=
 name|crom_buf
+expr_stmt|;
+name|bzero
+argument_list|(
+name|crom_buf
+argument_list|,
+name|len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
