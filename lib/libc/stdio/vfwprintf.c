@@ -3695,9 +3695,17 @@ name|convbuf
 operator|==
 name|NULL
 condition|)
+block|{
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 name|cp
 operator|=
 name|convbuf

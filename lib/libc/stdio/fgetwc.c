@@ -346,6 +346,12 @@ name|errno
 operator|=
 name|EILSEQ
 expr_stmt|;
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 return|return
 operator|(
 name|WEOF
