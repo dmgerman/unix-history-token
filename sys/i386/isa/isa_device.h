@@ -209,24 +209,6 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|haveseen_iobase
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|dvp
-operator|,
-name|int
-name|iosize
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|isa_compat_nextid
 name|__P
 argument_list|(
