@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -620,6 +620,35 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_id
+operator|==
+literal|0
+condition|)
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|htons
+argument_list|(
+name|ip_id
+operator|++
+argument_list|)
+expr_stmt|;
 name|opts
 operator|=
 name|NULL
