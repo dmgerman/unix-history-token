@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.23 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.24 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.23 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.24 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,7 +507,11 @@ name|p
 operator|=
 name|strchr
 argument_list|(
+operator|&
 name|SmtpReplyBuffer
+index|[
+literal|4
+index|]
 argument_list|,
 literal|' '
 argument_list|)
@@ -527,7 +531,11 @@ if|if
 condition|(
 name|strcasecmp
 argument_list|(
+operator|&
 name|SmtpReplyBuffer
+index|[
+literal|4
+index|]
 argument_list|,
 name|MyHostName
 argument_list|)
