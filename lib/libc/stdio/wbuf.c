@@ -53,28 +53,23 @@ begin_comment
 comment|/*  * Write the given character into the (probably full) buffer for  * the given file.  Flush the buffer out if it is or becomes full,  * or if c=='\n' and the file is line buffered.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__swbuf
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|fp
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -204,7 +199,7 @@ name|c
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

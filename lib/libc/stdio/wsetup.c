@@ -59,19 +59,17 @@ begin_comment
 comment|/*  * Various output routines call wsetup to be sure it is safe to write,  * because either _flags does not include __SWR, or _buf is NULL.  * _wsetup returns 0 if OK to write, nonzero otherwise.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__swsetup
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 comment|/* make sure stdio is set up */
 if|if
@@ -239,7 +237,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

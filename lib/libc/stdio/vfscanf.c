@@ -338,37 +338,29 @@ begin_comment
 comment|/*  * vfscanf  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__svfscanf
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|,
+parameter_list|,
 name|fmt0
-argument_list|,
+parameter_list|,
 name|ap
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 specifier|const
 modifier|*
 name|fmt0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|va_list
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_char
@@ -2693,7 +2685,7 @@ name|nassigned
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Fill in the given table from the scanset at the given format  * (just after `[').  Return a pointer to the character past the  * closing `]'.  The table has a 1 wherever characters should be  * considered part of the scanset.  */

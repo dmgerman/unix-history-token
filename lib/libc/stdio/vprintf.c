@@ -43,30 +43,22 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|vprintf
-argument_list|(
-argument|fmt
-argument_list|,
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fmt
+parameter_list|,
+name|ap
+parameter_list|)
 name|char
 specifier|const
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|_BSD_VA_LIST_
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -81,7 +73,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
