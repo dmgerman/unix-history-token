@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fopen.c	5.4 (Berkeley) %G%"
+literal|"@(#)fopen.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -210,6 +216,32 @@ operator|->
 name|_close
 operator|=
 name|__sclose
+expr_stmt|;
+comment|/* 	 * When opening in append mode, even though we use O_APPEND, 	 * we need to seek to the end so that ftell() gets the right 	 * answer.  If the user then alters the seek pointer, or 	 * the file extends, this will fail, but there is not much 	 * we can do about this.  (We could set __SAPP and check in 	 * fseek and ftell.) 	 */
+if|if
+condition|(
+name|oflags
+operator|&
+name|O_APPEND
+condition|)
+operator|(
+name|void
+operator|)
+name|__sseek
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|fp
+argument_list|,
+operator|(
+name|fpos_t
+operator|)
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
