@@ -27,14 +27,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|double
-name|__log__L
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|Double
