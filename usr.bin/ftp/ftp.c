@@ -6653,35 +6653,31 @@ block|}
 end_block
 
 begin_comment
-unit|}
 comment|/* void tvadd(tsum, t0) 	struct timeval *tsum, *t0; {  	tsum->tv_sec += t0->tv_sec; 	tsum->tv_usec += t0->tv_usec; 	if (tsum->tv_usec> 1000000) 		tsum->tv_sec++, tsum->tv_usec -= 1000000; } */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|tvsub
-argument_list|(
-argument|tdiff
-argument_list|,
-argument|t1
-argument_list|,
-argument|t0
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tdiff
+parameter_list|,
+name|t1
+parameter_list|,
+name|t0
+parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|tdiff
 decl_stmt|,
-modifier|*
+decl|*
 name|t1
 decl_stmt|,
 modifier|*
 name|t0
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
