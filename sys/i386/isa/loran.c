@@ -1255,13 +1255,6 @@ operator|&
 name|loran_cdevsw
 argument_list|)
 expr_stmt|;
-comment|/* We need to be a "fast-intr" */
-name|dvp
-operator|->
-name|id_ri_flags
-operator||=
-name|RI_FAST
-expr_stmt|;
 name|dvp
 operator|->
 name|id_iobase
@@ -1450,12 +1443,7 @@ operator|=
 name|loranintr
 expr_stmt|;
 comment|/* We need to be a "fast-intr" */
-name|isdp
-operator|->
-name|id_ri_flags
-operator||=
-name|RI_FAST
-expr_stmt|;
+comment|/* isdp->id_ri_flags |= RI_FAST; XXX unimplemented - use newbus! */
 name|printf
 argument_list|(
 literal|"loran0: LORAN-C Receiver\n"

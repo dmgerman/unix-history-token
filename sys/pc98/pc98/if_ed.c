@@ -16418,16 +16418,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|dev
-operator|->
-name|id_alive
-operator|=
 name|ed_probe
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)

@@ -2275,12 +2275,7 @@ name|id_ointr
 operator|=
 name|siointr
 expr_stmt|;
-name|isdp
-operator|->
-name|id_ri_flags
-operator||=
-name|RI_FAST
-expr_stmt|;
+comment|/* isdp->id_ri_flags |= RI_FAST; XXX unimplemented - use newbus! */
 return|return
 operator|(
 literal|1

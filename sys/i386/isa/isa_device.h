@@ -119,19 +119,6 @@ name|id_flags
 decl_stmt|;
 comment|/* flags */
 name|int
-name|id_alive
-decl_stmt|;
-comment|/* device is present */
-define|#
-directive|define
-name|RI_FAST
-value|1
-comment|/* fast interrupt handler */
-name|u_int
-name|id_ri_flags
-decl_stmt|;
-comment|/* flags for register_intr() */
-name|int
 name|id_enabled
 decl_stmt|;
 comment|/* is device enabled */
