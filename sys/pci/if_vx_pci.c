@@ -229,6 +229,10 @@ condition|)
 return|return
 literal|"3COM 3C595 Fast Etherlink III PCI"
 return|;
+comment|/* 	 * The (Fast) Etherlink XL adapters are now supported by 	 * the xl driver, which uses bus master DMA and is much 	 * faster. (And which also supports the 3c905B.) 	 */
+ifdef|#
+directive|ifdef
+name|VORTEX_ETHERLINK_XL
 if|if
 condition|(
 name|device_id
@@ -255,6 +259,8 @@ condition|)
 return|return
 literal|"3COM 3C905 Fast Etherlink XL PCI"
 return|;
+endif|#
+directive|endif
 return|return
 name|NULL
 return|;
