@@ -724,7 +724,7 @@ begin_define
 define|#
 directive|define
 name|AF_LOCAL
-value|1
+value|AF_UNIX
 end_define
 
 begin_comment
@@ -740,11 +740,11 @@ begin_define
 define|#
 directive|define
 name|AF_UNIX
-value|AF_LOCAL
+value|1
 end_define
 
 begin_comment
-comment|/* backward compatibility */
+comment|/* standardized name for AF_LOCAL */
 end_comment
 
 begin_define
