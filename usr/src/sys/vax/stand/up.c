@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.8	83/02/18	*/
+comment|/*	up.c	4.9	83/02/27	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UPECCDEBUG
+end_define
 
 begin_comment
 comment|/*  * UNIBUS peripheral standalone driver  * with ECC correction and bad block forwarding.  * Also supports header operation and write  * check for data and/or header.  */
@@ -595,6 +601,8 @@ decl_stmt|,
 name|tn
 decl_stmt|,
 name|sn
+decl_stmt|,
+name|o
 decl_stmt|;
 specifier|register
 name|unit
@@ -648,6 +656,11 @@ index|[
 name|unit
 index|]
 index|]
+decl_stmt|;
+name|int
+name|doprintf
+init|=
+literal|0
 decl_stmt|;
 name|sectsiz
 operator|=
@@ -751,12 +764,6 @@ argument_list|(
 name|short
 argument_list|)
 expr_stmt|;
-name|upaddr
-operator|->
-name|upba
-operator|=
-name|info
-expr_stmt|;
 name|recal
 operator|=
 literal|0
@@ -769,17 +776,40 @@ literal|0
 expr_stmt|;
 name|restart
 label|:
-name|bn
-operator|=
-name|io
+define|#
+directive|define
+name|rounddown
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x) / (y)) * (y))
+name|upaddr
 operator|->
-name|i_bn
-operator|+
-operator|(
+name|upwc
+operator|=
+name|rounddown
+argument_list|(
+name|upaddr
+operator|->
+name|upwc
+argument_list|,
+name|sectsiz
+operator|/
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|o
+operator|=
 name|io
 operator|->
 name|i_cc
 operator|+
+operator|(
 name|upaddr
 operator|->
 name|upwc
@@ -789,8 +819,45 @@ argument_list|(
 name|short
 argument_list|)
 operator|)
+expr_stmt|;
+name|upaddr
+operator|->
+name|upba
+operator|=
+name|info
+operator|+
+name|o
+expr_stmt|;
+name|bn
+operator|=
+name|io
+operator|->
+name|i_bn
+operator|+
+name|o
 operator|/
 name|sectsiz
+expr_stmt|;
+if|if
+condition|(
+name|doprintf
+condition|)
+name|printf
+argument_list|(
+literal|"upwc %d o %d i_bn %d bn %d\n"
+argument_list|,
+name|upaddr
+operator|->
+name|upwc
+argument_list|,
+name|o
+argument_list|,
+name|io
+operator|->
+name|i_bn
+argument_list|,
+name|bn
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1004,7 +1071,39 @@ operator|>
 literal|27
 condition|)
 block|{
-comment|/* 		 * After 28 retries (16 without offset, and 		 * 12 with offset positioning) give up. 		 */
+comment|/* 		 * After 28 retries (16 without offset, and 		 * 12 with offset positioning) give up. 		 * But first, if the error is a header CRC, 		 * check if a replacement sector exists in 		 * the bad sector table. 		 */
+if|if
+condition|(
+operator|(
+name|upaddr
+operator|->
+name|uper1
+operator|&
+name|UPER1_HCRC
+operator|)
+operator|&&
+operator|(
+name|io
+operator|->
+name|i_flgs
+operator|&
+name|F_NBSF
+operator|)
+operator|==
+literal|0
+operator|&&
+name|upecc
+argument_list|(
+name|io
+argument_list|,
+name|BSE
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|success
+goto|;
 name|io
 operator|->
 name|i_error
@@ -1432,9 +1531,14 @@ name|upwc
 operator|!=
 literal|0
 condition|)
+block|{
+name|doprintf
+operator|++
+expr_stmt|;
 goto|goto
 name|restart
 goto|;
+block|}
 comment|/* 	 * Release unibus  	 */
 name|ubafree
 argument_list|(
@@ -1571,7 +1675,7 @@ name|npf
 argument_list|,
 name|up
 operator|->
-name|ec2
+name|upec2
 argument_list|,
 name|up
 operator|->
@@ -1647,7 +1751,7 @@ block|{
 name|int
 name|bit
 decl_stmt|,
-name|byte
+name|o
 decl_stmt|,
 name|ecccnt
 decl_stmt|;
@@ -1672,7 +1776,10 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Compute the byte and bit position 		 * of the error.  i is the byte offset 		 * in the transfer at which the correction 		 * is first applied. 		 */
+comment|/* 		 * Compute the byte and bit position of 		 * the error.  o is the byte offset in 		 * the transfer at which the correction 		 * applied. 		 */
+name|npf
+operator|--
+expr_stmt|;
 name|i
 operator|=
 name|up
@@ -1688,7 +1795,7 @@ name|i
 operator|&
 literal|07
 expr_stmt|;
-name|i
+name|o
 operator|=
 operator|(
 name|i
@@ -1698,10 +1805,6 @@ literal|07
 operator|)
 operator|>>
 literal|3
-expr_stmt|;
-name|byte
-operator|=
-name|i
 expr_stmt|;
 name|up
 operator|->
@@ -1716,7 +1819,7 @@ expr_stmt|;
 comment|/* 		 * Correct while possible bits remain of mask. 		 * Since mask contains 11 bits, we continue while 		 * the bit offset is> -11.  Also watch out for 		 * end of this block and the end of the transfer. 		 */
 while|while
 condition|(
-name|i
+name|o
 operator|<
 name|sectsiz
 operator|&&
@@ -1726,7 +1829,7 @@ operator|*
 name|sectsiz
 operator|)
 operator|+
-name|i
+name|o
 operator|<
 name|io
 operator|->
@@ -1738,7 +1841,7 @@ operator|-
 literal|11
 condition|)
 block|{
-comment|/* 			 * addr = 			 *  vax base addr + 			 *  (# sectors transferred before the error) * 			 *    (sector size) + 			 *  byte number 			 */
+comment|/* 			 * addr = 			 *  (base address of transfer) + 			 *  (# sectors transferred before the error) * 			 *    (sector size) + 			 *  (byte offset to incorrect data) 			 */
 name|addr
 operator|=
 name|io
@@ -1751,7 +1854,7 @@ operator|*
 name|sectsiz
 operator|)
 operator|+
-name|byte
+name|o
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1772,6 +1875,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 			 * No data transfer occurs with a write check, 			 * so don't correct the resident copy of data. 			 */
 if|if
 condition|(
 operator|(
@@ -1814,12 +1918,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|byte
+name|o
 operator|++
 operator|,
-name|i
-operator|++
-expr_stmt|;
 name|bit
 operator|-=
 literal|8
