@@ -84,18 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timetc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/timepps.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -632,9 +620,6 @@ name|statclock
 argument_list|(
 name|frame
 argument_list|)
-expr_stmt|;
-name|tc_windup
-argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
