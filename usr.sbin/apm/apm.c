@@ -2264,6 +2264,10 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+name|all_info
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'h'
@@ -2274,6 +2278,10 @@ name|is_true
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+name|all_info
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
