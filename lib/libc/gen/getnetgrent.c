@@ -71,16 +71,6 @@ begin_comment
 comment|/*  * Notes:  * We want to be able to use NIS netgroups properly while retaining  * the ability to use a local /etc/netgroup file. Unfortunately, you  * can't really do both at the same time - at least, not efficiently.  * NetBSD deals with this problem by creating a netgroup database  * using Berkeley DB (just like the password database) that allows  * for lookups using netgroup, netgroup.byuser or netgroup.byhost  * searches. This is a neat idea, but I don't have time to implement  * something like that now. (I think ultimately it would be nice  * if we DB-fied the group and netgroup stuff all in one shot, but  * for now I'm satisfied just to have something that works well  * without requiring massive code changes.)  *   * Therefore, to still permit the use of the local file and maintain  * optimum NIS performance, we allow for the following conditions:  *  * - If /etc/netgroup does not exist and NIS is turned on, we use  *   NIS netgroups only.  *  * - If /etc/netgroup exists but is empty, we use NIS netgroups  *   only.  *  * - If /etc/netgroup exists and contains _only_ a '+', we use  *   NIS netgroups only.  *  * - If /etc/netgroup exists, contains locally defined netgroups  *   and a '+', we use a mixture of NIS and the local entries.  *   This method should return the same NIS data as just using  *   NIS alone, but it will be slower if the NIS netgroup database  *   is large (innetgr() in particular will suffer since extra  *   processing has to be done in order to determine memberships  *   using just the raw netgroup data).  *  * - If /etc/netgroup exists and contains only locally defined  *   netgroup entries, we use just those local entries and ignore  *   NIS (this is the original, pre-NIS behavior).  */
 end_comment
 
-begin_comment
-comment|/*  * NIS+ servers in YP emulation mode suport only the netgroup map  * (they have no netgroup.byhost and netgroup.byuser 'reverse' maps)  * so we need this for compatibility.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHARITABLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1266,6 +1256,10 @@ name|int
 name|rot
 init|=
 literal|0
+decl_stmt|,
+name|y
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1299,9 +1293,8 @@ name|rot
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
+name|y
+operator|=
 name|yp_match
 argument_list|(
 name|_netgr_yp_domain
@@ -1325,7 +1318,22 @@ argument_list|,
 operator|&
 name|resultlen
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|y
 condition|)
+block|{
+comment|/* 				 * If we get an error other than 'no 				 * such key in map' then something is 				 * wrong and we should stop the search. 				 */
+if|if
+condition|(
+name|y
+operator|!=
+name|YPERR_KEY
+condition|)
+break|break;
+block|}
+else|else
 block|{
 name|rv
 operator|=
@@ -1360,27 +1368,24 @@ operator|)
 return|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|CHARITABLE
-block|}
-comment|/* 	 * Couldn't match using NIS-exclusive mode -- try 	 * standard mode. 	 */
-name|setnetgrent
-argument_list|(
-name|group
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|/* 		 * Couldn't match using NIS-exclusive mode. If the error 	 	 * was YPERR_MAP, then the failure happened because there 	 	 * was no netgroup.byhost or netgroup.byuser map. The odds 		 * are we are talking to an Sun NIS+ server in YP emulation 		 * mode; if this is the case, then we have to do the check 		 * the 'old-fashioned' way by grovelling through the netgroup 		 * map and resolving memberships on the fly. 		 */
+if|if
+condition|(
+name|y
+operator|!=
+name|YPERR_MAP
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* CHARITABLE */
+name|setnetgrent
+argument_list|(
+name|group
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* YP */
@@ -1473,13 +1478,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Parse the netgroup file setting up the linked lists.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|parse_netgrp
@@ -2024,13 +2023,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Read the netgroup file and save lines until the line for the netgroup  * is found. Return 1 if eof is encountered.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|linelist
