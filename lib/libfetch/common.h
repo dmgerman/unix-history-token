@@ -290,6 +290,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Check whether a particular flag is set  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHECK_FLAG
+parameter_list|(
+name|x
+parameter_list|)
+value|(flags&& strchr(flags, (x)))
+end_define
+
 begin_endif
 endif|#
 directive|endif
