@@ -762,6 +762,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_SMC
+block|,
+name|USB_PRODUCT_SMC_2206USB
+block|}
+block|,
+name|PII
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_SOHOWARE
 block|,
 name|USB_PRODUCT_SOHOWARE_NUB100
