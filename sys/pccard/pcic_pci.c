@@ -237,7 +237,7 @@ name|PCI_DEVICE_ID_RICOH_RL5C465
 case|:
 return|return
 operator|(
-literal|"Ricoh RL5C465 PCI-CardBus Brige"
+literal|"Ricoh RL5C465 PCI-CardBus Bridge"
 operator|)
 return|;
 case|case
@@ -245,7 +245,7 @@ name|PCI_DEVICE_ID_RICOH_RL5C475
 case|:
 return|return
 operator|(
-literal|"Ricoh RL5C475 PCI-CardBus Brige"
+literal|"Ricoh RL5C475 PCI-CardBus Bridge"
 operator|)
 return|;
 case|case
@@ -253,7 +253,7 @@ name|PCI_DEVICE_ID_RICOH_RL5C476
 case|:
 return|return
 operator|(
-literal|"Ricoh RL5C476 PCI-CardBus Brige"
+literal|"Ricoh RL5C476 PCI-CardBus Bridge"
 operator|)
 return|;
 case|case
@@ -261,7 +261,7 @@ name|PCI_DEVICE_ID_RICOH_RL5C478
 case|:
 return|return
 operator|(
-literal|"Ricoh RL5C478 PCI-CardBus Brige"
+literal|"Ricoh RL5C478 PCI-CardBus Bridge"
 operator|)
 return|;
 comment|/* 16bit PC-card bridges */
