@@ -2777,7 +2777,27 @@ argument_list|(
 name|link
 argument_list|)
 expr_stmt|;
+comment|/* Special processing for IP encoding protocols */
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|ud
+operator|->
+name|uh_dport
+argument_list|)
+operator|==
+name|CUSEEME_PORT_NUMBER
+condition|)
+name|AliasHandleCUSeeMeIn
+argument_list|(
+name|pip
+argument_list|,
+name|original_address
+argument_list|)
+expr_stmt|;
 comment|/* If NETBIOS Datagram, It should be alias address in UDP Data, too */
+elseif|else
 if|if
 condition|(
 name|ntohs
@@ -2798,7 +2818,6 @@ argument_list|)
 operator|==
 name|NETBIOS_DGM_PORT_NUMBER
 condition|)
-block|{
 name|r
 operator|=
 name|AliasHandleUdpNbt
@@ -2815,7 +2834,6 @@ operator|->
 name|uh_dport
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2837,7 +2855,6 @@ argument_list|)
 operator|==
 name|NETBIOS_NS_PORT_NUMBER
 condition|)
-block|{
 name|r
 operator|=
 name|AliasHandleUdpNbtNS
@@ -2861,27 +2878,8 @@ operator|->
 name|uh_dport
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|ntohs
-argument_list|(
-name|ud
-operator|->
-name|uh_dport
-argument_list|)
-operator|==
-name|CUSEEME_PORT_NUMBER
-condition|)
-name|AliasHandleCUSeeMeIn
-argument_list|(
-name|pip
-argument_list|,
-name|original_address
-argument_list|)
-expr_stmt|;
 comment|/* If UDP checksum is not zero, then adjust since destination port */
-comment|/* is being unaliased and destination port is being altered.       */
+comment|/* is being unaliased and destination address is being altered.    */
 if|if
 condition|(
 name|ud
@@ -3113,6 +3111,7 @@ argument_list|(
 name|link
 argument_list|)
 expr_stmt|;
+comment|/* Special processing for IP encoding protocols */
 if|if
 condition|(
 name|ntohs
@@ -3132,6 +3131,7 @@ name|link
 argument_list|)
 expr_stmt|;
 comment|/* If NETBIOS Datagram, It should be alias address in UDP Data, too */
+elseif|else
 if|if
 condition|(
 name|ntohs
@@ -3152,7 +3152,6 @@ argument_list|)
 operator|==
 name|NETBIOS_DGM_PORT_NUMBER
 condition|)
-block|{
 name|AliasHandleUdpNbt
 argument_list|(
 name|pip
@@ -3165,7 +3164,6 @@ argument_list|,
 name|alias_port
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -3187,7 +3185,6 @@ argument_list|)
 operator|==
 name|NETBIOS_NS_PORT_NUMBER
 condition|)
-block|{
 name|AliasHandleUdpNbtNS
 argument_list|(
 name|pip
@@ -3211,7 +3208,6 @@ operator|&
 name|alias_port
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* If UDP checksum is not zero, adjust since source port is */
 comment|/* being aliased and source address is being altered        */
 if|if
