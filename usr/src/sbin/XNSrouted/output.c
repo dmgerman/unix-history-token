@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.5 (Berkeley) 4/9/84"
+literal|"@(#)output.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,6 +470,34 @@ operator|&
 name|rt
 operator|->
 name|rt_dst
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+operator|(
+name|RTF_HOST
+operator||
+name|RTF_GATEWAY
+operator|)
+operator|)
+operator|==
+name|RTF_HOST
+condition|)
+name|sns
+operator|=
+operator|(
+expr|struct
+name|sockaddr_ns
+operator|*
+operator|)
+operator|&
+name|rt
+operator|->
+name|rt_router
 expr_stmt|;
 name|metric
 operator|=
