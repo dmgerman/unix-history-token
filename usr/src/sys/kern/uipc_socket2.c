@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket2.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket2.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1791,12 +1791,8 @@ name|n
 operator|->
 name|m_nextpkt
 expr_stmt|;
-while|while
-condition|(
-name|n
-operator|->
-name|m_next
-condition|)
+do|do
+block|{
 if|if
 condition|(
 name|n
@@ -1816,13 +1812,22 @@ expr_stmt|;
 comment|/* XXXXXX!!!! */
 return|return;
 block|}
-else|else
+block|}
+do|while
+condition|(
+name|n
+operator|->
+name|m_next
+operator|&&
+operator|(
 name|n
 operator|=
 name|n
 operator|->
 name|m_next
-expr_stmt|;
+operator|)
+condition|)
+do|;
 block|}
 name|sbcompress
 argument_list|(
@@ -2814,6 +2819,12 @@ name|eor
 init|=
 literal|0
 decl_stmt|;
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|o
+decl_stmt|;
 while|while
 condition|(
 name|m
@@ -2834,6 +2845,38 @@ operator|->
 name|m_len
 operator|==
 literal|0
+operator|&&
+operator|(
+name|eor
+operator|==
+literal|0
+operator|||
+operator|(
+operator|(
+operator|(
+name|o
+operator|=
+name|m
+operator|->
+name|m_next
+operator|)
+operator|||
+operator|(
+name|o
+operator|=
+name|n
+operator|)
+operator|)
+operator|&&
+name|o
+operator|->
+name|m_type
+operator|==
+name|m
+operator|->
+name|m_type
+operator|)
+operator|)
 condition|)
 block|{
 name|m
@@ -2997,6 +3040,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|eor
+condition|)
+block|{
+if|if
+condition|(
 name|n
 condition|)
 name|n
@@ -3005,6 +3053,13 @@ name|m_flags
 operator||=
 name|eor
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"semi-panic: sbcompress\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
