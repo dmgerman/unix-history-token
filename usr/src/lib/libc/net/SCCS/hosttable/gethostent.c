@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostent.c	4.2	82/10/05	*/
+comment|/*	gethostent.c	4.3	82/11/14	*/
 end_comment
 
 begin_include
@@ -385,6 +385,8 @@ name|h_name
 operator|=
 name|cp
 expr_stmt|;
+name|q
+operator|=
 name|host
 operator|.
 name|h_aliases
@@ -406,15 +408,12 @@ name|cp
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|cp
 operator|++
 operator|=
 literal|'\0'
-expr_stmt|;
-name|q
-operator|=
-name|host_aliases
 expr_stmt|;
 while|while
 condition|(
@@ -480,6 +479,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|q

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getnetent.c	4.4	82/10/07	*/
+comment|/*	getnetent.c	4.5	82/11/14	*/
 end_comment
 
 begin_include
@@ -356,16 +356,21 @@ name|n_addrtype
 operator|=
 name|AF_INET
 expr_stmt|;
+name|q
+operator|=
 name|net
 operator|.
 name|n_aliases
 operator|=
 name|net_aliases
 expr_stmt|;
-name|q
-operator|=
-name|net_aliases
-operator|,
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
 name|cp
 operator|=
 name|p
@@ -434,6 +439,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|q

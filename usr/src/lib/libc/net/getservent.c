@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getservent.c	4.2	82/10/05	*/
+comment|/*	getservent.c	4.3	82/11/14	*/
 end_comment
 
 begin_include
@@ -359,6 +359,14 @@ name|s_proto
 operator|=
 name|cp
 expr_stmt|;
+name|q
+operator|=
+name|serv
+operator|.
+name|s_aliases
+operator|=
+name|serv_aliases
+expr_stmt|;
 name|cp
 operator|=
 name|any
@@ -374,21 +382,12 @@ name|cp
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|cp
 operator|++
 operator|=
 literal|'\0'
-expr_stmt|;
-name|serv
-operator|.
-name|s_aliases
-operator|=
-name|serv_aliases
-expr_stmt|;
-name|q
-operator|=
-name|serv_aliases
 expr_stmt|;
 while|while
 condition|(
@@ -454,6 +453,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|q

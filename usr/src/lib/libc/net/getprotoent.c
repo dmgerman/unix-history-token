@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getprotoent.c	4.2	82/10/05	*/
+comment|/*	getprotoent.c	4.3	82/11/14	*/
 end_comment
 
 begin_include
@@ -350,19 +350,24 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|q
+operator|=
 name|proto
 operator|.
 name|p_aliases
 operator|=
 name|proto_aliases
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
 name|cp
 operator|=
 name|p
-expr_stmt|;
-name|q
-operator|=
-name|proto_aliases
 expr_stmt|;
 while|while
 condition|(
@@ -428,6 +433,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|q
