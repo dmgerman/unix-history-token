@@ -388,6 +388,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|acpi_shutdown
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|acpi_quirks_set
 parameter_list|(
@@ -935,16 +946,16 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_detach
+name|device_shutdown
 argument_list|,
-name|bus_generic_detach
+name|acpi_shutdown
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_shutdown
+name|device_detach
 argument_list|,
-name|bus_generic_shutdown
+name|bus_generic_detach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -3000,6 +3011,29 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|acpi_shutdown
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+comment|/* Disable all wake GPEs not appropriate for reboot/poweroff. */
+name|acpi_wake_limit_walk
+argument_list|(
+name|ACPI_STATE_S5
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -5379,12 +5413,6 @@ init|=
 name|arg
 decl_stmt|;
 name|ACPI_ASSERTLOCK
-expr_stmt|;
-comment|/* Disable all wake GPEs not appropriate for this state. */
-name|acpi_wake_limit_walk
-argument_list|(
-name|ACPI_STATE_S5
-argument_list|)
 expr_stmt|;
 comment|/*      * Disable all ACPI events before soft off, otherwise the system      * will be turned on again on some laptops.      *      * XXX this should probably be restricted to masking some events just      *     before powering down, since we may still need ACPI during the      *     shutdown process.      */
 if|if
