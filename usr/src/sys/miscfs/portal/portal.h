@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal.h	1.1 (Berkeley) %G%  *  * $Id: portal.h,v 1.3 1992/05/30 10:05:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal.h	1.2 (Berkeley) %G%  *  * $Id: portal.h,v 1.3 1992/05/30 10:05:24 jsp Exp jsp $  */
 end_comment
 
 begin_struct
@@ -24,12 +24,23 @@ begin_struct
 struct|struct
 name|portal_cred
 block|{
+name|int
+name|pcr_flag
+decl_stmt|;
+comment|/* File open mode */
 name|uid_t
 name|pcr_uid
 decl_stmt|;
 comment|/* From ucred */
+name|short
+name|pcr_ngroups
+decl_stmt|;
+comment|/* From ucred */
 name|gid_t
-name|pcr_gid
+name|pcr_groups
+index|[
+name|NGROUPS
+index|]
 decl_stmt|;
 comment|/* From ucred */
 block|}
