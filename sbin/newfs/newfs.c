@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs.c,v 1.21 1998/07/16 12:04:52 charnier Exp $"
+literal|"$Id: newfs.c,v 1.22 1998/07/20 12:04:42 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -934,6 +934,8 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|n
+decl_stmt|,
+name|vflag
 decl_stmt|;
 name|char
 modifier|*
@@ -969,6 +971,10 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|vflag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1016,7 +1022,7 @@ name|mfs
 condition|?
 literal|"NF:T:a:b:c:d:e:f:i:m:o:s:"
 else|:
-literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
+literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:v:x"
 expr_stmt|;
 while|while
 condition|(
@@ -1567,6 +1573,14 @@ literal|"%s: bad sectors/track"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2164,6 +2178,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|vflag
+operator|&&
 name|cp
 operator|==
 operator|(
@@ -2236,6 +2253,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|vflag
+operator|||
 name|isdigit
 argument_list|(
 operator|*
