@@ -478,6 +478,11 @@ operator|->
 name|mii_dev
 argument_list|)
 expr_stmt|;
+name|mii_phy_setmedia
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
