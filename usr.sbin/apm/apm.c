@@ -3,6 +3,38 @@ begin_comment
 comment|/*  * LP (Laptop Package)  *  * Copyright (C) 1994 by HOSOKAWA Tatasumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -76,25 +108,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl APMIO_SUSPEND failed.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl APMIO_SUSPEND failed"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -123,25 +143,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl APMIO_GETINFO failed.\n"
-argument_list|,
-name|main_argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"ioctl APMIO_GETINFO failed"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -535,17 +543,11 @@ index|]
 operator|!=
 literal|'-'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: Unknown option '%s'.\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"unknown option '%s'"
 argument_list|,
 name|argv
 index|[
@@ -553,12 +555,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|j
@@ -648,26 +644,16 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s Unknown option '%s'.\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"unknown option '%s'"
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -692,16 +678,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't open %s.\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+literal|"can't open %s"
 argument_list|,
 name|APMDEV
 argument_list|)
