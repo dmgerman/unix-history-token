@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	8.1 (Berkeley) %G%"
+literal|"@(#)rec_get.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,43 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|t
+operator|=
+name|dbp
+operator|->
+name|internal
+expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* Get currently doesn't take any flags, and keys of 0 are illegal. */
 if|if
 condition|(
 name|flags
@@ -170,12 +207,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If we haven't seen this record yet, try to find it in the 	 * original file. 	 */
-name|t
-operator|=
-name|dbp
-operator|->
-name|internal
-expr_stmt|;
 if|if
 condition|(
 name|nrec
@@ -264,6 +295,15 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|B_DB_LOCK
+argument_list|)
+condition|)
 name|mpool_put
 argument_list|(
 name|t
@@ -276,6 +316,15 @@ name|page
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|e
+operator|->
+name|page
 expr_stmt|;
 return|return
 operator|(
