@@ -465,9 +465,12 @@ argument_list|,
 literal|"restarted (??)"
 argument_list|)
 expr_stmt|;
+comment|/* BpfGetIntfName() returns safe names, using %m */
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|errmsg
 argument_list|)
