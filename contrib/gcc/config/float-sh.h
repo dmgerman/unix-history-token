@@ -537,6 +537,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Because -m3e and -m4-single-only have 32-bit doubles, we append L    to the doubles below, so that they're not truncated.  */
+end_comment
+
+begin_comment
 comment|/* Number of base-FLT_RADIX digits in the significand of a long double */
 end_comment
 
@@ -584,7 +588,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|2.2204460492503131e-16
+value|2.2204460492503131e-16L
 end_define
 
 begin_comment
@@ -618,7 +622,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|2.2250738585072014e-308
+value|2.2250738585072014e-308L
 end_define
 
 begin_comment
@@ -669,7 +673,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|1.7976931348623157e+308
+value|1.7976931348623157e+308L
 end_define
 
 begin_comment
@@ -688,6 +692,62 @@ directive|define
 name|LDBL_MAX_10_EXP
 value|308
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|199901L
+end_if
+
+begin_comment
+comment|/* The floating-point expression evaluation method.         -1  indeterminate          0  evaluate all operations and constants just to the range and             precision of the type          1  evaluate operations and constants of type float and double             to the range and precision of the double type, evaluate             long double operations and constants to the range and             precision of the long double type          2  evaluate all operations and constants to the range and             precision of the long double type    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FLT_EVAL_METHOD
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FLT_EVAL_METHOD
+value|0
+end_define
+
+begin_comment
+comment|/* Number of decimal digits to enable rounding to the given number of       decimal digits without loss of precision.          if FLT_RADIX == 10^n:  #mantissa * log10 (FLT_RADIX)          else                :  ceil (1 + #mantissa * log10 (FLT_RADIX))       where #mantissa is the number of bits in the mantissa of the widest       supported floating-point type.    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DECIMAL_DIG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_DIG
+value|17
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* C99 */
+end_comment
 
 begin_endif
 endif|#

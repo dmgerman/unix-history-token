@@ -56,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Dlinux -Asystem(posix)"
+value|"-Dunix -Dlinux -Asystem=posix"
 end_define
 
 begin_undef
@@ -192,16 +192,6 @@ directive|define
 name|LINK_SPEC
 value|"-m i386linux"
 end_define
-
-begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"i386/perform.h"
-end_include
 
 end_unit
 

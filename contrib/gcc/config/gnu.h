@@ -55,16 +55,6 @@ value|"/include"
 end_define
 
 begin_comment
-comment|/* We have atexit.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
-
-begin_comment
 comment|/* Implicit library calls should use memcpy, not bcopy, etc.  */
 end_comment
 

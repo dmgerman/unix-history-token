@@ -1,24 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Common FreeBSD configuration.     All FreeBSD architectures should include this file, which will specify    their commonalities.    Adapted from /usr/src/contrib/gcc/config/i386/freebsd.h&     egcs/gcc/config/i386/freebsd-elf.h version by David O'Brien  */
+comment|/* Common FreeBSD configuration.     All FreeBSD architectures should include this file, which will specify    their commonalities.    Adapted from gcc/config/i386/freebsd-elf.h by     David O'Brien<obrien@FreeBSD.org>.      Further work by David O'Brien<obrien@FreeBSD.org> and    Loren J. Rittle<ljrittle@acm.org>.  */
 end_comment
 
 begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* In case we need to know.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NO_IMPLICIT_EXTERN_C
+name|USING_CONFIG_FREEBSD
+value|1
 end_define
 
 begin_comment
-comment|/* This defines which switch letters take arguments.  On svr4, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker).  We have a slightly different mix.  We    have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
+comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (coming from SVR4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc.  */
 end_comment
 
 begin_undef
@@ -34,10 +35,7 @@ name|SWITCH_TAKES_ARG
 parameter_list|(
 name|CHAR
 parameter_list|)
-define|\
-value|(   (CHAR) == 'D' \    || (CHAR) == 'U' \    || (CHAR) == 'o' \    || (CHAR) == 'e' \    || (CHAR) == 'T' \    || (CHAR) == 'u' \    || (CHAR) == 'I' \    || (CHAR) == 'm' \    || (CHAR) == 'x' \    || (CHAR) == 'L' \    || (CHAR) == 'A' \    || (CHAR) == 'V' \    || (CHAR) == 'B' \    || (CHAR) == 'b' \    || (CHAR) == 'h' \    || (CHAR) == 'z'
-comment|/* ignored by ld */
-value|\    || (CHAR) == 'R')
+value|(FBSD_SWITCH_TAKES_ARG(CHAR))
 end_define
 
 begin_undef
@@ -53,15 +51,138 @@ name|WORD_SWITCH_TAKES_ARG
 parameter_list|(
 name|STR
 parameter_list|)
-define|\
-value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)					\    || !strcmp (STR, "rpath") || !strcmp (STR, "rpath-link")		\    || !strcmp (STR, "soname") || !strcmp (STR, "defsym") 		\    || !strcmp (STR, "assert") || !strcmp (STR, "dynamic-linker"))
+value|(FBSD_WORD_SWITCH_TAKES_ARG(STR))
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_PREDEFINES
+end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_FBSD_PREDEFINES
-value|"-Dunix -D__ELF__ -D__FreeBSD__=4 -D__FreeBSD_cc_version=400001 -Asystem(unix) -Asystem(FreeBSD)"
+name|CPP_PREDEFINES
+value|FBSD_CPP_PREDEFINES
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|FBSD_CPP_SPEC
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|FBSD_STARTFILE_SPEC
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+value|FBSD_ENDFILE_SPEC
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LIB_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIB_SPEC
+value|FBSD_LIB_SPEC
+end_define
+
+begin_comment
+comment|/************************[  Target stuff  ]***********************************/
+end_comment
+
+begin_comment
+comment|/* Don't assume anything about the header files.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_IMPLICIT_EXTERN_C
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NO_IMPLICIT_EXTERN_C
+end_define
+
+begin_comment
+comment|/* Allow #sccs in preprocessor.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SCCS_DIRECTIVE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SCCS_DIRECTIVE
+end_define
+
+begin_comment
+comment|/* Make gcc agree with FreeBSD's standard headers (<machine/ansi.h>, etc...)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE
+value|"int"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_UNSIGNED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_UNSIGNED
+value|0
 end_define
 
 begin_comment
@@ -69,8 +190,14 @@ comment|/* Code generation parameters.  */
 end_comment
 
 begin_comment
-comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions.      (even though the svr4 ABI for the i386 says that records and unions are    returned in memory)  */
+comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions    (even though the SVR4 ABI for the i386 says that records and unions are    returned in memory).  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_PCC_STRUCT_RETURN
+end_undef
 
 begin_define
 define|#
@@ -80,7 +207,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Ensure we the configuration knows our system correctly so we can link with    libraries compiled with the native cc. */
+comment|/* Use periods rather than dollar signs in special g++ assembler names.    This ensures the configuration knows our system correctly so we can link    with libraries compiled with the native cc.  */
 end_comment
 
 begin_undef
@@ -90,106 +217,117 @@ name|NO_DOLLAR_IN_LABEL
 end_undef
 
 begin_comment
-comment|/* Miscellaneous parameters.  */
-end_comment
-
-begin_comment
-comment|/* Tell libgcc2.c that FreeBSD targets support atexit(3).  */
+comment|/* Used by libgcc2.c.  We support file locking with fcntl / F_SETLKW.    This enables the test coverage code to use file locking when exiting a    program, which avoids race conditions if the program has forked.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_ATEXIT
+name|TARGET_HAS_F_SETLKW
 end_define
 
 begin_comment
-comment|/* FREEBSD_NATIVE is defined when gcc is integrated into the FreeBSD    source tree so it can be configured appropriately without using    the GNU configure/build mechanism. */
+comment|/* The prefix to add to user-visible assembler symbols.    For System V Release 4& ELF the convention is *not* to prepend a leading    underscore onto user-level symbol names. Some CPU files such as    config/sparc/sparc.h set this wrong for ELF.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREEBSD_NATIVE
-end_ifdef
-
-begin_comment
-comment|/* Look for the include files in the system-defined places.  */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|USER_LABEL_PREFIX
+end_undef
 
 begin_define
 define|#
 directive|define
-name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/include/g++"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/include"
+name|USER_LABEL_PREFIX
+value|""
 end_define
 
 begin_comment
-comment|/* Now that GCC knows what the include path applies to, put the G++ one first.    C++ can now have include files that override the default C ones.  */
+comment|/* Handle #pragma weak and #pragma pack.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HANDLE_SYSV_PRAGMA
+end_undef
 
 begin_define
 define|#
 directive|define
-name|INCLUDE_DEFAULTS
-define|\
-value|{						\     { GPLUSPLUS_INCLUDE_DIR, "C++", 1, 1 },	\     { GCC_INCLUDE_DIR, "GCC", 0, 0 },		\     { 0, 0, 0, 0 }				\   }
+name|HANDLE_SYSV_PRAGMA
 end_define
 
 begin_comment
-comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.  */
+comment|/************************[  Assembler stuff  ]********************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|STANDARD_EXEC_PREFIX
-value|"/usr/libexec/"
-end_define
+begin_undef
+undef|#
+directive|undef
+name|IDENT_ASM_OP
+end_undef
 
 begin_define
 define|#
 directive|define
-name|TOOLDIR_BASE_PREFIX
-value|"/usr/libexec/"
-end_define
-
-begin_comment
-comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib/"
+name|IDENT_ASM_OP
+value|"\t.ident\t"
 end_define
 
 begin_comment
-comment|/* FreeBSD is 4.4BSD derived */
+comment|/************************[  Debugger stuff  ]*********************************/
 end_comment
+
+begin_comment
+comment|/* All ELF targets can support DWARF-2.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DWARF2_DEBUGGING_INFO
+end_undef
 
 begin_define
 define|#
 directive|define
-name|bsd4_4
+name|DWARF2_DEBUGGING_INFO
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* This is BSD, so we want the DBX format.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DBX_DEBUGGING_INFO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_DEBUGGING_INFO
+end_define
 
 begin_comment
-comment|/* FREEBSD_NATIVE */
+comment|/* Even though this is BSD, ELF and the GNU tools operates better with dwarf2    than stabs.  Since we don't have any native tools to be compatible with,    defaulting to dwarf2 is OK.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|DWARF2_DEBUG
+end_define
 
 end_unit
 

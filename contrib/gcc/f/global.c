@@ -99,6 +99,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ffeglobal_type_string_
 index|[]
 init|=

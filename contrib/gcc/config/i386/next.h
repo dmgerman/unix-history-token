@@ -22,13 +22,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 value|(MASK_80387 | MASK_IEEE_FP)
 end_define
 
@@ -64,120 +64,6 @@ value|((MODE) == SFmode || (MODE) == DFmode || (MODE) == XFmode	\    ? FIRST_FLO
 end_define
 
 begin_comment
-comment|/* 1 if N is a possible register number for a function value. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_VALUE_REGNO_P
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_VALUE_REGNO_P
-parameter_list|(
-name|N
-parameter_list|)
-value|((N) == 0 || (N)== FIRST_FLOAT_REG)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_VALUE_TO_TARGET_LONG_DOUBLE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_LONG_DOUBLE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LONG_DOUBLE
-parameter_list|(
-name|FILE
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\     long hex[3];							\     REAL_VALUE_TO_TARGET_LONG_DOUBLE (VALUE, hex);			\     if (sizeof (int) == sizeof (long))					\       fprintf (FILE, "\t.long 0x%x\n\t.long 0x%x\n\t.long 0x%x\n",	\ 		hex[0], hex[1], hex[2]);				\     else								\       fprintf (FILE, "\t.long 0x%lx\n\t.long 0x%lx\n\t.long 0x%lx\n",	\ 		hex[0], hex[1], hex[2]);				\   } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_VALUE_TO_TARGET_DOUBLE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DOUBLE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DOUBLE
-parameter_list|(
-name|FILE
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\     long hex[2];							\     REAL_VALUE_TO_TARGET_DOUBLE (VALUE, hex);				\     if (sizeof (int) == sizeof (long))					\       fprintf (FILE, "\t.long 0x%x\n\t.long 0x%x\n", hex[0], hex[1]);	\     else								\       fprintf (FILE, "\t.long 0x%lx\n\t.long 0x%lx\n", hex[0], hex[1]);	\   } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* This is how to output an assembler line defining a `float' constant.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_VALUE_TO_TARGET_SINGLE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_FLOAT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_FLOAT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|VALUE
-parameter_list|)
-define|\
-value|do {									\     long hex;								\     REAL_VALUE_TO_TARGET_SINGLE (VALUE, hex);				\     if (sizeof (int) == sizeof (long))					\       fprintf (FILE, "\t.long 0x%x\n", hex);				\     else								\       fprintf (FILE, "\t.long 0x%lx\n", hex);				\   } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* A C statement or statements which output an assembler instruction    opcode to the stdio stream STREAM.  The macro-operand PTR is a    variable of type `char *' which points to the opcode name in its    "internal" form--the form that is written in the machine description.     GAS version 1.38.1 doesn't understand the `repz' opcode mnemonic.    So use `repe' instead.  */
 end_comment
 
@@ -201,7 +87,7 @@ value|{							\   if ((PTR)[0] == 'r'					\&& (PTR)[1] == 'e'				\&& (PTR)[2] ==
 end_define
 
 begin_comment
-comment|/* Define macro used to output shift-double opcodes when the shift    count is in %cl.  Some assemblers require %cl as an argument;    some don't.     GAS requires the %cl argument, so override unx386.h. */
+comment|/* Define macro used to output shift-double opcodes when the shift    count is in %cl.  Some assemblers require %cl as an argument;    some don't.     GAS requires the %cl argument, so override unx386.h.  */
 end_comment
 
 begin_undef
@@ -218,7 +104,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Print opcodes the way that GAS expects them. */
+comment|/* Print opcodes the way that GAS expects them.  */
 end_comment
 
 begin_define
@@ -242,11 +128,11 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Di386 -DNeXT -Dunix -D__MACH__ -D__LITTLE_ENDIAN__ -D__ARCHITECTURE__=\"i386\" -Asystem(unix) -Asystem(mach) -Acpu(i386) -Amachine(i386)"
+value|"-DNeXT -Dunix -D__MACH__ -D__LITTLE_ENDIAN__ \   -D__ARCHITECTURE__=\"i386\" -Asystem=unix -Asystem=mach"
 end_define
 
 begin_comment
-comment|/* This accounts for the return pc and saved fp on the i386. */
+comment|/* This accounts for the return pc and saved fp on the i386.  */
 end_comment
 
 begin_define
@@ -298,7 +184,7 @@ parameter_list|,
 name|NUMBER
 parameter_list|)
 define|\
-value|sprintf ((BUF), "*%s%d", (PREFIX), (NUMBER))
+value|sprintf ((BUF), "*%s%ld", (PREFIX), (long)(NUMBER))
 end_define
 
 begin_undef

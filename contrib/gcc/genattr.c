@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate attribute information (insn-attr.h) from machine description.    Copyright (C) 1991, 1994, 1996, 1998, 1999 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate attribute information (insn-attr.h) from machine description.    Copyright (C) 1991, 1994, 1996, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -24,86 +24,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"errors.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|obstack
-name|obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|obstack
-modifier|*
-name|rtl_obstack
-init|=
-operator|&
-name|obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
-begin_decl_stmt
-name|void
-name|fatal
-name|PVPROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_1
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fancy_abort
-name|PROTO
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|insn_name_ptr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"gensupport.h"
+end_include
 
 begin_comment
 comment|/* A range of values.  */
@@ -168,7 +96,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|extend_range
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -187,7 +115,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|init_range
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -202,9 +130,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_upcase
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -216,7 +145,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -229,7 +158,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_units
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -348,6 +277,7 @@ name|write_upcase
 parameter_list|(
 name|str
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str
@@ -362,37 +292,13 @@ condition|;
 name|str
 operator|++
 control|)
-if|if
-condition|(
-operator|*
-name|str
-operator|>=
-literal|'a'
-operator|&&
-operator|*
-name|str
-operator|<=
-literal|'z'
-condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
+name|TOUPPER
+argument_list|(
 operator|*
 name|str
-operator|-
-literal|'a'
-operator|+
-literal|'A'
 argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
-operator|*
-name|str
 argument_list|)
 expr_stmt|;
 block|}
@@ -409,9 +315,25 @@ name|rtx
 name|attr
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|is_const
+init|=
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|attr
+argument_list|,
+literal|2
+argument_list|)
+argument_list|)
+operator|==
+name|CONST
 decl_stmt|;
 name|printf
 argument_list|(
@@ -440,7 +362,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"extern int get_attr_%s ();\n"
+literal|"extern int get_attr_%s PARAMS ((%s));\n"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -448,6 +370,14 @@ name|attr
 argument_list|,
 literal|0
 argument_list|)
+argument_list|,
+operator|(
+name|is_const
+condition|?
+literal|"void"
+else|:
+literal|"rtx"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -528,38 +458,14 @@ literal|"_"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|p
-operator|>=
-literal|'a'
-operator|&&
-operator|*
-name|p
-operator|<=
-literal|'z'
-condition|)
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
-operator|*
-name|p
-operator|-
-literal|'a'
-operator|+
-literal|'A'
-argument_list|)
-expr_stmt|;
 else|else
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
+name|TOUPPER
+argument_list|(
 operator|*
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -570,7 +476,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern enum attr_%s get_attr_%s ();\n\n"
+literal|"extern enum attr_%s get_attr_%s PARAMS ((%s));\n\n"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -585,6 +491,14 @@ name|attr
 argument_list|,
 literal|0
 argument_list|)
+argument_list|,
+operator|(
+name|is_const
+condition|?
+literal|"void"
+else|:
+literal|"rtx"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -607,37 +521,27 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"extern void init_lengths ();\n"
+literal|"extern void shorten_branches PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern void shorten_branches PROTO((rtx));\n"
+literal|"extern int insn_default_length PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int insn_default_length PROTO((rtx));\n"
+literal|"extern int insn_variable_length_p PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int insn_variable_length_p PROTO((rtx));\n"
+literal|"extern int insn_current_length PARAMS ((rtx));\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int insn_current_length PROTO((rtx));\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"extern int *insn_addresses;\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"extern int insn_current_address;\n\n"
+literal|"#include \"insn-addr.h\"\n\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -702,17 +606,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int result_ready_cost PROTO((rtx));\n"
+literal|"extern int result_ready_cost PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int function_units_used PROTO((rtx));\n\n"
+literal|"extern int function_units_used PARAMS ((rtx));\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern struct function_unit_desc\n"
+literal|"extern const struct function_unit_desc\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -722,57 +626,57 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  char *name;\n"
+literal|"  const char *const name;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int bitmask;\n"
+literal|"  const int bitmask;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int multiplicity;\n"
+literal|"  const int multiplicity;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int simultaneity;\n"
+literal|"  const int simultaneity;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int default_cost;\n"
+literal|"  const int default_cost;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int max_issue_delay;\n"
+literal|"  const int max_issue_delay;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int (*ready_cost_function) ();\n"
+literal|"  int (*const ready_cost_function) PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int (*conflict_cost_function) ();\n"
+literal|"  int (*const conflict_cost_function) PARAMS ((rtx, rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int max_blockage;\n"
+literal|"  const int max_blockage;\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  unsigned int (*blockage_range_function) ();\n"
+literal|"  unsigned int (*const blockage_range_function) PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int (*blockage_function) ();\n"
+literal|"  int (*const blockage_function) PARAMS ((rtx, rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -945,213 +849,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|val
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-expr_stmt|;
-return|return
-name|val
-return|;
-block|}
-end_function
-
-begin_function
-name|PTR
-name|xrealloc
-parameter_list|(
-name|old
-parameter_list|,
-name|size
-parameter_list|)
-name|PTR
-name|old
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|ptr
-decl_stmt|;
-if|if
-condition|(
-name|old
-condition|)
-name|ptr
-operator|=
-operator|(
-name|PTR
-operator|)
-name|realloc
-argument_list|(
-name|old
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-else|else
-name|ptr
-operator|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ptr
-condition|)
-name|fatal
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-expr_stmt|;
-return|return
-name|ptr
-return|;
-block|}
-end_function
-
 begin_decl_stmt
-name|void
-name|fatal
-name|VPROTO
+specifier|extern
+name|int
+decl|main
+name|PARAMS
 argument_list|(
 operator|(
-specifier|const
+name|int
+operator|,
 name|char
 operator|*
-name|format
-operator|,
-operator|...
+operator|*
 operator|)
 argument_list|)
-block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-specifier|const
-name|char
-modifier|*
-name|format
 decl_stmt|;
-endif|#
-directive|endif
-name|va_list
-name|ap
-decl_stmt|;
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|format
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"genattr: "
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
 end_decl_stmt
-
-begin_comment
-comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
-end_comment
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|()
-block|{
-name|fatal
-argument_list|(
-literal|"Internal gcc abort."
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
 
 begin_function
 name|int
@@ -1172,14 +885,6 @@ decl_stmt|;
 block|{
 name|rtx
 name|desc
-decl_stmt|;
-name|FILE
-modifier|*
-name|infile
-decl_stmt|;
-specifier|register
-name|int
-name|c
 decl_stmt|;
 name|int
 name|have_delay
@@ -1258,10 +963,9 @@ operator|&
 name|all_blockage
 argument_list|)
 expr_stmt|;
-name|obstack_init
-argument_list|(
-name|rtl_obstack
-argument_list|)
+name|progname
+operator|=
+literal|"genattr"
 expr_stmt|;
 if|if
 condition|(
@@ -1271,59 +975,54 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"No input file name."
-argument_list|)
-expr_stmt|;
-name|infile
-operator|=
-name|fopen
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"r"
+literal|"no input file name"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|infile
-operator|==
-literal|0
-condition|)
-block|{
-name|perror
+name|init_md_reader_args
 argument_list|(
+name|argc
+argument_list|,
 name|argv
-index|[
-literal|1
-index|]
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+operator|!=
+name|SUCCESS_EXIT_CODE
+condition|)
+return|return
+operator|(
 name|FATAL_EXIT_CODE
+operator|)
+return|;
+name|puts
+argument_list|(
+literal|"/* Generated automatically by the program `genattr'"
 argument_list|)
 expr_stmt|;
-block|}
-name|init_rtl
-argument_list|()
-expr_stmt|;
-name|printf
+name|puts
 argument_list|(
-literal|"/* Generated automatically by the program `genattr'\n\ from the machine description file `md'.  */\n\n"
+literal|"   from the machine description file `md'.  */\n"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"#ifndef GCC_INSN_ATTR_H"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"#define GCC_INSN_ATTR_H\n"
 argument_list|)
 expr_stmt|;
 comment|/* For compatibility, define the attribute `alternative', which is just      a reference to the variable `which_alternative'.  */
-name|printf
+name|puts
 argument_list|(
-literal|"#define HAVE_ATTR_alternative\n"
+literal|"#define HAVE_ATTR_alternative"
 argument_list|)
 expr_stmt|;
-name|printf
+name|puts
 argument_list|(
-literal|"#define get_attr_alternative(insn) which_alternative\n"
+literal|"#define get_attr_alternative(insn) which_alternative"
 argument_list|)
 expr_stmt|;
 comment|/* Read the machine description.  */
@@ -1332,34 +1031,29 @@ condition|(
 literal|1
 condition|)
 block|{
-name|c
+name|int
+name|line_no
+decl_stmt|,
+name|insn_code_number
+decl_stmt|;
+name|desc
 operator|=
-name|read_skip_spaces
+name|read_md_rtx
 argument_list|(
-name|infile
+operator|&
+name|line_no
+argument_list|,
+operator|&
+name|insn_code_number
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|c
+name|desc
 operator|==
-name|EOF
+name|NULL
 condition|)
 break|break;
-name|ungetc
-argument_list|(
-name|c
-argument_list|,
-name|infile
-argument_list|)
-expr_stmt|;
-name|desc
-operator|=
-name|read_rtx
-argument_list|(
-name|infile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|GET_CODE
@@ -1398,17 +1092,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int num_delay_slots PROTO((rtx));\n"
+literal|"extern int num_delay_slots PARAMS ((rtx));\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int eligible_for_delay PROTO((rtx, int, rtx, int));\n\n"
+literal|"extern int eligible_for_delay PARAMS ((rtx, int, rtx, int));\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int const_num_delay_slots PROTO((rtx));\n\n"
+literal|"extern int const_num_delay_slots PARAMS ((rtx));\n\n"
 argument_list|)
 expr_stmt|;
 name|have_delay
@@ -1460,7 +1154,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int eligible_for_annul_true ();\n"
+literal|"extern int eligible_for_annul_true PARAMS ((rtx, int, rtx, int));\n"
 argument_list|)
 expr_stmt|;
 name|have_annul_true
@@ -1492,7 +1186,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int eligible_for_annul_false ();\n"
+literal|"extern int eligible_for_annul_false PARAMS ((rtx, int, rtx, int));\n"
 argument_list|)
 expr_stmt|;
 name|have_annul_false
@@ -1513,6 +1207,7 @@ operator|==
 name|DEFINE_FUNCTION_UNIT
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1623,16 +1318,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|len
-init|=
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|+
-literal|1
-decl_stmt|;
 name|unit
 operator|=
 operator|(
@@ -1640,7 +1325,7 @@ expr|struct
 name|function_unit
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1653,24 +1338,9 @@ name|unit
 operator|->
 name|name
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|len
-argument_list|)
-expr_stmt|;
-name|bcopy
+name|xstrdup
 argument_list|(
 name|name
-argument_list|,
-name|unit
-operator|->
-name|name
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 name|unit
@@ -1764,7 +1434,7 @@ name|simultaneity
 condition|)
 name|fatal
 argument_list|(
-literal|"Differing specifications given for `%s' function unit."
+literal|"Differing specifications given for `%s' function unit"
 argument_list|,
 name|unit
 operator|->
@@ -2044,28 +1714,56 @@ argument_list|(
 literal|"#define ATTR_FLAG_very_unlikely\t0x20\n"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|puts
 argument_list|(
-name|stdout
+literal|"\n#endif /* GCC_INSN_ATTR_H */"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+if|if
+condition|(
 name|ferror
 argument_list|(
 name|stdout
 argument_list|)
-operator|!=
-literal|0
-condition|?
-name|FATAL_EXIT_CODE
-else|:
-name|SUCCESS_EXIT_CODE
+operator|||
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
+operator|||
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+condition|)
 return|return
-literal|0
+name|FATAL_EXIT_CODE
+return|;
+return|return
+name|SUCCESS_EXIT_CODE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|get_insn_name
+parameter_list|(
+name|code
+parameter_list|)
+name|int
+name|code
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|NULL
 return|;
 block|}
 end_function

@@ -4,6 +4,10 @@ comment|/* libgloss.h -- operating system specific defines to be used when    ta
 end_comment
 
 begin_comment
+comment|/* This file should not be used for ELF targets, as this definition of    STARTFILE_SPEC is all wrong.  */
+end_comment
+
+begin_comment
 comment|/* The libgloss standard for crt0.s has the name based on the command line    option. */
 end_comment
 

@@ -3,26 +3,6 @@ begin_comment
 comment|/* Configuration for an i386 running GNU with ELF as the target machine.  */
 end_comment
 
-begin_comment
-comment|/* This does it mostly for us.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/linux.h>
-end_include
-
-begin_comment
-comment|/* Get machine-independent configuration parameters for the GNU system.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<gnu.h>
-end_include
-
 begin_undef
 undef|#
 directive|undef
@@ -46,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -D__i386__ -DMACH -Asystem(mach) \   -Dunix -Asystem(unix) -Asystem(posix) -D__GNU__ -Asystem(gnu)"
+value|"-D__ELF__ -DMACH -Asystem=mach \   -Dunix -Asystem=unix -Asystem=posix -D__GNU__ -Asystem=gnu"
 end_define
 
 begin_undef
@@ -99,8 +79,18 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{!static: \        %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \      %{static:crt0.o%s}} \    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: \      %{!static: \        %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \      %{static:crt0.o%s}} \    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
+
+begin_comment
+comment|/* FIXME: Is a Hurd-specific fallback mechanism necessary?  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MD_FALLBACK_FRAME_STATE_FOR
+end_undef
 
 end_unit
 

@@ -165,16 +165,10 @@ block|{
 comment|/* NOTE: This is definitely ASCII-specific!!  */
 if|if
 condition|(
-name|ISALPHA
+name|ISIDST
 argument_list|(
 name|c
 argument_list|)
-operator|||
-operator|(
-name|c
-operator|==
-literal|'_'
-operator|)
 condition|)
 return|return
 operator|&

@@ -51,7 +51,7 @@ parameter_list|,
 name|NUMBER
 parameter_list|)
 define|\
-value|sprintf ((BUF), "*.%s%d", (PREFIX), (NUMBER))
+value|sprintf ((BUF), "*.%s%ld", (PREFIX), (long)(NUMBER))
 end_define
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to compute values of attributes.    Copyright (C) 1991, 93-98, 1999 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to compute values of attributes.    Copyright (C) 1991, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This program handles insn attributes and the DEFINE_DELAY and    DEFINE_FUNCTION_UNIT definitions.     It produces a series of functions named `get_attr_...', one for each insn    attribute.  Each of these is given the rtx for an insn and returns a member    of the enum for the attribute.     These subroutines have the form of a `switch' on the INSN_CODE (via    `recog_memoized').  Each case either returns a constant attribute value    or a value that depends on tests on other attributes, the form of    operands, or some random C expression (encoded with a SYMBOL_REF    expression).     If the attribute `alternative', or a random C expression is present,    `constrain_operands' is called.  If either of these cases of a reference to    an operand is found, `extract_insn' is called.     The special attribute `length' is also recognized.  For this operand,     expressions involving the address of an operand or the current insn,    (address (pc)), are valid.  In this case, an initial pass is made to    set all lengths that do not depend on address.  Those that do are set to    the maximum length.  Then each insn that depends on an address is checked    and possibly has its length changed.  The process repeats until no further    changed are made.  The resulting lengths are saved for use by    `get_attr_length'.     A special form of DEFINE_ATTR, where the expression for default value is a    CONST expression, indicates an attribute that is constant for a given run    of the compiler.  The subroutine generated for these attributes has no    parameters as it does not depend on any particular insn.  Constant    attributes are typically used to specify which variety of processor is    used.        Internal attributes are defined to handle DEFINE_DELAY and    DEFINE_FUNCTION_UNIT.  Special routines are output for these cases.     This program works by keeping a list of possible values for each attribute.    These include the basic attribute choices, default values for attribute, and    all derived quantities.     As the description file is read, the definition for each insn is saved in a    `struct insn_def'.   When the file reading is complete, a `struct insn_ent'    is created for each insn and chained to the corresponding attribute value,    either that specified, or the default.     An optimization phase is then run.  This simplifies expressions for each    insn.  EQ_ATTR tests are resolved, whenever possible, to a test that    indicates when the attribute has the specified value for the insn.  This    avoids recursive calls during compilation.     The strategy used when processing DEFINE_DELAY and DEFINE_FUNCTION_UNIT    definitions is to create arbitrarily complex expressions and have the    optimization simplify them.     Once optimization is complete, any required routines and definitions    will be written.     An optimization that is not yet implemented is to hoist the constant    expressions entirely out of the routines and definitions that are written.    A way to do this is to iterate over all possible combinations of values    for constant attributes and generate a set of functions for that given    combination.  An initialization function would be written that evaluates    the attributes and installs the corresponding set of routines and    definitions (each would be accessed through a pointer).     We use the flags in an RTX as follows:    `unchanging' (RTX_UNCHANGING_P): This rtx is fully simplified       independent of the insn code.    `in_struct' (MEM_IN_STRUCT_P): This rtx is fully simplified       for the insn code currently being processed (see optimize_attrs).    `integrated' (RTX_INTEGRATED_P): This rtx is permanent and unique       (see attr_rtx).    `volatil' (MEM_VOLATILE_P): During simplify_by_exploding the value of an       EQ_ATTR rtx is true if !volatil and false if volatil.  */
+comment|/* This program handles insn attributes and the DEFINE_DELAY and    DEFINE_FUNCTION_UNIT definitions.     It produces a series of functions named `get_attr_...', one for each insn    attribute.  Each of these is given the rtx for an insn and returns a member    of the enum for the attribute.     These subroutines have the form of a `switch' on the INSN_CODE (via    `recog_memoized').  Each case either returns a constant attribute value    or a value that depends on tests on other attributes, the form of    operands, or some random C expression (encoded with a SYMBOL_REF    expression).     If the attribute `alternative', or a random C expression is present,    `constrain_operands' is called.  If either of these cases of a reference to    an operand is found, `extract_insn' is called.     The special attribute `length' is also recognized.  For this operand,    expressions involving the address of an operand or the current insn,    (address (pc)), are valid.  In this case, an initial pass is made to    set all lengths that do not depend on address.  Those that do are set to    the maximum length.  Then each insn that depends on an address is checked    and possibly has its length changed.  The process repeats until no further    changed are made.  The resulting lengths are saved for use by    `get_attr_length'.     A special form of DEFINE_ATTR, where the expression for default value is a    CONST expression, indicates an attribute that is constant for a given run    of the compiler.  The subroutine generated for these attributes has no    parameters as it does not depend on any particular insn.  Constant    attributes are typically used to specify which variety of processor is    used.     Internal attributes are defined to handle DEFINE_DELAY and    DEFINE_FUNCTION_UNIT.  Special routines are output for these cases.     This program works by keeping a list of possible values for each attribute.    These include the basic attribute choices, default values for attribute, and    all derived quantities.     As the description file is read, the definition for each insn is saved in a    `struct insn_def'.   When the file reading is complete, a `struct insn_ent'    is created for each insn and chained to the corresponding attribute value,    either that specified, or the default.     An optimization phase is then run.  This simplifies expressions for each    insn.  EQ_ATTR tests are resolved, whenever possible, to a test that    indicates when the attribute has the specified value for the insn.  This    avoids recursive calls during compilation.     The strategy used when processing DEFINE_DELAY and DEFINE_FUNCTION_UNIT    definitions is to create arbitrarily complex expressions and have the    optimization simplify them.     Once optimization is complete, any required routines and definitions    will be written.     An optimization that is not yet implemented is to hoist the constant    expressions entirely out of the routines and definitions that are written.    A way to do this is to iterate over all possible combinations of values    for constant attributes and generate a set of functions for that given    combination.  An initialization function would be written that evaluates    the attributes and installs the corresponding set of routines and    definitions (each would be accessed through a pointer).     We use the flags in an RTX as follows:    `unchanging' (RTX_UNCHANGING_P): This rtx is fully simplified       independent of the insn code.    `in_struct' (MEM_IN_STRUCT_P): This rtx is fully simplified       for the insn code currently being processed (see optimize_attrs).    `integrated' (RTX_INTEGRATED_P): This rtx is permanent and unique       (see attr_rtx).    `volatil' (MEM_VOLATILE_P): During simplify_by_exploding the value of an       EQ_ATTR rtx is true if !volatil and false if volatil.  */
 end_comment
 
 begin_include
@@ -28,12 +28,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"insn-config.h"
+file|"ggc.h"
 end_include
 
-begin_comment
-comment|/* For REGISTER_CONSTRAINTS */
-end_comment
+begin_include
+include|#
+directive|include
+file|"gensupport.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -62,26 +64,19 @@ directive|include
 file|"obstack.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"errors.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
 name|obstack
-name|obstack
-decl_stmt|,
 name|obstack1
 decl_stmt|,
 name|obstack2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|obstack
-modifier|*
-name|rtl_obstack
-init|=
-operator|&
-name|obstack
 decl_stmt|;
 end_decl_stmt
 
@@ -122,51 +117,6 @@ value|free
 end_define
 
 begin_comment
-comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|insn_name_ptr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fatal
-name|PVPROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_1
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fancy_abort
-name|PROTO
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* enough space to reserve for printing out ints */
 end_comment
 
@@ -189,14 +139,6 @@ begin_struct
 struct|struct
 name|insn_def
 block|{
-name|int
-name|insn_code
-decl_stmt|;
-comment|/* Instruction number.  */
-name|int
-name|insn_index
-decl_stmt|;
-comment|/* Expression numer in file, for errors.  */
 name|struct
 name|insn_def
 modifier|*
@@ -207,6 +149,18 @@ name|rtx
 name|def
 decl_stmt|;
 comment|/* The DEFINE_...  */
+name|int
+name|insn_code
+decl_stmt|;
+comment|/* Instruction number.  */
+name|int
+name|insn_index
+decl_stmt|;
+comment|/* Expression numer in file, for errors.  */
+name|int
+name|lineno
+decl_stmt|;
+comment|/* Line number.  */
 name|int
 name|num_alternatives
 decl_stmt|;
@@ -227,6 +181,12 @@ begin_struct
 struct|struct
 name|insn_ent
 block|{
+name|struct
+name|insn_ent
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Next in chain.  */
 name|int
 name|insn_code
 decl_stmt|;
@@ -235,12 +195,10 @@ name|int
 name|insn_index
 decl_stmt|;
 comment|/* Index of definition in file */
-name|struct
-name|insn_ent
-modifier|*
-name|next
+name|int
+name|lineno
 decl_stmt|;
-comment|/* Next in chain.  */
+comment|/* Line number.  */
 block|}
 struct|;
 end_struct
@@ -354,6 +312,10 @@ modifier|*
 name|default_val
 decl_stmt|;
 comment|/* Default value for this attribute.  */
+name|int
+name|lineno
+decl_stmt|;
+comment|/* Line number.  */
 block|}
 struct|;
 end_struct
@@ -405,6 +367,10 @@ name|int
 name|num
 decl_stmt|;
 comment|/* Number of DEFINE_DELAY, starting at 1.  */
+name|int
+name|lineno
+decl_stmt|;
+comment|/* Line number.  */
 block|}
 struct|;
 end_struct
@@ -447,6 +413,10 @@ name|rtx
 name|issue_exp
 decl_stmt|;
 comment|/* Expression computing issue delay.  */
+name|int
+name|lineno
+decl_stmt|;
+comment|/* Line number.  */
 block|}
 struct|;
 end_struct
@@ -459,6 +429,7 @@ begin_struct
 struct|struct
 name|function_unit
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -507,7 +478,7 @@ comment|/* Nonzero if a blockage function required.  */
 name|int
 name|needs_range_function
 decl_stmt|;
-comment|/* Nonzero if blockage range function needed.*/
+comment|/* Nonzero if blockage range function needed.  */
 name|rtx
 name|default_cost
 decl_stmt|;
@@ -521,6 +492,10 @@ name|int
 name|max_blockage
 decl_stmt|;
 comment|/* Maximum time an insn blocks the unit.  */
+name|int
+name|first_lineno
+decl_stmt|;
+comment|/* First seen line number.  */
 block|}
 struct|;
 end_struct
@@ -580,7 +555,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* An expression where all the unknown terms are EQ_ATTR tests can be    rearranged into a COND provided we can enumerate all possible    combinations of the unknown values.  The set of combinations become the    tests of the COND; the value of the expression given that combination is    computed and becomes the corresponding value.  To do this, we must be    able to enumerate all values for each attribute used in the expression    (currently, we give up if we find a numeric attribute).        If the set of EQ_ATTR tests used in an expression tests the value of N    different attributes, the list of all possible combinations can be made    by walking the N-dimensional attribute space defined by those    attributes.  We record each of these as a struct dimension.     The algorithm relies on sharing EQ_ATTR nodes: if two nodes in an    expression are the same, the will also have the same address.  We find    all the EQ_ATTR nodes by marking them MEM_VOLATILE_P.  This bit later    represents the value of an EQ_ATTR node, so once all nodes are marked,    they are also given an initial value of FALSE.     We then separate the set of EQ_ATTR nodes into dimensions for each    attribute and put them on the VALUES list.  Terms are added as needed by    `add_values_to_cover' so that all possible values of the attribute are    tested.     Each dimension also has a current value.  This is the node that is    currently considered to be TRUE.  If this is one of the nodes added by    `add_values_to_cover', all the EQ_ATTR tests in the original expression    will be FALSE.  Otherwise, only the CURRENT_VALUE will be true.     NUM_VALUES is simply the length of the VALUES list and is there for    convenience.     Once the dimensions are created, the algorithm enumerates all possible    values and computes the current value of the given expression.  */
+comment|/* An expression where all the unknown terms are EQ_ATTR tests can be    rearranged into a COND provided we can enumerate all possible    combinations of the unknown values.  The set of combinations become the    tests of the COND; the value of the expression given that combination is    computed and becomes the corresponding value.  To do this, we must be    able to enumerate all values for each attribute used in the expression    (currently, we give up if we find a numeric attribute).     If the set of EQ_ATTR tests used in an expression tests the value of N    different attributes, the list of all possible combinations can be made    by walking the N-dimensional attribute space defined by those    attributes.  We record each of these as a struct dimension.     The algorithm relies on sharing EQ_ATTR nodes: if two nodes in an    expression are the same, the will also have the same address.  We find    all the EQ_ATTR nodes by marking them MEM_VOLATILE_P.  This bit later    represents the value of an EQ_ATTR node, so once all nodes are marked,    they are also given an initial value of FALSE.     We then separate the set of EQ_ATTR nodes into dimensions for each    attribute and put them on the VALUES list.  Terms are added as needed by    `add_values_to_cover' so that all possible values of the attribute are    tested.     Each dimension also has a current value.  This is the node that is    currently considered to be TRUE.  If this is one of the nodes added by    `add_values_to_cover', all the EQ_ATTR tests in the original expression    will be FALSE.  Otherwise, only the CURRENT_VALUE will be true.     NUM_VALUES is simply the length of the VALUES list and is there for    convenience.     Once the dimensions are created, the algorithm enumerates all possible    values and computes the current value of the given expression.  */
 end_comment
 
 begin_struct
@@ -753,6 +728,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|current_alternative_string
@@ -847,9 +823,11 @@ comment|/* These are referenced by rtlanal.c and hence need to be defined somewh
 end_comment
 
 begin_decl_stmt
-name|struct
-name|_global_rtl
+name|rtx
 name|global_rtl
+index|[
+name|GR_MAX
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -863,7 +841,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|attr_hash_add_rtx
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -878,7 +856,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|attr_hash_add_string
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -894,7 +872,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|attr_rtx
-name|PVPROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -908,12 +886,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|rtx
+name|attr_rtx_1
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|rtx_code
+operator|,
+name|va_list
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|attr_printf
-name|PVPROTO
+name|PARAMS
 argument_list|(
 operator|(
+name|unsigned
 name|int
 operator|,
 specifier|const
@@ -932,7 +927,7 @@ specifier|static
 name|char
 modifier|*
 name|attr_string
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -949,10 +944,12 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|check_attr_test
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|int
 operator|,
 name|int
 operator|)
@@ -964,7 +961,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|check_attr_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -981,14 +978,14 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|convert_set_attr_alternative
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
 operator|,
-name|int
-operator|,
-name|int
+expr|struct
+name|insn_def
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -998,14 +995,14 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|convert_set_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
 operator|,
-name|int
-operator|,
-name|int
+expr|struct
+name|insn_def
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1015,7 +1012,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|check_defs
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1031,7 +1028,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static rtx convert_const_symbol_ref PROTO((rtx, struct attr_desc *));
+unit|static rtx convert_const_symbol_ref PARAMS ((rtx, struct attr_desc *));
 endif|#
 directive|endif
 end_endif
@@ -1040,7 +1037,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|make_canonical
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1059,7 +1056,7 @@ name|struct
 name|attr_value
 modifier|*
 name|get_attr_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1078,7 +1075,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|copy_rtx_unchanging
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1091,7 +1088,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|copy_boolean
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1104,7 +1101,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|expand_delays
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1117,7 +1114,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|operate_exp
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -1135,7 +1132,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|expand_units
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1148,7 +1145,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_knowing
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1163,7 +1160,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|encode_units_mask
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1176,7 +1173,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fill_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1195,7 +1192,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|substitute_address
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1204,13 +1201,17 @@ name|rtx
 argument_list|(
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|rtx
+argument_list|)
 operator|,
 name|rtx
 argument_list|(
 operator|*
 argument_list|)
-argument_list|()
+argument_list|(
+name|rtx
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1220,7 +1221,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|make_length_attrs
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1233,7 +1234,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|identity_fn
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1246,7 +1247,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|zero_fn
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1259,7 +1260,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|one_fn
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1272,7 +1273,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|max_fn
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1285,7 +1286,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_length_unit_log
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1298,7 +1299,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_cond
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1318,7 +1319,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static rtx simplify_by_alternatives PROTO((rtx, int, int));
+unit|static rtx simplify_by_alternatives PARAMS ((rtx, int, int));
 endif|#
 directive|endif
 end_endif
@@ -1327,7 +1328,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_by_exploding
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1340,7 +1341,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|find_and_mark_used_attributes
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1359,7 +1360,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|unmark_used_attributes
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1378,7 +1379,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|add_values_to_cover
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1393,7 +1394,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|increment_current_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1410,7 +1411,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|test_for_current_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1427,7 +1428,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_with_current_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1446,7 +1447,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_with_current_value_aux
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1459,7 +1460,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|clear_struct_flag
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1472,7 +1473,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|count_sub_rtxs
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1487,7 +1488,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|remove_insn_ent
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1506,7 +1507,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|insert_insn_ent
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1525,7 +1526,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|insert_right_side
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|enum
@@ -1547,7 +1548,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|make_alternative_compare
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -1560,7 +1561,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|compute_alternative_mask
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1576,7 +1577,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|evaluate_eq_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1595,7 +1596,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_and_tree
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1615,7 +1616,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_or_tree
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1635,7 +1636,24 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|simplify_test_exp
-name|PROTO
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|simplify_test_exp_in_temp
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1652,7 +1670,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|optimize_attrs
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -1665,10 +1683,12 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1678,7 +1698,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|count_alternatives
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1691,7 +1711,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|compares_alternatives_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1704,7 +1724,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|contained_in_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1719,10 +1739,12 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_insn
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1732,10 +1754,12 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_delay
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1745,10 +1769,12 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_unit
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1758,7 +1784,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_test_expr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1773,7 +1799,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|max_attr_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1789,7 +1815,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|or_attr_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1805,7 +1831,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|walk_attr_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1818,7 +1844,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_attr_get
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1833,7 +1859,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|eliminate_known_true
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -1852,7 +1878,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_attr_set
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1885,7 +1911,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_attr_case
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1918,7 +1944,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_unit_name
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -1939,13 +1965,14 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_attr_valueq
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
 name|attr_desc
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1957,7 +1984,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_attr_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -1974,9 +2001,10 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_upcase
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1988,7 +2016,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_indent
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -2001,7 +2029,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_eligible_delay
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -2016,7 +2044,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_function_unit_info
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -2029,7 +2057,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_complex_function
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -2052,7 +2080,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|write_expr_attr_cache
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -2069,7 +2097,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_toplevel_expr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -2080,11 +2108,25 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|n_comma_elts
-name|PROTO
+name|void
+name|write_const_num_delay_slots
+name|PARAMS
 argument_list|(
 operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|n_comma_elts
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2097,9 +2139,10 @@ specifier|static
 name|char
 modifier|*
 name|next_comma_elt
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -2114,7 +2157,7 @@ name|struct
 name|attr_desc
 modifier|*
 name|find_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -2131,7 +2174,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|make_internal_attr
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -2152,7 +2195,7 @@ name|struct
 name|attr_value
 modifier|*
 name|find_most_used
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -2167,7 +2210,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|find_single_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -2182,7 +2225,7 @@ begin_decl_stmt
 specifier|static
 name|rtx
 name|make_numeric_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -2195,7 +2238,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|extend_range
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -2205,6 +2248,81 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|attr_eq
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|attr_numeral
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|attr_equal_p
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|attr_copy_rtx
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|attr_rtx_cost
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2319,7 +2437,6 @@ name|rtx
 name|rtl
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|attr_hash
 modifier|*
@@ -2401,7 +2518,6 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|attr_hash
 modifier|*
@@ -2467,57 +2583,32 @@ begin_comment
 comment|/* Generate an RTL expression, but avoid duplicates.    Set the RTX_INTEGRATED_P flag for these permanent objects.     In some cases we cannot uniquify; then we return an ordinary    impermanent rtx with RTX_INTEGRATED_P clear.     Args are like gen_rtx, but without the mode:     rtx attr_rtx (code, [element1, ..., elementn])  */
 end_comment
 
-begin_comment
-comment|/*VARARGS1*/
-end_comment
-
-begin_decl_stmt
+begin_function
 specifier|static
 name|rtx
-name|attr_rtx
-name|VPROTO
-argument_list|(
-operator|(
-expr|enum
-name|rtx_code
+name|attr_rtx_1
+parameter_list|(
 name|code
-operator|,
-operator|...
-operator|)
-argument_list|)
-block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
+parameter_list|,
+name|p
+parameter_list|)
 name|enum
 name|rtx_code
 name|code
 decl_stmt|;
-endif|#
-directive|endif
 name|va_list
 name|p
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
-comment|/* Array indices...			*/
-specifier|register
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-comment|/* Current rtx's format...		*/
-specifier|register
+block|{
 name|rtx
 name|rt_val
+init|=
+name|NULL_RTX
 decl_stmt|;
 comment|/* RTX to return to caller...		*/
 name|int
 name|hashcode
 decl_stmt|;
-specifier|register
 name|struct
 name|attr_hash
 modifier|*
@@ -2530,28 +2621,6 @@ name|old_obstack
 init|=
 name|rtl_obstack
 decl_stmt|;
-name|VA_START
-argument_list|(
-name|p
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|code
-operator|=
-name|va_arg
-argument_list|(
-name|p
-argument_list|,
-expr|enum
-name|rtx_code
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* For each of several cases, search the hash table for an existing entry.      Use that entry if one is found; otherwise create a new RTL and add it      to the table.  */
 if|if
 condition|(
@@ -2598,11 +2667,6 @@ literal|0
 argument_list|)
 operator|=
 name|arg0
-expr_stmt|;
-name|va_end
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 return|return
 name|rt_val
@@ -2673,9 +2737,13 @@ argument_list|)
 operator|==
 name|arg0
 condition|)
-goto|goto
-name|found
-goto|;
+return|return
+name|h
+operator|->
+name|u
+operator|.
+name|rtl
+return|;
 if|if
 condition|(
 name|h
@@ -2791,11 +2859,6 @@ argument_list|)
 operator|=
 name|arg1
 expr_stmt|;
-name|va_end
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return
 name|rt_val
 return|;
@@ -2883,9 +2946,13 @@ argument_list|)
 operator|==
 name|arg1
 condition|)
-goto|goto
-name|found
-goto|;
+return|return
+name|h
+operator|->
+name|u
+operator|.
+name|rtl
+return|;
 if|if
 condition|(
 name|h
@@ -3040,9 +3107,13 @@ argument_list|)
 operator|==
 name|arg0
 condition|)
-goto|goto
-name|found
-goto|;
+return|return
+name|h
+operator|->
+name|u
+operator|.
+name|rtl
+return|;
 if|if
 condition|(
 name|h
@@ -3210,9 +3281,13 @@ argument_list|)
 operator|==
 name|arg1
 condition|)
-goto|goto
-name|found
-goto|;
+return|return
+name|h
+operator|->
+name|u
+operator|.
+name|rtl
+return|;
 if|if
 condition|(
 name|h
@@ -3278,6 +3353,7 @@ condition|)
 return|return
 name|false_rtx
 return|;
+elseif|else
 if|if
 condition|(
 name|arg0
@@ -3287,12 +3363,23 @@ condition|)
 return|return
 name|true_rtx
 return|;
+else|else
 goto|goto
 name|nohash
 goto|;
 block|}
 else|else
 block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* Array indices...			*/
+specifier|const
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+comment|/* Current rtx's format...		*/
 name|nohash
 label|:
 name|rt_val
@@ -3446,11 +3533,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|va_end
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return
 name|rt_val
 return|;
@@ -3458,11 +3540,6 @@ block|}
 name|rtl_obstack
 operator|=
 name|old_obstack
-expr_stmt|;
-name|va_end
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|attr_hash_add_rtx
 argument_list|(
@@ -3481,19 +3558,60 @@ expr_stmt|;
 return|return
 name|rt_val
 return|;
-name|found
-label|:
-name|va_end
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|attr_rtx
+name|VPARAMS
+argument_list|(
+operator|(
+expr|enum
+name|rtx_code
+name|code
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+name|rtx
+name|result
+decl_stmt|;
+name|VA_OPEN
+argument_list|(
+name|p
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|VA_FIXEDARG
+argument_list|(
+name|p
+argument_list|,
+expr|enum
+name|rtx_code
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|attr_rtx_1
+argument_list|(
+name|code
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|VA_CLOSE
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
 return|return
-name|h
-operator|->
-name|u
-operator|.
-name|rtl
+name|result
 return|;
 block|}
 end_decl_stmt
@@ -3502,19 +3620,15 @@ begin_comment
 comment|/* Create a new string printed with the printf line arguments into a space    of at most LEN bytes:     rtx attr_printf (len, format, [arg1, ..., argn])  */
 end_comment
 
-begin_comment
-comment|/*VARARGS2*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|attr_printf
-name|VPROTO
+name|VPARAMS
 argument_list|(
 operator|(
-specifier|register
+name|unsigned
 name|int
 name|len
 operator|,
@@ -3527,71 +3641,51 @@ operator|...
 operator|)
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-specifier|register
-name|int
-name|len
-decl_stmt|;
-specifier|const
 name|char
-modifier|*
-name|fmt
-decl_stmt|;
-endif|#
-directive|endif
-name|va_list
-name|p
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
 name|str
+index|[
+literal|256
+index|]
 decl_stmt|;
-name|VA_START
+name|VA_OPEN
 argument_list|(
 name|p
 argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|len
-operator|=
-name|va_arg
+name|VA_FIXEDARG
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|int
+argument|unsigned int
+argument_list|,
+argument|len
 argument_list|)
-expr_stmt|;
-name|fmt
-operator|=
-name|va_arg
+empty_stmt|;
+name|VA_FIXEDARG
 argument_list|(
 name|p
 argument_list|,
 specifier|const
 name|char
 operator|*
+argument_list|,
+name|fmt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* Print the string into a temporary location.  */
-name|str
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
+if|if
+condition|(
 name|len
-argument_list|)
+operator|>
+sizeof|sizeof
+name|str
+operator|-
+literal|1
+condition|)
+comment|/* Leave room for \0.  */
+name|abort
+argument_list|()
 expr_stmt|;
 name|vsprintf
 argument_list|(
@@ -3602,7 +3696,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|va_end
+name|VA_CLOSE
 argument_list|(
 name|p
 argument_list|)
@@ -3622,6 +3716,7 @@ block|}
 end_decl_stmt
 
 begin_function
+specifier|static
 name|rtx
 name|attr_eq
 parameter_list|(
@@ -3629,6 +3724,7 @@ name|name
 parameter_list|,
 name|value
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3670,6 +3766,8 @@ block|}
 end_block
 
 begin_function
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|attr_numeral
@@ -3717,7 +3815,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|attr_hash
 modifier|*
@@ -3729,7 +3826,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|new_str
@@ -3877,11 +3973,11 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|str
-argument_list|,
 name|new_str
+argument_list|,
+name|str
 argument_list|,
 name|len
 argument_list|)
@@ -3912,6 +4008,7 @@ comment|/* Check two rtx's for equality of contents,    taking advantage of the 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|attr_equal_p
 parameter_list|(
@@ -3965,31 +4062,28 @@ comment|/* Copy an attribute value expression,    descending to all depths, but 
 end_comment
 
 begin_function
+specifier|static
 name|rtx
 name|attr_copy_rtx
 parameter_list|(
 name|orig
 parameter_list|)
-specifier|register
 name|rtx
 name|orig
 decl_stmt|;
 block|{
-specifier|register
 name|rtx
 name|copy
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|RTX_CODE
 name|code
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|format_ptr
@@ -4345,7 +4439,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a test expression for an attribute, ensure it is validly formed.    IS_CONST indicates whether the expression is constant for each compiler    run (a constant expression may not test any particular insn).     Convert (eq_attr "att" "a1,a2") to (ior (eq_attr ... ) (eq_attrq ..))    and (eq_attr "att" "!a1") to (not (eq_attr "att" "a1")).  Do the latter    test first so that (eq_attr "att" "!a1,a2,a3") works as expected.     Update the string address in EQ_ATTR expression to be the same used    in the attribute (or `alternative_name') to speed up subsequent    `find_attr' calls and eliminate most `strcmp' calls.     Return the new expression, if any.   */
+comment|/* Given a test expression for an attribute, ensure it is validly formed.    IS_CONST indicates whether the expression is constant for each compiler    run (a constant expression may not test any particular insn).     Convert (eq_attr "att" "a1,a2") to (ior (eq_attr ... ) (eq_attrq ..))    and (eq_attr "att" "!a1") to (not (eq_attr "att" "a1")).  Do the latter    test first so that (eq_attr "att" "!a1,a2,a3") works as expected.     Update the string address in EQ_ATTR expression to be the same used    in the attribute (or `alternative_name') to speed up subsequent    `find_attr' calls and eliminate most `strcmp' calls.     Return the new expression, if any.  */
 end_comment
 
 begin_function
@@ -4356,12 +4450,17 @@ parameter_list|(
 name|exp
 parameter_list|,
 name|is_const
+parameter_list|,
+name|lineno
 parameter_list|)
 name|rtx
 name|exp
 decl_stmt|;
 name|int
 name|is_const
+decl_stmt|;
+name|int
+name|lineno
 decl_stmt|;
 block|{
 name|struct
@@ -4374,6 +4473,7 @@ name|attr_value
 modifier|*
 name|av
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name_ptr
@@ -4442,6 +4542,8 @@ argument_list|)
 argument_list|)
 argument_list|,
 name|is_const
+argument_list|,
+name|lineno
 argument_list|)
 return|;
 elseif|else
@@ -4521,7 +4623,7 @@ block|}
 else|else
 name|fatal
 argument_list|(
-literal|"Unknown attribute `%s' in EQ_ATTR"
+literal|"unknown attribute `%s' in EQ_ATTR"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -4543,7 +4645,7 @@ name|is_const
 condition|)
 name|fatal
 argument_list|(
-literal|"Constant expression uses insn attribute `%s' in EQ_ATTR"
+literal|"constant expression uses insn attribute `%s' in EQ_ATTR"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -4613,19 +4715,16 @@ operator|++
 control|)
 if|if
 condition|(
+operator|!
+name|ISDIGIT
+argument_list|(
 operator|*
 name|p
-operator|<
-literal|'0'
-operator|||
-operator|*
-name|p
-operator|>
-literal|'9'
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"Attribute `%s' takes only numeric values"
+literal|"attribute `%s' takes only numeric values"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -4694,7 +4793,7 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"Unknown value `%s' for `%s' attribute"
+literal|"unknown value `%s' for `%s' attribute"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -4782,6 +4881,8 @@ argument_list|(
 name|orexp
 argument_list|,
 name|is_const
+argument_list|,
+name|lineno
 argument_list|)
 return|;
 block|}
@@ -4833,6 +4934,8 @@ literal|0
 argument_list|)
 argument_list|,
 name|is_const
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 name|XEXP
@@ -4852,6 +4955,8 @@ literal|1
 argument_list|)
 argument_list|,
 name|is_const
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4875,6 +4980,8 @@ literal|0
 argument_list|)
 argument_list|,
 name|is_const
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5102,6 +5209,7 @@ name|attr_value
 modifier|*
 name|av
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -5129,15 +5237,26 @@ name|attr
 operator|->
 name|is_numeric
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"CONST_INT not valid for non-numeric `%s' attribute"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"CONST_INT not valid for non-numeric attribute %s"
 argument_list|,
 name|attr
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|INTVAL
@@ -5152,15 +5271,26 @@ name|attr
 operator|->
 name|negative_ok
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Negative numeric value specified for `%s' attribute"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"negative numeric value specified for attribute %s"
 argument_list|,
 name|attr
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 break|break;
 case|case
 name|CONST_STRING
@@ -5228,19 +5358,25 @@ operator|++
 control|)
 if|if
 condition|(
-operator|*
-name|p
-operator|>
-literal|'9'
-operator|||
-operator|*
-name|p
-operator|<
-literal|'0'
-condition|)
-name|fatal
+operator|!
+name|ISDIGIT
 argument_list|(
-literal|"Non-numeric value for numeric `%s' attribute"
+operator|*
+name|p
+argument_list|)
+condition|)
+block|{
+name|message_with_line
+argument_list|(
+name|attr
+condition|?
+name|attr
+operator|->
+name|lineno
+else|:
+literal|0
+argument_list|,
+literal|"non-numeric value for numeric attribute %s"
 argument_list|,
 name|attr
 condition|?
@@ -5251,6 +5387,12 @@ else|:
 literal|"internal"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 break|break;
 block|}
 for|for
@@ -5307,9 +5449,14 @@ name|av
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Unknown value `%s' for `%s' attribute"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"unknown value `%s' for `%s' attribute"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -5327,6 +5474,11 @@ else|:
 literal|"internal"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|IF_THEN_ELSE
@@ -5352,6 +5504,14 @@ condition|?
 name|attr
 operator|->
 name|is_const
+else|:
+literal|0
+argument_list|,
+name|attr
+condition|?
+name|attr
+operator|->
+name|lineno
 else|:
 literal|0
 argument_list|)
@@ -5419,9 +5579,14 @@ name|attr
 operator|->
 name|is_numeric
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Invalid operation `%s' for non-numeric attribute value"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"invalid operation `%s' for non-numeric attribute value"
 argument_list|,
 name|GET_RTX_NAME
 argument_list|(
@@ -5432,6 +5597,12 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* FALLTHRU */
 case|case
 name|IOR
@@ -5517,11 +5688,22 @@ literal|2
 operator|!=
 literal|0
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"First operand of COND must have even length"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"first operand of COND must have even length"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 for|for
 control|(
 name|i
@@ -5567,6 +5749,14 @@ condition|?
 name|attr
 operator|->
 name|is_const
+else|:
+literal|0
+argument_list|,
+name|attr
+condition|?
+name|attr
+operator|->
+name|lineno
 else|:
 literal|0
 argument_list|)
@@ -5646,9 +5836,18 @@ name|attr2
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Unknown attribute `%s' in ATTR"
+name|attr
+condition|?
+name|attr
+operator|->
+name|lineno
+else|:
+literal|0
+argument_list|,
+literal|"unknown attribute `%s' in ATTR"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -5658,25 +5857,33 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|attr
 operator|&&
 name|attr
 operator|->
 name|is_const
-operator|)
 operator|&&
 operator|!
 name|attr2
 operator|->
 name|is_const
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Non-constant attribute `%s' referenced from `%s'"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"non-constant attribute `%s' referenced from `%s'"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -5690,6 +5897,11 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -5716,9 +5928,14 @@ name|negative_ok
 operator|)
 operator|)
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Numeric attribute mismatch calling `%s' from `%s'"
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"numeric attribute mismatch calling `%s' from `%s'"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -5732,6 +5949,11 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -5752,9 +5974,17 @@ argument_list|)
 argument_list|)
 return|;
 default|default:
-name|fatal
+name|message_with_line
 argument_list|(
-literal|"Invalid operation `%s' for attribute value"
+name|attr
+condition|?
+name|attr
+operator|->
+name|lineno
+else|:
+literal|0
+argument_list|,
+literal|"invalid operation `%s' for attribute value"
 argument_list|,
 name|GET_RTX_NAME
 argument_list|(
@@ -5765,6 +5995,11 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 return|return
 name|exp
@@ -5786,20 +6021,24 @@ name|convert_set_attr_alternative
 parameter_list|(
 name|exp
 parameter_list|,
-name|num_alt
-parameter_list|,
-name|insn_index
+name|id
 parameter_list|)
 name|rtx
 name|exp
 decl_stmt|;
-name|int
-name|num_alt
-decl_stmt|;
-name|int
-name|insn_index
+name|struct
+name|insn_def
+modifier|*
+name|id
 decl_stmt|;
 block|{
+name|int
+name|num_alt
+init|=
+name|id
+operator|->
+name|num_alternatives
+decl_stmt|;
 name|rtx
 name|condexp
 decl_stmt|;
@@ -5817,13 +6056,24 @@ argument_list|)
 operator|!=
 name|num_alt
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Bad number of entries in SET_ATTR_ALTERNATIVE for insn %d"
+name|id
+operator|->
+name|lineno
 argument_list|,
-name|insn_index
+literal|"bad number of entries in SET_ATTR_ALTERNATIVE"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|NULL_RTX
+return|;
+block|}
 comment|/* Make a COND with all tests but the last.  Select the last value via the      default.  */
 name|condexp
 operator|=
@@ -5866,6 +6116,7 @@ name|i
 operator|++
 control|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -5895,13 +6146,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Sharing this EQ_ATTR rtl causes trouble.  */
-block|XVECEXP (condexp, 0, 2 * i) = rtx_alloc (EQ_ATTR);       XSTR (XVECEXP (condexp, 0, 2 * i), 0) = alternative_name;       XSTR (XVECEXP (condexp, 0, 2 * i), 1) = p;
-endif|#
-directive|endif
 name|XVECEXP
 argument_list|(
 name|condexp
@@ -5978,23 +6222,21 @@ name|convert_set_attr
 parameter_list|(
 name|exp
 parameter_list|,
-name|num_alt
-parameter_list|,
-name|insn_index
+name|id
 parameter_list|)
 name|rtx
 name|exp
 decl_stmt|;
-name|int
-name|num_alt
-decl_stmt|;
-name|int
-name|insn_index
+name|struct
+name|insn_def
+modifier|*
+name|id
 decl_stmt|;
 block|{
 name|rtx
 name|newexp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name_ptr
@@ -6138,9 +6380,7 @@ name|convert_set_attr_alternative
 argument_list|(
 name|newexp
 argument_list|,
-name|num_alt
-argument_list|,
-name|insn_index
+name|id
 argument_list|)
 return|;
 block|}
@@ -6269,15 +6509,25 @@ argument_list|)
 operator|!=
 name|ATTR
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Bad attribute set in pattern %d"
-argument_list|,
 name|id
 operator|->
-name|insn_index
+name|lineno
+argument_list|,
+literal|"bad attribute set"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+name|value
+operator|=
+name|NULL_RTX
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|SET_ATTR_ALTERNATIVE
@@ -6289,12 +6539,6 @@ argument_list|(
 name|value
 argument_list|,
 name|id
-operator|->
-name|num_alternatives
-argument_list|,
-name|id
-operator|->
-name|insn_index
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6308,19 +6552,17 @@ argument_list|(
 name|value
 argument_list|,
 name|id
-operator|->
-name|num_alternatives
-argument_list|,
-name|id
-operator|->
-name|insn_index
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fatal
+name|message_with_line
 argument_list|(
-literal|"Invalid attribute code `%s' for pattern %d"
+name|id
+operator|->
+name|lineno
+argument_list|,
+literal|"invalid attribute code %s"
 argument_list|,
 name|GET_RTX_NAME
 argument_list|(
@@ -6329,13 +6571,24 @@ argument_list|(
 name|value
 argument_list|)
 argument_list|)
-argument_list|,
-name|id
-operator|->
-name|insn_index
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+name|value
+operator|=
+name|NULL_RTX
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|value
+operator|==
+name|NULL_RTX
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -6361,9 +6614,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Unknown attribute `%s' for pattern number %d"
+name|id
+operator|->
+name|lineno
+argument_list|,
+literal|"unknown attribute %s"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -6376,12 +6634,14 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
-argument_list|,
-name|id
-operator|->
-name|insn_index
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 name|XVECEXP
 argument_list|(
 name|id
@@ -6440,7 +6700,7 @@ comment|/* Make a COND with all tests but the last, and in the original order.  
 end_comment
 
 begin_endif
-unit|condexp = rtx_alloc (COND);   XVEC (condexp, 0) = rtvec_alloc ((num_alt - 1) * 2);   av = attr->first_value;   XEXP (condexp, 1) = av->value;    for (i = num_alt - 2; av = av->next, i>= 0; i--)     {       char *p, *string;       rtx value;        string = p = (char *) oballoc (2 				     + strlen (attr->name) 				     + strlen (XSTR (av->value, 0)));       strcpy (p, attr->name);       strcat (p, "_");       strcat (p, XSTR (av->value, 0));       for (; *p != '\0'; p++) 	if (*p>= 'a'&& *p<= 'z') 	  *p -= 'a' - 'A';        value = attr_rtx (SYMBOL_REF, string);       RTX_UNCHANGING_P (value) = 1;              XVECEXP (condexp, 0, 2 * i) = attr_rtx (EQ, exp, value);        XVECEXP (condexp, 0, 2 * i + 1) = av->value;     }    return condexp; }
+unit|condexp = rtx_alloc (COND);   XVEC (condexp, 0) = rtvec_alloc ((num_alt - 1) * 2);   av = attr->first_value;   XEXP (condexp, 1) = av->value;    for (i = num_alt - 2; av = av->next, i>= 0; i--)     {       char *p, *string;       rtx value;        string = p = (char *) oballoc (2 				     + strlen (attr->name) 				     + strlen (XSTR (av->value, 0)));       strcpy (p, attr->name);       strcat (p, "_");       strcat (p, XSTR (av->value, 0));       for (; *p != '\0'; p++) 	*p = TOUPPER (*p);        value = attr_rtx (SYMBOL_REF, string);       RTX_UNCHANGING_P (value) = 1;        XVECEXP (condexp, 0, 2 * i) = attr_rtx (EQ, exp, value);        XVECEXP (condexp, 0, 2 * i + 1) = av->value;     }    return condexp; }
 endif|#
 directive|endif
 end_endif
@@ -6531,7 +6791,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"(attr_value \"*\") used in invalid context."
+literal|"(attr_value \"*\") used in invalid context"
 argument_list|)
 expr_stmt|;
 name|exp
@@ -6571,7 +6831,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* ??? Why do we do this?  With attribute values { A B C D E }, this          tends to generate (!(x==A)&& !(x==B)&& !(x==C)&& !(x==D)) rather 	 than (x==E). */
+comment|/* ??? Why do we do this?  With attribute values { A B C D E }, this          tends to generate (!(x==A)&& !(x==B)&& !(x==C)&& !(x==D)) rather 	 than (x==E).  */
 block|exp = convert_const_symbol_ref (exp, attr);       RTX_UNCHANGING_P (exp) = 1;       exp = check_attr_value (exp, attr);
 comment|/* Goto COND case since this is now a COND.  Note that while the          new expression is rescanned, all symbol_ref notes are marked as 	 unchanging.  */
 block|goto cond;
@@ -7423,9 +7683,7 @@ operator|=
 name|attr_printf
 argument_list|(
 sizeof|sizeof
-argument_list|(
-literal|"*delay__"
-argument_list|)
+expr|"*delay__"
 operator|+
 name|MAX_DIGITS
 operator|*
@@ -7505,9 +7763,7 @@ operator|=
 name|attr_printf
 argument_list|(
 sizeof|sizeof
-argument_list|(
-literal|"*annul_true__"
-argument_list|)
+expr|"*annul_true__"
 operator|+
 name|MAX_DIGITS
 operator|*
@@ -7588,9 +7844,7 @@ operator|=
 name|attr_printf
 argument_list|(
 sizeof|sizeof
-argument_list|(
-literal|"*annul_false__"
-argument_list|)
+expr|"*annul_false__"
 operator|+
 name|MAX_DIGITS
 operator|*
@@ -8101,14 +8355,6 @@ if|if
 condition|(
 name|allsame
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|newexp
-argument_list|)
-expr_stmt|;
 return|return
 name|operate_exp
 argument_list|(
@@ -8124,29 +8370,6 @@ literal|1
 argument_list|)
 argument_list|)
 return|;
-block|}
-comment|/* If the result is the same as the RIGHT operand, 	     just use that.  */
-if|if
-condition|(
-name|rtx_equal_p
-argument_list|(
-name|newexp
-argument_list|,
-name|right
-argument_list|)
-condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|newexp
-argument_list|)
-expr_stmt|;
-return|return
-name|right
-return|;
-block|}
 return|return
 name|newexp
 return|;
@@ -8154,7 +8377,7 @@ block|}
 else|else
 name|fatal
 argument_list|(
-literal|"Badly formed attribute value"
+literal|"badly formed attribute value"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8423,14 +8646,6 @@ if|if
 condition|(
 name|allsame
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|newexp
-argument_list|)
-expr_stmt|;
 return|return
 name|operate_exp
 argument_list|(
@@ -8446,7 +8661,6 @@ argument_list|,
 name|right
 argument_list|)
 return|;
-block|}
 comment|/* If the result is the same as the LEFT operand, 	 just use that.  */
 if|if
 condition|(
@@ -8457,18 +8671,9 @@ argument_list|,
 name|left
 argument_list|)
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|newexp
-argument_list|)
-expr_stmt|;
 return|return
 name|left
 return|;
-block|}
 return|return
 name|newexp
 return|;
@@ -8476,7 +8681,7 @@ block|}
 else|else
 name|fatal
 argument_list|(
-literal|"Badly formed attribute value."
+literal|"badly formed attribute value"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -8574,6 +8779,10 @@ operator|->
 name|condexp
 argument_list|,
 literal|0
+argument_list|,
+name|unit
+operator|->
+name|first_lineno
 argument_list|)
 expr_stmt|;
 for|for
@@ -8696,6 +8905,7 @@ name|str
 operator|=
 name|attr_printf
 argument_list|(
+operator|(
 name|strlen
 argument_list|(
 name|unit
@@ -8704,11 +8914,10 @@ name|name
 argument_list|)
 operator|+
 sizeof|sizeof
-argument_list|(
-literal|"*_cost_"
-argument_list|)
+expr|"*_cost_"
 operator|+
 name|MAX_DIGITS
+operator|)
 argument_list|,
 literal|"*%s_cost_%d"
 argument_list|,
@@ -8743,6 +8952,10 @@ operator|->
 name|condexp
 argument_list|,
 literal|0
+argument_list|,
+name|op
+operator|->
+name|lineno
 argument_list|)
 expr_stmt|;
 block|}
@@ -8956,7 +9169,7 @@ operator|*
 operator|*
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 operator|(
 name|num_units
@@ -8981,7 +9194,7 @@ name|function_unit
 operator|*
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 operator|(
 name|num_units
@@ -9009,7 +9222,7 @@ expr|struct
 name|function_unit
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -9080,7 +9293,7 @@ name|function_unit_op
 operator|*
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 name|unit
 operator|->
@@ -9134,7 +9347,7 @@ name|function_unit_op
 operator|*
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 name|unit_num
 index|[
@@ -9175,27 +9388,19 @@ name|unit
 operator|->
 name|next
 control|)
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
+name|op_array
+index|[
+name|i
+index|]
+argument_list|,
 name|unit_ops
 index|[
 name|unit
 operator|->
 name|num
-index|]
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|op_array
-index|[
-name|i
 index|]
 argument_list|,
 name|unit
@@ -9631,9 +9836,6 @@ operator|->
 name|next
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAIFA
 name|rtx
 name|blockage
 init|=
@@ -9641,95 +9843,6 @@ name|op
 operator|->
 name|issue_exp
 decl_stmt|;
-else|#
-directive|else
-name|rtx
-name|blockage
-init|=
-name|operate_exp
-argument_list|(
-name|POS_MINUS_OP
-argument_list|,
-name|readycost
-argument_list|,
-name|make_numeric_value
-argument_list|(
-literal|1
-argument_list|)
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|unit
-operator|->
-name|simultaneity
-operator|!=
-literal|0
-condition|)
-block|{
-name|rtx
-name|filltime
-init|=
-name|make_numeric_value
-argument_list|(
-operator|(
-name|unit
-operator|->
-name|simultaneity
-operator|-
-literal|1
-operator|)
-operator|*
-name|unit
-operator|->
-name|issue_delay
-operator|.
-name|min
-argument_list|)
-decl_stmt|;
-name|blockage
-operator|=
-name|operate_exp
-argument_list|(
-name|MIN_OP
-argument_list|,
-name|blockage
-argument_list|,
-name|filltime
-argument_list|)
-expr_stmt|;
-block|}
-name|blockage
-operator|=
-name|operate_exp
-argument_list|(
-name|POS_MINUS_OP
-argument_list|,
-name|make_numeric_value
-argument_list|(
-name|op
-operator|->
-name|ready
-argument_list|)
-argument_list|,
-name|blockage
-argument_list|)
-expr_stmt|;
-name|blockage
-operator|=
-name|operate_exp
-argument_list|(
-name|MAX_OP
-argument_list|,
-name|blockage
-argument_list|,
-name|op
-operator|->
-name|issue_exp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|blockage
 operator|=
 name|simplify_knowing
@@ -9798,6 +9911,7 @@ name|str
 operator|=
 name|attr_printf
 argument_list|(
+operator|(
 name|strlen
 argument_list|(
 name|unit
@@ -9806,11 +9920,10 @@ name|name
 argument_list|)
 operator|+
 sizeof|sizeof
-argument_list|(
-literal|"*_block_"
-argument_list|)
+expr|"*_block_"
 operator|+
 name|MAX_DIGITS
+operator|)
 argument_list|,
 literal|"*%s_block_%d"
 argument_list|,
@@ -9951,6 +10064,7 @@ name|str
 operator|=
 name|attr_printf
 argument_list|(
+operator|(
 name|strlen
 argument_list|(
 name|unit
@@ -9959,9 +10073,8 @@ name|name
 argument_list|)
 operator|+
 sizeof|sizeof
-argument_list|(
-literal|"*_unit_blockage_range"
-argument_list|)
+expr|"*_unit_blockage_range"
+operator|)
 argument_list|,
 literal|"*%s_unit_blockage_range"
 argument_list|,
@@ -9992,9 +10105,7 @@ name|name
 argument_list|)
 operator|+
 sizeof|sizeof
-argument_list|(
-literal|"*_unit_ready_cost"
-argument_list|)
+expr|"*_unit_ready_cost"
 argument_list|,
 literal|"*%s_unit_ready_cost"
 argument_list|,
@@ -10181,9 +10292,7 @@ name|name
 argument_list|)
 operator|+
 sizeof|sizeof
-argument_list|(
-literal|"*_cases"
-argument_list|)
+expr|"*_cases"
 argument_list|,
 literal|"*%s_cases"
 argument_list|,
@@ -10303,20 +10412,17 @@ name|rtx
 name|x
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|enum
 name|rtx_code
 name|code
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -10354,10 +10460,10 @@ name|i
 operator|<
 literal|0
 condition|)
+comment|/* The sign bit encodes a one's compliment mask.  */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* The sign bit encodes a one's compliment mask.  */
 elseif|else
 if|if
 condition|(
@@ -10790,41 +10896,52 @@ begin_comment
 comment|/* Given an expression EXP, see if it is a COND or IF_THEN_ELSE that has a    test that checks relative positions of insns (uses MATCH_DUP or PC).    If so, replace it with what is obtained by passing the expression to    ADDRESS_FN.  If not but it is a COND or IF_THEN_ELSE, call this routine    recursively on each value (including the default value).  Otherwise,    return the value returned by NO_ADDRESS_FN applied to EXP.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|substitute_address
-argument_list|(
+parameter_list|(
 name|exp
-argument_list|,
+parameter_list|,
 name|no_address_fn
-argument_list|,
+parameter_list|,
 name|address_fn
-argument_list|)
+parameter_list|)
 name|rtx
 name|exp
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|rtx
-function_decl|(
-modifier|*
-name|no_address_fn
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|rtx
+parameter_list|(
+function_decl|*no_address_fn
 end_function_decl
 
-begin_function_decl
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
 name|rtx
-function_decl|(
-modifier|*
-name|address_fn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|rtx
+argument_list|(
+argument|*address_fn
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -11127,6 +11244,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|new_names
 index|[]
 init|=
@@ -11141,9 +11259,9 @@ decl_stmt|;
 specifier|static
 name|rtx
 argument_list|(
-argument|*no_address_fn[]
+argument|*const no_address_fn[]
 argument_list|)
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -11161,9 +11279,9 @@ expr_stmt|;
 specifier|static
 name|rtx
 argument_list|(
-argument|*address_fn[]
+argument|*const address_fn[]
 argument_list|)
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -11231,7 +11349,7 @@ name|is_numeric
 condition|)
 name|fatal
 argument_list|(
-literal|"length attribute must be numeric."
+literal|"length attribute must be numeric"
 argument_list|)
 expr_stmt|;
 name|length_attr
@@ -11255,14 +11373,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
+argument_list|(
 name|new_names
-operator|/
-sizeof|sizeof
-name|new_names
-index|[
-literal|0
-index|]
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -11716,21 +11830,21 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
-name|rtunion
+name|rtx
 modifier|*
 name|tests
 init|=
 operator|(
-name|rtunion
+name|rtx
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 name|len
 operator|*
 sizeof|sizeof
 argument_list|(
-name|rtunion
+name|rtx
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -11742,6 +11856,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|first_spacer
+decl_stmt|;
+name|rtx
+name|ret
 decl_stmt|;
 comment|/* This lets us free all storage allocated below, if appropriate.  */
 name|first_spacer
@@ -11755,12 +11872,10 @@ argument_list|(
 name|rtl_obstack
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+name|tests
+argument_list|,
 name|XVEC
 argument_list|(
 name|exp
@@ -11770,17 +11885,11 @@ argument_list|)
 operator|->
 name|elem
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|tests
-argument_list|,
 name|len
 operator|*
 sizeof|sizeof
 argument_list|(
-name|rtunion
+name|rtx
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11829,14 +11938,12 @@ decl_stmt|;
 comment|/* Simplify this test.  */
 name|newtest
 operator|=
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|tests
 index|[
 name|i
 index|]
-operator|.
-name|rtx
 argument_list|,
 name|insn_code
 argument_list|,
@@ -11847,8 +11954,6 @@ name|tests
 index|[
 name|i
 index|]
-operator|.
-name|rtx
 operator|=
 name|newtest
 expr_stmt|;
@@ -11860,8 +11965,6 @@ name|i
 operator|+
 literal|1
 index|]
-operator|.
-name|rtx
 expr_stmt|;
 comment|/* See if this value may need simplification.  */
 if|if
@@ -11905,8 +12008,6 @@ name|i
 operator|+
 literal|1
 index|]
-operator|.
-name|rtx
 expr_stmt|;
 name|new_defval
 operator|=
@@ -11941,8 +12042,6 @@ name|tests
 index|[
 name|j
 index|]
-operator|.
-name|rtx
 operator|=
 name|tests
 index|[
@@ -11950,8 +12049,6 @@ name|j
 operator|+
 literal|2
 index|]
-operator|.
-name|rtx
 expr_stmt|;
 name|len
 operator|-=
@@ -11975,8 +12072,6 @@ name|i
 operator|-
 literal|1
 index|]
-operator|.
-name|rtx
 argument_list|)
 condition|)
 block|{
@@ -11987,8 +12082,6 @@ name|i
 operator|-
 literal|2
 index|]
-operator|.
-name|rtx
 operator|=
 name|insert_right_side
 argument_list|(
@@ -12000,8 +12093,6 @@ name|i
 operator|-
 literal|2
 index|]
-operator|.
-name|rtx
 argument_list|,
 name|newtest
 argument_list|,
@@ -12030,8 +12121,6 @@ name|tests
 index|[
 name|j
 index|]
-operator|.
-name|rtx
 operator|=
 name|tests
 index|[
@@ -12039,8 +12128,6 @@ name|j
 operator|+
 literal|2
 index|]
-operator|.
-name|rtx
 expr_stmt|;
 name|len
 operator|-=
@@ -12054,8 +12141,6 @@ name|i
 operator|+
 literal|1
 index|]
-operator|.
-name|rtx
 operator|=
 name|newval
 expr_stmt|;
@@ -12075,8 +12160,6 @@ name|len
 operator|-
 literal|1
 index|]
-operator|.
-name|rtx
 argument_list|,
 name|new_defval
 argument_list|)
@@ -12133,8 +12216,6 @@ name|tests
 index|[
 name|i
 index|]
-operator|.
-name|rtx
 argument_list|,
 name|XVECEXP
 argument_list|(
@@ -12160,13 +12241,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|first_spacer
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|GET_CODE
@@ -12176,7 +12250,8 @@ argument_list|)
 operator|==
 name|COND
 condition|)
-return|return
+name|ret
+operator|=
 name|simplify_cond
 argument_list|(
 name|defval
@@ -12185,28 +12260,22 @@ name|insn_code
 argument_list|,
 name|insn_index
 argument_list|)
-return|;
-return|return
+expr_stmt|;
+else|else
+name|ret
+operator|=
 name|defval
-return|;
+expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
 name|allsame
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|first_spacer
-argument_list|)
-expr_stmt|;
-return|return
+name|ret
+operator|=
 name|exp
-return|;
-block|}
+expr_stmt|;
 else|else
 block|{
 name|rtx
@@ -12229,18 +12298,8 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|tests
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|XVEC
 argument_list|(
 name|newexp
@@ -12250,11 +12309,13 @@ argument_list|)
 operator|->
 name|elem
 argument_list|,
+name|tests
+argument_list|,
 name|len
 operator|*
 sizeof|sizeof
 argument_list|(
-name|rtunion
+name|rtx
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12267,10 +12328,19 @@ argument_list|)
 operator|=
 name|new_defval
 expr_stmt|;
-return|return
+name|ret
+operator|=
 name|newexp
-return|;
+expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|tests
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 
@@ -12737,7 +12807,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|newexp
 argument_list|,
@@ -12773,6 +12843,7 @@ name|rtx_code
 name|code
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|string
@@ -13008,7 +13079,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If we are processing an (eq_attr "attr" "value") test, we find the value    of "attr" for this insn code.  From that value, we can compute a test    showing when the EQ_ATTR will be true.  This routine performs that    computation.  If a test condition involves an address, we leave the EQ_ATTR    intact because addresses are only valid for the `length' attribute.      EXP is the EQ_ATTR expression and VALUE is the value of that attribute    for the insn corresponding to INSN_CODE and INSN_INDEX.  */
+comment|/* If we are processing an (eq_attr "attr" "value") test, we find the value    of "attr" for this insn code.  From that value, we can compute a test    showing when the EQ_ATTR will be true.  This routine performs that    computation.  If a test condition involves an address, we leave the EQ_ATTR    intact because addresses are only valid for the `length' attribute.     EXP is the EQ_ATTR expression and VALUE is the value of that attribute    for the insn corresponding to INSN_CODE and INSN_INDEX.  */
 end_comment
 
 begin_function
@@ -13104,9 +13175,12 @@ block|{
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
+decl_stmt|;
+name|char
 name|string
+index|[
+literal|256
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -13120,16 +13194,8 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-name|string
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-literal|2
-operator|+
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|XSTR
@@ -13149,7 +13215,13 @@ argument_list|,
 literal|1
 argument_list|)
 argument_list|)
-argument_list|)
+operator|+
+literal|2
+operator|>
+literal|256
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -13194,24 +13266,14 @@ condition|;
 name|p
 operator|++
 control|)
-if|if
-condition|(
 operator|*
 name|p
-operator|>=
-literal|'a'
-operator|&&
+operator|=
+name|TOUPPER
+argument_list|(
 operator|*
 name|p
-operator|<=
-literal|'z'
-condition|)
-operator|*
-name|p
-operator|-=
-literal|'a'
-operator|-
-literal|'A'
+argument_list|)
 expr_stmt|;
 name|newexp
 operator|=
@@ -13249,7 +13311,7 @@ operator|==
 name|COND
 condition|)
 block|{
-comment|/* We construct an IOR of all the cases for which the requested attribute 	 value is present.  Since we start with FALSE, if it is not present, 	 FALSE will be returned.  	 Each case is the AND of the NOT's of the previous conditions with the 	 current condition; in the default case the current condition is TRUE.   	 For each possible COND value, call ourselves recursively.  	 The extra TRUE and FALSE expressions will be eliminated by another 	 call to the simplification routine.  */
+comment|/* We construct an IOR of all the cases for which the requested attribute 	 value is present.  Since we start with FALSE, if it is not present, 	 FALSE will be returned.  	 Each case is the AND of the NOT's of the previous conditions with the 	 current condition; in the default case the current condition is TRUE.  	 For each possible COND value, call ourselves recursively.  	 The extra TRUE and FALSE expressions will be eliminated by another 	 call to the simplification routine.  */
 name|orexp
 operator|=
 name|false_rtx
@@ -13290,7 +13352,7 @@ block|{
 name|rtx
 name|this
 init|=
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|XVECEXP
 argument_list|(
@@ -13495,7 +13557,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This routine is called when an AND of a term with a tree of AND's is    encountered.  If the term or its complement is present in the tree, it    can be replaced with TRUE or FALSE, respectively.     Note that (eq_attr "att" "v1") and (eq_attr "att" "v2") cannot both    be true and hence are complementary.       There is one special case:  If we see 	(and (not (eq_attr "att" "v1")) 	     (eq_attr "att" "v2"))    this can be replaced by (eq_attr "att" "v2").  To do this we need to    replace the term, not anything in the AND tree.  So we pass a pointer to    the term.  */
+comment|/* This routine is called when an AND of a term with a tree of AND's is    encountered.  If the term or its complement is present in the tree, it    can be replaced with TRUE or FALSE, respectively.     Note that (eq_attr "att" "v1") and (eq_attr "att" "v2") cannot both    be true and hence are complementary.     There is one special case:  If we see 	(and (not (eq_attr "att" "v1")) 	     (eq_attr "att" "v2"))    this can be replaced by (eq_attr "att" "v2").  To do this we need to    replace the term, not anything in the AND tree.  So we pass a pointer to    the term.  */
 end_comment
 
 begin_function
@@ -13623,7 +13685,7 @@ argument_list|)
 expr_stmt|;
 name|exp
 operator|=
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|newexp
 argument_list|,
@@ -13758,7 +13820,7 @@ argument_list|)
 expr_stmt|;
 name|exp
 operator|=
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|newexp
 argument_list|,
@@ -14334,7 +14396,7 @@ argument_list|)
 expr_stmt|;
 name|exp
 operator|=
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|newexp
 argument_list|,
@@ -14469,7 +14531,7 @@ argument_list|)
 expr_stmt|;
 name|exp
 operator|=
-name|SIMPLIFY_TEST_EXP
+name|simplify_test_exp_in_temp
 argument_list|(
 name|newexp
 argument_list|,
@@ -14661,11 +14723,300 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Compute approximate cost of the expression.  Used to decide whether    expression is cheap enough for inline.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|attr_rtx_cost
+parameter_list|(
+name|x
+parameter_list|)
+name|rtx
+name|x
+decl_stmt|;
+block|{
+name|int
+name|cost
+init|=
+literal|0
+decl_stmt|;
+name|enum
+name|rtx_code
+name|code
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|x
+condition|)
+return|return
+literal|0
+return|;
+name|code
+operator|=
+name|GET_CODE
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|MATCH_OPERAND
+case|:
+if|if
+condition|(
+name|XSTR
+argument_list|(
+name|x
+argument_list|,
+literal|1
+argument_list|)
+index|[
+literal|0
+index|]
+condition|)
+return|return
+literal|10
+return|;
+else|else
+return|return
+literal|0
+return|;
+case|case
+name|EQ_ATTR
+case|:
+comment|/* Alternatives don't result into function call.  */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|XSTR
+argument_list|(
+name|x
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|"alternative"
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+else|else
+return|return
+literal|5
+return|;
+default|default:
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fmt
+init|=
+name|GET_RTX_FORMAT
+argument_list|(
+name|code
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|GET_RTX_LENGTH
+argument_list|(
+name|code
+argument_list|)
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+block|{
+switch|switch
+condition|(
+name|fmt
+index|[
+name|i
+index|]
+condition|)
+block|{
+case|case
+literal|'V'
+case|:
+case|case
+literal|'E'
+case|:
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|XVECLEN
+argument_list|(
+name|x
+argument_list|,
+name|i
+argument_list|)
+condition|;
+name|j
+operator|++
+control|)
+name|cost
+operator|+=
+name|attr_rtx_cost
+argument_list|(
+name|XVECEXP
+argument_list|(
+name|x
+argument_list|,
+name|i
+argument_list|,
+name|j
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|cost
+operator|+=
+name|attr_rtx_cost
+argument_list|(
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+break|break;
+block|}
+return|return
+name|cost
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Given an expression, see if it can be simplified for a particular insn    code based on the values of other attributes being tested.  This can    eliminate nested get_attr_... calls.     Note that if an endless recursion is specified in the patterns, the     optimization will loop.  However, it will do so in precisely the cases where    an infinite recursion loop could occur during compilation.  It's better that    it occurs here!  */
+comment|/* Simplify test expression and use temporary obstack in order to avoid    memory bloat.  Use RTX_UNCHANGING_P to avoid unnecesary simplifications    and avoid unnecesary copying if possible.  */
+end_comment
+
+begin_function
+specifier|static
+name|rtx
+name|simplify_test_exp_in_temp
+parameter_list|(
+name|exp
+parameter_list|,
+name|insn_code
+parameter_list|,
+name|insn_index
+parameter_list|)
+name|rtx
+name|exp
+decl_stmt|;
+name|int
+name|insn_code
+decl_stmt|,
+name|insn_index
+decl_stmt|;
+block|{
+name|rtx
+name|x
+decl_stmt|;
+name|struct
+name|obstack
+modifier|*
+name|old
+decl_stmt|;
+if|if
+condition|(
+name|RTX_UNCHANGING_P
+argument_list|(
+name|exp
+argument_list|)
+condition|)
+return|return
+name|exp
+return|;
+name|old
+operator|=
+name|rtl_obstack
+expr_stmt|;
+name|rtl_obstack
+operator|=
+name|temp_obstack
+expr_stmt|;
+name|x
+operator|=
+name|simplify_test_exp
+argument_list|(
+name|exp
+argument_list|,
+name|insn_code
+argument_list|,
+name|insn_index
+argument_list|)
+expr_stmt|;
+name|rtl_obstack
+operator|=
+name|old
+expr_stmt|;
+if|if
+condition|(
+name|x
+operator|==
+name|exp
+operator|||
+name|rtl_obstack
+operator|==
+name|temp_obstack
+condition|)
+return|return
+name|x
+return|;
+return|return
+name|attr_copy_rtx
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Given an expression, see if it can be simplified for a particular insn    code based on the values of other attributes being tested.  This can    eliminate nested get_attr_... calls.     Note that if an endless recursion is specified in the patterns, the    optimization will loop.  However, it will do so in precisely the cases where    an infinite recursion loop could occur during compilation.  It's better that    it occurs here!  */
 end_comment
 
 begin_function
@@ -14715,19 +15066,6 @@ name|rtx
 name|newexp
 init|=
 name|exp
-decl_stmt|;
-name|char
-modifier|*
-name|spacer
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|obstack_finish
-argument_list|(
-name|rtl_obstack
-argument_list|)
 decl_stmt|;
 comment|/* Don't re-simplify something we already simplified.  */
 if|if
@@ -14783,18 +15121,9 @@ name|left
 operator|==
 name|false_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|false_rtx
 return|;
-block|}
 name|right
 operator|=
 name|SIMPLIFY_TEST_EXP
@@ -14822,18 +15151,9 @@ name|left
 operator|==
 name|false_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|false_rtx
 return|;
-block|}
 comment|/* If either side is an IOR and we have (eq_attr "alternative" ..") 	 present on both sides, apply the distributive law since this will 	 yield simplifications.  */
 if|if
 condition|(
@@ -14997,18 +15317,9 @@ name|right
 operator|==
 name|false_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|false_rtx
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -15149,7 +15460,7 @@ index|]
 condition|)
 name|fatal
 argument_list|(
-literal|"Invalid alternative specified for pattern number %d"
+literal|"invalid alternative specified for pattern number %d"
 argument_list|,
 name|insn_index
 argument_list|)
@@ -15313,18 +15624,9 @@ name|left
 operator|==
 name|true_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|true_rtx
 return|;
-block|}
 name|right
 operator|=
 name|SIMPLIFY_TEST_EXP
@@ -15352,18 +15654,9 @@ name|right
 operator|==
 name|true_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|true_rtx
 return|;
-block|}
 name|right
 operator|=
 name|simplify_or_tree
@@ -15422,18 +15715,9 @@ name|left
 operator|==
 name|true_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|true_rtx
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -15632,7 +15916,7 @@ index|]
 condition|)
 name|fatal
 argument_list|(
-literal|"Invalid alternative specified for pattern number %d"
+literal|"invalid alternative specified for pattern number %d"
 argument_list|,
 name|insn_index
 argument_list|)
@@ -15863,18 +16147,9 @@ name|left
 operator|==
 name|false_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|true_rtx
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -15882,18 +16157,9 @@ name|left
 operator|==
 name|true_rtx
 condition|)
-block|{
-name|obstack_free
-argument_list|(
-name|rtl_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 return|return
 name|false_rtx
 return|;
-block|}
 comment|/* Try to apply De`Morgan's laws.  */
 elseif|else
 if|if
@@ -16059,7 +16325,7 @@ else|:
 name|false_rtx
 operator|)
 return|;
-comment|/* Look at the value for this insn code in the specified attribute. 	 We normally can replace this comparison with the condition that 	 would give this insn the values being tested for.   */
+comment|/* Look at the value for this insn code in the specified attribute. 	 We normally can replace this comparison with the condition that 	 would give this insn the values being tested for.  */
 if|if
 condition|(
 name|XSTR
@@ -16129,7 +16395,12 @@ name|insn_code
 operator|==
 name|insn_code
 condition|)
-return|return
+block|{
+name|rtx
+name|x
+decl_stmt|;
+name|x
+operator|=
 name|evaluate_eq_attr
 argument_list|(
 name|exp
@@ -16142,7 +16413,31 @@ name|insn_code
 argument_list|,
 name|insn_index
 argument_list|)
+expr_stmt|;
+name|x
+operator|=
+name|SIMPLIFY_TEST_EXP
+argument_list|(
+name|x
+argument_list|,
+name|insn_code
+argument_list|,
+name|insn_index
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|attr_rtx_cost
+argument_list|(
+name|x
+argument_list|)
+operator|<
+literal|20
+condition|)
+return|return
+name|x
 return|;
+block|}
 break|break;
 default|default:
 break|break;
@@ -16206,11 +16501,6 @@ name|rtx
 name|newexp
 decl_stmt|;
 name|int
-name|something_changed
-init|=
-literal|1
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 struct|struct
@@ -16271,7 +16561,7 @@ name|attr_value_list
 operator|*
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 operator|(
 name|insn_code_number
@@ -16287,13 +16577,15 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|insn_code_values
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|insn_code_number
@@ -16314,7 +16606,6 @@ name|insn_code_values
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* Allocate the attr_value_list structures using xmalloc rather than      alloca, because using alloca can overflow the maximum permitted      stack limit on SPARC Lynx.  */
 name|iv
 operator|=
 name|ivbuf
@@ -16497,20 +16788,6 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-comment|/* Loop until nothing changes for one iteration.  */
-name|something_changed
-operator|=
-literal|1
-expr_stmt|;
-while|while
-condition|(
-name|something_changed
-condition|)
-block|{
-name|something_changed
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|iv
@@ -16535,19 +16812,6 @@ modifier|*
 name|old
 init|=
 name|rtl_obstack
-decl_stmt|;
-name|char
-modifier|*
-name|spacer
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|obstack_finish
-argument_list|(
-name|temp_obstack
-argument_list|)
 decl_stmt|;
 name|attr
 operator|=
@@ -16587,16 +16851,31 @@ if|#
 directive|if
 literal|0
 comment|/* This was intended as a speed up, but it was slower.  */
-block|if (insn_n_alternatives[ie->insn_code]> 6&& count_sub_rtxs (av->value, 200)>= 200) 		newexp = simplify_by_alternatives (av->value, ie->insn_code, 						   ie->insn_index); 	      else
+block|if (insn_n_alternatives[ie->insn_code]> 6&& count_sub_rtxs (av->value, 200)>= 200) 	    newexp = simplify_by_alternatives (av->value, ie->insn_code, 					       ie->insn_index); 	  else
 endif|#
 directive|endif
 name|newexp
 operator|=
-name|simplify_cond
-argument_list|(
 name|av
 operator|->
 name|value
+expr_stmt|;
+while|while
+condition|(
+name|GET_CODE
+argument_list|(
+name|newexp
+argument_list|)
+operator|==
+name|COND
+condition|)
+block|{
+name|rtx
+name|newexp2
+init|=
+name|simplify_cond
+argument_list|(
+name|newexp
 argument_list|,
 name|ie
 operator|->
@@ -16606,7 +16885,19 @@ name|ie
 operator|->
 name|insn_index
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|newexp2
+operator|==
+name|newexp
+condition|)
+break|break;
+name|newexp
+operator|=
+name|newexp2
 expr_stmt|;
+block|}
 name|rtl_obstack
 operator|=
 name|old
@@ -16660,24 +16951,19 @@ argument_list|,
 name|ie
 argument_list|)
 expr_stmt|;
-name|something_changed
-operator|=
-literal|1
-expr_stmt|;
-block|}
-name|obstack_free
-argument_list|(
-name|temp_obstack
-argument_list|,
-name|spacer
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
 name|free
 argument_list|(
 name|ivbuf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|insn_code_values
+operator|-
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -16690,7 +16976,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static rtx simplify_by_alternatives (exp, insn_code, insn_index)      rtx exp;      int insn_code, insn_index; {   int i;   int len = insn_n_alternatives[insn_code];   rtx newexp = rtx_alloc (COND);   rtx ultimate;     XVEC (newexp, 0) = rtvec_alloc (len * 2);
+unit|static rtx simplify_by_alternatives (exp, insn_code, insn_index)      rtx exp;      int insn_code, insn_index; {   int i;   int len = insn_n_alternatives[insn_code];   rtx newexp = rtx_alloc (COND);   rtx ultimate;    XVEC (newexp, 0) = rtvec_alloc (len * 2);
 comment|/* It will not matter what value we use as the default value      of the new COND, since that default will never be used.      Choose something of the right type.  */
 end_comment
 
@@ -16761,6 +17047,9 @@ name|num_marks
 decl_stmt|,
 name|new_marks
 decl_stmt|;
+name|rtx
+name|ret
+decl_stmt|;
 comment|/* Locate all the EQ_ATTR expressions.  */
 if|if
 condition|(
@@ -16802,7 +17091,7 @@ expr|struct
 name|dimension
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 name|ndim
 operator|*
@@ -16830,6 +17119,7 @@ operator|++
 control|)
 block|{
 comment|/* Pull the first attribute value from the list and record that 	 attribute as another dimension in the attribute space.  */
+specifier|const
 name|char
 modifier|*
 name|name
@@ -17155,7 +17445,7 @@ operator|(
 name|rtx
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 name|total
 operator|*
@@ -17171,7 +17461,7 @@ operator|(
 name|rtx
 operator|*
 operator|)
-name|alloca
+name|xmalloc
 argument_list|(
 name|total
 operator|*
@@ -17250,6 +17540,11 @@ argument_list|,
 name|space
 argument_list|,
 name|ndim
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|space
 argument_list|)
 expr_stmt|;
 comment|/* Find the most used constant value and make that the default.  */
@@ -17403,20 +17698,25 @@ name|num_marks
 operator|==
 literal|0
 condition|)
-return|return
+name|ret
+operator|=
 name|exp
-return|;
+expr_stmt|;
 comment|/* If all values are the default, use that.  */
+elseif|else
 if|if
 condition|(
 name|total
 operator|==
 name|most_tests
 condition|)
-return|return
+name|ret
+operator|=
 name|defval
-return|;
+expr_stmt|;
 comment|/* Make a COND with the most common constant value the default.  (A more      complex method where tests with the same value were combined didn't      seem to improve things.)  */
+else|else
+block|{
 name|condexp
 operator|=
 name|rtx_alloc
@@ -17514,8 +17814,23 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-return|return
+name|ret
+operator|=
 name|condexp
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|condtest
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|condval
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -17977,8 +18292,8 @@ name|dim
 operator|->
 name|num_values
 condition|)
+comment|/* OK.  */
 empty_stmt|;
-comment|/* Ok.  */
 elseif|else
 if|if
 condition|(
@@ -18565,7 +18880,6 @@ name|rtx
 name|exp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -18959,20 +19273,17 @@ name|rtx
 name|x
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|enum
 name|rtx_code
 name|code
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -19149,20 +19460,17 @@ name|int
 name|max
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|register
 name|enum
 name|rtx_code
 name|code
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -19344,9 +19652,14 @@ name|void
 name|gen_attr
 parameter_list|(
 name|exp
+parameter_list|,
+name|lineno
 parameter_list|)
 name|rtx
 name|exp
+decl_stmt|;
+name|int
+name|lineno
 decl_stmt|;
 block|{
 name|struct
@@ -19359,6 +19672,7 @@ name|attr_value
 modifier|*
 name|av
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name_ptr
@@ -19388,14 +19702,38 @@ name|attr
 operator|->
 name|default_val
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Duplicate definition for `%s' attribute"
+name|lineno
+argument_list|,
+literal|"duplicate definition for attribute %s"
 argument_list|,
 name|attr
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+name|message_with_line
+argument_list|(
+name|attr
+operator|->
+name|lineno
+argument_list|,
+literal|"previous definition"
+argument_list|)
+expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
+name|attr
+operator|->
+name|lineno
+operator|=
+name|lineno
 expr_stmt|;
 if|if
 condition|(
@@ -19529,11 +19867,19 @@ name|attr
 operator|->
 name|is_numeric
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Constant attributes may not take numeric values"
+name|lineno
+argument_list|,
+literal|"constant attributes may not take numeric values"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* Get rid of the CONST node.  It is allowed only at top-level.  */
 name|XEXP
 argument_list|(
@@ -19572,11 +19918,19 @@ name|attr
 operator|->
 name|is_numeric
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
+name|lineno
+argument_list|,
 literal|"`length' attribute must take numeric values"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* Set up the default value.  */
 name|XEXP
 argument_list|(
@@ -19644,6 +19998,7 @@ name|j
 decl_stmt|,
 name|n
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -19818,6 +20173,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -19975,6 +20331,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -20112,9 +20469,14 @@ name|void
 name|gen_insn
 parameter_list|(
 name|exp
+parameter_list|,
+name|lineno
 parameter_list|)
 name|rtx
 name|exp
+decl_stmt|;
+name|int
+name|lineno
 decl_stmt|;
 block|{
 name|struct
@@ -20154,6 +20516,12 @@ name|def
 operator|=
 name|exp
 expr_stmt|;
+name|id
+operator|->
+name|lineno
+operator|=
+name|lineno
+expr_stmt|;
 switch|switch
 condition|(
 name|GET_CODE
@@ -20170,14 +20538,12 @@ operator|->
 name|insn_code
 operator|=
 name|insn_code_number
-operator|++
 expr_stmt|;
 name|id
 operator|->
 name|insn_index
 operator|=
 name|insn_index_number
-operator|++
 expr_stmt|;
 name|id
 operator|->
@@ -20217,14 +20583,12 @@ operator|->
 name|insn_code
 operator|=
 name|insn_code_number
-operator|++
 expr_stmt|;
 name|id
 operator|->
 name|insn_index
 operator|=
 name|insn_index_number
-operator|++
 expr_stmt|;
 name|id
 operator|->
@@ -20311,9 +20675,14 @@ name|void
 name|gen_delay
 parameter_list|(
 name|def
+parameter_list|,
+name|lineno
 parameter_list|)
 name|rtx
 name|def
+decl_stmt|;
+name|int
+name|lineno
 decl_stmt|;
 block|{
 name|struct
@@ -20337,11 +20706,20 @@ literal|3
 operator|!=
 literal|0
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Number of elements in DEFINE_DELAY must be multiple of three."
+name|lineno
+argument_list|,
+literal|"number of elements in DEFINE_DELAY must be multiple of three"
 argument_list|)
 expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|i
@@ -20432,6 +20810,12 @@ name|next
 operator|=
 name|delays
 expr_stmt|;
+name|delay
+operator|->
+name|lineno
+operator|=
+name|lineno
+expr_stmt|;
 name|delays
 operator|=
 name|delay
@@ -20443,7 +20827,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Process a DEFINE_FUNCTION_UNIT.       This gives information about a function unit contained in the CPU.    We fill in a `struct function_unit_op' and a `struct function_unit'    with information used later by `expand_unit'.  */
+comment|/* Process a DEFINE_FUNCTION_UNIT.     This gives information about a function unit contained in the CPU.    We fill in a `struct function_unit_op' and a `struct function_unit'    with information used later by `expand_unit'.  */
 end_comment
 
 begin_function
@@ -20452,9 +20836,14 @@ name|void
 name|gen_unit
 parameter_list|(
 name|def
+parameter_list|,
+name|lineno
 parameter_list|)
 name|rtx
 name|def
+decl_stmt|;
+name|int
+name|lineno
 decl_stmt|;
 block|{
 name|struct
@@ -20467,6 +20856,7 @@ name|function_unit_op
 modifier|*
 name|op
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -20580,15 +20970,33 @@ name|simultaneity
 operator|!=
 name|simultaneity
 condition|)
-name|fatal
+block|{
+name|message_with_line
 argument_list|(
-literal|"Differing specifications given for `%s' function unit."
+name|lineno
+argument_list|,
+literal|"differing specifications given for function unit %s"
 argument_list|,
 name|unit
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|message_with_line
+argument_list|(
+name|unit
+operator|->
+name|first_lineno
+argument_list|,
+literal|"previous definition"
+argument_list|)
+expr_stmt|;
+name|have_error
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 break|break;
 block|}
 if|if
@@ -20677,6 +21085,12 @@ name|next
 operator|=
 name|units
 expr_stmt|;
+name|unit
+operator|->
+name|first_lineno
+operator|=
+name|lineno
+expr_stmt|;
 name|units
 operator|=
 name|unit
@@ -20733,6 +21147,12 @@ operator|=
 name|unit
 operator|->
 name|ops
+expr_stmt|;
+name|op
+operator|->
+name|lineno
+operator|=
+name|lineno
 expr_stmt|;
 name|unit
 operator|->
@@ -20876,7 +21296,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a piece of RTX, print a C expression to test its truth value.    We use AND and IOR both for logical and bit-wise operations, so     interpret them as logical unless they are inside a comparison expression.    The first bit of FLAGS will be non-zero in that case.     Set the second bit of FLAGS to make references to attribute values use    a cached local variable instead of calling a function.  */
+comment|/* Given a piece of RTX, print a C expression to test its truth value.    We use AND and IOR both for logical and bit-wise operations, so    interpret them as logical unless they are inside a comparison expression.    The first bit of FLAGS will be non-zero in that case.     Set the second bit of FLAGS to make references to attribute values use    a cached local variable instead of calling a function.  */
 end_comment
 
 begin_function
@@ -21575,7 +21995,7 @@ name|VOIDmode
 condition|)
 name|fatal
 argument_list|(
-literal|"Null MATCH_OPERAND specified as test"
+literal|"null MATCH_OPERAND specified as test"
 argument_list|)
 expr_stmt|;
 else|else
@@ -21685,7 +22105,7 @@ name|MATCH_DUP
 case|:
 name|printf
 argument_list|(
-literal|"insn_addresses[INSN_UID (GET_CODE (operands[%d]) == LABEL_REF ? XEXP (operands[%d], 0) : operands[%d])]"
+literal|"INSN_ADDRESSES_SET_P () ? INSN_ADDRESSES (INSN_UID (GET_CODE (operands[%d]) == LABEL_REF ? XEXP (operands[%d], 0) : operands[%d])) : 0"
 argument_list|,
 name|XINT
 argument_list|(
@@ -22170,13 +22590,12 @@ name|rtx
 name|exp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -22431,6 +22850,86 @@ argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
+comment|/* Write out prototype of function.  */
+if|if
+condition|(
+operator|!
+name|attr
+operator|->
+name|is_numeric
+condition|)
+name|printf
+argument_list|(
+literal|"extern enum attr_%s "
+argument_list|,
+name|attr
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|attr
+operator|->
+name|unsigned_p
+condition|)
+name|printf
+argument_list|(
+literal|"extern unsigned int "
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"extern int "
+argument_list|)
+expr_stmt|;
+comment|/* If the attribute name starts with a star, the remainder is the name of      the subroutine to use, instead of `get_attr_...'.  */
+if|if
+condition|(
+name|attr
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'*'
+condition|)
+name|printf
+argument_list|(
+literal|"%s PARAMS ((rtx));\n"
+argument_list|,
+operator|&
+name|attr
+operator|->
+name|name
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"get_attr_%s PARAMS ((%s));\n"
+argument_list|,
+name|attr
+operator|->
+name|name
+argument_list|,
+operator|(
+name|attr
+operator|->
+name|is_const
+condition|?
+literal|"void"
+else|:
+literal|"rtx"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Write out start of function, then all values with explicit `case' lines,      then a `default', then the value with the most uses.  */
 if|if
 condition|(
@@ -22619,7 +23118,7 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/* No need to emit code to abort if the insn is unrecognized; the           other get_attr_foo functions will do that when we call them.  */
+comment|/* No need to emit code to abort if the insn is unrecognized; the          other get_attr_foo functions will do that when we call them.  */
 name|write_toplevel_expr
 argument_list|(
 name|p
@@ -23485,6 +23984,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|must_constrain
+condition|)
+block|{
+name|write_indent
+argument_list|(
+name|indent
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extract_constrain_insn_cached (insn);\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|must_extract
 condition|)
 block|{
@@ -23497,44 +24015,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extract_insn (insn);\n"
+literal|"extract_insn_cached (insn);\n"
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|must_constrain
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|REGISTER_CONSTRAINTS
-name|write_indent
-argument_list|(
-name|indent
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"if (! constrain_operands (reload_completed))\n"
-argument_list|)
-expr_stmt|;
-name|write_indent
-argument_list|(
-name|indent
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  fatal_insn_not_found (insn);\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|write_attr_set
 argument_list|(
@@ -23625,6 +24108,7 @@ modifier|*
 name|attr
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -23673,7 +24157,7 @@ name|is_numeric
 condition|)
 name|printf
 argument_list|(
-literal|"  register enum attr_%s "
+literal|"  enum attr_%s "
 argument_list|,
 name|attr
 operator|->
@@ -23689,13 +24173,13 @@ name|unsigned_p
 condition|)
 name|printf
 argument_list|(
-literal|"  register unsigned int "
+literal|"  unsigned int "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"  register int "
+literal|"  int "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -23899,7 +24383,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  register unsigned long accum = 0;\n\n"
+literal|"  unsigned long accum = 0;\n\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -24105,6 +24589,7 @@ name|attr_desc
 modifier|*
 name|attr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
@@ -24355,6 +24840,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CONST_INT
+case|:
+name|printf
+argument_list|(
+name|HOST_WIDE_INT_PRINT_DEC
+argument_list|,
+name|INTVAL
+argument_list|(
+name|value
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SYMBOL_REF
 case|:
 name|fputs
@@ -24519,6 +25018,7 @@ name|write_upcase
 parameter_list|(
 name|str
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str
@@ -24529,41 +25029,21 @@ condition|(
 operator|*
 name|str
 condition|)
-if|if
-condition|(
-operator|*
-name|str
-operator|<
-literal|'a'
-operator|||
-operator|*
-name|str
-operator|>
-literal|'z'
-condition|)
-name|printf
+block|{
+comment|/* The argument of TOUPPER should not have side effects.  */
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
+name|TOUPPER
+argument_list|(
 operator|*
 name|str
-operator|++
+argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
-operator|*
 name|str
 operator|++
-operator|-
-literal|'a'
-operator|+
-literal|'A'
-argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -24722,7 +25202,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     rtx delay_insn;\n"
+literal|"     rtx delay_insn ATTRIBUTE_UNUSED;\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -24737,7 +25217,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     int flags;\n"
+literal|"     int flags ATTRIBUTE_UNUSED;\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -25331,7 +25811,7 @@ block|}
 comment|/* Now that all functions have been written, write the table describing      the function units.   The name is included for documentation purposes      only.  */
 name|printf
 argument_list|(
-literal|"struct function_unit_desc function_units[] = {\n"
+literal|"const struct function_unit_desc function_units[] = {\n"
 argument_list|)
 expr_stmt|;
 comment|/* Write out the descriptions in numeric order, but don't force that order      on the list.  Doing so increases the runtime of genattrtab.c.  */
@@ -25548,8 +26028,10 @@ name|rtx
 name|value
 decl_stmt|;
 name|char
-modifier|*
 name|str
+index|[
+literal|256
+index|]
 decl_stmt|;
 name|int
 name|using_case
@@ -25557,6 +26039,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"static int %s_unit_%s PARAMS ((rtx, rtx));\n"
+argument_list|,
+name|unit
+operator|->
+name|name
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"static int\n"
@@ -25614,14 +26107,8 @@ literal|"    {\n"
 argument_list|)
 expr_stmt|;
 comment|/* Write the `switch' statement to get the case value.  */
-name|str
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|unit
@@ -25629,18 +26116,13 @@ operator|->
 name|name
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|connection
-argument_list|)
-operator|+
-literal|10
-argument_list|)
+sizeof|sizeof
+expr|"*_cases"
+operator|>
+literal|256
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -26013,6 +26495,7 @@ name|n_comma_elts
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -26071,6 +26554,7 @@ name|next_comma_elt
 parameter_list|(
 name|pstr
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -26081,6 +26565,7 @@ name|char
 modifier|*
 name|out_str
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -26347,6 +26832,20 @@ operator|=
 name|attr
 operator|->
 name|is_special
+operator|=
+literal|0
+expr_stmt|;
+name|attr
+operator|->
+name|unsigned_p
+operator|=
+name|attr
+operator|->
+name|func_units_p
+operator|=
+name|attr
+operator|->
+name|blockage_p
 operator|=
 literal|0
 expr_stmt|;
@@ -26817,114 +27316,12 @@ block|}
 end_function
 
 begin_function
-name|PTR
-name|xrealloc
-parameter_list|(
-name|old
-parameter_list|,
-name|size
-parameter_list|)
-name|PTR
-name|old
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|ptr
-decl_stmt|;
-if|if
-condition|(
-name|old
-condition|)
-name|ptr
-operator|=
-operator|(
-name|PTR
-operator|)
-name|realloc
-argument_list|(
-name|old
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-else|else
-name|ptr
-operator|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ptr
-condition|)
-name|fatal
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-expr_stmt|;
-return|return
-name|ptr
-return|;
-block|}
-end_function
-
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|val
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-expr_stmt|;
-return|return
-name|val
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|rtx
 name|copy_rtx_unchanging
 parameter_list|(
 name|orig
 parameter_list|)
-specifier|register
 name|rtx
 name|orig
 decl_stmt|;
@@ -26932,7 +27329,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|register rtx copy;   register RTX_CODE code;
+block|rtx copy;   RTX_CODE code;
 endif|#
 directive|endif
 if|if
@@ -26963,113 +27360,9 @@ return|;
 if|#
 directive|if
 literal|0
-block|code = GET_CODE (orig);   switch (code)     {     case CONST_INT:     case CONST_DOUBLE:     case SYMBOL_REF:     case CODE_LABEL:       return orig;            default:       break;     }    copy = rtx_alloc (code);   PUT_MODE (copy, GET_MODE (orig));   RTX_UNCHANGING_P (copy) = 1;      bcopy ((char *)&XEXP (orig, 0), (char *)&XEXP (copy, 0), 	 GET_RTX_LENGTH (GET_CODE (copy)) * sizeof (rtx));   return copy;
+block|code = GET_CODE (orig);   switch (code)     {     case CONST_INT:     case CONST_DOUBLE:     case SYMBOL_REF:     case CODE_LABEL:       return orig;      default:       break;     }    copy = rtx_alloc (code);   PUT_MODE (copy, GET_MODE (orig));   RTX_UNCHANGING_P (copy) = 1;    memcpy (&XEXP (copy, 0),&XEXP (orig, 0), 	  GET_RTX_LENGTH (GET_CODE (copy)) * sizeof (rtx));   return copy;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_decl_stmt
-name|void
-name|fatal
-name|VPROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|format
-operator|,
-operator|...
-operator|)
-argument_list|)
-block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-specifier|const
-name|char
-modifier|*
-name|format
-decl_stmt|;
-endif|#
-directive|endif
-name|va_list
-name|ap
-decl_stmt|;
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|format
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"genattrtab: "
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
-end_comment
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|()
-block|{
-name|fatal
-argument_list|(
-literal|"Internal gcc abort."
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -27078,6 +27371,7 @@ comment|/* Determine if an insn has a constant number of delay slots, i.e., the 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|write_const_num_delay_slots
 parameter_list|()
@@ -27230,6 +27524,23 @@ end_function
 begin_escape
 end_escape
 
+begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -27250,14 +27561,6 @@ block|{
 name|rtx
 name|desc
 decl_stmt|;
-name|FILE
-modifier|*
-name|infile
-decl_stmt|;
-specifier|register
-name|int
-name|c
-decl_stmt|;
 name|struct
 name|attr_desc
 modifier|*
@@ -27274,70 +27577,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|RLIMIT_STACK
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_GETRLIMIT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SETRLIMIT
-argument_list|)
-comment|/* Get rid of any avoidable limit on stack size.  */
-block|{
-name|struct
-name|rlimit
-name|rlim
-decl_stmt|;
-comment|/* Set the stack limit huge so that alloca does not fail.  */
-name|getrlimit
-argument_list|(
-name|RLIMIT_STACK
-argument_list|,
-operator|&
-name|rlim
-argument_list|)
-expr_stmt|;
-name|rlim
-operator|.
-name|rlim_cur
+name|progname
 operator|=
-name|rlim
-operator|.
-name|rlim_max
-expr_stmt|;
-name|setrlimit
-argument_list|(
-name|RLIMIT_STACK
-argument_list|,
-operator|&
-name|rlim
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-name|obstack_init
-argument_list|(
-name|rtl_obstack
-argument_list|)
-expr_stmt|;
-name|obstack_init
-argument_list|(
-name|hash_obstack
-argument_list|)
-expr_stmt|;
-name|obstack_init
-argument_list|(
-name|temp_obstack
-argument_list|)
+literal|"genattrtab"
 expr_stmt|;
 if|if
 condition|(
@@ -27347,44 +27589,34 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"No input file name."
-argument_list|)
-expr_stmt|;
-name|infile
-operator|=
-name|fopen
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"r"
+literal|"no input file name"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|infile
-operator|==
-literal|0
-condition|)
-block|{
-name|perror
+name|init_md_reader_args
 argument_list|(
+name|argc
+argument_list|,
 name|argv
-index|[
-literal|1
-index|]
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+operator|!=
+name|SUCCESS_EXIT_CODE
+condition|)
+return|return
+operator|(
 name|FATAL_EXIT_CODE
+operator|)
+return|;
+name|obstack_init
+argument_list|(
+name|hash_obstack
 argument_list|)
 expr_stmt|;
-block|}
-name|init_rtl
-argument_list|()
+name|obstack_init
+argument_list|(
+name|temp_obstack
+argument_list|)
 expr_stmt|;
 comment|/* Set up true and false rtx's */
 name|true_rtx
@@ -27466,155 +27698,111 @@ condition|(
 literal|1
 condition|)
 block|{
-name|c
+name|int
+name|lineno
+decl_stmt|;
+name|desc
 operator|=
-name|read_skip_spaces
+name|read_md_rtx
 argument_list|(
-name|infile
+operator|&
+name|lineno
+argument_list|,
+operator|&
+name|insn_code_number
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|c
+name|desc
 operator|==
-name|EOF
+name|NULL
 condition|)
 break|break;
-name|ungetc
-argument_list|(
-name|c
-argument_list|,
-name|infile
-argument_list|)
-expr_stmt|;
-name|desc
-operator|=
-name|read_rtx
-argument_list|(
-name|infile
-argument_list|)
-expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|GET_CODE
 argument_list|(
 name|desc
 argument_list|)
-operator|==
-name|DEFINE_INSN
-operator|||
-name|GET_CODE
-argument_list|(
-name|desc
-argument_list|)
-operator|==
-name|DEFINE_PEEPHOLE
-operator|||
-name|GET_CODE
-argument_list|(
-name|desc
-argument_list|)
-operator|==
-name|DEFINE_ASM_ATTRIBUTES
 condition|)
+block|{
+case|case
+name|DEFINE_INSN
+case|:
+case|case
+name|DEFINE_PEEPHOLE
+case|:
+case|case
+name|DEFINE_ASM_ATTRIBUTES
+case|:
 name|gen_insn
 argument_list|(
 name|desc
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|desc
-argument_list|)
-operator|==
-name|DEFINE_EXPAND
-condition|)
-name|insn_code_number
-operator|++
-operator|,
-name|insn_index_number
-operator|++
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|desc
-argument_list|)
-operator|==
-name|DEFINE_SPLIT
-condition|)
-name|insn_code_number
-operator|++
-operator|,
-name|insn_index_number
-operator|++
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|desc
-argument_list|)
-operator|==
+break|break;
+case|case
 name|DEFINE_ATTR
-condition|)
-block|{
+case|:
 name|gen_attr
 argument_list|(
 name|desc
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
-name|insn_index_number
-operator|++
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|desc
-argument_list|)
-operator|==
+break|break;
+case|case
 name|DEFINE_DELAY
-condition|)
-block|{
+case|:
 name|gen_delay
 argument_list|(
 name|desc
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
-name|insn_index_number
-operator|++
+break|break;
+case|case
+name|DEFINE_FUNCTION_UNIT
+case|:
+name|gen_unit
+argument_list|(
+name|desc
+argument_list|,
+name|lineno
+argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
 block|}
-elseif|else
 if|if
 condition|(
 name|GET_CODE
 argument_list|(
 name|desc
 argument_list|)
-operator|==
-name|DEFINE_FUNCTION_UNIT
+operator|!=
+name|DEFINE_ASM_ATTRIBUTES
 condition|)
-block|{
-name|gen_unit
-argument_list|(
-name|desc
-argument_list|)
-expr_stmt|;
 name|insn_index_number
 operator|++
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|have_error
+condition|)
+return|return
+name|FATAL_EXIT_CODE
+return|;
+name|insn_code_number
+operator|++
+expr_stmt|;
 comment|/* If we didn't have a DEFINE_ASM_ATTRIBUTES, make a null one.  */
 if|if
 condition|(
@@ -27644,6 +27832,8 @@ expr_stmt|;
 name|gen_insn
 argument_list|(
 name|tem
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -27676,6 +27866,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"rtl.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"tm_p.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -27715,12 +27910,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"flags.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define operands recog_operand\n\n"
+literal|"#define operands recog_data.operand\n\n"
 argument_list|)
 expr_stmt|;
 comment|/* Make `insn_alternatives'.  */
@@ -27863,7 +28063,6 @@ name|attr
 operator|->
 name|next
 control|)
-block|{
 name|attr
 operator|->
 name|default_val
@@ -27881,12 +28080,48 @@ argument_list|,
 name|attr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|have_error
+condition|)
+return|return
+name|FATAL_EXIT_CODE
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAX_ATTRS_INDEX
+condition|;
+name|i
+operator|++
+control|)
+for|for
+control|(
+name|attr
+operator|=
+name|attrs
+index|[
+name|i
+index|]
+init|;
+name|attr
+condition|;
+name|attr
+operator|=
+name|attr
+operator|->
+name|next
+control|)
 name|fill_attr
 argument_list|(
 name|attr
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Construct extra attributes for `length'.  */
 name|make_length_attrs
 argument_list|()
@@ -27995,8 +28230,8 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 name|ferror
 argument_list|(
 name|stdout
@@ -28007,11 +28242,30 @@ condition|?
 name|FATAL_EXIT_CODE
 else|:
 name|SUCCESS_EXIT_CODE
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|get_insn_name
+parameter_list|(
+name|code
+parameter_list|)
+name|int
+name|code
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Base configuration file for all OpenBSD targets.    Copyright (C) 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Base configuration file for all OpenBSD targets.    Copyright (C) 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -79,12 +79,35 @@ begin_comment
 comment|/* CPP_SPEC appropriate for OpenBSD. We deal with -posix and -pthread.    XXX the way threads are handling currently is not very satisfying,    since all code must be compiled with -pthread to work.     This two-stage defines makes it easy to pick that for targets that    have subspecs.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPP_CPU_SPEC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OBSD_CPP_SPEC
+value|"%(cpp_cpu) %{posix:-D_POSIX_SOURCE} %{pthread:-D_POSIX_THREADS}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|OBSD_CPP_SPEC
 value|"%{posix:-D_POSIX_SOURCE} %{pthread:-D_POSIX_THREADS}"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* LIB_SPEC appropriate for OpenBSD.  Select the appropriate libc,     depending on profiling and threads.  Basically,     -lc(_r)?(_p)?, select _r for threads, and _p for p or pg.  */
@@ -94,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|OBSD_LIB_SPEC
-value|"-lc%{pthread:_r}%{p:_p}%{!p:%{pg:_p}}"
+value|"%{!shared:-lc%{pthread:_r}%{p:_p}%{!p:%{pg:_p}}}"
 end_define
 
 begin_ifndef
@@ -220,7 +243,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{assert*}"
+value|"%{g:%{!nostdlib:-L/usr/lib/debug}} %{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{assert*}"
 end_define
 
 begin_else
@@ -233,7 +256,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{R*} %{static:-Bstatic} %{assert*}"
+value|"%{g:%{!nostdlib:-L/usr/lib/debug}} %{!shared:%{!nostdlib:%{!r*:%{!e*:-e start}}}} %{shared:-Bshareable -x} -dc -dp %{R*} %{static:-Bstatic} %{assert*}"
 end_define
 
 begin_endif
@@ -284,25 +307,26 @@ begin_comment
 comment|/* Use memcpy and memset instead of bcopy and bzero.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_MEM_FUNCTIONS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|TARGET_MEM_FUNCTIONS
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Miscellaneous parameters.  */
 end_comment
-
-begin_comment
-comment|/* Tell libgcc2.c that OpenBSD targets support atexit.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
 
 begin_comment
 comment|/* Controlling debugging info: dbx options.  */
@@ -363,21 +387,21 @@ begin_define
 define|#
 directive|define
 name|TYPE_ASM_OP
-value|".type"
+value|"\t.type\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZE_ASM_OP
-value|".size"
+value|"\t.size\t"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SET_ASM_OP
-value|".set"
+value|"\t.set\t"
 end_define
 
 begin_comment
@@ -455,7 +479,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     fputs (" , ", FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     fputs (" , ", FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
 end_define
 
 begin_endif
@@ -491,7 +515,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (!flag_inhibit_size_directive)					\       {									\ 	fprintf (FILE, "\t%s\t", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\ 	fputs (" , . - ", FILE);					\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
+value|do {									\     if (!flag_inhibit_size_directive)					\       {									\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\ 	fputs (" , . - ", FILE);					\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
 end_define
 
 begin_endif
@@ -527,7 +551,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     fputs (" , ", FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, " , %d\n", int_size_in_bytes (TREE_TYPE (DECL)));\       }									\     ASM_OUTPUT_LABEL (FILE, NAME);					\   } while (0)
+value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     fputs (" , ", FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, " , %d\n", int_size_in_bytes (TREE_TYPE (DECL)));\       }									\     ASM_OUTPUT_LABEL (FILE, NAME);					\   } while (0)
 end_define
 
 begin_comment
@@ -554,7 +578,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									 \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "\t%s\t", SIZE_ASM_OP);			 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, " , %d\n", int_size_in_bytes (TREE_TYPE (DECL)));\        }								 \    } while (0)
+value|do {									 \      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		 \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		 \&& ! AT_END&& TOP_LEVEL					 \&& DECL_INITIAL (DECL) == error_mark_node			 \&& !size_directive_output)					 \        {								 \ 	 size_directive_output = 1;					 \ 	 fprintf (FILE, "%s", SIZE_ASM_OP);				 \ 	 assemble_name (FILE, name);					 \ 	 fprintf (FILE, " , %d\n", int_size_in_bytes (TREE_TYPE (DECL)));\        }								 \    } while (0)
 end_define
 
 begin_endif
@@ -634,14 +658,6 @@ end_escape
 
 begin_comment
 comment|/* Storage layout.  */
-end_comment
-
-begin_comment
-comment|/* We don't have to worry about binary compatibility with older C++ code,    but there is a big known bug with vtable thunks which has not been    fixed yet, so DON'T activate it by default.  */
-end_comment
-
-begin_comment
-comment|/* #define DEFAULT_VTABLE_THUNKS 1 */
 end_comment
 
 begin_escape

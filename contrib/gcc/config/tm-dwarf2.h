@@ -10,6 +10,12 @@ name|DWARF2_DEBUGGING_INFO
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
 begin_define
 define|#
 directive|define

@@ -3,15 +3,22 @@ begin_comment
 comment|/* Definitions of target machine for GNU compiler, for SPARC VxSim    Copyright 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (sparc VxSim)");
+end_define
+
 begin_comment
 comment|/* Supposedly the same as vanilla sparc svr4, except for the stuff below: */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sparc/sysv4.h"
-end_include
 
 begin_undef
 undef|#
@@ -24,7 +31,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-DCPU=SIMSPARCSOLARIS -D__vxworks -D__vxworks__ -Dsparc -D__svr4__ -D__SVR4 \   -Asystem(embedded) -Asystem(svr4) -Acpu(sparc) -Amachine(sparc)\   -D__GCC_NEW_VARARGS__"
+value|"-DCPU=SIMSPARCSOLARIS -D__vxworks -D__vxworks__ -Dsparc -D__svr4__ -D__SVR4 \   -Asystem=embedded -Asystem=svr4 -Acpu=sparc -Amachine=sparc\   -D__GCC_NEW_VARARGS__"
 end_define
 
 begin_undef
@@ -54,7 +61,7 @@ value|"-fno-builtin %{sun4:} %{target:}"
 end_define
 
 begin_comment
-comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used. */
+comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used.  */
 end_comment
 
 begin_undef
@@ -72,7 +79,7 @@ value|"%{V} %{v:%{!V:-V}} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s \   
 end_define
 
 begin_comment
-comment|/* However it appears that Solaris 2.0 uses the same reg numbering as    the old BSD-style system did. */
+comment|/* However it appears that Solaris 2.0 uses the same reg numbering as    the old BSD-style system did.  */
 end_comment
 
 begin_undef
@@ -113,7 +120,7 @@ value|DBX_DEBUG
 end_define
 
 begin_comment
-comment|/* The Solaris 2 assembler uses .skip, not .zero, so put this back. */
+comment|/* The Solaris 2 assembler uses .skip, not .zero, so put this back.  */
 end_comment
 
 begin_undef
@@ -168,7 +175,7 @@ begin_define
 define|#
 directive|define
 name|COMMON_ASM_OP
-value|"\t.common"
+value|"\t.common\t"
 end_define
 
 begin_comment
@@ -243,7 +250,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf (LABEL, "*.L%s%d", PREFIX, NUM)
+value|sprintf (LABEL, "*.L%s%ld", PREFIX, (long)(NUM))
 end_define
 
 begin_escape

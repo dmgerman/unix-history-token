@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hash.c -- hash table routines    Copyright (C) 1993, 1994, 1998 Free Software Foundation, Inc.    Written by Steve Chamberlain<sac@cygnus.com>  This file was lifted from BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* hash.c -- hash table routines    Copyright (C) 1993, 1994, 1998, 2001 Free Software Foundation, Inc.    Written by Steve Chamberlain<sac@cygnus.com>  This file was lifted from BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_SIZE
-value|(1009)
+value|1009
 end_define
 
 begin_comment
@@ -67,7 +67,7 @@ comment|/* Create a new hash table, given a number of entries.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|void
 name|hash_table_init_n
 argument_list|(
 name|table
@@ -129,7 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|boolean
+name|bool
 argument_list|(
 argument|*comp
 argument_list|)
@@ -171,9 +171,6 @@ name|hash_entry
 operator|*
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|obstack_begin
 argument_list|(
 operator|&
@@ -183,17 +180,7 @@ name|memory
 argument_list|,
 name|alloc
 argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"no memory"
-argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
-block|}
 name|table
 operator|->
 name|table
@@ -216,23 +203,6 @@ name|alloc
 argument_list|)
 operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|table
-operator|->
-name|table
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"no memory"
-argument_list|)
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
 name|memset
 argument_list|(
 operator|(
@@ -271,9 +241,6 @@ name|comp
 operator|=
 name|comp
 expr_stmt|;
-return|return
-name|true
-return|;
 block|}
 end_block
 
@@ -282,7 +249,7 @@ comment|/* Create a new hash table with the default number of entries.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|void
 name|hash_table_init
 argument_list|(
 name|table
@@ -342,7 +309,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|boolean
+name|bool
 argument_list|(
 argument|*comp
 argument_list|)
@@ -362,7 +329,6 @@ end_expr_stmt
 
 begin_block
 block|{
-return|return
 name|hash_table_init_n
 argument_list|(
 name|table
@@ -375,7 +341,7 @@ name|comp
 argument_list|,
 name|DEFAULT_SIZE
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_block
 
@@ -437,7 +403,7 @@ decl_stmt|;
 name|hash_table_key
 name|key
 decl_stmt|;
-name|boolean
+name|int
 name|create
 decl_stmt|;
 function_decl|hash_table_key
@@ -464,7 +430,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|unsigned
 name|long
 name|hash
@@ -511,12 +476,7 @@ index|]
 init|;
 name|hashp
 operator|!=
-operator|(
-expr|struct
-name|hash_entry
-operator|*
-operator|)
-name|NULL
+literal|0
 condition|;
 name|hashp
 operator|=
@@ -524,7 +484,6 @@ name|hashp
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|hashp
@@ -550,19 +509,13 @@ condition|)
 return|return
 name|hashp
 return|;
-block|}
 if|if
 condition|(
 operator|!
 name|create
 condition|)
 return|return
-operator|(
-expr|struct
-name|hash_entry
-operator|*
-operator|)
-name|NULL
+literal|0
 return|;
 name|hashp
 operator|=
@@ -589,20 +542,10 @@ if|if
 condition|(
 name|hashp
 operator|==
-operator|(
-expr|struct
-name|hash_entry
-operator|*
-operator|)
-name|NULL
+literal|0
 condition|)
 return|return
-operator|(
-expr|struct
-name|hash_entry
-operator|*
-operator|)
-name|NULL
+literal|0
 return|;
 if|if
 condition|(
@@ -665,10 +608,6 @@ begin_comment
 comment|/* Base method for creating a new hash table entry.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|struct
 name|hash_entry
@@ -693,18 +632,14 @@ name|table
 decl_stmt|;
 name|hash_table_key
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
 condition|(
 name|entry
 operator|==
-operator|(
-expr|struct
-name|hash_entry
-operator|*
-operator|)
-name|NULL
+literal|0
 condition|)
 name|entry
 operator|=
@@ -754,11 +689,7 @@ name|int
 name|size
 decl_stmt|;
 block|{
-name|PTR
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+return|return
 name|obstack_alloc
 argument_list|(
 operator|&
@@ -768,24 +699,6 @@ name|memory
 argument_list|,
 name|size
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-name|NULL
-operator|&&
-name|size
-operator|!=
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"no memory"
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_function
@@ -809,7 +722,7 @@ name|hash_table
 modifier|*
 name|table
 decl_stmt|;
-function_decl|boolean
+function_decl|bool
 parameter_list|(
 function_decl|*func
 end_function_decl
@@ -841,6 +754,11 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|hash_entry
+modifier|*
+name|p
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -856,12 +774,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|struct
-name|hash_entry
-modifier|*
-name|p
-decl_stmt|;
 for|for
 control|(
 name|p
@@ -875,7 +787,7 @@ index|]
 init|;
 name|p
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|p
 operator|=
@@ -883,7 +795,6 @@ name|p
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 operator|!
@@ -898,8 +809,6 @@ name|info
 argument_list|)
 condition|)
 return|return;
-block|}
-block|}
 block|}
 end_block
 
@@ -1014,7 +923,7 @@ comment|/* Compare two strings.  Return non-zero iff the two strings are    the 
 end_comment
 
 begin_function
-name|boolean
+name|bool
 name|string_compare
 parameter_list|(
 name|k1
@@ -1104,21 +1013,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|new
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"no memory"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|strcpy
 argument_list|(
 name|new

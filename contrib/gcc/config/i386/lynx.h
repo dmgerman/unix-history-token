@@ -25,15 +25,15 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -DI386 -DLynx -DIBITS32 -Asystem(unix) -Asystem(lynx) -Acpu(i386) -Amachine(i386)"
+value|"-DI386 -DLynx -DIBITS32 -Asystem=unix -Asystem=lynx"
 end_define
 
 begin_comment
-comment|/* The prefix to add to user-visible assembler symbols. */
+comment|/* The prefix to add to user-visible assembler symbols.  */
 end_comment
 
 begin_comment
-comment|/* Override the svr3 convention of adding a leading underscore. */
+comment|/* Override the svr3 convention of adding a leading underscore.  */
 end_comment
 
 begin_undef

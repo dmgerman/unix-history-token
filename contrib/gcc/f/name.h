@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_name
+name|GCC_F_NAME_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_name
+name|GCC_F_NAME_H
 end_define
 
 begin_comment
@@ -423,6 +423,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_NAME_H */
+end_comment
 
 end_unit
 

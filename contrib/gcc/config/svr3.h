@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do { output_file_directive ((FILE), main_input_filename);	\        if (optimize) ASM_FILE_START_1 (FILE);			\      } while (0)
+value|do { output_file_directive ((FILE), main_input_filename);	\        if (optimize) { ASM_FILE_START_1 (FILE); }		\      } while (0)
 end_define
 
 begin_comment
@@ -225,6 +225,12 @@ begin_comment
 comment|/* Output #ident as a .ident.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_IDENT
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -335,23 +341,6 @@ value|BITS_PER_WORD
 end_define
 
 begin_comment
-comment|/* Assembler pseudos to introduce constants of various size.  These    definitions should work for most svr3 systems.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_BYTE_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_BYTE_OP
-value|"\t.byte"
-end_define
-
-begin_comment
 comment|/* The prefix to add to user-visible assembler symbols.     For System V Release 3 the convention is to prepend a leading    underscore onto user-level symbol names.  */
 end_comment
 
@@ -415,7 +404,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf (LABEL, "*%s%s%d", LOCAL_LABEL_PREFIX, PREFIX, NUM)
+value|sprintf (LABEL, "*%s%s%ld", LOCAL_LABEL_PREFIX, PREFIX, (long)(NUM))
 end_define
 
 begin_comment
@@ -440,7 +429,7 @@ comment|/* Support const sections and the ctors and dtors sections for g++.    N
 end_comment
 
 begin_comment
-comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).     Define ASM_OUTPUT_CONSTRUCTOR to push the address of the constructor.  */
+comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).     Define TARGET_ASM_CONSTRUCTOR to push the address of the constructor.  */
 end_comment
 
 begin_define
@@ -454,28 +443,21 @@ begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP
-value|".section\t.init"
+value|"\t.section\t.init"
 end_define
 
 begin_define
 define|#
 directive|define
 name|FINI_SECTION_ASM_OP
-value|".section .fini,\"x\""
+value|"\t.section .fini,\"x\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONST_SECTION_ASM_OP
-value|".section\t.rodata, \"x\""
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTORS_SECTION_ASM_OP
-value|INIT_SECTION_ASM_OP
+value|"\t.section\t.rodata, \"x\""
 end_define
 
 begin_define
@@ -569,7 +551,7 @@ define|#
 directive|define
 name|INIT_SECTION_FUNCTION
 define|\
-value|void								\ init_section ()							\ {								\   if (in_section != in_init)					\     {								\       fprintf (asm_out_file, "\t%s\n", INIT_SECTION_ASM_OP);	\       in_section = in_init;					\     }								\ }
+value|void								\ init_section ()							\ {								\   if (in_section != in_init)					\     {								\       fprintf (asm_out_file, "%s\n", INIT_SECTION_ASM_OP);	\       in_section = in_init;					\     }								\ }
 end_define
 
 begin_define
@@ -577,7 +559,7 @@ define|#
 directive|define
 name|FINI_SECTION_FUNCTION
 define|\
-value|void								\ fini_section ()							\ {								\   if (in_section != in_fini)					\     {								\       fprintf (asm_out_file, "\t%s\n", FINI_SECTION_ASM_OP);	\       in_section = in_fini;					\     }								\ }
+value|void								\ fini_section ()							\ {								\   if (in_section != in_fini)					\     {								\       fprintf (asm_out_file, "%s\n", FINI_SECTION_ASM_OP);	\       in_section = in_fini;					\     }								\ }
 end_define
 
 begin_define
@@ -593,59 +575,18 @@ define|#
 directive|define
 name|CONST_SECTION_FUNCTION
 define|\
-value|void									\ const_section ()							\ {									\   extern void text_section();						\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
-end_define
-
-begin_comment
-comment|/* The ctors and dtors sections are not normally put into use     by EXTRA_SECTIONS and EXTRA_SECTION_FUNCTIONS as defined in svr3.h,    but it can't hurt to define these macros for whatever systems use them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTORS_SECTION_FUNCTION
-define|\
-value|void									\ ctors_section ()							\ {									\   if (in_section != in_ctors)						\     {									\       fprintf (asm_out_file, "%s\n", CTORS_SECTION_ASM_OP);		\       in_section = in_ctors;						\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTORS_SECTION_FUNCTION
-define|\
-value|void									\ dtors_section ()							\ {									\   if (in_section != in_dtors)						\     {									\       fprintf (asm_out_file, "%s\n", DTORS_SECTION_ASM_OP);		\       in_section = in_dtors;						\     }									\ }
-end_define
-
-begin_comment
-comment|/* This is machine-dependent    because it needs to push something on the stack.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
-end_undef
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     fini_section ();                   				\     fprintf (FILE, "%s\t ", ASM_LONG);					\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n");						\   } while (0)
+value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
 end_define
 
 begin_comment
 comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SELECT_SECTION
+end_undef
 
 begin_define
 define|#
@@ -655,6 +596,8 @@ parameter_list|(
 name|DECL
 parameter_list|,
 name|RELOC
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
 value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((0&& RELOC)
@@ -666,6 +609,12 @@ begin_comment
 comment|/* A C statement or statements to switch to the appropriate    section for output of RTX in mode MODE.  RTX is some kind    of constant in RTL.  The argument MODE is redundant except    in the case of a `const_int' rtx.  Currently, these always    go into the const section.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SELECT_RTX_SECTION
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -674,6 +623,8 @@ parameter_list|(
 name|MODE
 parameter_list|,
 name|RTX
+parameter_list|,
+name|ALIGN
 parameter_list|)
 value|const_section()
 end_define

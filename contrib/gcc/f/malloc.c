@@ -159,6 +159,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|malloc_types_
 index|[]
 init|=
@@ -480,7 +481,7 @@ condition|)
 return|return;
 name|malloc_reserve_
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 literal|20
 operator|*
@@ -488,13 +489,6 @@ literal|1024
 argument_list|)
 expr_stmt|;
 comment|/* In case of crash, free this first. */
-name|assert
-argument_list|(
-name|malloc_reserve_
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

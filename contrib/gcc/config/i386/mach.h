@@ -19,16 +19,6 @@ directive|include
 file|"i386/gstabs.h"
 end_include
 
-begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"i386/perform.h"
-end_include
-
 begin_undef
 undef|#
 directive|undef
@@ -39,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -DMACH -Asystem(unix) -Asystem(mach) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -DMACH -Asystem=unix -Asystem=mach"
 end_define
 
 begin_comment

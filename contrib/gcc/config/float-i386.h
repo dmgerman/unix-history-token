@@ -403,46 +403,11 @@ directive|undef
 name|LDBL_EPSILON
 end_undef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__LDBL_UNION__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__LDBL_UNION__
-end_define
-
-begin_union
-union|union
-name|__convert_long_double
-block|{
-name|unsigned
-name|__convert_long_double_i
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|long
-name|double
-name|__convert_long_double_d
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|(__extension__ ((union __convert_long_double) {__convert_long_double_i: {0x0, 0x80000000, 0x3fc0, 0x0}}).__convert_long_double_d)
+value|1.08420217248550443401e-19L
 end_define
 
 begin_comment
@@ -476,7 +441,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|(__extension__ ((union __convert_long_double) {__convert_long_double_i: {0x0, 0x80000000, 0x1, 0x0}}).__convert_long_double_d)
+value|3.36210314311209350626e-4932L
 end_define
 
 begin_comment
@@ -527,7 +492,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|(__extension__ ((union __convert_long_double) {__convert_long_double_i: {0xffffffff, 0xffffffff, 0x107ffe, 0x0}}).__convert_long_double_d)
+value|1.18973149535723176502e+4932L
 end_define
 
 begin_comment
@@ -546,6 +511,62 @@ directive|define
 name|LDBL_MAX_10_EXP
 value|4932
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|199901L
+end_if
+
+begin_comment
+comment|/* The floating-point expression evaluation method.         -1  indeterminate          0  evaluate all operations and constants just to the range and             precision of the type          1  evaluate operations and constants of type float and double             to the range and precision of the double type, evaluate             long double operations and constants to the range and             precision of the long double type          2  evaluate all operations and constants to the range and             precision of the long double type    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FLT_EVAL_METHOD
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FLT_EVAL_METHOD
+value|2
+end_define
+
+begin_comment
+comment|/* Number of decimal digits to enable rounding to the given number of       decimal digits without loss of precision.          if FLT_RADIX == 10^n:  #mantissa * log10 (FLT_RADIX)          else                :  ceil (1 + #mantissa * log10 (FLT_RADIX))       where #mantissa is the number of bits in the mantissa of the widest       supported floating-point type.    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DECIMAL_DIG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_DIG
+value|21
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* C99 */
+end_comment
 
 begin_endif
 endif|#

@@ -56,6 +56,7 @@ comment|/* Return string which is the former assembler name modified with a     
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|gen_stdcall_suffix
@@ -72,8 +73,10 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* ??? This probably should use XSTR (XEXP (DECL_RTL (decl), 0), 0) instead      of DECL_ASSEMBLER_NAME.  */
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|asmname
 init|=
 name|IDENTIFIER_POINTER
@@ -226,7 +229,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Turn this back on when the linker is updated to handle grouped    .data$ sections correctly. See corresponding note in i386/interix.h.     MK. */
+comment|/* Turn this back on when the linker is updated to handle grouped    .data$ sections correctly. See corresponding note in i386/interix.h.     MK.  */
 end_comment
 
 begin_comment
@@ -234,7 +237,7 @@ comment|/* Cover function for UNIQUE_SECTION.  */
 end_comment
 
 begin_comment
-unit|void i386_pe_unique_section (decl, reloc)      tree decl;      int reloc; {   int len;   char *name,*string,*prefix;    name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (decl));
+unit|void i386_pe_unique_section (decl, reloc)      tree decl;      int reloc; {   int len;   const char *name;   char *string,*prefix;    name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (decl));
 comment|/* Strip off any encoding in fnname.  */
 end_comment
 
@@ -243,8 +246,13 @@ unit|STRIP_NAME_ENCODING (name, name);
 comment|/* The object is put in, for example, section .text$foo.      The linker will then ultimately place them in .text      (everything from the $ on is stripped). Don't put      read-only data in .rdata section to avoid a PE linker       bug when .rdata$* grouped sections are used in code      without a .rdata section.  */
 end_comment
 
+begin_comment
+unit|if (TREE_CODE (decl) == FUNCTION_DECL)     prefix = ".text$";
+comment|/* else if (DECL_INITIAL (decl) == 0 	   || DECL_INITIAL (decl) == error_mark_node)     prefix = ".bss"; */
+end_comment
+
 begin_ifdef
-unit|if (TREE_CODE (decl) == FUNCTION_DECL)     prefix = ".text$";   else if (DECL_READONLY_SECTION (decl, reloc))
+unit|else if (DECL_READONLY_SECTION (decl, reloc))
 ifdef|#
 directive|ifdef
 name|READONLY_DATA_SECTION

@@ -4,7 +4,7 @@ comment|/* Definitions for Intel 386 running Interactive Unix System V,    using
 end_comment
 
 begin_comment
-comment|/* Mostly it's like AT&T Unix System V with dbx-in-coff. */
+comment|/* Mostly it's like AT&T Unix System V with dbx-in-coff.  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ file|"i386/isc.h"
 end_include
 
 begin_comment
-comment|/* Overridden defines for ifile usage. */
+comment|/* Overridden defines for ifile usage.  */
 end_comment
 
 begin_undef

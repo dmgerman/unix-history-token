@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define per-register tables for data flow info and register allocation.    Copyright (C) 1987, 1993, 1994, 1995, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Define per-register tables for data flow info and register allocation.    Copyright (C) 1987, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -20,19 +20,29 @@ value|mode_size[(int) GET_MODE (R)]
 end_define
 
 begin_comment
-comment|/* Get the number of consecutive hard regs required to hold the REG rtx R.    When something may be an explicit hard reg, REG_SIZE is the only    valid way to get this value.  You cannot get it from the regno.  */
+comment|/* When you only have the mode of a pseudo register before it has a hard    register chosen for it, this reports the size of each hard register    a pseudo in such a mode would get allocated to.  A target may    override this.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|REGMODE_NATURAL_SIZE
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|REG_SIZE
+name|REGMODE_NATURAL_SIZE
 parameter_list|(
-name|R
+name|MODE
 parameter_list|)
-define|\
-value|((mode_size[(int) GET_MODE (R)] + UNITS_PER_WORD - 1) / UNITS_PER_WORD)
+value|UNITS_PER_WORD
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -85,7 +95,7 @@ name|int
 name|last_note_uid
 decl_stmt|;
 comment|/* UID of last note to use (REG n) */
-comment|/* fields set by both reg_scan and flow_analysis */
+comment|/* fields set by reg_scan& flow_analysis */
 name|int
 name|sets
 decl_stmt|;
@@ -95,6 +105,10 @@ name|int
 name|refs
 decl_stmt|;
 comment|/* # of times (REG n) is used or set */
+name|int
+name|freq
+decl_stmt|;
+comment|/* # estimated frequency (REG n) is used or set */
 name|int
 name|deaths
 decl_stmt|;
@@ -112,9 +126,9 @@ name|basic_block
 decl_stmt|;
 comment|/* # of basic blocks (REG n) is used in */
 name|char
-name|changes_size
+name|changes_mode
 decl_stmt|;
-comment|/* whether (SUBREG (REG n)) changes size */
+comment|/* whether (SUBREG (REG n)) exists and  				   is illegal.  */
 block|}
 name|reg_info
 typedef|;
@@ -127,16 +141,8 @@ name|reg_n_info
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|reg_n_max
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Indexed by n, gives number of times (REG n) is used or set.    References within loops may be counted more times.  */
+comment|/* Indexed by n, gives number of times (REG n) is used or set.  */
 end_comment
 
 begin_define
@@ -147,6 +153,45 @@ parameter_list|(
 name|N
 parameter_list|)
 value|(VARRAY_REG (reg_n_info, N)->refs)
+end_define
+
+begin_comment
+comment|/* Estimate frequency of references to register N.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_FREQ
+parameter_list|(
+name|N
+parameter_list|)
+value|(VARRAY_REG (reg_n_info, N)->freq)
+end_define
+
+begin_comment
+comment|/* The weights for each insn varries from 0 to REG_FREQ_BASE.     This constant does not need to be high, as in infrequently executed    regions we want to count instructions equivalently to optimize for    size instead of speed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_FREQ_MAX
+value|1000
+end_define
+
+begin_comment
+comment|/* Compute register frequency from the BB frequency.  When optimizing for size,    or profile driven feedback is available and the function is never executed,    frequency is always equivalent.  Otherwise rescale the basic block    frequency.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_FREQ_FROM_BB
+parameter_list|(
+name|bb
+parameter_list|)
+value|(optimize_size				      \ 			      || (flag_branch_probabilities		      \&& !ENTRY_BLOCK_PTR->count)		      \ 			      ? REG_FREQ_MAX				      \ 			      : ((bb)->frequency * REG_FREQ_MAX / BB_FREQ_MAX)\ 			      ? ((bb)->frequency * REG_FREQ_MAX / BB_FREQ_MAX)\ 			      : 1)
 end_define
 
 begin_comment
@@ -178,17 +223,17 @@ value|(VARRAY_REG (reg_n_info, N)->deaths)
 end_define
 
 begin_comment
-comment|/* Indexed by N; says whether a pseudo register N was ever used    within a SUBREG that changes the size of the reg.  Some machines prohibit    such objects to be in certain (usually floating-point) registers.  */
+comment|/* Indexed by N; says whether a pseudo register N was ever used    within a SUBREG that changes the mode of the reg in some way    that is illegal for a given class (usually floating-point)    of registers.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REG_CHANGES_SIZE
+name|REG_CHANGES_MODE
 parameter_list|(
 name|N
 parameter_list|)
-value|(VARRAY_REG (reg_n_info, N)->changes_size)
+value|(VARRAY_REG (reg_n_info, N)->changes_mode)
 end_define
 
 begin_comment
@@ -295,6 +340,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|reg_names
@@ -362,46 +408,6 @@ value|(VARRAY_REG (reg_n_info, N)->last_note_uid)
 end_define
 
 begin_comment
-comment|/* This is reset to LAST_VIRTUAL_REGISTER + 1 at the start of each function.    After rtl generation, it is 1 plus the largest register number used.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|reg_rtx_no
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Vector indexed by regno; contains 1 for a register is considered a pointer.    Reloading, etc. will use a pointer register rather than a non-pointer    as the base register in an address, when there is a choice of two regs.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|regno_pointer_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|REGNO_POINTER_FLAG
-parameter_list|(
-name|REGNO
-parameter_list|)
-value|regno_pointer_flag[REGNO]
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|regno_pointer_flag_length
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* List made of EXPR_LIST rtx's which gives pairs of pseudo registers    that have to go in the same hard reg.  */
 end_comment
 
@@ -409,18 +415,6 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|regs_may_share
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Vector mapping pseudo regno into the REG rtx for that register.    This is computed by reg_scan.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-modifier|*
-name|regno_reg_rtx
 decl_stmt|;
 end_decl_stmt
 
@@ -505,6 +499,8 @@ parameter_list|(
 name|REGNO
 parameter_list|,
 name|NREGS
+parameter_list|,
+name|MODE
 parameter_list|)
 define|\
 value|choose_hard_reg_mode (REGNO, NREGS)
@@ -550,7 +546,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|allocate_reg_info
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|size_t

@@ -36,76 +36,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -DVSTA \   -Asystem(unix) -Asystem(vsta) -Acpu(i386) -Amachine(i386)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_ctor, in_dtor
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|CTOR_SECTION_FUNCTION						\   DTOR_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTOR_SECTION_FUNCTION
-define|\
-value|void								\ ctor_section ()							\ {								\   if (in_section != in_ctor)					\     {								\       fprintf (asm_out_file, "\t.section .ctor\n");		\       in_section = in_ctor;					\     }								\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTOR_SECTION_FUNCTION
-define|\
-value|void								\ dtor_section ()							\ {								\   if (in_section != in_dtor)					\     {								\       fprintf (asm_out_file, "\t.section .dtor\n");		\       in_section = in_dtor;					\     }								\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\     ctor_section ();				\     fprintf (FILE, "%s\t", ASM_LONG);		\     assemble_name (FILE, NAME);			\     fprintf (FILE, "\n");			\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\     dtor_section ();                   		\     fprintf (FILE, "%s\t", ASM_LONG);		\     assemble_name (FILE, NAME);              	\     fprintf (FILE, "\n");			\   } while (0)
+value|"-Dunix -DVSTA -Asystem=unix -Asystem=vsta"
 end_define
 
 end_unit

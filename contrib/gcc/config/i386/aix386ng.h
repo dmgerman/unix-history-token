@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dps2 -Dunix -Asystem(aix)"
+value|"-Dps2 -Dunix -Asystem=aix"
 end_define
 
 begin_define
@@ -266,13 +266,13 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
+name|TARGET_ASM_CONSTRUCTOR
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
+name|TARGET_ASM_DESTRUCTOR
 end_undef
 
 begin_undef
@@ -340,7 +340,7 @@ define|#
 directive|define
 name|CONST_SECTION_FUNCTION
 define|\
-value|void									\ const_section ()							\ {									\   extern void text_section();						\   text_section();							\ }
+value|void									\ const_section ()							\ {									\   text_section();							\ }
 end_define
 
 begin_undef

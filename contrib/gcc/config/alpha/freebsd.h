@@ -1,17 +1,57 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* XXX */
+comment|/* Definitions for DEC Alpha/AXP running FreeBSD using the ELF format    Copyright (C) 2000 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * This file was derived from source obtained from NetBSD/Alpha which  * is publicly available for ftp. The patch was developed by cgd@netbsd.org  * during the time he worked at CMU. He claims that CMU own this patch  * to gcc and that they have not (and will not) release the patch for  * incorporation in FSF sources. We are supposedly able to use the patch,  * but we are not allowed to forward it back to FSF for inclusion in  * their source releases.  *  * This all has me (jb@freebsd.org) confused because (a) I see no copyright  * messages that tell me that use is restricted; and (b) I expected that  * the patch was originally developed from other files which are subject  * to GPL.  *  * Use of this file is restricted until its CMU ownership is tested.  */
+comment|/* Provide a CPP_SPEC appropriate for FreeBSD/alpha.  Besides the dealing with    the GCC option `-posix', and PIC issues as on all FreeBSD platforms, we must    deal with the Alpha's FP issues.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"alpha/alpha.h"
-end_include
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%(cpp_cpu)						\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{posix:-D_POSIX_SOURCE}						\   %{mieee:-D_IEEE_FP}							\   %{mieee-with-inexact:-D_IEEE_FP -D_IEEE_FP_INEXACT}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"-m elf64alpha %{G*} %{relax:-relax}			\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}			\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}}	\     %{static:-Bstatic}}"
+end_define
+
+begin_comment
+comment|/* Provide an ASM_SPEC appropriate for a FreeBSD/Alpha target.  This differs    from the generic FreeBSD ASM_SPEC in that no special handling of PIC is    necessary on the Alpha.  */
+end_comment
+
+begin_comment
+comment|/* Per Richard Henderson<rth@cygnus.com>, it is better to use the `.arch'    directive in the assembly file.  alpha/elf.h gives us this in    "ASM_FILE_START". #undef  ASM_SPEC #define ASM_SPEC " %| %{mcpu=*:-m%*}" */
+end_comment
+
+begin_comment
+comment|/************************[  Target stuff  ]***********************************/
+end_comment
+
+begin_comment
+comment|/* Define the actual types of some ANSI-mandated types.      Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
+end_comment
+
+begin_comment
+comment|/* alpha.h gets this wrong for FreeBSD.  We use the GCC defaults instead.  */
+end_comment
 
 begin_undef
 undef|#
@@ -19,11 +59,17 @@ directive|undef
 name|WCHAR_TYPE
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_UNSIGNED
+end_undef
+
 begin_define
 define|#
 directive|define
-name|WCHAR_TYPE
-value|"int"
+name|WCHAR_UNSIGNED
+value|0
 end_define
 
 begin_undef
@@ -39,217 +85,37 @@ name|WCHAR_TYPE_SIZE
 value|32
 end_define
 
-begin_comment
-comment|/* FreeBSD-specific things: */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_VERSION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__FreeBSD__ -D__alpha__ -D__alpha"
+name|TARGET_VERSION
+value|fprintf (stderr, " (FreeBSD/alpha ELF)");
 end_define
-
-begin_comment
-comment|/* Look for the include files in the system-defined places.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|GPLUSPLUS_INCLUDE_DIR
-end_undef
 
 begin_define
 define|#
 directive|define
-name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/include/g++"
+name|TARGET_ELF
+value|1
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|GCC_INCLUDE_DIR
+name|TARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/include"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|INCLUDE_DEFAULTS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INCLUDE_DEFAULTS
-define|\
-value|{                                     \     { GPLUSPLUS_INCLUDE_DIR, 1, 1 },    \     { GCC_INCLUDE_DIR, 0, 0 },          \     { 0, 0, 0 }                         \   }
-end_define
-
-begin_comment
-comment|/* Under FreeBSD, the normal location of the `ld' and `as' programs is the    /usr/bin directory.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MD_EXEC_PREFIX
-value|"/usr/bin/"
-end_define
-
-begin_comment
-comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|MD_STARTFILE_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MD_STARTFILE_PREFIX
-value|"/usr/lib/"
-end_define
-
-begin_comment
-comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  Current we just deal with    the GCC option `-posix'.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%{posix:-D_POSIX_SOURCE}"
-end_define
-
-begin_comment
-comment|/* Provide an ASM_SPEC appropriate for FreeBSD. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|" %|"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FINAL_SPEC
-end_undef
-
-begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LIB_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{!shared:%{!pg:%{!pthread:-lc}%{pthread:-lpthread -lc}}%{pg:%{!pthread:-lc_p}%{pthread:-lpthread_p -lc_p}}}"
-end_define
-
-begin_comment
-comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static, -assert, and -nostdlib.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e __start}}} -dc -dp %{static:-Bstatic} %{assert*}"
-end_define
-
-begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|fputs ("\tjsr $28,_mcount\n", (FILE));
-end_define
-
-begin_comment
-comment|/* at */
-end_comment
-
-begin_comment
-comment|/* Show that we need a GP when profiling.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_PROFILING_NEEDS_GP
-end_define
-
-begin_define
-define|#
-directive|define
-name|bsd4_4
+name|TARGET_DEFAULT
+value|(MASK_FP | MASK_FPREGS | MASK_GAS)
 end_define
 
 begin_undef
@@ -258,17 +124,38 @@ directive|undef
 name|HAS_INIT_SECTION
 end_undef
 
+begin_comment
+comment|/* Show that we need a GP when profiling.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
-name|PREFERRED_DEBUGGING_TYPE
+name|TARGET_PROFILING_NEEDS_GP
 end_undef
 
 begin_define
 define|#
 directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
+name|TARGET_PROFILING_NEEDS_GP
+value|1
+end_define
+
+begin_comment
+comment|/* This is the char to use for continuation (in case we need to turn    continuation back on).  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DBX_CONTIN_CHAR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_CONTIN_CHAR
+value|'?'
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility routines for data type conversion for GNU C.    Copyright (C) 1987, 88, 91-95, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU C.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Utility routines for data type conversion for GNU C.    Copyright (C) 1987, 1988, 1991, 1992, 1993, 1994, 1995, 1997,    1998 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_include
@@ -313,7 +319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert EXPR to some integer (or enum) type TYPE.     EXPR must be pointer, integer, discrete (enum, char, or bool), or float;    in other cases error is called.     The result of this is always supposed to be a newly created tree node    not in use in any existing structure.  */
+comment|/* Convert EXPR to some integer (or enum) type TYPE.     EXPR must be pointer, integer, discrete (enum, char, or bool), float, or    vector; in other cases error is called.     The result of this is always supposed to be a newly created tree node    not in use in any existing structure.  */
 end_comment
 
 begin_function
@@ -347,6 +353,7 @@ argument_list|(
 name|expr
 argument_list|)
 decl_stmt|;
+name|unsigned
 name|int
 name|inprec
 init|=
@@ -355,6 +362,7 @@ argument_list|(
 name|intype
 argument_list|)
 decl_stmt|;
+name|unsigned
 name|int
 name|outprec
 init|=
@@ -367,7 +375,7 @@ comment|/* An INTEGER_TYPE cannot be incomplete, but an ENUMERAL_TYPE can      b
 if|if
 condition|(
 operator|!
-name|TYPE_SIZE
+name|COMPLETE_TYPE_P
 argument_list|(
 name|type
 argument_list|)
@@ -974,7 +982,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* Do the arithmetic in type TYPEX, 		   then convert result to TYPE.  */
-specifier|register
 name|tree
 name|typex
 init|=
@@ -1016,7 +1023,7 @@ operator|!=
 name|inprec
 condition|)
 block|{
-comment|/* Don't do unsigned arithmetic where signed was wanted, 		       or vice versa. 		       Exception: if either of the original operands were 		       unsigned then can safely do the work as unsigned. 		       And we may need to do it as unsigned 		       if we truncate to the original size.  */
+comment|/* Don't do unsigned arithmetic where signed was wanted, 		       or vice versa. 		       Exception: if both of the original operands were 		       unsigned then can safely do the work as unsigned. 		       And we may need to do it as unsigned 		       if we truncate to the original size.  */
 name|typex
 operator|=
 operator|(
@@ -1029,6 +1036,7 @@ name|expr
 argument_list|)
 argument_list|)
 operator|||
+operator|(
 name|TREE_UNSIGNED
 argument_list|(
 name|TREE_TYPE
@@ -1036,7 +1044,7 @@ argument_list|(
 name|arg0
 argument_list|)
 argument_list|)
-operator|||
+operator|&&
 name|TREE_UNSIGNED
 argument_list|(
 name|TREE_TYPE
@@ -1044,6 +1052,7 @@ argument_list|(
 name|arg1
 argument_list|)
 argument_list|)
+operator|)
 operator|)
 condition|?
 name|unsigned_type
@@ -1101,7 +1110,6 @@ name|BIT_NOT_EXPR
 case|:
 comment|/* This is not correct for ABS_EXPR, 	     since we must test the sign before truncation.  */
 block|{
-specifier|register
 name|tree
 name|typex
 init|=
@@ -1315,6 +1323,50 @@ argument_list|,
 name|expr
 argument_list|)
 argument_list|)
+argument_list|)
+return|;
+case|case
+name|VECTOR_TYPE
+case|:
+if|if
+condition|(
+name|GET_MODE_SIZE
+argument_list|(
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|!=
+name|GET_MODE_SIZE
+argument_list|(
+name|TYPE_MODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"can't convert between vector values of different size"
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+return|return
+name|build1
+argument_list|(
+name|NOP_EXPR
+argument_list|,
+name|type
+argument_list|,
+name|expr
 argument_list|)
 return|;
 default|default:
@@ -1579,6 +1631,100 @@ argument_list|)
 expr_stmt|;
 return|return
 name|convert_to_complex
+argument_list|(
+name|type
+argument_list|,
+name|integer_zero_node
+argument_list|)
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Convert EXPR to the vector type TYPE in the usual ways.  */
+end_comment
+
+begin_function
+name|tree
+name|convert_to_vector
+parameter_list|(
+name|type
+parameter_list|,
+name|expr
+parameter_list|)
+name|tree
+name|type
+decl_stmt|,
+name|expr
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+condition|)
+block|{
+case|case
+name|INTEGER_TYPE
+case|:
+case|case
+name|VECTOR_TYPE
+case|:
+if|if
+condition|(
+name|GET_MODE_SIZE
+argument_list|(
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|!=
+name|GET_MODE_SIZE
+argument_list|(
+name|TYPE_MODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"can't convert between vector values of different size"
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+return|return
+name|build1
+argument_list|(
+name|NOP_EXPR
+argument_list|,
+name|type
+argument_list|,
+name|expr
+argument_list|)
+return|;
+default|default:
+name|error
+argument_list|(
+literal|"can't convert value to a vector"
+argument_list|)
+expr_stmt|;
+return|return
+name|convert_to_vector
 argument_list|(
 name|type
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running system V, using gas.    Copyright (C) 1992, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running system V, using gas.    Copyright (C) 1992, 1996, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -32,13 +32,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FRAME_POINTER_REQUIRED
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 define|\
 value|(current_function_calls_setjmp || current_function_calls_longjmp)
 end_define
@@ -141,10 +141,6 @@ begin_comment
 comment|/* Support const sections and the ctors and dtors sections for g++.    Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.    However, use of the const section is turned off by default    unless the specific tm.h file turns it on by defining    USE_CONST_SECTION as 1.  */
 end_comment
 
-begin_comment
-comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).     Define ASM_OUTPUT_CONSTRUCTOR to push the address of the constructor.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -156,21 +152,21 @@ begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP
-value|".section\t.init"
+value|"\t.section\t.init"
 end_define
 
 begin_define
 define|#
 directive|define
 name|FINI_SECTION_ASM_OP
-value|".section .fini,\"x\""
+value|"\t.section .fini,\"x\""
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONST_SECTION_ASM_OP
-value|".section\t.rodata, \"x\""
+value|"\t.section\t.rodata, \"x\""
 end_define
 
 begin_define
@@ -191,11 +187,24 @@ begin_comment
 comment|/* CTOR_LIST_BEGIN and CTOR_LIST_END are machine-dependent    because they push on the stack.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STACK_GROWS_DOWNWARD
-end_ifdef
+begin_comment
+comment|/* This is copied from i386/sysv3.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTOR_LIST_BEGIN
+define|\
+value|asm (INIT_SECTION_ASM_OP);			\   asm ("pushl $0")
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTOR_LIST_END
+value|CTOR_LIST_BEGIN
+end_define
 
 begin_comment
 comment|/* Constructor list on stack is in reverse order.  Go to the end of the    list and go backwards to call constructors in the right order.  */
@@ -208,32 +217,6 @@ name|DO_GLOBAL_CTORS_BODY
 define|\
 value|do {								\   func_ptr *p, *beg = alloca (0);				\   for (p = beg; *p; p++)					\     ;								\   while (p != beg)						\     (*--p) ();							\ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Constructor list on stack is in correct order.  Just call them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DO_GLOBAL_CTORS_BODY
-define|\
-value|do {								\   func_ptr *p, *beg = alloca (0);				\   for (p = beg; *p; )						\     (*p++) ();							\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STACK_GROWS_DOWNWARD */
-end_comment
 
 begin_comment
 comment|/* Add extra sections .rodata, .init and .fini.  */
@@ -271,7 +254,7 @@ define|#
 directive|define
 name|INIT_SECTION_FUNCTION
 define|\
-value|void								\ init_section ()							\ {								\   if (in_section != in_init)					\     {								\       fprintf (asm_out_file, "\t%s\n", INIT_SECTION_ASM_OP);	\       in_section = in_init;					\     }								\ }
+value|void								\ init_section ()							\ {								\   if (in_section != in_init)					\     {								\       fprintf (asm_out_file, "%s\n", INIT_SECTION_ASM_OP);	\       in_section = in_init;					\     }								\ }
 end_define
 
 begin_define
@@ -279,7 +262,7 @@ define|#
 directive|define
 name|FINI_SECTION_FUNCTION
 define|\
-value|void								\ fini_section ()							\ {								\   if (in_section != in_fini)					\     {								\       fprintf (asm_out_file, "\t%s\n", FINI_SECTION_ASM_OP);	\       in_section = in_fini;					\     }								\ }
+value|void								\ fini_section ()							\ {								\   if (in_section != in_fini)					\     {								\       fprintf (asm_out_file, "%s\n", FINI_SECTION_ASM_OP);	\       in_section = in_fini;					\     }								\ }
 end_define
 
 begin_define
@@ -295,54 +278,14 @@ define|#
 directive|define
 name|CONST_SECTION_FUNCTION
 define|\
-value|void									\ const_section ()							\ {									\   extern void text_section();						\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
-end_define
-
-begin_comment
-comment|/* The ctors and dtors sections are not normally put into use     by EXTRA_SECTIONS and EXTRA_SECTION_FUNCTIONS as defined in svr3.h,    but it can't hurt to define these macros for whatever systems use them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTORS_SECTION_FUNCTION
-define|\
-value|void									\ ctors_section ()							\ {									\   if (in_section != in_ctors)						\     {									\       fprintf (asm_out_file, "%s\n", CTORS_SECTION_ASM_OP);		\       in_section = in_ctors;						\     }									\ }
+value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|DTORS_SECTION_FUNCTION
-define|\
-value|void									\ dtors_section ()							\ {									\   if (in_section != in_dtors)						\     {									\       fprintf (asm_out_file, "%s\n", DTORS_SECTION_ASM_OP);		\       in_section = in_dtors;						\     }									\ }
-end_define
-
-begin_comment
-comment|/* This is machine-dependent    because it needs to push something on the stack.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
-end_undef
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     fini_section ();                   				\     fprintf (FILE, "%s\t ", ASM_LONG);					\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n");						\   } while (0)
+name|TARGET_ASM_CONSTRUCTOR
+value|ix86_svr3_asm_out_constructor
 end_define
 
 begin_comment
@@ -357,6 +300,8 @@ parameter_list|(
 name|DECL
 parameter_list|,
 name|RELOC
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
 value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((0&& RELOC)
@@ -376,60 +321,10 @@ parameter_list|(
 name|MODE
 parameter_list|,
 name|RTX
+parameter_list|,
+name|ALIGN
 parameter_list|)
 value|const_section()
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* This is copied from i386/sysv3.h.  */
-end_comment
-
-begin_comment
-comment|/* Define a few machine-specific details of the implementation of    constructors.     The __CTORS_LIST__ goes in the .init section.  Define CTOR_LIST_BEGIN    and CTOR_LIST_END to contribute to the .init section an instruction to    push a word containing 0 (or some equivalent of that).     ASM_OUTPUT_CONSTRUCTOR should be defined to push the address of the    constructor.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|INIT_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INIT_SECTION_ASM_OP
-value|".section .init,\"x\""
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTOR_LIST_BEGIN
-define|\
-value|asm (INIT_SECTION_ASM_OP);			\   asm ("pushl $0")
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTOR_LIST_END
-value|CTOR_LIST_BEGIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\     init_section ();				\     fprintf (FILE, "\tpushl $");		\     assemble_name (FILE, NAME);			\     fprintf (FILE, "\n");			\   } while (0)
 end_define
 
 end_unit

@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_ste
+name|GCC_F_STE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_ste
+name|GCC_F_STE_H
 end_define
 
 begin_comment
@@ -1019,14 +1019,6 @@ name|ffeste_init_4
 parameter_list|()
 end_define
 
-begin_if
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1055,44 +1047,6 @@ parameter_list|)
 define|\
 value|(input_filename = (name), lineno = (num))
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetFFE
-end_elif
-
-begin_define
-define|#
-directive|define
-name|ffeste_set_line
-parameter_list|(
-name|name
-parameter_list|,
-name|num
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FFECOM_targetCURRENT == FFECOM_targetFFE */
-end_comment
 
 begin_define
 define|#
@@ -1162,6 +1116,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_STE_H */
+end_comment
 
 end_unit
 

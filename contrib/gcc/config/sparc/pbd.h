@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, Citicorp/TTI Unicom PBD    version (using GAS and COFF (encapsulated is unacceptable) )    Copyright (C) 1990, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, Citicorp/TTI Unicom PBD    version (using GAS and COFF (encapsulated is unacceptable) )    Copyright (C) 1990, 1996, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sparc/sparc.h"
-end_include
 
 begin_comment
 comment|/* Names to predefine in the preprocessor for this target machine.  */
@@ -23,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dsparc -DUnicomPBD -Dunix -D__GCC_NEW_VARARGS__ -Asystem(unix) -Acpu(sparc) -Amachine(sparc)"
+value|"-Dsparc -DUnicomPBD -Dunix -D__GCC_NEW_VARARGS__ -Asystem=unix -Acpu=sparc -Amachine=sparc"
 end_define
 
 begin_comment
@@ -117,7 +111,7 @@ name|CTOR_LISTS_DEFINED_EXTERNALLY
 end_define
 
 begin_comment
-comment|/* similar to default, but allows for the table defined by ld with gcc.ifile.     nptrs is always 0.  So we need to instead check that __DTOR_LIST__[1] != 0.    The old check is left in so that the same macro can be used if and when      a future version of gas does support section directives. */
+comment|/* similar to default, but allows for the table defined by ld with gcc.ifile.     nptrs is always 0.  So we need to instead check that __DTOR_LIST__[1] != 0.    The old check is left in so that the same macro can be used if and when      a future version of gas does support section directives.  */
 end_comment
 
 begin_define
@@ -132,7 +126,7 @@ comment|/*   * Here is an example gcc.ifile.  I've tested it on PBD sparc  * sys
 end_comment
 
 begin_comment
-comment|/* The prefix to add to user-visible assembler symbols. */
+comment|/* The prefix to add to user-visible assembler symbols.  */
 end_comment
 
 begin_undef
@@ -178,7 +172,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf (LABEL, "*.%s%d", PREFIX, NUM)
+value|sprintf (LABEL, "*.%s%ld", PREFIX, (long)(NUM))
 end_define
 
 begin_comment
@@ -264,11 +258,6 @@ begin_undef
 undef|#
 directive|undef
 name|ASM_OUTPUT_SOURCE_LINE
-name|(
-name|file
-name|,
-name|line
-name|)
 end_undef
 
 begin_define
@@ -288,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|ASM_INT_OP
-value|".long "
+value|"\t.long "
 end_define
 
 end_unit

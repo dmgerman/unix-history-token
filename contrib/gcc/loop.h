@@ -1,13 +1,112 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Loop optimization definitions for GNU C-Compiler    Copyright (C) 1991, 1995, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Loop optimization definitions for GNU C-Compiler    Copyright (C) 1991, 1995, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"varray.h"
+file|"bitmap.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"sbitmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hard-reg-set.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"basic-block.h"
+end_include
+
+begin_comment
+comment|/* Flags passed to loop_optimize.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_UNROLL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_BCT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_PREFETCH
+value|4
+end_define
+
+begin_comment
+comment|/* Get the loop info pointer of a loop.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_INFO
+parameter_list|(
+name|LOOP
+parameter_list|)
+value|((struct loop_info *) (LOOP)->aux)
+end_define
+
+begin_comment
+comment|/* Get a pointer to the loop movables structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_MOVABLES
+parameter_list|(
+name|LOOP
+parameter_list|)
+value|(&LOOP_INFO (LOOP)->movables)
+end_define
+
+begin_comment
+comment|/* Get a pointer to the loop registers structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_REGS
+parameter_list|(
+name|LOOP
+parameter_list|)
+value|(&LOOP_INFO (LOOP)->regs)
+end_define
+
+begin_comment
+comment|/* Get a pointer to the loop induction variables structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_IVS
+parameter_list|(
+name|LOOP
+parameter_list|)
+value|(&LOOP_INFO (LOOP)->ivs)
+end_define
 
 begin_comment
 comment|/* Get the luid of an insn.  Catch the error of trying to reference the LUID    of an insn added during loop, since these don't have LUIDs.  */
@@ -24,6 +123,26 @@ define|\
 value|(INSN_UID (INSN)< max_uid_for_loop ? uid_luid[INSN_UID (INSN)] \    : (abort (), -1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|REGNO_FIRST_LUID
+parameter_list|(
+name|REGNO
+parameter_list|)
+value|uid_luid[REGNO_FIRST_UID (REGNO)]
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGNO_LAST_LUID
+parameter_list|(
+name|REGNO
+parameter_list|)
+value|uid_luid[REGNO_LAST_UID (REGNO)]
+end_define
+
 begin_comment
 comment|/* A "basic induction variable" or biv is a pseudo reg that is set    (within this loop) only by incrementing or decrementing it.  */
 end_comment
@@ -33,7 +152,7 @@ comment|/* A "general induction variable" or giv is a pseudo reg whose    value 
 end_comment
 
 begin_comment
-comment|/* Bivs are recognized by `basic_induction_var';    Givs by `general_induct_var'.  */
+comment|/* Bivs are recognized by `basic_induction_var';    Givs by `general_induction_var'.  */
 end_comment
 
 begin_comment
@@ -91,11 +210,10 @@ name|machine_mode
 name|mode
 decl_stmt|;
 comment|/* The mode of this biv or giv */
-name|enum
-name|machine_mode
-name|mem_mode
+name|rtx
+name|mem
 decl_stmt|;
-comment|/* For DEST_ADDR, mode of the memory object. */
+comment|/* For DEST_ADDR, the memory object.  */
 name|rtx
 name|mult_val
 decl_stmt|;
@@ -151,25 +269,25 @@ name|maybe_multiple
 range|:
 literal|1
 decl_stmt|;
-comment|/* Only used for a biv and  1 if this biv 				   update may be done multiple times per 				   iteration. */
+comment|/* Only used for a biv and  1 if this biv 				   update may be done multiple times per 				   iteration.  */
 name|unsigned
 name|cant_derive
 range|:
 literal|1
 decl_stmt|;
-comment|/* For giv's, 1 if this giv cannot derive 				   another giv.  This occurs in many cases 				   where a giv's lifetime spans an update to 				   a biv. */
+comment|/* For giv's, 1 if this giv cannot derive 				   another giv.  This occurs in many cases 				   where a giv's lifetime spans an update to 				   a biv.  */
 name|unsigned
 name|maybe_dead
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if this giv might be dead.  In that case, 				   we won't use it to eliminate a biv, it 				   would probably lose. */
+comment|/* 1 if this giv might be dead.  In that case, 				   we won't use it to eliminate a biv, it 				   would probably lose.  */
 name|unsigned
 name|auto_inc_opt
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if this giv had its increment output next 				   to it to try to form an auto-inc address. */
+comment|/* 1 if this giv had its increment output next 				   to it to try to form an auto-inc address.  */
 name|unsigned
 name|unrolled
 range|:
@@ -186,7 +304,7 @@ name|no_const_addval
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if add_val does not contain a const. */
+comment|/* 1 if add_val does not contain a const.  */
 name|int
 name|lifetime
 decl_stmt|;
@@ -194,7 +312,11 @@ comment|/* Length of life of this giv */
 name|rtx
 name|derive_adjustment
 decl_stmt|;
-comment|/* If nonzero, is an adjustment to be 				   subtracted from add_val when this giv 				   derives another.  This occurs when the 				   giv spans a biv update by incrementation. */
+comment|/* If nonzero, is an adjustment to be 				   subtracted from add_val when this giv 				   derives another.  This occurs when the 				   giv spans a biv update by incrementation.  */
+name|rtx
+name|ext_dependent
+decl_stmt|;
+comment|/* If nonzero, is a sign or zero extension 				   if a biv on which this giv is dependent.  */
 name|struct
 name|induction
 modifier|*
@@ -207,20 +329,10 @@ modifier|*
 name|same
 decl_stmt|;
 comment|/* If this giv has been combined with another 				   giv, this points to the base giv.  The base 				   giv will have COMBINED_WITH non-zero.  */
-name|struct
-name|induction
-modifier|*
-name|derived_from
-decl_stmt|;
-comment|/* For a giv, if we decided to derive this 				   giv from another one.  */
 name|HOST_WIDE_INT
 name|const_adjust
 decl_stmt|;
-comment|/* Used by loop unrolling, when an address giv 				   is split, and a constant is eliminated from 				   the address, the -constant is stored here 				   for later use. */
-name|int
-name|ix
-decl_stmt|;
-comment|/* Used by recombine_givs, as n index into 				   the stats array.  */
+comment|/* Used by loop unrolling, when an address giv 				   is split, and a constant is eliminated from 				   the address, the -constant is stored here 				   for later use.  */
 name|struct
 name|induction
 modifier|*
@@ -230,7 +342,7 @@ comment|/* If there are multiple identical givs in 				   the same insn, then al
 name|rtx
 name|last_use
 decl_stmt|;
-comment|/* For a giv made from a biv increment, this is 				   a substitute for the lifetime information. */
+comment|/* For a giv made from a biv increment, this is 				   a substitute for the lifetime information.  */
 block|}
 struct|;
 end_struct
@@ -243,6 +355,7 @@ begin_struct
 struct|struct
 name|iv_class
 block|{
+name|unsigned
 name|int
 name|regno
 decl_stmt|;
@@ -270,29 +383,33 @@ comment|/* List of all insns that compute a giv 				   from this reg.  */
 name|int
 name|total_benefit
 decl_stmt|;
-comment|/* Sum of BENEFITs of all those givs */
+comment|/* Sum of BENEFITs of all those givs.  */
 name|rtx
 name|initial_value
 decl_stmt|;
-comment|/* Value of reg at loop start */
+comment|/* Value of reg at loop start.  */
 name|rtx
 name|initial_test
 decl_stmt|;
-comment|/* Test performed on BIV before loop */
+comment|/* Test performed on BIV before loop.  */
+name|rtx
+name|final_value
+decl_stmt|;
+comment|/* Value of reg at loop end, if known.  */
 name|struct
 name|iv_class
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Links all class structures together */
+comment|/* Links all class structures together.  */
 name|rtx
 name|init_insn
 decl_stmt|;
-comment|/* insn which initializes biv, 0 if none. */
+comment|/* insn which initializes biv, 0 if none.  */
 name|rtx
 name|init_set
 decl_stmt|;
-comment|/* SET of INIT_INSN, if any. */
+comment|/* SET of INIT_INSN, if any.  */
 name|unsigned
 name|incremented
 range|:
@@ -304,31 +421,272 @@ name|eliminable
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if plausible candidate for elimination. */
+comment|/* 1 if plausible candidate for                                    elimination.  */
 name|unsigned
 name|nonneg
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if we added a REG_NONNEG note for this. */
+comment|/* 1 if we added a REG_NONNEG note for                                    this.  */
 name|unsigned
 name|reversed
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if we reversed the loop that this 				   biv controls. */
+comment|/* 1 if we reversed the loop that this 				   biv controls.  */
+name|unsigned
+name|all_reduced
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1 if all givs using this biv have                                    been reduced.  */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Information required to calculate the number of loop iterations.     This is set by loop_iterations.  */
+comment|/* Definitions used by the basic induction variable discovery code.  */
+end_comment
+
+begin_enum
+enum|enum
+name|iv_mode
+block|{
+name|UNKNOWN_INDUCT
+block|,
+name|BASIC_INDUCT
+block|,
+name|NOT_BASIC_INDUCT
+block|,
+name|GENERAL_INDUCT
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* A `struct iv' is created for every register.  */
+end_comment
+
+begin_struct
+struct|struct
+name|iv
+block|{
+name|enum
+name|iv_mode
+name|type
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|iv_class
+modifier|*
+name|class
+decl_stmt|;
+name|struct
+name|induction
+modifier|*
+name|info
+decl_stmt|;
+block|}
+name|iv
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|REG_IV_TYPE
+parameter_list|(
+name|ivs
+parameter_list|,
+name|n
+parameter_list|)
+value|ivs->regs[n].type
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_IV_INFO
+parameter_list|(
+name|ivs
+parameter_list|,
+name|n
+parameter_list|)
+value|ivs->regs[n].iv.info
+end_define
+
+begin_define
+define|#
+directive|define
+name|REG_IV_CLASS
+parameter_list|(
+name|ivs
+parameter_list|,
+name|n
+parameter_list|)
+value|ivs->regs[n].iv.class
+end_define
+
+begin_struct
+struct|struct
+name|loop_ivs
+block|{
+comment|/* Indexed by register number, contains pointer to `struct      iv' if register is an induction variable.  */
+name|struct
+name|iv
+modifier|*
+name|regs
+decl_stmt|;
+comment|/* Size of regs array.  */
+name|unsigned
+name|int
+name|n_regs
+decl_stmt|;
+comment|/* The head of a list which links together (via the next field)      every iv class for the current loop.  */
+name|struct
+name|iv_class
+modifier|*
+name|list
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|loop_mem_info
+block|{
+name|rtx
+name|mem
+decl_stmt|;
+comment|/* The MEM itself.  */
+name|rtx
+name|reg
+decl_stmt|;
+comment|/* Corresponding pseudo, if any.  */
+name|int
+name|optimize
+decl_stmt|;
+comment|/* Nonzero if we can optimize access to this MEM.  */
+block|}
+name|loop_mem_info
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|loop_reg
+block|{
+comment|/* Number of times the reg is set during the loop being scanned.      During code motion, a negative value indicates a reg that has      been made a candidate; in particular -2 means that it is an      candidate that we know is equal to a constant and -1 means that      it is an candidate not known equal to a constant.  After code      motion, regs moved have 0 (which is accurate now) while the      failed candidates have the original number of times set.       Therefore, at all times, == 0 indicates an invariant register;< 0 a conditionally invariant one.  */
+name|int
+name|set_in_loop
+decl_stmt|;
+comment|/* Original value of set_in_loop; same except that this value      is not set negative for a reg whose sets have been made candidates      and not set to 0 for a reg that is moved.  */
+name|int
+name|n_times_set
+decl_stmt|;
+comment|/* Contains the insn in which a register was used if it was used      exactly once; contains const0_rtx if it was used more than once.  */
+name|rtx
+name|single_usage
+decl_stmt|;
+comment|/* Nonzero indicates that the register cannot be moved or strength      reduced.  */
+name|char
+name|may_not_optimize
+decl_stmt|;
+comment|/* Nonzero means reg N has already been moved out of one loop.      This reduces the desire to move it out of another.  */
+name|char
+name|moved_once
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|loop_regs
+block|{
+name|int
+name|num
+decl_stmt|;
+comment|/* Number of regs used in table.  */
+name|int
+name|size
+decl_stmt|;
+comment|/* Size of table.  */
+name|struct
+name|loop_reg
+modifier|*
+name|array
+decl_stmt|;
+comment|/* Register usage info. array.  */
+name|int
+name|multiple_uses
+decl_stmt|;
+comment|/* Nonzero if a reg has multiple uses.  */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|loop_movables
+block|{
+comment|/* Head of movable chain.  */
+name|struct
+name|movable
+modifier|*
+name|head
+decl_stmt|;
+comment|/* Last movable in chain.  */
+name|struct
+name|movable
+modifier|*
+name|last
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Information pertaining to a loop.  */
 end_comment
 
 begin_struct
 struct|struct
 name|loop_info
 block|{
+comment|/* Nonzero if there is a subroutine call in the current loop.  */
+name|int
+name|has_call
+decl_stmt|;
+comment|/* Nonzero if there is a libcall in the current loop.  */
+name|int
+name|has_libcall
+decl_stmt|;
+comment|/* Nonzero if there is a non constant call in the current loop.  */
+name|int
+name|has_nonconst_call
+decl_stmt|;
+comment|/* Nonzero if there is a volatile memory reference in the current      loop.  */
+name|int
+name|has_volatile
+decl_stmt|;
+comment|/* Nonzero if there is a tablejump in the current loop.  */
+name|int
+name|has_tablejump
+decl_stmt|;
+comment|/* Nonzero if there are ways to leave the loop other than falling      off the end.  */
+name|int
+name|has_multiple_exit_targets
+decl_stmt|;
+comment|/* Nonzero if there is an indirect jump in the current function.  */
+name|int
+name|has_indirect_jump
+decl_stmt|;
 comment|/* Register or constant initial loop value.  */
 name|rtx
 name|initial_value
@@ -366,37 +724,75 @@ name|unsigned
 name|HOST_WIDE_INT
 name|n_iterations
 decl_stmt|;
-comment|/* The loop unrolling factor.      Potential values:      0: unrolled      1: not unrolled.      -1: completely unrolled>0: holds the unroll exact factor.  */
+comment|/* The number of times the loop body was unrolled.  */
 name|unsigned
 name|int
 name|unroll_number
 decl_stmt|;
-comment|/* Non-zero if the loop has a NOTE_INSN_LOOP_VTOP.  */
+name|int
+name|used_count_register
+decl_stmt|;
+comment|/* The loop iterator induction variable.  */
+name|struct
+name|iv_class
+modifier|*
+name|iv
+decl_stmt|;
+comment|/* List of MEMs that are stored in this loop.  */
 name|rtx
-name|vtop
+name|store_mems
+decl_stmt|;
+comment|/* Array of MEMs that are used (read or written) in this loop, but      cannot be aliased by anything in this loop, except perhaps      themselves.  In other words, if mems[i] is altered during      the loop, it is altered by an expression that is rtx_equal_p to      it.  */
+name|loop_mem_info
+modifier|*
+name|mems
+decl_stmt|;
+comment|/* The index of the next available slot in MEMS.  */
+name|int
+name|mems_idx
+decl_stmt|;
+comment|/* The number of elements allocated in MEMS.  */
+name|int
+name|mems_allocated
+decl_stmt|;
+comment|/* Nonzero if we don't know what MEMs were changed in the current      loop.  This happens if the loop contains a call (in which case      `has_call' will also be set) or if we store into more than      NUM_STORES MEMs.  */
+name|int
+name|unknown_address_altered
+decl_stmt|;
+comment|/* The above doesn't count any readonly memory locations that are      stored.  This does.  */
+name|int
+name|unknown_constant_address_altered
+decl_stmt|;
+comment|/* Count of memory write instructions discovered in the loop.  */
+name|int
+name|num_mem_sets
+decl_stmt|;
+comment|/* The insn where the first of these was found.  */
+name|rtx
+name|first_loop_store_insn
+decl_stmt|;
+comment|/* The chain of movable insns in loop.  */
+name|struct
+name|loop_movables
+name|movables
+decl_stmt|;
+comment|/* The registers used the in loop.  */
+name|struct
+name|loop_regs
+name|regs
+decl_stmt|;
+comment|/* The induction variable information in loop.  */
+name|struct
+name|loop_ivs
+name|ivs
+decl_stmt|;
+comment|/* Non-zero if call is in pre_header extended basic block.  */
+name|int
+name|pre_header_has_call
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Definitions used by the basic induction variable discovery code.  */
-end_comment
-
-begin_enum
-enum|enum
-name|iv_mode
-block|{
-name|UNKNOWN_INDUCT
-block|,
-name|BASIC_INDUCT
-block|,
-name|NOT_BASIC_INDUCT
-block|,
-name|GENERAL_INDUCT
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/* Variables declared in loop.c, but also needed in unroll.c.  */
@@ -419,40 +815,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-modifier|*
-name|uid_loop_num
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|loop_outer_loop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|rtx
-modifier|*
-name|loop_number_exit_labels
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|loop_number_exit_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+name|unsigned
 name|int
 name|max_reg_before_loop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|loop
+modifier|*
+modifier|*
+name|uid_loop
 decl_stmt|;
 end_decl_stmt
 
@@ -464,80 +839,21 @@ name|loop_dump_stream
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|varray_type
-name|reg_iv_type
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|varray_type
-name|reg_iv_info
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|REG_IV_TYPE
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|(*(enum iv_mode *)&VARRAY_INT(reg_iv_type, (n)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|REG_IV_INFO
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|(*(struct induction **)&VARRAY_GENERIC_PTR(reg_iv_info, (n)))
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|iv_class
-modifier|*
-modifier|*
-name|reg_biv_class
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|iv_class
-modifier|*
-name|loop_iv_list
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|first_increment_giv
-decl_stmt|,
-name|last_increment_giv
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Forward declarations for non-static functions declared in loop.c and    unroll.c.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|invariant_p
-name|PROTO
+name|loop_invariant_p
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
 name|rtx
 operator|)
 argument_list|)
@@ -547,9 +863,14 @@ end_decl_stmt
 begin_decl_stmt
 name|rtx
 name|get_condition_for_loop
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
 name|rtx
 operator|)
 argument_list|)
@@ -558,17 +879,70 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|emit_iv_add_mult
-name|PROTO
+name|loop_iv_add_mult_hoist
+name|PARAMS
 argument_list|(
 operator|(
-name|rtx
+specifier|const
+expr|struct
+name|loop
+operator|*
 operator|,
 name|rtx
 operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|loop_iv_add_mult_sink
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|loop_iv_add_mult_emit_before
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|basic_block
 operator|,
 name|rtx
 operator|)
@@ -579,7 +953,7 @@ end_decl_stmt
 begin_decl_stmt
 name|rtx
 name|express_from
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -595,22 +969,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|unroll_loop
-name|PROTO
+name|rtx
+name|extend_value_for_giv
+name|PARAMS
 argument_list|(
 operator|(
+expr|struct
+name|induction
+operator|*
+operator|,
 name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|unroll_loop
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
 operator|,
 name|int
-operator|,
-name|rtx
-operator|,
-name|rtx
-operator|,
-expr|struct
-name|loop_info
-operator|*
 operator|,
 name|int
 operator|)
@@ -621,16 +1005,13 @@ end_decl_stmt
 begin_decl_stmt
 name|rtx
 name|biv_total_increment
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|iv_class
 operator|*
-operator|,
-name|rtx
-operator|,
-name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -640,15 +1021,11 @@ begin_decl_stmt
 name|unsigned
 name|HOST_WIDE_INT
 name|loop_iterations
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|rtx
-operator|,
-name|rtx
-operator|,
 expr|struct
-name|loop_info
+name|loop
 operator|*
 operator|)
 argument_list|)
@@ -658,13 +1035,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|precondition_loop_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|rtx
-operator|,
+specifier|const
 expr|struct
-name|loop_info
+name|loop
 operator|*
 operator|,
 name|rtx
@@ -688,19 +1064,17 @@ end_decl_stmt
 begin_decl_stmt
 name|rtx
 name|final_biv_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
 expr|struct
 name|iv_class
 operator|*
-operator|,
-name|rtx
-operator|,
-name|rtx
-operator|,
-name|unsigned
-name|HOST_WIDE_INT
 operator|)
 argument_list|)
 decl_stmt|;
@@ -709,19 +1083,17 @@ end_decl_stmt
 begin_decl_stmt
 name|rtx
 name|final_giv_value
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
 expr|struct
 name|induction
 operator|*
-operator|,
-name|rtx
-operator|,
-name|rtx
-operator|,
-name|unsigned
-name|HOST_WIDE_INT
 operator|)
 argument_list|)
 decl_stmt|;
@@ -730,7 +1102,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|emit_unrolled_add
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -746,12 +1118,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|back_branch_in_range_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
-name|rtx
-operator|,
-name|rtx
+specifier|const
+expr|struct
+name|loop
+operator|*
 operator|,
 name|rtx
 operator|)
@@ -762,7 +1135,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|loop_insn_first_p
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -773,37 +1146,114 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-modifier|*
-name|loop_unroll_number
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Forward declarations for non-static functions declared in stmt.c.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|find_loop_tree_blocks
-name|PROTO
+begin_typedef
+typedef|typedef
+name|rtx
+argument_list|(
+argument|*loop_insn_callback
+argument_list|)
+name|PARAMS
 argument_list|(
 operator|(
+expr|struct
+name|loop
+operator|*
+operator|,
+name|rtx
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|void
+name|for_each_insn_in_loop
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
+operator|,
+name|loop_insn_callback
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|unroll_block_trees
-name|PROTO
+name|rtx
+name|loop_insn_emit_before
+name|PARAMS
 argument_list|(
 operator|(
-name|void
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+name|basic_block
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|rtx
+name|loop_insn_sink
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|rtx
+name|loop_insn_hoist
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Forward declarations for non-static functions declared in doloop.c.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doloop_optimize
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

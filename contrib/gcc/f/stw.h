@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_H_f_stw
+name|GCC_F_STW_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_H_f_stw
+name|GCC_F_STW_H
 end_define
 
 begin_comment
@@ -198,11 +198,6 @@ name|int
 name|substate_
 decl_stmt|;
 comment|/* Used on a per-block-state basis. */
-if|#
-directive|if
-name|FFECOM_targetCURRENT
-operator|==
-name|FFECOM_targetGCC
 name|struct
 name|nesting
 modifier|*
@@ -233,9 +228,6 @@ name|int
 name|ifthen_fake_else_
 decl_stmt|;
 comment|/* Number of fake `else' introductions.  */
-endif|#
-directive|endif
-comment|/* FFECOM_targetCURRENT == FFECOM_targetGCC*/
 block|}
 struct|;
 end_struct
@@ -950,6 +942,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! GCC_F_STW_H */
+end_comment
 
 end_unit
 

@@ -1,4 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* Copyright (C) 1989, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* As a special exception, if you include this header file into source    files compiled by GCC, this header file does not by itself cause    the resulting executable to be covered by the GNU General Public    License.  This exception does not however invalidate any other    reasons why the executable file might be covered by the GNU General    Public License.  */
+end_comment
+
+begin_comment
+comment|/*  * ISO C Standard:  7.17  Common definitions<stddef.h>  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -551,7 +563,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* In case nobody has defined these types, but we aren't running under    GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE__TYPE__, and    __WCHAR_TYPE__ have reasonable values.  This can happen if the    parts of GCC is compiled by an older compiler, that actually    include gstddef.h, such as collect2.  */
+comment|/* In case nobody has defined these types, but we aren't running under    GCC 2.00, make sure that __PTRDIFF_TYPE__, __SIZE_TYPE__, and    __WCHAR_TYPE__ have reasonable values.  This can happen if the    parts of GCC is compiled by an older compiler, that actually    include gstddef.h, such as collect2.  */
 end_comment
 
 begin_comment
@@ -827,6 +839,16 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__SIZE_T__
+end_ifndef
+
+begin_comment
+comment|/* Cray Unicos/Mk */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_SIZE_T
 end_ifndef
 
@@ -914,6 +936,16 @@ end_define
 
 begin_comment
 comment|/* BeOS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__SIZE_T__
+end_define
+
+begin_comment
+comment|/* Cray Unicos/Mk */
 end_comment
 
 begin_define
@@ -1190,6 +1222,15 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* __SIZE_T__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* __size_t__ */
 end_comment
 
@@ -1243,6 +1284,16 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__WCHAR_T__
+end_ifndef
+
+begin_comment
+comment|/* Cray Unicos/Mk */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_WCHAR_T
 end_ifndef
 
@@ -1275,6 +1326,16 @@ ifndef|#
 directive|ifndef
 name|_BSD_WCHAR_T_
 end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_BSD_WCHAR_T_DEFINED_
+end_ifndef
+
+begin_comment
+comment|/* Darwin */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1320,6 +1381,16 @@ end_define
 
 begin_comment
 comment|/* BeOS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__WCHAR_T__
+end_define
+
+begin_comment
+comment|/* Cray Unicos/Mk */
 end_comment
 
 begin_define
@@ -1439,6 +1510,36 @@ name|rune_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_BSD_WCHAR_T_DEFINED_
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Why is this file so hard to maintain properly?  In constrast to    the comment above regarding BSD/386 1.1, on FreeBSD for as long    as the symbol has existed, _BSD_RUNE_T_ must not stay defined or    redundant typedefs will occur when stdlib.h is included after this file. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_RUNE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -1460,35 +1561,12 @@ directive|ifndef
 name|__WCHAR_TYPE__
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__BEOS__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__WCHAR_TYPE__
-value|unsigned char
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|__WCHAR_TYPE__
 value|int
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1578,6 +1656,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __WCHAR_T__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* __wchar_t__ */
 end_comment
@@ -1600,11 +1692,6 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_STDDEF_H
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__need_wint_t
@@ -1669,7 +1756,7 @@ comment|/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc. 
 end_comment
 
 begin_comment
-comment|/*  BSD/OS 3.1 requires the MACHINE_ANSI_H check here.  FreeBSD 2.x apparently     does not, even though there is a check for MACHINE_ANSI_H above.  */
+comment|/*  BSD/OS 3.1 and FreeBSD [23].x require the MACHINE_ANSI_H check here.  */
 end_comment
 
 begin_if
@@ -1680,17 +1767,10 @@ argument_list|(
 name|_ANSI_H_
 argument_list|)
 operator|||
-operator|(
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|_MACHINE_ANSI_H_
 argument_list|)
-operator|)
 end_if
 
 begin_comment
@@ -1845,7 +1925,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ANSI_H_ || ( __bsdi__&& _MACHINE_ANSI_H_ ) */
+comment|/* _ANSI_H_ || _MACHINE_ANSI_H_ */
 end_comment
 
 begin_endif
@@ -1907,12 +1987,43 @@ begin_comment
 comment|/* G++ */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NULL
 value|((void *)0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* C++ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* C++ */
+end_comment
 
 begin_endif
 endif|#

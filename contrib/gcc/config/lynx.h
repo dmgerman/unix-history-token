@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target independent definitions for LynxOS.    Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target independent definitions for LynxOS.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -286,16 +286,6 @@ value|do {								\   if (TARGET_SYSTEM_V&& profile_flag)				\     warning ("-ms
 end_define
 
 begin_comment
-comment|/* Define this so that C++ destructors will use atexit, since LynxOS    calls exit after main returns.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
-
-begin_comment
 comment|/* Since init.o et al put all sorts of stuff into the init section,    we can't use the standard init section support in crtbegin.o. */
 end_comment
 
@@ -315,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_ctors, in_dtors, in_fini
+value|in_const, in_fini
 end_define
 
 begin_undef
@@ -329,7 +319,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION					\   CTORS_SECTION_FUNCTION					\   DTORS_SECTION_FUNCTION					\   FINI_SECTION_FUNCTION
+value|CONST_SECTION_FUNCTION					\   FINI_SECTION_FUNCTION
 end_define
 
 begin_undef
@@ -342,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|CTORS_SECTION_ASM_OP
-value|".section\t.ctors"
+value|"\t.section\t.ctors"
 end_define
 
 begin_undef
@@ -355,60 +345,7 @@ begin_define
 define|#
 directive|define
 name|DTORS_SECTION_ASM_OP
-value|".section\t.dtors"
-end_define
-
-begin_define
-define|#
-directive|define
-name|INT_ASM_OP
-value|".long"
-end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global constructors.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     ctors_section ();							\     fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);						\     fprintf (FILE, "\n");						\   } while (0)
-end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     dtors_section ();                   				\     fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n");						\   } while (0)
+value|"\t.section\t.dtors"
 end_define
 
 begin_undef

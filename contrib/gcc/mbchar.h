@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbchar.h - Various declarations for functions found in mbchar.c    Copyright (C) 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Various declarations for functions found in mbchar.c    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GCC_MBCHAR_H__
+name|GCC_MBCHAR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GCC_MBCHAR_H__
+name|GCC_MBCHAR_H
 end_define
 
 begin_ifdef
@@ -22,7 +22,7 @@ name|MULTIBYTE_CHARS
 end_ifdef
 
 begin_comment
-comment|/* escape character used for JIS encoding */
+comment|/* Escape character used for JIS encoding */
 end_comment
 
 begin_define
@@ -39,7 +39,7 @@ name|ISSJIS1
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)>= 0x81&& (c)<= 0x9f || (c)>= 0xe0&& (c)<= 0xef)
+value|(((c)>= 0x81&& (c)<= 0x9f) || ((c)>= 0xe0&& (c)<= 0xef))
 end_define
 
 begin_define
@@ -49,7 +49,7 @@ name|ISSJIS2
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)>= 0x40&& (c)<= 0x7e || (c)>= 0x80&& (c)<= 0xfc)
+value|(((c)>= 0x40&& (c)<= 0x7e) || ((c)>= 0x80&& (c)<= 0xfc))
 end_define
 
 begin_define
@@ -73,9 +73,10 @@ value|((c)>= 0x21&& (c)<= 0x7e)
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|local_mbtowc
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|wchar_t
@@ -92,9 +93,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|local_mblen
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -108,9 +110,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|local_mb_cur_max
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -125,6 +128,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|literal_codeset
@@ -146,7 +150,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GCC_MBCHAR_H__ */
+comment|/* ! GCC_MBCHAR_H */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specific flags and argument handling of the C++ front-end.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specific flags and argument handling of the C++ front-end.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gcc.h"
 end_include
 
 begin_comment
@@ -84,51 +90,32 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function
 name|void
 name|lang_specific_driver
-argument_list|(
-name|fn
-argument_list|,
+parameter_list|(
 name|in_argc
-argument_list|,
+parameter_list|,
 name|in_argv
-argument_list|,
+parameter_list|,
 name|in_added_libraries
-argument_list|)
-name|void
-argument_list|(
-operator|*
-name|fn
-argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|)
 name|int
 modifier|*
 name|in_argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 modifier|*
 name|in_argv
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|in_added_libraries
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -154,6 +141,7 @@ init|=
 literal|2
 decl_stmt|;
 comment|/* Used to track options that take arguments, so we don't go wrapping      those with -xc++/-xnone.  */
+specifier|const
 name|char
 modifier|*
 name|quote
@@ -161,6 +149,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* The new argument list will be contained in this.  */
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -173,6 +162,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* "-lm" or "-lmath" if it appears on the command line.  */
+specifier|const
 name|char
 modifier|*
 name|saw_math
@@ -180,6 +170,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* "-lc" if it appears on the command line.  */
+specifier|const
 name|char
 modifier|*
 name|saw_libc
@@ -204,13 +195,21 @@ operator|!=
 literal|'\0'
 operator|)
 decl_stmt|;
+comment|/* True if we should add -shared-libgcc to the command-line.  */
+name|int
+name|shared_libgcc
+init|=
+literal|1
+decl_stmt|;
 comment|/* The total number of arguments with the new stuff.  */
 name|int
 name|argc
 decl_stmt|;
 comment|/* The argument list.  */
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 decl_stmt|;
@@ -245,26 +244,10 @@ operator|(
 name|int
 operator|*
 operator|)
-name|xmalloc
+name|xcalloc
 argument_list|(
 name|argc
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|args
 argument_list|,
-name|argc
-operator|*
 sizeof|sizeof
 argument_list|(
 name|int
@@ -560,6 +543,18 @@ index|[
 name|i
 index|]
 argument_list|,
+literal|"-Xlinker"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
 literal|"-Tdata"
 argument_list|)
 operator|==
@@ -623,6 +618,18 @@ literal|"-MM"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-fsyntax-only"
+argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
@@ -636,6 +643,37 @@ operator|-=
 literal|2
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-static-libgcc"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-static"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|shared_libgcc
+operator|=
+literal|0
+expr_stmt|;
 else|else
 comment|/* Pass other options through.  */
 continue|continue;
@@ -730,10 +768,7 @@ if|if
 condition|(
 name|quote
 condition|)
-call|(
-modifier|*
-name|fn
-call|)
+name|fatal
 argument_list|(
 literal|"argument to `%s' missing\n"
 argument_list|,
@@ -757,6 +792,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* There's no point adding -shared-libgcc if we don't have a shared      libgcc.  */
+ifndef|#
+directive|ifndef
+name|ENABLE_SHARED_LIBGCC
+name|shared_libgcc
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Make sure to have room for the trailing NULL argument.  */
 name|num_args
 operator|=
 name|argc
@@ -764,10 +810,15 @@ operator|+
 name|added
 operator|+
 name|need_math
+operator|+
+name|shared_libgcc
+operator|+
+literal|1
 expr_stmt|;
 name|arglist
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -783,27 +834,34 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTE: We start at 1 now, not 0.  */
-for|for
-control|(
 name|i
 operator|=
 literal|0
-operator|,
+expr_stmt|;
 name|j
 operator|=
 literal|0
-init|;
+expr_stmt|;
+comment|/* Copy the 0th argument, i.e., the name of the program itself.  */
+name|arglist
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|argv
+index|[
+name|j
+operator|++
+index|]
+expr_stmt|;
+comment|/* NOTE: We start at 1 now, not 0.  */
+while|while
+condition|(
 name|i
 operator|<
 name|argc
-condition|;
-name|i
-operator|++
-operator|,
-name|j
-operator|++
-control|)
+condition|)
 block|{
 name|arglist
 index|[
@@ -944,6 +1002,12 @@ operator|=
 literal|"-xnone"
 expr_stmt|;
 block|}
+name|i
+operator|++
+expr_stmt|;
+name|j
+operator|++
+expr_stmt|;
 block|}
 comment|/* Add `-lstdc++' if we haven't already done so.  */
 if|if
@@ -1007,6 +1071,18 @@ index|]
 operator|=
 name|saw_libc
 expr_stmt|;
+if|if
+condition|(
+name|shared_libgcc
+condition|)
+name|arglist
+index|[
+name|j
+operator|++
+index|]
+operator|=
+literal|"-shared-libgcc"
+expr_stmt|;
 name|arglist
 index|[
 name|j
@@ -1030,7 +1106,7 @@ operator|=
 name|added_libraries
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Called before linking.  Returns 0 on success and -1 on failure. */

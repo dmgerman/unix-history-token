@@ -7,12 +7,6 @@ begin_comment
 comment|/* We're very much the SVR4 target with "/udk" prepended to everything that's    interesting */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"i386/sysv5.h"
-end_include
-
 begin_undef
 undef|#
 directive|undef

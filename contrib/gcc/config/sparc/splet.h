@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for SPARClet.    Copyright (C) 1996, 1997 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"sparc/aout.h"
-end_include
-
-begin_comment
-comment|/* -mbroken-saverestore is not included here because the long term    default is -mno-broken-saverestore.  */
+comment|/* Definitions of target machine for GNU compiler, for SPARClet.    Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -26,9 +16,12 @@ name|TARGET_DEFAULT
 value|(MASK_APP_REGS + MASK_EPILOGUE)
 end_define
 
-begin_comment
-comment|/* -mlive-g0 is only supported on the sparclet.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|CPP_PREDEFINES
+value|"-Dsparc -Acpu=sparc -Amachine=sparc"
+end_define
 
 begin_undef
 undef|#
@@ -41,7 +34,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{"big-endian", -MASK_LITTLE_ENDIAN, "Generate code for big endian" }, \ {"little-endian", MASK_LITTLE_ENDIAN, "Generate code for little endian" }, \ {"live-g0", MASK_LIVE_G0, "Use g0 as a normal register" }, \ {"no-live-g0", -MASK_LIVE_G0, "Register g0 is fixed with a zero value" }, \ {"broken-saverestore", MASK_BROKEN_SAVERESTORE, "Enable save/restore bug workarounds" }, \ {"no-broken-saverestore", -MASK_BROKEN_SAVERESTORE, "Disable save/restore bug workarouns" },
+value|{"big-endian", -MASK_LITTLE_ENDIAN, N_("Generate code for big endian") },     \ {"little-endian", MASK_LITTLE_ENDIAN, N_("Generate code for little endian") },
 end_define
 
 begin_undef
@@ -115,20 +108,6 @@ define|#
 directive|define
 name|WORDS_BIG_ENDIAN
 value|(! TARGET_LITTLE_ENDIAN)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_OVERRIDE_OPTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OVERRIDE_OPTIONS
-define|\
-value|do {									\     if (TARGET_LIVE_G0)							\       {									\ 	warning ("Option '-mlive-g0' deprecated.");			\         target_flags&= ~MASK_LIVE_G0;					\       }									\     else if (TARGET_BROKEN_SAVERESTORE)					\       {									\ 	warning ("Option '-mbroken-saverestore' deprecated.");		\         target_flags&= ~MASK_BROKEN_SAVERESTORE;			\       }									\   } while (0)
 end_define
 
 end_unit

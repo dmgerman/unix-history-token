@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Variables and structures for declaration processing.    Copyright (C) 1993 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Variables and structures for declaration processing.    Copyright (C) 1993, 2000, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|grokdeclarator
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -59,21 +59,9 @@ operator|,
 name|int
 operator|,
 name|tree
+operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* C++: Keep these around to reduce calls to `get_identifier'.    Identifiers for `this' in member functions and the auto-delete    parameter for destructors.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|this_identifier
-decl_stmt|,
-name|in_charge_identifier
 decl_stmt|;
 end_decl_stmt
 

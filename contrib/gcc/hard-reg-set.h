@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sets (bit vectors) of hard registers, and operations on them.    Copyright (C) 1987, 1992, 1994 Free Software Foundation, Inc.  This file is part of GNU CC  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sets (bit vectors) of hard registers, and operations on them.    Copyright (C) 1987, 1992, 1994, 2000 Free Software Foundation, Inc.  This file is part of GCC  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_HARD_REG_SET_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_HARD_REG_SET_H
+end_define
 
 begin_comment
 comment|/* Define the type of a set of hard registers.  */
@@ -314,7 +326,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      scan_tp_[0] = 0;						\      scan_tp_[1] = 0; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      scan_tp_[0] = 0;						\      scan_tp_[1] = 0; } while (0)
 end_define
 
 begin_define
@@ -325,7 +337,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      scan_tp_[0] = -1;						\      scan_tp_[1] = -1; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      scan_tp_[0] = -1;						\      scan_tp_[1] = -1; } while (0)
 end_define
 
 begin_define
@@ -338,7 +350,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM);	\      scan_tp_[0] = scan_fp_[0];					\      scan_tp_[1] = scan_fp_[1]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM);	\      scan_tp_[0] = scan_fp_[0];					\      scan_tp_[1] = scan_fp_[1]; } while (0)
 end_define
 
 begin_define
@@ -351,7 +363,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] = ~ scan_fp_[0];				\      scan_tp_[1] = ~ scan_fp_[1]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] = ~ scan_fp_[0];				\      scan_tp_[1] = ~ scan_fp_[1]; } while (0)
 end_define
 
 begin_define
@@ -364,7 +376,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0]&= scan_fp_[0];					\      scan_tp_[1]&= scan_fp_[1]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0]&= scan_fp_[0];				\      scan_tp_[1]&= scan_fp_[1]; } while (0)
 end_define
 
 begin_define
@@ -377,7 +389,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0]&= ~ scan_fp_[0];				\      scan_tp_[1]&= ~ scan_fp_[1]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0]&= ~ scan_fp_[0];				\      scan_tp_[1]&= ~ scan_fp_[1]; } while (0)
 end_define
 
 begin_define
@@ -390,7 +402,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] |= scan_fp_[0];				\      scan_tp_[1] |= scan_fp_[1]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] |= scan_fp_[0];				\      scan_tp_[1] |= scan_fp_[1]; } while (0)
 end_define
 
 begin_define
@@ -403,7 +415,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] |= ~ scan_fp_[0];				\      scan_tp_[1] |= ~ scan_fp_[1]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] |= ~ scan_fp_[0];				\      scan_tp_[1] |= ~ scan_fp_[1]; } while (0)
 end_define
 
 begin_define
@@ -418,7 +430,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      if ((0 == (scan_xp_[0]& ~ scan_yp_[0]))			\&& (0 == (scan_xp_[1]& ~ scan_yp_[1])))		\ 	goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      if ((0 == (scan_xp_[0]& ~ scan_yp_[0]))			\&& (0 == (scan_xp_[1]& ~ scan_yp_[1])))		\ 	goto TO; } while (0)
 end_define
 
 begin_define
@@ -433,7 +445,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      if ((scan_xp_[0] == scan_yp_[0])				\&& (scan_xp_[1] == scan_yp_[1]))			\ 	goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      if ((scan_xp_[0] == scan_yp_[0])				\&& (scan_xp_[1] == scan_yp_[1]))			\ 	goto TO; } while (0)
 end_define
 
 begin_else
@@ -459,7 +471,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      scan_tp_[0] = 0;						\      scan_tp_[1] = 0;						\      scan_tp_[2] = 0; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      scan_tp_[0] = 0;						\      scan_tp_[1] = 0;						\      scan_tp_[2] = 0; } while (0)
 end_define
 
 begin_define
@@ -470,7 +482,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      scan_tp_[0] = -1;						\      scan_tp_[1] = -1;						\      scan_tp_[2] = -1; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      scan_tp_[0] = -1;						\      scan_tp_[1] = -1;						\      scan_tp_[2] = -1; } while (0)
 end_define
 
 begin_define
@@ -483,7 +495,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM);	\      scan_tp_[0] = scan_fp_[0];					\      scan_tp_[1] = scan_fp_[1];					\      scan_tp_[2] = scan_fp_[2]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM);	\      scan_tp_[0] = scan_fp_[0];					\      scan_tp_[1] = scan_fp_[1];					\      scan_tp_[2] = scan_fp_[2]; } while (0)
 end_define
 
 begin_define
@@ -496,7 +508,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] = ~ scan_fp_[0];				\      scan_tp_[1] = ~ scan_fp_[1];				\      scan_tp_[2] = ~ scan_fp_[2]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] = ~ scan_fp_[0];				\      scan_tp_[1] = ~ scan_fp_[1];				\      scan_tp_[2] = ~ scan_fp_[2]; } while (0)
 end_define
 
 begin_define
@@ -509,7 +521,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0]&= scan_fp_[0];					\      scan_tp_[1]&= scan_fp_[1];					\      scan_tp_[2]&= scan_fp_[2]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0]&= scan_fp_[0];				\      scan_tp_[1]&= scan_fp_[1];				\      scan_tp_[2]&= scan_fp_[2]; } while (0)
 end_define
 
 begin_define
@@ -522,7 +534,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0]&= ~ scan_fp_[0];				\      scan_tp_[1]&= ~ scan_fp_[1];				\      scan_tp_[2]&= ~ scan_fp_[2]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0]&= ~ scan_fp_[0];				\      scan_tp_[1]&= ~ scan_fp_[1];				\      scan_tp_[2]&= ~ scan_fp_[2]; } while (0)
 end_define
 
 begin_define
@@ -535,7 +547,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] |= scan_fp_[0];				\      scan_tp_[1] |= scan_fp_[1];				\      scan_tp_[2] |= scan_fp_[2]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] |= scan_fp_[0];				\      scan_tp_[1] |= scan_fp_[1];				\      scan_tp_[2] |= scan_fp_[2]; } while (0)
 end_define
 
 begin_define
@@ -548,7 +560,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] |= ~ scan_fp_[0];				\      scan_tp_[1] |= ~ scan_fp_[1];				\      scan_tp_[2] |= ~ scan_fp_[2]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] |= ~ scan_fp_[0];				\      scan_tp_[1] |= ~ scan_fp_[1];				\      scan_tp_[2] |= ~ scan_fp_[2]; } while (0)
 end_define
 
 begin_define
@@ -563,7 +575,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      if ((0 == (scan_xp_[0]& ~ scan_yp_[0]))			\&& (0 == (scan_xp_[1]& ~ scan_yp_[1]))		\&& (0 == (scan_xp_[2]& ~ scan_yp_[2])))		\ 	goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      if ((0 == (scan_xp_[0]& ~ scan_yp_[0]))			\&& (0 == (scan_xp_[1]& ~ scan_yp_[1]))		\&& (0 == (scan_xp_[2]& ~ scan_yp_[2])))		\ 	goto TO; } while (0)
 end_define
 
 begin_define
@@ -578,7 +590,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      if ((scan_xp_[0] == scan_yp_[0])				\&& (scan_xp_[1] == scan_yp_[1])			\&& (scan_xp_[2] == scan_yp_[2]))			\ 	goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      if ((scan_xp_[0] == scan_yp_[0])				\&& (scan_xp_[1] == scan_yp_[1])			\&& (scan_xp_[2] == scan_yp_[2]))			\ 	goto TO; } while (0)
 end_define
 
 begin_else
@@ -604,7 +616,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      scan_tp_[0] = 0;						\      scan_tp_[1] = 0;						\      scan_tp_[2] = 0;						\      scan_tp_[3] = 0; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      scan_tp_[0] = 0;						\      scan_tp_[1] = 0;						\      scan_tp_[2] = 0;						\      scan_tp_[3] = 0; } while (0)
 end_define
 
 begin_define
@@ -615,7 +627,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      scan_tp_[0] = -1;						\      scan_tp_[1] = -1;						\      scan_tp_[2] = -1;						\      scan_tp_[3] = -1; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      scan_tp_[0] = -1;						\      scan_tp_[1] = -1;						\      scan_tp_[2] = -1;						\      scan_tp_[3] = -1; } while (0)
 end_define
 
 begin_define
@@ -628,7 +640,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM);	\      scan_tp_[0] = scan_fp_[0];					\      scan_tp_[1] = scan_fp_[1];					\      scan_tp_[2] = scan_fp_[2];					\      scan_tp_[3] = scan_fp_[3]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM);	\      scan_tp_[0] = scan_fp_[0];					\      scan_tp_[1] = scan_fp_[1];					\      scan_tp_[2] = scan_fp_[2];					\      scan_tp_[3] = scan_fp_[3]; } while (0)
 end_define
 
 begin_define
@@ -641,7 +653,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] = ~ scan_fp_[0];				\      scan_tp_[1] = ~ scan_fp_[1];				\      scan_tp_[2] = ~ scan_fp_[2];				\      scan_tp_[3] = ~ scan_fp_[3]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] = ~ scan_fp_[0];				\      scan_tp_[1] = ~ scan_fp_[1];				\      scan_tp_[2] = ~ scan_fp_[2];				\      scan_tp_[3] = ~ scan_fp_[3]; } while (0)
 end_define
 
 begin_define
@@ -654,7 +666,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0]&= scan_fp_[0];					\      scan_tp_[1]&= scan_fp_[1];					\      scan_tp_[2]&= scan_fp_[2];					\      scan_tp_[3]&= scan_fp_[3]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0]&= scan_fp_[0];				\      scan_tp_[1]&= scan_fp_[1];				\      scan_tp_[2]&= scan_fp_[2];				\      scan_tp_[3]&= scan_fp_[3]; } while (0)
 end_define
 
 begin_define
@@ -667,7 +679,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0]&= ~ scan_fp_[0];				\      scan_tp_[1]&= ~ scan_fp_[1];				\      scan_tp_[2]&= ~ scan_fp_[2];				\      scan_tp_[3]&= ~ scan_fp_[3]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0]&= ~ scan_fp_[0];				\      scan_tp_[1]&= ~ scan_fp_[1];				\      scan_tp_[2]&= ~ scan_fp_[2];				\      scan_tp_[3]&= ~ scan_fp_[3]; } while (0)
 end_define
 
 begin_define
@@ -680,7 +692,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] |= scan_fp_[0];				\      scan_tp_[1] |= scan_fp_[1];				\      scan_tp_[2] |= scan_fp_[2];				\      scan_tp_[3] |= scan_fp_[3]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] |= scan_fp_[0];				\      scan_tp_[1] |= scan_fp_[1];				\      scan_tp_[2] |= scan_fp_[2];				\      scan_tp_[3] |= scan_fp_[3]; } while (0)
 end_define
 
 begin_define
@@ -693,7 +705,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      scan_tp_[0] |= ~ scan_fp_[0];				\      scan_tp_[1] |= ~ scan_fp_[1];				\      scan_tp_[2] |= ~ scan_fp_[2];				\      scan_tp_[3] |= ~ scan_fp_[3]; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      scan_tp_[0] |= ~ scan_fp_[0];				\      scan_tp_[1] |= ~ scan_fp_[1];				\      scan_tp_[2] |= ~ scan_fp_[2];				\      scan_tp_[3] |= ~ scan_fp_[3]; } while (0)
 end_define
 
 begin_define
@@ -708,7 +720,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      if ((0 == (scan_xp_[0]& ~ scan_yp_[0]))			\&& (0 == (scan_xp_[1]& ~ scan_yp_[1]))		\&& (0 == (scan_xp_[2]& ~ scan_yp_[2]))		\&& (0 == (scan_xp_[3]& ~ scan_yp_[3])))		\ 	goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      if ((0 == (scan_xp_[0]& ~ scan_yp_[0]))			\&& (0 == (scan_xp_[1]& ~ scan_yp_[1]))		\&& (0 == (scan_xp_[2]& ~ scan_yp_[2]))		\&& (0 == (scan_xp_[3]& ~ scan_yp_[3])))		\ 	goto TO; } while (0)
 end_define
 
 begin_define
@@ -723,7 +735,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      if ((scan_xp_[0] == scan_yp_[0])				\&& (scan_xp_[1] == scan_yp_[1])			\&& (scan_xp_[2] == scan_yp_[2])			\&& (scan_xp_[3] == scan_yp_[3]))			\ 	goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      if ((scan_xp_[0] == scan_yp_[0])				\&& (scan_xp_[1] == scan_yp_[1])			\&& (scan_xp_[2] == scan_yp_[2])			\&& (scan_xp_[3] == scan_yp_[3]))			\ 	goto TO; } while (0)
 end_define
 
 begin_else
@@ -743,7 +755,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = 0; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = 0; } while (0)
 end_define
 
 begin_define
@@ -754,7 +766,7 @@ parameter_list|(
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO);		\      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = -1; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO);			\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = -1; } while (0)
 end_define
 
 begin_define
@@ -767,7 +779,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = *scan_fp_++; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = *scan_fp_++; } while (0)
 end_define
 
 begin_define
@@ -780,7 +792,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = ~ *scan_fp_++; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ = ~ *scan_fp_++; } while (0)
 end_define
 
 begin_define
@@ -793,7 +805,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++&= *scan_fp_++; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++&= *scan_fp_++; } while (0)
 end_define
 
 begin_define
@@ -806,7 +818,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++&= ~ *scan_fp_++; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++&= ~ *scan_fp_++; } while (0)
 end_define
 
 begin_define
@@ -819,7 +831,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ |= *scan_fp_++; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ |= *scan_fp_++; } while (0)
 end_define
 
 begin_define
@@ -832,7 +844,7 @@ parameter_list|,
 name|FROM
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ |= ~ *scan_fp_++; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_tp_ = (TO), *scan_fp_ = (FROM); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        *scan_tp_++ |= ~ *scan_fp_++; } while (0)
 end_define
 
 begin_define
@@ -847,7 +859,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        if (0 != (*scan_xp_++& ~ *scan_yp_++)) break;		\      if (i == HARD_REG_SET_LONGS) goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        if (0 != (*scan_xp_++& ~ *scan_yp_++)) break;		\      if (i == HARD_REG_SET_LONGS) goto TO; } while (0)
 end_define
 
 begin_define
@@ -862,7 +874,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|do { register HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); \      register int i;						\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        if (*scan_xp_++ != *scan_yp_++) break;			\      if (i == HARD_REG_SET_LONGS) goto TO; } while (0)
+value|do { HARD_REG_ELT_TYPE *scan_xp_ = (X), *scan_yp_ = (Y); 	\      int i;							\      for (i = 0; i< HARD_REG_SET_LONGS; i++)			\        if (*scan_xp_++ != *scan_yp_++) break;			\      if (i == HARD_REG_SET_LONGS) goto TO; } while (0)
 end_define
 
 begin_endif
@@ -990,8 +1002,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Table of register numbers in the order in which to try to use them.  */
+comment|/* Contains 1 for registers that are set or clobbered by calls.  */
 end_comment
+
+begin_comment
+comment|/* ??? Ideally, this would be just call_used_regs plus global_regs, but    for someone's bright idea to have call_used_regs strictly include    fixed_regs.  Which leaves us guessing as to the set of fixed_regs    that are actually preserved.  We know for sure that those associated    with the local stack frame are safe, but scant others.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|HARD_REG_SET
+name|regs_invalidated_by_call
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1000,13 +1023,27 @@ name|REG_ALLOC_ORDER
 end_ifdef
 
 begin_comment
-comment|/* Avoid undef symbol in certain broken linkers.  */
+comment|/* Table of register numbers in the order in which to try to use them.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|reg_alloc_order
+index|[
+name|FIRST_PSEUDO_REGISTER
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The inverse of reg_alloc_order.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inv_reg_alloc_order
 index|[
 name|FIRST_PSEUDO_REGISTER
 index|]
@@ -1026,7 +1063,9 @@ begin_decl_stmt
 specifier|extern
 name|HARD_REG_SET
 name|reg_class_contents
-index|[]
+index|[
+name|N_REG_CLASSES
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1036,6 +1075,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|int
 name|reg_class_size
 index|[
@@ -1133,6 +1173,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|reg_names
@@ -1141,6 +1182,15 @@ name|FIRST_PSEUDO_REGISTER
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! GCC_HARD_REG_SET_H */
+end_comment
 
 end_unit
 

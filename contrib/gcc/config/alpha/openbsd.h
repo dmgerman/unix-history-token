@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__unix__ -D__ANSI_COMPAT -Asystem(unix) \ -D__OpenBSD__ -D__alpha__ -D__alpha"
+value|"-D__unix__ -D__ANSI_COMPAT -Asystem=unix \ -D__OpenBSD__ -D__alpha__ -D__alpha"
 end_define
 
 begin_comment
@@ -266,7 +266,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");                          \   fprintf (FILE, "\t.set noat\n");				\   if (TARGET_SUPPORT_ARCH)					\     fprintf (FILE, "\t.arch %s\n",				\              alpha_cpu == PROCESSOR_EV6 ? "ev6"			\ 	     : (alpha_cpu == PROCESSOR_EV5			\ 		? (TARGET_MAX ? "pca56" : TARGET_BWX ? "ev56" : "ev5") \ 		: "ev4"));					\ 								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
+value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");                          \   fprintf (FILE, "\t.set noat\n");				\   if (TARGET_SUPPORT_ARCH)					\     fprintf (FILE, "\t.arch %s\n",				\              TARGET_CPU_EV6 ? "ev6"				\ 	     : (TARGET_CPU_EV5					\ 		? (TARGET_MAX ? "pca56" : TARGET_BWX ? "ev56" : "ev5") \ 		: "ev4"));					\ 								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
 end_define
 
 begin_endif

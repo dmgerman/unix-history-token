@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* OSF/1 1.3 now is compitable with SVR4, so include sysv4.h, and    put difference here.  */
+comment|/* OSF/1 1.3 now is compitable with SVR4, so include sysv4.h, and    put difference here.    Copyright (C) 2000 Free Software Foundation, Inc.  */
 end_comment
 
 begin_include
@@ -8,32 +8,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/sysv4.h"
-end_include
-
-begin_comment
-comment|/* Base i386 target machine definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_sys_siglist
-value|sys_siglist
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_siglist
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_undef
 undef|#
@@ -46,6 +20,12 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (i386 OSF/1)");
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_OSF1ELF
 end_define
 
 begin_comment
@@ -83,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %{fpic: -D__SHARED__} %{fPIC: %{!fpic: -D__SHARED__}} \ %{.S:	%{!ansi:%{!traditional:%{!traditional-cpp:%{!ftraditional: -traditional}}}}} \ %{.S:	-D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C} \ %{!.S:	-D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}"
+value|"\ %(cpp_cpu) \ %{fpic: -D__SHARED__} %{fPIC: %{!fpic: -D__SHARED__}} \ %{.S:	%{!ansi:%{!traditional:%{!traditional-cpp:%{!ftraditional: -traditional}}}}} \ %{.S:	-D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C} \ %{!.S:	-D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}"
 end_define
 
 begin_comment
@@ -100,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"%{p: %{!mmcount: %{!mno-mcount: -mno-mcount }}} \ %{!p: %{pg: %{!mmcount: %{!mno-mcount: -mno-mcount }}}}"
+value|"%(cc1_cpu) %{p: %{!mmcount: %{!mno-mcount: -mno-mcount }}} \ %{!p: %{pg: %{!mmcount: %{!mno-mcount: -mno-mcount }}}}"
 end_define
 
 begin_comment
@@ -118,7 +98,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-D__NO_UNDERSCORES__ -D__ELF__ -DOSF -DOSF1 -Di386 -Dunix -Asystem(xpg4) -Asystem(osf1) -Acpu(i386) -Amachine(i386)"
+value|"-D__NO_UNDERSCORES__ -D__ELF__ -DOSF -DOSF1 -Dunix \    -Asystem=unix -Asystem=xpg4 -Asystem=osf1"
 end_define
 
 begin_comment
@@ -231,40 +211,6 @@ value|"%{!shared:%{!symbolic:libgcc.a%s}}"
 end_define
 
 begin_comment
-comment|/* A C statement to output assembler commands which will identify the object   file as having been compile with GNU CC. We don't need or want this for   OSF1. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_IDENTIFY_GCC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC
-parameter_list|(
-name|FILE
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* Identify the front-end which produced this file.  To keep symbol    space down, and not confuse kdb, only do this if the language is    not C.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_LANGUAGE
-parameter_list|(
-name|STREAM
-parameter_list|)
-define|\
-value|{                                                                       \   if (strcmp (lang_identify (), "c") != 0)                              \     output_lang_identify (STREAM);                                      \ }
-end_define
-
-begin_comment
 comment|/* Specify size_t, ptrdiff_t, and wchar_t types.  */
 end_comment
 
@@ -370,7 +316,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "mcount",		-MASK_NO_MCOUNT, "Profiling uses mcount" },			\      { "no-mcount",		 MASK_NO_MCOUNT, "" },
+value|{ "mcount",		-MASK_NO_MCOUNT,			\        N_("Profiling uses mcount") },					\      { "no-mcount",		 MASK_NO_MCOUNT, "" },
 end_define
 
 begin_comment
@@ -408,27 +354,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_PROLOGUE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_PROLOGUE
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SIZE
-parameter_list|)
-define|\
-value|do									\   {									\     char *prefix = "";			\     char *lprefix = LPREFIX;						\     int labelno = profile_label_no;					\ 									\     if (profile_flag&& OSF_PROFILE_BEFORE_PROLOGUE)			\       {									\ 	if (!flag_pic)				\ 	  {								\ 	    fprintf (FILE, "\tmovl $%sP%d,%%edx\n", lprefix, labelno);	\ 	    fprintf (FILE, "\tcall *%s_mcount_ptr\n", prefix);		\ 	  }								\ 									\ 	else								\ 	  {								\ 	    static int call_no = 0;					\ 									\ 	    fprintf (FILE, "\tcall %sPc%d\n", lprefix, call_no);	\ 	    fprintf (FILE, "%sPc%d:\tpopl %%eax\n", lprefix, call_no);	\ 	    fprintf (FILE, "\taddl $_GLOBAL_OFFSET_TABLE_+[.-%sPc%d],%%eax\n", \ 		     lprefix, call_no++);				\ 	    fprintf (FILE, "\tleal %sP%d@GOTOFF(%%eax),%%edx\n",	\ 		     lprefix, labelno);					\ 	    fprintf (FILE, "\tmovl %s_mcount_ptr@GOT(%%eax),%%eax\n",	\ 		     prefix);						\ 	    fprintf (FILE, "\tcall *(%%eax)\n");			\ 	  }								\       }									\ 									\     function_prologue (FILE, SIZE);					\   }									\ while (0)
-end_define
-
 begin_comment
-comment|/* A C statement or compound statement to output to FILE some assembler code to    call the profiling subroutine `mcount'.  Before calling, the assembler code    must load the address of a counter variable into a register where `mcount'    expects to find the address.  The name of this variable is `LP' followed by    the number LABELNO, so you would generate the name using `LP%d' in a    `fprintf'.     The details of how the address should be passed to `mcount' are determined    by your operating system environment, not by GNU CC.  To figure them out,    compile a small program for profiling using the system's installed C    compiler and look at the assembler code that results. */
+comment|/* A C statement or compound statement to output to FILE some assembler code to    call the profiling subroutine `mcount'.  Before calling, the assembler code    must load the address of a counter variable into a register where `mcount'    expects to find the address.  The name of this variable is `LP' followed by    the number LABELNO, so you would generate the name using `LP%d' in a    `fprintf'.     The details of how the address should be passed to `mcount' are determined    by your operating system environment, not by GNU CC.  To figure them out,    compile a small program for profiling using the system's installed C    compiler and look at the assembler code that results.  */
 end_comment
 
 begin_undef
@@ -447,7 +374,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|do									\   {									\     if (!OSF_PROFILE_BEFORE_PROLOGUE)					\       {									\ 	char *prefix = "";			\ 	char *lprefix = LPREFIX;					\ 	int labelno = LABELNO;					\ 									\
+value|do									\   {									\     if (!OSF_PROFILE_BEFORE_PROLOGUE)					\       {									\ 	const char *const prefix = "";					\ 	const char *const lprefix = LPREFIX;				\ 	int labelno = LABELNO;						\ 									\
 comment|/* Note that OSF/rose blew it in terms of calling mcount,	\ 	   since OSF/rose prepends a leading underscore, but mcount's	\ 	   doesn't.  At present, we keep this kludge for ELF as well	\ 	   to allow old kernels to build profiling.  */
 value|\ 									\ 	if (flag_pic							\&& !current_function_uses_pic_offset_table			\&& !current_function_uses_const_pool)			\ 	  abort ();							\ 									\ 	if (TARGET_MCOUNT&& flag_pic)					\ 	  {								\ 	    fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%edx\n",	\ 		     lprefix, labelno);					\ 	    fprintf (FILE, "\tcall *%smcount@GOT(%%ebx)\n", prefix);	\ 	  }								\ 									\ 	else if (TARGET_MCOUNT)						\ 	  {								\ 	    fprintf (FILE, "\tmovl $%sP%d,%%edx\n", lprefix, labelno);	\ 	    fprintf (FILE, "\tcall %smcount\n", prefix);		\ 	  }								\ 									\ 	else if (flag_pic&& frame_pointer_needed)			\ 	  {								\ 	    fprintf (FILE, "\tmovl 4(%%ebp),%%ecx\n");			\ 	    fprintf (FILE, "\tpushl %%ecx\n");				\ 	    fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%edx\n",	\ 		     lprefix, labelno);					\ 	    fprintf (FILE, "\tmovl _mcount_ptr@GOT(%%ebx),%%eax\n");	\ 	    fprintf (FILE, "\tcall *(%%eax)\n");			\ 	    fprintf (FILE, "\tpopl %%eax\n");				\ 	  }								\ 									\ 	else if (frame_pointer_needed)					\ 	  {								\ 	    fprintf (FILE, "\tmovl 4(%%ebp),%%ecx\n");			\ 	    fprintf (FILE, "\tpushl %%ecx\n");				\ 	    fprintf (FILE, "\tmovl $%sP%d,%%edx\n", lprefix, labelno);	\ 	    fprintf (FILE, "\tcall *_mcount_ptr\n");			\ 	    fprintf (FILE, "\tpopl %%eax\n");				\ 	  }								\ 									\ 	else								\ 	  abort ();							\       }									\   }									\ while (0)
 end_define

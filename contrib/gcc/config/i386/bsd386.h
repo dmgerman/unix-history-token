@@ -3,14 +3,8 @@ begin_comment
 comment|/* Configuration for an i386 running BSDI's BSD/OS (formerly known as BSD/386)    as the target machine.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"i386/386bsd.h"
-end_include
-
 begin_comment
-comment|/* We exist mostly to add -Dbsdi and such to the predefines. */
+comment|/* We exist mostly to add -Dbsdi and such to the predefines.  */
 end_comment
 
 begin_undef
@@ -23,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -Dbsdi -D__i386__ -D__bsdi__ -D____386BSD____ -D__386BSD__ -DBSD_NET2 -Asystem(unix) -Asystem(bsd) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Dbsdi -D____386BSD____ -D__386BSD__\  -DBSD_NET2 -Asystem=unix -Asystem=bsd"
 end_define
 
 begin_undef

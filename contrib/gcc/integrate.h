@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Function integration definitions for GNU C-Compiler    Copyright (C) 1990, 1995, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Function integration definitions for GNU C-Compiler    Copyright (C) 1990, 1995, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -17,7 +17,7 @@ begin_struct
 struct|struct
 name|inline_remap
 block|{
-comment|/* True if we are doing function integration, false otherwise.      Used to control whether RTX_UNCHANGING bits are copied by      copy_rtx_and_substitute. */
+comment|/* True if we are doing function integration, false otherwise.      Used to control whether RTX_UNCHANGING bits are copied by      copy_rtx_and_substitute.  */
 name|int
 name|integrating
 decl_stmt|;
@@ -31,11 +31,38 @@ comment|/* Place to put insns needed at start of function.  */
 name|rtx
 name|insns_at_start
 decl_stmt|;
+comment|/* Mapping from old BLOCKs to new BLOCKs.  */
+name|varray_type
+name|block_map
+decl_stmt|;
 comment|/* Mapping from old registers to new registers.      It is allocated and deallocated in `expand_inline_function' */
 name|rtx
 modifier|*
 name|reg_map
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LEAF_REGISTERS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|LEAF_REG_REMAP
+argument_list|)
+comment|/* Mapping from old leaf registers to new leaf registers.  */
+name|rtx
+name|leaf_reg_map
+index|[
+name|FIRST_PSEUDO_REGISTER
+index|]
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Mapping from old code-labels to new code-labels.      The first element of this map is label_map[min_labelno].  */
 name|rtx
 modifier|*
@@ -80,14 +107,19 @@ comment|/* Likewise, this is the copied constraints vector.  */
 name|rtvec
 name|copy_asm_constraints_vector
 decl_stmt|;
-comment|/* Indications for regs being pointers and their alignment.  */
-name|char
-modifier|*
-name|regno_pointer_flag
+comment|/* Target of a return insn, if needed and inlining.  */
+name|rtx
+name|local_return_label
 decl_stmt|;
+comment|/* Indications for regs being pointers and their alignment.  */
+name|unsigned
 name|char
 modifier|*
 name|regno_pointer_align
+decl_stmt|;
+name|rtx
+modifier|*
+name|x_regno_reg_rtx
 decl_stmt|;
 comment|/* The next few fields are used for subst_constants to record the SETs      that it saw.  */
 name|int
@@ -121,6 +153,14 @@ name|last_cc0_value
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Note mode of COMPARE if the mode would be otherwise lost (comparing of      two VOIDmode constants.  */
+name|rtx
+name|compare_src
+decl_stmt|;
+name|enum
+name|machine_mode
+name|compare_mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -133,13 +173,216 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|copy_rtx_and_substitute
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
 operator|,
 expr|struct
 name|inline_remap
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return a pseudo that corresponds to the value in the specified hard    reg as of the start of the function (for inlined functions, the    value at the start of the parent function).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|get_hard_reg_initial_val
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Likewise, but for a different than the current function, or    arbitrary expression.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|get_func_hard_reg_initial_val
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Likewise, but iff someone else has caused it to become allocated.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|has_func_hard_reg_initial_val
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Likewise, but for common cases.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|has_hard_reg_initial_val
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If a pseudo represents an initial hard reg (or expression), return    it, else return NULL_RTX.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|get_hard_reg_initial_reg
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This is for GC.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_hard_reg_initial_vals
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|function
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Called from rest_of_compilation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_initial_value_sets
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|allocate_initial_values
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Copy a declaration when one function is substituted inline into    another.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|tree_node
+modifier|*
+name|copy_decl_for_inlining
+name|PARAMS
+argument_list|(
+operator|(
+expr|union
+name|tree_node
+operator|*
+operator|,
+expr|union
+name|tree_node
+operator|*
+operator|,
+expr|union
+name|tree_node
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Check whether there's any attribute in a function declaration that    makes the function uninlinable.  Returns false if it finds any,    true otherwise.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|function_attribute_inlinable_p
+name|PARAMS
+argument_list|(
+operator|(
+expr|union
+name|tree_node
 operator|*
 operator|)
 argument_list|)
@@ -150,7 +393,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|try_constants
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -158,21 +401,6 @@ operator|,
 expr|struct
 name|inline_remap
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|mark_stores
-name|PROTO
-argument_list|(
-operator|(
-name|rtx
-operator|,
-name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -186,7 +414,7 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|get_label_from_map
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 expr|struct
@@ -238,7 +466,7 @@ parameter_list|,
 name|MAX
 parameter_list|)
 define|\
-value|{									\     if ((MAX)>= VARRAY_SIZE ((MAP)->const_equiv_varray))		\       {									\         int is_global = (global_const_equiv_varray			\ 			 == (MAP)->const_equiv_varray);			\         VARRAY_GROW ((MAP)->const_equiv_varray, (MAX)+1);		\ 	if (is_global)							\ 	   global_const_equiv_varray = (MAP)->const_equiv_varray;	\       }									\   }
+value|{									\     if ((size_t)(MAX)>= VARRAY_SIZE ((MAP)->const_equiv_varray))	\       {									\         int is_global = (global_const_equiv_varray			\ 			 == (MAP)->const_equiv_varray);			\         VARRAY_GROW ((MAP)->const_equiv_varray, (MAX)+1);		\ 	if (is_global)							\ 	   global_const_equiv_varray = (MAP)->const_equiv_varray;	\       }									\   }
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows NT 3.x, using a Unix style C library and tools,    as distinct from winnt.h, which is used to build GCC for use with a    windows style library and tool set and uses the Microsoft tools.    Copyright (C) 1995-1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Operating system specific defines to be used when targeting GCC for    hosting on Windows NT 3.x, using a Unix style C library and tools,    as distinct from winnt.h, which is used to build GCC for use with a    windows style library and tool set and uses the Microsoft tools.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -52,7 +52,7 @@ file|"dbxcoff.h"
 end_include
 
 begin_comment
-comment|/* Augment TARGET_SWITCHES with the cygwin/win32 options. */
+comment|/* Augment TARGET_SWITCHES with the cygwin/win32 options.  */
 end_comment
 
 begin_define
@@ -156,7 +156,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "win32",                           MASK_WIN32, "Use Mingw32 interface" }, \     { "cygwin",                          MASK_CYGWIN, "Use Cygwin interface"  },  \     { "windows",                         MASK_WINDOWS, "Use bare Windows interface" }, \     { "dll",                             MASK_DLL, "Generate code for a DLL" },     \     { "nop-fun-dllimport",		 MASK_NOP_FUN_DLLIMPORT, "Ignore dllimport for functions" }, \     { "no-nop-fun-dllimport",		 MASK_NOP_FUN_DLLIMPORT, "" },
+value|{ "win32",			MASK_WIN32,				\       N_("Use Mingw32 interface") },					\     { "cygwin",			MASK_CYGWIN,				\       N_("Use Cygwin interface")  },					\     { "windows",		MASK_WINDOWS,				\       N_("Use bare Windows interface") },				\     { "dll",			MASK_DLL,				\       N_("Generate code for a DLL") },					\     { "nop-fun-dllimport",	MASK_NOP_FUN_DLLIMPORT,			\       N_("Ignore dllimport for functions") }, 				\     { "no-nop-fun-dllimport",	MASK_NOP_FUN_DLLIMPORT, "" },
 end_define
 
 begin_undef
@@ -169,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D_WIN32 \   -DWINNT  -D_X86_=1 -D__STDC__=1\   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -Asystem(winnt)"
+value|"-D_WIN32 -DWINNT -D_X86_=1 \   -D__stdcall=__attribute__((__stdcall__)) \   -D__cdecl=__attribute__((__cdecl__)) \   -Asystem=winnt"
 end_define
 
 begin_undef
@@ -268,84 +268,8 @@ name|NEED_ATEXIT
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_ctor, in_dtor
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|CTOR_SECTION_FUNCTION						\   DTOR_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTOR_SECTION_FUNCTION
-define|\
-value|void								\ ctor_section ()							\ {								\   if (in_section != in_ctor)					\     {								\       fprintf (asm_out_file, "\t.section .ctor\n");		\       in_section = in_ctor;					\     }								\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTOR_SECTION_FUNCTION
-define|\
-value|void								\ dtor_section ()							\ {								\   if (in_section != in_dtor)					\     {								\       fprintf (asm_out_file, "\t.section .dtor\n");		\       in_section = in_dtor;					\     }								\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\     ctor_section ();				\     fprintf (FILE, "%s\t", ASM_LONG);		\     assemble_name (FILE, NAME);			\     fprintf (FILE, "\n");			\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\     dtor_section ();                   		\     fprintf (FILE, "%s\t", ASM_LONG);		\     assemble_name (FILE, NAME);              	\     fprintf (FILE, "\n");			\   } while (0)
-end_define
-
 begin_comment
-comment|/* Define this macro if references to a symbol must be treated    differently depending on something about the variable or    function named by the symbol (such as what section it is in).     On i386, if using PIC, mark a SYMBOL_REF for a non-global symbol    so that we may access it directly in the GOT.     On i386 running Windows NT, modify the assembler name with a suffix     consisting of an atsign (@) followed by string of digits that represents    the number of bytes of arguments passed to the function, if it has the     attribute STDCALL. */
+comment|/* Define this macro if references to a symbol must be treated    differently depending on something about the variable or    function named by the symbol (such as what section it is in).     On i386, if using PIC, mark a SYMBOL_REF for a non-global symbol    so that we may access it directly in the GOT.     On i386 running Windows NT, modify the assembler name with a suffix     consisting of an atsign (@) followed by string of digits that represents    the number of bytes of arguments passed to the function, if it has the     attribute STDCALL.  */
 end_comment
 
 begin_ifdef
@@ -396,11 +320,11 @@ parameter_list|,
 name|SYMBOL_NAME
 parameter_list|)
 define|\
-value|do {									\   char *_p;								\   char *_name = ((SYMBOL_NAME) + ((SYMBOL_NAME)[0] == '*'));		\   for (_p = _name; *_p&& *_p != '@'; ++_p)				\     ;									\   if (*_p == '@')							\     {									\       int _len = _p - _name;						\       (VAR) = (char *) alloca (_len + 1);				\       strncpy ((VAR), _name, _len);					\       (VAR)[_len] = '\0';						\     }									\   else									\     (VAR) = _name;							\ } while (0)
+value|do {									\   const char *_p;							\   const char *const _name = ((SYMBOL_NAME) + ((SYMBOL_NAME)[0] == '*'));\   for (_p = _name; *_p&& *_p != '@'; ++_p)				\     ;									\   if (*_p == '@')							\     {									\       int _len = _p - _name;						\       char *_new_name = (char *) alloca (_len + 1);			\       strncpy (_new_name, _name, _len);					\       _new_name[_len] = '\0';						\       (VAR) = _new_name;						\     }									\   else									\     (VAR) = _name;							\ } while (0)
 end_define
 
 begin_comment
-comment|/* Emit code to check the stack when allocating more that 4000    bytes in one go. */
+comment|/* Emit code to check the stack when allocating more that 4000    bytes in one go.  */
 end_comment
 
 begin_define
@@ -417,13 +341,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 define|\
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_STACK_PROBE)
 end_define
@@ -461,16 +385,6 @@ directive|define
 name|MULTIPLE_SYMBOL_SPACES
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNIQUE_SECTION_P
-parameter_list|(
-name|DECL
-parameter_list|)
-value|DECL_ONE_ONLY (DECL)
-end_define
-
 begin_function_decl
 specifier|extern
 name|void
@@ -499,32 +413,25 @@ value|1
 end_define
 
 begin_comment
-comment|/* A C statement to output something to the assembler file to switch to section    NAME for object DECL which is either a FUNCTION_DECL, a VAR_DECL or    NULL_TREE.  Some target formats do not support arbitrary sections.  Do not    define this macro in such cases.  */
+comment|/* Switch into a generic section.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_SECTION_NAME
-end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_SECTION_NAME
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|DECL
-parameter_list|,
-name|NAME
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do {								\   if ((DECL)&& TREE_CODE (DECL) == FUNCTION_DECL)		\     fprintf (STREAM, "\t.section %s,\"x\"\n", (NAME));		\   else if ((DECL)&& DECL_READONLY_SECTION (DECL, RELOC))	\     fprintf (STREAM, "\t.section %s,\"\"\n", (NAME));		\   else								\     fprintf (STREAM, "\t.section %s,\"w\"\n", (NAME));		\
-comment|/* Functions may have been compiled at various levels of	\      optimization so we can't use `same_size' here.  Instead,	\      have the linker pick one.  */
-value|\   if ((DECL)&& DECL_ONE_ONLY (DECL))				\     fprintf (STREAM, "\t.linkonce %s\n",			\ 	     TREE_CODE (DECL) == FUNCTION_DECL			\ 	     ? "discard" : "same_size");			\ } while (0)
+name|TARGET_ASM_NAMED_SECTION
+value|i386_pe_asm_named_section
+end_define
+
+begin_comment
+comment|/* Select attributes for named sections.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_SECTION_TYPE_FLAGS
+value|i386_pe_section_type_flags
 end_define
 
 begin_undef
@@ -541,18 +448,7 @@ value|" #"
 end_define
 
 begin_comment
-comment|/* DWARF2 Unwinding doesn't work with exception handling yet. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWARF2_UNWIND_INFO
-value|0
-end_define
-
-begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* Don't assume anything about the header files.  */
 end_comment
 
 begin_define
@@ -566,7 +462,7 @@ define|#
 directive|define
 name|SUBTARGET_PROLOGUE
 define|\
-value|if (profile_flag 							\&& strcmp (IDENTIFIER_POINTER (DECL_NAME (current_function_decl)),\ 		 "main") == 0)						\      {									\       rtx xops[1];							\       xops[0] = gen_rtx_MEM (FUNCTION_MODE,				\ 			 gen_rtx (SYMBOL_REF, Pmode, "_monstartup"));	\       if (do_rtl)							\ 	emit_call_insn (gen_rtx (CALL, VOIDmode, xops[0], const0_rtx));	\       else								\ 	output_asm_insn (AS1 (call,%P1), xops);			\      }
+value|if (current_function_profile						\&& MAIN_NAME_P (DECL_NAME (current_function_decl))		\      {									\       rtx xops[1];							\       xops[0] = gen_rtx_MEM (FUNCTION_MODE,				\ 			 gen_rtx (SYMBOL_REF, Pmode, "_monstartup"));	\       emit_call_insn (gen_rtx (CALL, VOIDmode, xops[0], const0_rtx));	\      }
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 94-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -24,213 +24,169 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"errors.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"gensupport.h"
+end_include
+
+begin_comment
+comment|/* Many parts of GCC use arrays that are indexed by machine mode and    contain the insn codes for pattern in the MD file that perform a given    operation on operands of that mode.     These patterns are present in the MD file with names that contain    the mode(s) used and the name of the operation.  This program    writes a function `init_all_optabs' that initializes the optabs with    all the insn codes of the relevant patterns present in the MD file.     This array contains a list of optabs that need to be initialized.  Within    each string, the name of the pattern to be matched against is delimited    with $( and $).  In the string, $a and $b are used to match a short mode    name (the part of the mode name not including `mode' and converted to    lower-case).  When writing out the initializer, the entire string is    used.  $A and $B are replaced with the full name of the mode; $a and $b    are replaced with the short form of the name, as above.     If $N is present in the pattern, it means the two modes must be consecutive    widths in the same mode class (e.g, QImode and HImode).  $I means that    only full integer modes should be considered for the next mode, and $F    means that only float modes should be considered.    $P means that both full and partial integer modes should be considered.     $V means to emit 'v' if the first mode is a MODE_FLOAT mode.     For some optabs, we store the operation by RTL codes.  These are only    used for comparisons.  In that case, $c and $C are the lower-case and    upper-case forms of the comparison, respectively.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|obstack
-name|obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|obstack
-modifier|*
-name|rtl_obstack
-init|=
-operator|&
-name|obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
-begin_decl_stmt
-name|void
-name|fatal
-name|PVPROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_1
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fancy_abort
-name|PROTO
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Many parts of GCC use arrays that are indexed by machine mode and    contain the insn codes for pattern in the MD file that perform a given    operation on operands of that mode.     These patterns are present in the MD file with names that contain    the mode(s) used and the name of the operation.  This program    writes a function `init_all_optabs' that initializes the optabs with    all the insn codes of the relevant patterns present in the MD file.     This array contains a list of optabs that need to be initialized.  Within    each string, the name of the pattern to be matched against is delimited    with %( and %).  In the string, %a and %b are used to match a short mode    name (the part of the mode name not including `mode' and converted to    lower-case).  When writing out the initializer, the entire string is    used.  %A and %B are replaced with the full name of the mode; %a and %b    are replaced with the short form of the name, as above.     If %N is present in the pattern, it means the two modes must be consecutive    widths in the same mode class (e.g, QImode and HImode).  %I means that    only integer modes should be considered for the next mode, and %F means    that only float modes should be considered.     For some optabs, we store the operation by RTL codes.  These are only    used for comparisons.  In that case, %c and %C are the lower-case and    upper-case forms of the comparison, respectively.  */
-end_comment
-
-begin_comment
-comment|/* The reason we use \% is to avoid sequences of the form %-capletter-%    which SCCS treats as magic.  This gets warnings which you should ignore.  */
-end_comment
-
-begin_decl_stmt
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|optabs
 index|[]
 init|=
 block|{
-literal|"extendtab[(int) %B][(int) %A][0] = CODE_FOR_%(extend%a\%b2%)"
+literal|"extendtab[$B][$A][0] = CODE_FOR_$(extend$a$b2$)"
 block|,
-literal|"extendtab[(int) %B][(int) %A][1] = CODE_FOR_%(zero_extend%a\%b2%)"
+literal|"extendtab[$B][$A][1] = CODE_FOR_$(zero_extend$a$b2$)"
 block|,
-literal|"fixtab[(int) %A][(int) %B][0] = CODE_FOR_%(fix%F\%a%I\%b2%)"
+literal|"fixtab[$A][$B][0] = CODE_FOR_$(fix$F$a$I$b2$)"
 block|,
-literal|"fixtab[(int) %A][(int) %B][1] = CODE_FOR_%(fixuns%F\%a%b2%)"
+literal|"fixtab[$A][$B][1] = CODE_FOR_$(fixuns$F$a$b2$)"
 block|,
-literal|"fixtrunctab[(int) %A][(int) %B][0] = CODE_FOR_%(fix_trunc%F\%a%I\%b2%)"
+literal|"fixtrunctab[$A][$B][0] = CODE_FOR_$(fix_trunc$F$a$I$b2$)"
 block|,
-literal|"fixtrunctab[(int) %A][(int) %B][1] = CODE_FOR_%(fixuns_trunc%F\%a%I\%b2%)"
+literal|"fixtrunctab[$A][$B][1] = CODE_FOR_$(fixuns_trunc$F$a$I$b2$)"
 block|,
-literal|"floattab[(int) %B][(int) %A][0] = CODE_FOR_%(float%I\%a%F\%b2%)"
+literal|"floattab[$B][$A][0] = CODE_FOR_$(float$I$a$F$b2$)"
 block|,
-literal|"floattab[(int) %B][(int) %A][1] = CODE_FOR_%(floatuns%I\%a%F\%b2%)"
+literal|"floattab[$B][$A][1] = CODE_FOR_$(floatuns$I$a$F$b2$)"
 block|,
-literal|"add_optab->handlers[(int) %A].insn_code = CODE_FOR_%(add%a3%)"
+literal|"add_optab->handlers[$A].insn_code = CODE_FOR_$(add$P$a3$)"
 block|,
-literal|"sub_optab->handlers[(int) %A].insn_code = CODE_FOR_%(sub%a3%)"
+literal|"addv_optab->handlers[(int) $A].insn_code =\n\     add_optab->handlers[(int) $A].insn_code = CODE_FOR_$(add$F$a3$)"
 block|,
-literal|"smul_optab->handlers[(int) %A].insn_code = CODE_FOR_%(mul%a3%)"
+literal|"addv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(addv$I$a3$)"
 block|,
-literal|"umul_highpart_optab->handlers[(int) %A].insn_code = CODE_FOR_%(umul%a3_highpart%)"
+literal|"sub_optab->handlers[$A].insn_code = CODE_FOR_$(sub$P$a3$)"
 block|,
-literal|"smul_highpart_optab->handlers[(int) %A].insn_code = CODE_FOR_%(smul%a3_highpart%)"
+literal|"subv_optab->handlers[(int) $A].insn_code =\n\     sub_optab->handlers[(int) $A].insn_code = CODE_FOR_$(sub$F$a3$)"
 block|,
-literal|"smul_widen_optab->handlers[(int) %B].insn_code = CODE_FOR_%(mul%a%b3%)%N"
+literal|"subv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(subv$I$a3$)"
 block|,
-literal|"umul_widen_optab->handlers[(int) %B].insn_code = CODE_FOR_%(umul%a%b3%)%N"
+literal|"smul_optab->handlers[$A].insn_code = CODE_FOR_$(mul$P$a3$)"
 block|,
-literal|"sdiv_optab->handlers[(int) %A].insn_code = CODE_FOR_%(div%I\%a3%)"
+literal|"smulv_optab->handlers[(int) $A].insn_code =\n\     smul_optab->handlers[(int) $A].insn_code = CODE_FOR_$(mul$F$a3$)"
 block|,
-literal|"udiv_optab->handlers[(int) %A].insn_code = CODE_FOR_%(udiv%I\%a3%)"
+literal|"smulv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(mulv$I$a3$)"
 block|,
-literal|"sdivmod_optab->handlers[(int) %A].insn_code = CODE_FOR_%(divmod%a4%)"
+literal|"umul_highpart_optab->handlers[$A].insn_code = CODE_FOR_$(umul$a3_highpart$)"
 block|,
-literal|"udivmod_optab->handlers[(int) %A].insn_code = CODE_FOR_%(udivmod%a4%)"
+literal|"smul_highpart_optab->handlers[$A].insn_code = CODE_FOR_$(smul$a3_highpart$)"
 block|,
-literal|"smod_optab->handlers[(int) %A].insn_code = CODE_FOR_%(mod%a3%)"
+literal|"smul_widen_optab->handlers[$B].insn_code = CODE_FOR_$(mul$a$b3$)$N"
 block|,
-literal|"umod_optab->handlers[(int) %A].insn_code = CODE_FOR_%(umod%a3%)"
+literal|"umul_widen_optab->handlers[$B].insn_code = CODE_FOR_$(umul$a$b3$)$N"
 block|,
-literal|"flodiv_optab->handlers[(int) %A].insn_code = CODE_FOR_%(div%F\%a3%)"
+literal|"sdiv_optab->handlers[$A].insn_code = CODE_FOR_$(div$a3$)"
 block|,
-literal|"ftrunc_optab->handlers[(int) %A].insn_code = CODE_FOR_%(ftrunc%F\%a2%)"
+literal|"sdivv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(div$V$I$a3$)"
 block|,
-literal|"and_optab->handlers[(int) %A].insn_code = CODE_FOR_%(and%a3%)"
+literal|"udiv_optab->handlers[$A].insn_code = CODE_FOR_$(udiv$I$a3$)"
 block|,
-literal|"ior_optab->handlers[(int) %A].insn_code = CODE_FOR_%(ior%a3%)"
+literal|"sdivmod_optab->handlers[$A].insn_code = CODE_FOR_$(divmod$a4$)"
 block|,
-literal|"xor_optab->handlers[(int) %A].insn_code = CODE_FOR_%(xor%a3%)"
+literal|"udivmod_optab->handlers[$A].insn_code = CODE_FOR_$(udivmod$a4$)"
 block|,
-literal|"ashl_optab->handlers[(int) %A].insn_code = CODE_FOR_%(ashl%a3%)"
+literal|"smod_optab->handlers[$A].insn_code = CODE_FOR_$(mod$a3$)"
 block|,
-literal|"ashr_optab->handlers[(int) %A].insn_code = CODE_FOR_%(ashr%a3%)"
+literal|"umod_optab->handlers[$A].insn_code = CODE_FOR_$(umod$a3$)"
 block|,
-literal|"lshr_optab->handlers[(int) %A].insn_code = CODE_FOR_%(lshr%a3%)"
+literal|"ftrunc_optab->handlers[$A].insn_code = CODE_FOR_$(ftrunc$F$a2$)"
 block|,
-literal|"rotl_optab->handlers[(int) %A].insn_code = CODE_FOR_%(rotl%a3%)"
+literal|"and_optab->handlers[$A].insn_code = CODE_FOR_$(and$a3$)"
 block|,
-literal|"rotr_optab->handlers[(int) %A].insn_code = CODE_FOR_%(rotr%a3%)"
+literal|"ior_optab->handlers[$A].insn_code = CODE_FOR_$(ior$a3$)"
 block|,
-literal|"smin_optab->handlers[(int) %A].insn_code = CODE_FOR_%(smin%I\%a3%)"
+literal|"xor_optab->handlers[$A].insn_code = CODE_FOR_$(xor$a3$)"
 block|,
-literal|"smin_optab->handlers[(int) %A].insn_code = CODE_FOR_%(min%F\%a3%)"
+literal|"ashl_optab->handlers[$A].insn_code = CODE_FOR_$(ashl$a3$)"
 block|,
-literal|"smax_optab->handlers[(int) %A].insn_code = CODE_FOR_%(smax%I\%a3%)"
+literal|"ashr_optab->handlers[$A].insn_code = CODE_FOR_$(ashr$a3$)"
 block|,
-literal|"smax_optab->handlers[(int) %A].insn_code = CODE_FOR_%(max%F\%a3%)"
+literal|"lshr_optab->handlers[$A].insn_code = CODE_FOR_$(lshr$a3$)"
 block|,
-literal|"umin_optab->handlers[(int) %A].insn_code = CODE_FOR_%(umin%I\%a3%)"
+literal|"rotl_optab->handlers[$A].insn_code = CODE_FOR_$(rotl$a3$)"
 block|,
-literal|"umax_optab->handlers[(int) %A].insn_code = CODE_FOR_%(umax%I\%a3%)"
+literal|"rotr_optab->handlers[$A].insn_code = CODE_FOR_$(rotr$a3$)"
 block|,
-literal|"neg_optab->handlers[(int) %A].insn_code = CODE_FOR_%(neg%a2%)"
+literal|"smin_optab->handlers[$A].insn_code = CODE_FOR_$(smin$I$a3$)"
 block|,
-literal|"abs_optab->handlers[(int) %A].insn_code = CODE_FOR_%(abs%a2%)"
+literal|"smin_optab->handlers[$A].insn_code = CODE_FOR_$(min$F$a3$)"
 block|,
-literal|"sqrt_optab->handlers[(int) %A].insn_code = CODE_FOR_%(sqrt%a2%)"
+literal|"smax_optab->handlers[$A].insn_code = CODE_FOR_$(smax$I$a3$)"
 block|,
-literal|"sin_optab->handlers[(int) %A].insn_code = CODE_FOR_%(sin%a2%)"
+literal|"smax_optab->handlers[$A].insn_code = CODE_FOR_$(max$F$a3$)"
 block|,
-literal|"cos_optab->handlers[(int) %A].insn_code = CODE_FOR_%(cos%a2%)"
+literal|"umin_optab->handlers[$A].insn_code = CODE_FOR_$(umin$I$a3$)"
 block|,
-literal|"strlen_optab->handlers[(int) %A].insn_code = CODE_FOR_%(strlen%a%)"
+literal|"umax_optab->handlers[$A].insn_code = CODE_FOR_$(umax$I$a3$)"
 block|,
-literal|"one_cmpl_optab->handlers[(int) %A].insn_code = CODE_FOR_%(one_cmpl%a2%)"
+literal|"neg_optab->handlers[$A].insn_code = CODE_FOR_$(neg$P$a2$)"
 block|,
-literal|"ffs_optab->handlers[(int) %A].insn_code = CODE_FOR_%(ffs%a2%)"
+literal|"negv_optab->handlers[(int) $A].insn_code =\n\     neg_optab->handlers[(int) $A].insn_code = CODE_FOR_$(neg$F$a2$)"
 block|,
-literal|"mov_optab->handlers[(int) %A].insn_code = CODE_FOR_%(mov%a%)"
+literal|"negv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(negv$I$a2$)"
 block|,
-literal|"movstrict_optab->handlers[(int) %A].insn_code = CODE_FOR_%(movstrict%a%)"
+literal|"abs_optab->handlers[$A].insn_code = CODE_FOR_$(abs$P$a2$)"
 block|,
-literal|"cmp_optab->handlers[(int) %A].insn_code = CODE_FOR_%(cmp%a%)"
+literal|"absv_optab->handlers[(int) $A].insn_code =\n\     abs_optab->handlers[(int) $A].insn_code = CODE_FOR_$(abs$F$a2$)"
 block|,
-literal|"tst_optab->handlers[(int) %A].insn_code = CODE_FOR_%(tst%a%)"
+literal|"absv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(absv$I$a2$)"
 block|,
-literal|"bcc_gen_fctn[(int) %C] = gen_%(b%c%)"
+literal|"sqrt_optab->handlers[$A].insn_code = CODE_FOR_$(sqrt$a2$)"
 block|,
-literal|"setcc_gen_code[(int) %C] = CODE_FOR_%(s%c%)"
+literal|"sin_optab->handlers[$A].insn_code = CODE_FOR_$(sin$a2$)"
 block|,
-literal|"movcc_gen_code[(int) %A] = CODE_FOR_%(mov%acc%)"
+literal|"cos_optab->handlers[$A].insn_code = CODE_FOR_$(cos$a2$)"
 block|,
-literal|"reload_in_optab[(int) %A] = CODE_FOR_%(reload_in%a%)"
+literal|"strlen_optab->handlers[$A].insn_code = CODE_FOR_$(strlen$a$)"
 block|,
-literal|"reload_out_optab[(int) %A] = CODE_FOR_%(reload_out%a%)"
+literal|"one_cmpl_optab->handlers[$A].insn_code = CODE_FOR_$(one_cmpl$a2$)"
 block|,
-literal|"movstr_optab[(int) %A] = CODE_FOR_%(movstr%a%)"
+literal|"ffs_optab->handlers[$A].insn_code = CODE_FOR_$(ffs$a2$)"
 block|,
-literal|"clrstr_optab[(int) %A] = CODE_FOR_%(clrstr%a%)"
+literal|"mov_optab->handlers[$A].insn_code = CODE_FOR_$(mov$a$)"
+block|,
+literal|"movstrict_optab->handlers[$A].insn_code = CODE_FOR_$(movstrict$a$)"
+block|,
+literal|"cmp_optab->handlers[$A].insn_code = CODE_FOR_$(cmp$a$)"
+block|,
+literal|"tst_optab->handlers[$A].insn_code = CODE_FOR_$(tst$a$)"
+block|,
+literal|"bcc_gen_fctn[$C] = gen_$(b$c$)"
+block|,
+literal|"setcc_gen_code[$C] = CODE_FOR_$(s$c$)"
+block|,
+literal|"movcc_gen_code[$A] = CODE_FOR_$(mov$acc$)"
+block|,
+literal|"cbranch_optab->handlers[$A].insn_code = CODE_FOR_$(cbranch$a4$)"
+block|,
+literal|"cmov_optab->handlers[$A].insn_code = CODE_FOR_$(cmov$a6$)"
+block|,
+literal|"cstore_optab->handlers[$A].insn_code = CODE_FOR_$(cstore$a4$)"
+block|,
+literal|"push_optab->handlers[$A].insn_code = CODE_FOR_$(push$a1$)"
+block|,
+literal|"reload_in_optab[$A] = CODE_FOR_$(reload_in$a$)"
+block|,
+literal|"reload_out_optab[$A] = CODE_FOR_$(reload_out$a$)"
+block|,
+literal|"movstr_optab[$A] = CODE_FOR_$(movstr$a$)"
+block|,
+literal|"clrstr_optab[$A] = CODE_FOR_$(clrstr$a$)"
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Allow linking with print-rtl.c.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|insn_name_ptr
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +194,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_insn
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|rtx
@@ -258,6 +214,7 @@ name|rtx
 name|insn
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -271,10 +228,16 @@ argument_list|)
 decl_stmt|;
 name|int
 name|m1
+init|=
+literal|0
 decl_stmt|,
 name|m2
+init|=
+literal|0
 decl_stmt|,
 name|op
+init|=
+literal|0
 decl_stmt|;
 name|size_t
 name|pindex
@@ -314,14 +277,10 @@ literal|0
 init|;
 name|pindex
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
+argument_list|(
 name|optabs
-operator|/
-sizeof|sizeof
-name|optabs
-index|[
-literal|0
-index|]
+argument_list|)
 condition|;
 name|pindex
 operator|++
@@ -333,6 +292,10 @@ init|=
 literal|0
 decl_stmt|,
 name|force_int
+init|=
+literal|0
+decl_stmt|,
+name|force_partial_int
 init|=
 literal|0
 decl_stmt|;
@@ -360,7 +323,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|'%'
+literal|'$'
 operator|||
 name|pp
 index|[
@@ -392,7 +355,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'%'
+literal|'$'
 operator|&&
 name|pp
 index|[
@@ -411,7 +374,7 @@ condition|(
 operator|*
 name|pp
 operator|!=
-literal|'%'
+literal|'$'
 condition|)
 block|{
 if|if
@@ -450,12 +413,24 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'P'
+case|:
+name|force_partial_int
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'F'
 case|:
 name|force_float
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
 break|break;
 case|case
 literal|'c'
@@ -478,10 +453,10 @@ for|for
 control|(
 name|p
 operator|=
-name|rtx_name
-index|[
+name|GET_RTX_NAME
+argument_list|(
 name|op
-index|]
+argument_list|)
 operator|,
 name|q
 operator|=
@@ -518,10 +493,10 @@ name|q
 operator|==
 literal|0
 operator|&&
-name|rtx_class
-index|[
+name|GET_RTX_CLASS
+argument_list|(
 name|op
-index|]
+argument_list|)
 operator|==
 literal|'<'
 condition|)
@@ -542,10 +517,10 @@ name|np
 operator|+=
 name|strlen
 argument_list|(
-name|rtx_name
-index|[
+name|GET_RTX_NAME
+argument_list|(
 name|op
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -581,10 +556,10 @@ for|for
 control|(
 name|p
 operator|=
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 operator|,
 name|q
 operator|=
@@ -601,12 +576,8 @@ operator|++
 control|)
 if|if
 condition|(
-name|tolower
+name|TOLOWER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|p
 argument_list|)
@@ -632,6 +603,39 @@ name|i
 index|]
 operator|==
 name|MODE_INT
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
+name|MODE_VECTOR_INT
+operator|)
+operator|&&
+operator|(
+operator|!
+name|force_partial_int
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
+name|MODE_INT
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
+name|MODE_PARTIAL_INT
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
+name|MODE_VECTOR_INT
 operator|)
 operator|&&
 operator|(
@@ -644,6 +648,13 @@ name|i
 index|]
 operator|==
 name|MODE_FLOAT
+operator|||
+name|mode_class
+index|[
+name|i
+index|]
+operator|==
+name|MODE_VECTOR_FLOAT
 operator|)
 condition|)
 break|break;
@@ -674,10 +685,10 @@ name|np
 operator|+=
 name|strlen
 argument_list|(
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -689,13 +700,15 @@ name|np
 operator|+=
 name|strlen
 argument_list|(
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|force_int
+operator|=
+name|force_partial_int
 operator|=
 name|force_float
 operator|=
@@ -717,7 +730,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'%'
+literal|'$'
 operator|&&
 name|pp
 index|[
@@ -752,14 +765,10 @@ if|if
 condition|(
 name|pindex
 operator|==
-sizeof|sizeof
+name|ARRAY_SIZE
+argument_list|(
 name|optabs
-operator|/
-sizeof|sizeof
-name|optabs
-index|[
-literal|0
-index|]
+argument_list|)
 condition|)
 return|return;
 comment|/* We found a match.  If this pattern is only conditionally present,      write out the "if" and two extra blanks.  */
@@ -809,12 +818,10 @@ condition|(
 operator|*
 name|pp
 operator|!=
-literal|'%'
+literal|'$'
 condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
 operator|*
 name|pp
 argument_list|)
@@ -844,16 +851,34 @@ literal|'N'
 case|:
 break|break;
 case|case
+literal|'V'
+case|:
+if|if
+condition|(
+name|GET_MODE_CLASS
+argument_list|(
+name|m1
+argument_list|)
+operator|==
+name|MODE_FLOAT
+condition|)
+name|printf
+argument_list|(
+literal|"v"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'a'
 case|:
 for|for
 control|(
 name|np
 operator|=
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|m1
-index|]
+argument_list|)
 init|;
 operator|*
 name|np
@@ -861,16 +886,10 @@ condition|;
 name|np
 operator|++
 control|)
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
-name|tolower
+name|TOLOWER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|np
 argument_list|)
@@ -884,10 +903,10 @@ for|for
 control|(
 name|np
 operator|=
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|m2
-index|]
+argument_list|)
 init|;
 operator|*
 name|np
@@ -895,16 +914,10 @@ condition|;
 name|np
 operator|++
 control|)
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
-name|tolower
+name|TOLOWER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|np
 argument_list|)
@@ -916,12 +929,12 @@ literal|'A'
 case|:
 name|printf
 argument_list|(
-literal|"%smode"
+literal|"(int) %smode"
 argument_list|,
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|m1
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -930,12 +943,12 @@ literal|'B'
 case|:
 name|printf
 argument_list|(
-literal|"%smode"
+literal|"(int) %smode"
 argument_list|,
-name|mode_name
-index|[
+name|GET_MODE_NAME
+argument_list|(
 name|m2
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -946,24 +959,29 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|rtx_name
-index|[
+name|GET_RTX_NAME
+argument_list|(
 name|op
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'C'
 case|:
+name|printf
+argument_list|(
+literal|"(int) "
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|np
 operator|=
-name|rtx_name
-index|[
+name|GET_RTX_NAME
+argument_list|(
 name|op
-index|]
+argument_list|)
 init|;
 operator|*
 name|np
@@ -971,16 +989,10 @@ condition|;
 name|np
 operator|++
 control|)
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
-name|toupper
+name|TOUPPER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|np
 argument_list|)
@@ -997,216 +1009,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
-begin_function
-name|PTR
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|val
-init|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|val
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-expr_stmt|;
-return|return
-name|val
-return|;
-block|}
-end_function
-
-begin_function
-name|PTR
-name|xrealloc
-parameter_list|(
-name|old
-parameter_list|,
-name|size
-parameter_list|)
-name|PTR
-name|old
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|;
-block|{
-specifier|register
-name|PTR
-name|ptr
-decl_stmt|;
-if|if
-condition|(
-name|old
-condition|)
-name|ptr
-operator|=
-operator|(
-name|PTR
-operator|)
-name|realloc
-argument_list|(
-name|old
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-else|else
-name|ptr
-operator|=
-operator|(
-name|PTR
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ptr
-condition|)
-name|fatal
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-expr_stmt|;
-return|return
-name|ptr
-return|;
-block|}
-end_function
-
 begin_decl_stmt
-name|void
-name|fatal
-name|VPROTO
+specifier|extern
+name|int
+decl|main
+name|PARAMS
 argument_list|(
 operator|(
-specifier|const
+name|int
+operator|,
 name|char
 operator|*
-name|format
-operator|,
-operator|...
+operator|*
 operator|)
 argument_list|)
-block|{
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-specifier|const
-name|char
-modifier|*
-name|format
 decl_stmt|;
-endif|#
-directive|endif
-name|va_list
-name|ap
-decl_stmt|;
-name|VA_START
-argument_list|(
-name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ANSI_PROTOTYPES
-name|format
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"genopinit: "
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|format
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
 end_decl_stmt
-
-begin_comment
-comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
-end_comment
-
-begin_function
-name|void
-name|fancy_abort
-parameter_list|()
-block|{
-name|fatal
-argument_list|(
-literal|"Internal gcc abort."
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
 
 begin_function
 name|int
@@ -1228,18 +1046,9 @@ block|{
 name|rtx
 name|desc
 decl_stmt|;
-name|FILE
-modifier|*
-name|infile
-decl_stmt|;
-specifier|register
-name|int
-name|c
-decl_stmt|;
-name|obstack_init
-argument_list|(
-name|rtl_obstack
-argument_list|)
+name|progname
+operator|=
+literal|"genopinit"
 expr_stmt|;
 if|if
 condition|(
@@ -1249,45 +1058,25 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"No input file name."
-argument_list|)
-expr_stmt|;
-name|infile
-operator|=
-name|fopen
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"r"
+literal|"no input file name"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|infile
-operator|==
-literal|0
-condition|)
-block|{
-name|perror
+name|init_md_reader_args
 argument_list|(
+name|argc
+argument_list|,
 name|argv
-index|[
-literal|1
-index|]
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
+operator|!=
+name|SUCCESS_EXIT_CODE
+condition|)
+return|return
+operator|(
 name|FATAL_EXIT_CODE
-argument_list|)
-expr_stmt|;
-block|}
-name|init_rtl
-argument_list|()
-expr_stmt|;
+operator|)
+return|;
 name|printf
 argument_list|(
 literal|"/* Generated automatically by the program `genopinit'\n\ from the machine description file `md'.  */\n\n"
@@ -1315,16 +1104,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#include \"insn-flags.h\"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#include \"insn-codes.h\"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#include \"insn-config.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -1336,6 +1115,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"expr.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"optabs.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1354,34 +1138,31 @@ condition|(
 literal|1
 condition|)
 block|{
-name|c
+name|int
+name|line_no
+decl_stmt|,
+name|insn_code_number
+init|=
+literal|0
+decl_stmt|;
+name|desc
 operator|=
-name|read_skip_spaces
+name|read_md_rtx
 argument_list|(
-name|infile
+operator|&
+name|line_no
+argument_list|,
+operator|&
+name|insn_code_number
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|c
+name|desc
 operator|==
-name|EOF
+name|NULL
 condition|)
 break|break;
-name|ungetc
-argument_list|(
-name|c
-argument_list|,
-name|infile
-argument_list|)
-expr_stmt|;
-name|desc
-operator|=
-name|read_rtx
-argument_list|(
-name|infile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|GET_CODE
@@ -1414,8 +1195,8 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 name|ferror
 argument_list|(
 name|stdout
@@ -1426,11 +1207,30 @@ condition|?
 name|FATAL_EXIT_CODE
 else|:
 name|SUCCESS_EXIT_CODE
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Define this so we can link with print-rtl.o to get debug_rtx function.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|get_insn_name
+parameter_list|(
+name|code
+parameter_list|)
+name|int
+name|code
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function

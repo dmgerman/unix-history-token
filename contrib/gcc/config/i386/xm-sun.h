@@ -9,11 +9,5 @@ directive|define
 name|USG
 end_define
 
-begin_include
-include|#
-directive|include
-file|"i386/xm-i386.h"
-end_include
-
 end_unit
 

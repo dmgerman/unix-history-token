@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996, 2000 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -14,54 +14,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (i386 FreeBSD/ELF)");
-end_define
-
-begin_comment
-comment|/* The svr4 ABI for the i386 says that records and unions are returned    in memory.  */
-end_comment
-
-begin_comment
-comment|/* On FreeBSD, we do not. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_PCC_STRUCT_RETURN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PCC_STRUCT_RETURN
-value|0
-end_define
-
-begin_comment
-comment|/* This gets defined in tm.h->linux.h->svr4.h, and keeps us from using    libraries compiled with the native cc, so undef it. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NO_DOLLAR_IN_LABEL
-end_undef
-
-begin_comment
-comment|/* Use more efficient ``thunks'' to implement C++ vtables. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_VTABLE_THUNKS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_VTABLE_THUNKS
-value|1
 end_define
 
 begin_comment
@@ -117,71 +69,8 @@ begin_define
 define|#
 directive|define
 name|SET_ASM_OP
-value|".set"
+value|"\t.set\t"
 end_define
-
-begin_comment
-comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BODY
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
-define|\
-value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
-end_define
-
-begin_comment
-comment|/* Indicate that jump tables go in the text section.  This is    necessary when compiling PIC code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUMP_TABLES_IN_TEXT_SECTION
-value|(flag_pic)
-end_define
-
-begin_comment
-comment|/* Use stabs instead of DWARF debug format.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PREFERRED_DEBUGGING_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
-end_define
-
-begin_comment
-comment|/* Copy this from the svr4 specifications... */
-end_comment
-
-begin_comment
-comment|/* Define the register numbers to be used in Dwarf debugging information.    The SVR4 reference port C compiler uses the following register numbers    in its Dwarf output code: 	0 for %eax (gnu regno = 0) 	1 for %ecx (gnu regno = 2) 	2 for %edx (gnu regno = 1) 	3 for %ebx (gnu regno = 3) 	4 for %esp (gnu regno = 7) 	5 for %ebp (gnu regno = 6) 	6 for %esi (gnu regno = 4) 	7 for %edi (gnu regno = 5)    The following three DWARF register numbers are never generated by    the SVR4 C compiler or by the GNU compilers, but SDB on x86/svr4    believes these numbers have these meanings. 	8  for %eip    (no gnu equivalent) 	9  for %eflags (no gnu equivalent) 	10 for %trapno (no gnu equivalent)    It is not at all clear how we should number the FP stack registers    for the x86 architecture.  If the version of SDB on x86/svr4 were    a bit less brain dead with respect to floating-point then we would    have a precedent to follow with respect to DWARF register numbers    for x86 FP registers, but the SDB on x86/svr4 is so completely    broken with respect to FP registers that it is hardly worth thinking    of it as something to strive for compatibility with.    The version of x86/svr4 SDB I have at the moment does (partially)    seem to believe that DWARF register number 11 is associated with    the x86 register %st(0), but that's about all.  Higher DWARF    register numbers don't seem to be associated with anything in    particular, and even for DWARF regno 11, SDB only seems to under-    stand that it should say that a variable lives in %st(0) (when    asked via an `=' command) if we said it was in DWARF regno 11,    but SDB still prints garbage when asked for the value of the    variable in question (via a `/' command).    (Also note that the labels SDB prints for various FP stack regs    when doing an `x' command are all wrong.)    Note that these problems generally don't affect the native SVR4    C compiler because it doesn't allow the use of -O with -g and    because when it is *not* optimizing, it allocates a memory    location for each floating-point variable, and the memory    location is what gets described in the DWARF AT_location    attribute for the variable in question.    Regardless of the severe mental illness of the x86/svr4 SDB, we    do something sensible here and we use the following DWARF    register numbers.  Note that these are all stack-top-relative    numbers. 	11 for %st(0) (gnu regno = 8) 	12 for %st(1) (gnu regno = 9) 	13 for %st(2) (gnu regno = 10) 	14 for %st(3) (gnu regno = 11) 	15 for %st(4) (gnu regno = 12) 	16 for %st(5) (gnu regno = 13) 	17 for %st(6) (gnu regno = 14) 	18 for %st(7) (gnu regno = 15) */
-end_comment
 
 begin_undef
 undef|#
@@ -197,7 +86,19 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|((n) == 0 ? 0 \  : (n) == 1 ? 2 \  : (n) == 2 ? 1 \  : (n) == 3 ? 3 \  : (n) == 4 ? 6 \  : (n) == 5 ? 7 \  : (n) == 6 ? 5 \  : (n) == 7 ? 4 \  : ((n)>= FIRST_STACK_REG&& (n)<= LAST_STACK_REG) ? (n)+3 \  : (-1))
+value|(TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NO_PROFILE_COUNTERS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_COUNTERS
 end_define
 
 begin_comment
@@ -220,8 +121,12 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\       fprintf (FILE, "\tcall *.mcount@GOT(%%ebx)\n");			\   else									\       fprintf (FILE, "\tcall .mcount\n");				\ }
+value|{									\   if (flag_pic)								\       fprintf ((FILE), "\tcall *.mcount@GOT(%%ebx)\n");			\   else									\       fprintf ((FILE), "\tcall .mcount\n");				\ }
 end_define
+
+begin_comment
+comment|/* Make gcc agree with<machine/ansi.h>.  */
+end_comment
 
 begin_undef
 undef|#
@@ -252,32 +157,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|WCHAR_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_TYPE
-value|"int"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
 
@@ -288,55 +167,8 @@ name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-Di386 -Dunix -D__ELF__ -D__FreeBSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
-end_define
-
 begin_comment
-comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (comming from svr4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SWITCH_TAKES_ARG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SWITCH_TAKES_ARG
-parameter_list|(
-name|CHAR
-parameter_list|)
-define|\
-value|(DEFAULT_SWITCH_TAKES_ARG (CHAR) \    || (CHAR) == 'h' \    || (CHAR) == 'z' \    || (CHAR) == 'R')
-end_define
-
-begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add    the magical crtbegin.o file (see crtstuff.c) which provides part  	of the support for getting C++ file-scope static object constructed  	before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add    the magical crtbegin.o file (see crtstuff.c) which provides part  	of the support for getting C++ file-scope static object constructed  	before entering `main'.  */
 end_comment
 
 begin_undef
@@ -369,23 +201,6 @@ directive|define
 name|ENDFILE_SPEC
 define|\
 value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
-end_define
-
-begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling or need threads support.    (simular to the default, except no -lg, and no -p.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LIB_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{!shared: \    %{!pg:%{!pthread:%{!kthread:-lc} \      %{kthread:-lpthread -lc}} \      %{pthread:-lc_r}} \    %{pg:%{!pthread:%{!kthread:-lc_p} \      %{kthread:-lpthread_p -lc_p}} \      %{pthread:-lc_r_p}}}"
 end_define
 
 begin_comment
@@ -427,7 +242,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|if ((LOG) != 0) {\     if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP)); \   }
+value|if ((LOG) != 0) {														\     if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\   }
 end_define
 
 begin_endif

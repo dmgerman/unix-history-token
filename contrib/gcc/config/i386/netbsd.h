@@ -16,16 +16,6 @@ file|<i386/gstabs.h>
 end_include
 
 begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/perform.h>
-end_include
-
-begin_comment
 comment|/* Get generic NetBSD definitions.  */
 end_comment
 
@@ -35,6 +25,12 @@ directive|include
 file|<netbsd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netbsd-aout.h>
+end_include
+
 begin_comment
 comment|/* This goes away when the math-emulator is fixed */
 end_comment
@@ -42,13 +38,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_SUBTARGET_DEFAULT
 define|\
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
 end_define
@@ -63,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__NetBSD__ -Asystem(unix) -Asystem(NetBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -D__NetBSD__ \  -Asystem=unix -Asystem=bsd -Asystem=NetBSD"
 end_define
 
 begin_escape
@@ -158,55 +154,6 @@ define|#
 directive|define
 name|ASM_APP_OFF
 value|"#NO_APP\n"
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* The following macros are stolen from i386v4.h */
-end_comment
-
-begin_comment
-comment|/* These have to be defined to get PIC code correct */
-end_comment
-
-begin_comment
-comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|BODY
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
-define|\
-value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
-end_define
-
-begin_comment
-comment|/* Indicate that jump tables go in the text section.  This is    necessary when compiling PIC code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JUMP_TABLES_IN_TEXT_SECTION
-value|1
 end_define
 
 begin_comment

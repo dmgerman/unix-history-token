@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Code to maintain a C++ template repository.    Copyright (C) 1995, 96-97, 1998 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Code to maintain a C++ template repository.    Copyright (C) 1995, 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -49,25 +49,23 @@ directive|include
 file|"toplev.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|getpwd
-name|PROTO
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"ggc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"diagnostic.h"
+end_include
 
 begin_decl_stmt
 specifier|static
 name|tree
 name|repo_get_id
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -81,7 +79,7 @@ specifier|static
 name|char
 modifier|*
 name|extract_string
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|char
@@ -94,10 +92,11 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|get_base_filename
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -112,7 +111,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|open_repo_file
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -128,7 +127,7 @@ specifier|static
 name|char
 modifier|*
 name|afgets
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|FILE
@@ -142,7 +141,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|reopen_repo_file_for_write
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -196,23 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|flag_use_repository
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errorcount
-decl_stmt|,
-name|sorrycount
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|obstack
 name|temporary_obstack
@@ -291,43 +274,45 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
+name|TYPE_P
 argument_list|(
 name|t
 argument_list|)
-argument_list|)
-operator|==
-literal|'t'
 condition|)
 block|{
+name|tree
+name|vtable
+decl_stmt|;
 comment|/* If we're not done setting up the class, we may not have set up 	 the vtable, so going ahead would give the wrong answer.          See g++.pt/instantiate4.C.  */
 if|if
 condition|(
-name|TYPE_SIZE
+operator|!
+name|COMPLETE_TYPE_P
 argument_list|(
 name|t
 argument_list|)
-operator|==
-name|NULL_TREE
 operator|||
 name|TYPE_BEING_DEFINED
 argument_list|(
 name|t
 argument_list|)
 condition|)
-name|my_friendly_abort
+name|abort
+argument_list|()
+expr_stmt|;
+name|vtable
+operator|=
+name|get_vtbl_decl_for_binfo
 argument_list|(
-literal|981113
+name|TYPE_BINFO
+argument_list|(
+name|t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t
 operator|=
-name|TYPE_BINFO_VTABLE
-argument_list|(
-name|t
-argument_list|)
+name|vtable
 expr_stmt|;
 if|if
 condition|(
@@ -387,15 +372,10 @@ condition|)
 return|return;
 if|if
 condition|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
+name|TYPE_P
 argument_list|(
 name|t
 argument_list|)
-argument_list|)
-operator|==
-literal|'t'
 condition|)
 block|{
 if|if
@@ -416,15 +396,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
+name|DECL_P
 argument_list|(
 name|t
 argument_list|)
-argument_list|)
-operator|==
-literal|'d'
 condition|)
 block|{
 if|if
@@ -434,8 +409,19 @@ argument_list|(
 name|id
 argument_list|)
 condition|)
+comment|/* It doesn't make sense to instantiate a clone, so we 	   instantiate the cloned function instead.  Note that this 	   approach will not work correctly if collect2 assigns 	   different clones to different files -- but it shouldn't.  */
 name|mark_decl_instantiated
 argument_list|(
+name|DECL_CLONED_FUNCTION_P
+argument_list|(
+name|t
+argument_list|)
+condition|?
+name|DECL_CLONED_FUNCTION
+argument_list|(
+name|t
+argument_list|)
+else|:
 name|t
 argument_list|,
 literal|0
@@ -443,10 +429,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|my_friendly_abort
-argument_list|(
-literal|1
-argument_list|)
+name|abort
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -466,7 +450,7 @@ literal|1
 expr_stmt|;
 name|pending_repo
 operator|=
-name|perm_tree_cons
+name|tree_cons
 argument_list|(
 name|NULL_TREE
 argument_list|,
@@ -490,7 +474,7 @@ comment|/* Note that the vtable for a class has been used, and offer to emit it.
 end_comment
 
 begin_comment
-unit|static void repo_vtable_used (t)      tree t; {   if (! flag_use_repository)     return;    pending_repo = perm_tree_cons (NULL_TREE, t, pending_repo); }
+unit|static void repo_vtable_used (t)      tree t; {   if (! flag_use_repository)     return;    pending_repo = tree_cons (NULL_TREE, t, pending_repo); }
 comment|/* Note that an inline with external linkage has been used, and offer to    emit it.  */
 end_comment
 
@@ -500,7 +484,7 @@ comment|/* Member functions of polymorphic classes go with their vtables.  */
 end_comment
 
 begin_comment
-unit|if (DECL_FUNCTION_MEMBER_P (fn)&& TYPE_VIRTUAL_P (DECL_CLASS_CONTEXT (fn)))     {       repo_vtable_used (DECL_CLASS_CONTEXT (fn));       return;     }    pending_repo = perm_tree_cons (NULL_TREE, fn, pending_repo); }
+unit|if (DECL_FUNCTION_MEMBER_P (fn)&& TYPE_POLYMORPHIC_P (DECL_CONTEXT (fn)))     {       repo_vtable_used (DECL_CONTEXT (fn));       return;     }    pending_repo = tree_cons (NULL_TREE, fn, pending_repo); }
 comment|/* Note that a particular typeinfo node has been used, and offer to    emit it.  */
 end_comment
 
@@ -694,7 +678,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+specifier|const
 name|char
 modifier|*
 name|get_base_filename
@@ -812,7 +796,7 @@ name|NULL
 return|;
 block|}
 return|return
-name|file_name_nondirectory
+name|lbasename
 argument_list|(
 name|filename
 argument_list|)
@@ -858,14 +842,14 @@ condition|)
 return|return;
 name|p
 operator|=
-name|file_name_nondirectory
+name|lbasename
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|p
 argument_list|,
@@ -1016,6 +1000,28 @@ operator|!
 name|flag_use_repository
 condition|)
 return|return;
+name|ggc_add_tree_root
+argument_list|(
+operator|&
+name|pending_repo
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ggc_add_tree_root
+argument_list|(
+operator|&
+name|original_repo
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|gcc_obstack_init
+argument_list|(
+operator|&
+name|temporary_obstack
+argument_list|)
+expr_stmt|;
 name|open_repo_file
 argument_list|(
 name|filename
@@ -1166,7 +1172,7 @@ name|NULL_TREE
 expr_stmt|;
 name|original_repo
 operator|=
-name|perm_tree_cons
+name|tree_cons
 argument_list|(
 name|orig
 argument_list|,

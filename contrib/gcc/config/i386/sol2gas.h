@@ -21,5 +21,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Assume sol2.h will be included afterwards.  */
+end_comment
+
 end_unit
 

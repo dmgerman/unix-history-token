@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       An abstraction for information maintained on a per-operator and per-       operand basis in expression trees.     Modifications:       30-Aug-90	 JCB  2.0 	 Extensive rewrite for new cleaner approach. */
+comment|/* info.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 2002 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       An abstraction for information maintained on a per-operator and per-       operand basis in expression trees.     Modifications:       30-Aug-90	 JCB  2.0 	 Extensive rewrite for new cleaner approach. */
 end_comment
 
 begin_comment
@@ -60,6 +60,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ffeinfo_basictype_string_
 index|[]
 init|=
@@ -90,6 +91,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ffeinfo_kind_message_
 index|[]
 init|=
@@ -98,13 +100,13 @@ define|#
 directive|define
 name|FFEINFO_KIND
 parameter_list|(
-name|KWD
+name|kwd
 parameter_list|,
-name|LNAM
+name|msgid
 parameter_list|,
-name|SNAM
+name|snam
 parameter_list|)
-value|LNAM,
+value|msgid,
 include|#
 directive|include
 file|"info-k.def"
@@ -120,6 +122,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ffeinfo_kind_string_
 index|[]
 init|=
@@ -163,6 +166,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ffeinfo_kindtype_string_
 index|[]
 init|=
@@ -195,6 +199,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|ffeinfo_where_string_
 index|[]
 init|=
@@ -230,12 +235,6 @@ index|]
 index|[
 name|FFEINFO_kindtype
 index|]
-init|=
-block|{
-block|{
-name|NULL
-block|}
-block|}
 decl_stmt|;
 end_decl_stmt
 

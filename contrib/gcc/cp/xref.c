@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Code for handling XREF output from GNU C++.    Copyright (C) 1992, 93-97, 1998 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Code for handling XREF output from GNU C++.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998,    2000, 2002 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -38,20 +38,6 @@ include|#
 directive|include
 file|"toplev.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|getpwd
-name|PROTO
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* The character(s) used to join a directory specification (obtained with    getwd or equivalent) with a non-absolute file name.  */
@@ -92,7 +78,7 @@ name|FILE_NAME_ABSOLUTE_P
 parameter_list|(
 name|NAME
 parameter_list|)
-value|(NAME[0] == '/')
+value|((NAME)[0] == '/')
 end_define
 
 begin_endif
@@ -171,9 +157,9 @@ define|#
 directive|define
 name|PALLOC
 parameter_list|(
-name|typ
+name|TYP
 parameter_list|)
-value|((typ *) calloc(1,sizeof(typ)))
+value|((TYP *) xcalloc (1, sizeof (TYP)))
 end_define
 
 begin_comment
@@ -185,10 +171,9 @@ define|#
 directive|define
 name|SALLOC
 parameter_list|(
-name|str
+name|STR
 parameter_list|)
-define|\
-value|((char *) ((str) == NULL ? NULL	\ 	    : (char *) strcpy ((char *) malloc (strlen ((str)) + 1), (str))))
+value|((char *) ((STR) == NULL ? NULL : xstrdup (STR)))
 end_define
 
 begin_define
@@ -196,9 +181,9 @@ define|#
 directive|define
 name|SFREE
 parameter_list|(
-name|str
+name|STR
 parameter_list|)
-value|(str != NULL&& (free(str),0))
+value|((STR) != NULL&& (free (STR), 0))
 end_define
 
 begin_define
@@ -206,11 +191,11 @@ define|#
 directive|define
 name|STREQL
 parameter_list|(
-name|s1
+name|S1
 parameter_list|,
-name|s2
+name|S2
 parameter_list|)
-value|(strcmp((s1),(s2)) == 0)
+value|(strcmp ((S1), (S2)) == 0)
 end_define
 
 begin_define
@@ -218,11 +203,11 @@ define|#
 directive|define
 name|STRNEQ
 parameter_list|(
-name|s1
+name|S1
 parameter_list|,
-name|s2
+name|S2
 parameter_list|)
-value|(strcmp((s1),(s2)) != 0)
+value|(strcmp ((S1), (S2)) != 0)
 end_define
 
 begin_define
@@ -230,11 +215,11 @@ define|#
 directive|define
 name|STRLSS
 parameter_list|(
-name|s1
+name|S1
 parameter_list|,
-name|s2
+name|S2
 parameter_list|)
-value|(strcmp((s1),(s2))< 0)
+value|(strcmp ((S1), (S2))< 0)
 end_define
 
 begin_define
@@ -242,11 +227,11 @@ define|#
 directive|define
 name|STRLEQ
 parameter_list|(
-name|s1
+name|S1
 parameter_list|,
-name|s2
+name|S2
 parameter_list|)
-value|(strcmp((s1),(s2))<= 0)
+value|(strcmp ((S1), (S2))<= 0)
 end_define
 
 begin_define
@@ -254,11 +239,11 @@ define|#
 directive|define
 name|STRGTR
 parameter_list|(
-name|s1
+name|S1
 parameter_list|,
-name|s2
+name|S2
 parameter_list|)
-value|(strcmp((s1),(s2))> 0)
+value|(strcmp ((S1), (S2))> 0)
 end_define
 
 begin_define
@@ -266,11 +251,11 @@ define|#
 directive|define
 name|STRGEQ
 parameter_list|(
-name|s1
+name|S1
 parameter_list|,
-name|s2
+name|S2
 parameter_list|)
-value|(strcmp((s1),(s2))>= 0)
+value|(strcmp ((S1), (S2))>= 0)
 end_define
 
 begin_comment
@@ -487,7 +472,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|gen_assign
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|XREF_FILE
@@ -502,7 +487,7 @@ begin_decl_stmt
 specifier|static
 name|XREF_FILE
 name|find_file
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -519,7 +504,7 @@ specifier|const
 name|char
 modifier|*
 name|filename
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|XREF_FILE
@@ -534,7 +519,7 @@ specifier|const
 name|char
 modifier|*
 name|fctname
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -549,7 +534,7 @@ specifier|const
 name|char
 modifier|*
 name|declname
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -562,7 +547,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|simplify_type
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|char
@@ -578,7 +563,7 @@ specifier|const
 name|char
 modifier|*
 name|fixname
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -596,7 +581,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|open_xref_file
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -613,7 +598,7 @@ specifier|const
 name|char
 modifier|*
 name|classname
-name|PROTO
+name|PARAMS
 argument_list|(
 operator|(
 name|tree
@@ -895,59 +880,23 @@ operator|->
 name|name
 expr_stmt|;
 else|else
-block|{
-name|char
-modifier|*
-name|nmbuf
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|wd_name
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|FILE_NAME_JOINER
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|nmbuf
-argument_list|,
-literal|"%s%s%s"
-argument_list|,
-name|wd_name
-argument_list|,
-name|FILE_NAME_JOINER
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|name
-operator|=
-name|nmbuf
-expr_stmt|;
 name|xf
 operator|->
 name|outname
 operator|=
-name|nmbuf
+name|name
+operator|=
+name|concat
+argument_list|(
+name|wd_name
+argument_list|,
+name|FILE_NAME_JOINER
+argument_list|,
+name|name
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|xref_file
@@ -1747,18 +1696,6 @@ name|cls
 operator|=
 literal|"CLASSID"
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|IS_SIGNATURE
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-name|cls
-operator|=
-literal|"SIGNATUREID"
-expr_stmt|;
 else|else
 name|cls
 operator|=
@@ -1865,10 +1802,8 @@ operator|=
 literal|"VARTEMP"
 expr_stmt|;
 else|else
-name|my_friendly_abort
-argument_list|(
-literal|358
-argument_list|)
+name|abort
+argument_list|()
 expr_stmt|;
 name|uselin
 operator|=
@@ -2046,13 +1981,6 @@ argument_list|(
 name|cls
 argument_list|,
 literal|"UNIONID"
-argument_list|)
-operator|||
-name|STREQL
-argument_list|(
-name|cls
-argument_list|,
-literal|"SIGNATUREID"
 argument_list|)
 condition|)
 block|{
@@ -2617,15 +2545,10 @@ if|if
 condition|(
 name|cls
 operator|&&
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
+name|TYPE_P
 argument_list|(
 name|cls
 argument_list|)
-argument_list|)
-operator|==
-literal|'t'
 condition|)
 name|cls
 operator|=
@@ -2638,15 +2561,10 @@ if|if
 condition|(
 name|cls
 operator|&&
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
+name|DECL_P
 argument_list|(
 name|cls
 argument_list|)
-argument_list|)
-operator|==
-literal|'d'
 condition|)
 name|cls
 operator|=
@@ -2925,7 +2843,7 @@ argument_list|)
 operator|==
 name|FUNCTION_DECL
 operator|&&
-name|DECL_ABSTRACT_VIRTUAL_P
+name|DECL_PURE_VIRTUAL_P
 argument_list|(
 name|fld
 argument_list|)
@@ -3018,19 +2936,13 @@ index|]
 operator|==
 literal|'_'
 operator|&&
+name|ISDIGIT
+argument_list|(
 name|p
 index|[
 literal|2
 index|]
-operator|>=
-literal|'0'
-operator|&&
-name|p
-index|[
-literal|2
-index|]
-operator|<=
-literal|'9'
+argument_list|)
 condition|)
 block|{
 if|if
@@ -3081,19 +2993,13 @@ index|]
 operator|==
 literal|'C'
 operator|&&
+name|ISDIGIT
+argument_list|(
 name|p
 index|[
 literal|3
 index|]
-operator|>=
-literal|'0'
-operator|&&
-name|p
-index|[
-literal|3
-index|]
-operator|<=
-literal|'9'
+argument_list|)
 condition|)
 block|{
 if|if
@@ -3874,7 +3780,7 @@ else|#
 directive|else
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,
@@ -3910,7 +3816,7 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|xref_name
 argument_list|,
@@ -3962,7 +3868,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can't create cross-reference file `%s'"
+literal|"can't create cross-reference file `%s'"
 argument_list|,
 name|xref_name
 argument_list|)

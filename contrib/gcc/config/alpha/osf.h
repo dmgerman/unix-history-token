@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on OSF/1.    Copyright (C) 1992, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on OSF/1.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2001    Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -21,6 +21,23 @@ value|1
 end_define
 
 begin_comment
+comment|/* The GEM libraries for X_float are present, though not used by C.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_HAS_XFLOATING_LIBS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAS_XFLOATING_LIBS
+value|1
+end_define
+
+begin_comment
 comment|/* Names to predefine in the preprocessor for this target machine.  */
 end_comment
 
@@ -28,7 +45,18 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\ -Dunix -D__osf__ -D_LONGLONG -DSYSTYPE_BSD \ -D_SYSTYPE_BSD -Asystem(unix) -Asystem(xpg4)"
+value|"\ -Dunix -D__osf__ -D_LONGLONG -DSYSTYPE_BSD \ -D_SYSTYPE_BSD -Asystem=unix -Asystem=xpg4"
+end_define
+
+begin_comment
+comment|/* Tru64 UNIX V5 requires additional definitions for 16 byte long double    support.  Empty by default.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPP_XFLOAT_SPEC
+value|""
 end_define
 
 begin_comment
@@ -46,7 +74,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4}"
+value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4} %(cpp_xfloat)"
 end_define
 
 begin_comment
@@ -62,7 +90,7 @@ value|"%{p|pg:-lprof1%{pthread|threads:_r} -lpdf} %{a:-lprof2} \  %{threads: -lp
 end_define
 
 begin_comment
-comment|/* Pass "-G 8" to ld because Alpha's CC does.  Pass -O3 if we are    optimizing, -O1 if we are not.  Pass -shared, -non_shared or    -call_shared as appropriate.  Also pass -pg.  */
+comment|/* Pass "-G 8" to ld because Alpha's CC does.  Pass -O3 if we are    optimizing, -O1 if we are not.  Pass -shared, -non_shared or    -call_shared as appropriate.  Pass -hidden_symbol so that our    constructor and call-frame data structures are not accidentally    overridden.  */
 end_comment
 
 begin_define
@@ -70,7 +98,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"-G 8 %{O*:-O3} %{!O*:-O1} %{static:-non_shared} \    %{!static:%{shared:-shared} %{!shared:-call_shared}} %{pg} %{taso} \    %{rpath*}"
+value|"-G 8 %{O*:-O3} %{!O*:-O1} %{static:-non_shared} \    %{!static:%{shared:-shared -hidden_symbol _GLOBAL_*} \    %{!shared:-call_shared}} %{pg} %{taso} %{rpath*}"
 end_define
 
 begin_define
@@ -79,6 +107,14 @@ directive|define
 name|STARTFILE_SPEC
 define|\
 value|"%{!shared:%{pg:gcrt0.o%s}%{!pg:%{p:mcrt0.o%s}%{!p:crt0.o%s}}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}"
 end_define
 
 begin_define
@@ -96,7 +132,18 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");                          \   fprintf (FILE, "\t.set noat\n");				\   if (TARGET_SUPPORT_ARCH)					\     fprintf (FILE, "\t.arch %s\n",				\              alpha_cpu == PROCESSOR_EV6 ? "ev6"			\ 	     : (alpha_cpu == PROCESSOR_EV5			\ 		? (TARGET_MAX ? "pca56" : TARGET_BWX ? "ev56" : "ev5") \ 		: "ev4"));					\ 								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
+value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");                          \   fprintf (FILE, "\t.set noat\n");				\   if (TARGET_SUPPORT_ARCH)					\     fprintf (FILE, "\t.arch %s\n",				\              TARGET_CPU_EV6 ? "ev6"				\ 	     : (TARGET_CPU_EV5					\ 		? (TARGET_MAX ? "pca56" : TARGET_BWX ? "ev56" : "ev5") \ 		: "ev4"));					\ 								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
+end_define
+
+begin_comment
+comment|/* Tru64 UNIX V5.1 requires a special as flag.  Empty by default.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OLDAS_SPEC
+value|""
 end_define
 
 begin_comment
@@ -127,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{malpha-as:-g} -nocpp %{pg}"
+value|"%{malpha-as:-g %(asm_oldas)} -nocpp %{pg}"
 end_define
 
 begin_else
@@ -143,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{!mgas:-g} -nocpp %{pg} -O0"
+value|"%{!mgas:-g %(asm_oldas)} -nocpp %{pg} -O0"
 end_define
 
 begin_endif
@@ -195,6 +242,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "cpp_xfloat", CPP_XFLOAT_SPEC },	\   { "asm_oldas", ASM_OLDAS_SPEC }
+end_define
+
 begin_comment
 comment|/* Indicate that we have a stamp.h to use.  */
 end_comment
@@ -226,9 +287,116 @@ define|#
 directive|define
 name|TRANSFER_FROM_TRAMPOLINE
 define|\
-value|void									\ __enable_execute_stack (addr)						\      void *addr;							\ {									\   long size = getpagesize ();						\   long mask = ~(size-1);						\   char *page = (char *) (((long) addr)& mask);				\   char *end  = (char *) ((((long) (addr + TRAMPOLINE_SIZE))& mask) + size); \ 									\
+value|extern void __enable_execute_stack PARAMS ((void *));			\ 									\ void									\ __enable_execute_stack (addr)						\      void *addr;							\ {									\   extern int mprotect PARAMS ((const void *, size_t, int));		\   long size = getpagesize ();						\   long mask = ~(size-1);						\   char *page = (char *) (((long) addr)& mask);				\   char *end  = (char *) ((((long) (addr + TRAMPOLINE_SIZE))& mask) + size); \ 									\
 comment|/* 7 is PROT_READ | PROT_WRITE | PROT_EXEC */
 value|\   if (mprotect (page, end - page, 7)< 0)				\     perror ("mprotect of trampoline code");				\ }
+end_define
+
+begin_comment
+comment|/* Digital UNIX V4.0E (1091)/usr/include/sys/types.h 4.3.49.9 1997/08/14 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZE_TYPE
+value|"long unsigned int"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_TYPE
+value|"long int"
+end_define
+
+begin_comment
+comment|/* The linker will stick __main into the .init section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_INIT_SECTION
+end_define
+
+begin_define
+define|#
+directive|define
+name|LD_INIT_SWITCH
+value|"-init"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LD_FINI_SWITCH
+value|"-fini"
+end_define
+
+begin_comment
+comment|/* Select a format to encode pointers in exception handling data.  CODE    is 0 for data, 1 for code labels, 2 for function pointers.  GLOBAL is    true if the symbol may be affected by dynamic relocations.        We really ought to be using the SREL32 relocations that ECOFF has,    but no version of the native assembler supports creating such things,    and Compaq has no plans to rectify this.  Worse, the dynamic loader    cannot handle unaligned relocations, so we have to make sure that    things get padded appropriately.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_PREFERRED_EH_DATA_FORMAT
+parameter_list|(
+name|CODE
+parameter_list|,
+name|GLOBAL
+parameter_list|)
+define|\
+value|(TARGET_GAS								     \    ? (((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel | DW_EH_PE_sdata4) \    : DW_EH_PE_aligned)
+end_define
+
+begin_comment
+comment|/* This is how we tell the assembler that a symbol is weak.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_WEAK_ALIAS
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|VALUE
+parameter_list|)
+define|\
+value|do							\     {							\       ASM_GLOBALIZE_LABEL (FILE, NAME);			\       fputs ("\t.weakext\t", FILE);			\       assemble_name (FILE, NAME);			\       if (VALUE)					\         {						\           fputc (' ', FILE);				\           assemble_name (FILE, VALUE);			\         }						\       fputc ('\n', FILE);				\     }							\   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_LABEL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+value|ASM_OUTPUT_WEAK_ALIAS(FILE, NAME, 0)
+end_define
+
+begin_comment
+comment|/* Handle #pragma weak and #pragma pack.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HANDLE_SYSV_PRAGMA
+end_undef
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 end_unit

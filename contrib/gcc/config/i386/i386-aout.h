@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Di386"
+value|""
 end_define
 
 begin_comment
