@@ -23,21 +23,19 @@ name|unsigned
 name|int
 name|exp
 range|:
-literal|15
+literal|11
 decl_stmt|;
 name|unsigned
-name|long
-name|long
+name|int
 name|manh
 range|:
-literal|48
+literal|20
 decl_stmt|;
 name|unsigned
-name|long
-name|long
+name|int
 name|manl
 range|:
-literal|64
+literal|32
 decl_stmt|;
 block|}
 name|bits
@@ -66,14 +64,14 @@ begin_define
 define|#
 directive|define
 name|LDBL_MANH_SIZE
-value|48
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MANL_SIZE
-value|64
+value|32
 end_define
 
 begin_define
@@ -85,7 +83,7 @@ name|u
 parameter_list|,
 name|a
 parameter_list|)
-value|do {			\ 	(a)[0] = (uint32_t)(u).bits.manl;		\ 	(a)[1] = (uint32_t)((u).bits.manl>> 32);      	\ 	(a)[2] = (uint32_t)(u).bits.manh;		\ 	(a)[3] = (uint32_t)((u).bits.manh>> 32);	\ } while(0)
+value|do {			\ 	(a)[0] = (uint32_t)(u).bits.manl;		\ 	(a)[1] = (uint32_t)(u).bits.manh;		\ } while(0)
 end_define
 
 end_unit

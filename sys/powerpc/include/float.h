@@ -256,63 +256,63 @@ begin_define
 define|#
 directive|define
 name|LDBL_MANT_DIG
-value|113
+value|DBL_MANT_DIG
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|1.925929944387235853055977942584927319E-34L
+value|DBL_EPSILON
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_DIG
-value|33
+value|DBL_DIG
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MIN_EXP
-value|(-16381)
+value|DBL_MIN_EXP
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|3.362103143112093506262677817321752603E-4932L
+value|DBL_MIN
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MIN_10_EXP
-value|(-4931)
+value|DBL_MIN_10_EXP
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MAX_EXP
-value|(+16384)
+value|DBL_MAX_EXP
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|1.189731495357231765085759326628007016E+4932L
+value|DBL_MAX
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDBL_MAX_10_EXP
-value|(+4932)
+value|DBL_MAX_10_EXP
 end_define
 
 begin_endif
