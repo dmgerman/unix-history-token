@@ -242,7 +242,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EHCI_HCS_P_INCICATOR
+name|EHCI_HCS_P_INDICATOR
 parameter_list|(
 name|x
 parameter_list|)
@@ -1305,6 +1305,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>>  0)& 0xff)
+define|#
+directive|define
+name|EHCI_QTD_SET_STATUS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<<  0)
 define|#
 directive|define
 name|EHCI_QTD_ACTIVE
