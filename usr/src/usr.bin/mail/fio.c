@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.3 %G%"
+literal|"@(#)fio.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1607,6 +1607,10 @@ if|if
 condition|(
 operator|!
 name|gotcha
+operator|||
+name|Tflag
+operator|!=
+name|NOSTR
 condition|)
 goto|goto
 name|done
