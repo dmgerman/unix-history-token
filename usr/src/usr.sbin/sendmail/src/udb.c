@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.4 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.5 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.4 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.5 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,12 +61,6 @@ ifdef|#
 directive|ifdef
 name|USERDB
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_include
 include|#

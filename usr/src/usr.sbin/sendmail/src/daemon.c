@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.30 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.31 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.30 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.31 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,12 +82,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
