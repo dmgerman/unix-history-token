@@ -1271,61 +1271,140 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_struct
 specifier|static
+struct|struct
+name|ai_errlist
+block|{
+specifier|const
 name|char
 modifier|*
+name|str
+decl_stmt|;
+name|int
+name|code
+decl_stmt|;
+block|}
 name|ai_errlist
 index|[]
 init|=
 block|{
+block|{
 literal|"Success"
 block|,
+literal|0
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|EAI_ADDRFAMILY
+block|{
 literal|"Address family for hostname not supported"
 block|,
-comment|/* EAI_ADDRFAMILY */
+name|EAI_ADDRFAMILY
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
 literal|"Temporary failure in name resolution"
 block|,
-comment|/* EAI_AGAIN      */
+name|EAI_AGAIN
+block|, }
+block|,
+block|{
 literal|"Invalid value for ai_flags"
 block|,
-comment|/* EAI_BADFLAGS   */
+name|EAI_BADFLAGS
+block|, }
+block|,
+block|{
 literal|"Non-recoverable failure in name resolution"
 block|,
-comment|/* EAI_FAIL       */
+name|EAI_FAIL
+block|, }
+block|,
+block|{
 literal|"ai_family not supported"
 block|,
-comment|/* EAI_FAMILY     */
+name|EAI_FAMILY
+block|, }
+block|,
+block|{
 literal|"Memory allocation failure"
 block|,
-comment|/* EAI_MEMORY     */
+name|EAI_MEMORY
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|EAI_NODATA
+block|{
 literal|"No address associated with hostname"
 block|,
-comment|/* EAI_NODATA     */
+name|EAI_NODATA
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
 literal|"hostname nor servname provided, or not known"
 block|,
-comment|/* EAI_NONAME     */
+name|EAI_NONAME
+block|, }
+block|,
+block|{
 literal|"servname not supported for ai_socktype"
 block|,
-comment|/* EAI_SERVICE    */
+name|EAI_SERVICE
+block|, }
+block|,
+block|{
 literal|"ai_socktype not supported"
 block|,
-comment|/* EAI_SOCKTYPE   */
+name|EAI_SOCKTYPE
+block|, }
+block|,
+block|{
 literal|"System error returned in errno"
 block|,
-comment|/* EAI_SYSTEM     */
+name|EAI_SYSTEM
+block|, }
+block|,
+block|{
 literal|"Invalid value for hints"
 block|,
-comment|/* EAI_BADHINTS	  */
+name|EAI_BADHINTS
+block|, }
+block|,
+block|{
 literal|"Resolved protocol is unknown"
 block|,
-comment|/* EAI_PROTOCOL   */
-literal|"Unknown error"
+name|EAI_PROTOCOL
+block|, }
 block|,
-comment|/* EAI_MAX        */
-block|}
-decl_stmt|;
-end_decl_stmt
+comment|/* backward compatibility with userland code prior to 2553bis-02 */
+block|{
+literal|"Address family for hostname not supported"
+block|,
+literal|1
+block|, }
+block|,
+block|{
+literal|"No address associated with hostname"
+block|,
+literal|7
+block|, }
+block|,
+block|{
+name|NULL
+block|,
+operator|-
+literal|1
+block|, }
+block|, }
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * XXX: Our res_*() is not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call res_*().  */
@@ -1476,26 +1555,43 @@ name|int
 name|ecode
 decl_stmt|;
 block|{
+name|struct
+name|ai_errlist
+modifier|*
+name|p
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|ai_errlist
+init|;
+name|p
+operator|->
+name|str
+condition|;
+name|p
+operator|++
+control|)
+block|{
 if|if
 condition|(
+name|p
+operator|->
+name|code
+operator|==
 name|ecode
-operator|<
-literal|0
-operator|||
-name|ecode
-operator|>
-name|EAI_MAX
 condition|)
-name|ecode
-operator|=
-name|EAI_MAX
-expr_stmt|;
 return|return
-name|ai_errlist
-index|[
-name|ecode
-index|]
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+operator|->
+name|str
 return|;
+block|}
 block|}
 end_function
 
