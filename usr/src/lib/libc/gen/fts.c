@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.16 (Berkeley) %G%"
+literal|"@(#)fts.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,16 +812,6 @@ name|sp
 operator|->
 name|fts_path
 expr_stmt|;
-name|sp
-operator|->
-name|rdev
-operator|=
-name|p
-operator|->
-name|fts_statb
-operator|.
-name|st_dev
-expr_stmt|;
 name|p
 operator|->
 name|fts_info
@@ -834,6 +824,16 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|rdev
+operator|=
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_dev
 expr_stmt|;
 return|return
 operator|(
