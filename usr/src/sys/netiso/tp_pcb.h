@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -152,6 +152,22 @@ modifier|*
 name|tpr_pcb
 decl_stmt|;
 comment|/* back ptr to PCB */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|tp_refinfo
+block|{
+name|struct
+name|tp_ref
+modifier|*
+name|tpr_base
+decl_stmt|;
+name|int
+name|tpr_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -483,10 +499,6 @@ decl_stmt|;
 comment|/* current local credit in # packets */
 name|u_short
 name|tp_maxlcredit
-decl_stmt|;
-comment|/* needed for reassembly queue */
-name|u_long
-name|tp_sbmax
 decl_stmt|;
 comment|/* needed for reassembly queue */
 name|struct
@@ -900,6 +912,14 @@ specifier|extern
 name|struct
 name|timeval
 name|time
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tp_refinfo
+name|tp_refinfo
 decl_stmt|;
 end_decl_stmt
 
