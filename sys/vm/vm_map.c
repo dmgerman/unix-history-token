@@ -7025,18 +7025,25 @@ if|if
 condition|(
 name|invalidate
 condition|)
+block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
-name|vm_map_pmap
-argument_list|(
 name|map
-argument_list|)
+operator|->
+name|pmap
 argument_list|,
 name|start
 argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 	 * Make a second pass, cleaning/uncaching pages from the indicated 	 * objects as we go. 	 */
 for|for
 control|(
@@ -7879,6 +7886,9 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -7889,6 +7899,9 @@ name|s
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -10906,6 +10919,9 @@ operator|)
 condition|)
 block|{
 comment|/*    				* Remove old window into the file    				*/
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -10916,6 +10932,9 @@ name|uaddr
 argument_list|,
 name|tend
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/*    				* Force copy on write for mmaped regions    				*/
 name|vm_object_pmap_copy_1
@@ -10984,6 +11003,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -10994,6 +11016,9 @@ name|uaddr
 argument_list|,
 name|tend
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -11059,6 +11084,9 @@ operator|)
 condition|)
 block|{
 comment|/*    				* Remove old window into the file    				*/
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -11069,6 +11097,9 @@ name|uaddr
 argument_list|,
 name|tend
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/* 				 * Remove unneeded old pages 				 */
 name|vm_object_page_remove
@@ -11205,6 +11236,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -11215,6 +11249,9 @@ name|uaddr
 argument_list|,
 name|tend
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/*  * Otherwise, we have to do a logical mmap.  */
@@ -11233,6 +11270,9 @@ argument_list|(
 name|srcobject
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|map
@@ -11243,6 +11283,9 @@ name|uaddr
 argument_list|,
 name|tend
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|vm_object_pmap_copy_1
 argument_list|(
