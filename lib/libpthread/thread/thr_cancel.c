@@ -1001,6 +1001,13 @@ modifier|*
 name|thread
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+condition|)
+return|return;
 comment|/* Look for a cancellation before we block: */
 name|THR_SCHED_LOCK
 argument_list|(
@@ -1040,6 +1047,13 @@ modifier|*
 name|thread
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|_kse_isthreaded
+argument_list|()
+condition|)
+return|return;
 name|THR_SCHED_LOCK
 argument_list|(
 name|thread
