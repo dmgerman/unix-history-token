@@ -7249,7 +7249,7 @@ literal|"on a drive other than the first one or have multiple operating\n"
 literal|"systems on your machine, you will have the option to install a boot\n"
 literal|"manager later.  To select a drive, use the arrow keys to move to it\n"
 literal|"and press [SPACE] or [ENTER].  To de-select it, press it again.\n\n"
-literal|"Select OK or Cancel to leave this menu."
+literal|"Use [TAB] to get to the buttons and leave this menu."
 block|,
 literal|"Press F1 for important information regarding disk geometry!"
 block|,
