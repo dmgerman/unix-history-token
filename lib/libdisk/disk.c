@@ -1524,7 +1524,7 @@ operator|=
 name|o
 expr_stmt|;
 block|}
-comment|/* PLATFORM POLICY BEGIN ------------------------------------- */
+comment|/* PLATFORM POLICY BEGIN ----------------------------------- */
 if|if
 condition|(
 name|platform
@@ -1713,7 +1713,7 @@ operator|==
 name|RAW_PART
 condition|)
 continue|continue;
-comment|/* PLATFORM POLICY END --------------------------------------- */
+comment|/* PLATFORM POLICY END ------------------------------------- */
 name|off
 operator|/=
 name|s
@@ -2215,7 +2215,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("  real_geom=%lu/%lu/%lu", d->real_cyl, d->real_hd, d->real_sect);
+block|printf("  real_geom=%lu/%lu/%lu", 	       d->real_cyl, d->real_hd, d->real_sect);
 endif|#
 directive|endif
 name|printf
@@ -2491,7 +2491,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void Collapse_Disk(struct disk *d) {  	while(Collapse_Chunk(d, d->chunks)) 		; }
+unit|void Collapse_Disk(struct disk *d) {  	while (Collapse_Chunk(d, d->chunks)) 		; }
 endif|#
 directive|endif
 end_endif

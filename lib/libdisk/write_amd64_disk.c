@@ -90,7 +90,7 @@ file|"libdisk.h"
 end_include
 
 begin_comment
-comment|/* XXX: A lot of hardcoded 512s probably should be foo->sector_size;         I'm not sure which, so I leave it like it worked before. --schweikh */
+comment|/*  * XXX: A lot of hardcoded 512s probably should be foo->sector_size;  *	I'm not sure which, so I leave it like it worked before. --schweikh  */
 end_comment
 
 begin_function
@@ -269,7 +269,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|write_block
 argument_list|(
 name|fd
@@ -289,7 +288,6 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -448,8 +446,7 @@ name|int
 name|fd
 decl_stmt|,
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
 name|j
 decl_stmt|;
 name|struct

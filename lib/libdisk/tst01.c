@@ -2707,9 +2707,7 @@ argument_list|,
 literal|"quit"
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -2721,9 +2719,7 @@ argument_list|,
 literal|"exit"
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -2735,9 +2731,7 @@ argument_list|,
 literal|"q"
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -2749,9 +2743,7 @@ argument_list|,
 literal|"x"
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 operator|!
@@ -3351,7 +3343,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX boot1 undefined, fix me */
-block|if (!strcasecmp(*cmds,"boot")) { 			Set_Boot_Blocks(d,boot1,boot2); 			continue; 		}
+block|if (!strcasecmp(*cmds, "boot")) { 			Set_Boot_Blocks(d, boot1, boot2); 			continue; 		}
 endif|#
 directive|endif
 if|if
@@ -3525,7 +3517,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|for(i=0;chunk_n[i];i++) 			printf("%d = %s%s",i,chunk_n[i],i == 4 ? "\n\t" : "  ");
+block|for (i = 0; chunk_n[i]; i++) 			printf("%d = %s%s", i, chunk_n[i], 			       i == 4 ? "\n\t" : "  ");
 endif|#
 directive|endif
 name|printf

@@ -422,11 +422,9 @@ operator|->
 name|oname
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|newname
 goto|;
-block|}
 name|strcpy
 argument_list|(
 name|c1

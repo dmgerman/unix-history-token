@@ -424,7 +424,6 @@ argument_list|(
 name|dl
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

@@ -497,7 +497,8 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"%d is too many children of the 'whole' chunk.  Max is %d\n"
+literal|"%d is too many children of the 'whole' chunk."
+literal|"  Max is %d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -651,11 +652,13 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|PC98
-literal|"chunk '%s' [%ld..%ld] does not start on a cylinder boundary\n"
+literal|"chunk '%s' [%ld..%ld] does not start"
+literal|" on a cylinder boundary\n"
 argument_list|,
 else|#
 directive|else
-literal|"chunk '%s' [%ld..%ld] does not start on a track boundary\n"
+literal|"chunk '%s' [%ld..%ld] does not start"
+literal|" on a track boundary\n"
 argument_list|,
 endif|#
 directive|endif
@@ -712,7 +715,8 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"chunk '%s' [%ld..%ld] does not end on a cylinder boundary\n"
+literal|"chunk '%s' [%ld..%ld] does not end"
+literal|" on a cylinder boundary\n"
 argument_list|,
 name|c1
 operator|->

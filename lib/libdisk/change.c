@@ -315,7 +315,6 @@ operator|->
 name|bios_hd
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

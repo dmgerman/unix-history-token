@@ -428,7 +428,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* "chunk_n" for subtypes too  */
+comment|/* "chunk_n" for subtypes too */
 end_comment
 
 begin_function_decl
@@ -460,7 +460,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free a tree made with Open_Disk() or Clone_Disk()  */
+comment|/* Free a tree made with Open_Disk() or Clone_Disk() */
 end_comment
 
 begin_function_decl
@@ -475,7 +475,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Print the content of the tree to stdout  */
+comment|/* Print the content of the tree to stdout */
 end_comment
 
 begin_function_decl
@@ -496,7 +496,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set the geometry the bios uses.  */
+comment|/* Set the geometry the bios uses. */
 end_comment
 
 begin_function_decl
@@ -511,7 +511,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set the bios geometry to something sane  */
+comment|/* Set the bios geometry to something sane */
 end_comment
 
 begin_function_decl
@@ -561,7 +561,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free a chunk of disk_space modified by the passed  * flags.  */
+comment|/* Free a chunk of disk_space modified by the passed flags. */
 end_comment
 
 begin_function_decl
@@ -580,7 +580,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free a chunk of disk_space  */
+comment|/* Free a chunk of disk_space */
 end_comment
 
 begin_function_decl
@@ -595,7 +595,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Experimental, do not use.  */
+comment|/* Experimental, do not use. */
 end_comment
 
 begin_function_decl
@@ -614,7 +614,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Experimental, do not use.  */
+comment|/* Experimental, do not use. */
 end_comment
 
 begin_function_decl
@@ -643,7 +643,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Create a chunk with the specified paramters  */
+comment|/* Create a chunk with the specified paramters */
 end_comment
 
 begin_function_decl
@@ -660,7 +660,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Make one FreeBSD chunk covering the entire disk;  * if force_all is set, bypass all BIOS geometry  * considerations.  */
+comment|/*  * Make one FreeBSD chunk covering the entire disk;  * if force_all is set, bypass all BIOS geometry  * considerations.  */
 end_comment
 
 begin_function_decl
@@ -677,7 +677,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return char* to warnings about broken design rules in this disklayout  */
+comment|/* Return char* to warnings about broken design rules in this disklayout */
 end_comment
 
 begin_function_decl
@@ -692,7 +692,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return char** with all disk's names (wd0, wd1 ...).  You must free  * each pointer, as well as the array by hand  */
+comment|/*  * Return char** with all disk's names (wd0, wd1 ...).  You must free  * each pointer, as well as the array by hand  */
 end_comment
 
 begin_ifdef
@@ -755,7 +755,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Use this boot-manager on this disk.  Gets written when Write_Disk()  * is called  */
+comment|/*  * Use this boot-manager on this disk.  Gets written when Write_Disk()  * is called  */
 end_comment
 
 begin_function_decl
@@ -778,7 +778,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Use these boot-blocks on this disk.  Gets written when Write_Disk()  * is called. Returns nonzero upon failure.  */
+comment|/*  * Use these boot-blocks on this disk.  Gets written when Write_Disk()  * is called. Returns nonzero upon failure.  */
 end_comment
 
 begin_function_decl
@@ -794,7 +794,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Write all the MBRs, disklabels, bootblocks and boot managers  */
+comment|/* Write all the MBRs, disklabels, bootblocks and boot managers */
 end_comment
 
 begin_function_decl
@@ -812,7 +812,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Round offset up to next cylinder according to the bios-geometry  */
+comment|/* Round offset up to next cylinder according to the bios-geometry */
 end_comment
 
 begin_function_decl
@@ -830,7 +830,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Round offset down to previous cylinder according to the bios-  * geometry  */
+comment|/* Round offset down to previous cylinder according to the bios-geometry */
 end_comment
 
 begin_function_decl
@@ -848,7 +848,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Check if offset is aligned on a track according to the  * bios geometry  */
+comment|/* Check if offset is aligned on a track according to the bios geometry */
 end_comment
 
 begin_function_decl
@@ -866,7 +866,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Round offset up to next track according to the bios-geometry  */
+comment|/* Round offset up to next track according to the bios-geometry */
 end_comment
 
 begin_function_decl
@@ -884,7 +884,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Check if offset is aligned on a track according to the  * bios geometry  */
+comment|/* Check if offset is aligned on a track according to the bios geometry */
 end_comment
 
 begin_function_decl
@@ -914,7 +914,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* This one creates a partition inside the given parent of the given  * size, and returns a pointer to it.  The first unused chunk big  * enough is used.  */
+comment|/*  * This one creates a partition inside the given parent of the given  * size, and returns a pointer to it.  The first unused chunk big  * enough is used.  */
 end_comment
 
 begin_function_decl
