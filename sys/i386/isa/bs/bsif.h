@@ -913,6 +913,14 @@ name|dma_init_flag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|spending
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -920,7 +928,7 @@ name|softintr
 parameter_list|(
 name|y
 parameter_list|)
-value|do {			\ 	atomic_set_int(&spending, 1<< y);	\ 	sched_ithd((void*)SOFTINTR);		\ } while(0);
+value|do {			\ 	atomic_set_int(&spending, 1<< y);	\ 	sched_softintr();					\ } while(0);
 end_define
 
 begin_function
