@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -341,14 +341,16 @@ operator|.
 name|q_paddr
 argument_list|)
 expr_stmt|;
-comment|/* output timeout */
+comment|/* output creation time */
 name|fprintf
 argument_list|(
 name|tfp
 argument_list|,
 literal|"T%ld\n"
 argument_list|,
-name|TimeOut
+name|e
+operator|->
+name|e_ctime
 argument_list|)
 expr_stmt|;
 comment|/* output message priority */
@@ -1867,6 +1869,10 @@ literal|"CurTime=%ld, TimeOut=%ld\n"
 argument_list|,
 name|CurTime
 argument_list|,
+name|CurEnv
+operator|->
+name|e_ctime
+operator|+
 name|TimeOut
 argument_list|)
 expr_stmt|;
@@ -1881,6 +1887,10 @@ name|e_queueup
 operator|&&
 name|CurTime
 operator|>
+name|CurEnv
+operator|->
+name|e_ctime
+operator|+
 name|TimeOut
 condition|)
 name|timeout
@@ -2153,7 +2163,7 @@ break|break;
 case|case
 literal|'T'
 case|:
-comment|/* timeout */
+comment|/* init time */
 operator|(
 name|void
 operator|)
@@ -2168,7 +2178,9 @@ argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
-name|TimeOut
+name|CurEnv
+operator|->
+name|e_ctime
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2295,8 +2307,9 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|TextTimeOut
-decl_stmt|;
+name|pintvl
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2338,7 +2351,12 @@ name|buf
 argument_list|,
 literal|"Cannot send mail for %s"
 argument_list|,
-name|TextTimeOut
+name|pintvl
+argument_list|(
+name|TimeOut
+argument_list|,
+name|FALSE
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2359,9 +2377,9 @@ expr_stmt|;
 comment|/* arrange to remove files from queue */
 name|CurEnv
 operator|->
-name|e_queueup
+name|e_dontqueue
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 block|}
 end_block

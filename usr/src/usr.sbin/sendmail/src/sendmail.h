@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.80		%G%"
+literal|"@(#)sendmail.h	3.81		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -874,10 +874,18 @@ name|long
 name|e_msgpriority
 decl_stmt|;
 comment|/* adjusted priority of this message */
+name|time_t
+name|e_ctime
+decl_stmt|;
+comment|/* time message appeared in the queue */
 name|bool
 name|e_queueup
 decl_stmt|;
 comment|/* queue this message */
+name|bool
+name|e_dontqueue
+decl_stmt|;
+comment|/* override queueing */
 name|bool
 name|e_oldstyle
 decl_stmt|;
@@ -1905,7 +1913,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time until timeout */
+comment|/* time until timeout [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -1986,7 +1994,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default uid to run as */
+comment|/* default uid to run as [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -1997,7 +2005,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default gid to run as */
+comment|/* default gid to run as [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2110,7 +2118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* template for Transcript */
+comment|/* template for Transcript [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2122,7 +2130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of alias file */
+comment|/* location of alias file [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2134,7 +2142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of configuration file */
+comment|/* location of configuration file [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2146,7 +2154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of statistics summary */
+comment|/* location of statistics summary [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2158,7 +2166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* location of queue directory */
+comment|/* location of queue directory [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2170,7 +2178,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the message number for Arpanet info */
+comment|/* the reply code for Arpanet info [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2214,7 +2222,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* timeout on reads before clock ticks */
+comment|/* timeout on reads [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2225,7 +2233,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* level of logging to perform */
+comment|/* level of logging to perform [conf.c] */
 end_comment
 
 begin_escape

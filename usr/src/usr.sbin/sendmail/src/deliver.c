@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.100
+literal|3.101
 operator|%
 name|G
 operator|%
@@ -2943,11 +2943,18 @@ else|:
 literal|2
 operator|)
 condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+name|pintvl
+parameter_list|()
+function_decl|;
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: to=%s, stat=%s"
+literal|"%s: to=%s, delay=%s, stat=%s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -2957,9 +2964,21 @@ name|CurEnv
 operator|->
 name|e_to
 argument_list|,
+name|pintvl
+argument_list|(
+name|CurTime
+operator|-
+name|CurEnv
+operator|->
+name|e_ctime
+argument_list|,
+name|TRUE
+argument_list|)
+argument_list|,
 name|statmsg
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|LOG
@@ -5537,6 +5556,13 @@ name|savemail
 argument_list|()
 expr_stmt|;
 comment|/* queue up anything laying around */
+if|if
+condition|(
+name|e
+operator|->
+name|e_dontqueue
+condition|)
+return|return;
 for|for
 control|(
 name|q

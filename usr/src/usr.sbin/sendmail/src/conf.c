@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -374,19 +374,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* default timeout for queue files */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|TextTimeOut
-init|=
-literal|"three days"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* text of above for error messages */
 end_comment
 
 begin_decl_stmt

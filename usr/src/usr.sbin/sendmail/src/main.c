@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.97
+literal|3.98
 operator|%
 name|G
 operator|%
@@ -406,6 +406,24 @@ operator|.
 name|e_putbody
 operator|=
 name|putbody
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|time
+argument_list|(
+operator|&
+name|CurTime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MainEnvelope
+operator|.
+name|e_ctime
+operator|=
+name|CurTime
 expr_stmt|;
 end_expr_stmt
 
@@ -3171,24 +3189,6 @@ modifier|*
 name|gmtime
 parameter_list|()
 function_decl|;
-comment|/* convert timeout interval to absolute time */
-name|TimeOut
-operator|-=
-name|CurTime
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|CurTime
-argument_list|)
-expr_stmt|;
-name|TimeOut
-operator|+=
-name|CurTime
-expr_stmt|;
 comment|/* process id */
 operator|(
 name|void
@@ -3231,6 +3231,15 @@ name|cbuf
 argument_list|)
 expr_stmt|;
 comment|/* time as integer, unix time, arpa time */
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|CurTime
+argument_list|)
+expr_stmt|;
 name|tm
 operator|=
 name|gmtime
@@ -3668,6 +3677,12 @@ name|FALSE
 expr_stmt|;
 name|e
 operator|->
+name|e_dontqueue
+operator|=
+name|FALSE
+expr_stmt|;
+name|e
+operator|->
 name|e_oldstyle
 operator|=
 name|FALSE
@@ -3731,6 +3746,12 @@ operator|->
 name|e_id
 operator|=
 name|NULL
+expr_stmt|;
+name|e
+operator|->
+name|e_ctime
+operator|=
+name|CurTime
 expr_stmt|;
 return|return
 operator|(
