@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -186,6 +192,13 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|decimal_point
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +264,26 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Die with same signal as child */
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_NUMERIC
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|decimal_point
+operator|=
+name|localeconv
+argument_list|()
+operator|->
+name|decimal_point
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|aflag
 operator|=
 name|hflag
@@ -607,11 +640,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"real %ld.%02ld\n"
+literal|"real %ld%c%02ld\n"
 argument_list|,
 name|after
 operator|.
 name|tv_sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|after
 operator|.
@@ -624,13 +659,15 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"user %ld.%02ld\n"
+literal|"user %ld%c%02ld\n"
 argument_list|,
 name|ru
 operator|.
 name|ru_utime
 operator|.
 name|tv_sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|ru
 operator|.
@@ -645,13 +682,15 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"sys %ld.%02ld\n"
+literal|"sys %ld%c%02ld\n"
 argument_list|,
 name|ru
 operator|.
 name|ru_stime
 operator|.
 name|tv_sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|ru
 operator|.
@@ -750,11 +789,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%9ld.%02ld real "
+literal|"%9ld%c%02ld real "
 argument_list|,
 name|after
 operator|.
 name|tv_sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|after
 operator|.
@@ -767,13 +808,15 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%9ld.%02ld user "
+literal|"%9ld%c%02ld user "
 argument_list|,
 name|ru
 operator|.
 name|ru_utime
 operator|.
 name|tv_sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|ru
 operator|.
@@ -788,13 +831,15 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%9ld.%02ld sys\n"
+literal|"%9ld%c%02ld sys\n"
 argument_list|,
 name|ru
 operator|.
 name|ru_stime
 operator|.
 name|tv_sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|ru
 operator|.
@@ -1334,9 +1379,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%ld.%02lds"
+literal|"%ld%c%02lds"
 argument_list|,
 name|sec
+argument_list|,
+name|decimal_point
 argument_list|,
 name|usec
 argument_list|)
