@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.35 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.36 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.35 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.36 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2803,10 +2803,15 @@ modifier|*
 name|gethostbyaddr
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 specifier|extern
 name|int
 name|h_errno
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	**  See if we have already looked up this name.  If so, just 	**  return it. 	*/
 name|s
 operator|=
@@ -2863,6 +2868,9 @@ name|s_namecanon
 operator|.
 name|nc_errno
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|h_errno
 operator|=
 name|s
@@ -2871,6 +2879,8 @@ name|s_namecanon
 operator|.
 name|nc_herrno
 expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|statp
 operator|=
@@ -3045,6 +3055,25 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|s
+operator|->
+name|s_namecanon
+operator|.
+name|nc_errno
+operator|=
+name|errno
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+name|s
+operator|->
+name|s_namecanon
+operator|.
+name|nc_herrno
+operator|=
+name|h_errno
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -3060,22 +3089,6 @@ literal|"FAIL (%d)\n"
 argument_list|,
 name|h_errno
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|s_namecanon
-operator|.
-name|nc_errno
-operator|=
-name|errno
-expr_stmt|;
-name|s
-operator|->
-name|s_namecanon
-operator|.
-name|nc_herrno
-operator|=
-name|h_errno
 expr_stmt|;
 switch|switch
 condition|(
@@ -3161,6 +3174,29 @@ name|EX_UNAVAILABLE
 expr_stmt|;
 break|break;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"FAIL\n"
+argument_list|)
+expr_stmt|;
+operator|*
+name|statp
+operator|=
+name|EX_NOHOST
+expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|->
 name|s_namecanon
@@ -3325,6 +3361,9 @@ name|nc_errno
 operator|=
 name|errno
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|s
 operator|->
 name|s_namecanon
@@ -3333,6 +3372,8 @@ name|nc_herrno
 operator|=
 name|h_errno
 expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|->
 name|s_namecanon
