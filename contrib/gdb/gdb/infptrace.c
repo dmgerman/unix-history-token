@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level Unix child interface to ptrace, for GDB when running under Unix.    Copyright 1988, 89, 90, 91, 92, 93, 94, 95, 96, 1998     Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level Unix child interface to ptrace, for GDB when running under Unix.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -36,7 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"regcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -66,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_dirent.h"
 end_include
 
 begin_include
@@ -500,21 +512,18 @@ name|CHILD_XFER_MEMORY
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|udot_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -531,60 +540,48 @@ name|FETCH_INFERIOR_REGISTERS
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fetch_register
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|store_register
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|_initialize_kernel_u_addr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|_initialize_infptrace
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -597,25 +594,18 @@ begin_function
 name|int
 name|call_ptrace
 parameter_list|(
-name|request
-parameter_list|,
-name|pid
-parameter_list|,
-name|addr
-parameter_list|,
-name|data
-parameter_list|)
 name|int
 name|request
-decl_stmt|,
+parameter_list|,
+name|int
 name|pid
-decl_stmt|;
+parameter_list|,
 name|PTRACE_ARG3_TYPE
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pt_status
@@ -646,6 +636,13 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|FIVE_ARG_PTRACE
+argument_list|)
 name|pt_status
 operator|=
 name|ptrace
@@ -657,19 +654,28 @@ argument_list|,
 name|addr
 argument_list|,
 name|data
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FIVE_ARG_PTRACE
-argument_list|)
-comment|/* Deal with HPUX 8.0 braindamage.  We never use the                           calls which require the fifth argument.  */
-argument_list|,
-literal|0
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* Deal with HPUX 8.0 braindamage.  We never use the          calls which require the fifth argument.  */
+name|pt_status
+operator|=
+name|ptrace
+argument_list|(
+name|PT_SETTRC
+argument_list|,
+name|pid
+argument_list|,
+name|addr
+argument_list|,
+name|data
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|errno
@@ -752,6 +758,13 @@ literal|0
 block|saved_errno = errno;   errno = 0;
 endif|#
 directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|FIVE_ARG_PTRACE
+argument_list|)
 name|pt_status
 operator|=
 name|ptrace
@@ -763,19 +776,28 @@ argument_list|,
 name|addr
 argument_list|,
 name|data
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FIVE_ARG_PTRACE
-argument_list|)
-comment|/* Deal with HPUX 8.0 braindamage.  We never use the 		    calls which require the fifth argument.  */
-argument_list|,
-literal|0
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* Deal with HPUX 8.0 braindamage.  We never use the      calls which require the fifth argument.  */
+name|pt_status
+operator|=
+name|ptrace
+argument_list|(
+name|request
+argument_list|,
+name|pid
+argument_list|,
+name|addr
+argument_list|,
+name|data
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
@@ -830,17 +852,13 @@ begin_function
 name|int
 name|ptrace_wait
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|status
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 modifier|*
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|wstate
@@ -854,7 +872,10 @@ argument_list|)
 expr_stmt|;
 name|target_post_wait
 argument_list|(
+name|pid_to_ptid
+argument_list|(
 name|wstate
+argument_list|)
 argument_list|,
 operator|*
 name|status
@@ -869,14 +890,24 @@ end_function
 begin_function
 name|void
 name|kill_inferior
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|status
 decl_stmt|;
+name|int
+name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-name|inferior_pid
+name|pid
 operator|==
 literal|0
 condition|)
@@ -886,7 +917,7 @@ name|ptrace
 argument_list|(
 name|PT_KILL
 argument_list|,
-name|inferior_pid
+name|pid
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -898,7 +929,7 @@ argument_list|)
 expr_stmt|;
 name|ptrace_wait
 argument_list|(
-literal|0
+name|null_ptid
 argument_list|,
 operator|&
 name|status
@@ -924,23 +955,25 @@ begin_function
 name|void
 name|child_resume
 parameter_list|(
-name|pid
+name|ptid_t
+name|ptid
 parameter_list|,
-name|step
-parameter_list|,
-name|signal
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
 name|int
 name|step
-decl_stmt|;
+parameter_list|,
 name|enum
 name|target_signal
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
+name|int
+name|pid
+init|=
+name|PIDGET
+argument_list|(
+name|ptid
+argument_list|)
+decl_stmt|;
 name|errno
 operator|=
 literal|0
@@ -953,10 +986,13 @@ operator|-
 literal|1
 condition|)
 comment|/* Resume all threads.  */
-comment|/* I think this only gets used in the non-threaded case, where "resume        all threads" and "resume inferior_pid" are the same.  */
+comment|/* I think this only gets used in the non-threaded case, where "resume        all threads" and "resume inferior_ptid" are the same.  */
 name|pid
 operator|=
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 comment|/* An address of (PTRACE_ARG3_TYPE)1 tells ptrace to continue from where      it was.  (If GDB wanted it to start some other way, we have already      written a new PC value to the child.)       If this system does not support PT_STEP, a higher level function will      have called single_step() to transmute the step request into a      continue request (by setting breakpoints on all possible successor      instructions), so we don't have to worry about that here.  */
 if|if
@@ -967,9 +1003,16 @@ block|{
 if|if
 condition|(
 name|SOFTWARE_SINGLE_STEP_P
-condition|)
-name|abort
 argument_list|()
+condition|)
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"failed internal consistency check"
+argument_list|)
 expr_stmt|;
 comment|/* Make sure this doesn't happen. */
 else|else
@@ -1013,11 +1056,13 @@ if|if
 condition|(
 name|errno
 condition|)
+block|{
 name|perror_with_name
 argument_list|(
 literal|"ptrace"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1047,11 +1092,9 @@ begin_function
 name|int
 name|attach
 parameter_list|(
-name|pid
-parameter_list|)
 name|int
 name|pid
-decl_stmt|;
+parameter_list|)
 block|{
 name|errno
 operator|=
@@ -1098,11 +1141,9 @@ begin_function
 name|void
 name|detach
 parameter_list|(
-name|signal
-parameter_list|)
 name|int
 name|signal
-decl_stmt|;
+parameter_list|)
 block|{
 name|errno
 operator|=
@@ -1112,7 +1153,10 @@ name|ptrace
 argument_list|(
 name|PT_DETACH
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1213,7 +1257,9 @@ end_comment
 begin_function
 name|void
 name|_initialize_kernel_u_addr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1277,8 +1323,12 @@ operator|.
 name|n_value
 expr_stmt|;
 else|else
-name|fatal
+name|internal_error
 argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
 literal|"Unable to get kernel u area address."
 argument_list|)
 expr_stmt|;
@@ -1344,36 +1394,7 @@ define|#
 directive|define
 name|U_REGS_OFFSET
 define|\
-value|ptrace (PT_READ_U, inferior_pid, \ 	  (PTRACE_ARG3_TYPE) (offsetof (struct user, u_ar0)), 0) \     - KERNEL_U_ADDR
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Registers we shouldn't try to fetch.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CANNOT_FETCH_REGISTER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CANNOT_FETCH_REGISTER
-parameter_list|(
-name|regno
-parameter_list|)
-value|0
+value|ptrace (PT_READ_U, PIDGET (inferior_ptid), \ 	  (PTRACE_ARG3_TYPE) (offsetof (struct user, u_ar0)), 0) \     - KERNEL_U_ADDR
 end_define
 
 begin_endif
@@ -1390,11 +1411,9 @@ specifier|static
 name|void
 name|fetch_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This isn't really an address.  But ptrace thinks of it as one.  */
 name|CORE_ADDR
@@ -1417,10 +1436,16 @@ name|offset
 decl_stmt|;
 comment|/* Offset of registers within the u area.  */
 name|char
+modifier|*
 name|buf
-index|[
+init|=
+name|alloca
+argument_list|(
 name|MAX_REGISTER_RAW_SIZE
-index|]
+argument_list|)
+decl_stmt|;
+name|int
+name|tid
 decl_stmt|;
 if|if
 condition|(
@@ -1452,6 +1477,28 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Overload thread id onto process id */
+if|if
+condition|(
+operator|(
+name|tid
+operator|=
+name|TIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|tid
+operator|=
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+expr_stmt|;
+comment|/* no thread id, just use process id */
 name|offset
 operator|=
 name|U_REGS_OFFSET
@@ -1505,7 +1552,7 @@ name|ptrace
 argument_list|(
 name|PT_READ_U
 argument_list|,
-name|inferior_pid
+name|tid
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1568,11 +1615,9 @@ begin_function
 name|void
 name|fetch_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1597,7 +1642,7 @@ literal|0
 init|;
 name|regno
 operator|<
-name|ARCH_NUM_REGS
+name|NUM_REGS
 condition|;
 name|regno
 operator|++
@@ -1614,35 +1659,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Registers we shouldn't try to store.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|CANNOT_STORE_REGISTER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|CANNOT_STORE_REGISTER
-parameter_list|(
-name|regno
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Store one register. */
 end_comment
 
@@ -1651,11 +1667,9 @@ specifier|static
 name|void
 name|store_register
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This isn't really an address.  But ptrace thinks of it as one.  */
 name|CORE_ADDR
@@ -1677,6 +1691,18 @@ name|int
 name|offset
 decl_stmt|;
 comment|/* Offset of registers within the u area.  */
+name|int
+name|tid
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+init|=
+name|alloca
+argument_list|(
+name|MAX_REGISTER_RAW_SIZE
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|CANNOT_STORE_REGISTER
@@ -1687,6 +1713,28 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* Overload thread id onto process id */
+if|if
+condition|(
+operator|(
+name|tid
+operator|=
+name|TIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|tid
+operator|=
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+expr_stmt|;
+comment|/* no thread id, just use process id */
 name|offset
 operator|=
 name|U_REGS_OFFSET
@@ -1700,6 +1748,15 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
+comment|/* Put the contents of regno into a local buffer */
+name|regcache_collect
+argument_list|(
+name|regno
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+comment|/* Store the local buffer into the inferior a chunk at the time. */
 for|for
 control|(
 name|i
@@ -1729,7 +1786,7 @@ name|ptrace
 argument_list|(
 name|PT_WRITE_U
 argument_list|,
-name|inferior_pid
+name|tid
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -1741,16 +1798,11 @@ operator|(
 name|PTRACE_XFER_TYPE
 operator|*
 operator|)
-operator|&
-name|registers
-index|[
-name|REGISTER_BYTE
-argument_list|(
-name|regno
-argument_list|)
+operator|(
+name|buf
 operator|+
 name|i
-index|]
+operator|)
 argument_list|)
 expr_stmt|;
 name|regaddr
@@ -1799,11 +1851,9 @@ begin_function
 name|void
 name|store_inferior_registers
 parameter_list|(
-name|regno
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1828,7 +1878,7 @@ literal|0
 init|;
 name|regno
 operator|<
-name|ARCH_NUM_REGS
+name|NUM_REGS
 condition|;
 name|regno
 operator|++
@@ -1856,6 +1906,28 @@ end_comment
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Set an upper limit on alloca.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GDB_MAX_ALLOCA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GDB_MAX_ALLOCA
+value|0x1000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1867,69 +1939,64 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* NOTE! I tried using PTRACE_READDATA, etc., to read and write memory    in the NEW_SUN_PTRACE case.    It ought to be straightforward.  But it appears that writing did    not write the data that I specified.  I cannot understand where    it got the data that it actually did write.  */
+comment|/* NOTE! I tried using PTRACE_READDATA, etc., to read and write memory    in the NEW_SUN_PTRACE case.  It ought to be straightforward.  But    it appears that writing did not write the data that I specified.  I    cannot understand where it got the data that it actually did write.  */
 end_comment
 
 begin_comment
-comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR    to debugger memory starting at MYADDR.   Copy to inferior if    WRITE is nonzero.       Returns the length copied, which is either the LEN argument or zero.    This xfer function does not do partial moves, since child_ops    doesn't allow memory operations to cross below us in the target stack    anyway.  */
+comment|/* Copy LEN bytes to or from inferior's memory starting at MEMADDR to    debugger memory starting at MYADDR.  Copy to inferior if WRITE is    nonzero.  TARGET is ignored.     Returns the length copied, which is either the LEN argument or    zero.  This xfer function does not do partial moves, since    child_ops doesn't allow memory operations to cross below us in the    target stack anyway.  */
 end_comment
 
 begin_function
 name|int
 name|child_xfer_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|write
-parameter_list|,
-name|target
-parameter_list|)
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|write
-decl_stmt|;
+parameter_list|,
+name|struct
+name|mem_attrib
+modifier|*
+name|attrib
+parameter_list|,
 name|struct
 name|target_ops
 modifier|*
 name|target
-decl_stmt|;
-comment|/* ignored */
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* Round starting address down to longword boundary.  */
-specifier|register
 name|CORE_ADDR
 name|addr
 init|=
 name|memaddr
 operator|&
 operator|-
+operator|(
+name|CORE_ADDR
+operator|)
 sizeof|sizeof
 argument_list|(
 name|PTRACE_XFER_TYPE
 argument_list|)
 decl_stmt|;
 comment|/* Round ending address up; get number of longwords that makes.  */
-specifier|register
 name|int
 name|count
 init|=
+operator|(
 operator|(
 operator|(
 operator|(
@@ -1953,33 +2020,78 @@ sizeof|sizeof
 argument_list|(
 name|PTRACE_XFER_TYPE
 argument_list|)
-decl_stmt|;
-comment|/* Allocate buffer of that many longwords.  */
-specifier|register
-name|PTRACE_XFER_TYPE
-modifier|*
-name|buffer
-init|=
-operator|(
-name|PTRACE_XFER_TYPE
-operator|*
 operator|)
-name|alloca
-argument_list|(
+decl_stmt|;
+name|int
+name|alloc
+init|=
 name|count
 operator|*
 sizeof|sizeof
 argument_list|(
 name|PTRACE_XFER_TYPE
 argument_list|)
-argument_list|)
 decl_stmt|;
+name|PTRACE_XFER_TYPE
+modifier|*
+name|buffer
+decl_stmt|;
+name|struct
+name|cleanup
+modifier|*
+name|old_chain
+init|=
+name|NULL
+decl_stmt|;
+comment|/* Allocate buffer of that many longwords.  */
+if|if
+condition|(
+name|len
+operator|<
+name|GDB_MAX_ALLOCA
+condition|)
+block|{
+name|buffer
+operator|=
+operator|(
+name|PTRACE_XFER_TYPE
+operator|*
+operator|)
+name|alloca
+argument_list|(
+name|alloc
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|buffer
+operator|=
+operator|(
+name|PTRACE_XFER_TYPE
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+name|alloc
+argument_list|)
+expr_stmt|;
+name|old_chain
+operator|=
+name|make_cleanup
+argument_list|(
+name|xfree
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|write
 condition|)
 block|{
-comment|/* Fill start and end extra bytes of buffer with existing memory data.  */
+comment|/* Fill start and end extra bytes of buffer with existing memory          data.  */
 if|if
 condition|(
 name|addr
@@ -2007,7 +2119,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_I
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2024,7 +2139,7 @@ name|count
 operator|>
 literal|1
 condition|)
-comment|/* FIXME, avoid if even boundary */
+comment|/* FIXME, avoid if even boundary.  */
 block|{
 name|buffer
 index|[
@@ -2037,7 +2152,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_I
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 call|(
@@ -2063,7 +2181,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Copy data to be written over corresponding part of buffer */
+comment|/* Copy data to be written over corresponding part of buffer.  */
 name|memcpy
 argument_list|(
 operator|(
@@ -2120,7 +2238,10 @@ name|ptrace
 argument_list|(
 name|PT_WRITE_D
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2138,7 +2259,7 @@ condition|(
 name|errno
 condition|)
 block|{
-comment|/* Using the appropriate one (I or D) is necessary for 		 Gould NP1, at least.  */
+comment|/* Using the appropriate one (I or D) is necessary for 	         Gould NP1, at least.  */
 name|errno
 operator|=
 literal|0
@@ -2147,7 +2268,10 @@ name|ptrace
 argument_list|(
 name|PT_WRITE_I
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2180,7 +2304,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* Read all the longwords */
+comment|/* Read all the longwords.  */
 for|for
 control|(
 name|i
@@ -2215,7 +2339,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_I
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2263,6 +2390,17 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|old_chain
+operator|!=
+name|NULL
+condition|)
+name|do_cleanups
+argument_list|(
+name|old_chain
+argument_list|)
+expr_stmt|;
 return|return
 name|len
 return|;
@@ -2277,17 +2415,13 @@ specifier|static
 name|void
 name|udot_info
 parameter_list|(
-name|dummy1
-parameter_list|,
-name|dummy2
-parameter_list|)
 name|char
 modifier|*
 name|dummy1
-decl_stmt|;
+parameter_list|,
 name|int
 name|dummy2
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2395,7 +2529,10 @@ name|ptrace
 argument_list|(
 name|PT_READ_U
 argument_list|,
-name|inferior_pid
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
 argument_list|,
 operator|(
 name|PTRACE_ARG3_TYPE
@@ -2470,7 +2607,9 @@ end_escape
 begin_function
 name|void
 name|_initialize_infptrace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
