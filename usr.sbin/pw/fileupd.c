@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fileupd.c,v 1.5 1997/10/10 06:23:31 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,8 +283,6 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
-operator||
-name|O_EXLOCK
 argument_list|,
 name|fmode
 argument_list|)
@@ -699,7 +697,7 @@ argument_list|,
 name|infp
 argument_list|)
 expr_stmt|;
-comment|/* 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode. 								 */
+comment|/*                                                                  * If there was a problem with copying                                                                  * we will just rename 'file.new'                                                                   * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode                                                                  * and hence the lock.                                                                  *                                                                  * The implications of this is that this invocation of pw                                                                   * won't have the file locked and concurrent copies                                                                  * of pw, vipw etc could clobber what this one is doing.                                                                  *                                                                  * It should probably just return an error instead                                                                  * of going on like nothing is wrong. 								 */
 if|if
 condition|(
 name|fflush

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: edgroup.c,v 1.5 1997/10/10 06:23:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,8 +221,6 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
-operator||
-name|O_EXLOCK
 argument_list|,
 literal|0644
 argument_list|)
