@@ -2613,6 +2613,13 @@ block|}
 block|,
 comment|/* USR3031 */
 block|{
+literal|0x7420b04e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SUP2070 */
+block|{
 literal|0x8020b04e
 block|,
 name|NULL
@@ -2626,6 +2633,13 @@ name|NULL
 block|}
 block|,
 comment|/* SUP2480 */
+block|{
+literal|0x6045f435
+block|,
+name|NULL
+block|}
+block|,
+comment|/* MOT4560 */
 block|{
 literal|0
 block|}
