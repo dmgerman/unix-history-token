@@ -1133,7 +1133,7 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-value|do {					\ 	struct mbuf *__mmm = (m);					\ 									\ 	_MEXT_ALLOC_CNT(__mmm->m_ext.ref_cnt, (how));			\ 	if (__mmm != NULL)						\ 		MEXT_ADD_REF(__mmm);					\ } while (0)
+value|do {					\ 	struct mbuf *__mmm = (m);					\ 									\ 	_MEXT_ALLOC_CNT(__mmm->m_ext.ref_cnt, (how));			\ 	if (__mmm->m_ext.ref_cnt != NULL)				\ 		MEXT_ADD_REF(__mmm);					\ } while (0)
 end_define
 
 begin_comment
@@ -1179,7 +1179,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		 mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
+value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_define
@@ -1205,7 +1205,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		 mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_comment
