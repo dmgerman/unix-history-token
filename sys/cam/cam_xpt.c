@@ -21757,7 +21757,7 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ensure we've waited at least a bus settle 	 * delay before attempting to probe the device. 	 */
+comment|/* 	 * Ensure we've waited at least a bus settle 	 * delay before attempting to probe the device. 	 * For HBAs that don't do bus resets, this won't make a difference. 	 */
 name|cam_periph_freeze_after_event
 argument_list|(
 name|periph
