@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Some data-tables that are often used.  * Cannot be copyrighted.  */
+comment|/*  * Some data-tables that are often used.  * Cannot be copyrighted.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/libkern.h>
 end_include
 
 begin_decl_stmt
 name|u_char
 specifier|const
-name|_bcd2bin
+name|bcd2bin_data
 index|[]
 init|=
 block|{
@@ -330,7 +330,7 @@ end_decl_stmt
 begin_decl_stmt
 name|u_char
 specifier|const
-name|_bin2bcd
+name|bin2bcd_data
 index|[]
 init|=
 block|{
@@ -540,7 +540,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 specifier|const
-name|_hex2ascii
+name|hex2ascii_data
 index|[]
 init|=
 literal|"0123456789abcdef"
