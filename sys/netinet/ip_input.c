@@ -5240,7 +5240,7 @@ comment|/* 	 * If we are over the maximum number of fragments 	 * (due to the li
 if|if
 condition|(
 name|maxnipq
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|nipq
