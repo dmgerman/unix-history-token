@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -16,7 +12,7 @@ name|PRIVATE_H
 end_define
 
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). ** ** $FreeBSD$ */
 end_comment
 
 begin_comment

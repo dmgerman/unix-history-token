@@ -12,7 +12,7 @@ name|TZFILE_H
 end_define
 
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). */
+comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-05 by Arthur David Olson (arthur_david_olson@nih.gov). ** ** $FreeBSD$ */
 end_comment
 
 begin_comment
