@@ -2605,19 +2605,6 @@ name|uio_td
 operator|=
 name|td
 expr_stmt|;
-name|VOP_LEASE
-argument_list|(
-name|backing_vnode
-argument_list|,
-name|td
-argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|backing_vnode
@@ -3677,21 +3664,7 @@ expr|struct
 name|ufs_extattr_header
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Acquire locks. 	 */
-name|VOP_LEASE
-argument_list|(
-name|attribute
-operator|->
-name|uele_backing_vnode
-argument_list|,
-name|td
-argument_list|,
-name|cred
-argument_list|,
-name|LEASE_READ
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Don't need to get a lock on the backing file if the getattr is 	 * being applied to the backing file, as the lock is already held. 	 */
+comment|/* 	 * Acquire locks. 	 * 	 * Don't need to get a lock on the backing file if the getattr is 	 * being applied to the backing file, as the lock is already held. 	 */
 if|if
 condition|(
 name|attribute
@@ -4498,21 +4471,7 @@ expr|struct
 name|ufs_extattr_header
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Acquire locks. 	 */
-name|VOP_LEASE
-argument_list|(
-name|attribute
-operator|->
-name|uele_backing_vnode
-argument_list|,
-name|td
-argument_list|,
-name|cred
-argument_list|,
-name|LEASE_WRITE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Don't need to get a lock on the backing file if the setattr is 	 * being applied to the backing file, as the lock is already held. 	 */
+comment|/* 	 * Acquire locks. 	 * 	 * Don't need to get a lock on the backing file if the setattr is 	 * being applied to the backing file, as the lock is already held. 	 */
 if|if
 condition|(
 name|attribute
@@ -4958,19 +4917,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ufs_extattr_header
-argument_list|)
-expr_stmt|;
-name|VOP_LEASE
-argument_list|(
-name|attribute
-operator|->
-name|uele_backing_vnode
-argument_list|,
-name|td
-argument_list|,
-name|cred
-argument_list|,
-name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't need to get the lock on the backing vnode if the vnode we're 	 * modifying is it, as we already hold the lock. 	 */
