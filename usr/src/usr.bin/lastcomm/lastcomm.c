@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastcomm.c	5.9 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,8 @@ argument_list|(
 name|acp
 operator|->
 name|ac_uid
+argument_list|,
+literal|0
 argument_list|)
 argument_list|,
 name|UT_LINESIZE
@@ -767,6 +769,8 @@ argument_list|(
 name|acp
 operator|->
 name|ac_uid
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
