@@ -134,6 +134,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern_security
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bsd
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"BSD security policy"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5213,7 +5231,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern_security
+name|_kern_security_bsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -5651,13 +5669,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * kern_security_seeotheruids_permitted determines whether or not visibility  * of processes and sockets with credentials holding different real uid's  * is possible using a variety of system MIBs.  */
+comment|/*  * 'seeotheruids_permitted' determines whether or not visibility of processes  * and sockets with credentials holding different real uid's is possible  * using a variety of system MIBs.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|kern_security_seeotheruids_permitted
+name|seeotheruids_permitted
 init|=
 literal|1
 decl_stmt|;
@@ -5666,7 +5684,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern_security
+name|_kern_security_bsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -5675,7 +5693,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|kern_security_seeotheruids_permitted
+name|seeotheruids_permitted
 argument_list|,
 literal|0
 argument_list|,
@@ -5727,7 +5745,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|kern_security_seeotheruids_permitted
+name|seeotheruids_permitted
 operator|&&
 name|u1
 operator|->
@@ -6181,13 +6199,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The kern_unprivileged_procdebug_permitted flag may be used to disable  * a variety of unprivileged inter-process debugging services, including  * some procfs functionality, ptrace(), and ktrace().  In the past,  * inter-process debugging has been involved in a variety of security  * problems, and sites not requiring the service might choose to disable it  * when hardening systems.  *  * XXX: Should modifying and reading this variable require locking?  */
+comment|/*  * The 'unprivileged_procdebug_permitted' flag may be used to disable  * a variety of unprivileged inter-process debugging services, including  * some procfs functionality, ptrace(), and ktrace().  In the past,  * inter-process debugging has been involved in a variety of security  * problems, and sites not requiring the service might choose to disable it  * when hardening systems.  *  * XXX: Should modifying and reading this variable require locking?  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|kern_unprivileged_procdebug_permitted
+name|unprivileged_procdebug_permitted
 init|=
 literal|1
 decl_stmt|;
@@ -6196,7 +6214,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern_security
+name|_kern_security_bsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -6205,7 +6223,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|kern_unprivileged_procdebug_permitted
+name|unprivileged_procdebug_permitted
 argument_list|,
 literal|0
 argument_list|,
@@ -6247,7 +6265,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|kern_unprivileged_procdebug_permitted
+name|unprivileged_procdebug_permitted
 condition|)
 block|{
 name|error
