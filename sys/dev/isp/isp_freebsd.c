@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.17 1999/05/06 20:16:25 ken Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.18 1999/05/11 05:10:06 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -1806,22 +1806,29 @@ operator|~
 name|DPARM_SYNC
 expr_stmt|;
 block|}
-name|IDPRINTF
-argument_list|(
+if|if
+condition|(
+name|bootverbose
+operator|||
+name|isp
+operator|->
+name|isp_dblev
+operator|>=
 literal|3
+condition|)
+name|printf
+argument_list|(
+literal|"%s: %d.%d set %s period 0x%x offset "
+literal|"0x%x flags 0x%x\n"
 argument_list|,
-operator|(
-literal|"%s: %d.%d set %s period 0x%x offset 0x%x"
-literal|" flags 0x%x\n"
-operator|,
 name|isp
 operator|->
 name|isp_name
-operator|,
+argument_list|,
 name|bus
-operator|,
+argument_list|,
 name|tgt
-operator|,
+argument_list|,
 operator|(
 name|cts
 operator|->
@@ -1833,7 +1840,7 @@ condition|?
 literal|"current"
 else|:
 literal|"user"
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_devparam
@@ -1842,7 +1849,7 @@ name|tgt
 index|]
 operator|.
 name|sync_period
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_devparam
@@ -1851,7 +1858,7 @@ name|tgt
 index|]
 operator|.
 name|sync_offset
-operator|,
+argument_list|,
 name|sdp
 operator|->
 name|isp_devparam
@@ -1860,7 +1867,6 @@ name|tgt
 index|]
 operator|.
 name|dev_flags
-operator|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -2029,6 +2035,53 @@ operator|&
 name|CCB_TRANS_CURRENT_SETTINGS
 condition|)
 block|{
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+comment|/* 				 * First do a refresh to see if things 				 * have changed recently! 				 */
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|dev_refresh
+operator|=
+literal|1
+expr_stmt|;
+name|isp
+operator|->
+name|isp_update
+operator||=
+operator|(
+literal|1
+operator|<<
+name|bus
+operator|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|isp_control
+argument_list|(
+name|isp
+argument_list|,
+name|ISPCTL_UPDATE_PARAMS
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|dval
 operator|=
 name|sdp
@@ -2215,22 +2268,29 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
-argument_list|(
+if|if
+condition|(
+name|bootverbose
+operator|||
+name|isp
+operator|->
+name|isp_dblev
+operator|>=
 literal|3
+condition|)
+name|printf
+argument_list|(
+literal|"%s: %d.%d get %s period 0x%x offset "
+literal|"0x%x flags 0x%x\n"
 argument_list|,
-operator|(
-literal|"%s: %d.%d get %s period 0x%x offset 0x%x"
-literal|" flags 0x%x\n"
-operator|,
 name|isp
 operator|->
 name|isp_name
-operator|,
+argument_list|,
 name|bus
-operator|,
+argument_list|,
 name|tgt
-operator|,
+argument_list|,
 operator|(
 name|cts
 operator|->
@@ -2242,13 +2302,12 @@ condition|?
 literal|"current"
 else|:
 literal|"user"
-operator|,
+argument_list|,
 name|pval
-operator|,
+argument_list|,
 name|oval
-operator|,
+argument_list|,
 name|dval
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
