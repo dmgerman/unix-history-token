@@ -4175,6 +4175,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|el_source
+argument_list|(
+name|el
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

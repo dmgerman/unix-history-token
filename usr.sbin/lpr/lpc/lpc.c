@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpc.c,v 1.8 1998/09/11 18:49:31 wollman Exp $"
+literal|"$Id: lpc.c,v 1.9 1999/08/19 03:29:13 mdodd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,6 +699,13 @@ argument_list|,
 name|EL_SIGNAL
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|el_source
+argument_list|(
+name|el
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cdcontrol.c,v 1.18 1999/01/31 15:30:21 billf Exp $"
+literal|"$Id: cdcontrol.c,v 1.19 1999/08/19 03:29:11 mdodd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5762,6 +5762,13 @@ argument_list|,
 name|EL_SIGNAL
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|el_source
+argument_list|(
+name|el
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
