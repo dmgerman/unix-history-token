@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.52 1996/06/14 18:35:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.53 1996/06/17 09:04:53 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -589,10 +589,9 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Glossary of functions"
 block|,
-literal|"This menu contains an alphabetized index of all top level\n"
-literal|"functions in this program (sysinstall).  Please select the\n"
-literal|"function you wish to invoke below and press [ENTER] or\n"
-literal|"Cancel to leave this menu."
+literal|"This menu contains an alphabetized index of the top level functions in\n"
+literal|"this program (sysinstall).  Invoke an option by pressing [ENTER].\n"
+literal|"Leave the index page by selecting Cancel [TAB-ENTER]."
 block|,
 literal|"Use PageUp or PageDown to move through this menu faster!"
 block|,
@@ -625,6 +624,16 @@ block|,
 name|NULL
 block|,
 literal|"anon_ftp"
+block|}
+block|,
+block|{
+literal|"Commit"
+block|,
+literal|"Commit any pending actions (dangerous!)"
+block|,
+name|NULL
+block|,
+name|installCustomCommit
 block|}
 block|,
 block|{
@@ -793,7 +802,7 @@ name|distSetXF86
 block|}
 block|,
 block|{
-literal|"Doc Menu"
+literal|"Documentation"
 block|,
 literal|"Installation instructions, README, etc."
 block|,
@@ -888,6 +897,16 @@ name|docBrowser
 block|}
 block|,
 block|{
+literal|"Extract"
+block|,
+literal|"Extract selected distributions from media."
+block|,
+name|NULL
+block|,
+name|distExtractAll
+block|}
+block|,
+block|{
 literal|"Fixit"
 block|,
 literal|"Repair mode with CDROM or floppy."
@@ -946,6 +965,16 @@ literal|"gateway=YES"
 block|}
 block|,
 block|{
+literal|"HTML Docs"
+block|,
+literal|"The HTML documentation menu"
+block|,
+name|NULL
+block|,
+name|docBrowser
+block|}
+block|,
+block|{
 literal|"Install, Novice"
 block|,
 literal|"A novice system installation."
@@ -966,7 +995,7 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"Install, Custom Menu"
+literal|"Install, Custom"
 block|,
 literal|"The custom installation menu"
 block|,
@@ -978,6 +1007,16 @@ name|NULL
 block|,
 operator|&
 name|MenuInstallCustom
+block|}
+block|,
+block|{
+literal|"Label"
+block|,
+literal|"The disk Label editor"
+block|,
+name|NULL
+block|,
+name|diskLabelEditor
 block|}
 block|,
 block|{
@@ -1076,9 +1115,19 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"Networking Menu"
+literal|"Network Interfaces"
 block|,
-literal|"The network configuration menu."
+literal|"Configure network interfaces"
+block|,
+name|NULL
+block|,
+name|tcpMenuSelect
+block|}
+block|,
+block|{
+literal|"Networking Services"
+block|,
+literal|"The network services menu."
 block|,
 name|NULL
 block|,
@@ -1141,6 +1190,26 @@ block|,
 name|NULL
 block|,
 name|optionsEditor
+block|}
+block|,
+block|{
+literal|"Packages"
+block|,
+literal|"The packages collection"
+block|,
+name|NULL
+block|,
+name|configPackages
+block|}
+block|,
+block|{
+literal|"Partition"
+block|,
+literal|"The disk Partition Editor"
+block|,
+name|NULL
+block|,
+name|diskPartitionEditor
 block|}
 block|,
 block|{
@@ -1210,7 +1279,7 @@ literal|"samba"
 block|}
 block|,
 block|{
-literal|"Syscons Menu"
+literal|"Syscons"
 block|,
 literal|"The system console configuration menu."
 block|,
@@ -1225,7 +1294,7 @@ name|MenuSyscons
 block|}
 block|,
 block|{
-literal|"Syscons Menu, Keymap"
+literal|"Syscons, Keymap"
 block|,
 literal|"The console keymap configuration menu."
 block|,
@@ -1240,7 +1309,7 @@ name|MenuSysconsKeymap
 block|}
 block|,
 block|{
-literal|"Syscons Menu, Keyrate"
+literal|"Syscons, Keyrate"
 block|,
 literal|"The console key rate configuration menu."
 block|,
@@ -1255,7 +1324,7 @@ name|MenuSysconsKeyrate
 block|}
 block|,
 block|{
-literal|"Syscons Menu, Saver"
+literal|"Syscons, Saver"
 block|,
 literal|"The console screen saver configuration menu."
 block|,
@@ -1504,7 +1573,7 @@ block|,
 block|{
 literal|"0 Index"
 block|,
-literal|"Glossary list of all possible operations."
+literal|"Glossary of functions."
 block|,
 name|NULL
 block|,
