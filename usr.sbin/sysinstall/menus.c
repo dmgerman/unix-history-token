@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.93 1996/11/07 08:03:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.94 1996/11/07 18:30:59 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1505,7 +1505,22 @@ name|MenuDocumentation
 block|}
 block|,
 block|{
-literal|"3 Options"
+literal|"3 Keymap"
+block|,
+literal|"Select a keyboard language."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsKeymap
+block|}
+block|,
+block|{
+literal|"4 Options"
 block|,
 literal|"Go to the options editor"
 block|,
@@ -1515,7 +1530,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"4 Novice"
+literal|"5 Novice"
 block|,
 literal|"Begin a novice installation (for beginners)"
 block|,
@@ -1525,7 +1540,7 @@ name|installNovice
 block|}
 block|,
 block|{
-literal|"5 Express"
+literal|"6 Express"
 block|,
 literal|"Begin a quick installation (for the impatient)"
 block|,
@@ -1535,7 +1550,7 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"6 Custom"
+literal|"7 Custom"
 block|,
 literal|"Begin a custom installation (for experts)"
 block|,
@@ -1550,7 +1565,7 @@ name|MenuInstallCustom
 block|}
 block|,
 block|{
-literal|"7 Fixit"
+literal|"8 Fixit"
 block|,
 literal|"Go into repair mode with CDROM or floppy"
 block|,
@@ -1565,7 +1580,7 @@ name|MenuFixit
 block|}
 block|,
 block|{
-literal|"8 Upgrade"
+literal|"9 Upgrade"
 block|,
 literal|"Upgrade an existing system"
 block|,
@@ -1575,7 +1590,7 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"9 Configure"
+literal|"c Configure"
 block|,
 literal|"Do post-install configuration of FreeBSD"
 block|,
@@ -7033,7 +7048,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) defaults\n\ to a standard \"American\" keyboard map.  Users in other countries\n\ (or with different keyboard preferences) may wish to choose one of\n\ the other keymaps below."
+literal|"The default system console driver for FreeBSD (syscons) defaults\n\ to a standard \"American\" keyboard map.  Users in other countries\n\ (or with different keyboard preferences) may wish to choose one of\n\ the other keymaps below.\n\ Note that sysinstall itself does only guarantee to use the part of\n\ the keyboard mapping that is required to generate the ANSI character\n\ subset, but the desired mapping will be remembered later."
 block|,
 literal|"Choose a keyboard map"
 block|,
@@ -7041,13 +7056,55 @@ name|NULL
 block|,
 block|{
 block|{
+literal|"Belgian"
+block|,
+literal|"Belgian ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=be.iso"
+block|}
+block|,
+block|{
+literal|"Brazil CP850"
+block|,
+literal|"Brazil CP850 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=br275.cp850"
+block|}
+block|,
+block|{
+literal|"Brazil ISO"
+block|,
+literal|"Brazil ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=br275.iso"
+block|}
+block|,
+block|{
 literal|"Danish CP865"
 block|,
 literal|"Danish Code Page 865 keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7061,7 +7118,7 @@ literal|"Danish ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7075,7 +7132,7 @@ literal|"French ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7089,7 +7146,7 @@ literal|"German Code Page 850 keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7103,7 +7160,7 @@ literal|"German ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7117,7 +7174,7 @@ literal|"Italian ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7131,11 +7188,67 @@ literal|"Japanese 106 keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
 literal|"keymap=jp.106"
+block|}
+block|,
+block|{
+literal|"Norway ISO"
+block|,
+literal|"Norwegian ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=norwegian.iso"
+block|}
+block|,
+block|{
+literal|"Russia CP866"
+block|,
+literal|"Russian CP866 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=ru.cp866"
+block|}
+block|,
+block|{
+literal|"Russia KOI8-R"
+block|,
+literal|"Russian KOI8-R keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=ru.koi8-r"
+block|}
+block|,
+block|{
+literal|"Spanish"
+block|,
+literal|"Spanish ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=spanish.iso"
 block|}
 block|,
 block|{
@@ -7145,7 +7258,7 @@ literal|"Swedish Code Page 850 keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7159,11 +7272,25 @@ literal|"Swedish ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
 literal|"keymap=swedish.iso"
+block|}
+block|,
+block|{
+literal|"Swiss German"
+block|,
+literal|"Swiss German ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=swissgerman.iso.kbd"
 block|}
 block|,
 block|{
@@ -7173,7 +7300,7 @@ literal|"United Kingdom Code Page 850 keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
@@ -7187,11 +7314,25 @@ literal|"United Kingdom ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
 literal|"keymap=uk.iso"
+block|}
+block|,
+block|{
+literal|"U.S. Dvorak"
+block|,
+literal|"United States Dvorak keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=us.dvorak"
 block|}
 block|,
 block|{
@@ -7201,7 +7342,7 @@ literal|"United States ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
