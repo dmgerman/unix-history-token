@@ -9484,7 +9484,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|" startup dirs"
+literal|" Startup dirs"
 block|,
 literal|"Set the list of dirs to look for startup scripts"
 block|,
@@ -9526,7 +9526,7 @@ literal|"named_flags"
 block|}
 block|,
 block|{
-literal|" nis client"
+literal|" NIS client"
 block|,
 literal|"This host wishes to be an NIS client."
 block|,
@@ -9540,7 +9540,7 @@ literal|"nis_client_enable=YES"
 block|}
 block|,
 block|{
-literal|" nis domainname"
+literal|" NIS domainname"
 block|,
 literal|"Set NIS domainname (if enabled)"
 block|,
@@ -9554,7 +9554,7 @@ literal|"nisdomainname"
 block|}
 block|,
 block|{
-literal|" nis server"
+literal|" NIS server"
 block|,
 literal|"This host wishes to be an NIS server."
 block|,
@@ -9588,7 +9588,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|" accounting"
+literal|" Accounting"
 block|,
 literal|"This host wishes to run process accounting."
 block|,
@@ -9619,9 +9619,9 @@ ifdef|#
 directive|ifdef
 name|WITH_LINUX
 block|{
-literal|" linux"
+literal|" Linux"
 block|,
-literal|"This host wants to be able to run linux binaries."
+literal|"This host wants to be able to run Linux binaries."
 block|,
 name|dmenuVarCheck
 block|,
