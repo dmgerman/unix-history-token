@@ -1758,13 +1758,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The open function is named Fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
+comment|/*  * The open function is named fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|d_open_t
-name|Fdopen
+name|fdopen
 decl_stmt|;
 end_decl_stmt
 
@@ -2246,7 +2246,7 @@ block|{
 operator|.
 name|d_open
 operator|=
-name|Fdopen
+name|fdopen
 block|,
 operator|.
 name|d_close
@@ -7122,7 +7122,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|Fdopen
+name|fdopen
 parameter_list|(
 name|dev_t
 name|dev
