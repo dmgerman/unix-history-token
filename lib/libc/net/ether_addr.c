@@ -112,6 +112,7 @@ name|e
 parameter_list|,
 name|hostname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|l
@@ -237,6 +238,7 @@ name|ether_aton
 parameter_list|(
 name|a
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|a
@@ -381,6 +383,7 @@ name|ether_ntoa
 parameter_list|(
 name|n
 parameter_list|)
+specifier|const
 name|struct
 name|ether_addr
 modifier|*
@@ -488,6 +491,7 @@ name|char
 modifier|*
 name|hostname
 decl_stmt|;
+specifier|const
 name|struct
 name|ether_addr
 modifier|*
@@ -749,6 +753,7 @@ name|hostname
 parameter_list|,
 name|e
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|hostname
