@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.23 (Berkeley) %G%"
+literal|"@(#)table.c	1.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1926,6 +1926,8 @@ block|,
 literal|0
 block|,
 name|RLEFT
+operator||
+name|RESCC
 block|,
 literal|"	ZW\n"
 block|,
@@ -1954,6 +1956,8 @@ block|,
 literal|0
 block|,
 name|RLEFT
+operator||
+name|RESCC
 block|,
 literal|"	ZY\n"
 block|,
@@ -3051,6 +3055,8 @@ block|,
 name|INAREG
 operator||
 name|FOREFF
+operator||
+name|FORCC
 block|,
 name|SAREG
 operator||
@@ -4089,6 +4095,8 @@ block|,
 name|INAREG
 operator||
 name|FOREFF
+operator||
+name|FORCC
 block|,
 name|SAREG
 operator||
