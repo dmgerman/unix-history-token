@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.60 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.61 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -2594,9 +2594,6 @@ name|syncprt
 decl_stmt|;
 comment|/* LFS */
 comment|/*  * Go through the disk queues to initiate sandbagged IO;  * go through the inodes to write those that have been modified;  * initiate the writing of the super block if it has been modified.  *  * Note: we are always called with the filesystem marked `MPBUSY'.  */
-name|int
-name|STOPNOW
-decl_stmt|;
 name|lfs_sync
 argument_list|(
 argument|mp
@@ -2672,10 +2669,6 @@ name|bufstats
 argument_list|()
 expr_stmt|;
 comment|/* All syncs must be checkpoints until roll-forward is implemented. */
-name|STOPNOW
-operator|=
-literal|1
-expr_stmt|;
 name|error
 operator|=
 name|lfs_segwrite
