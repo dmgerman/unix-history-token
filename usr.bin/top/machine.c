@@ -1013,11 +1013,11 @@ if|if
 condition|(
 name|namelength
 operator|>
-literal|16
+literal|15
 condition|)
 name|namelength
 operator|=
-literal|16
+literal|15
 expr_stmt|;
 if|if
 condition|(
