@@ -102,6 +102,17 @@ value|((x + 1)& GEM_NRXDESC_MASK)
 end_define
 
 begin_comment
+comment|/*  * How many ticks to wait until to retry on a RX descriptor that is still owned  * by the hardware.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GEM_RXOWN_TICKS
+value|(hz / 50)
+end_define
+
+begin_comment
 comment|/*  * Control structures are DMA'd to the GEM chip.  We allocate them in  * a single clump that maps to a single DMA segment to make several things  * easier.  */
 end_comment
 
@@ -334,6 +345,11 @@ name|callout
 name|sc_tick_ch
 decl_stmt|;
 comment|/* tick callout */
+name|struct
+name|callout
+name|sc_rx_ch
+decl_stmt|;
+comment|/* delayed rx callout */
 comment|/* The following bus handles are to be provided by the bus front-end */
 name|bus_space_tag_t
 name|sc_bustag

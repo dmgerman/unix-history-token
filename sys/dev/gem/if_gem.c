@@ -523,6 +523,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|gem_rint_timeout
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|gem_tint
 parameter_list|(
 name|struct
@@ -1527,6 +1538,16 @@ operator|&
 name|sc
 operator|->
 name|sc_tick_ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_rx_ch
 argument_list|,
 literal|0
 argument_list|)
@@ -6798,6 +6819,31 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|gem_rint_timeout
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+name|gem_rint
+argument_list|(
+operator|(
+expr|struct
+name|gem_softc
+operator|*
+operator|)
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Receive interrupt.  */
 end_comment
@@ -6864,6 +6910,14 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_rx_ch
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -7008,15 +7062,21 @@ operator|&
 name|GEM_RD_OWN
 condition|)
 block|{
-name|printf
+comment|/* 			 * The descriptor is still marked as owned, although 			 * it is supposed to have completed. This has been 			 * observed on some machines. Just exiting here 			 * might leave the packet sitting around until another 			 * one arrives to trigger a new interrupt, which is 			 * generally undesirable, so set up a timeout. 			 */
+name|callout_reset
 argument_list|(
-literal|"gem_rint: completed descriptor "
-literal|"still owned %d\n"
+operator|&
+name|sc
+operator|->
+name|sc_rx_ch
 argument_list|,
-name|i
+name|GEM_RXOWN_TICKS
+argument_list|,
+name|gem_rint_timeout
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We have processed all of the receive buffers. 			 */
 break|break;
 block|}
 if|if
