@@ -460,7 +460,7 @@ value|(char)2
 end_define
 
 begin_comment
-comment|/*  * Db_build() builds the name and capabilty databases according to the  * details above.  */
+comment|/*  * Db_build() builds the name and capability databases according to the  * details above.  */
 end_comment
 
 begin_function
@@ -798,22 +798,28 @@ operator|++
 name|reccnt
 expr_stmt|;
 comment|/* If only one name, ignore the rest. */
-if|if
-condition|(
-operator|(
+operator|*
 name|p
 operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
 name|strchr
 argument_list|(
 name|bp
 argument_list|,
 literal|'|'
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
 continue|continue;
+operator|*
+name|p
+operator|=
+literal|':'
+expr_stmt|;
 comment|/* The rest of the names reference the entire name. */
 operator|(
 operator|(
