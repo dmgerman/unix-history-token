@@ -8441,7 +8441,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|do {                                                    \     (field)[num] = 1;                                   \ }
+value|do {                                                    \     (field)[(num) - fireWallBaseNum] = 1;               \ }
 comment|/*lint -save -e717 */
 value|while(0)
 end_define
@@ -8460,7 +8460,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|do {                                                    \     (field)[num] = 0;                                   \ }
+value|do {                                                    \     (field)[(num) - fireWallBaseNum] = 0;               \ }
 comment|/*lint -save -e717 */
 value|while(0)
 end_define
@@ -8478,7 +8478,7 @@ name|field
 parameter_list|,
 name|num
 parameter_list|)
-value|((field)[num])
+value|((field)[(num) - fireWallBaseNum])
 end_define
 
 begin_function
@@ -8706,17 +8706,10 @@ empty_stmt|;
 if|if
 condition|(
 name|fwhole
-operator|>=
+operator|==
 name|fireWallBaseNum
 operator|+
 name|fireWallNumNums
-operator|||
-name|fw_tstfield
-argument_list|(
-name|fireWallField
-argument_list|,
-name|fwhole
-argument_list|)
 condition|)
 block|{
 for|for
