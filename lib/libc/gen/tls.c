@@ -290,7 +290,7 @@ name|_rtld_free_tls
 end_pragma
 
 begin_comment
-comment|/*  * Free Static TLS using the Variant II method.  */
+comment|/*  * Free Static TLS using the Variant I method.  */
 end_comment
 
 begin_function
