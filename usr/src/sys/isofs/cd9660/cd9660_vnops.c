@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2106,9 +2106,16 @@ block|}
 block|}
 name|endsearch
 operator|=
+name|roundup
+argument_list|(
 name|ip
 operator|->
 name|i_size
+argument_list|,
+name|imp
+operator|->
+name|logical_block_size
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2266,6 +2273,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|reclen
+operator|<
+name|ISO_DIRECTORY_RECORD_SIZE
+operator|+
+name|idp
+operator|->
+name|current
+operator|.
+name|d_namlen
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* illegal entry, stop */
+break|break;
+block|}
+if|if
+condition|(
 name|isonum_711
 argument_list|(
 name|ep
@@ -2303,37 +2330,14 @@ operator|->
 name|b_blkno
 argument_list|)
 operator|+
-name|idp
-operator|->
-name|curroff
+name|entryoffsetinblock
 expr_stmt|;
-if|if
-condition|(
-name|reclen
-operator|<
-name|ISO_DIRECTORY_RECORD_SIZE
-operator|+
-name|idp
-operator|->
-name|current
-operator|.
-name|d_namlen
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* illegal entry, stop */
-break|break;
-block|}
 name|idp
 operator|->
 name|curroff
 operator|+=
 name|reclen
 expr_stmt|;
-comment|/* 		 * 		 */
 switch|switch
 condition|(
 name|imp
