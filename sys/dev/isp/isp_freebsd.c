@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Platform (FreeBSD) dependent common attachment code for Qlogic adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Platform (FreeBSD) dependent common attachment code for Qlogic adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -186,9 +186,12 @@ literal|"isp"
 argument_list|,
 name|isp
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|isp
 operator|->
-name|isp_unit
+name|isp_dev
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -408,9 +411,12 @@ literal|"isp"
 argument_list|,
 name|isp
 argument_list|,
+name|device_get_unit
+argument_list|(
 name|isp
 operator|->
-name|isp_unit
+name|isp_dev
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -2087,10 +2093,10 @@ parameter_list|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|lfmt
+index|[]
 init|=
-literal|"Lun now %sabled for target mode\n"
+literal|"Lun now %sabled for target mode"
 decl_stmt|;
 name|struct
 name|ccb_en_lun
@@ -2129,6 +2135,32 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bus
+operator|!=
+literal|0
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"second channel target mode not supported"
+argument_list|)
+expr_stmt|;
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_CMP_ERR
+expr_stmt|;
+return|return;
+block|}
 name|tgt
 operator|=
 name|ccb
@@ -2357,9 +2389,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"could not get a good port database read\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"could not get a good port database read"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -2768,8 +2804,12 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
 name|lfmt
 argument_list|,
 operator|(
@@ -2973,9 +3013,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"isp_lun_cmd failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isp_lun_cmd failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3003,9 +3047,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"wait for ENABLE LUN timed out\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"wait for ENABLE LUN timed out"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3036,9 +3084,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"ENABLE LUN returned 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"ENABLE LUN returned 0x%x"
 argument_list|,
 name|rstat
 argument_list|)
@@ -3094,9 +3146,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"isp_lun_cmd failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"isp_lun_cmd failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3124,9 +3180,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"wait for MODIFY LUN timed out\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"wait for MODIFY LUN timed out"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3157,9 +3217,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"MODIFY LUN returned 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"MODIFY LUN returned 0x%x"
 argument_list|,
 name|rstat
 argument_list|)
@@ -3209,9 +3273,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"isp_lun_cmd failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"isp_lun_cmd failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3239,9 +3307,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"wait for ENABLE LUN timed out\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"wait for ENABLE LUN timed out"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3272,9 +3344,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"ENABLE LUN returned 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"ENABLE LUN returned 0x%x"
 argument_list|,
 name|rstat
 argument_list|)
@@ -3312,9 +3388,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"lun %sable failed\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"lun %sable failed"
 argument_list|,
 operator|(
 name|cel
@@ -3367,8 +3447,12 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
 name|lfmt
 argument_list|,
 operator|(
@@ -3787,7 +3871,7 @@ name|ccb
 operator|->
 name|csio
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 modifier|*
 name|hp
 decl_stmt|,
@@ -3941,7 +4025,7 @@ operator|.
 name|spriv_field0
 expr_stmt|;
 block|}
-comment|/* 		 * We always have to use the tag_id- it has the RX_ID 		 * for this exchage. 		 */
+comment|/* 		 * We always have to use the tag_id- it has the responder 		 * exchange id in it. 		 */
 name|cto
 operator|->
 name|ct_rxid
@@ -4163,7 +4247,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG2
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x SCSI STATUS 0x%x datalength %u"
+literal|"CTIO2[%x] SCSI STATUS 0x%x datalength %u"
 argument_list|,
 name|cto
 operator|->
@@ -4184,7 +4268,7 @@ operator|=
 operator|&
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 expr_stmt|;
 block|}
 else|else
@@ -4195,6 +4279,7 @@ name|cto
 init|=
 name|qe
 decl_stmt|;
+comment|/* 		 * We always have to use the tag_id- it has the handle 		 * for this command. 		 */
 name|cto
 operator|->
 name|ct_header
@@ -4239,6 +4324,16 @@ name|ccb_h
 operator|.
 name|target_lun
 expr_stmt|;
+name|cto
+operator|->
+name|ct_fwhandle
+operator|=
+name|cso
+operator|->
+name|tag_id
+operator|>>
+literal|8
+expr_stmt|;
 if|if
 condition|(
 name|cso
@@ -4258,6 +4353,8 @@ operator|=
 name|cso
 operator|->
 name|tag_id
+operator|&
+literal|0xff
 expr_stmt|;
 name|cto
 operator|->
@@ -4398,7 +4495,7 @@ operator|=
 operator|&
 name|cto
 operator|->
-name|ct_reserved
+name|ct_syshandle
 expr_stmt|;
 name|ccb
 operator|->
@@ -4788,6 +4885,18 @@ operator|=
 name|atiop
 operator|->
 name|tag_id
+operator|&
+literal|0xff
+expr_stmt|;
+name|at
+operator|->
+name|at_handle
+operator|=
+name|atiop
+operator|->
+name|tag_id
+operator|>>
+literal|8
 expr_stmt|;
 name|ISP_SWIZ_ATIO
 argument_list|(
@@ -4951,13 +5060,13 @@ name|AT_PHASE_ERROR
 condition|)
 block|{
 comment|/* 		 * Bus Phase Sequence error. We should have sense data 		 * suggested by the f/w. I'm not sure quite yet what 		 * to do about this for CAM. 		 */
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: PHASE ERROR\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"PHASE ERROR"
 argument_list|)
 expr_stmt|;
 name|isp_endcmd
@@ -4989,13 +5098,13 @@ operator|!=
 name|AT_CDB
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: bogus atio (0x%x) leaked to platform\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"bogus atio (0x%x) leaked to platform"
 argument_list|,
 name|status
 argument_list|)
@@ -5100,9 +5209,13 @@ operator|->
 name|owner
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"no ATIOS for lun %d from initiator %d\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"no ATIOS for lun %d from initiator %d"
 argument_list|,
 name|aep
 operator|->
@@ -5331,6 +5444,14 @@ operator|=
 name|aep
 operator|->
 name|at_tag_val
+operator||
+operator|(
+name|aep
+operator|->
+name|at_handle
+operator|<<
+literal|8
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -5372,7 +5493,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG2
 argument_list|,
-literal|"ATIO CDB=0x%x iid%d->lun%d tag 0x%x ttype 0x%x %s"
+literal|"ATIO[%x] CDB=0x%x iid%d->lun%d tag 0x%x ttype 0x%x %s"
+argument_list|,
+name|aep
+operator|->
+name|at_handle
 argument_list|,
 name|aep
 operator|->
@@ -5471,13 +5596,13 @@ operator|!=
 name|AT_CDB
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: bogus atio (0x%x) leaked to platform\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"bogus atio (0x%x) leaked to platform"
 argument_list|,
 name|aep
 operator|->
@@ -5613,9 +5738,13 @@ operator|->
 name|owner
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"no ATIOS for lun %d from initiator %d\n"
+name|isp
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"no ATIOS for lun %d from initiator %d"
 argument_list|,
 name|lun
 argument_list|,
@@ -5719,60 +5848,13 @@ operator|=
 name|lun
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|aep
-operator|->
-name|at_status
-operator|&
-name|QLTM_SVALID
-condition|)
-block|{
-name|size_t
-name|amt
-init|=
-name|imin
-argument_list|(
-name|QLTM_SENSELEN
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|atiop
-operator|->
-name|sense_data
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|atiop
-operator|->
-name|sense_len
-operator|=
-name|amt
-expr_stmt|;
-name|MEMCPY
-argument_list|(
-operator|&
-name|atiop
-operator|->
-name|sense_data
-argument_list|,
-name|aep
-operator|->
-name|at_sense
-argument_list|,
-name|amt
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
+comment|/* 	 * We don't get 'suggested' sense data as we do with SCSI cards. 	 */
 name|atiop
 operator|->
 name|sense_len
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|atiop
 operator|->
 name|init_id
@@ -5918,13 +6000,11 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG2
 argument_list|,
-literal|"ATIO2 RX_ID 0x%x CDB=0x%x iid%d->lun%d tattr 0x%x datalen %u"
+literal|"ATIO2[%x] CDB=0x%x iid%d->lun%d tattr 0x%x datalen %u"
 argument_list|,
 name|aep
 operator|->
 name|at_rxid
-operator|&
-literal|0xffff
 argument_list|,
 name|aep
 operator|->
@@ -6012,7 +6092,7 @@ operator|)
 name|arg
 operator|)
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6040,7 +6120,7 @@ operator|)
 name|arg
 operator|)
 operator|->
-name|ct_reserved
+name|ct_syshandle
 argument_list|)
 expr_stmt|;
 if|if
@@ -6108,7 +6188,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG2
 argument_list|,
-literal|"CTIO2 RX_ID 0x%x sts 0x%x flg 0x%x sns %d FIN"
+literal|"CTIO2[%x] sts 0x%x flg 0x%x sns %d FIN"
 argument_list|,
 name|ct
 operator|->
@@ -6715,13 +6795,13 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: isp_attach Async Code 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isp_cam_async: Code 0x%x"
 argument_list|,
 name|code
 argument_list|)
@@ -7071,13 +7151,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: watchdog timeout (%x, %x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"watchdog timeout (%x, %x)"
 argument_list|,
 name|handle
 argument_list|,
@@ -8167,9 +8247,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"XPT_CONT_TARGET_IO freeze simq\n"
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"XPT_CONT_TARGET_IO freeze simq"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9449,6 +9533,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
+comment|/* XXX: we don't support 2nd bus target mode yet */
+if|if
+condition|(
+name|cam_sim_bus
+argument_list|(
+name|sim
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|cpi
 operator|->
 name|target_sprt
@@ -9458,6 +9552,13 @@ operator||
 name|PIT_DISCONNECT
 operator||
 name|PIT_TERM_IO
+expr_stmt|;
+else|else
+name|cpi
+operator|->
+name|target_sprt
+operator|=
+literal|0
 expr_stmt|;
 else|#
 directive|else
@@ -10029,9 +10130,13 @@ operator|.
 name|path
 argument_list|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"cam completion status 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"cam completion status 0x%x"
 argument_list|,
 name|sccb
 operator|->
@@ -11784,9 +11889,12 @@ name|printf
 argument_list|(
 literal|"%s: "
 argument_list|,
+name|device_get_nameunit
+argument_list|(
 name|isp
 operator|->
-name|isp_name
+name|isp_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|va_start
