@@ -87,14 +87,6 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NSND
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -148,15 +140,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSND> 0 */
-end_comment
 
 begin_endif
 endif|#
