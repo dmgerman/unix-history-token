@@ -1,10 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|ISDEBUG
-end_define
-
 begin_comment
 comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  * */
 end_comment
@@ -26,6 +20,12 @@ name|NIS
 operator|>
 literal|0
 end_if
+
+begin_include
+include|#
+directive|include
+file|"bpfilter.h"
+end_include
 
 begin_include
 include|#
@@ -164,12 +164,6 @@ name|NBPFILTER
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"bpfilter.h"
-end_include
 
 begin_include
 include|#
