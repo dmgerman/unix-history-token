@@ -664,7 +664,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"ext2_balloc: ufs_bmaparray returned indirect block"
+literal|"ext2_balloc: ufs_getlbns returned indirect block"
 argument_list|)
 expr_stmt|;
 endif|#
