@@ -26,7 +26,7 @@ specifier|static
 name|int
 name|tigonFwReleaseFix
 init|=
-literal|0xc
+literal|0xf
 decl_stmt|;
 end_decl_stmt
 
@@ -34652,15 +34652,15 @@ literal|0x4f4e3a20
 block|,
 literal|0x23312054
 block|,
-literal|0x6875204a
+literal|0x68752041
 block|,
-literal|0x756c2031
+literal|0x75672031
 block|,
-literal|0x35203130
+literal|0x32203135
 block|,
-literal|0x3a32383a
+literal|0x3a34393a
 block|,
-literal|0x34312050
+literal|0x35332050
 block|,
 literal|0x44542031
 block|,
@@ -34674,11 +34674,11 @@ literal|0x4c455f54
 block|,
 literal|0x494d453a
 block|,
-literal|0x2031303a
+literal|0x2031353a
 block|,
-literal|0x32383a34
+literal|0x34393a35
 block|,
-literal|0x31000000
+literal|0x33000000
 block|,
 literal|0x46575f43
 block|,

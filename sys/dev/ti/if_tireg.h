@@ -399,7 +399,7 @@ begin_define
 define|#
 directive|define
 name|TI_FIRMWARE_FIX
-value|0xc
+value|0xf
 end_define
 
 begin_comment
