@@ -2560,11 +2560,19 @@ if|if
 condition|(
 name|db_active
 condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|db_error
 argument_list|(
 literal|"Context switches not allowed in the debugger."
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|#
