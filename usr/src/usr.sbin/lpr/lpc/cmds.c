@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.12 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3079,11 +3079,11 @@ operator|(
 name|enable
 operator|==
 literal|2
-operator|)
 condition|?
 literal|0666
 else|:
 literal|0677
+operator|)
 argument_list|)
 operator|<
 literal|0
