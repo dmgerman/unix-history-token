@@ -5109,7 +5109,7 @@ name|sysctl_hlt_cpus
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|""
+literal|"Bitmap of CPUs to halt.  101 (binary) will halt CPUs 0 and 2."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
