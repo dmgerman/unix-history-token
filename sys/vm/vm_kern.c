@@ -932,7 +932,7 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-comment|/* 		 * Note: if M_NOWAIT specified alone, allocate from  		 * interrupt-safe queues only (just the free list).  If  		 * M_ASLEEP or M_USE_RESERVE is also specified, we can also 		 * allocate from the cache.  Neither of the latter two 		 * flags may be specified from an interrupt since interrupts 		 * are not allowed to mess with the cache queue. 		 */
+comment|/* 		 * Note: if M_NOWAIT specified alone, allocate from  		 * interrupt-safe queues only (just the free list).  If  		 * M_USE_RESERVE is also specified, we can also 		 * allocate from the cache.  Neither of the latter two 		 * flags may be specified from an interrupt since interrupts 		 * are not allowed to mess with the cache queue. 		 */
 name|retry
 label|:
 name|m
@@ -954,8 +954,6 @@ name|flags
 operator|&
 operator|(
 name|M_NOWAIT
-operator||
-name|M_ASLEEP
 operator||
 name|M_USE_RESERVE
 operator|)
@@ -1020,16 +1018,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|M_ASLEEP
-condition|)
-block|{
-name|VM_AWAIT
-expr_stmt|;
-block|}
 goto|goto
 name|bad
 goto|;

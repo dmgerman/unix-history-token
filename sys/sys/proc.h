@@ -262,26 +262,6 @@ comment|/* No SIGCHLD when children stop. */
 end_comment
 
 begin_comment
-comment|/*  * pasleep structure, used by asleep() syscall to hold requested priority  * and timeout values for await().  */
-end_comment
-
-begin_struct
-struct|struct
-name|pasleep
-block|{
-name|int
-name|as_priority
-decl_stmt|;
-comment|/* Async priority. */
-name|int
-name|as_timo
-decl_stmt|;
-comment|/* Async timeout. */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * pargs, used to hold a copy of the command line, if it had a sane length.  */
 end_comment
 
@@ -805,11 +785,6 @@ modifier|*
 name|p_leader
 decl_stmt|;
 comment|/* (c) */
-name|struct
-name|pasleep
-name|p_asleep
-decl_stmt|;
-comment|/* (k) Used by asleep()/await(). */
 name|void
 modifier|*
 name|p_emuldata
