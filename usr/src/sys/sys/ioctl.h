@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.24	82/12/05	*/
+comment|/*	ioctl.h	4.25	82/12/13	*/
 end_comment
 
 begin_comment
@@ -517,334 +517,11 @@ begin_comment
 comment|/* get special characters */
 end_comment
 
-begin_comment
-comment|/* locals, from 127 down */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLBIS
-value|_IOW(t, 127, int)
-end_define
-
-begin_comment
-comment|/* bis local mode bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLBIC
-value|_IOW(t, 126, int)
-end_define
-
-begin_comment
-comment|/* bic local mode bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLSET
-value|_IOW(t, 125, int)
-end_define
-
-begin_comment
-comment|/* set entire local mode word */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCLGET
-value|_IOR(t, 124, int)
-end_define
-
-begin_comment
-comment|/* get local modes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSBRK
-value|_IO(t, 123)
-end_define
-
-begin_comment
-comment|/* set break bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCCBRK
-value|_IO(t, 122)
-end_define
-
-begin_comment
-comment|/* clear break bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSDTR
-value|_IO(t, 121)
-end_define
-
-begin_comment
-comment|/* set data terminal ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCCDTR
-value|_IO(t, 120)
-end_define
-
-begin_comment
-comment|/* clear data terminal ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCGPGRP
-value|_IOR(t, 119, int)
-end_define
-
-begin_comment
-comment|/* get pgrp of tty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSPGRP
-value|_IOW(t, 118, int)
-end_define
-
-begin_comment
-comment|/* set pgrp of tty */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSLTC
-value|_IOW(t,117,struct ltchars)
-end_define
-
-begin_comment
-comment|/* set local special chars */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCGLTC
-value|_IOR(t,116,struct ltchars)
-end_define
-
-begin_comment
-comment|/* get local special chars */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSTI
-value|_IOW(t, 114, char)
-end_define
-
-begin_comment
-comment|/* simulate terminal input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCNOTTY
-value|_IO(t, 113)
-end_define
-
-begin_comment
-comment|/* void tty association */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT
-value|_IOW(t, 112, int)
-end_define
-
-begin_comment
-comment|/* pty: set/clear packet mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_DATA
-value|0x00
-end_define
-
-begin_comment
-comment|/* data packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_FLUSHREAD
-value|0x01
-end_define
-
-begin_comment
-comment|/* flush packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_FLUSHWRITE
-value|0x02
-end_define
-
-begin_comment
-comment|/* flush packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_STOP
-value|0x04
-end_define
-
-begin_comment
-comment|/* stop output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_START
-value|0x08
-end_define
-
-begin_comment
-comment|/* start output */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_NOSTOP
-value|0x10
-end_define
-
-begin_comment
-comment|/* no more ^S, ^Q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCPKT_DOSTOP
-value|0x20
-end_define
-
-begin_comment
-comment|/* now do ^S ^Q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSTOP
-value|_IO(t, 111)
-end_define
-
-begin_comment
-comment|/* stop output, like ^S */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCSTART
-value|_IO(t, 110)
-end_define
-
-begin_comment
-comment|/* start output, like ^Q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMSET
-value|_IOW(t, 109, int)
-end_define
-
-begin_comment
-comment|/* set all modem bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMBIS
-value|_IOW(t, 108, int)
-end_define
-
-begin_comment
-comment|/* bis modem bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMBIC
-value|_IOW(t, 107, int)
-end_define
-
-begin_comment
-comment|/* bic modem bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCMGET
-value|_IOR(t, 106, int)
-end_define
-
-begin_comment
-comment|/* get all modem bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCREMOTE
-value|_IO(t, 105)
-end_define
-
-begin_comment
-comment|/* remote input editing */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|TIOCSET
-value|_IOW(t, 104, long)
+value|_IOW(t, 19, long)
 end_define
 
 begin_comment
@@ -855,7 +532,7 @@ begin_define
 define|#
 directive|define
 name|TIOCBIS
-value|_IOW(t, 103, long)
+value|_IOW(t, 20, long)
 end_define
 
 begin_comment
@@ -866,7 +543,7 @@ begin_define
 define|#
 directive|define
 name|TIOCBIC
-value|_IOW(t, 102, long)
+value|_IOW(t, 21, long)
 end_define
 
 begin_comment
@@ -877,7 +554,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGET
-value|_IOR(t, 101, long)
+value|_IOR(t, 22, long)
 end_define
 
 begin_comment
@@ -1182,9 +859,12 @@ name|BS1
 value|0x00008000
 end_define
 
-begin_comment
-comment|/* used to be local mode settings */
-end_comment
+begin_define
+define|#
+directive|define
+name|ALLDELAY
+value|(NLDELAY|TBDELAY|CRDELAY|VTDELAY|BSDELAY)
+end_define
 
 begin_define
 define|#
@@ -1357,9 +1037,456 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALLDELAY
-value|(NLDELAY|TBDELAY|CRDELAY|VTDELAY|BSDELAY)
+name|TIOCCSET
+value|_IOW(t,23,struct ttychars)
 end_define
+
+begin_comment
+comment|/* set special characters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCCGET
+value|_IOR(t,24,struct ttychars)
+end_define
+
+begin_comment
+comment|/* get special characters */
+end_comment
+
+begin_comment
+comment|/* locals, from 127 down */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOCOMPAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TIOCLBIS
+value|_IOW(t, 127, int)
+end_define
+
+begin_comment
+comment|/* bis local mode bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCLBIC
+value|_IOW(t, 126, int)
+end_define
+
+begin_comment
+comment|/* bic local mode bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCLSET
+value|_IOW(t, 125, int)
+end_define
+
+begin_comment
+comment|/* set entire local mode word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCLGET
+value|_IOR(t, 124, int)
+end_define
+
+begin_comment
+comment|/* get local modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCRTBS
+value|(CRTBS>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPRTERA
+value|(PRTERA>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCRTERA
+value|(CRTERA>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LTILDE
+value|(TILDE>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LMDMBUF
+value|(MDMBUF>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLITOUT
+value|(LITOUT>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LTOSTOP
+value|(TOSTOP>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LFLUSHO
+value|(FLUSHO>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LNOHANG
+value|(NOHANG>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCRTKIL
+value|(CRTKIL>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCTLECH
+value|(CTLECH>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPENDIN
+value|(PENDIN>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDECCTQ
+value|(DECCTQ>>16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LNOFLSH
+value|(NOFLSH>>16)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TIOCSBRK
+value|_IO(t, 123)
+end_define
+
+begin_comment
+comment|/* set break bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCCBRK
+value|_IO(t, 122)
+end_define
+
+begin_comment
+comment|/* clear break bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSDTR
+value|_IO(t, 121)
+end_define
+
+begin_comment
+comment|/* set data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCCDTR
+value|_IO(t, 120)
+end_define
+
+begin_comment
+comment|/* clear data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCGPGRP
+value|_IOR(t, 119, int)
+end_define
+
+begin_comment
+comment|/* get pgrp of tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSPGRP
+value|_IOW(t, 118, int)
+end_define
+
+begin_comment
+comment|/* set pgrp of tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSLTC
+value|_IOW(t,117,struct ltchars)
+end_define
+
+begin_comment
+comment|/* set local special chars */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCGLTC
+value|_IOR(t,116,struct ltchars)
+end_define
+
+begin_comment
+comment|/* get local special chars */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTI
+value|_IOW(t, 114, char)
+end_define
+
+begin_comment
+comment|/* simulate terminal input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCNOTTY
+value|_IO(t, 113)
+end_define
+
+begin_comment
+comment|/* void tty association */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT
+value|_IOW(t, 112, int)
+end_define
+
+begin_comment
+comment|/* pty: set/clear packet mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_DATA
+value|0x00
+end_define
+
+begin_comment
+comment|/* data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_FLUSHREAD
+value|0x01
+end_define
+
+begin_comment
+comment|/* flush packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_FLUSHWRITE
+value|0x02
+end_define
+
+begin_comment
+comment|/* flush packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_STOP
+value|0x04
+end_define
+
+begin_comment
+comment|/* stop output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_START
+value|0x08
+end_define
+
+begin_comment
+comment|/* start output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_NOSTOP
+value|0x10
+end_define
+
+begin_comment
+comment|/* no more ^S, ^Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCPKT_DOSTOP
+value|0x20
+end_define
+
+begin_comment
+comment|/* now do ^S ^Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTOP
+value|_IO(t, 111)
+end_define
+
+begin_comment
+comment|/* stop output, like ^S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSTART
+value|_IO(t, 110)
+end_define
+
+begin_comment
+comment|/* start output, like ^Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMSET
+value|_IOW(t, 109, int)
+end_define
+
+begin_comment
+comment|/* set all modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMBIS
+value|_IOW(t, 108, int)
+end_define
+
+begin_comment
+comment|/* bis modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMBIC
+value|_IOW(t, 107, int)
+end_define
+
+begin_comment
+comment|/* bic modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMGET
+value|_IOR(t, 106, int)
+end_define
+
+begin_comment
+comment|/* get all modem bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCREMOTE
+value|_IO(t, 105)
+end_define
+
+begin_comment
+comment|/* remote input editing */
+end_comment
 
 begin_define
 define|#
