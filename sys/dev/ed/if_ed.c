@@ -7851,9 +7851,16 @@ name|len
 operator|==
 literal|0
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 goto|goto
 name|outloop
 goto|;
+block|}
 block|}
 name|sc
 operator|->
