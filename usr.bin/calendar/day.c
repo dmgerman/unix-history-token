@@ -896,7 +896,7 @@ name|tp
 operator|->
 name|tm_wday
 operator|==
-literal|5
+name|Friday
 condition|?
 literal|3
 else|:

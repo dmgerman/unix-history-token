@@ -170,6 +170,18 @@ begin_comment
 comment|/* days before current date */
 end_comment
 
+begin_decl_stmt
+name|int
+name|Friday
+init|=
+literal|5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* day before weekend */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -211,7 +223,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-af:t:A:B:"
+literal|"-af:t:A:B:F:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -275,6 +287,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'W'
+case|:
+comment|/* we don't need no steenking Fridays */
+name|Friday
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 literal|'A'
 case|:
 comment|/* days after current date */
@@ -291,6 +313,17 @@ literal|'B'
 case|:
 comment|/* days before current date */
 name|f_dayBefore
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|Friday
 operator|=
 name|atoi
 argument_list|(
@@ -438,7 +471,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: calendar [-a] [-A days] [-B days] [-f calendarfile] [-t dd[.mm[.year]]]\n"
+literal|"usage: calendar [-a] [-A days] [-W days] [-F friday] [-B days]\n"
+literal|"\t[-f calendarfile] [-t dd[.mm[.year]]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
