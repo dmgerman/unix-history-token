@@ -2095,7 +2095,7 @@ name|uma_zalloc
 argument_list|(
 name|atm_attributes_zone
 argument_list|,
-literal|0
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if

@@ -410,11 +410,7 @@ argument_list|(
 name|Atm_attributes
 argument_list|)
 argument_list|,
-operator|(
-name|uma_ctor
-operator|)
-operator|&
-name|atm_uma_ctor
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -457,11 +453,7 @@ expr|struct
 name|stackq_entry
 argument_list|)
 argument_list|,
-operator|(
-name|uma_ctor
-operator|)
-operator|&
-name|atm_uma_ctor
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -1516,32 +1508,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Zero fill constructor for our uma_zone's.  */
-end_comment
-
-begin_function
-name|void
-name|atm_uma_ctor
-parameter_list|(
-name|void
-modifier|*
-name|mem
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-block|{
-name|bzero
-argument_list|(
-name|mem
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Handle timer tick expiration  *   * Decrement tick count in first block on timer queue.  If there  * are blocks with expired timers, call their timeout function.  * This function is called ATM_HZ times per second.  *  * Arguments:  *	arg	argument passed on timeout() call  *  * Returns:  *	none  *  */
 end_comment
 
@@ -2177,7 +2143,7 @@ name|uma_zalloc
 argument_list|(
 name|atm_stackq_zone
 argument_list|,
-literal|0
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
