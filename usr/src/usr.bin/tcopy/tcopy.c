@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.12 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,19 +191,13 @@ name|op
 init|=
 name|READ
 enum|;
+name|sig_t
+name|oldsig
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
 name|needeof
-decl_stmt|,
-name|intr
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|oldsig
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -216,6 +210,10 @@ modifier|*
 name|getspace
 argument_list|()
 decl_stmt|;
+name|void
+name|intr
+parameter_list|()
+function_decl|;
 name|guesslen
 operator|=
 literal|1
@@ -1222,12 +1220,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|intr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1282,7 +1278,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char

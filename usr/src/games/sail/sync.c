@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sync.c	5.4 (Berkeley) %G%"
+literal|"@(#)sync.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -698,18 +698,10 @@ end_macro
 
 begin_block
 block|{
-name|int
-argument_list|(
-operator|*
+name|sig_t
 name|sighup
-argument_list|)
-argument_list|()
 decl_stmt|,
-argument_list|(
-operator|*
 name|sigint
-argument_list|)
-argument_list|()
 decl_stmt|;
 specifier|register
 name|n

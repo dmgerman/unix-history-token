@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tc.c	4.3 (Berkeley) %G%"
+literal|"@(#)tc.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,25 +473,13 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|sigint
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+decl_stmt|,
 name|sigquit
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -519,12 +507,11 @@ name|char
 modifier|*
 name|k
 decl_stmt|;
-extern|extern ex(
-block|)
-function|;
-end_function
-
-begin_while
+specifier|extern
+name|void
+name|ex
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 operator|(
@@ -665,9 +652,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-end_while
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -709,9 +693,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|sigint
 operator|=
 name|signal
@@ -721,9 +702,6 @@ argument_list|,
 name|ex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sigquit
 operator|=
 name|signal
@@ -733,9 +711,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|(
@@ -1407,24 +1382,25 @@ block|}
 continue|continue;
 block|}
 block|}
-end_while
-
-begin_expr_stmt
 name|ex
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_expr_stmt
-unit|} lig
-operator|(
-name|x
-operator|)
+begin_macro
+name|lig
+argument_list|(
+argument|x
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|x
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1568,12 +1544,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|ex
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|yy
 operator|=
@@ -1612,7 +1586,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|kwait

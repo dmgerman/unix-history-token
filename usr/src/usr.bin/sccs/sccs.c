@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sccs.c	5.7 (Berkeley) %G%"
+literal|"@(#)sccs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4858,13 +4858,9 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|osig
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
