@@ -1172,6 +1172,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|g_wither_geom
+parameter_list|(
+name|struct
+name|g_geom
+modifier|*
+name|gp
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* geom_io.c */
 end_comment
