@@ -99,13 +99,6 @@ directive|include
 file|<machine/limits.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|4
-end_define
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -176,7 +169,7 @@ comment|/* name */
 literal|"g_dev"
 block|,
 comment|/* maj */
-name|CDEV_MAJOR
+name|GEOM_MAJOR
 block|,
 comment|/* dump */
 name|nodump
@@ -473,6 +466,8 @@ decl_stmt|;
 specifier|static
 name|int
 name|unit
+init|=
+name|GEOM_MINOR_PROVIDERS
 decl_stmt|;
 name|int
 name|error
