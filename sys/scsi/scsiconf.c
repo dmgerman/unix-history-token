@@ -5679,6 +5679,10 @@ name|version
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|type
+operator|=
+name|T_UNKNOWN
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
