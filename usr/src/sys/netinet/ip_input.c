@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.45	82/06/20	*/
+comment|/*	ip_input.c	1.46	82/07/24	*/
 end_comment
 
 begin_include
@@ -2103,6 +2103,9 @@ break|break;
 comment|/* 		 * Source routing with record. 		 * Find interface with current destination address. 		 * If none on this machine then drop if strictly routed, 		 * or do nothing if loosely routed. 		 * Record interface address and bring up next address 		 * component.  If strictly routed make sure next 		 * address on directly accessible net. 		 */
 case|case
 name|IPOPT_LSRR
+case|:
+case|case
+name|IPOPT_SSRR
 case|:
 if|if
 condition|(
