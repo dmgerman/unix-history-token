@@ -3520,8 +3520,6 @@ expr_stmt|;
 if|if
 condition|(
 name|bootverbose
-operator|||
-literal|1
 condition|)
 block|{
 name|printf
@@ -3778,8 +3776,6 @@ decl_stmt|;
 if|if
 condition|(
 name|bootverbose
-operator|||
-literal|1
 condition|)
 block|{
 name|printf
@@ -3968,8 +3964,6 @@ block|}
 if|if
 condition|(
 name|bootverbose
-operator|||
-literal|1
 condition|)
 block|{
 name|printf
@@ -4181,8 +4175,6 @@ block|}
 if|if
 condition|(
 name|bootverbose
-operator|||
-literal|1
 condition|)
 block|{
 name|printf
@@ -4426,8 +4418,6 @@ expr_stmt|;
 if|if
 condition|(
 name|bootverbose
-operator|||
-literal|1
 condition|)
 block|{
 name|printf
