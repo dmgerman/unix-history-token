@@ -3740,6 +3740,12 @@ name|inp_ppcb
 operator|=
 name|NULL
 expr_stmt|;
+name|tp
+operator|->
+name|t_inpcb
+operator|=
+name|NULL
+expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
