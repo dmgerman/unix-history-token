@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_temp.c	7.6 (Berkeley) %G%"
+literal|"@(#)ex_temp.c	7.6.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -850,23 +850,6 @@ name|bno
 decl_stmt|,
 name|off
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CRYPT
-specifier|register
-name|char
-modifier|*
-name|p1
-decl_stmt|,
-modifier|*
-name|p2
-decl_stmt|;
-specifier|register
-name|int
-name|n
-decl_stmt|;
-endif|#
-directive|endif
 name|bno
 operator|=
 operator|(
