@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c	5.2 (Berkeley) %G%"
+literal|"@(#)asparse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2366,6 +2366,26 @@ operator|->
 name|s_ptype
 condition|)
 block|{
+case|case
+name|N_LCSYM
+case|:
+name|stpt
+operator|->
+name|s_dest
+operator|=
+operator|(
+expr|struct
+name|symtab
+operator|*
+operator|)
+name|exprisname
+expr_stmt|;
+name|stpt
+operator|->
+name|s_type
+operator||=
+name|STABFLAG
+expr_stmt|;
 case|case
 name|N_GSYM
 case|:
