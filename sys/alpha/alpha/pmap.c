@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.4 1998/07/15 20:07:33 dfr Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.5 1998/07/24 09:43:27 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -237,15 +237,9 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
-name|PMAP_DEBUG_VA
-parameter_list|(
-name|va
-parameter_list|)
-value|if ((va) == 0x120058000) pmap_break(); else
-end_define
+begin_comment
+comment|/* #define PMAP_DEBUG_VA(va) if ((va) == 0x120058000) pmap_break(); else */
+end_comment
 
 begin_endif
 endif|#
@@ -6485,8 +6479,6 @@ argument_list|(
 name|va
 operator|+
 name|ALPHA_L1SIZE
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -6526,8 +6518,6 @@ argument_list|(
 name|va
 operator|+
 name|ALPHA_L2SIZE
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -9943,6 +9933,41 @@ operator|~
 name|PV_TABLE_MOD
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  *	pmap_page_is_free:  *  *	Called when a page is freed to allow pmap to clean up  *	any extra state associated with the page.  In this case  *	clear modified/referenced bits.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_page_is_free
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|pv_table_t
+modifier|*
+name|ppv
+decl_stmt|;
+name|ppv
+operator|=
+name|pa_to_pvh
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ppv
+operator|->
+name|pv_flags
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
