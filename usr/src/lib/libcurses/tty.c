@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.12 (Berkeley) %G%"
+literal|"@(#)tty.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,6 +694,8 @@ operator|->
 name|maxy
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
