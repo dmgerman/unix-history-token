@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.c	7.11 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.c	7.12 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -43,19 +43,11 @@ directive|include
 file|<vm/vm_kern.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"swappager.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSWAPPAGER
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SWAPPAGER
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -65,31 +57,16 @@ name|swappagerops
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|swappagerops_p
-value|&swappagerops
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"vnodepager.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NVNODEPAGER
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VNODEPAGER
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -99,31 +76,16 @@ name|vnodepagerops
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|vnodepagerops_p
-value|&vnodepagerops
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"devpager.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NDEVPAGER
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVPAGER
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -132,13 +94,6 @@ name|pagerops
 name|devicepagerops
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|devicepagerops_p
-value|&devicepagerops
-end_define
 
 begin_endif
 endif|#
@@ -153,32 +108,29 @@ name|pagertab
 index|[]
 init|=
 block|{
-if|#
-directive|if
-name|NSWAPPAGER
-operator|>
-literal|0
-name|swappagerops_p
+ifdef|#
+directive|ifdef
+name|SWAPPAGER
+operator|&
+name|swappagerops
 block|,
 comment|/* PG_SWAP */
 endif|#
 directive|endif
-if|#
-directive|if
-name|NVNODEPAGER
-operator|>
-literal|0
-name|vnodepagerops_p
+ifdef|#
+directive|ifdef
+name|VNODEPAGER
+operator|&
+name|vnodepagerops
 block|,
 comment|/* PG_VNODE */
 endif|#
 directive|endif
-if|#
-directive|if
-name|NDEVPAGER
-operator|>
-literal|0
-name|devicepagerops_p
+ifdef|#
+directive|ifdef
+name|DEVPAGER
+operator|&
+name|devicepagerops
 block|,
 comment|/* PG_DEV */
 endif|#
