@@ -1317,6 +1317,23 @@ expr_stmt|;
 comment|/* Take care of trivial cases first. */
 if|if
 condition|(
+name|string
+operator|==
+literal|0
+operator|||
+operator|*
+name|string
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 operator|!
 name|history_length
 operator|||
