@@ -3209,7 +3209,25 @@ operator|+=
 name|count
 expr_stmt|;
 comment|/* do the input */
+if|if
+condition|(
+name|dp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
 name|VOP_SPECSTRATEGY
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+else|else
+name|VOP_STRATEGY
 argument_list|(
 name|bp
 operator|->
