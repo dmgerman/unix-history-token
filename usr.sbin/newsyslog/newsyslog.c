@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.2 1996/01/09 08:40:08 graichen Exp $"
+literal|"$Id: newsyslog.c,v 1.3 1996/01/16 10:32:04 graichen Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1196,6 +1196,8 @@ name|struct
 name|conf_entry
 modifier|*
 name|working
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|passwd
