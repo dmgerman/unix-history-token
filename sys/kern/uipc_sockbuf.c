@@ -1500,8 +1500,14 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|(
+name|u_quad_t
+operator|)
 name|cc
 operator|>
+operator|(
+name|u_quad_t
+operator|)
 name|sb_max
 operator|*
 name|MCLBYTES
