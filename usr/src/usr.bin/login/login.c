@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.26 (Berkeley) 83/05/23"
+literal|"@(#)login.c	4.27 (Berkeley) 83/05/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,23 +2034,8 @@ modifier|*
 name|namep
 decl_stmt|;
 name|char
-name|hostname
-index|[
-literal|32
-index|]
-decl_stmt|,
 name|c
 decl_stmt|;
-name|gethostname
-argument_list|(
-name|hostname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hostname
-argument_list|)
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|up
@@ -2071,9 +2056,7 @@ name|ut_name
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s login: "
-argument_list|,
-name|hostname
+literal|"login: "
 argument_list|)
 expr_stmt|;
 while|while
