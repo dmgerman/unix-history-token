@@ -225,6 +225,16 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pdev
+operator|->
+name|si_devsw
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* Probably a unit we don't have */
 name|s
 operator|=
 name|dkslice
