@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.5	86/01/26	*/
+comment|/*	cy.c	1.6	86/01/27	*/
 end_comment
 
 begin_include
@@ -3376,7 +3376,7 @@ argument_list|(
 name|cy
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If last command was a rewind or file mark search, and 	 * tape is still moving, wait for the operation to complete. 	 */
+comment|/* 	 * If last command was a rewind and tape is 	 * still moving, wait for the operation to complete. 	 */
 if|if
 condition|(
 name|vm
@@ -3676,16 +3676,14 @@ name|opcont
 goto|;
 block|}
 comment|/* 		 * If error is not hard, and this was an i/o operation 		 * retry up to 8 times. 		 */
-name|err
-operator|=
-literal|1
-operator|<<
-name|err
-expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
+literal|1
+operator|<<
 name|err
+operator|)
 operator|&
 name|CYER_SOFT
 operator|)
