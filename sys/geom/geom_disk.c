@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -1297,7 +1291,7 @@ name|dkmakeminor
 argument_list|(
 name|unit
 argument_list|,
-name|WHOLE_DISK_SLICE
+literal|1
 argument_list|,
 name|RAW_PART
 argument_list|)
