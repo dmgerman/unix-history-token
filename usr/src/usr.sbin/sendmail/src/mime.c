@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.25 (Berkeley) %G%"
+literal|"@(#)mime.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1495,7 +1495,7 @@ return|return
 name|bt
 return|;
 block|}
-comment|/* 	**  Message/* types -- recurse exactly once. 	*/
+comment|/* 	**  Message/* types -- recurse exactly once. 	** 	**	Class 'm' is predefined to have "rfc822" only. 	*/
 if|if
 condition|(
 name|strcasecmp
@@ -1510,14 +1510,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+operator|!
+name|wordinclass
 argument_list|(
 name|subtype
 argument_list|,
-literal|"rfc822"
+literal|'m'
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|flags

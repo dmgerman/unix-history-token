@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.131 (Berkeley) %G%"
+literal|"@(#)main.c	8.132 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3663,6 +3663,14 @@ argument_list|(
 literal|'n'
 argument_list|,
 literal|"multipart/signed"
+argument_list|)
+expr_stmt|;
+comment|/* MIME message/* subtypes that can be treated as messages */
+name|setclass
+argument_list|(
+literal|'m'
+argument_list|,
+literal|"rfc822"
 argument_list|)
 expr_stmt|;
 comment|/* MIME Content-Transfer-Encodings that can be encoded */
