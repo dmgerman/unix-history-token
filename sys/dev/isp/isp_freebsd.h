@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|0
+value|1
 end_define
 
 begin_include
@@ -558,7 +558,7 @@ name|XS_CDBP
 parameter_list|(
 name|xs
 parameter_list|)
-value|(xs)->cmd
+value|((caddr_t) (xs)->cmd)
 end_define
 
 begin_define
