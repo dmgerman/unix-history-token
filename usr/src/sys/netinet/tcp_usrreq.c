@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.49 82/01/18 */
+comment|/* tcp_usrreq.c 1.50 82/02/19 */
 end_comment
 
 begin_include
@@ -1112,7 +1112,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * User issued close, and wish to trail through shutdown states:  * if never received SYN, just forget it.  If got a SYN from peer,  * but haven't sent FIN, then go to FIN_WAIT_1 state to send peer a FIN.  * If already got a FIN from peer, then almost done; go to LAST_ACK  * state.  In all other cases, have already sent FIN to peer (e.g.  * after PRU_SHUTDOWN), and just have to play tedious game waiting  * for peer to send FIN or not respond to keep-alives, etc.  */
+comment|/*  * User issued close, and wish to trail through shutdown states:  * if never received SYN, just forget it.  If got a SYN from peer,  * but haven't sent FIN, then go to FIN_WAIT_1 state to send peer a FIN.  * If already got a FIN from peer, then almost done; go to LAST_ACK  * state.  In all other cases, have already sent FIN to peer (e.g.  * after PRU_SHUTDOWN), and just have to play tedious game waiting  * for peer to send FIN or not respond to keep-alives, etc.  * We can let the user exit from the close as soon as the FIN is acked.  */
 end_comment
 
 begin_macro
@@ -1181,6 +1181,23 @@ name|TCPS_LAST_ACK
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|>=
+name|TCPS_FIN_WAIT_2
+condition|)
+name|soisdisconnected
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_socket
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
