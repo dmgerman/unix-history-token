@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.52 1998/04/15 17:45:26 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.53 1998/06/07 17:10:39 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -129,12 +129,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -273,11 +267,22 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/icu.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
