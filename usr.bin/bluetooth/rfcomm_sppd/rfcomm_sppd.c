@@ -1269,8 +1269,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|slash
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|group
@@ -1346,7 +1344,7 @@ index|[
 literal|1
 index|]
 operator|==
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|syslog
