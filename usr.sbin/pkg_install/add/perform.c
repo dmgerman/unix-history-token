@@ -1722,9 +1722,9 @@ operator|->
 name|name
 else|:
 literal|"/"
-argument_list|)
-operator|,
+argument_list|,
 name|_PATH_DEVNULL
+argument_list|)
 condition|)
 name|warnx
 argument_list|(
