@@ -324,7 +324,7 @@ value|0xc8
 end_define
 
 begin_comment
-comment|/*  * Config offsets for VIA AGP chipsets.  */
+comment|/*  * Config offsets for VIA AGP 2.x chipsets.  */
 end_comment
 
 begin_define
@@ -346,6 +346,31 @@ define|#
 directive|define
 name|AGP_VIA_ATTBASE
 value|0x88
+end_define
+
+begin_comment
+comment|/*  * Config offsets for VIA AGP 3.0 chipsets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP3_VIA_GARTCTRL
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP3_VIA_APSIZE
+value|0x94
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP3_VIA_ATTBASE
+value|0x98
 end_define
 
 begin_comment
