@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wc.c	5.8 (Berkeley) %G%"
+literal|"@(#)wc.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,7 +657,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %7lu"
+literal|" %7qu"
 argument_list|,
 name|sb
 operator|.
