@@ -480,28 +480,6 @@ parameter_list|)
 value|mtx_unlock(&(object)->mtx)
 end_define
 
-begin_define
-define|#
-directive|define
-name|vm_object_lock
-parameter_list|(
-name|object
-parameter_list|)
-define|\
-value|mtx_lock((object) == kmem_object ?&kmem_object->mtx :&Giant)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_object_unlock
-parameter_list|(
-name|object
-parameter_list|)
-define|\
-value|mtx_unlock((object) == kmem_object ?&kmem_object->mtx :&Giant)
-end_define
-
 begin_function_decl
 name|void
 name|vm_object_set_flag
