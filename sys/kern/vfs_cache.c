@@ -668,6 +668,32 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_OPAQUE
+argument_list|(
+name|_vfs_cache
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nchstats
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nchstats
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nchstats
+argument_list|)
+argument_list|,
+literal|"LU"
+argument_list|,
+literal|"VFS cache effectiveness statistics"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|void
