@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ansidecl.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"version.h"
 end_include
 
@@ -25,7 +19,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"3.3.3 [FreeBSD] 20031106"
+literal|"3.4.2 [FreeBSD] 20040728"
 decl_stmt|;
 end_decl_stmt
 
