@@ -303,7 +303,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HTabdlmpqrstu"
+literal|"HTmqsu"
 argument_list|)
 operator|)
 operator|!=
