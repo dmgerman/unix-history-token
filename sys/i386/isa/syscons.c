@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Heavily modified by Søren Schmidt (sos@kmd-ac.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2d 930908  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  */
+comment|/*  * Heavily modified by Søren Schmidt (sos@login.dkuug.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2e 930924  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  */
 end_comment
 
 begin_define
@@ -1829,13 +1829,13 @@ name|MONO_BASE
 condition|)
 name|printf
 argument_list|(
-literal|" VGA mono"
+literal|"VGA mono"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" VGA color"
+literal|"VGA color"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1847,13 +1847,13 @@ name|MONO_BASE
 condition|)
 name|printf
 argument_list|(
-literal|" MDA/hercules"
+literal|"MDA/hercules"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" CGA/EGA"
+literal|"CGA/EGA"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2746,6 +2746,19 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
+name|cur_pccons
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
 name|pcconsoftc
 operator|.
 name|cs_flags
@@ -2902,6 +2915,8 @@ end_macro
 begin_block
 block|{
 name|int
+name|i
+decl_stmt|,
 name|error
 decl_stmt|;
 name|struct
@@ -3581,18 +3596,50 @@ comment|/* NOT REACHED */
 case|case
 name|VT_OPENQRY
 case|:
-comment|/* return free virtual cons, allways current */
+comment|/* return free virtual console */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NCONS
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+operator|(
+name|pccons
+index|[
+name|i
+index|]
+operator|.
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+condition|)
+block|{
 operator|*
 name|data
 operator|=
-name|get_scr_num
-argument_list|(
-name|scp
-argument_list|)
+name|i
+operator|+
+literal|1
 expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+return|return
+name|EINVAL
+return|;
+comment|/* NOT REACHED */
 case|case
 name|VT_ACTIVATE
 case|:
