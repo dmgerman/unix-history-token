@@ -937,7 +937,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|bktr
 argument_list|,
@@ -946,8 +946,6 @@ argument_list|,
 name|bktr_driver
 argument_list|,
 name|bktr_devclass
-argument_list|,
-name|bktr_cdevsw
 argument_list|,
 literal|0
 argument_list|,
