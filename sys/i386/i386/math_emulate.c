@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.25 1997/07/20 08:46:19 bde Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.26 1997/07/20 11:00:32 bde Exp $  */
 end_comment
 
 begin_comment
@@ -231,12 +231,10 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|u_int32_t
 name|get_fs_long
 parameter_list|(
-name|unsigned
-name|long
+name|u_int32_t
 modifier|*
 name|adr
 parameter_list|)
@@ -314,8 +312,7 @@ parameter_list|(
 name|u_long
 name|val
 parameter_list|,
-name|unsigned
-name|long
+name|u_int32_t
 modifier|*
 name|adr
 parameter_list|)
@@ -355,7 +352,7 @@ name|char
 modifier|*
 name|address
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|oldeip
 decl_stmt|;
 comment|/* ever used fp? */
@@ -470,6 +467,9 @@ name|info
 operator|->
 name|tf_cs
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|oldeip
 argument_list|)
 expr_stmt|;
@@ -2452,7 +2452,7 @@ control|)
 block|{
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -2465,8 +2465,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|address
@@ -2551,7 +2550,7 @@ name|put_fs_long
 argument_list|(
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -2562,8 +2561,7 @@ name|code
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|address
@@ -2780,7 +2778,7 @@ control|)
 block|{
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -2793,8 +2791,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|address
@@ -2841,7 +2838,7 @@ name|put_fs_long
 argument_list|(
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -2852,8 +2849,7 @@ name|code
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|address
@@ -3477,8 +3473,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_int32_t
 name|tmp
 decl_stmt|;
 name|tmp
@@ -3518,8 +3513,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|u_int32_t
 name|tmp
 decl_stmt|;
 name|tmp
@@ -3700,7 +3694,7 @@ name|index
 decl_stmt|,
 name|base
 decl_stmt|;
-name|long
+name|int32_t
 name|offset
 init|=
 literal|0
@@ -3830,8 +3824,7 @@ operator|)
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|info
@@ -3890,7 +3883,7 @@ name|mod
 decl_stmt|,
 name|rm
 decl_stmt|;
-name|long
+name|int32_t
 modifier|*
 name|tmp
 decl_stmt|;
@@ -3948,8 +3941,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|info
@@ -3986,7 +3978,7 @@ block|}
 name|tmp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -4045,8 +4037,7 @@ operator|)
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|info
@@ -4156,8 +4147,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4216,8 +4206,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4232,8 +4221,7 @@ argument_list|(
 literal|1
 operator|+
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4289,8 +4277,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4305,8 +4292,7 @@ argument_list|(
 literal|1
 operator|+
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4466,8 +4452,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4555,8 +4540,7 @@ operator|=
 name|get_fs_long
 argument_list|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4571,8 +4555,7 @@ argument_list|(
 literal|1
 operator|+
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4629,7 +4612,7 @@ parameter_list|,
 name|high
 parameter_list|)
 define|\
-value|__asm__("addl %4,%0 ; adcl $0,%1":"=r" (low),"=r" (high) \ :"0" (low),"1" (high),"r" ((unsigned long) (val)))
+value|__asm__("addl %4,%0 ; adcl $0,%1":"=r" (low),"=r" (high) \ :"0" (low),"1" (high),"r" ((u_int32_t) (val)))
 end_define
 
 begin_function
@@ -4840,8 +4823,7 @@ argument_list|(
 name|sr
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4902,8 +4884,7 @@ operator|.
 name|a
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4918,8 +4899,7 @@ argument_list|,
 literal|1
 operator|+
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4969,8 +4949,7 @@ operator|->
 name|a
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -4985,8 +4964,7 @@ argument_list|,
 literal|1
 operator|+
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -5153,8 +5131,7 @@ operator|.
 name|a
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -5222,8 +5199,7 @@ operator|.
 name|a
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -5238,8 +5214,7 @@ argument_list|,
 literal|1
 operator|+
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 name|addr
@@ -5422,7 +5397,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-asm|__asm__("movl (%0),%%eax ; addl %%eax,(%0)\n\t" 		"movl 4(%0),%%eax ; adcl %%eax,4(%0)\n\t" 		"movl 8(%0),%%eax ; adcl %%eax,8(%0)\n\t" 		"movl 12(%0),%%eax ; adcl %%eax,12(%0)" 		::"r" ((long) c):"ax");
+asm|__asm__("movl (%0),%%eax ; addl %%eax,(%0)\n\t" 		"movl 4(%0),%%eax ; adcl %%eax,4(%0)\n\t" 		"movl 8(%0),%%eax ; adcl %%eax,8(%0)\n\t" 		"movl 12(%0),%%eax ; adcl %%eax,12(%0)" 		::"r" (c):"ax");
 block|}
 end_function
 
@@ -5446,7 +5421,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-asm|__asm__("movl (%0),%%eax\n\t" 		"mull (%1)\n\t" 		"movl %%eax,(%2)\n\t" 		"movl %%edx,4(%2)\n\t" 		"movl 4(%0),%%eax\n\t" 		"mull 4(%1)\n\t" 		"movl %%eax,8(%2)\n\t" 		"movl %%edx,12(%2)\n\t" 		"movl (%0),%%eax\n\t" 		"mull 4(%1)\n\t" 		"addl %%eax,4(%2)\n\t" 		"adcl %%edx,8(%2)\n\t" 		"adcl $0,12(%2)\n\t" 		"movl 4(%0),%%eax\n\t" 		"mull (%1)\n\t" 		"addl %%eax,4(%2)\n\t" 		"adcl %%edx,8(%2)\n\t" 		"adcl $0,12(%2)" 		::"S" ((long) a),"c" ((long) b),"D" ((long) c) 		:"ax","dx");
+asm|__asm__("movl (%0),%%eax\n\t" 		"mull (%1)\n\t" 		"movl %%eax,(%2)\n\t" 		"movl %%edx,4(%2)\n\t" 		"movl 4(%0),%%eax\n\t" 		"mull 4(%1)\n\t" 		"movl %%eax,8(%2)\n\t" 		"movl %%edx,12(%2)\n\t" 		"movl (%0),%%eax\n\t" 		"mull 4(%1)\n\t" 		"addl %%eax,4(%2)\n\t" 		"adcl %%edx,8(%2)\n\t" 		"adcl $0,12(%2)\n\t" 		"movl 4(%0),%%eax\n\t" 		"mull (%1)\n\t" 		"addl %%eax,4(%2)\n\t" 		"adcl %%edx,8(%2)\n\t" 		"adcl $0,12(%2)" 		::"S" (a),"c" (b),"D" (c) 		:"ax","dx");
 block|}
 end_function
 
@@ -5670,7 +5645,7 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|("movl (%0),%%eax ; addl %%eax,(%0)\n\t" 		"movl 4(%0),%%eax ; adcl %%eax,4(%0)\n\t" 		"movl 8(%0),%%eax ; adcl %%eax,8(%0)\n\t" 		"movl 12(%0),%%eax ; adcl %%eax,12(%0)" 		::"r" ((long) c):"ax");
+asm|("movl (%0),%%eax ; addl %%eax,(%0)\n\t" 		"movl 4(%0),%%eax ; adcl %%eax,4(%0)\n\t" 		"movl 8(%0),%%eax ; adcl %%eax,8(%0)\n\t" 		"movl 12(%0),%%eax ; adcl %%eax,12(%0)" 		::"r" (c):"ax");
 block|}
 end_function
 
@@ -5684,7 +5659,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-asm|__asm__("shrl $1,12(%0) ; rcrl $1,8(%0) ; rcrl $1,4(%0) ; rcrl $1,(%0)" 		::"r" ((long) c));
+asm|__asm__("shrl $1,12(%0) ; rcrl $1,8(%0) ; rcrl $1,4(%0) ; rcrl $1,(%0)" 		::"r" (c));
 block|}
 end_function
 
@@ -5707,7 +5682,7 @@ name|ok
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("movl (%1),%%eax ; subl %%eax,(%2)\n\t" 		"movl 4(%1),%%eax ; sbbl %%eax,4(%2)\n\t" 		"movl 8(%1),%%eax ; sbbl %%eax,8(%2)\n\t" 		"movl 12(%1),%%eax ; sbbl %%eax,12(%2)\n\t" 		"setae %%al":"=a" (ok):"c" ((long) a),"d" ((long) b));
+asm|("movl (%1),%%eax ; subl %%eax,(%2)\n\t" 		"movl 4(%1),%%eax ; sbbl %%eax,4(%2)\n\t" 		"movl 8(%1),%%eax ; sbbl %%eax,8(%2)\n\t" 		"movl 12(%1),%%eax ; sbbl %%eax,12(%2)\n\t" 		"setae %%al":"=a" (ok):"c" (a),"d" (b));
 return|return
 name|ok
 return|;
@@ -6984,8 +6959,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|unsigned
-name|long
+name|u_int32_t
 operator|)
 name|a
 operator|->
@@ -7057,7 +7031,7 @@ operator|(
 operator|(
 operator|(
 operator|(
-name|long
+name|int32_t
 operator|)
 name|a
 operator|->
@@ -7244,7 +7218,7 @@ operator|(
 literal|0x7fff
 operator|&
 operator|(
-name|long
+name|int32_t
 operator|)
 name|a
 operator|->
@@ -7419,8 +7393,7 @@ operator|&
 literal|0x7fff
 operator|)
 decl_stmt|;
-name|unsigned
-name|long
+name|u_int32_t
 name|underflow
 decl_stmt|;
 if|if
@@ -7769,8 +7742,7 @@ operator|&
 literal|0x7fff
 operator|)
 decl_stmt|;
-name|unsigned
-name|long
+name|u_int32_t
 name|underflow
 decl_stmt|;
 name|b

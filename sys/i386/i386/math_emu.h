@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/include/linux/math_emu.h  *  * (C) 1991 Linus Torvalds  *  *	$Id$  */
+comment|/*  * linux/include/linux/math_emu.h  *  * (C) 1991 Linus Torvalds  *  *	$Id: math_emu.h,v 1.5 1997/02/22 09:32:27 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,14 +20,14 @@ comment|/*#define math_abort(x,y) \ (((volatile void (*)(struct info *,unsigned 
 end_comment
 
 begin_comment
-comment|/*  * Gcc forces this stupid alignment problem: I want to use only two longs  * for the temporary real 64-bit mantissa, but then gcc aligns out the  * structure to 12 bytes which breaks things in math_emulate.c. Shit. I  * want some kind of "no-alignt" pragma or something.  */
+comment|/*  * Gcc forces this stupid alignment problem: I want to use only two int32_t's  * for the temporary real 64-bit mantissa, but then gcc aligns out the  * structure to 12 bytes which breaks things in math_emulate.c. Shit. I  * want some kind of "no-alignt" pragma or something.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|long
+name|int32_t
 name|a
 decl_stmt|,
 name|b
@@ -78,7 +78,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|long
+name|int32_t
 name|a
 decl_stmt|,
 name|b
@@ -90,7 +90,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
+name|int32_t
 name|short_real
 typedef|;
 end_typedef
@@ -99,7 +99,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|long
+name|int32_t
 name|a
 decl_stmt|,
 name|b
@@ -194,28 +194,28 @@ begin_struct
 struct|struct
 name|i387_struct
 block|{
-name|long
+name|int32_t
 name|cwd
 decl_stmt|;
-name|long
+name|int32_t
 name|swd
 decl_stmt|;
-name|long
+name|int32_t
 name|twd
 decl_stmt|;
-name|long
+name|int32_t
 name|fip
 decl_stmt|;
-name|long
+name|int32_t
 name|fcs
 decl_stmt|;
-name|long
+name|int32_t
 name|foo
 decl_stmt|;
-name|long
+name|int32_t
 name|fos
 decl_stmt|;
-name|long
+name|int32_t
 name|st_space
 index|[
 literal|20
