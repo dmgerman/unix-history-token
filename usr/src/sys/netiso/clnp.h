@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp.h,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)clnp.h	7.2 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -109,8 +113,7 @@ name|IS_CLUSTER
 parameter_list|(
 name|m
 parameter_list|)
-define|\
-value|((m)->m_off> MMAXOFF)
+value|((m)->m_flags& M_EXT)
 end_define
 
 begin_comment
