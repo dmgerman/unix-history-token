@@ -14,7 +14,7 @@ end_ifdef
 begin_warning
 warning|#
 directive|warning
-literal|"obsolete option CHILD_MAX - rename it to PROC0_RLIMIT_NPROC"
+literal|"obsolete option CHILD_MAX - use /etc/login.conf"
 end_warning
 
 begin_endif
@@ -25,7 +25,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GATEWAY
+name|EXTRAVNODES
 end_ifdef
 
 begin_warning
@@ -65,7 +65,7 @@ end_ifdef
 begin_warning
 warning|#
 directive|warning
-literal|"obsolete option OPEN_MAX - rename it to PROC0_RLIMIT_NOFILE"
+literal|"obsolete option OPEN_MAX - use /etc/login.conf"
 end_warning
 
 begin_endif
