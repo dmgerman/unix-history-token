@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	6.4	84/08/29	*/
+comment|/*	raw_ip.c	6.5	85/06/02	*/
 end_comment
 
 begin_include
@@ -371,11 +371,11 @@ name|ip
 operator|->
 name|ip_p
 operator|=
-name|so
+name|rp
 operator|->
-name|so_proto
-operator|->
-name|pr_protocol
+name|rcb_proto
+operator|.
+name|sp_protocol
 expr_stmt|;
 name|ip
 operator|->
