@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated automatically from configure.ac by autoheader
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.138 2002/06/12 16:57:15 mouring Exp $ */
+comment|/* $Id: acconfig.h,v 1.141 2002/06/25 22:35:16 tim Exp $ */
 end_comment
 
 begin_comment
@@ -736,17 +736,6 @@ value|"/usr/X11R6/bin/xauth"
 end_define
 
 begin_comment
-comment|/* Define if rsh is found in your path */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RSH_PATH
-value|"/usr/bin/rsh"
-end_define
-
-begin_comment
 comment|/* Define if you want to allow MD5 passwords */
 end_comment
 
@@ -1177,6 +1166,25 @@ end_comment
 
 begin_comment
 comment|/* #undef PRIVSEP_PATH */
+end_comment
+
+begin_comment
+comment|/* Define if you have the `mmap' function that supports MAP_ANON|SHARED */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MMAP_ANON_SHARED
+value|1
+end_define
+
+begin_comment
+comment|/* Define if sendmsg()/recvmsg() has problems passing file descriptors */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_FD_PASSING */
 end_comment
 
 begin_comment
