@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv_tab.c	5.2 (Berkeley) %G%"
+literal|"@(#)conv_tab.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4151,9 +4151,9 @@ literal|0255
 block|,
 literal|0340
 block|,
-literal|0137
+literal|0275
 block|,
-literal|0232
+literal|0137
 block|,
 literal|0155
 block|,
@@ -4219,9 +4219,9 @@ literal|0300
 block|,
 literal|0117
 block|,
-literal|0241
+literal|0320
 block|,
-literal|0137
+literal|0241
 block|,
 literal|0007
 block|,
@@ -4383,9 +4383,9 @@ literal|0216
 block|,
 literal|0217
 block|,
-literal|0232
+literal|0220
 block|,
-literal|0152
+literal|0232
 block|,
 literal|0233
 block|,
@@ -4404,9 +4404,9 @@ literal|0252
 block|,
 literal|0253
 block|,
-literal|0255
+literal|0254
 block|,
-literal|0112
+literal|0255
 block|,
 literal|0256
 block|,
@@ -4438,9 +4438,9 @@ literal|0272
 block|,
 literal|0273
 block|,
-literal|0275
+literal|0274
 block|,
-literal|0241
+literal|0275
 block|,
 literal|0276
 block|,
