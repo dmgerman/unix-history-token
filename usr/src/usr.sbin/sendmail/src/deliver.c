@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.129
+literal|3.130
 operator|%
 name|G
 operator|%
@@ -5200,7 +5200,7 @@ for|for
 control|(
 name|q
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_sendqueue
 init|;
@@ -5228,7 +5228,7 @@ name|q_flags
 argument_list|)
 condition|)
 block|{
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -5255,7 +5255,7 @@ literal|"queued"
 argument_list|)
 expr_stmt|;
 block|}
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
@@ -5283,7 +5283,7 @@ operator|)
 condition|)
 name|queueup
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 name|TRUE
 argument_list|)
@@ -5311,17 +5311,17 @@ break|break;
 case|case
 name|SM_QUEUE
 case|:
-name|CurEnv
+name|e
 operator|->
 name|e_df
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_qf
 operator|=
 name|NULL
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_dontqueue
 operator|=
@@ -5334,6 +5334,14 @@ return|return;
 case|case
 name|SM_FORK
 case|:
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
 name|pid
 operator|=
 name|fork
@@ -5359,7 +5367,34 @@ name|pid
 operator|>
 literal|0
 condition|)
+block|{
+comment|/* be sure we leave the temp files to our child */
+name|e
+operator|->
+name|e_id
+operator|=
+name|e
+operator|->
+name|e_df
+operator|=
+name|e
+operator|->
+name|e_qf
+operator|=
+name|NULL
+expr_stmt|;
+name|e
+operator|->
+name|e_dontqueue
+operator|=
+name|TRUE
+expr_stmt|;
+name|Transcript
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
+block|}
 comment|/* double fork to avoid zombies */
 if|if
 condition|(
@@ -5373,16 +5408,11 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
-comment|/* now arrange to run the queue */
-name|HoldErrs
-operator|=
-name|MailBack
-operator|=
+comment|/* be sure we are immune from the terminal */
+name|disconnect
+argument_list|(
 name|TRUE
-expr_stmt|;
-name|Verbose
-operator|=
-name|FALSE
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -5413,7 +5443,7 @@ operator|==
 name|SM_VERIFY
 condition|)
 block|{
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
