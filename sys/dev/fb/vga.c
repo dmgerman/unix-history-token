@@ -13401,6 +13401,11 @@ case|case
 name|KD_EGA
 case|:
 comment|/* no support yet */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|ENODEV
 return|;
