@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.27 1997/11/20 18:24:52 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.28 1998/06/07 17:09:59 dfr Exp $  */
 end_comment
 
 begin_include
@@ -76,10 +76,6 @@ init|=
 block|{
 literal|"cs"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -89,10 +85,6 @@ name|FCN_NULL
 block|,
 literal|"ds"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -102,10 +94,6 @@ name|FCN_NULL
 block|,
 literal|"es"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -116,15 +104,11 @@ block|,
 if|#
 directive|if
 literal|0
-block|"fs",	(long *)&ddb_regs.tf_fs,  FCN_NULL, 	"gs",	(long *)&ddb_regs.tf_gs,  FCN_NULL,
+block|"fs",&ddb_regs.tf_fs,  FCN_NULL, 	"gs",&ddb_regs.tf_gs,  FCN_NULL,
 endif|#
 directive|endif
 literal|"ss"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -134,10 +118,6 @@ name|FCN_NULL
 block|,
 literal|"eax"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -147,10 +127,6 @@ name|FCN_NULL
 block|,
 literal|"ecx"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -160,10 +136,6 @@ name|FCN_NULL
 block|,
 literal|"edx"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -173,10 +145,6 @@ name|FCN_NULL
 block|,
 literal|"ebx"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -186,10 +154,6 @@ name|FCN_NULL
 block|,
 literal|"esp"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -199,10 +163,6 @@ name|FCN_NULL
 block|,
 literal|"ebp"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -212,10 +172,6 @@ name|FCN_NULL
 block|,
 literal|"esi"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -225,10 +181,6 @@ name|FCN_NULL
 block|,
 literal|"edi"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -238,10 +190,6 @@ name|FCN_NULL
 block|,
 literal|"eip"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
@@ -251,10 +199,6 @@ name|FCN_NULL
 block|,
 literal|"efl"
 block|,
-operator|(
-name|long
-operator|*
-operator|)
 operator|&
 name|ddb_regs
 operator|.
