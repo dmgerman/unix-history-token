@@ -115,14 +115,12 @@ index|[
 name|MAX_POSSIBLE_INTERRUPTS
 index|]
 decl_stmt|;
-empty_stmt|;
 name|UINT8
 name|sorted_irq
 index|[
 name|MAX_POSSIBLE_INTERRUPTS
 index|]
 decl_stmt|;
-empty_stmt|;
 name|int
 name|references
 decl_stmt|;
@@ -1486,9 +1484,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 name|link
 operator|->
@@ -1923,7 +1918,11 @@ operator|!
 operator|(
 name|sta
 operator|&
-name|ACPI_STA_ENABLE
+operator|(
+name|ACPI_STA_PRESENT
+operator||
+name|ACPI_STA_FUNCTIONAL
+operator|)
 operator|)
 condition|)
 block|{
@@ -1932,7 +1931,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"PCI interrupt link is disabled - %s\n"
+literal|"PCI interrupt link is not functional - %s\n"
 operator|,
 name|acpi_name
 argument_list|(
