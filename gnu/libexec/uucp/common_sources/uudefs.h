@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uudefs.h    Miscellaneous definitions for the UUCP package.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* uudefs.h    Miscellaneous definitions for the UUCP package.     Copyright (C) 1991, 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_if
@@ -145,6 +145,11 @@ decl_stmt|;
 comment|/* Number of seconds until a retry is permitted.  */
 name|int
 name|cwait
+decl_stmt|;
+comment|/* String in status file.  Only used when reading status file, not      when writing.  May be NULL.  Should be freed with ubuffree.  */
+name|char
+modifier|*
+name|zstring
 decl_stmt|;
 block|}
 struct|;
@@ -1186,7 +1191,7 @@ name|long
 name|cmicros
 operator|,
 name|boolean
-name|fmaster
+name|fcaller
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1321,6 +1326,9 @@ name|fpublic
 operator|,
 name|boolean
 name|fmkdirs
+operator|,
+name|boolean
+name|fsignals
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1350,6 +1358,9 @@ name|fpublic
 operator|,
 name|boolean
 name|fmkdirs
+operator|,
+name|boolean
+name|fsignals
 operator|)
 argument_list|)
 decl_stmt|;

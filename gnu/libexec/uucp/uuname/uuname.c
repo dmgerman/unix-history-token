@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uuname.c    List the names of known remote UUCP sites.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* uuname.c    List the names of known remote UUCP sites.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uuname_rcsid
 index|[]
 init|=
-literal|"$Id: uuname.c,v 1.17 1994/01/30 20:59:40 ian Rel $"
+literal|"$Id: uuname.c,v 1.3 1995/08/19 21:30:14 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +316,7 @@ case|:
 comment|/* Print version and exit.  */
 name|printf
 argument_list|(
-literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|zProgram
 argument_list|,
@@ -645,7 +645,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+literal|"Taylor UUCP %s, copyright (C) 1991, 92, 93, 94, 1995 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)

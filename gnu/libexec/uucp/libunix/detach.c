@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* detach.c    Detach from the controlling terminal.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* detach.c    Detach from the controlling terminal.     Copyright (C) 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -190,6 +190,19 @@ block|{
 name|pid_t
 name|igrp
 decl_stmt|;
+comment|/* Make sure that we can open the log file.  We do this now so that,      if we can't, a message will be written to stderr.  After we leave      this routine, stderr will be closed.  */
+name|ulog
+argument_list|(
+name|LOG_NORMAL
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Make sure we are not a process group leader.  */
 if|#
 directive|if
@@ -319,7 +332,7 @@ name|DEBUG_MESSAGE2
 argument_list|(
 name|DEBUG_PORT
 argument_list|,
-literal|"Forked; old PID %ld, new pid %ld"
+literal|"usysdep_detach: Forked; old PID %ld, new pid %ld"
 argument_list|,
 operator|(
 name|long
@@ -339,13 +352,37 @@ operator|!
 name|HAVE_SETSID
 operator|&&
 name|HAVE_TIOCNOTTY
-comment|/* Lose the original controlling terminal as well as our process      group.  If standard input has been reopened to /dev/null, this      will do no harm.  If another port has been opened to become the      controlling terminal, it should have been detached when it was      closed.  */
+comment|/* Lose the original controlling terminal as well as our process      group.  */
+block|{
+name|int
+name|o
+decl_stmt|;
+name|o
+operator|=
+name|open
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+literal|"/dev/tty"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|o
+operator|>=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|ioctl
 argument_list|(
-literal|0
+name|o
 argument_list|,
 name|TIOCNOTTY
 argument_list|,
@@ -356,6 +393,16 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|o
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 endif|#
 directive|endif
 comment|/* ! HAVE_SETSID&& HAVE_TIOCNOTTY */

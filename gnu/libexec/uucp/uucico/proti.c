@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* proti.c    The 'i' protocol.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* proti.c    The 'i' protocol.     Copyright (C) 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|proti_rcsid
 index|[]
 init|=
-literal|"$Id: proti.c,v 1.2 1994/05/07 18:13:48 ache Exp $"
+literal|"$Id: proti.c,v 1.4 1995/08/19 21:29:42 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,14 +384,14 @@ value|(5)
 end_define
 
 begin_comment
-comment|/* Largest possible packet size (plus 1).  */
+comment|/* Largest possible packet size.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IMAXPACKSIZE
-value|(1<< 12)
+value|((1<< 12) - 1)
 end_define
 
 begin_comment
@@ -674,6 +674,19 @@ begin_decl_stmt
 specifier|static
 name|int
 name|cItimeout
+init|=
+name|CTIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Timeout to use when waiting for an acknowledgement to open up space    in the window.  This is computed based on the window size and the    connection speed.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cIwindow_timeout
 init|=
 name|CTIMEOUT
 decl_stmt|;
@@ -1535,6 +1548,9 @@ decl_stmt|;
 name|int
 name|csyncs
 decl_stmt|;
+name|long
+name|ibaud
+decl_stmt|;
 operator|*
 name|pzlog
 operator|=
@@ -1555,7 +1571,7 @@ operator|<=
 literal|0
 operator|||
 name|iIforced_remote_packsize
-operator|>=
+operator|>
 name|imaxpacksize
 condition|)
 name|iIforced_remote_packsize
@@ -1960,6 +1976,62 @@ name|FALSE
 return|;
 block|}
 block|}
+block|}
+comment|/* Calculate the window timeout.  */
+name|ibaud
+operator|=
+name|iconn_baud
+argument_list|(
+name|qdaemon
+operator|->
+name|qconn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ibaud
+operator|==
+literal|0
+condition|)
+name|cIwindow_timeout
+operator|=
+name|cItimeout
+expr_stmt|;
+else|else
+block|{
+comment|/* We expect to receive an ACK about halfway through each 	 window.  In principle, an entire window might be sitting in a 	 modem buffer while we are waiting for an ACK.  Therefore, the 	 minimum time we should wait for an ACK is 	   (1/2 window size) * (seconds / byte) + (roundtrip time) == 	   (1/2 window size) * (1 / (baud / 10)) + (roundtrip time) == 	   (1/2 window size) * (10 / baud) + (roundtrip time) == 	   (5 * (window size)) / baud + (roundtrip time)  	 The window size is iIremote_packsize * iIremote_winsize.  For 	 typical settings of packsize == 1024, winsize == 16, baud == 	 9600, this equation works out to 	   (5 * 1024 * 16) / 9600 == 8 seconds 	 We then take cItimeout as the round trip time, which gives us 	 some flexibility.  We get more flexibility because it is 	 quite likely that by the time we have finished sending out 	 the last packet in a window, the first one has already been 	 received by the remote system.  */
+name|cIwindow_timeout
+operator|=
+operator|(
+operator|(
+literal|5
+operator|*
+name|iIremote_packsize
+operator|*
+name|iIremote_winsize
+operator|)
+operator|/
+name|ibaud
+operator|+
+name|cItimeout
+operator|)
+expr_stmt|;
+block|}
+comment|/* If we are the callee, bump both timeouts by one, to make it less      likely that both systems will timeout simultaneously.  */
+if|if
+condition|(
+operator|!
+name|qdaemon
+operator|->
+name|fcaller
+condition|)
+block|{
+operator|++
+name|cItimeout
+expr_stmt|;
+operator|++
+name|cIwindow_timeout
+expr_stmt|;
 block|}
 comment|/* We got a SYNC packet; set up packet buffers to use.  */
 if|if
@@ -2376,6 +2448,10 @@ operator|=
 name|CSYNC_RETRIES
 expr_stmt|;
 name|cItimeout
+operator|=
+name|CTIMEOUT
+expr_stmt|;
+name|cIwindow_timeout
 operator|=
 name|CTIMEOUT
 expr_stmt|;
@@ -2937,7 +3013,7 @@ name|fiwait_for_packet
 argument_list|(
 name|qdaemon
 argument_list|,
-name|cItimeout
+name|cIwindow_timeout
 argument_list|,
 name|cIretries
 argument_list|,

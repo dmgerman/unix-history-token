@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* work.c    Routines to read command files.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* work.c    Routines to read command files.     Copyright (C) 1991, 1992, 1993, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|work_rcsid
 index|[]
 init|=
-literal|"$Id: work.c,v 1.2 1994/05/07 18:11:41 ache Exp $"
+literal|"$Id: work.c,v 1.4 1995/08/19 21:26:21 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,12 +661,12 @@ index|]
 operator|==
 literal|'.'
 operator|&&
-name|strlen
-argument_list|(
 name|zfile
-argument_list|)
-operator|==
-literal|7
+index|[
+literal|2
+index|]
+operator|!=
+literal|'\0'
 operator|)
 return|;
 endif|#
@@ -1585,7 +1585,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the next work entry for a system.  This must parse the next    line in the next work file.  The type of command is set into    qcmd->bcmd; if there are no more commands we call    fsysdep_get_work_init to rescan, in case any came in since the last    call.  If there are still no commands, qcmd->bcmd is set to 'H'.    Each field in the structure is set to point to a spot in an    malloced string.  The only time we use the grade here is when    calling fsysdep_get_work_init to rescan.  */
+comment|/* Get the next work entry for a system.  This must parse the next    line in the next work file.  The type of command is set into    qcmd->bcmd If there are no more commands, qcmd->bcmd is set to 'H'.    Each field in the structure is set to point to a spot in an    malloced string.  The grade argument is never used; it has been    used by fsysdep_get_work_init.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -1708,34 +1712,6 @@ operator|>=
 name|cSwork_files
 condition|)
 block|{
-comment|/* Rescan the work directory.  */
-if|if
-condition|(
-operator|!
-name|fsysdep_get_work_init
-argument_list|(
-name|qsys
-argument_list|,
-name|bgrade
-argument_list|)
-condition|)
-block|{
-name|ubuffree
-argument_list|(
-name|zdir
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-if|if
-condition|(
-name|iSwork_file
-operator|>=
-name|cSwork_files
-condition|)
-block|{
 name|qcmd
 operator|->
 name|bcmd
@@ -1750,7 +1726,6 @@ expr_stmt|;
 return|return
 name|TRUE
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -3024,6 +2999,25 @@ name|zfile
 expr_stmt|;
 if|#
 directive|if
+name|SPOOLDIR_TAYLOR
+name|bgrade
+operator|=
+operator|*
+operator|(
+name|strrchr
+argument_list|(
+name|zfile
+argument_list|,
+literal|'/'
+argument_list|)
+operator|+
+literal|3
+operator|)
+expr_stmt|;
+else|#
+directive|else
+if|#
+directive|if
 operator|!
 name|SPOOLDIR_SVR4
 name|bgrade
@@ -3056,6 +3050,8 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* log.c    Routines to add entries to the log files.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* log.c    Routines to add entries to the log files.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|log_rcsid
 index|[]
 init|=
-literal|"$Id: log.c,v 1.2 1994/05/07 18:08:47 ache Exp $"
+literal|"$Id: log.c,v 1.4 1995/08/19 21:23:54 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1037,13 +1037,6 @@ name|FALSE
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|zmsg
-operator|==
-name|NULL
-condition|)
-return|return;
 if|#
 directive|if
 name|DEBUG
@@ -1143,6 +1136,13 @@ operator|!
 name|fLlog_tried
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|zprint
+init|=
+name|NULL
+decl_stmt|;
 name|fLlog_tried
 operator|=
 name|TRUE
@@ -1163,6 +1163,10 @@ name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|zprint
+operator|=
+name|zLogfile
 expr_stmt|;
 else|#
 directive|else
@@ -1185,7 +1189,7 @@ name|char
 modifier|*
 name|zfile
 decl_stmt|;
-comment|/* We want to write to .Log/program/system, e.g. 	       .Log/uucico/uunet.  The system name may not be set.  */
+comment|/* We want to write to .Log/program/system, e.g.  	 	       .Log/uucico/uunet.  The system name may not be set.  */
 if|if
 condition|(
 name|zLsystem
@@ -1304,10 +1308,21 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eLlog
+operator|!=
+name|NULL
+condition|)
 name|ubuffree
 argument_list|(
 name|zfile
 argument_list|)
+expr_stmt|;
+else|else
+name|zprint
+operator|=
+name|zfile
 expr_stmt|;
 block|}
 endif|#
@@ -1325,11 +1340,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s: can not open log file\n"
+literal|"%s: %s: can not open log file: %s\n"
 argument_list|,
 name|zProgram
 argument_list|,
-name|zLogfile
+name|zprint
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1364,6 +1384,13 @@ name|NULL
 condition|)
 return|return;
 block|}
+if|if
+condition|(
+name|zmsg
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|pfLstart
@@ -2291,7 +2318,7 @@ name|csecs
 parameter_list|,
 name|cmicros
 parameter_list|,
-name|fmaster
+name|fcaller
 parameter_list|)
 name|boolean
 name|fsucceeded
@@ -2319,7 +2346,7 @@ name|long
 name|cmicros
 decl_stmt|;
 name|boolean
-name|fmaster
+name|fcaller
 decl_stmt|;
 block|{
 name|long
@@ -2648,7 +2675,7 @@ name|zsystem
 argument_list|,
 name|zuser
 argument_list|,
-name|fmaster
+name|fcaller
 condition|?
 literal|'M'
 else|:
@@ -2928,7 +2955,7 @@ name|sprintf
 argument_list|(
 name|ab
 argument_list|,
-literal|"%d/%d-%02d:%02d:%02d"
+literal|"%d/%d-%d:%02d:%02d"
 argument_list|,
 name|s
 operator|.

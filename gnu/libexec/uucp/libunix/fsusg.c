@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* fsusage.c -- return space usage of mounted filesystems    Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     This file was modified slightly by Ian Lance Taylor, December 1992,    for use with Taylor UUCP.  */
+comment|/* fsusage.c -- return space usage of mounted filesystems    Copyright (C) 1991, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     This file was modified slightly by Ian Lance Taylor, December 1992,    and again July 1995, for use with Taylor UUCP.  */
 end_comment
 
 begin_include
@@ -27,17 +27,18 @@ directive|include
 file|"fsusg.h"
 end_include
 
+begin_function_decl
+name|int
+name|statfs
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
-name|STAT_STATFS2_BSIZE
+name|HAVE_SYS_PARAM_H
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_include
 include|#
@@ -45,26 +46,33 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_MOUNT_H
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/mount.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IBMR2
-end_ifndef
-
-begin_comment
-comment|/* 4.3BSD, SunOS 4, HP-UX, AIX PS/2.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_VFS_H
+end_if
 
 begin_include
 include|#
@@ -77,10 +85,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_FILSYS_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/filsys.h>
+end_include
+
+begin_comment
+comment|/* SVR2.  */
+end_comment
 
 begin_endif
 endif|#
@@ -90,17 +109,13 @@ end_endif
 begin_if
 if|#
 directive|if
-name|STAT_STATFS2_FSIZE
+name|HAVE_FCNTL_H
 end_if
-
-begin_comment
-comment|/* 4.4BSD.  */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
+file|<fcntl.h>
 end_include
 
 begin_endif
@@ -111,60 +126,8 @@ end_endif
 begin_if
 if|#
 directive|if
-name|STAT_STATFS2_FS_DATA
+name|HAVE_SYS_STATFS_H
 end_if
-
-begin_comment
-comment|/* Ultrix.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|STAT_USTAT
-end_if
-
-begin_comment
-comment|/* SVR2 and others.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ustat.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|STAT_STATFS4
-end_if
-
-begin_comment
-comment|/* SVR3, Dynix, Irix.  */
-end_comment
 
 begin_include
 include|#
@@ -177,53 +140,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IBMR2
-end_ifdef
-
-begin_comment
-comment|/* AIX RS6000.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/statfs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
-name|STAT_DUSTAT
+name|HAVE_SYS_DUSTAT_H
 end_if
 
 begin_comment
 comment|/* AIX PS/2.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
 
 begin_include
 include|#
@@ -239,7 +164,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|STAT_STATVFS
+name|HAVE_SYS_STATVFS_H
 end_if
 
 begin_comment
@@ -250,6 +175,34 @@ begin_include
 include|#
 directive|include
 file|<sys/statvfs.h>
+end_include
+
+begin_function_decl
+name|int
+name|statvfs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_USTAT_H
+end_if
+
+begin_comment
+comment|/* SVR2 and others.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<ustat.h>
 end_include
 
 begin_endif
@@ -276,12 +229,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -301,7 +248,14 @@ begin_if
 if|#
 directive|if
 operator|!
-name|STAT_STATVFS
+name|STAT_STATFS3_OSF1
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|STAT_STATFS2_FS_DATA
 end_if
 
 begin_if
@@ -322,13 +276,6 @@ begin_if
 if|#
 directive|if
 operator|!
-name|STAT_STATFS2_FS_DATA
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
 name|STAT_STATFS4
 end_if
 
@@ -336,14 +283,7 @@ begin_if
 if|#
 directive|if
 operator|!
-name|STAT_DUSTAT
-end_if
-
-begin_if
-if|#
-directive|if
-operator|!
-name|STAT_USTAT
+name|STAT_STATVFS
 end_if
 
 begin_if
@@ -351,6 +291,13 @@ if|#
 directive|if
 operator|!
 name|STAT_DISK_SPACE
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|STAT_USTAT
 end_if
 
 begin_undef
@@ -434,7 +381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return the number of TOSIZE-byte blocks used by    BLOCKS FROMSIZE-byte blocks, rounding up.  */
+comment|/* Return the number of TOSIZE-byte blocks used by    BLOCKS FROMSIZE-byte blocks, rounding away from zero.    TOSIZE must be positive.  Return -1 if FROMSIZE is not positive.  */
 end_comment
 
 begin_function
@@ -457,6 +404,25 @@ decl_stmt|,
 name|tosize
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|tosize
+operator|<=
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fromsize
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|fromsize
@@ -490,7 +456,16 @@ return|return
 operator|(
 name|blocks
 operator|+
+operator|(
+name|blocks
+operator|<
+literal|0
+condition|?
+operator|-
 literal|1
+else|:
+literal|1
+operator|)
 operator|)
 operator|/
 operator|(
@@ -551,6 +526,45 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|STAT_STATFS3_OSF1
+name|struct
+name|statfs
+name|fsd
+decl_stmt|;
+if|if
+condition|(
+name|statfs
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|fsd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|statfs
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+define|#
+directive|define
+name|CONVERT_BLOCKS
+parameter_list|(
+name|b
+parameter_list|)
+value|adjust_blocks ((b), fsd.f_fsize, 512)
+endif|#
+directive|endif
+comment|/* STAT_STATFS3_OSF1 */
+if|#
+directive|if
 name|STAT_STATFS2_FS_DATA
 comment|/* Ultrix.  */
 name|struct
@@ -575,7 +589,7 @@ literal|1
 return|;
 define|#
 directive|define
-name|convert_blocks
+name|CONVERT_BLOCKS
 parameter_list|(
 name|b
 parameter_list|)
@@ -584,7 +598,7 @@ name|fsp
 operator|->
 name|fsu_blocks
 operator|=
-name|convert_blocks
+name|CONVERT_BLOCKS
 argument_list|(
 name|fsd
 operator|.
@@ -597,7 +611,7 @@ name|fsp
 operator|->
 name|fsu_bfree
 operator|=
-name|convert_blocks
+name|CONVERT_BLOCKS
 argument_list|(
 name|fsd
 operator|.
@@ -610,7 +624,7 @@ name|fsp
 operator|->
 name|fsu_bavail
 operator|=
-name|convert_blocks
+name|CONVERT_BLOCKS
 argument_list|(
 name|fsd
 operator|.
@@ -644,8 +658,6 @@ directive|endif
 if|#
 directive|if
 name|STAT_STATFS2_BSIZE
-operator|||
-name|STAT_DUSTAT
 comment|/* 4.3BSD, SunOS 4, HP-UX, AIX.  */
 name|struct
 name|statfs
@@ -669,7 +681,7 @@ literal|1
 return|;
 define|#
 directive|define
-name|convert_blocks
+name|CONVERT_BLOCKS
 parameter_list|(
 name|b
 parameter_list|)
@@ -702,7 +714,7 @@ literal|1
 return|;
 define|#
 directive|define
-name|convert_blocks
+name|CONVERT_BLOCKS
 parameter_list|(
 name|b
 parameter_list|)
@@ -739,9 +751,21 @@ operator|-
 literal|1
 return|;
 comment|/* Empirically, the block counts on most SVR3 and SVR3-derived      systems seem to always be in terms of 512-byte blocks,      no matter what value f_bsize has.  */
+if|#
+directive|if
+name|_AIX
 define|#
 directive|define
-name|convert_blocks
+name|CONVERT_BLOCKS
+parameter_list|(
+name|b
+parameter_list|)
+value|adjust_blocks ((b), fsd.f_bsize, 512)
+else|#
+directive|else
+define|#
+directive|define
+name|CONVERT_BLOCKS
 parameter_list|(
 name|b
 parameter_list|)
@@ -750,10 +774,18 @@ ifndef|#
 directive|ifndef
 name|_SEQUENT_
 comment|/* _SEQUENT_ is DYNIX/ptx.  */
+ifndef|#
+directive|ifndef
+name|DOLPHIN
+comment|/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
 define|#
 directive|define
 name|f_bavail
 value|f_bfree
+endif|#
+directive|endif
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
@@ -785,7 +817,7 @@ return|;
 comment|/* f_frsize isn't guaranteed to be supported.  */
 define|#
 directive|define
-name|convert_blocks
+name|CONVERT_BLOCKS
 parameter_list|(
 name|b
 parameter_list|)
@@ -1202,7 +1234,7 @@ name|fsp
 operator|->
 name|fsu_blocks
 operator|=
-name|convert_blocks
+name|CONVERT_BLOCKS
 argument_list|(
 name|fsd
 operator|.
@@ -1213,7 +1245,7 @@ name|fsp
 operator|->
 name|fsu_bfree
 operator|=
-name|convert_blocks
+name|CONVERT_BLOCKS
 argument_list|(
 name|fsd
 operator|.
@@ -1224,7 +1256,7 @@ name|fsp
 operator|->
 name|fsu_bavail
 operator|=
-name|convert_blocks
+name|CONVERT_BLOCKS
 argument_list|(
 name|fsd
 operator|.
@@ -1261,11 +1293,17 @@ return|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-name|STAT_DUSTAT
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_I386
+end_ifdef
 
 begin_comment
 comment|/* AIX PS/2 does not supply statfs.  */
@@ -1438,7 +1476,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* STAT_DUSTAT */
+comment|/* _I386 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _AIX */
 end_comment
 
 end_unit

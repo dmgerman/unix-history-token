@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* policy.h    Configuration file for policy decisions.  To be edited on site.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
+comment|/* policy.h    Configuration file for policy decisions.  To be edited on site.     Copyright (C) 1991, 1992, 1993, 1994, 1995 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, 48 Grove Street, Somerville, MA 02144.    */
 end_comment
 
 begin_comment
@@ -74,11 +74,11 @@ operator|==
 literal|0
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__QNX__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|HAVE_TERMIOS_H
+end_if
 
 begin_undef
 undef|#
@@ -99,7 +99,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ! defined (__QNX__) */
+comment|/* ! HAVE_TERMIOS_H */
 end_comment
 
 begin_if
@@ -158,7 +158,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! defined (__QNX__) */
+comment|/* ! HAVE_TERMIOS_H */
 end_comment
 
 begin_endif
@@ -368,13 +368,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* On some systems, such as the DG Aviion and, possibly, the RS/6000,    the setreuid function is broken.  It should be possible to use    setreuid to swap the real and effective user ID's, but on some    systems it will not change the real user ID (I believe this is due    to a misreading of the POSIX standard).  On such a system you must    set HAVE_BROKEN_SETREUID to 1; if you do not, you will get error    messages from setreuid.  Systems on which setreuid exists but is    broken pretty much always have saved setuid.  */
+comment|/* On some systems, such as 4.4BSD-Lite, NetBSD, the DG Aviion and,    possibly, the RS/6000, the setreuid function is broken.  It should    be possible to use setreuid to swap the real and effective user    ID's, but on some systems it will not change the real user ID (I    believe this is due to a misreading of the POSIX standard).  On    such a system you must set HAVE_BROKEN_SETREUID to 1; if you do    not, you will get error messages from setreuid.  Systems on which    setreuid exists but is broken pretty much always have saved setuid.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HAVE_BROKEN_SETREUID
+value|0
+end_define
+
+begin_comment
+comment|/* On a few systems, such as NextStep 3.3, the POSIX macro F_SETLKW is    defined, but does not work.  On such systems, you must set    HAVE_BROKEN_SETLKW to 1.  If you do not, uux will hang, or log    peculiar error messages, every time it is run.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BROKEN_SETLKW
 value|0
 end_define
 
@@ -1277,6 +1288,17 @@ define|#
 directive|define
 name|ALLOW_FILENAME_ARGUMENTS
 value|1
+end_define
+
+begin_comment
+comment|/* If you set FSYNC_ON_CLOSE to 1, all output files will be forced out    to disk using the fsync system call when they are closed.  This can    be useful if you can not afford to lose people's mail if the system    crashes.  However, not all systems have the fsync call, and it is    always less efficient to use it.  Note that some versions of SCO    Unix, and possibly other systems, make fsync a synonym for sync,    which is extremely inefficient.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSYNC_ON_CLOSE
+value|0
 end_define
 
 begin_if
