@@ -1,38 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1992 The Regents of the University of California.\n\  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -40,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.13 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +34,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_include
@@ -59,8 +43,15 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|static
+specifier|inline
 name|char
 modifier|*
 name|med3
@@ -88,6 +79,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|inline
 name|void
 name|swapfunc
 name|__P
@@ -153,6 +145,7 @@ end_define
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|swapfunc
 parameter_list|(
@@ -223,7 +216,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|if (swaptype == 0) { \ 		long t = *(long *)(a); \ 		*(long *)(a) = *(long *)(b); \ 		*(long *)(b) = t; \ 	} else \ 		swapfunc(a, b, es, swaptype)
+value|if (swaptype == 0) {				\ 		long t = *(long *)(a);			\ 		*(long *)(a) = *(long *)(b);		\ 		*(long *)(b) = t;			\ 	} else						\ 		swapfunc(a, b, es, swaptype)
 end_define
 
 begin_define
@@ -242,6 +235,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|inline
 name|char
 modifier|*
 name|med3
