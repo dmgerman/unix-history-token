@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.57 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3886,16 +3886,26 @@ literal|0
 condition|)
 block|{
 comment|/* oops.... */
+name|int
+name|fd
+decl_stmt|;
 name|syserr
 argument_list|(
-literal|"openmailer: fd %d not open"
+literal|"%s... openmailer(%s): fd %d not open"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|fd
+operator|=
 name|open
 argument_list|(
 literal|"/dev/null"
@@ -3905,6 +3915,32 @@ argument_list|,
 literal|0666
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|!=
+name|i
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|fd
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* create a pipe to shove the mail through */
@@ -3920,7 +3956,15 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"openmailer: pipe (to mailer)"
+literal|"%s... openmailer(%s): pipe (to mailer)"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -3960,7 +4004,15 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"openmailer: pipe (from mailer)"
+literal|"%s... openmailer(%s): pipe (from mailer)"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4067,7 +4119,15 @@ block|{
 comment|/* failure */
 name|syserr
 argument_list|(
-literal|"openmailer: cannot fork"
+literal|"%s... openmailer(%s): cannot fork"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4252,7 +4312,15 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot dup pipe %d for stdout"
+literal|"%s... openmailer(%s): cannot dup pipe %d for stdout"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|,
 name|rpvect
 index|[
@@ -4308,7 +4376,15 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot dup xscript %d for stdout"
+literal|"%s... openmailer(%s): cannot dup xscript %d for stdout"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|,
 name|fileno
 argument_list|(
@@ -4339,7 +4415,15 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot dup stdout for stderr"
+literal|"%s... openmailer(%s): cannot dup stdout for stderr"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -4377,7 +4461,15 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot dup pipe %d for stdin"
+literal|"%s... openmailer(%s): cannot dup pipe %d for stdin"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|,
 name|mpvect
 index|[
