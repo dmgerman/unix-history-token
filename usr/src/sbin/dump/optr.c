@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.15 (Berkeley) %G%"
+literal|"@(#)optr.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1758,10 +1758,14 @@ return|return;
 block|}
 while|while
 condition|(
+operator|(
 name|fs
 operator|=
 name|getfsent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
