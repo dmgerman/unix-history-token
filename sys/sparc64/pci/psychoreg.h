@@ -19,32 +19,936 @@ begin_comment
 comment|/*  * Sun4u PCI definitions.  Here's where we deal w/the machine  * dependencies of psycho and the PCI controller on the UltraIIi.  *  * All PCI registers are bit-swapped, however they are not byte-swapped.  * This means that they must be accessed using little-endian access modes,  * either map the pages little-endian or use little-endian ASIs.  *  * PSYCHO implements two PCI buses, A and B.  */
 end_comment
 
-begin_struct
-struct|struct
-name|psychoreg
-block|{
-struct|struct
-name|upareg
-block|{
+begin_comment
+comment|/*  * psycho register offset.s  *  * NB: FFB0 and FFB1 intr map regs also appear at 0x6000 and 0x8000  * respectively.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_UPA_PORTID
+value|0x0000
+end_define
+
+begin_comment
 comment|/* UPA port ID register */
-comment|/* 1fe.0000.0000 */
-name|u_int64_t
-name|upa_portid
-decl_stmt|;
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_UPA_CONFIG
+value|0x0008
+end_define
+
+begin_comment
 comment|/* UPA config register */
-comment|/* 1fe.0000.0008 */
-name|u_int64_t
-name|upa_config
-decl_stmt|;
-block|}
-name|sys_upa
-struct|;
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_CS
+value|0x0010
+end_define
+
+begin_comment
 comment|/* PSYCHO control/status register */
-comment|/* 1fe.0000.0010 */
-name|u_int64_t
-name|psy_csr
-decl_stmt|;
-comment|/*  	 * 63     59     55     50     45     4        3       2     1      0 	 * +------+------+------+------+--//---+--------+-------+-----+------+ 	 * | IMPL | VERS | MID  | IGN  |  xxx  | APCKEN | APERR | IAP | MODE | 	 * +------+------+------+------+--//---+--------+-------+-----+------+ 	 * 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_ECCC
+value|0x0020
+end_define
+
+begin_comment
+comment|/* ECC control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_UE_AFS
+value|0x0030
+end_define
+
+begin_comment
+comment|/* Uncorrectable Error AFSR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_UE_AFA
+value|0x0038
+end_define
+
+begin_comment
+comment|/* Uncorrectable Error AFAR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_CE_AFS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Correctable Error AFSR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_CE_AFA
+value|0x0048
+end_define
+
+begin_comment
+comment|/* Correctable Error AFAR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PM_CTL
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Performance monitor control reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PM_COUNT
+value|0x0108
+end_define
+
+begin_comment
+comment|/* Performance monitor counter reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_IOMMU
+value|0x0200
+end_define
+
+begin_comment
+comment|/* IOMMU registers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA0_INT_MAP
+value|0x0c00
+end_define
+
+begin_comment
+comment|/* PCI bus a slot 0 irq map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA1_INT_MAP
+value|0x0c08
+end_define
+
+begin_comment
+comment|/* PCI bus a slot 1 irq map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA2_INT_MAP
+value|0x0c10
+end_define
+
+begin_comment
+comment|/* PCI bus a slot 2 irq map reg (IIi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA3_INT_MAP
+value|0x0c18
+end_define
+
+begin_comment
+comment|/* PCI bus a slot 3 irq map reg (IIi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB0_INT_MAP
+value|0x0c20
+end_define
+
+begin_comment
+comment|/* PCI bus b slot 0 irq map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB1_INT_MAP
+value|0x0c28
+end_define
+
+begin_comment
+comment|/* PCI bus b slot 1 irq map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB2_INT_MAP
+value|0x0c30
+end_define
+
+begin_comment
+comment|/* PCI bus b slot 2 irq map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB3_INT_MAP
+value|0x0c38
+end_define
+
+begin_comment
+comment|/* PCI bus b slot 3 irq map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SCSI_INT_MAP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* SCSI interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_ETHER_INT_MAP
+value|0x1008
+end_define
+
+begin_comment
+comment|/* ethernet interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_BPP_INT_MAP
+value|0x1010
+end_define
+
+begin_comment
+comment|/* parallel interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_AUDIOR_INT_MAP
+value|0x1018
+end_define
+
+begin_comment
+comment|/* audio record interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_AUDIOP_INT_MAP
+value|0x1020
+end_define
+
+begin_comment
+comment|/* audio playback interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_POWER_INT_MAP
+value|0x1028
+end_define
+
+begin_comment
+comment|/* power fail interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SKBDMS_INT_MAP
+value|0x1030
+end_define
+
+begin_comment
+comment|/* serial/kbd/mouse interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_FD_INT_MAP
+value|0x1038
+end_define
+
+begin_comment
+comment|/* floppy interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SPARE_INT_MAP
+value|0x1040
+end_define
+
+begin_comment
+comment|/* spare interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_KBD_INT_MAP
+value|0x1048
+end_define
+
+begin_comment
+comment|/* kbd [unused] interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_MOUSE_INT_MAP
+value|0x1050
+end_define
+
+begin_comment
+comment|/* mouse [unused] interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SERIAL_INT_MAP
+value|0x1058
+end_define
+
+begin_comment
+comment|/* second serial interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_TIMER0_INT_MAP
+value|0x1060
+end_define
+
+begin_comment
+comment|/* timer 0 interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_TIMER1_INT_MAP
+value|0x1068
+end_define
+
+begin_comment
+comment|/* timer 1 interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_UE_INT_MAP
+value|0x1070
+end_define
+
+begin_comment
+comment|/* UE interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_CE_INT_MAP
+value|0x1078
+end_define
+
+begin_comment
+comment|/* CE interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIAERR_INT_MAP
+value|0x1080
+end_define
+
+begin_comment
+comment|/* PCI bus a error interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIBERR_INT_MAP
+value|0x1088
+end_define
+
+begin_comment
+comment|/* PCI bus b error interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PWRMGT_INT_MAP
+value|0x1090
+end_define
+
+begin_comment
+comment|/* power mgmt wake interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_FFB0_INT_MAP
+value|0x1098
+end_define
+
+begin_comment
+comment|/* FFB0 graphics interrupt map reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_FFB1_INT_MAP
+value|0x10a0
+end_define
+
+begin_comment
+comment|/* FFB1 graphics interrupt map reg */
+end_comment
+
+begin_comment
+comment|/* Note: clear interrupt 0 registers are not really used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA0_INT_CLR
+value|0x1400
+end_define
+
+begin_comment
+comment|/* PCI a slot 0 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA1_INT_CLR
+value|0x1420
+end_define
+
+begin_comment
+comment|/* PCI a slot 1 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA2_INT_CLR
+value|0x1440
+end_define
+
+begin_comment
+comment|/* PCI a slot 1 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIA3_INT_CLR
+value|0x1460
+end_define
+
+begin_comment
+comment|/* PCI a slot 1 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB0_INT_CLR
+value|0x1480
+end_define
+
+begin_comment
+comment|/* PCI b slot 0 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB1_INT_CLR
+value|0x14a0
+end_define
+
+begin_comment
+comment|/* PCI b slot 1 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB2_INT_CLR
+value|0x14c0
+end_define
+
+begin_comment
+comment|/* PCI b slot 2 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIB3_INT_CLR
+value|0x14d0
+end_define
+
+begin_comment
+comment|/* PCI b slot 3 clear int regs 0..3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SCSI_INT_CLR
+value|0x1800
+end_define
+
+begin_comment
+comment|/* SCSI clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_ETHER_INT_CLR
+value|0x1808
+end_define
+
+begin_comment
+comment|/* ethernet clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_BPP_INT_CLR
+value|0x1810
+end_define
+
+begin_comment
+comment|/* parallel clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_AUDIOR_INT_CLR
+value|0x1818
+end_define
+
+begin_comment
+comment|/* audio record clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_AUDIOP_INT_CLR
+value|0x1820
+end_define
+
+begin_comment
+comment|/* audio playback clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_POWER_INT_CLR
+value|0x1828
+end_define
+
+begin_comment
+comment|/* power fail clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SKBDMS_INT_CLR
+value|0x1830
+end_define
+
+begin_comment
+comment|/* serial/kbd/mouse clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_FD_INT_CLR
+value|0x1838
+end_define
+
+begin_comment
+comment|/* floppy clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SPARE_INT_CLR
+value|0x1840
+end_define
+
+begin_comment
+comment|/* spare clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_KBD_INT_CLR
+value|0x1848
+end_define
+
+begin_comment
+comment|/* kbd [unused] clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_MOUSE_INT_CLR
+value|0x1850
+end_define
+
+begin_comment
+comment|/* mouse [unused] clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_SERIAL_INT_CLR
+value|0x1858
+end_define
+
+begin_comment
+comment|/* second serial clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_TIMER0_INT_CLR
+value|0x1860
+end_define
+
+begin_comment
+comment|/* timer 0 clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_TIMER1_INT_CLR
+value|0x1868
+end_define
+
+begin_comment
+comment|/* timer 1 clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_UE_INT_CLR
+value|0x1870
+end_define
+
+begin_comment
+comment|/* UE clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_CE_INT_CLR
+value|0x1878
+end_define
+
+begin_comment
+comment|/* CE clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIAERR_INT_CLR
+value|0x1880
+end_define
+
+begin_comment
+comment|/* PCI bus a error clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCIBERR_INT_CLR
+value|0x1888
+end_define
+
+begin_comment
+comment|/* PCI bus b error clear int reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PWRMGT_INT_CLR
+value|0x1890
+end_define
+
+begin_comment
+comment|/* power mgmt wake clr interrupt reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_INTR_RETRY_TIM
+value|0x1a00
+end_define
+
+begin_comment
+comment|/* interrupt retry timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_TC0
+value|0x1c00
+end_define
+
+begin_comment
+comment|/* timer/counter 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_TC1
+value|0x1c10
+end_define
+
+begin_comment
+comment|/* timer/counter 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_DMA_WRITE_SYNC
+value|0x1c20
+end_define
+
+begin_comment
+comment|/* PCI DMA write sync register (IIi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCICTL0
+value|0x2000
+end_define
+
+begin_comment
+comment|/* PCICTL registers for 1st psycho. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCICTL1
+value|0x4000
+end_define
+
+begin_comment
+comment|/* PCICTL registers for 2nd psycho. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_DMA_SCB_DIAG0
+value|0xa000
+end_define
+
+begin_comment
+comment|/* DMA scoreboard diag reg 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_DMA_SCB_DIAG1
+value|0xa008
+end_define
+
+begin_comment
+comment|/* DMA scoreboard diag reg 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_IOMMU_SVADIAG
+value|0xa400
+end_define
+
+begin_comment
+comment|/* IOMMU virtual addr diag reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_IOMMU_TLB_CMP_DIAG
+value|0xa408
+end_define
+
+begin_comment
+comment|/* IOMMU TLB tag compare diag reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_IOMMU_QUEUE_DIAG
+value|0xa500
+end_define
+
+begin_comment
+comment|/* IOMMU LRU queue diag regs 0..15 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_IOMMU_TLB_TAG_DIAG
+value|0xa580
+end_define
+
+begin_comment
+comment|/* TLB tag diag regs 0..15 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_IOMMU_TLB_DATA_DIAG
+value|0xa600
+end_define
+
+begin_comment
+comment|/* TLB data RAM diag regs 0..15 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_PCI_INT_DIAG
+value|0xa800
+end_define
+
+begin_comment
+comment|/* PCI int state diag reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_OBIO_INT_DIAG
+value|0xa808
+end_define
+
+begin_comment
+comment|/* OBIO and misc int state diag reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_STRBUF_DIAG
+value|0xb000
+end_define
+
+begin_comment
+comment|/* Streaming buffer diag regs */
+end_comment
+
+begin_comment
+comment|/*  * Here is the rest of the map, which we're not specifying:  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0000 - 1fe.0100.00ff	PCI B configuration header  * 1fe.0101.0000 - 1fe.0101.00ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.0200.ffff	PCI A I/O space  * 1fe.0201.0000 - 1fe.0201.ffff	PCI B I/O space  * 1ff.0000.0000 - 1ff.7fff.ffff	PCI A memory space  * 1ff.8000.0000 - 1ff.ffff.ffff	PCI B memory space  *  * NB: config and I/O space can use 1-4 byte accesses, not 8 byte  * accesses.  Memory space can use any sized accesses.  *  * Note that the SUNW,sabre/SUNW,simba combinations found on the  * Ultra5 and Ultra10 machines uses slightly differrent addresses  * than the above.  This is mostly due to the fact that the APB is  * a multi-function PCI device with two PCI bridges, and the U2P is  * two separate PCI bridges.  It uses the same PCI configuration  * space, though the configuration header for each PCI bus is  * located differently due to the SUNW,simba PCI busses being  * function 0 and function 1 of the APB, whereas the psycho's are  * each their own PCI device.  The I/O and memory spaces are each  * split into 8 equally sized areas (8x2MB blocks for I/O space,  * and 8x512MB blocks for memory space).  These are allocated in to  * either PCI A or PCI B, or neither in the APB's `I/O Address Map  * Register A/B' (0xde) and `Memory Address Map Register A/B' (0xdf)  * registers of each simba.  We must ensure that both of the  * following are correct (the prom should do this for us):  *  *    (PCI A Memory Address Map)& (PCI B Memory Address Map) == 0  *  *    (PCI A I/O Address Map)& (PCI B I/O Address Map) == 0  *  * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space  * 1fe.0100.0800 - 1fe.0100.08ff	PCI B configuration header  * 1fe.0100.0900 - 1fe.0100.09ff	PCI A configuration header  * 1fe.0200.0000 - 1fe.02ff.ffff	PCI I/O space (divided)  * 1ff.0000.0000 - 1ff.ffff.ffff	PCI memory space (divided)  */
+end_comment
+
+begin_comment
+comment|/*  * PSR_CS defines:  *  * 63     59     55     50     45     4        3       2     1      0  * +------+------+------+------+--//---+--------+-------+-----+------+  * | IMPL | VERS | MID  | IGN  |  xxx  | APCKEN | APERR | IAP | MODE |  * +------+------+------+------+--//---+--------+-------+-----+------+  *  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_GCSR_IMPL
@@ -52,6 +956,9 @@ parameter_list|(
 name|csr
 parameter_list|)
 value|((u_int)(((csr)>> 60)& 0xf))
+end_define
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_GCSR_VERS
@@ -59,6 +966,9 @@ parameter_list|(
 name|csr
 parameter_list|)
 value|((u_int)(((csr)>> 56)& 0xf))
+end_define
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_GCSR_MID
@@ -66,6 +976,9 @@ parameter_list|(
 name|csr
 parameter_list|)
 value|((u_int)(((csr)>> 51)& 0x1f))
+end_define
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_GCSR_IGN
@@ -73,670 +986,125 @@ parameter_list|(
 name|csr
 parameter_list|)
 value|((u_int)(((csr)>> 46)& 0x1f))
+end_define
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_CSR_APCKEN
 value|8
+end_define
+
+begin_comment
 comment|/* UPA addr parity check enable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_CSR_APERR
 value|4
+end_define
+
+begin_comment
 comment|/* UPA addr parity error */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_CSR_IAP
 value|2
+end_define
+
+begin_comment
 comment|/* invert UPA address parity */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|PSYCHO_CSR_MODE
 value|1
+end_define
+
+begin_comment
 comment|/* UPA/PCI handshake */
-name|u_int64_t
-name|pad0
-decl_stmt|;
-comment|/* ECC control register */
-comment|/* 1fe.0000.0020 */
-name|u_int64_t
-name|psy_ecccr
-decl_stmt|;
-comment|/* 1fe.0000.0028 */
-name|u_int64_t
-name|reserved
-decl_stmt|;
-comment|/* Uncorrectable Error AFSR */
-comment|/* 1fe.0000.0030 */
-name|u_int64_t
-name|psy_ue_afsr
-decl_stmt|;
-comment|/* Uncorrectable Error AFAR */
-comment|/* 1fe.0000.0038 */
-name|u_int64_t
-name|psy_ue_afar
-decl_stmt|;
-comment|/* Correctable Error AFSR */
-comment|/* 1fe.0000.0040 */
-name|u_int64_t
-name|psy_ce_afsr
-decl_stmt|;
-comment|/* Correctable Error AFAR */
-comment|/* 1fe.0000.0048 */
-name|u_int64_t
-name|psy_ce_afar
-decl_stmt|;
-name|u_int64_t
-name|pad1
-index|[
-literal|22
-index|]
-decl_stmt|;
-struct|struct
-name|perfmon
-block|{
-comment|/* Performance monitor control reg */
-comment|/* 1fe.0000.0100 */
-name|u_int64_t
-name|pm_cr
-decl_stmt|;
-comment|/* Performance monitor counter reg */
-comment|/* 1fe.0000.0108 */
-name|u_int64_t
-name|pm_count
-decl_stmt|;
-block|}
-name|psy_pm
-struct|;
-name|u_int64_t
-name|pad2
-index|[
-literal|30
-index|]
-decl_stmt|;
-comment|/* 1fe.0000.0200,0210 */
-name|struct
-name|iommureg
-name|psy_iommu
-decl_stmt|;
-name|u_int64_t
-name|pad3
-index|[
-literal|317
-index|]
-decl_stmt|;
-comment|/* PCI bus a slot 0 irq map reg */
-comment|/* 1fe.0000.0c00 */
-name|u_int64_t
-name|pcia0_int_map
-decl_stmt|;
-comment|/* PCI bus a slot 1 irq map reg */
-comment|/* 1fe.0000.0c08 */
-name|u_int64_t
-name|pcia1_int_map
-decl_stmt|;
-comment|/* PCI bus a slot 2 irq map reg (IIi) */
-comment|/* 1fe.0000.0c10 */
-name|u_int64_t
-name|pcia2_int_map
-decl_stmt|;
-comment|/* PCI bus a slot 3 irq map reg (IIi) */
-comment|/* 1fe.0000.0c18 */
-name|u_int64_t
-name|pcia3_int_map
-decl_stmt|;
-comment|/* PCI bus b slot 0 irq map reg */
-comment|/* 1fe.0000.0c20 */
-name|u_int64_t
-name|pcib0_int_map
-decl_stmt|;
-comment|/* PCI bus b slot 1 irq map reg */
-comment|/* 1fe.0000.0c28 */
-name|u_int64_t
-name|pcib1_int_map
-decl_stmt|;
-comment|/* PCI bus b slot 2 irq map reg */
-comment|/* 1fe.0000.0c30 */
-name|u_int64_t
-name|pcib2_int_map
-decl_stmt|;
-comment|/* PCI bus b slot 3 irq map reg */
-comment|/* 1fe.0000.0c38 */
-name|u_int64_t
-name|pcib3_int_map
-decl_stmt|;
-name|u_int64_t
-name|pad4
-index|[
-literal|120
-index|]
-decl_stmt|;
-comment|/* SCSI interrupt map reg */
-comment|/* 1fe.0000.1000 */
-name|u_int64_t
-name|scsi_int_map
-decl_stmt|;
-comment|/* ethernet interrupt map reg */
-comment|/* 1fe.0000.1008 */
-name|u_int64_t
-name|ether_int_map
-decl_stmt|;
-comment|/* parallel interrupt map reg */
-comment|/* 1fe.0000.1010 */
-name|u_int64_t
-name|bpp_int_map
-decl_stmt|;
-comment|/* audio record interrupt map reg */
-comment|/* 1fe.0000.1018 */
-name|u_int64_t
-name|audior_int_map
-decl_stmt|;
-comment|/* audio playback interrupt map reg */
-comment|/* 1fe.0000.1020 */
-name|u_int64_t
-name|audiop_int_map
-decl_stmt|;
-comment|/* power fail interrupt map reg */
-comment|/* 1fe.0000.1028 */
-name|u_int64_t
-name|power_int_map
-decl_stmt|;
-comment|/* serial/kbd/mouse interrupt map reg */
-comment|/* 1fe.0000.1030 */
-name|u_int64_t
-name|ser_kbd_ms_int_map
-decl_stmt|;
-comment|/* floppy interrupt map reg */
-comment|/* 1fe.0000.1038 */
-name|u_int64_t
-name|fd_int_map
-decl_stmt|;
-comment|/* spare interrupt map reg */
-comment|/* 1fe.0000.1040 */
-name|u_int64_t
-name|spare_int_map
-decl_stmt|;
-comment|/* kbd [unused] interrupt map reg */
-comment|/* 1fe.0000.1048 */
-name|u_int64_t
-name|kbd_int_map
-decl_stmt|;
-comment|/* mouse [unused] interrupt map reg */
-comment|/* 1fe.0000.1050 */
-name|u_int64_t
-name|mouse_int_map
-decl_stmt|;
-comment|/* second serial interrupt map reg */
-comment|/* 1fe.0000.1058 */
-name|u_int64_t
-name|serial_int_map
-decl_stmt|;
-comment|/* timer 0 interrupt map reg */
-comment|/* 1fe.0000.1060 */
-name|u_int64_t
-name|timer0_int_map
-decl_stmt|;
-comment|/* timer 1 interrupt map reg */
-comment|/* 1fe.0000.1068 */
-name|u_int64_t
-name|timer1_int_map
-decl_stmt|;
-comment|/* UE interrupt map reg */
-comment|/* 1fe.0000.1070 */
-name|u_int64_t
-name|ue_int_map
-decl_stmt|;
-comment|/* CE interrupt map reg */
-comment|/* 1fe.0000.1078 */
-name|u_int64_t
-name|ce_int_map
-decl_stmt|;
-comment|/* PCI bus a error interrupt map reg */
-comment|/* 1fe.0000.1080 */
-name|u_int64_t
-name|pciaerr_int_map
-decl_stmt|;
-comment|/* PCI bus b error interrupt map reg */
-comment|/* 1fe.0000.1088 */
-name|u_int64_t
-name|pciberr_int_map
-decl_stmt|;
-comment|/* power mgmt wake interrupt map reg */
-comment|/* 1fe.0000.1090 */
-name|u_int64_t
-name|pwrmgt_int_map
-decl_stmt|;
-comment|/* FFB0 graphics interrupt map reg */
-comment|/* 1fe.0000.1098 */
-name|u_int64_t
-name|ffb0_int_map
-decl_stmt|;
-comment|/* FFB1 graphics interrupt map reg */
-comment|/* 1fe.0000.10a0 */
-name|u_int64_t
-name|ffb1_int_map
-decl_stmt|;
-name|u_int64_t
-name|pad5
-index|[
-literal|107
-index|]
-decl_stmt|;
-comment|/* Note: clear interrupt 0 registers are not really used */
-comment|/* PCI a slot 0 clear int regs 0..7 */
-comment|/* 1fe.0000.1400-1418 */
-name|u_int64_t
-name|pcia0_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI a slot 1 clear int regs 0..7 */
-comment|/* 1fe.0000.1420-1438 */
-name|u_int64_t
-name|pcia1_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI a slot 2 clear int regs 0..7 */
-comment|/* 1fe.0000.1440-1458 */
-name|u_int64_t
-name|pcia2_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI a slot 3 clear int regs 0..7 */
-comment|/* 1fe.0000.1480-1478 */
-name|u_int64_t
-name|pcia3_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI b slot 0 clear int regs 0..7 */
-comment|/* 1fe.0000.1480-1498 */
-name|u_int64_t
-name|pcib0_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI b slot 1 clear int regs 0..7 */
-comment|/* 1fe.0000.14a0-14b8 */
-name|u_int64_t
-name|pcib1_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI b slot 2 clear int regs 0..7 */
-comment|/* 1fe.0000.14c0-14d8 */
-name|u_int64_t
-name|pcib2_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* PCI b slot 3 clear int regs 0..7 */
-comment|/* 1fe.0000.14d0-14f8 */
-name|u_int64_t
-name|pcib3_int_clr
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|u_int64_t
-name|pad6
-index|[
-literal|96
-index|]
-decl_stmt|;
-comment|/* SCSI clear int reg */
-comment|/* 1fe.0000.1800 */
-name|u_int64_t
-name|scsi_int_clr
-decl_stmt|;
-comment|/* ethernet clear int reg */
-comment|/* 1fe.0000.1808 */
-name|u_int64_t
-name|ether_int_clr
-decl_stmt|;
-comment|/* parallel clear int reg */
-comment|/* 1fe.0000.1810 */
-name|u_int64_t
-name|bpp_int_clr
-decl_stmt|;
-comment|/* audio record clear int reg */
-comment|/* 1fe.0000.1818 */
-name|u_int64_t
-name|audior_int_clr
-decl_stmt|;
-comment|/* audio playback clear int reg */
-comment|/* 1fe.0000.1820 */
-name|u_int64_t
-name|audiop_int_clr
-decl_stmt|;
-comment|/* power fail clear int reg */
-comment|/* 1fe.0000.1828 */
-name|u_int64_t
-name|power_int_clr
-decl_stmt|;
-comment|/* serial/kbd/mouse clear int reg */
-comment|/* 1fe.0000.1830 */
-name|u_int64_t
-name|ser_kb_ms_int_clr
-decl_stmt|;
-comment|/* floppy clear int reg */
-comment|/* 1fe.0000.1838 */
-name|u_int64_t
-name|fd_int_clr
-decl_stmt|;
-comment|/* spare clear int reg */
-comment|/* 1fe.0000.1840 */
-name|u_int64_t
-name|spare_int_clr
-decl_stmt|;
-comment|/* kbd [unused] clear int reg */
-comment|/* 1fe.0000.1848 */
-name|u_int64_t
-name|kbd_int_clr
-decl_stmt|;
-comment|/* mouse [unused] clear int reg */
-comment|/* 1fe.0000.1850 */
-name|u_int64_t
-name|mouse_int_clr
-decl_stmt|;
-comment|/* second serial clear int reg */
-comment|/* 1fe.0000.1858 */
-name|u_int64_t
-name|serial_clr
-decl_stmt|;
-comment|/* timer 0 clear int reg */
-comment|/* 1fe.0000.1860 */
-name|u_int64_t
-name|timer0_int_clr
-decl_stmt|;
-comment|/* timer 1 clear int reg */
-comment|/* 1fe.0000.1868 */
-name|u_int64_t
-name|timer1_int_clr
-decl_stmt|;
-comment|/* UE clear int reg */
-comment|/* 1fe.0000.1870 */
-name|u_int64_t
-name|ue_int_clr
-decl_stmt|;
-comment|/* CE clear int reg */
-comment|/* 1fe.0000.1878 */
-name|u_int64_t
-name|ce_int_clr
-decl_stmt|;
-comment|/* PCI bus a error clear int reg */
-comment|/* 1fe.0000.1880 */
-name|u_int64_t
-name|pciaerr_int_clr
-decl_stmt|;
-comment|/* PCI bus b error clear int reg */
-comment|/* 1fe.0000.1888 */
-name|u_int64_t
-name|pciberr_int_clr
-decl_stmt|;
-comment|/* power mgmt wake clr interrupt reg */
-comment|/* 1fe.0000.1890 */
-name|u_int64_t
-name|pwrmgt_int_clr
-decl_stmt|;
-name|u_int64_t
-name|pad7
-index|[
-literal|45
-index|]
-decl_stmt|;
-comment|/* interrupt retry timer */
-comment|/* 1fe.0000.1a00 */
-name|u_int64_t
-name|intr_retry_timer
-decl_stmt|;
-name|u_int64_t
-name|pad8
-index|[
-literal|63
-index|]
-decl_stmt|;
-struct|struct
-name|timer_counter
-block|{
-comment|/* timer/counter 0/1 count register */
-comment|/* 1fe.0000.1c00,1c10 */
-name|u_int64_t
-name|tc_count
-decl_stmt|;
-comment|/* timer/counter 0/1 limit register */
-comment|/* 1fe.0000.1c08,1c18 */
-name|u_int64_t
-name|tc_limit
-decl_stmt|;
-block|}
-name|tc
-index|[
-literal|2
-index|]
-struct|;
-comment|/* PCI DMA write sync register (IIi) */
-comment|/* 1fe.0000.1c20 */
-name|u_int64_t
-name|pci_dma_write_sync
-decl_stmt|;
-name|u_int64_t
-name|pad9
-index|[
-literal|123
-index|]
-decl_stmt|;
-struct|struct
-name|pci_ctl
-block|{
-comment|/* PCI a/b control/status register */
-comment|/* 1fe.0000.2000,4000 */
-name|u_int64_t
-name|pci_csr
-decl_stmt|;
-name|u_int64_t
-name|pad10
-decl_stmt|;
-comment|/* PCI a/b AFSR register */
-comment|/* 1fe.0000.2010,4010 */
-name|u_int64_t
-name|pci_afsr
-decl_stmt|;
-comment|/* PCI a/b AFAR register */
-comment|/* 1fe.0000.2018,4018 */
-name|u_int64_t
-name|pci_afar
-decl_stmt|;
-comment|/* PCI a/b diagnostic register */
-comment|/* 1fe.0000.2020,4020 */
-name|u_int64_t
-name|pci_diag
-decl_stmt|;
-comment|/* PCI target address space reg (IIi)*/
-comment|/* 1fe.0000.2028,4028 */
-name|u_int64_t
-name|pci_tasr
-decl_stmt|;
-name|u_int64_t
-name|pad11
-index|[
-literal|250
-index|]
-decl_stmt|;
-comment|/* This is really the IOMMU's, not the PCI bus's */
-comment|/* 1fe.0000.2800-210 */
-name|struct
-name|iommu_strbuf
-name|pci_strbuf
-decl_stmt|;
+end_comment
+
+begin_comment
+comment|/* Offsets into the PSR_PCICTL* register block. */
+end_comment
+
+begin_define
 define|#
 directive|define
-name|psy_iommu_strbuf
-value|psy_pcictl[0].pci_strbuf
-name|u_int64_t
-name|pad12
-index|[
-literal|765
-index|]
-decl_stmt|;
-block|}
-name|psy_pcictl
-index|[
-literal|2
-index|]
-struct|;
-comment|/* For PCI a and b */
-comment|/* 	 * NB: FFB0 and FFB1 intr map regs also appear at 1fe.0000.6000 and 	 * 1fe.0000.8000 respectively 	 */
-name|u_int64_t
-name|pad13
-index|[
-literal|2048
-index|]
-decl_stmt|;
-comment|/* DMA scoreboard diag reg 0 */
-comment|/* 1fe.0000.a000 */
-name|u_int64_t
-name|dma_scb_diag0
-decl_stmt|;
-comment|/* DMA scoreboard diag reg 1 */
-comment|/* 1fe.0000.a008 */
-name|u_int64_t
-name|dma_scb_diag1
-decl_stmt|;
-name|u_int64_t
-name|pad14
-index|[
-literal|126
-index|]
-decl_stmt|;
-comment|/* IOMMU virtual addr diag reg */
-comment|/* 1fe.0000.a400 */
-name|u_int64_t
-name|iommu_svadiag
-decl_stmt|;
-comment|/* IOMMU TLB tag compare diag reg */
-comment|/* 1fe.0000.a408 */
-name|u_int64_t
-name|iommu_tlb_comp_diag
-decl_stmt|;
-name|u_int64_t
-name|pad15
-index|[
-literal|30
-index|]
-decl_stmt|;
-comment|/* IOMMU LRU queue diag */
-comment|/* 1fe.0000.a500-a578 */
-name|u_int64_t
-name|iommu_queue_diag
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* TLB tag diag */
-comment|/* 1fe.0000.a580-a5f8 */
-name|u_int64_t
-name|tlb_tag_diag
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* TLB data RAM diag */
-comment|/* 1fe.0000.a600-a678 */
-name|u_int64_t
-name|tlb_data_diag
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|u_int64_t
-name|pad16
-index|[
-literal|48
-index|]
-decl_stmt|;
-comment|/* PCI int state diag reg */
-comment|/* 1fe.0000.a800 */
-name|u_int64_t
-name|pci_int_diag
-decl_stmt|;
-comment|/* OBIO and misc int state diag reg */
-comment|/* 1fe.0000.a808 */
-name|u_int64_t
-name|obio_int_diag
-decl_stmt|;
-name|u_int64_t
-name|pad17
-index|[
-literal|254
-index|]
-decl_stmt|;
-struct|struct
-name|strbuf_diag
-block|{
-comment|/* streaming buffer data RAM diag */
-comment|/* 1fe.0000.b000-b3f8 */
-name|u_int64_t
-name|strbuf_data_diag
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* streaming buffer error status diag */
-comment|/* 1fe.0000.b400-b7f8 */
-name|u_int64_t
-name|strbuf_error_diag
-index|[
-literal|128
-index|]
-decl_stmt|;
-comment|/* streaming buffer page tag diag */
-comment|/* 1fe.0000.b800-b878 */
-name|u_int64_t
-name|strbuf_pg_tag_diag
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|u_int64_t
-name|pad18
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* streaming buffer line tag diag */
-comment|/* 1fe.0000.b900-b978 */
-name|u_int64_t
-name|strbuf_ln_tag_diag
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|u_int64_t
-name|pad19
-index|[
-literal|208
-index|]
-decl_stmt|;
-block|}
-name|psy_strbufdiag
-index|[
-literal|2
-index|]
-struct|;
-comment|/* For PCI a and b */
-comment|/*  	 * Here is the rest of the map, which we're not specifying: 	 * 	 * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space 	 * 1fe.0100.0000 - 1fe.0100.00ff	PCI B configuration header 	 * 1fe.0101.0000 - 1fe.0101.00ff	PCI A configuration header 	 * 1fe.0200.0000 - 1fe.0200.ffff	PCI A I/O space 	 * 1fe.0201.0000 - 1fe.0201.ffff	PCI B I/O space 	 * 1ff.0000.0000 - 1ff.7fff.ffff	PCI A memory space 	 * 1ff.8000.0000 - 1ff.ffff.ffff	PCI B memory space 	 * 	 * NB: config and I/O space can use 1-4 byte accesses, not 8 byte 	 * accesses.  Memory space can use any sized accesses. 	 * 	 * Note that the SUNW,sabre/SUNW,simba combinations found on the 	 * Ultra5 and Ultra10 machines uses slightly differrent addresses 	 * than the above.  This is mostly due to the fact that the APB is 	 * a multi-function PCI device with two PCI bridges, and the U2P is 	 * two separate PCI bridges.  It uses the same PCI configuration 	 * space, though the configuration header for each PCI bus is 	 * located differently due to the SUNW,simba PCI busses being 	 * function 0 and function 1 of the APB, whereas the psycho's are 	 * each their own PCI device.  The I/O and memory spaces are each 	 * split into 8 equally sized areas (8x2MB blocks for I/O space, 	 * and 8x512MB blocks for memory space).  These are allocated in to 	 * either PCI A or PCI B, or neither in the APB's `I/O Address Map 	 * Register A/B' (0xde) and `Memory Address Map Register A/B' (0xdf) 	 * registers of each simba.  We must ensure that both of the 	 * following are correct (the prom should do this for us): 	 * 	 *    (PCI A Memory Address Map)& (PCI B Memory Address Map) == 0 	 * 	 *    (PCI A I/O Address Map)& (PCI B I/O Address Map) == 0 	 * 	 * 1fe.0100.0000 - 1fe.01ff.ffff	PCI configuration space 	 * 1fe.0100.0800 - 1fe.0100.08ff	PCI B configuration header 	 * 1fe.0100.0900 - 1fe.0100.09ff	PCI A configuration header 	 * 1fe.0200.0000 - 1fe.02ff.ffff	PCI I/O space (divided) 	 * 1ff.0000.0000 - 1ff.ffff.ffff	PCI memory space (divided)  	 */
-block|}
-struct|;
-end_struct
+name|PCR_CS
+value|0x0000
+end_define
+
+begin_comment
+comment|/* PCI control/status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCR_AFS
+value|0x0010
+end_define
+
+begin_comment
+comment|/* PCI AFSR register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCR_AFA
+value|0x0018
+end_define
+
+begin_comment
+comment|/* PCI AFAR register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCR_DIAG
+value|0x0020
+end_define
+
+begin_comment
+comment|/* PCI diagnostic register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCR_TAS
+value|0x0028
+end_define
+
+begin_comment
+comment|/* PCI target address space reg (IIi) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCR_STRBUF
+value|0x0800
+end_define
+
+begin_comment
+comment|/* IOMMU streaming buffer registers. */
+end_comment
+
+begin_comment
+comment|/* Device space defines. */
+end_comment
 
 begin_define
 define|#

@@ -27,11 +27,6 @@ name|device_t
 name|sc_dev
 decl_stmt|;
 comment|/* 	 * PSYCHO register.  we record the base physical address of these 	 * also as it is the base of the entire PSYCHO 	 */
-name|struct
-name|psychoreg
-modifier|*
-name|sc_regs
-decl_stmt|;
 name|vm_offset_t
 name|sc_basepaddr
 decl_stmt|;
@@ -48,6 +43,9 @@ name|sc_bushandle
 decl_stmt|;
 name|bus_dma_tag_t
 name|sc_dmatag
+decl_stmt|;
+name|bus_addr_t
+name|sc_pcictl
 decl_stmt|;
 name|int
 name|sc_clockfreq
