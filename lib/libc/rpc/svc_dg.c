@@ -910,7 +910,7 @@ decl_stmt|;
 name|size_t
 name|replylen
 decl_stmt|;
-name|int
+name|ssize_t
 name|rlen
 decl_stmt|;
 name|again
@@ -982,11 +982,16 @@ operator|||
 operator|(
 name|rlen
 operator|<
+call|(
+name|ssize_t
+call|)
+argument_list|(
 literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
 name|u_int32_t
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -1339,6 +1344,9 @@ operator|.
 name|len
 argument_list|)
 operator|==
+operator|(
+name|ssize_t
+operator|)
 name|slen
 condition|)
 block|{
