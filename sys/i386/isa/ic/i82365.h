@@ -12,7 +12,7 @@ name|__83265_H__
 end_define
 
 begin_comment
-comment|/***********************************************************************  * 82365.h -- information necessary for direct manipulation of PCMCIA  * cards and controllers  *  * Support is included for Intel 82365SL PCIC controllers and clones  * thereof.  *  * originally by Barry Jaspan; hacked over by Keith Moore  *  ***********************************************************************/
+comment|/***********************************************************************  * 82365.h -- information necessary for direct manipulation of PCMCIA  * cards and controllers  *  * Support is included for Intel 82365SL PCIC controllers and clones  * thereof.  *  * originally by Barry Jaspan; hacked over by Keith Moore  *  * $FreeBSD$  ***********************************************************************/
 end_comment
 
 begin_comment
