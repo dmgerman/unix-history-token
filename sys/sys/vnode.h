@@ -671,6 +671,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VI_OWEINACT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Need to call inactive */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VV_ROOT
 value|0x0001
 end_define
