@@ -12960,7 +12960,7 @@ comment|/* start */
 name|TRUE
 argument_list|,
 comment|/* load_eject */
-name|TRUE
+name|FALSE
 argument_list|,
 comment|/* immediate */
 name|FALSE
