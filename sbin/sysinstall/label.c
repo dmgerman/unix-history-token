@@ -4124,7 +4124,7 @@ condition|)
 block|{
 name|yip
 operator|=
-literal|"Oh god, I'm so confused!"
+literal|"Sizes unchanged - couldn't find room"
 expr_stmt|;
 break|break;
 block|}
