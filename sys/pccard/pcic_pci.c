@@ -786,6 +786,18 @@ name|pcic_pci_topic_init
 block|}
 block|,
 block|{
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC95B
+block|,
+literal|"Toshiba ToPIC95B PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
+block|,
+name|pcic_pci_topic_init
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
 block|,
 literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
