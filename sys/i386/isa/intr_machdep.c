@@ -2779,19 +2779,6 @@ name|NULL
 condition|)
 block|{
 comment|/* no reference to this maskptr was found in this irq's chain */
-if|if
-condition|(
-operator|(
-operator|*
-name|maskptr
-operator|&
-name|mask
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
-comment|/* the irq was included in the classes mask, remove it */
 operator|*
 name|maskptr
 operator|&=
@@ -2802,19 +2789,6 @@ block|}
 else|else
 block|{
 comment|/* a reference to this maskptr was found in this irq's chain */
-if|if
-condition|(
-operator|(
-operator|*
-name|maskptr
-operator|&
-name|mask
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return;
-comment|/* put the irq into the classes mask */
 operator|*
 name|maskptr
 operator||=
