@@ -473,6 +473,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_TRYLOCK
+parameter_list|(
+name|object
+parameter_list|)
+value|mtx_trylock(&(object)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_UNLOCK
 parameter_list|(
 name|object
