@@ -2800,8 +2800,8 @@ condition|)
 goto|goto
 name|match
 goto|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|m
 operator|->
 name|m_pkthdr
@@ -2809,14 +2809,7 @@ operator|.
 name|rcvif
 operator|!=
 name|NULL
-argument_list|,
-operator|(
-literal|"icmp_reflect: NULL rcvif"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|m
 operator|->
 name|m_pkthdr
