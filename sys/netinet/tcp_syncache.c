@@ -2972,9 +2972,10 @@ name|tp
 operator|->
 name|t_flags
 operator|=
-name|sc
-operator|->
-name|sc_tp
+name|sototcpcb
+argument_list|(
+name|lso
+argument_list|)
 operator|->
 name|t_flags
 operator|&
