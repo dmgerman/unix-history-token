@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"nss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mcd.h"
 end_include
 
@@ -565,6 +571,14 @@ specifier|extern
 name|struct
 name|isa_driver
 name|uartdriver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isa_driver
+name|nssdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,6 +1460,20 @@ name|INTR_TYPE_MISC
 block|,
 operator|&
 name|uartdriver
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|NNSS
+operator|>
+literal|0
+block|{
+name|INTR_TYPE_MISC
+block|,
+operator|&
+name|nssdriver
 block|}
 block|,
 endif|#
