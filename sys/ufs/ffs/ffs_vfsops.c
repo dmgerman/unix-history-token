@@ -574,6 +574,11 @@ name|error
 operator|)
 return|;
 comment|/* 			 * Flush any dirty data. 			 */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|VFS_SYNC
 argument_list|(
 name|mp
@@ -588,7 +593,22 @@ name|p_ucred
 argument_list|,
 name|td
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|vn_finished_write
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* 			 * Check for and optionally get rid of files open 			 * for writing. 			 */
 name|flags
 operator|=
@@ -5775,6 +5795,10 @@ expr_stmt|;
 comment|/* Flushed work items may create new vnodes to clean */
 if|if
 condition|(
+name|allerror
+operator|==
+literal|0
+operator|&&
 name|count
 condition|)
 block|{
@@ -5880,6 +5904,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|allerror
+operator|==
+literal|0
+operator|&&
 name|waitfor
 operator|==
 name|MNT_WAIT

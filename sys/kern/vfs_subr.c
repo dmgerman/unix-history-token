@@ -14577,6 +14577,8 @@ operator|->
 name|a_td
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|asyncflag
 decl_stmt|;
 comment|/* 	 * We only need to do something if this is a lazy evaluation. 	 */
@@ -14699,6 +14701,8 @@ argument_list|,
 name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|VFS_SYNC
 argument_list|(
 name|mp
@@ -14736,7 +14740,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

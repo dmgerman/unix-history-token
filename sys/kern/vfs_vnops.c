@@ -4631,7 +4631,7 @@ comment|/*  * Request a filesystem to suspend write operations.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|vfs_write_suspend
 parameter_list|(
 name|mp
@@ -4649,6 +4649,9 @@ name|td
 init|=
 name|curthread
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|mp
@@ -4657,7 +4660,11 @@ name|mnt_kern_flag
 operator|&
 name|MNTK_SUSPEND
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|mp
 operator|->
 name|mnt_kern_flag
@@ -4691,6 +4698,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|VFS_SYNC
 argument_list|(
 name|mp
@@ -4703,13 +4715,33 @@ name|td_ucred
 argument_list|,
 name|td
 argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|vfs_write_resume
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|mp
 operator|->
 name|mnt_kern_flag
 operator||=
 name|MNTK_SUSPENDED
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
