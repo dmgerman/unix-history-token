@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.27	83/06/12	*/
+comment|/*	if_dmc.c	4.28	83/06/13	*/
 end_comment
 
 begin_include
@@ -1636,6 +1636,12 @@ name|dmc_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|register
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|struct
 name|uba_device
 modifier|*
@@ -1728,6 +1734,13 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_if
+expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcxint\n"
@@ -1744,10 +1757,8 @@ case|case
 name|DMC_OUR
 case|:
 comment|/* 		 * A read has completed.  Purge input buffered 		 * data path.  Pass packet to type specific 		 * higher-level input routine. 		 */
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_ipackets
 operator|++
 expr_stmt|;
@@ -1793,11 +1804,11 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ui
+name|ifp
 operator|->
-name|ui_flags
-operator|&
-name|DMC_AF
+name|if_addr
+operator|.
+name|sa_family
 condition|)
 block|{
 ifdef|#
@@ -1826,11 +1837,11 @@ literal|"dmc%d: unknown address type %d\n"
 argument_list|,
 name|unit
 argument_list|,
-name|ui
+name|ifp
 operator|->
-name|ui_flags
-operator|&
-name|DMC_AF
+name|if_addr
+operator|.
+name|sa_family
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1942,10 +1953,8 @@ argument_list|(
 literal|"  write done\n"
 argument_list|)
 expr_stmt|;
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_opackets
 operator|++
 expr_stmt|;
@@ -1984,10 +1993,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|sc_if
-operator|.
 name|if_snd
 operator|.
 name|ifq_head
@@ -2129,13 +2136,11 @@ name|dst
 operator|->
 name|sa_family
 operator|!=
-operator|(
-name|ui
+name|ifp
 operator|->
-name|ui_flags
-operator|&
-name|DMC_AF
-operator|)
+name|if_addr
+operator|.
+name|sa_family
 condition|)
 block|{
 name|printf
