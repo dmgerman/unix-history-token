@@ -2234,6 +2234,18 @@ argument_list|,
 name|M_MBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|how
+operator|==
+name|M_TRYWAIT
+condition|)
+name|mb_list
+operator|->
+name|ml_mapfull
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2743,12 +2755,6 @@ name|M_TRYWAIT
 condition|)
 block|{
 comment|/* 			 	   * Absolute worst-case scenario. We block if 			 	   * we're willing to, but only after trying to 				   * steal from other lists. 				   */
-name|mb_list
-operator|->
-name|ml_mapfull
-operator|=
-literal|1
-expr_stmt|;
 name|m
 operator|=
 name|mb_alloc_wait
