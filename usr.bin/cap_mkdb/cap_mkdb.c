@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cap_mkdb.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,19 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -320,15 +320,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"strdup failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -590,15 +586,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -687,7 +679,7 @@ name|TCERR
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"Record not tc expanded: %.*s"
+literal|"record not tc expanded: %.*s"
 argument_list|,
 name|p
 operator|-
@@ -1054,7 +1046,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cap_mkdb [-v] [-f outfile] file1 [file2 ...]\n"
+literal|"usage: cap_mkdb [-v] [-f outfile] file [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
