@@ -127,6 +127,7 @@ specifier|static
 name|int
 name|acct_load
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1081,17 +1082,14 @@ specifier|static
 name|int
 name|acct_load
 parameter_list|(
-name|pn
-parameter_list|,
-name|wr
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|pn
-decl_stmt|;
+parameter_list|,
 name|int
 name|wr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|acct
@@ -1555,21 +1553,16 @@ specifier|static
 name|int
 name|cmp_comm
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|rv
@@ -1605,7 +1598,7 @@ name|rv
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by total user and system time */
@@ -1616,21 +1609,16 @@ specifier|static
 name|int
 name|cmp_usrsys
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -1729,7 +1717,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by average user and system time */
@@ -1740,21 +1728,16 @@ specifier|static
 name|int
 name|cmp_avgusrsys
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -1887,7 +1870,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by total number of disk I/O operations */
@@ -1898,21 +1881,16 @@ specifier|static
 name|int
 name|cmp_dkio
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -1994,7 +1972,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by average number of disk I/O operations */
@@ -2005,21 +1983,16 @@ specifier|static
 name|int
 name|cmp_avgdkio
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -2146,7 +2119,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by the cpu-storage integral */
@@ -2157,21 +2130,16 @@ specifier|static
 name|int
 name|cmp_cpumem
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -2253,7 +2221,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by the cpu-time average memory usage */
@@ -2264,21 +2232,16 @@ specifier|static
 name|int
 name|cmp_avgcpumem
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -2422,7 +2385,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* sort by the number of invocations */
@@ -2433,21 +2396,16 @@ specifier|static
 name|int
 name|cmp_calls
 parameter_list|(
-name|d1
-parameter_list|,
-name|d2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|d1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|d2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|cmdinfo
@@ -2529,7 +2487,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -95,24 +95,21 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|uid_compare
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|DBT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|DBT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -430,14 +427,12 @@ begin_function
 name|int
 name|usracct_add
 parameter_list|(
-name|ci
-parameter_list|)
 specifier|const
 name|struct
 name|cmdinfo
 modifier|*
 name|ci
-decl_stmt|;
+parameter_list|)
 block|{
 name|DBT
 name|key
@@ -1201,21 +1196,16 @@ specifier|static
 name|int
 name|uid_compare
 parameter_list|(
-name|k1
-parameter_list|,
-name|k2
-parameter_list|)
 specifier|const
 name|DBT
 modifier|*
 name|k1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|DBT
+modifier|*
 name|k2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|u_long
 name|d1
@@ -1273,7 +1263,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
