@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_comment
@@ -725,6 +731,50 @@ directive|define
 name|STDERR_FILENO
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCKF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LOCK_SH
+value|0x01
+end_define
+
+begin_comment
+comment|/* shared lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_EX
+value|0x02
+end_define
+
+begin_comment
+comment|/* exclusive lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_NB
+value|0x04
+end_define
+
+begin_comment
+comment|/* non-blocking lock */
+end_comment
 
 begin_endif
 endif|#

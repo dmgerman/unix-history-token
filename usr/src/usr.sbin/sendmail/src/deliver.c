@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.45 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -1282,19 +1276,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-name|define
-argument_list|(
-literal|'<'
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1944,19 +1925,6 @@ expr_stmt|;
 name|define
 argument_list|(
 literal|'g'
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-name|define
-argument_list|(
-literal|'<'
 argument_list|,
 operator|(
 name|char
@@ -5744,15 +5712,6 @@ name|splitenv
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCKF
-name|struct
-name|flock
-name|lfd
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* determine actual delivery mode */
 if|if
 condition|(
@@ -6844,6 +6803,15 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCKF
+name|struct
+name|flock
+name|lfd
+decl_stmt|;
+endif|#
+directive|endif
 name|oldverbose
 operator|=
 name|Verbose

@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -93,7 +87,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.25 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.26 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -108,7 +102,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.25 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.26 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.25 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.26 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.25 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.26 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,21 +1818,17 @@ name|dbmp
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LOCKF
-name|struct
-name|flock
-name|fld
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|line
 index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+specifier|extern
+name|bool
+name|lockfile
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(
@@ -1904,70 +1894,23 @@ argument_list|(
 name|NEWDB
 argument_list|)
 comment|/* see if someone else is rebuilding the alias file already */
-ifdef|#
-directive|ifdef
-name|LOCKF
-name|fld
-operator|.
-name|l_type
-operator|=
-name|F_WRLCK
-expr_stmt|;
-name|fld
-operator|.
-name|l_whence
-operator|=
-name|fld
-operator|.
-name|l_start
-operator|=
-name|fld
-operator|.
-name|l_len
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
-name|fcntl
+operator|!
+name|lockfile
 argument_list|(
 name|fileno
 argument_list|(
 name|af
 argument_list|)
 argument_list|,
-name|F_SETLK
-argument_list|,
-operator|&
-name|fld
-argument_list|)
-operator|<
-literal|0
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|flock
-argument_list|(
-name|fileno
-argument_list|(
-name|af
-argument_list|)
+name|aliasfile
 argument_list|,
 name|LOCK_EX
 operator||
 name|LOCK_NB
 argument_list|)
-operator|<
-literal|0
-operator|&&
-name|errno
-operator|==
-name|EWOULDBLOCK
 condition|)
-endif|#
-directive|endif
 block|{
 comment|/* yes, they are -- wait until done and then return */
 name|message
@@ -1983,42 +1926,21 @@ name|MD_INITALIAS
 condition|)
 block|{
 comment|/* wait for other rebuild to complete */
-ifdef|#
-directive|ifdef
-name|LOCKF
 operator|(
 name|void
 operator|)
-name|fcntl
+name|lockfile
 argument_list|(
 name|fileno
 argument_list|(
 name|af
 argument_list|)
 argument_list|,
-name|F_SETLKW
-argument_list|,
-operator|&
-name|fld
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|flock
-argument_list|(
-name|fileno
-argument_list|(
-name|af
-argument_list|)
+name|aliasfile
 argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 operator|(
 name|void

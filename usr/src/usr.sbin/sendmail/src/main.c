@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.37 (Berkeley) %G%"
+literal|"@(#)main.c	6.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|"sendmail.h"
 end_include
 
 begin_include
@@ -80,12 +80,6 @@ begin_include
 include|#
 directive|include
 file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
 end_include
 
 begin_ifdef
@@ -3741,6 +3735,12 @@ begin_comment
 comment|/* 	**  Do basic system initialization and set the sender 	*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSTEM5
+end_ifndef
+
 begin_comment
 comment|/* make sendmail immune from process group signals */
 end_comment
@@ -3758,6 +3758,11 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|initsys

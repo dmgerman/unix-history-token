@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.12 (Berkeley) %G%"
+literal|"@(#)util.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1497,12 +1497,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|FLOCK
 name|int
 name|locktype
 decl_stmt|;
+specifier|extern
+name|bool
+name|lockfile
+parameter_list|()
+function_decl|;
 comment|/* lock the file to avoid accidental conflicts */
 if|if
 condition|(
@@ -1528,18 +1530,18 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|flock
+name|lockfile
 argument_list|(
 name|fileno
 argument_list|(
 name|fp
 argument_list|)
 argument_list|,
+name|filename
+argument_list|,
 name|locktype
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|errno
 operator|=
 literal|0

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.27 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +38,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.21 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_comment
