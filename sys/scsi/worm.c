@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * worm: Write Once device driver  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * Copyright (C) 1996, interface business GmbH  *   Tolkewitzer Str. 49  *   D-01277 Dresden  *   F.R. Germany  *<joerg_wunsch@interface-business.de>  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: worm.c,v 1.29.2.3 1997/04/04 22:13:36 jkh Exp $  */
+comment|/*  * worm: Write Once device driver  *  * Copyright (C) 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * Copyright (C) 1996, interface business GmbH  *   Tolkewitzer Str. 49  *   D-01277 Dresden  *   F.R. Germany  *<joerg_wunsch@interface-business.de>  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: worm.c,v 1.29.2.4 1997/05/05 13:35:51 joerg Exp $  */
 end_comment
 
 begin_include
@@ -1410,6 +1410,15 @@ name|worm
 operator|->
 name|blk_size
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|)
+comment|/* 		     * Leave the LBA as 0 for write operations, it 		     * is reserved in this case (and wouldn't make 		     * any sense to set it at all, since CD-R write 		     * operations are in `streaming' mode anyway. 		     */
 name|scsi_uto4b
 argument_list|(
 name|lba
@@ -1576,6 +1585,7 @@ block|}
 comment|/* go back and see if we can cram more work in.. */
 name|badnews
 label|:
+empty_stmt|;
 block|}
 end_function
 
@@ -2073,15 +2083,6 @@ literal|"rezero, get size, or prepare_track failed\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|scsi_stop_unit
-argument_list|(
-name|sc_link
-argument_list|,
-literal|0
-argument_list|,
-name|SCSI_SILENT
-argument_list|)
-expr_stmt|;
 name|scsi_prevent
 argument_list|(
 name|sc_link
@@ -2135,15 +2136,6 @@ argument_list|,
 operator|(
 literal|"get size failed\n"
 operator|)
-argument_list|)
-expr_stmt|;
-name|scsi_stop_unit
-argument_list|(
-name|sc_link
-argument_list|,
-literal|0
-argument_list|,
-name|SCSI_SILENT
 argument_list|)
 expr_stmt|;
 name|scsi_prevent
@@ -2239,15 +2231,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|scsi_stop_unit
-argument_list|(
-name|sc_link
-argument_list|,
-literal|0
-argument_list|,
-name|SCSI_SILENT
-argument_list|)
-expr_stmt|;
 name|scsi_prevent
 argument_list|(
 name|sc_link
@@ -4488,6 +4471,9 @@ name|struct
 name|scsi_synchronize_cache
 name|cmd
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -4517,7 +4503,8 @@ name|op_code
 operator|=
 name|SYNCHRONIZE_CACHE
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|scsi_scsi_cmd
 argument_list|(
 name|sc_link
@@ -4549,6 +4536,25 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|error
+operator|=
+name|rf4100_prepare_track
+argument_list|(
+name|sc_link
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
@@ -5336,6 +5342,9 @@ name|struct
 name|scsi_synchronize_cache
 name|cmd
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -5365,7 +5374,8 @@ name|op_code
 operator|=
 name|SYNCHRONIZE_CACHE
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|scsi_scsi_cmd
 argument_list|(
 name|sc_link
@@ -5397,6 +5407,25 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|error
+operator|=
+name|rf4100_prepare_track
+argument_list|(
+name|sc_link
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
