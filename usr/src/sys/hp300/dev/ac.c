@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ac.c 1.5 92/01/21$  *  *	@(#)ac.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ac.c 1.5 92/01/21$  *  *	@(#)ac.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -37,36 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include
