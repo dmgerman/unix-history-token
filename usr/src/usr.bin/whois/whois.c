@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.7 (Berkeley) %G%"
+literal|"@(#)whois.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,8 +267,6 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -317,6 +315,11 @@ name|bind
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -324,8 +327,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -348,6 +349,10 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sin
 operator|.
@@ -411,8 +416,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -514,6 +517,11 @@ condition|)
 name|putchar
 argument_list|(
 name|ch
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
