@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$	*/
+comment|/*	$Id: ftp_var.h,v 1.6 1997/12/13 20:38:18 pst Exp $	*/
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<stringlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_ifndef
@@ -867,6 +873,27 @@ end_decl_stmt
 
 begin_comment
 comment|/* port number to use for gateftp connections */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dobind
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bind to specific address */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+name|bindto
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address to bind to */
 end_comment
 
 begin_decl_stmt

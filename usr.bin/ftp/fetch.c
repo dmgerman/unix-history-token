@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: fetch.c,v 1.4 1997/12/16 08:22:35 ache Exp $"
+literal|"$Id: fetch.c,v 1.5 1997/12/16 08:58:15 ache Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -991,6 +991,48 @@ block|{
 name|warn
 argument_list|(
 literal|"Can't create socket"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup_url_get
+goto|;
+block|}
+if|if
+condition|(
+name|dobind
+operator|&&
+name|bind
+argument_list|(
+name|s
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|bindto
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bindto
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Can't bind to %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|bindto
+operator|.
+name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
