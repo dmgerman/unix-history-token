@@ -28,7 +28,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Andrew A. Chernov<ache@astral.msk.su>    Dec 15 1993  *  * Fix kernel time value if machine run wall CMOS clock  * (and /etc/wall_cmos_clock file present)  * using zoneinfo rules or direct TZ environment variable set.  * Use Joerg Wunsch idea for seconds accurate offset calculation  * with Garrett Wollman and Bruce Evans fixes.  *  */
+comment|/*  * Andrew A. Chernov<ache@astral.msk.su>    Dec 20 1993  *  * Fix kernel time value if machine run wall CMOS clock  * (and /etc/wall_cmos_clock file present)  * using zoneinfo rules or direct TZ environment variable set.  * Use Joerg Wunsch idea for seconds accurate offset calculation  * with Garrett Wollman and Bruce Evans fixes.  *  */
 end_comment
 
 begin_include
@@ -124,6 +124,9 @@ decl_stmt|,
 name|localsec
 decl_stmt|,
 name|diff
+decl_stmt|;
+name|time_t
+name|final_sec
 decl_stmt|;
 name|int
 name|ch
@@ -413,7 +416,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong hour to call\n"
+literal|"Wrong initial hour to call\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -430,15 +433,120 @@ comment|/* correct the kerneltime for this diffs */
 comment|/* subtract kernel offset, if present, old offset too */
 name|diff
 operator|=
-name|oldoffset
-operator|+
+name|offset
+operator|-
 name|tz
 operator|.
 name|tz_minuteswest
 operator|*
 literal|60
 operator|-
+name|oldoffset
+expr_stmt|;
+if|if
+condition|(
+name|diff
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Yet one step for final time */
+name|final_sec
+operator|=
+name|tv
+operator|.
+name|tv_sec
+operator|+
+name|diff
+expr_stmt|;
+comment|/* get the actual local timezone difference */
+name|local
+operator|=
+operator|*
+name|localtime
+argument_list|(
+operator|&
+name|final_sec
+argument_list|)
+expr_stmt|;
+name|utc
+operator|=
+operator|*
+name|gmtime
+argument_list|(
+operator|&
+name|final_sec
+argument_list|)
+expr_stmt|;
+name|utc
+operator|.
+name|tm_isdst
+operator|=
+name|local
+operator|.
+name|tm_isdst
+expr_stmt|;
+comment|/* Use current timezone for mktime(), */
+comment|/* because it assumed local time */
+name|utcsec
+operator|=
+name|mktime
+argument_list|(
+operator|&
+name|utc
+argument_list|)
+expr_stmt|;
+name|localsec
+operator|=
+name|mktime
+argument_list|(
+operator|&
+name|local
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|utcsec
+operator|==
+operator|-
+literal|1
+operator|||
+name|localsec
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Wrong final hour to call\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|offset
+operator|=
+name|utcsec
+operator|-
+name|localsec
+expr_stmt|;
+comment|/* correct the kerneltime for this diffs */
+comment|/* subtract kernel offset, if present, old offset too */
+name|diff
+operator|=
+name|offset
+operator|-
+name|tz
+operator|.
+name|tz_minuteswest
+operator|*
+literal|60
+operator|-
+name|oldoffset
 expr_stmt|;
 if|if
 condition|(
@@ -464,6 +572,12 @@ name|stv
 operator|=
 operator|&
 name|tv
+expr_stmt|;
+block|}
+else|else
+name|stv
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 else|else
