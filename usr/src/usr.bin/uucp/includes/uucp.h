@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)uucp.h	5.15	%G%	*/
+comment|/*	@(#)uucp.h	5.16	%G%	*/
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  * Determine local uucp name of this machine.  * Define one of the following:  *  * For UCB 4.1A and later systems, you will have the gethostname(2) call.  * If this call exists, define GETHOSTNAME.  *  * For USG 3.0 and later systems, you will have the uname(2) call.  * If this call exists, define UNAME.  *  * Some systems have a line of the form '#define sysname "myuucpname",'  * in the file /usr/include/whoami.h, to identify their machine.  * If your site does that, define WHOAMI.  *  * If your site has<whoami.h>, but you do not want to read  * that file every time uucp runs, you can compile sysname into uucp.  * This is faster and more reliable, but binaries do not port.  * If you want to do that, define CCWHOAMI.  *  * Some systems put the local uucp name in a single-line file  * named /etc/uucpname or /local/uucpname.  * If your site does that, define UUNAME.  *  * Systems running 3Com's UNET will have the getmyhname() call.  * If you want to, define GETMYHNAME.  *  * You should also define MYNAME to be your uucp name.  *  * For each of the above that are defined, uucp checks them in order.  * It stops on the first method that returns a non null name.  * If everything fails, it uses "unknown" for the system name.  */
+comment|/*  * Determine local uucp name of this machine.  * Define one of the following:  *  * For UCB 4.1A and later systems, you will have the gethostname(2) call.  * If this call exists, define GETHOSTNAME.  *  * For USG 3.0 and later systems, you will have the uname(2) call.  * If this call exists, define UNAME.  *  * Some systems have a line of the form '#define sysname "myuucpname",'  * in the file /usr/include/whoami.h, to identify their machine.  * If your site does that, define WHOAMI.  *  * If your site has<whoami.h>, but you do not want to read  * that file every time uucp runs, you can compile sysname into uucp.  * This is faster and more reliable, but binaries do not port.  * If you want to do that, define CCWHOAMI.  *  * Some systems put the local uucp name in a single-line file  * named /etc/uucpname or /local/uucpname.  * If your site does that, define UUNAME.  *  * You should also define MYNAME to be your uucp name.  *  * For each of the above that are defined, uucp checks them in order.  * It stops on the first method that returns a non null name.  * If everything fails, it uses "unknown" for the system name.  */
 end_comment
 
 begin_define
@@ -37,10 +37,6 @@ end_comment
 
 begin_comment
 comment|/* #define UUNAME	/**/
-end_comment
-
-begin_comment
-comment|/* #define GETMYHNAME	/**/
 end_comment
 
 begin_comment
