@@ -161,9 +161,11 @@ name|compress
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -223,9 +225,11 @@ name|decompress
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -241,6 +245,7 @@ name|permission
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -254,6 +259,7 @@ name|setfile
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -934,6 +940,7 @@ name|out
 parameter_list|,
 name|bits
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|in
@@ -951,8 +958,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
+name|size_t
 name|nr
 decl_stmt|;
 name|struct
@@ -1447,6 +1453,7 @@ name|out
 parameter_list|,
 name|bits
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|in
@@ -1464,8 +1471,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
+name|size_t
 name|nr
 decl_stmt|;
 name|struct
@@ -1810,11 +1816,11 @@ name|name
 parameter_list|,
 name|fs
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|struct
 name|stat
 modifier|*
@@ -1982,6 +1988,7 @@ name|permission
 parameter_list|(
 name|fname
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
