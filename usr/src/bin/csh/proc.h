@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ name|char
 name|p_reason
 decl_stmt|;
 comment|/* reason for entering this state */
-name|char
+name|int
 name|p_index
 decl_stmt|;
 comment|/* shorthand job index */
@@ -405,7 +405,7 @@ comment|/* previous job in table */
 end_comment
 
 begin_decl_stmt
-name|short
+name|int
 name|pmaxindex
 decl_stmt|;
 end_decl_stmt
