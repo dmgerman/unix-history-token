@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)hpux_compat.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)hpux_compat.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3009,7 +3009,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|off_t
+name|long
 modifier|*
 name|retval
 decl_stmt|;
@@ -4402,6 +4402,9 @@ name|ds
 operator|.
 name|hst_dev
 operator|=
+operator|(
+name|u_short
+operator|)
 name|sb
 operator|->
 name|st_dev
@@ -4507,13 +4510,37 @@ operator|->
 name|st_rdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|->
+name|st_size
+operator|<
+operator|(
+name|quad_t
+operator|)
+literal|1
+operator|<<
+literal|32
+condition|)
 name|ds
 operator|.
 name|hst_size
 operator|=
+operator|(
+name|long
+operator|)
 name|sb
 operator|->
 name|st_size
+expr_stmt|;
+else|else
+name|ds
+operator|.
+name|hst_size
+operator|=
+operator|-
+literal|2
 expr_stmt|;
 name|ds
 operator|.
@@ -7293,7 +7320,7 @@ begin_struct
 struct|struct
 name|ohpuxstat
 block|{
-name|dev_t
+name|u_short
 name|ohst_dev
 decl_stmt|;
 name|u_short
@@ -7311,7 +7338,7 @@ decl_stmt|;
 name|short
 name|ohst_gid
 decl_stmt|;
-name|dev_t
+name|u_short
 name|ohst_rdev
 decl_stmt|;
 name|int
@@ -8916,7 +8943,7 @@ operator|.
 name|ohst_rdev
 operator|=
 operator|(
-name|dev_t
+name|u_short
 operator|)
 name|vattr
 operator|.
