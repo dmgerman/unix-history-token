@@ -942,6 +942,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -7946,7 +7950,7 @@ name|frwl
 operator|->
 name|fw_number
 expr_stmt|;
-comment|/* 	* It's possible to insert multiple chain entries with the 	* same number, so we don't stop after finding the first 	* match if zeroing a specific entry. 	*/
+comment|/* 	 * It is possible to insert multiple chain entries with the 	 * same number, so we don't stop after finding the first 	 * match if zeroing a specific entry. 	 */
 name|LIST_FOREACH
 argument_list|(
 argument|rule
@@ -8042,7 +8046,7 @@ condition|(
 operator|!
 name|cleared
 condition|)
-comment|/* we didn't find any matching rules */
+comment|/* we did not find any matching rules */
 return|return
 operator|(
 name|EINVAL

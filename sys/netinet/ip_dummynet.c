@@ -3761,18 +3761,6 @@ return|return
 name|NULL
 return|;
 block|}
-name|bzero
-argument_list|(
-name|q
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|q
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* needed */
 name|q
 operator|->
 name|fs
@@ -5019,7 +5007,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* XXX expensive, see if we can remove it*/
+comment|/* XXX expensive to zero, see if we can remove it*/
 name|pkt
 operator|=
 operator|(
