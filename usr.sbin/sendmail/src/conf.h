@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.272 (Berkeley) 11/16/96  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.279 (Berkeley) 12/1/96  */
 end_comment
 
 begin_comment
@@ -2332,6 +2332,13 @@ name|setpgid
 value|setpgrp
 end_define
 
+begin_define
+define|#
+directive|define
+name|MODE_T
+value|int
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -2500,6 +2507,17 @@ end_define
 
 begin_comment
 comment|/* does not have getusershell(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf(3) */
 end_comment
 
 begin_ifndef
@@ -2985,7 +3003,7 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_INT
+value|LA_ALPHAOSF
 end_define
 
 begin_define
@@ -7600,17 +7618,6 @@ begin_comment
 comment|/* has setvbuf(3) function */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASSIGSETMASK
-value|0
-end_define
-
-begin_comment
-comment|/* does not have sigsetmask(2) function */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -7936,6 +7943,17 @@ undef|#
 directive|undef
 name|WEXITSTATUS
 end_undef
+
+begin_define
+define|#
+directive|define
+name|MODE_T
+value|int
+end_define
+
+begin_comment
+comment|/* system include files have no mode_t */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -9948,51 +9966,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* heuristic setting of HASSETSIGMASK; can override above */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASSIGSETMASK
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGVTALRM
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSETSIGMASK
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HASSETSIGMASK
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* **  If no type for argument two of getgroups call is defined, assume **  it's an integer -- unfortunately, there seem to be several choices **  here. */
 end_comment
 
@@ -10283,6 +10256,21 @@ comment|/* drop out of server immediately */
 end_comment
 
 begin_comment
+comment|/* pseudo-code used for mci_setstat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_NOTSTICKY
+value|-5
+end_define
+
+begin_comment
+comment|/* don't save persistent status */
+end_comment
+
+begin_comment
 comment|/* **  These are used in a few cases where we need some special **  error codes, but where the system doesn't provide something **  reasonable.  They are printed in errstring. */
 end_comment
 
@@ -10506,6 +10494,12 @@ operator|||
 name|NETISO
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMTP
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -10516,6 +10510,17 @@ end_define
 begin_comment
 comment|/* enable user and server SMTP */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|QUEUE
+end_ifndef
 
 begin_define
 define|#
@@ -10528,6 +10533,17 @@ begin_comment
 comment|/* enable queueing */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DAEMON
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -10538,6 +10554,11 @@ end_define
 begin_comment
 comment|/* include the daemon (requires IPC& SMTP) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

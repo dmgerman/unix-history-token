@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.75 (Berkeley) 11/6/96 (with SMTP)"
+literal|"@(#)usersmtp.c	8.79 (Berkeley) 12/1/96 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.75 (Berkeley) 11/6/96 (without SMTP)"
+literal|"@(#)usersmtp.c	8.79 (Berkeley) 12/1/96 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_comment
 comment|/* **  USERSMTP -- run SMTP protocol from the user end. ** **	This protocol is described in RFC821. */
@@ -476,7 +476,7 @@ goto|;
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitnset
@@ -522,7 +522,7 @@ name|tryhelo
 label|:
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitnset
@@ -679,7 +679,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitset
@@ -785,7 +785,7 @@ argument_list|)
 operator|&&
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 operator|!
 name|bitnset
 argument_list|(
@@ -1647,7 +1647,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_DATAERR
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.6.3"
 argument_list|,
@@ -2111,7 +2111,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_DATAERR
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.5.2"
 argument_list|,
@@ -2135,7 +2135,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_DATAERR
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.1.3"
 argument_list|,
@@ -2159,7 +2159,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_UNAVAILABLE
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.2.2"
 argument_list|,
@@ -2186,7 +2186,7 @@ name|mci_setstat
 argument_list|(
 name|mci
 argument_list|,
-name|EX_UNAVAILABLE
+name|EX_NOTSTICKY
 argument_list|,
 literal|"5.0.0"
 argument_list|,
@@ -2754,6 +2754,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_PROTOCOL
+argument_list|,
+literal|"5.5.1"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 return|return
 name|EX_PROTOCOL
 return|;
@@ -2976,6 +2987,17 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|EX_PROTOCOL
+argument_list|,
+literal|"5.5.1"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_PROTOCOL
@@ -3191,6 +3213,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d>>> .\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -3230,7 +3255,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 if|if
 condition|(
 name|bitnset
@@ -3468,7 +3493,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|FFR_LMTP
+name|_FFR_LMTP
 end_if
 
 begin_function
@@ -4807,6 +4832,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d>>> %s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.315 (Berkeley) 11/10/96"
+literal|"@(#)conf.c	8.325 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -3650,12 +3650,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RELEASESIGNAL -- release a held signal ** **	Parameters: **		sig -- the signal to release. ** **	Returns: **		0 on success. **		-1 on failure. */
+comment|/* **  BLOCKSIGNAL -- hold a signal to prevent delivery ** **	Parameters: **		sig -- the signal to block. ** **	Returns: **		1 signal was previously blocked **		0 signal was not previously blocked **		-1 on failure. */
 end_comment
 
 begin_function
 name|int
-name|releasesignal
+name|blocksignal
 parameter_list|(
 name|sig
 parameter_list|)
@@ -3679,34 +3679,62 @@ value|(1<< ((s) - 1))
 endif|#
 directive|endif
 return|return
-name|sigsetmask
-argument_list|(
+operator|(
 name|sigblock
 argument_list|(
-literal|0
-argument_list|)
-operator|&
-operator|~
 name|sigmask
 argument_list|(
 name|sig
 argument_list|)
 argument_list|)
+operator|&
+name|sigmask
+argument_list|(
+name|sig
+argument_list|)
+operator|)
+operator|!=
+literal|0
 return|;
 else|#
 directive|else
 ifdef|#
 directive|ifdef
 name|ALTOS_SYSTEM_V
-name|sigrelse
+name|sigfunc_t
+name|handler
+decl_stmt|;
+name|handler
+operator|=
+name|sigset
 argument_list|(
 name|sig
+argument_list|,
+name|SIG_HOLD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|handler
+operator|==
+name|SIG_ERR
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+else|else
+return|return
+name|handler
+operator|==
+name|SIG_HOLD
+return|;
 else|#
 directive|else
 name|sigset_t
 name|sset
+decl_stmt|,
+name|oset
 decl_stmt|;
 name|sigemptyset
 argument_list|(
@@ -3722,7 +3750,145 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|sset
+argument_list|,
+operator|&
+name|oset
+argument_list|)
+operator|<
+literal|0
+condition|)
 return|return
+operator|-
+literal|1
+return|;
+else|else
+return|return
+name|sigismember
+argument_list|(
+operator|&
+name|oset
+argument_list|,
+name|sig
+argument_list|)
+return|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  RELEASESIGNAL -- release a held signal ** **	Parameters: **		sig -- the signal to release. ** **	Returns: **		1 signal was previously blocked **		0 signal was not previously blocked **		-1 on failure. */
+end_comment
+
+begin_function
+name|int
+name|releasesignal
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|BSD4_3
+return|return
+operator|(
+name|sigsetmask
+argument_list|(
+name|sigblock
+argument_list|(
+literal|0
+argument_list|)
+operator|&
+operator|~
+name|sigmask
+argument_list|(
+name|sig
+argument_list|)
+argument_list|)
+operator|&
+name|sigmask
+argument_list|(
+name|sig
+argument_list|)
+operator|)
+operator|!=
+literal|0
+return|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|ALTOS_SYSTEM_V
+name|sigfunc_t
+name|handler
+decl_stmt|;
+name|handler
+operator|=
+name|sigset
+argument_list|(
+name|sig
+argument_list|,
+name|SIG_HOLD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigrelse
+argument_list|(
+name|sig
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+else|else
+return|return
+name|handler
+operator|==
+name|SIG_HOLD
+return|;
+else|#
+directive|else
+name|sigset_t
+name|sset
+decl_stmt|,
+name|oset
+decl_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sset
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|sset
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sigprocmask
 argument_list|(
 name|SIG_UNBLOCK
@@ -3730,7 +3896,24 @@ argument_list|,
 operator|&
 name|sset
 argument_list|,
-name|NULL
+operator|&
+name|oset
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+else|else
+return|return
+name|sigismember
+argument_list|(
+operator|&
+name|oset
+argument_list|,
+name|sig
 argument_list|)
 return|;
 endif|#
@@ -4083,6 +4266,17 @@ end_define
 
 begin_comment
 comment|/* read short from a device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_ALPHAOSF
+value|14
+end_define
+
+begin_comment
+comment|/* Digital UNIX (OSF/1 on Alpha) table() call */
 end_comment
 
 begin_comment
@@ -4693,8 +4887,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getla: symbol address = %#x\n"
+literal|"getla: symbol address = %#lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|Nl
 index|[
 name|X_AVENRUN
@@ -7064,6 +7261,53 @@ if|#
 directive|if
 name|LA_TYPE
 operator|==
+name|LA_ALPHAOSF
+include|#
+directive|include
+file|<sys/table.h>
+argument|int getla() { 	int ave =
+literal|0
+argument|; 	struct tbl_loadavg tab;  	if (table(TBL_LOADAVG,
+literal|0
+argument|,&tab,
+literal|1
+argument|, sizeof(tab)) == -
+literal|1
+argument|) 	{ 		if (tTd(
+literal|3
+argument|,
+literal|1
+argument|)) 			printf(
+literal|"getla: table %s\n"
+argument|, errstring(errno)); 		return (-
+literal|1
+argument|); 	}  	if (tTd(
+literal|3
+argument|,
+literal|1
+argument|)) 		printf(
+literal|"getla: scale = %d\n"
+argument|, tab.tl_lscale);  	if (tab.tl_lscale) 		ave = (tab.tl_avenrun.l[
+literal|0
+argument|] + (tab.tl_lscale/
+literal|2
+argument|)) / tab.tl_lscale; 	else 		ave = (int) (tab.tl_avenrun.d[
+literal|0
+argument|] +
+literal|0.5
+argument|);  	if (tTd(
+literal|3
+argument|,
+literal|1
+argument|)) 		printf(
+literal|"getla: %d\n"
+argument|, ave);  	return ave; }
+endif|#
+directive|endif
+if|#
+directive|if
+name|LA_TYPE
+operator|==
 name|LA_ZERO
 argument|int getla() { 	if (tTd(
 literal|3
@@ -7211,7 +7455,7 @@ endif|#
 directive|endif
 argument|return TRUE; 	}  	if (MaxChildren>
 literal|0
-argument|&& CurChildren>= MaxChildren) 	{ 		proc_list_probe(); 		if (CurChildren>= MaxChildren) 		{ 			setproctitle(
+argument|&& CurChildren>= MaxChildren) 	{ 		extern void proc_list_probe __P((void));  		proc_list_probe(); 		if (CurChildren>= MaxChildren) 		{ 			setproctitle(
 literal|"rejecting connections on port %d: %d children, max %d"
 argument|, 				port, CurChildren, MaxChildren);
 ifdef|#
@@ -8114,7 +8358,7 @@ argument|, 			count, shortenstring(str,
 literal|203
 argument|)); 	return strlen(str); }
 comment|/*  * dopr(): poor man's version of doprintf  */
-argument|static void fmtstr __P((char *value, int ljust, int len, int zpad, int maxwidth)); static void fmtnum __P((long value, int base, int dosign, int ljust, int len, int zpad)); static void dostr __P(( char * , int )); static char *output; static void dopr_outch __P(( int c ));  static void dopr( buffer, format, args )        char *buffer;        char *format;        va_list args; {        int ch;        long value;        int longflag  =
+argument|static void fmtstr __P((char *value, int ljust, int len, int zpad, int maxwidth)); static void fmtnum __P((long value, int base, int dosign, int ljust, int len, int zpad)); static void dostr __P(( char * , int )); static char *output; static void dopr_outch __P(( int c ));  static void dopr( buffer, format, args )        char *buffer;        const char *format;        va_list args; {        int ch;        long value;        int longflag  =
 literal|0
 argument|;        int pointflag =
 literal|0
@@ -9293,6 +9537,17 @@ name|SUN_EXTENSIONS
 argument|sun_pre_defaults(e);
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|apollo
+comment|/* stupid domain/os can't even open /etc/sendmail.cf without this */
+argument|setuserenv(
+literal|"ISP"
+argument|, NULL); 	setuserenv(
+literal|"SYSTYPE"
+argument|, NULL);
+endif|#
+directive|endif
 argument|}   void vendor_post_defaults(e) 	ENVELOPE *e; {
 ifdef|#
 directive|ifdef
@@ -9345,6 +9600,9 @@ file|<tcpd.h>
 argument|int	allow_severity	= LOG_INFO; int	deny_severity	= LOG_WARNING;
 endif|#
 directive|endif
+if|#
+directive|if
+name|DAEMON
 argument|bool validate_connection(sap, hostname, e) 	SOCKADDR *sap; 	char *hostname; 	ENVELOPE *e; { 	if (rscheck(
 literal|"check_relay"
 argument|, hostname, anynet_ntoa(sap), e) != EX_OK) 		return FALSE;
@@ -9357,6 +9615,8 @@ argument|, hostname, anynet_ntoa(sap), STRING_UNKNOWN)) 		return FALSE;
 endif|#
 directive|endif
 argument|return TRUE; }
+endif|#
+directive|endif
 comment|/* **  STRTOL -- convert string to long integer ** **	For systems that don't have it in the C library. ** **	This is taken verbatim from the 4.4-Lite C library. */
 ifdef|#
 directive|ifdef
@@ -9624,7 +9884,36 @@ endif|#
 directive|endif
 argument|}
 comment|/* **  SM_GETPW{NAM,UID} -- wrapper for getpwnam and getpwuid */
-argument|struct passwd * sm_getpwnam(user) 	char *user; { 	return getpwnam(user); }  struct passwd * sm_getpwuid(uid) 	UID_T uid; { 	return getpwuid(uid); }
+argument|struct passwd * sm_getpwnam(user) 	char *user; {
+ifdef|#
+directive|ifdef
+name|_AIX4
+argument|extern struct passwd *_getpwnam_shadow(const char *, const int);  	return _getpwnam_shadow(user,
+literal|0
+argument|);
+else|#
+directive|else
+argument|return getpwnam(user);
+endif|#
+directive|endif
+argument|}  struct passwd * sm_getpwuid(uid) 	UID_T uid; {
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX4
+argument_list|)
+operator|&&
+literal|0
+argument|extern struct passwd *_getpwuid_shadow(const int, const int);  	return _getpwuid_shadow(uid,
+literal|0
+argument|);
+else|#
+directive|else
+argument|return getpwuid(uid);
+endif|#
+directive|endif
+argument|}
 comment|/* **  SECUREWARE_SETUP_SECURE -- Convex SecureWare setup ** **	Set up the trusted computing environment for C2 level security **	under SecureWare. ** **	Parameters: **		uid -- uid of the user to initialize in the TCB ** **	Returns: **		none ** **	Side Effects: **		Initialized the user in the trusted computing base */
 if|#
 directive|if
@@ -10168,13 +10457,6 @@ if|#
 directive|if
 name|HASSETVBUF
 literal|"HASSETVBUF"
-argument|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|HASSIGSETMASK
-literal|"HASSIGSETMASK"
 argument|,
 endif|#
 directive|endif
