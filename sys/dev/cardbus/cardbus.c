@@ -1970,20 +1970,6 @@ argument_list|,
 name|cardbus_detach_card
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|card_cis_read
-argument_list|,
-name|cardbus_cis_read
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_cis_free
-argument_list|,
-name|cardbus_cis_free
-argument_list|)
-block|,
 comment|/* Cardbus/PCI interface */
 name|DEVMETHOD
 argument_list|(
