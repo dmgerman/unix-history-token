@@ -97,6 +97,14 @@ directive|include
 file|<netgraph/ng_tty.h>
 end_include
 
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"ng_tty"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Misc defs */
 end_comment
