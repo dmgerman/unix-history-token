@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -216,6 +222,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|phdr_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* local function declarations */
 end_comment
@@ -238,6 +253,14 @@ parameter_list|(
 name|int
 name|signo
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|do_phdr
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -1484,6 +1507,19 @@ block|}
 block|}
 if|if
 condition|(
+name|phdr_flag
+condition|)
+block|{
+name|phdr_flag
+operator|=
+literal|0
+expr_stmt|;
+name|do_phdr
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|Cflag
 operator|>
 literal|0
@@ -1533,10 +1569,8 @@ operator|--
 name|headercount
 condition|)
 block|{
-name|phdr
-argument_list|(
-literal|0
-argument_list|)
+name|do_phdr
+argument_list|()
 expr_stmt|;
 name|headercount
 operator|=
@@ -1683,10 +1717,8 @@ break|break;
 case|case
 literal|1
 case|:
-name|phdr
-argument_list|(
-literal|0
-argument_list|)
+name|do_phdr
+argument_list|()
 expr_stmt|;
 name|headercount
 operator|=
@@ -1775,10 +1807,8 @@ break|break;
 case|case
 literal|1
 case|:
-name|phdr
-argument_list|(
-literal|0
-argument_list|)
+name|do_phdr
+argument_list|()
 expr_stmt|;
 name|headercount
 operator|=
@@ -1996,6 +2026,19 @@ parameter_list|(
 name|int
 name|signo
 parameter_list|)
+block|{
+name|phdr_flag
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|do_phdr
+parameter_list|()
 block|{
 specifier|register
 name|int
