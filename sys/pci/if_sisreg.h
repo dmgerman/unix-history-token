@@ -470,6 +470,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIS_CFG_FAIR_BACKOFF
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* 635& 900B Specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_CFG_RND_CNT
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* 635& 900B Specific */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIS_CFG_EDB_MASTER_EN
 value|0x00002000
 end_define
@@ -1891,6 +1913,20 @@ end_define
 begin_comment
 comment|/*  * SiS 900 PCI revision codes.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_900B
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_REV_630A
+value|0x0080
+end_define
 
 begin_define
 define|#
