@@ -2432,6 +2432,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_rthdr_reverse
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|cmsghdr
+operator|*
+operator|,
+expr|struct
+name|cmsghdr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
