@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fsinfo.c,v 1.1.1.1.8.2 1997/09/03 06:27:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
