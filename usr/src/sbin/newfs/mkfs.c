@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.11 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4374,6 +4374,19 @@ operator|.
 name|i_mode
 argument_list|)
 expr_stmt|;
+name|node
+operator|.
+name|i_blocks
+operator|=
+name|howmany
+argument_list|(
+name|node
+operator|.
+name|i_size
+argument_list|,
+name|DEV_BSIZE
+argument_list|)
+expr_stmt|;
 name|wtfs
 argument_list|(
 name|fsbtodb
@@ -4450,6 +4463,19 @@ argument_list|,
 name|node
 operator|.
 name|i_mode
+argument_list|)
+expr_stmt|;
+name|node
+operator|.
+name|i_blocks
+operator|=
+name|howmany
+argument_list|(
+name|node
+operator|.
+name|i_size
+argument_list|,
+name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
 name|wtfs
