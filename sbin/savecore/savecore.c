@@ -380,7 +380,7 @@ comment|/* magic number in dump */
 end_comment
 
 begin_decl_stmt
-name|int
+name|off_t
 name|dumpsize
 decl_stmt|;
 end_decl_stmt
@@ -3016,17 +3016,21 @@ name|void
 name|get_dumpsize
 parameter_list|()
 block|{
+name|unsigned
+name|int
+name|dumppages
+decl_stmt|;
 comment|/* Read the dump size. */
 name|DumpRead
 argument_list|(
 name|dumpfd
 argument_list|,
 operator|&
-name|dumpsize
+name|dumppages
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dumpsize
+name|dumppages
 argument_list|)
 argument_list|,
 call|(
@@ -3050,7 +3054,9 @@ name|L_SET
 argument_list|)
 expr_stmt|;
 name|dumpsize
-operator|*=
+operator|=
+name|dumppages
+operator|*
 name|getpagesize
 argument_list|()
 expr_stmt|;
