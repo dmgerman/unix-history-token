@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"canohost.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ssh2.h"
 end_include
 
