@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * set flag to initialize fortran-66 mods  *	@(#)libI66.c	1.3  * usage: f77 ... -lI66 ...  */
+comment|/*  * set flag to initialize fortran-66 mods  *	@(#)libI66.c	1.4  * usage: f77 ... -lI66 ...  */
 end_comment
 
 begin_include
@@ -15,7 +15,7 @@ name|ioiflg
 name|ioiflg_
 init|=
 block|{
-literal|1
+literal|0
 block|,
 comment|/* open files at beginning */
 literal|1
