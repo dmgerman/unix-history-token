@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netstat.c	5.6 (Berkeley) %G%"
+literal|"@(#)netstat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * netstat  */
@@ -32,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"systat.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -57,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -164,8 +173,103 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|enter
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|,
+expr|struct
+name|socket
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|inetname
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|inetprint
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -364,21 +468,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|void
 name|closenetstat
-argument_list|(
-argument|w
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|w
+parameter_list|)
 name|WINDOW
 modifier|*
 name|w
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -461,7 +560,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -494,18 +593,32 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|initnetstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
+if|if
+condition|(
 name|kvm_nlist
+argument_list|(
+name|kd
+argument_list|,
+name|nlst
+argument_list|)
+condition|)
+block|{
+name|nlisterr
 argument_list|(
 name|nlst
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|nlst
@@ -557,14 +670,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|fetchnetstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -922,7 +1033,7 @@ name|again
 goto|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1235,12 +1346,10 @@ name|STATE
 value|SNDCC+7
 end_define
 
-begin_macro
+begin_function
+name|void
 name|labelnetstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1335,14 +1444,12 @@ literal|"(state)"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|shownetstat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1805,7 +1912,7 @@ expr_stmt|;
 comment|/* XXX */
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pretty print an Internet address (net address + port).  * If the nflag was specified, use numbers instead of names.  */
@@ -2204,24 +2311,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|cmdnetstat
-argument_list|(
-argument|cmd
-argument_list|,
-argument|args
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|args
+parameter_list|)
 name|char
 modifier|*
 name|cmd
 decl_stmt|,
-modifier|*
+decl|*
 name|args
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
