@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -636,11 +636,18 @@ name|v_usecount
 operator|>
 literal|1
 condition|)
+block|{
+name|vput
+argument_list|(
+name|um_rootvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|error
@@ -654,11 +661,18 @@ argument_list|,
 name|flags
 argument_list|)
 condition|)
+block|{
+name|vput
+argument_list|(
+name|um_rootvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|UNION_DIAGNOSTIC
@@ -694,7 +708,7 @@ name|um_cred
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Release reference on underlying root vnode 	 */
-name|vrele
+name|vput
 argument_list|(
 name|um_rootvp
 argument_list|)
@@ -782,6 +796,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Return locked reference to root. 	 */
+name|VREF
+argument_list|(
+name|um
+operator|->
+name|um_uppervp
+argument_list|)
+expr_stmt|;
+name|VREF
+argument_list|(
+name|um
+operator|->
+name|um_lowervp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|union_allocvp
@@ -816,9 +844,25 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-literal|0
 condition|)
+block|{
+name|vrele
+argument_list|(
+name|um
+operator|->
+name|um_uppervp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|um
+operator|->
+name|um_lowervp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|(
 operator|*
 name|vpp
@@ -828,6 +872,7 @@ name|v_flag
 operator||=
 name|VROOT
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -238,7 +238,7 @@ name|UPPERVP
 parameter_list|(
 name|vp
 parameter_list|)
-value|(VTOUNION(vp)->un_lowervp)
+value|(VTOUNION(vp)->un_uppervp)
 end_define
 
 begin_define
