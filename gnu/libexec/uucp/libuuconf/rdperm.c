@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* rdperm.c    Read the HDB Permissions file.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* rdperm.c    Read the HDB Permissions file.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|_uuconf_rdperm_rcsid
 index|[]
 init|=
-literal|"$Id: rdperm.c,v 1.1 1993/08/04 19:34:57 jtc Exp $"
+literal|"$Id: rdperm.c,v 1.7 1994/01/30 21:14:29 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -780,17 +780,6 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|isspace
-argument_list|(
-name|BUCHAR
-argument_list|(
-name|zline
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-operator|||
 name|zline
 index|[
 literal|0
@@ -1907,6 +1896,16 @@ decl_stmt|;
 name|int
 name|iret
 decl_stmt|;
+comment|/* Ignore an attempt to say NOREAD or NOWRITE with an empty 	 string, since it will be interpreted as an attempt to deny 	 everything.  */
+if|if
+condition|(
+operator|*
+operator|*
+name|pz
+operator|!=
+literal|'\0'
+condition|)
+block|{
 name|csize
 operator|=
 name|strlen
@@ -2008,6 +2007,7 @@ condition|)
 return|return
 name|iret
 return|;
+block|}
 block|}
 return|return
 name|UUCONF_SUCCESS

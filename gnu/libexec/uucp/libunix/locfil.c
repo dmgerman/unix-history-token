@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* locfil.c    Expand a file name on the local system.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* locfil.c    Expand a file name on the local system.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -80,6 +80,8 @@ parameter_list|(
 name|zfile
 parameter_list|,
 name|zpubdir
+parameter_list|,
+name|pfbadname
 parameter_list|)
 specifier|const
 name|char
@@ -91,12 +93,27 @@ name|char
 modifier|*
 name|zpubdir
 decl_stmt|;
+name|boolean
+modifier|*
+name|pfbadname
+decl_stmt|;
 block|{
 specifier|const
 name|char
 modifier|*
 name|zdir
 decl_stmt|;
+if|if
+condition|(
+name|pfbadname
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|pfbadname
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -239,6 +256,17 @@ name|ubuffree
 argument_list|(
 name|zcopy
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pfbadname
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|pfbadname
+operator|=
+name|TRUE
 expr_stmt|;
 return|return
 name|NULL

@@ -51,6 +51,10 @@ begin_comment
 comment|/* fscoherent_disable_tty() is a COHERENT specific function. It takes the name  * of a serial device and then scans /etc/ttys for a match. If it finds one,  * it checks the first field of the entry. If it is a '1', then it will disable  * the port and set a flag. The flag will be checked later when uucico wants to  * reset the serial device to see if the device needs to be re-enabled.  */
 end_comment
 
+begin_comment
+comment|/* May 10, 1993: This function will always return true for the following  * reasons:  *  1) lock files have already been dealt with  *  2) if someone else already has the port open, uucico should fail anyways  *  3) Coherent's disable command return can return '0' or '1', but will  *     succeed in any event.  *  4) It doesn't matter if there is a ttys entry for the port in question.  *     /etc/ttys generally only lists devices that MAY be enabled for logins.  *     If a device will never be used for logins, then there may not be a  *     ttys entry, in which case, disable won't be called anyways.  *	---bob@mwc.com  */
+end_comment
+
 begin_function
 name|boolean
 name|fscoherent_disable_tty
@@ -504,29 +508,20 @@ argument_list|)
 expr_stmt|;
 comment|/*				ulog(LOG_NORMAL,"Enable string is {%s}",*pzenable); */
 return|return
-operator|(
-name|x
-operator|==
-literal|0
-condition|?
 name|TRUE
-else|:
-name|FALSE
-operator|)
 return|;
-comment|/* disable either failed 							   or succeded */
 block|}
 else|else
 block|{
+comment|/* device not enabled */
 return|return
-name|FALSE
+name|TRUE
 return|;
-comment|/* device in tty entry not enabled */
 block|}
 block|}
 block|}
 return|return
-name|FALSE
+name|TRUE
 return|;
 comment|/* no ttys entry found */
 block|}

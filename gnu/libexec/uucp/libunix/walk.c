@@ -56,7 +56,6 @@ name|char
 operator|*
 name|zname
 operator|,
-specifier|const
 expr|struct
 name|stat
 operator|*
@@ -223,7 +222,6 @@ name|char
 modifier|*
 name|zname
 decl_stmt|;
-specifier|const
 name|struct
 name|stat
 modifier|*

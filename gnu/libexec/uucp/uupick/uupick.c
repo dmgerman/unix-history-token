@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uupick.c    Get files stored in the public directory by uucp -t.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* uupick.c    Get files stored in the public directory by uucp -t.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uupick_rcsid
 index|[]
 init|=
-literal|"$Id: uupick.c,v 1.1 1993/08/04 19:36:56 jtc Exp $"
+literal|"$Id: uupick.c,v 1.10 1994/01/30 20:59:40 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,19 +116,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The program name.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|abProgram
-index|[]
-init|=
-literal|"uupick"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Long getopt options.  */
 end_comment
 
@@ -141,6 +128,56 @@ name|asPlongopts
 index|[]
 init|=
 block|{
+block|{
+literal|"system"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"config"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'I'
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'x'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|1
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -162,6 +199,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upusage
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|uphelp
 name|P
 argument_list|(
 operator|(
@@ -245,6 +295,10 @@ decl_stmt|;
 name|boolean
 name|fquit
 decl_stmt|;
+name|zProgram
+operator|=
+literal|"uupick"
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -256,7 +310,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:s:x:"
+literal|"I:s:vx:"
 argument_list|,
 name|asPlongopts
 argument_list|,
@@ -321,6 +375,40 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'v'
+case|:
+comment|/* Print version and exit.  */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+argument_list|,
+name|zProgram
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
+literal|1
+case|:
+comment|/* --help.  */
+name|uphelp
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
 literal|0
 case|:
 comment|/* Long option found and flag set.  */
@@ -329,7 +417,7 @@ default|default:
 name|upusage
 argument_list|()
 expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 block|}
 block|}
 if|if
@@ -562,6 +650,9 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+name|boolean
+name|fbadname
+decl_stmt|;
 name|fcontinue
 operator|=
 name|FALSE
@@ -738,6 +829,9 @@ operator|=
 name|zsysdep_uupick_local_file
 argument_list|(
 name|zto
+argument_list|,
+operator|&
+name|fbadname
 argument_list|)
 expr_stmt|;
 if|if
@@ -746,11 +840,32 @@ name|zlocal
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|fbadname
+condition|)
 name|usysdep_exit
 argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"%s: bad local file name"
+argument_list|,
+name|zto
+argument_list|)
+expr_stmt|;
+name|fcontinue
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
 name|zto
 operator|=
 name|zsysdep_in_dir
@@ -1033,7 +1148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print usage message.  */
+comment|/* Print usage message and die.  */
 end_comment
 
 begin_function
@@ -1046,7 +1161,43 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP version %s, copyright (C) 1991, 1992 Ian Lance Taylor\n"
+literal|"Usage: %s [-s system] [-I config] [-x debug]\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Use %s --help for help\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print help message.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|uphelp
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)
@@ -1055,21 +1206,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: uupick [-s system] [-I config] [-x debug]\n"
+literal|" -s,--system system: Only consider files from named system\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -s system: Only consider files from named system\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -x debug: Set debugging level\n"
+literal|" -x,--debug debug: Set debugging level\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -1079,15 +1223,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -I file: Set configuration file to use\n"
+literal|" -I,--config file: Set configuration file to use\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_TAYLOR_CONFIG */
-name|exit
+name|fprintf
 argument_list|(
-name|EXIT_FAILURE
+name|stderr
+argument_list|,
+literal|" -v,--version: Print version and exit\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" --help: Print help and exit\n"
 argument_list|)
 expr_stmt|;
 block|}

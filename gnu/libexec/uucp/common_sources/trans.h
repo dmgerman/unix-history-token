@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trans.h    Header file for file and command transfer routines.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* trans.h    Header file for file and command transfer routines.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_comment
@@ -85,6 +85,16 @@ comment|/* Global uuconf pointer.  */
 name|pointer
 name|puuconf
 decl_stmt|;
+comment|/* Configuration file name argument (from -I option).  */
+specifier|const
+name|char
+modifier|*
+name|zconfig
+decl_stmt|;
+comment|/* How often to spawn uuxqt (from uuconf_runuuxqt).  */
+name|int
+name|irunuuxqt
+decl_stmt|;
 comment|/* Remote system information.  */
 specifier|const
 name|struct
@@ -111,6 +121,10 @@ name|sprotocol
 modifier|*
 name|qproto
 decl_stmt|;
+comment|/* Number of channels being used.  */
+name|int
+name|cchans
+decl_stmt|;
 comment|/* The largest file size permitted for a local request.  */
 name|long
 name|clocal_size
@@ -126,6 +140,18 @@ decl_stmt|;
 comment|/* The remote system ulimit.  */
 name|long
 name|cmax_receive
+decl_stmt|;
+comment|/* Number of bytes sent.  */
+name|long
+name|csent
+decl_stmt|;
+comment|/* Number of bytes received.  */
+name|long
+name|creceived
+decl_stmt|;
+comment|/* Number of execution files received since the last time we spawned      uuxqt.  */
+name|long
+name|cxfiles_received
 decl_stmt|;
 comment|/* Features supported by the remote side.  */
 name|int
@@ -846,6 +872,34 @@ name|qdaemon
 operator|,
 name|boolean
 name|fallacked
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Spawn a uuxqt process.  The ffork argument is passed to    fsysdep_run.  If the zsys argument is not NULL, then -s zsys is    passed to uuxqt.  The zconfig argument is the name of the    configuration file, from the -I option.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fspawn_uuxqt
+name|P
+argument_list|(
+operator|(
+name|boolean
+name|ffork
+operator|,
+specifier|const
+name|char
+operator|*
+name|zsys
+operator|,
+specifier|const
+name|char
+operator|*
+name|zconfig
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* conn.h    Header file for routines which manipulate connections.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* conn.h    Header file for routines which manipulate connections.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_ifndef
@@ -269,21 +269,6 @@ name|fsuccess
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Reset the connection so that another call may be accepted.  */
-name|boolean
-argument_list|(
-argument|*pfreset
-argument_list|)
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|sconnection
-operator|*
-name|qconn
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* Dial a number on a connection.  This set *qdialer to the dialer      used, if any, and sets *ptdialerfound appropriately.  The qsys      and zphone arguments are for the chat script.  This field may be      NULL.  */
 name|boolean
 argument_list|(
@@ -514,7 +499,7 @@ comment|/* Connection functions.  */
 end_comment
 
 begin_comment
-comment|/* Initialize a connection.  This must be called before any of the    other connection functions are called.  It initializes the fields    of qconn.  It returns FALSE on error.  */
+comment|/* Initialize a connection.  This must be called before any of the    other connection functions are called.  It initializes the fields    of qconn.  If qport is NULL, this opens standard input as a port    using type ttype.  This function returns FALSE on error.  */
 end_comment
 
 begin_decl_stmt
@@ -533,6 +518,10 @@ expr|struct
 name|sconnection
 operator|*
 name|qconn
+operator|,
+expr|enum
+name|uuconf_porttype
+name|ttype
 operator|)
 argument_list|)
 decl_stmt|;
@@ -656,26 +645,6 @@ name|qdialer
 operator|,
 name|boolean
 name|fsuccess
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Reset a connection such that another call may be accepted.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|boolean
-name|fconn_reset
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|sconnection
-operator|*
-name|q
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1005,6 +974,55 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Run through a dialer sequence.  This is a support routine for the    port type specific dialing routines.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fconn_dial_sequence
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sconnection
+operator|*
+name|qconn
+operator|,
+name|pointer
+name|puuconf
+operator|,
+name|char
+operator|*
+operator|*
+name|pzdialer
+operator|,
+specifier|const
+expr|struct
+name|uuconf_system
+operator|*
+name|qsys
+operator|,
+specifier|const
+name|char
+operator|*
+name|zphone
+operator|,
+expr|struct
+name|uuconf_dialer
+operator|*
+name|qdialer
+operator|,
+expr|enum
+name|tdialerfound
+operator|*
+name|ptdialerfound
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Dialing out on a modem is partially system independent.  This is    the modem dialing routine.  */
 end_comment
 
@@ -1203,6 +1221,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fsysdep_pipe_init
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sconnection
+operator|*
+name|qconn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

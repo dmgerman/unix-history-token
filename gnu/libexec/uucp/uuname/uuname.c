@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uuname.c    List the names of known remote UUCP sites.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* uuname.c    List the names of known remote UUCP sites.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uuname_rcsid
 index|[]
 init|=
-literal|"$Id: uuname.c,v 1.1 1993/08/04 19:36:52 jtc Exp $"
+literal|"$Id: uuname.c,v 1.17 1994/01/30 20:59:40 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,19 +58,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The program name.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|abProgram
-index|[]
-init|=
-literal|"uuname"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Local functions.  */
 end_comment
 
@@ -90,15 +77,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|unuuconf_error
+name|unhelp
 name|P
 argument_list|(
 operator|(
-name|pointer
-name|puuconf
-operator|,
-name|int
-name|iuuconf
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -117,6 +100,66 @@ name|asNlongopts
 index|[]
 init|=
 block|{
+block|{
+literal|"aliases"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'a'
+block|}
+block|,
+block|{
+literal|"local"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'l'
+block|}
+block|,
+block|{
+literal|"config"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'I'
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'x'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|1
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -176,6 +219,13 @@ decl_stmt|;
 name|int
 name|iuuconf
 decl_stmt|;
+name|zProgram
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -187,7 +237,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"alI:x:"
+literal|"alI:vx:"
 argument_list|,
 name|asNlongopts
 argument_list|,
@@ -261,6 +311,38 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'v'
+case|:
+comment|/* Print version and exit.  */
+name|printf
+argument_list|(
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+argument_list|,
+name|zProgram
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
+literal|1
+case|:
+comment|/* --help.  */
+name|unhelp
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
 literal|0
 case|:
 comment|/* Long option found and flag set.  */
@@ -269,7 +351,7 @@ default|default:
 name|unusage
 argument_list|()
 expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 block|}
 block|}
 if|if
@@ -304,8 +386,10 @@ name|iuuconf
 operator|!=
 name|UUCONF_SUCCESS
 condition|)
-name|unuuconf_error
+name|ulog_uuconf
 argument_list|(
+name|LOG_FATAL
+argument_list|,
 name|puuconf
 argument_list|,
 name|iuuconf
@@ -368,6 +452,8 @@ argument_list|(
 name|puuconf
 argument_list|,
 name|INIT_SUID
+operator||
+name|INIT_NOCHDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -421,8 +507,10 @@ name|iuuconf
 operator|!=
 name|UUCONF_SUCCESS
 condition|)
-name|unuuconf_error
+name|ulog_uuconf
 argument_list|(
+name|LOG_FATAL
+argument_list|,
 name|puuconf
 argument_list|,
 name|iuuconf
@@ -465,8 +553,10 @@ name|iuuconf
 operator|!=
 name|UUCONF_SUCCESS
 condition|)
-name|unuuconf_error
+name|ulog_uuconf
 argument_list|(
+name|LOG_FATAL
+argument_list|,
 name|puuconf
 argument_list|,
 name|iuuconf
@@ -521,45 +611,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP version %s, copyright (C) 1991, 1992 Ian Lance Taylor\n"
+literal|"Usage: %s [-a] [-l] [-I file]\n"
 argument_list|,
-name|VERSION
+name|zProgram
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: uuname [-a] [-l] [-I file]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"Use %s --help for help\n"
 argument_list|,
-literal|" -a: display aliases\n"
+name|zProgram
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -l: print local name\n"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|HAVE_TAYLOR_CONFIG
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -I file: Set configuration file to use\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_TAYLOR_CONFIG */
 name|exit
 argument_list|(
 name|EXIT_FAILURE
@@ -569,78 +634,58 @@ block|}
 end_function
 
 begin_comment
-comment|/* Display a uuconf error and exit.  */
+comment|/* Print a help message.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|unuuconf_error
-parameter_list|(
-name|puuconf
-parameter_list|,
-name|iret
-parameter_list|)
-name|pointer
-name|puuconf
-decl_stmt|;
-name|int
-name|iret
-decl_stmt|;
+name|unhelp
+parameter_list|()
 block|{
-name|char
-name|ab
-index|[
-literal|512
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|uuconf_error_string
+name|printf
 argument_list|(
-name|puuconf
+literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
 argument_list|,
-name|iret
-argument_list|,
-name|ab
-argument_list|,
-sizeof|sizeof
-name|ab
+name|VERSION
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|iret
-operator|&
-name|UUCONF_ERROR_FILENAME
-operator|)
-operator|==
-literal|0
-condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
+literal|"Usage: %s [-a] [-l] [-I file]\n"
 argument_list|,
-literal|"uuname: %s\n"
-argument_list|,
-name|ab
+name|zProgram
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"uuname:%s\n"
-argument_list|,
-name|ab
+literal|" -a,--aliases: display aliases\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|printf
 argument_list|(
-name|EXIT_FAILURE
+literal|" -l,--local: print local name\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|HAVE_TAYLOR_CONFIG
+name|printf
+argument_list|(
+literal|" -I,--config file: Set configuration file to use\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_TAYLOR_CONFIG */
+name|printf
+argument_list|(
+literal|" -v,--version: Print version and exit\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" --help: Print help and exit\n"
 argument_list|)
 expr_stmt|;
 block|}

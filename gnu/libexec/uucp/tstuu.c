@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tstuu.c    Test the uucp package on a UNIX system.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* tstuu.c    Test the uucp package on a UNIX system.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|tstuu_rcsid
 index|[]
 init|=
-literal|"$Id: tstuu.c,v 1.2 1993/08/04 19:29:58 jtc Exp $"
+literal|"$Id: tstuu.c,v 1.81 1994/01/30 20:53:38 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,11 +106,22 @@ directive|if
 name|HAVE_SELECT
 end_if
 
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_TIME_H
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -254,13 +265,18 @@ begin_if
 if|#
 directive|if
 name|HAVE_TIME_H
-operator|&&
-operator|(
-name|HAVE_SYS_TIME_AND_TIME_H
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_SYS_TIME_H
 operator|||
 operator|!
 name|HAVE_SELECT
-operator|)
+operator|||
+name|TIME_WITH_SYS_TIME
 end_if
 
 begin_include
@@ -268,6 +284,11 @@ include|#
 directive|include
 file|<time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1345,7 +1366,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP version %s, copyright (C) 1991, 1992 Ian Lance Taylor\n"
+literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)
@@ -2319,6 +2340,12 @@ argument_list|(
 literal|"close"
 argument_list|)
 expr_stmt|;
+comment|/* This is said to improve the tests on Linux.  */
+name|sleep
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|zDebug
@@ -2510,6 +2537,12 @@ condition|)
 name|perror
 argument_list|(
 literal|"close"
+argument_list|)
+expr_stmt|;
+comment|/* This is said to improve the tests on Linux.  */
+name|sleep
+argument_list|(
+literal|5
 argument_list|)
 expr_stmt|;
 if|if
@@ -4441,13 +4474,6 @@ argument_list|,
 literal|"type stdin\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|e
-argument_list|,
-literal|"pty true\n"
-argument_list|)
-expr_stmt|;
 name|xfclose
 argument_list|(
 name|e
@@ -4473,7 +4499,7 @@ name|fprintf
 argument_list|(
 name|e
 argument_list|,
-literal|"%s test1 pass1\n"
+literal|"%s test1 pass\\s1\n"
 argument_list|,
 name|zsys
 argument_list|)
@@ -4798,7 +4824,7 @@ name|fprintf
 argument_list|(
 name|e
 argument_list|,
-literal|"test1 pass1\n"
+literal|"test1 pass\\s1\n"
 argument_list|)
 expr_stmt|;
 name|xfclose

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* proti.c    The 'i' protocol.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* proti.c    The 'i' protocol.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|proti_rcsid
 index|[]
 init|=
-literal|"$Id: proti.c,v 1.1 1993/08/04 19:36:22 jtc Exp $"
+literal|"$Id: proti.c,v 1.29 1994/03/26 03:39:05 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,21 @@ name|INEXTSEQ
 parameter_list|(
 name|i
 parameter_list|)
-value|((i + 1)& (IMAXSEQ - 1))
+value|(((i) + 1)& (IMAXSEQ - 1))
+end_define
+
+begin_comment
+comment|/* Get the previous sequence number given a sequence number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPREVSEQ
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i) + IMAXSEQ - 1)& (IMAXSEQ - 1))
 end_define
 
 begin_comment
@@ -604,7 +618,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Forced remote packet size, used if non-zero (protocol parameter    ``remote-packet-size'').  */
+comment|/* Forced remote packet size, used if non-zero (protocol parameter    ``remote-packet-size'').  There is no forced remote window size    because the ACK strategy requires that both sides agree on the    window size.  */
 end_comment
 
 begin_decl_stmt
@@ -617,26 +631,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Remote window size (set from SYNC packet or from    iIforced_remote_winsize).  */
+comment|/* Remote window size (set from SYNC packet).  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|iIremote_winsize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Forced remote window size, used if non-zero (protocol parameter    ``remote-window'').  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|iIforced_remote_winsize
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -714,6 +715,19 @@ name|int
 name|cIerror_decay
 init|=
 name|CERROR_DECAY
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The number of packets we should wait to receive before sending an    ACK; this is set by default to half the window size we have    requested (protocol parameter ``ack-frequency'').  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cIack_frequency
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1065,20 +1079,6 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"remote-window"
-block|,
-name|UUCONF_CMDTABTYPE_INT
-block|,
-operator|(
-name|pointer
-operator|)
-operator|&
-name|iIforced_remote_winsize
-block|,
-name|NULL
-block|}
-block|,
-block|{
 literal|"sync-timeout"
 block|,
 name|UUCONF_CMDTABTYPE_INT
@@ -1158,6 +1158,20 @@ name|pointer
 operator|)
 operator|&
 name|cIerror_decay
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"ack-frequency"
+block|,
+name|UUCONF_CMDTABTYPE_INT
+block|,
+operator|(
+name|pointer
+operator|)
+operator|&
+name|cIack_frequency
 block|,
 name|NULL
 block|}
@@ -1506,7 +1520,7 @@ name|ab
 index|[
 name|CHDRLEN
 operator|+
-literal|3
+literal|4
 operator|+
 name|CCKSUMLEN
 index|]
@@ -1556,25 +1570,6 @@ expr_stmt|;
 name|iIalc_packsize
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|iIforced_remote_winsize
-operator|<=
-literal|0
-operator|||
-name|iIforced_remote_winsize
-operator|>=
-name|IMAXSEQ
-condition|)
-name|iIforced_remote_winsize
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|iIremote_winsize
-operator|=
-name|iIforced_remote_winsize
 expr_stmt|;
 name|iIsendseq
 operator|=
@@ -1632,6 +1627,88 @@ name|cIremote_rejects
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|iIrequest_packsize
+operator|<
+literal|0
+operator|||
+name|iIrequest_packsize
+operator|>
+name|imaxpacksize
+condition|)
+block|{
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"Illegal protocol '%c' packet size; using %d"
+argument_list|,
+name|qdaemon
+operator|->
+name|qproto
+operator|->
+name|bname
+argument_list|,
+name|imaxpacksize
+argument_list|)
+expr_stmt|;
+name|iIrequest_packsize
+operator|=
+name|imaxpacksize
+expr_stmt|;
+block|}
+comment|/* The maximum permissible window size is 16.  Otherwise the      protocol can get confused because a duplicated packet may arrive      out of order.  If the window size is large in such a case, the      duplicate packet may be treated as a packet in the upcoming      window, causing the protocol to assume that all intermediate      packets have been lost, leading to immense confusion.  */
+if|if
+condition|(
+name|iIrequest_winsize
+operator|<
+literal|0
+operator|||
+name|iIrequest_winsize
+operator|>
+name|IMAXSEQ
+operator|/
+literal|2
+condition|)
+block|{
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"Illegal protocol '%c' window size; using %d"
+argument_list|,
+name|qdaemon
+operator|->
+name|qproto
+operator|->
+name|bname
+argument_list|,
+name|IREQUEST_WINSIZE
+argument_list|)
+expr_stmt|;
+name|iIrequest_winsize
+operator|=
+name|IREQUEST_WINSIZE
+expr_stmt|;
+block|}
+comment|/* The default for the ACK frequency is half the window size.  */
+if|if
+condition|(
+name|cIack_frequency
+operator|<=
+literal|0
+operator|||
+name|cIack_frequency
+operator|>=
+name|iIrequest_winsize
+condition|)
+name|cIack_frequency
+operator|=
+name|iIrequest_winsize
+operator|/
+literal|2
+expr_stmt|;
 name|ab
 index|[
 name|IHDR_INTRO
@@ -1669,7 +1746,7 @@ name|qdaemon
 operator|->
 name|fcaller
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 expr_stmt|;
 name|ab
@@ -1685,7 +1762,7 @@ name|qdaemon
 operator|->
 name|fcaller
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 expr_stmt|;
 name|ab
@@ -1733,6 +1810,17 @@ index|]
 operator|=
 name|iIrequest_winsize
 expr_stmt|;
+name|ab
+index|[
+name|CHDRLEN
+operator|+
+literal|3
+index|]
+operator|=
+name|qdaemon
+operator|->
+name|cchans
+expr_stmt|;
 name|icksum
 operator|=
 name|icrc
@@ -1741,7 +1829,7 @@ name|ab
 operator|+
 name|CHDRLEN
 argument_list|,
-literal|3
+literal|4
 argument_list|,
 name|ICRCINIT
 argument_list|)
@@ -1752,7 +1840,7 @@ name|ab
 operator|+
 name|CHDRLEN
 operator|+
-literal|3
+literal|4
 argument_list|,
 name|icksum
 argument_list|)
@@ -1774,15 +1862,19 @@ block|{
 name|boolean
 name|ftimedout
 decl_stmt|;
-name|DEBUG_MESSAGE2
+name|DEBUG_MESSAGE3
 argument_list|(
 name|DEBUG_PROTO
 argument_list|,
-literal|"fistart: Sending SYNC packsize %d winsize %d"
+literal|"fistart: Sending SYNC packsize %d winsize %d channels %d"
 argument_list|,
 name|iIrequest_packsize
 argument_list|,
 name|iIrequest_winsize
+argument_list|,
+name|qdaemon
+operator|->
+name|cchans
 argument_list|)
 expr_stmt|;
 if|if
@@ -1801,7 +1893,7 @@ name|ab
 argument_list|,
 name|CHDRLEN
 operator|+
-literal|3
+literal|4
 operator|+
 name|CCKSUMLEN
 argument_list|,
@@ -1984,9 +2076,9 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"protocol 'i' packet size %d window %d"
+expr|"protocol '' sending packet/window / receiving /"
 operator|+
-literal|50
+literal|64
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -1994,7 +2086,7 @@ argument_list|(
 operator|*
 name|pzlog
 argument_list|,
-literal|"protocol '%c' packet size %d window %d"
+literal|"protocol '%c' sending packet/window %d/%d receiving %d/%d"
 argument_list|,
 name|qdaemon
 operator|->
@@ -2002,9 +2094,25 @@ name|qproto
 operator|->
 name|bname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|iIremote_packsize
 argument_list|,
+operator|(
+name|int
+operator|)
 name|iIremote_winsize
+argument_list|,
+operator|(
+name|int
+operator|)
+name|iIrequest_packsize
+argument_list|,
+operator|(
+name|int
+operator|)
+name|iIrequest_winsize
 argument_list|)
 expr_stmt|;
 name|iIalc_packsize
@@ -2259,10 +2367,6 @@ name|iIforced_remote_packsize
 operator|=
 literal|0
 expr_stmt|;
-name|iIforced_remote_winsize
-operator|=
-literal|0
-expr_stmt|;
 name|cIsync_timeout
 operator|=
 name|CSYNC_TIMEOUT
@@ -2286,6 +2390,10 @@ expr_stmt|;
 name|cIerror_decay
 operator|=
 name|CERROR_DECAY
+expr_stmt|;
+name|cIack_frequency
+operator|=
+literal|0
 expr_stmt|;
 name|zJavoid_parameter
 operator|=
@@ -3377,11 +3485,11 @@ argument_list|(
 name|zhdr
 argument_list|)
 expr_stmt|;
-name|DEBUG_MESSAGE2
+name|DEBUG_MESSAGE4
 argument_list|(
 name|DEBUG_PROTO
 argument_list|,
-literal|"fisenddata: Sending packet %d (%d bytes)"
+literal|"fisenddata: Sending packet %d size %d local %d remote %d"
 argument_list|,
 name|iIsendseq
 argument_list|,
@@ -3389,6 +3497,10 @@ operator|(
 name|int
 operator|)
 name|cdata
+argument_list|,
+name|ilocal
+argument_list|,
+name|iremote
 argument_list|)
 expr_stmt|;
 name|iIsendseq
@@ -3890,6 +4002,7 @@ name|unsigned
 name|long
 name|icksum
 decl_stmt|;
+comment|/* Don't bother sending the number of channels in this 	     packet.  */
 name|iIrequest_packsize
 operator|/=
 literal|2
@@ -4568,15 +4681,17 @@ operator|>
 name|iIrequest_winsize
 condition|)
 block|{
-name|DEBUG_MESSAGE1
+name|DEBUG_MESSAGE2
 argument_list|(
 name|DEBUG_PROTO
 operator||
 name|DEBUG_ABNORMAL
 argument_list|,
-literal|"fiprocess_data: Out of order packet %d"
+literal|"fiprocess_data: Out of order packet %d (ack %d)"
 argument_list|,
 name|iseq
+argument_list|,
+name|iIlocal_ack
 argument_list|)
 expr_stmt|;
 operator|++
@@ -5048,6 +5163,52 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* If we already sent a NAK for this packet, and we have not 	     seen the previous packet, then forget that we sent a NAK 	     for this and any preceding packets.  This is to handle 	     the following sequence: 	         receive packet 0 		 packets 1 and 2 lost 		 receive packet 3 		 send NAK 1 		 send NAK 2 		 packet 1 lost 		 receive packet 2 	     At this point we want to send NAK 1.  */
+if|if
+condition|(
+name|afInaked
+index|[
+name|iseq
+index|]
+operator|&&
+name|azIrecbuffers
+index|[
+name|IPREVSEQ
+argument_list|(
+name|iseq
+argument_list|)
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+name|INEXTSEQ
+argument_list|(
+name|iIrecseq
+argument_list|)
+init|;
+name|i
+operator|!=
+name|iseq
+condition|;
+name|i
+operator|=
+name|INEXTSEQ
+argument_list|(
+name|i
+argument_list|)
+control|)
+name|afInaked
+index|[
+name|i
+index|]
+operator|=
+name|FALSE
+expr_stmt|;
 name|afInaked
 index|[
 name|iseq
@@ -5055,6 +5216,7 @@ index|]
 operator|=
 name|FALSE
 expr_stmt|;
+block|}
 comment|/* If we haven't handled all previous packets, we must save 	     off this packet and deal with it later.  */
 if|if
 condition|(
@@ -5088,30 +5250,34 @@ name|iIrequest_winsize
 operator|)
 condition|)
 block|{
-name|DEBUG_MESSAGE1
+name|DEBUG_MESSAGE2
 argument_list|(
 name|DEBUG_PROTO
 operator||
 name|DEBUG_ABNORMAL
 argument_list|,
-literal|"fiprocess_data: Ignoring out of order packet %d"
+literal|"fiprocess_data: Ignoring out of order packet %d (recseq %d)"
 argument_list|,
 name|iseq
+argument_list|,
+name|iIrecseq
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
 else|else
 block|{
-name|DEBUG_MESSAGE1
+name|DEBUG_MESSAGE2
 argument_list|(
 name|DEBUG_PROTO
 operator||
 name|DEBUG_ABNORMAL
 argument_list|,
-literal|"fiprocess_data: Saving unexpected packet %d"
+literal|"fiprocess_data: Saving unexpected packet %d (recseq %d)"
 argument_list|,
 name|iseq
+argument_list|,
+name|iIrecseq
 argument_list|)
 expr_stmt|;
 if|if
@@ -5428,9 +5594,7 @@ argument_list|,
 name|iIlocal_ack
 argument_list|)
 operator|>=
-name|iIrequest_winsize
-operator|/
-literal|2
+name|cIack_frequency
 condition|)
 block|{
 name|char
@@ -5663,17 +5827,33 @@ name|IHDR_LOCAL
 index|]
 argument_list|)
 expr_stmt|;
-name|DEBUG_MESSAGE2
+name|DEBUG_MESSAGE4
 argument_list|(
 name|DEBUG_PROTO
 argument_list|,
-literal|"fiprocess_packet: Got DATA packet %d size %d"
+literal|"fiprocess_packet: Got DATA packet %d size %d local %d remote %d"
 argument_list|,
 name|iseq
 argument_list|,
 name|cfirst
 operator|+
 name|csecond
+argument_list|,
+name|IHDRWIN_GETCHAN
+argument_list|(
+name|zhdr
+index|[
+name|IHDR_REMOTE
+index|]
+argument_list|)
+argument_list|,
+name|IHDRWIN_GETCHAN
+argument_list|(
+name|zhdr
+index|[
+name|IHDR_LOCAL
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fret
@@ -5742,6 +5922,8 @@ name|int
 name|ipack
 decl_stmt|,
 name|iwin
+decl_stmt|,
+name|cchans
 decl_stmt|;
 comment|/* We accept a SYNC packet to adjust the packet and window 	   sizes at any time.  */
 if|if
@@ -5823,15 +6005,72 @@ operator|-
 name|cfirst
 index|]
 expr_stmt|;
-name|DEBUG_MESSAGE2
+comment|/* The fourth byte in a SYNC packet is the number of channels 	   to use.  This is optional.  Switching the number of 	   channels in the middle of a conversation may cause 	   problems.  */
+if|if
+condition|(
+name|cfirst
+operator|+
+name|csecond
+operator|<=
+literal|3
+condition|)
+name|cchans
+operator|=
+literal|0
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|cfirst
+operator|>
+literal|3
+condition|)
+name|cchans
+operator|=
+name|zfirst
+index|[
+literal|3
+index|]
+expr_stmt|;
+else|else
+name|cchans
+operator|=
+name|zsecond
+index|[
+literal|3
+operator|-
+name|cfirst
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|cchans
+operator|>
+literal|0
+operator|&&
+name|cchans
+operator|<
+literal|8
+condition|)
+name|qdaemon
+operator|->
+name|cchans
+operator|=
+name|cchans
+expr_stmt|;
+block|}
+name|DEBUG_MESSAGE3
 argument_list|(
 name|DEBUG_PROTO
 argument_list|,
-literal|"fiprocess_packet: Got SYNC packsize %d winsize %d"
+literal|"fiprocess_packet: Got SYNC packsize %d winsize %d channels %d"
 argument_list|,
 name|ipack
 argument_list|,
 name|iwin
+argument_list|,
+name|cchans
 argument_list|)
 expr_stmt|;
 if|if
@@ -5854,12 +6093,6 @@ name|iIremote_packsize
 operator|=
 name|ipack
 expr_stmt|;
-if|if
-condition|(
-name|iIforced_remote_winsize
-operator|==
-literal|0
-condition|)
 name|iIremote_winsize
 operator|=
 name|iwin
@@ -5938,7 +6171,133 @@ name|IHDR_LOCAL
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* The timeout code will send a NAK for the packet the remote 	   side wants.  So we may see a NAK here for the packet we are 	   about to send.  */
+comment|/* If the remote side times out while waiting for a packet, it 	   will send a NAK for the next packet it wants to see.  If we 	   have not sent that packet yet, and we have no 	   unacknowledged data, it implies that the remote side has a 	   window full of data to send, which implies that our ACK has 	   been lost.  Therefore, we send an ACK.  */
+if|if
+condition|(
+name|iseq
+operator|==
+name|iIsendseq
+operator|&&
+name|INEXTSEQ
+argument_list|(
+name|iIremote_ack
+argument_list|)
+operator|==
+name|iIsendseq
+condition|)
+block|{
+name|char
+name|aback
+index|[
+name|CHDRLEN
+index|]
+decl_stmt|;
+name|aback
+index|[
+name|IHDR_INTRO
+index|]
+operator|=
+name|IINTRO
+expr_stmt|;
+name|aback
+index|[
+name|IHDR_LOCAL
+index|]
+operator|=
+name|IHDRWIN_SET
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|aback
+index|[
+name|IHDR_REMOTE
+index|]
+operator|=
+name|IHDRWIN_SET
+argument_list|(
+name|iIrecseq
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|iIlocal_ack
+operator|=
+name|iIrecseq
+expr_stmt|;
+name|aback
+index|[
+name|IHDR_CONTENTS1
+index|]
+operator|=
+name|IHDRCON_SET1
+argument_list|(
+name|ACK
+argument_list|,
+name|qdaemon
+operator|->
+name|fcaller
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|aback
+index|[
+name|IHDR_CONTENTS2
+index|]
+operator|=
+name|IHDRCON_SET2
+argument_list|(
+name|ACK
+argument_list|,
+name|qdaemon
+operator|->
+name|fcaller
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|aback
+index|[
+name|IHDR_CHECK
+index|]
+operator|=
+name|IHDRCHECK_VAL
+argument_list|(
+name|aback
+argument_list|)
+expr_stmt|;
+name|DEBUG_MESSAGE1
+argument_list|(
+name|DEBUG_PROTO
+argument_list|,
+literal|"fiprocess_packet: Sending ACK %d"
+argument_list|,
+name|iIrecseq
+argument_list|)
+expr_stmt|;
+return|return
+call|(
+modifier|*
+name|pfIsend
+call|)
+argument_list|(
+name|qdaemon
+operator|->
+name|qconn
+argument_list|,
+name|aback
+argument_list|,
+name|CHDRLEN
+argument_list|,
+name|TRUE
+argument_list|)
+return|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|iseq
@@ -5972,15 +6331,17 @@ operator|)
 operator|)
 condition|)
 block|{
-name|DEBUG_MESSAGE1
+name|DEBUG_MESSAGE2
 argument_list|(
 name|DEBUG_PROTO
 operator||
 name|DEBUG_ABNORMAL
 argument_list|,
-literal|"fiprocess_packet: Ignoring out of order NAK %d"
+literal|"fiprocess_packet: Ignoring out of order NAK %d (sendseq %d)"
 argument_list|,
 name|iseq
+argument_list|,
+name|iIsendseq
 argument_list|)
 expr_stmt|;
 return|return
@@ -6108,6 +6469,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 return|;
+block|}
 block|}
 case|case
 name|SPOS

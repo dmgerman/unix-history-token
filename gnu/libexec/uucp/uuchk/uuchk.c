@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uuchk.c    Display what we think the permissions of systems are.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* uuchk.c    Display what we think the permissions of systems are.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uuchk_rcsid
 index|[]
 init|=
-literal|"$Id: uuchk.c,v 1.1 1993/08/04 19:36:14 jtc Exp $"
+literal|"$Id: uuchk.c,v 1.52 1994/05/02 03:43:02 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ukusage
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ukhelp
 name|P
 argument_list|(
 operator|(
@@ -164,6 +177,25 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|ukshow_reliable
+name|P
+argument_list|(
+operator|(
+name|int
+name|i
+operator|,
+specifier|const
+name|char
+operator|*
+name|zhdr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|ukshow_proto_params
 name|P
 argument_list|(
@@ -264,6 +296,19 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Program name.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|zKprogram
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Long getopt options.  */
 end_comment
 
@@ -276,6 +321,46 @@ name|asKlongopts
 index|[]
 init|=
 block|{
+block|{
+literal|"config"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'I'
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'x'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|1
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -328,6 +413,13 @@ modifier|*
 modifier|*
 name|pzsystems
 decl_stmt|;
+name|zKprogram
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -339,7 +431,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:x:"
+literal|"I:vx:"
 argument_list|,
 name|asKlongopts
 argument_list|,
@@ -374,6 +466,38 @@ case|:
 comment|/* Set the debugging level.  There is actually no debugging 	     information for this program.  */
 break|break;
 case|case
+literal|'v'
+case|:
+comment|/* Print version and exit.  */
+name|printf
+argument_list|(
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+argument_list|,
+name|zKprogram
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
+literal|1
+case|:
+comment|/* --help.  */
+name|ukhelp
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
 literal|0
 case|:
 comment|/* Long option found and flag set.  */
@@ -382,7 +506,7 @@ default|default:
 name|ukusage
 argument_list|()
 expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 block|}
 block|}
 if|if
@@ -391,9 +515,20 @@ name|optind
 operator|!=
 name|argc
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: too many arguments"
+argument_list|,
+name|zKprogram
+argument_list|)
+expr_stmt|;
 name|ukusage
 argument_list|()
 expr_stmt|;
+block|}
 name|iret
 operator|=
 name|uuconf_init
@@ -449,6 +584,29 @@ argument_list|,
 name|iret
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pzsystems
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: no systems found\n"
+argument_list|,
+name|zKprogram
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|*
@@ -549,28 +707,65 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP version %s, copyright (C) 1991, 1992 Ian Lance Taylor\n"
+literal|"Usage: %s [{-I,--config} file]\n"
 argument_list|,
-name|VERSION
+name|zKprogram
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: uuchk [-I file]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"Use %s --help for help\n"
 argument_list|,
-literal|" -I file: Set configuration file to use\n"
+name|zKprogram
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print a help message.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ukhelp
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Usage: %s [{-I,--config} file] [-v] [--version] [--help]\n"
+argument_list|,
+name|zKprogram
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" -I,--config file: Set configuration file to use\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" -v,--version: Print version and exit\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" --help: Print help and exit\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1323,6 +1518,21 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|UUCONF_ERROR_VALUE
+argument_list|(
+name|iret
+argument_list|)
+operator|==
+name|UUCONF_FOPEN_FAILED
+condition|)
+name|printf
+argument_list|(
+literal|" Can not read call out file\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|iret
 operator|!=
 name|UUCONF_SUCCESS
@@ -1751,7 +1961,7 @@ name|uuconf_qcalled_remote_size
 argument_list|,
 name|FALSE
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2262,9 +2472,19 @@ modifier|*
 name|qmodem
 decl_stmt|;
 name|struct
+name|uuconf_tcp_port
+modifier|*
+name|qtcp
+decl_stmt|;
+name|struct
 name|uuconf_tli_port
 modifier|*
 name|qtli
+decl_stmt|;
+name|struct
+name|uuconf_pipe_port
+modifier|*
+name|qpipe
 decl_stmt|;
 name|qi
 operator|->
@@ -2330,6 +2550,12 @@ operator|.
 name|uuconf_zdevice
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"   Using port name as device name\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"   Speed %ld\n"
@@ -2341,6 +2567,40 @@ operator|.
 name|uuconf_sdirect
 operator|.
 name|uuconf_ibaud
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   Carrier %savailable\n"
+argument_list|,
+name|qport
+operator|->
+name|uuconf_u
+operator|.
+name|uuconf_sdirect
+operator|.
+name|uuconf_fcarrier
+condition|?
+literal|""
+else|:
+literal|"not "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   Hardware flow control %savailable\n"
+argument_list|,
+name|qport
+operator|->
+name|uuconf_u
+operator|.
+name|uuconf_sdirect
+operator|.
+name|uuconf_fhardflow
+condition|?
+literal|""
+else|:
+literal|"not "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2376,6 +2636,12 @@ argument_list|,
 name|qmodem
 operator|->
 name|uuconf_zdevice
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"   Using port name as device name\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2434,6 +2700,19 @@ argument_list|,
 name|qmodem
 operator|->
 name|uuconf_fcarrier
+condition|?
+literal|""
+else|:
+literal|"not "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   Hardware flow control %savailable\n"
+argument_list|,
+name|qmodem
+operator|->
+name|uuconf_fhardflow
 condition|?
 literal|""
 else|:
@@ -2722,6 +3001,15 @@ break|break;
 case|case
 name|UUCONF_PORTTYPE_TCP
 case|:
+name|qtcp
+operator|=
+operator|&
+name|qport
+operator|->
+name|uuconf_u
+operator|.
+name|uuconf_stcp
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"   Port type tcp\n"
@@ -2731,15 +3019,64 @@ name|printf
 argument_list|(
 literal|"   TCP service %s\n"
 argument_list|,
-name|qport
+name|qtcp
 operator|->
-name|uuconf_u
-operator|.
-name|uuconf_stcp
-operator|.
 name|uuconf_zport
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|qtcp
+operator|->
+name|uuconf_pzdialer
+operator|!=
+name|NULL
+operator|&&
+name|qtcp
+operator|->
+name|uuconf_pzdialer
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"   Dialer sequence"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pz
+operator|=
+name|qtcp
+operator|->
+name|uuconf_pzdialer
+init|;
+operator|*
+name|pz
+operator|!=
+name|NULL
+condition|;
+name|pz
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+operator|*
+name|pz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|UUCONF_PORTTYPE_TLI
@@ -2781,6 +3118,12 @@ argument_list|,
 name|qtli
 operator|->
 name|uuconf_zdevice
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"   Using port name as device name\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2898,6 +3241,68 @@ name|uuconf_zservaddr
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|UUCONF_PORTTYPE_PIPE
+case|:
+name|qpipe
+operator|=
+operator|&
+name|qport
+operator|->
+name|uuconf_u
+operator|.
+name|uuconf_spipe
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   Port type pipe\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|qpipe
+operator|->
+name|uuconf_pzcmd
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"   Command"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pz
+operator|=
+name|qpipe
+operator|->
+name|uuconf_pzcmd
+init|;
+operator|*
+name|pz
+operator|!=
+name|NULL
+condition|;
+name|pz
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+operator|*
+name|pz
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|fprintf
 argument_list|(
@@ -2940,6 +3345,27 @@ argument_list|,
 name|qport
 operator|->
 name|uuconf_zlockname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|qport
+operator|->
+name|uuconf_ireliable
+operator|&
+name|UUCONF_RELIABLE_SPECIFIED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|ukshow_reliable
+argument_list|(
+name|qport
+operator|->
+name|uuconf_ireliable
+argument_list|,
+literal|"   "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3086,6 +3512,27 @@ operator|->
 name|uuconf_sabort
 argument_list|,
 literal|"    When aborting chat"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|q
+operator|->
+name|uuconf_ireliable
+operator|&
+name|UUCONF_RELIABLE_SPECIFIED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|ukshow_reliable
+argument_list|(
+name|q
+operator|->
+name|uuconf_ireliable
+argument_list|,
+literal|"   "
 argument_list|)
 expr_stmt|;
 if|if
@@ -3505,6 +3952,115 @@ condition|)
 name|printf
 argument_list|(
 literal|"  (At other times may send files of any size)\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Show reliability information.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ukshow_reliable
+parameter_list|(
+name|i
+parameter_list|,
+name|zhdr
+parameter_list|)
+name|int
+name|i
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|zhdr
+decl_stmt|;
+block|{
+name|printf
+argument_list|(
+literal|"%sCharacteristics:"
+argument_list|,
+name|zhdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+name|UUCONF_RELIABLE_EIGHT
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" eight-bit-clean"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" not-eight-bit-clean"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+name|UUCONF_RELIABLE_RELIABLE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" reliable"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+name|UUCONF_RELIABLE_ENDTOEND
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" end-to-end"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+name|UUCONF_RELIABLE_FULLDUPLEX
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" fullduplex"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" halfduplex"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4058,7 +4614,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"uuchk: %s\n"
+literal|"%s: %s\n"
+argument_list|,
+name|zKprogram
 argument_list|,
 name|ab
 argument_list|)
@@ -4068,7 +4626,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"uuchk:%s\n"
+literal|"%s:%s\n"
+argument_list|,
+name|zKprogram
 argument_list|,
 name|ab
 argument_list|)

@@ -57,7 +57,7 @@ name|char
 name|uusnap_rcsid
 index|[]
 init|=
-literal|"$Id: uusnap.c,v 1.1 1993/08/04 19:31:43 jtc Exp $"
+literal|"$Id: uusnap.c,v 1.9 92/05/05 22:51:50 hwr Exp Locker: hwr $"
 decl_stmt|;
 end_decl_stmt
 

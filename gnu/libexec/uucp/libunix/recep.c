@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* recep.c    See whether a file has already been received.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* recep.c    See whether a file has already been received.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -285,7 +285,7 @@ name|fsysdep_make_dirs
 argument_list|(
 name|zfile
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 condition|)
 block|{
@@ -376,6 +376,17 @@ name|TRUE
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* The number of seconds in one week.  We must cast to long for this    to be calculated correctly on a machine with 16 bit ints.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECS_PER_WEEK
+value|((long) 7 * (long) 24 * (long) 60 * (long) 60)
+end_define
 
 begin_comment
 comment|/* See if we have already received a file.  Note that don't delete the    marker file here, because we need to know that the sending system    has received our denial first.  This function returns TRUE if the    file has already been received, FALSE if it has not.  */
@@ -490,13 +501,7 @@ name|s
 operator|.
 name|st_mtime
 operator|+
-literal|7
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
+name|SECS_PER_WEEK
 operator|>=
 name|time
 argument_list|(

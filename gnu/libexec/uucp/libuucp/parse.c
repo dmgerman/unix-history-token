@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* parse.c    Parse a UUCP command string.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* parse.c    Parse a UUCP command string.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|parse_rcsid
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.1 1993/08/04 19:35:49 jtc Exp $"
+literal|"$Id: parse.c,v 1.6 1994/03/26 04:42:39 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,12 @@ condition|)
 return|return
 name|FALSE
 return|;
+name|qcmd
+operator|->
+name|bgrade
+operator|=
+literal|'\0'
+expr_stmt|;
 name|qcmd
 operator|->
 name|pseq
@@ -649,7 +655,7 @@ argument_list|,
 operator|&
 name|zend
 argument_list|,
-literal|8
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -662,6 +668,36 @@ condition|)
 return|return
 name|FALSE
 return|;
+comment|/* As a magic special case, if the mode came out as the decimal      values 666 or 777, assume that they actually meant the octal      values.  Most systems use a leading zero, but a few do not.      Since both 666 and 777 are greater than the largest legal mode      value, which is 0777 == 511, this hack does not restrict any      legal values.  */
+if|if
+condition|(
+name|qcmd
+operator|->
+name|imode
+operator|==
+literal|666
+condition|)
+name|qcmd
+operator|->
+name|imode
+operator|=
+literal|0666
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|qcmd
+operator|->
+name|imode
+operator|==
+literal|777
+condition|)
+name|qcmd
+operator|->
+name|imode
+operator|=
+literal|0777
+expr_stmt|;
 name|z
 operator|=
 name|strtok

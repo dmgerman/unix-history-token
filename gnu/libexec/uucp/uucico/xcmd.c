@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xcmd.c    Routines to handle work requests.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* xcmd.c    Routines to handle work requests.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|xcmd_rcsid
 index|[]
 init|=
-literal|"$Id: xcmd.c,v 1.1 1993/08/04 19:36:35 jtc Exp $"
+literal|"$Id: xcmd.c,v 1.14 1994/04/04 03:25:12 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,31 @@ operator|.
 name|zto
 argument_list|)
 expr_stmt|;
+name|qtrans
+operator|->
+name|fcmd
+operator|=
+name|TRUE
+expr_stmt|;
+name|qtrans
+operator|->
+name|precfn
+operator|=
+name|flocal_xcmd_await_reply
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fqueue_receive
+argument_list|(
+name|qdaemon
+argument_list|,
+name|qtrans
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
 comment|/* We send the string      X from to user options      We put a dash in front of options.  */
 name|clen
 operator|=
@@ -367,35 +392,13 @@ condition|(
 operator|!
 name|fret
 condition|)
-block|{
 name|utransfree
 argument_list|(
 name|qtrans
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
-return|;
-block|}
-name|qtrans
-operator|->
-name|fcmd
-operator|=
-name|TRUE
-expr_stmt|;
-name|qtrans
-operator|->
-name|precfn
-operator|=
-name|flocal_xcmd_await_reply
-expr_stmt|;
-return|return
-name|fqueue_receive
-argument_list|(
-name|qdaemon
-argument_list|,
-name|qtrans
-argument_list|)
+name|fret
 return|;
 block|}
 end_function
@@ -782,6 +785,12 @@ argument_list|,
 name|qsys
 operator|->
 name|uuconf_zpubdir
+argument_list|,
+operator|(
+name|boolean
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1159,6 +1168,12 @@ argument_list|,
 name|qsys
 operator|->
 name|uuconf_zpubdir
+argument_list|,
+operator|(
+name|boolean
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1470,6 +1485,12 @@ operator|.
 name|bcmd
 operator|=
 literal|'S'
+expr_stmt|;
+name|ssend
+operator|.
+name|bgrade
+operator|=
+name|BDEFAULT_UUCP_GRADE
 expr_stmt|;
 name|ssend
 operator|.

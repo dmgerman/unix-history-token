@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* system.h    Header file for system dependent stuff in the Taylor UUCP package.    This file is not itself system dependent.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* system.h    Header file for system dependent stuff in the Taylor UUCP package.    This file is not itself system dependent.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_ifndef
@@ -116,6 +116,17 @@ define|#
 directive|define
 name|INIT_SUID
 value|(04)
+end_define
+
+begin_comment
+comment|/* Do not close all open descriptors.  This is not used by the UUCP    code, but it is used by other programs which share some of the    system dependent libraries.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_NOCLOSE
+value|(010)
 end_define
 
 begin_decl_stmt
@@ -380,7 +391,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Expand a file name on the local system.  On Unix, if the zfile    argument begins with ~user/ it goes in that users home directory,    and if it begins with ~/ it goes in the public directory (the    public directory is passed to this routine, since each system may    have its own public directory).  Similar conventions may be    desirable on other systems.  This should always return an absolute    path name, probably in the public directory.  It should return NULL    on error; otherwise the return value should be allocated using    zbufcpy or zbufalc.  */
+comment|/* Expand a file name on the local system.  On Unix, if the zfile    argument begins with ~user/ it goes in that users home directory,    and if it begins with ~/ it goes in the public directory (the    public directory is passed to this routine, since each system may    have its own public directory).  Similar conventions may be    desirable on other systems.  This should always return an absolute    path name, probably in the public directory.  It should return NULL    on error; otherwise the return value should be allocated using    zbufcpy or zbufalc.  If pfbadname is not NULL, then if the function    returns NULL *pfbadname should be set to TRUE if the error is just    that the file name is badly specified; *pfbadname should be set to    FALSE for some sort of internal error.  */
 end_comment
 
 begin_decl_stmt
@@ -400,6 +411,10 @@ specifier|const
 name|char
 operator|*
 name|zpubdir
+operator|,
+name|boolean
+operator|*
+name|pfbadname
 operator|)
 argument_list|)
 decl_stmt|;
@@ -462,7 +477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Start up a program.  The code expects fsysdep_run to return after    doing a fork, but at least for now everything will work fine if it    does not (on a system which does not support forking).  The three    string arguments may be catenated together to form the program to    execute; I did it this way to make it easy to call execl(2), and    because I never needed more than two arguments.  The program will    always be "uucico" or "uuxqt".  The return value will be passed    directly to usysdep_exit, and should be TRUE on success, FALSE on    error.  */
+comment|/* Start up a program.  If the ffork argument is true, this should    spawn a new process and return.  If the ffork argument is false,    this may either return or not.  The three string arguments may be    catenated together to form the program to execute; I did it this    way to make it easy to call execl(2), and because I never needed    more than two arguments.  The program will always be "uucico" or    "uuxqt".  The return value should be TRUE on success, FALSE on    error.  */
 end_comment
 
 begin_decl_stmt
@@ -472,6 +487,9 @@ name|fsysdep_run
 name|P
 argument_list|(
 operator|(
+name|boolean
+name|ffork
+operator|,
 specifier|const
 name|char
 operator|*
@@ -885,6 +903,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Save a file in a location used to hold corrupt files.  This is    called if a bad execution file is found by uuxqt.  This should    return the new name of the file (allocated by zbufalc), or NULL if    the move failed (in which the original file should remain).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|zsysdep_save_corrupt_file
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|zfile
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Cleanup anything left over by fsysdep_get_work_init and    fsysdep_get_work.  This may be called even though    fsysdep_get_work_init has not been.  */
 end_comment
 
@@ -1078,7 +1117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return a temporary file name to receive into.  This file will be    opened by esysdep_open_receive.  The qsys argument is the system    the file is coming from, the zto argument is the name the file will    have after it has been fully received, and the ztemp argument, if    it is not NULL, is from the command sent by the remote system.  The    return value must be freed using ubuffree.  The function should    return NULL on error.  */
+comment|/* Return a temporary file name to receive into.  This file will be    opened by esysdep_open_receive.  The qsys argument is the system    the file is coming from, the zto argument is the name the file will    have after it has been fully received, the ztemp argument, if it is    not NULL, is from the command sent by the remote system, and the    frestart argument is TRUE if the protocol and remote system permit    file transfers to be restarted.  The return value must be freed    using ubuffree.  The function should return NULL on error.  */
 end_comment
 
 begin_decl_stmt
@@ -1104,13 +1143,16 @@ specifier|const
 name|char
 operator|*
 name|ztemp
+operator|,
+name|boolean
+name|frestart
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Open a file to receive from another system.  The zreceive argument    is the return value of zsysdep_receive_temp with the same qsys,    zfile and ztemp arguments.  If the function can determine that this    file has already been partially received, it should set *pcrestart    to the number of bytes that have been received.  If the file has    not been partially received, *pcrestart should be set to -1.  The    function should return EFILECLOSED on error.  After the file is    written, fsysdep_move_file will be called to move the file to its    final destination, and to set the correct file mode.  */
+comment|/* Open a file to receive from another system.  The zreceive argument    is the return value of zsysdep_receive_temp with the same qsys,    zfile and ztemp arguments.  If the function can determine that this    file has already been partially received, it should set *pcrestart    to the number of bytes that have been received.  If the file has    not been partially received, *pcrestart should be set to -1.    pcrestart will be passed in as NULL if file restart is not    supported by the protocol or the remote system.  The function    should return EFILECLOSED on error.  After the file is written,    fsysdep_move_file will be called to move the file to its final    destination, and to set the correct file mode.  */
 end_comment
 
 begin_decl_stmt
@@ -1150,7 +1192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Move a file.  This is used to move a received file to its final    location.  The zto argument is the file to create.  The zorig    argument is the name of the file to move.  If fmkdirs is TRUE, then    any necessary directories are created; fpublic indicates whether    they should be publically writeable or not.  If fcheck is TRUE,    this should make sure the directory is writeable by the user zuser    (if zuser is NULL, then it must be writeable by any user); this is    to avoid a window of vulnerability between fsysdep_in_directory and    fsysdep_move_file.  This function should return FALSE on error; the    zorig file should be removed even if an error occurs.  */
+comment|/* Move a file.  This is used to move a received file to its final    location.  The zto argument is the file to create.  The zorig    argument is the name of the file to move.  If fmkdirs is TRUE, then    any necessary directories are created; fpublic indicates whether    they should be publically writeable or not.  If fcheck is TRUE,    this should make sure the directory is writeable by the user zuser    (if zuser is NULL, then it must be writeable by any user); this is    to avoid a window of vulnerability between fsysdep_in_directory and    fsysdep_move_file.  This function should return FALSE on error, in    which case the zorig file should still exist.  */
 end_comment
 
 begin_decl_stmt
@@ -1942,6 +1984,10 @@ specifier|const
 name|char
 operator|*
 name|zpubdir
+operator|,
+name|boolean
+operator|*
+name|pfbadname
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2216,7 +2262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* See whether the current user is permitted to kill jobs submitted by    another user.  This should return TRUE if permission is granted,    FALSE otherwise.  */
+comment|/* See whether the current user is privileged.  Privileged users are    permitted to kill jobs submitted by another user, and they are    permitted to use the -u argument to uucico; other uses of this call    may be added later.  This should return TRUE if permission is    granted, FALSE otherwise.  */
 end_comment
 
 begin_decl_stmt
@@ -2310,6 +2356,26 @@ begin_decl_stmt
 specifier|extern
 name|long
 name|ixsysdep_file_time
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|zfile
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Touch a file to make it appear as though it was created at the    current time.  This is called by uustat on execution files.  On    error this should log an error message and return FALSE.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fsysdep_touch_file
 name|P
 argument_list|(
 operator|(
@@ -2860,6 +2926,10 @@ specifier|const
 name|char
 operator|*
 name|zfile
+operator|,
+name|boolean
+operator|*
+name|pfbadname
 operator|)
 argument_list|)
 decl_stmt|;

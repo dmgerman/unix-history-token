@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* detach.c    Detach from the controlling terminal.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* detach.c    Detach from the controlling terminal.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -284,10 +284,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|ulog_id
-argument_list|(
+name|ipid
+operator|=
 name|getpid
 argument_list|()
+expr_stmt|;
+name|ulog_id
+argument_list|(
+name|ipid
 argument_list|)
 expr_stmt|;
 comment|/* Restore SIGHUP catcher if it wasn't being ignored.  */
@@ -309,6 +313,23 @@ name|boolean
 operator|*
 operator|)
 name|NULL
+argument_list|)
+expr_stmt|;
+name|DEBUG_MESSAGE2
+argument_list|(
+name|DEBUG_PORT
+argument_list|,
+literal|"Forked; old PID %ld, new pid %ld"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|igrp
+argument_list|,
+operator|(
+name|long
+operator|)
+name|ipid
 argument_list|)
 expr_stmt|;
 block|}
@@ -454,7 +475,7 @@ directive|endif
 comment|/* If we don't have setsid, we must use setpgrp.  On an old System V      system setpgrp will make us the leader of a new process group and      detach the controlling terminal.  On an old BSD system the call      setpgrp (0, 0) will set our process group to 0 so that we can      acquire a new controlling terminal (TIOCNOTTY may or may not have      already done that anyhow).  */
 if|#
 directive|if
-name|HAVE_BSD_SETPGRP
+name|HAVE_BSD_PGRP
 if|if
 condition|(
 name|setpgrp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uulog.c    Display the UUCP log file.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* uulog.c    Display the UUCP log file.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|uulog_rcsid
 index|[]
 init|=
-literal|"$Id: uulog.c,v 1.1 1993/08/04 19:36:47 jtc Exp $"
+literal|"$Id: uulog.c,v 1.21 1994/01/30 20:59:40 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,19 +77,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The program name.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|abProgram
-index|[]
-init|=
-literal|"uulog"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Local functions.  */
 end_comment
 
@@ -97,6 +84,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ulusage
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ulhelp
 name|P
 argument_list|(
 operator|(
@@ -119,6 +119,116 @@ name|asLlongopts
 index|[]
 init|=
 block|{
+block|{
+literal|"debuglog"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'D'
+block|}
+block|,
+block|{
+literal|"follow"
+block|,
+name|optional_argument
+block|,
+name|NULL
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|"lines"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'n'
+block|}
+block|,
+block|{
+literal|"system"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"statslog"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'S'
+block|}
+block|,
+block|{
+literal|"user"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'u'
+block|}
+block|,
+block|{
+literal|"uuxqtlog"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'x'
+block|}
+block|,
+block|{
+literal|"config"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'I'
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'X'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|1
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -268,6 +378,13 @@ decl_stmt|;
 name|size_t
 name|cline
 decl_stmt|;
+name|zProgram
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* Look for a straight number argument, and convert it to -n before      passing the arguments to getopt.  */
 for|for
 control|(
@@ -383,7 +500,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Df:FI:n:s:Su:xX:"
+literal|"Df:FI:n:s:Su:vxX:"
 argument_list|,
 name|asLlongopts
 argument_list|,
@@ -550,6 +667,67 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'v'
+case|:
+comment|/* Print version and exit.  */
+name|printf
+argument_list|(
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+argument_list|,
+name|zProgram
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
+literal|2
+case|:
+comment|/* --follow.  */
+name|fforever
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+name|cshow
+operator|==
+literal|0
+condition|)
+name|cshow
+operator|=
+literal|10
+expr_stmt|;
+if|if
+condition|(
+name|optarg
+operator|!=
+name|NULL
+condition|)
+name|zsystem
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+comment|/* --help.  */
+name|ulhelp
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
 literal|0
 case|:
 comment|/* Long option found and flag set.  */
@@ -558,7 +736,7 @@ default|default:
 name|ulusage
 argument_list|()
 expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 block|}
 block|}
 if|if
@@ -739,7 +917,7 @@ name|usysdep_initialize
 argument_list|(
 name|puuconf
 argument_list|,
-literal|0
+name|INIT_NOCHDIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -770,6 +948,7 @@ name|struct
 name|uuconf_system
 name|ssys
 decl_stmt|;
+comment|/* Canonicalize the system name.  If we can't find the 	     system information, just use whatever we were given so 	     that people can check on systems that logged in 	     anonymously.  */
 name|iuuconf
 operator|=
 name|uuconf_system_info
@@ -785,35 +964,10 @@ expr_stmt|;
 if|if
 condition|(
 name|iuuconf
-operator|!=
+operator|==
 name|UUCONF_SUCCESS
 condition|)
 block|{
-if|if
-condition|(
-name|iuuconf
-operator|!=
-name|UUCONF_NOT_FOUND
-condition|)
-name|ulog_uuconf
-argument_list|(
-name|LOG_FATAL
-argument_list|,
-name|puuconf
-argument_list|,
-name|iuuconf
-argument_list|)
-expr_stmt|;
-name|ulog
-argument_list|(
-name|LOG_FATAL
-argument_list|,
-literal|"%s: System not found"
-argument_list|,
-name|zsystem
-argument_list|)
-expr_stmt|;
-block|}
 name|zsystem
 operator|=
 name|zbufcpy
@@ -834,6 +988,7 @@ operator|&
 name|ssys
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -881,8 +1036,12 @@ name|zsystem
 operator|==
 name|NULL
 condition|)
-name|ulusage
-argument_list|()
+name|ulog
+argument_list|(
+name|LOG_FATAL
+argument_list|,
+literal|"system name (-s argument) required for HDB format log files"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -933,6 +1092,23 @@ expr_stmt|;
 name|zfile
 operator|=
 name|zalc
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fsysdep_file_exists
+argument_list|(
+name|zfile
+argument_list|)
+condition|)
+name|ulog
+argument_list|(
+name|LOG_FATAL
+argument_list|,
+literal|"no log file available for system %s"
+argument_list|,
+name|zsystem
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1282,7 +1458,7 @@ name|clsys
 operator|+
 literal|1
 expr_stmt|;
-name|zlsys
+name|zluser
 operator|=
 name|znext
 expr_stmt|;
@@ -1514,104 +1690,137 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP version %s, copyright (C) 1991, 1992 Ian Lance Taylor\n"
+literal|"Usage: %s [-n #] [-sf system] [-u user] [-xDSF] [-I file] [-X debug]\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Use %s --help for help\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print a help message.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ulhelp
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: uulog [-n #] [-sf system] [-u user] [-xDSF] [-I file] [-X debug]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -n: show given number of lines from end of log\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -s: print entries for named system\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -f: follow entries for named system\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" -u: print entries for named user\n"
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 name|HAVE_HDB_LOGGING
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
+literal|"Usage: %s [-n #] [-sf system] [-u user] [-xDS] [-I file] [-X debug]\n"
 argument_list|,
-literal|" -x: print uuxqt log rather than uucico log\n"
+name|zProgram
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
+literal|"Usage: %s [-n #] [-sf system] [-u user] [-DSF] [-I file] [-X debug]\n"
 argument_list|,
-literal|" -F: follow entries for any system\n"
+name|zProgram
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|" -S: show statistics file\n"
+literal|" -n,--lines: show given number of lines from end of log\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|" -D: show debugging file\n"
+literal|" -s,--system: print entries for named system\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|" -X debug: Set debugging level (0 for none, 9 is max)\n"
+literal|" -f system,--follow=system: follow entries for named system\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" -u,--user user: print entries for named user\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|HAVE_HDB_LOGGING
+name|printf
+argument_list|(
+literal|" -x,--uuxqt: print uuxqt log rather than uucico log\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|" -F,--follow: follow entries for any system\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|" -S,--statslog: show statistics file\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" -D,--debuglog: show debugging file\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" -X,--debug debug: Set debugging level\n"
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 name|HAVE_TAYLOR_CONFIG
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|" -I file: Set configuration file to use\n"
+literal|" -I,--config file: Set configuration file to use\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_TAYLOR_CONFIG */
-name|exit
+name|printf
 argument_list|(
-name|EXIT_FAILURE
+literal|" -v,--version: Print version and exit\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" --help: Print help and exit\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uucp.h    Header file for the UUCP package.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* uucp.h    Header file for the UUCP package.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|"config.h"
 end_include
 
 begin_include
@@ -91,6 +91,18 @@ begin_comment
 comment|/* We always include some standard header files.  We need<signal.h>    to define sig_atomic_t.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -107,18 +119,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_comment
 comment|/* On some systems we need<sys/types.h> to get sig_atomic_t or    size_t or time_t.  */
@@ -384,12 +384,15 @@ name|HAVE_VOID
 operator|||
 operator|!
 name|HAVE_UNSIGNED_CHAR
+operator|||
+operator|!
+name|HAVE_PROTOTYPES
 end_if
 
 begin_error
 error|#
 directive|error
-error|ANSI C compiler without void or unsigned char
+error|ANSI C compiler without void or unsigned char or prototypes
 end_error
 
 begin_endif
@@ -444,14 +447,8 @@ comment|/* ! ANSI_C */
 end_comment
 
 begin_comment
-comment|/* Handle uses of const, volatile and void in Classic C.  */
+comment|/* Handle uses of volatile and void in Classic C.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
 
 begin_define
 define|#
@@ -478,6 +475,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAVE_PROTOTYPES
+end_if
+
+begin_define
+define|#
+directive|define
+name|P
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -487,6 +505,11 @@ name|x
 parameter_list|)
 value|()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -841,6 +864,15 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|unsigned
+name|long
+name|strtoul
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|getenv
@@ -1145,6 +1177,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SEEK_END
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ffileseekend
+parameter_list|(
+name|e
+parameter_list|)
+value|(fseek ((e), (long) 0, SEEK_END) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ffileseekend
+parameter_list|(
+name|e
+parameter_list|)
+value|(fseek ((e), (long) 0, 2) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1308,6 +1376,42 @@ parameter_list|(
 name|e
 parameter_list|)
 value|(lseek ((e), (long) 0, 0)>= 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SEEK_END
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ffileseekend
+parameter_list|(
+name|e
+parameter_list|)
+value|(lseek ((e), (long) 0, SEEK_END)>= 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ffileseekend
+parameter_list|(
+name|e
+parameter_list|)
+value|(lseek ((e), (long) 0, 2)>= 0)
 end_define
 
 begin_endif
@@ -2135,6 +2239,44 @@ begin_decl_stmt
 specifier|extern
 name|long
 name|strtol
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Turn a string into a long unsigned integer.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_STRTOUL
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|strtoul
 name|P
 argument_list|(
 operator|(

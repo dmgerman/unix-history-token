@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* work.c    Routines to read command files.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* work.c    Routines to read command files.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|work_rcsid
 index|[]
 init|=
-literal|"$Id: work.c,v 1.1 1993/08/04 19:33:20 jtc Exp $"
+literal|"$Id: work.c,v 1.15 1994/01/30 21:09:20 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +194,45 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* These functions can support multiple actions going on at once.    This allows the UUCP package to send and receive multiple files at    the same time.  This is a very flexible feature, but I'm not sure    it will actually be used all that much.     The ssfile structure holds a command file name and all the lines    read in from that command file.  The union within the ssline    structure initially holds a line from the file and then holds a    pointer back to the ssfile structure; a pointer to this union is    used as a sequence pointer.  The ztemp entry of the ssline    structure holds the name of a temporary file to delete, if any.  */
+comment|/* These functions can support multiple actions going on at once.    This allows the UUCP package to send and receive multiple files at    the same time.  */
+end_comment
+
+begin_comment
+comment|/* To avoid wasting a lot of time scanning the spool directory, which    might cause the remote system to time out, we limit each scan to    pick up at most a certain number of files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMANDS_PER_SCAN
+value|(200)
+end_define
+
+begin_comment
+comment|/* The ssfilename structure holds the name of a work file, as well as    its grade.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ssfilename
+block|{
+name|char
+modifier|*
+name|zfile
+decl_stmt|;
+name|char
+name|bgrade
+decl_stmt|;
+comment|/* Some compiler may need this, and it won't normally hurt.  */
+name|char
+name|bdummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* The ssfile structure holds a command file name and all the lines    read in from that command file.  The union within the ssline    structure initially holds a line from the file and then holds a    pointer back to the ssfile structure; a pointer to this union is    used as a sequence pointer.  The ztemp entry of the ssline    structure holds the name of a temporary file to delete, if any.  */
 end_comment
 
 begin_define
@@ -233,6 +271,13 @@ name|char
 modifier|*
 name|zfile
 decl_stmt|;
+name|char
+name|bgrade
+decl_stmt|;
+comment|/* bdummy is needed for some buggy compilers.  */
+name|char
+name|bdummy
+decl_stmt|;
 name|int
 name|clines
 decl_stmt|;
@@ -256,10 +301,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+name|struct
+name|ssfilename
 modifier|*
-modifier|*
-name|azSwork_files
+name|asSwork_files
 decl_stmt|;
 end_decl_stmt
 
@@ -651,33 +696,29 @@ name|pdatum
 decl_stmt|;
 block|{
 specifier|const
-name|char
+name|struct
+name|ssfilename
 modifier|*
-specifier|const
-modifier|*
-name|pzkey
+name|qkey
 init|=
 operator|(
 specifier|const
-name|char
-operator|*
-specifier|const
+expr|struct
+name|ssfilename
 operator|*
 operator|)
 name|pkey
 decl_stmt|;
 specifier|const
-name|char
+name|struct
+name|ssfilename
 modifier|*
-specifier|const
-modifier|*
-name|pzdatum
+name|qdatum
 init|=
 operator|(
 specifier|const
-name|char
-operator|*
-specifier|const
+expr|struct
+name|ssfilename
 operator|*
 operator|)
 name|pdatum
@@ -685,11 +726,13 @@ decl_stmt|;
 return|return
 name|strcmp
 argument_list|(
-operator|*
-name|pzkey
+name|qkey
+operator|->
+name|zfile
 argument_list|,
-operator|*
-name|pzdatum
+name|qdatum
+operator|->
+name|zfile
 argument_list|)
 return|;
 block|}
@@ -1109,14 +1152,14 @@ argument_list|(
 operator|(
 name|pointer
 operator|)
-name|azSwork_files
+name|asSwork_files
 argument_list|,
 name|chad
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+expr|struct
+name|ssfilename
 argument_list|)
 argument_list|,
 name|iswork_cmp
@@ -1276,6 +1319,10 @@ name|char
 modifier|*
 name|zname
 decl_stmt|;
+name|struct
+name|ssfilename
+name|slook
+decl_stmt|;
 if|#
 directive|if
 operator|!
@@ -1315,6 +1362,12 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
+name|slook
+operator|.
+name|zfile
+operator|=
+name|zname
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1342,7 +1395,7 @@ operator|<
 literal|0
 operator|||
 operator|(
-name|azSwork_files
+name|asSwork_files
 operator|!=
 name|NULL
 operator|&&
@@ -1352,19 +1405,19 @@ operator|(
 name|pointer
 operator|)
 operator|&
-name|zname
+name|slook
 argument_list|,
 operator|(
 name|pointer
 operator|)
-name|azSwork_files
+name|asSwork_files
 argument_list|,
 name|chad
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+expr|struct
+name|ssfilename
 argument_list|)
 argument_list|,
 name|iswork_cmp
@@ -1400,11 +1453,12 @@ name|callocated
 operator|+=
 name|CWORKFILES
 expr_stmt|;
-name|azSwork_files
+name|asSwork_files
 operator|=
 operator|(
-name|char
-operator|*
+operator|(
+expr|struct
+name|ssfilename
 operator|*
 operator|)
 name|xrealloc
@@ -1412,28 +1466,51 @@ argument_list|(
 operator|(
 name|pointer
 operator|)
-name|azSwork_files
+name|asSwork_files
 argument_list|,
+operator|(
 name|callocated
 operator|*
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+expr|struct
+name|ssfilename
 argument_list|)
+operator|)
 argument_list|)
+operator|)
 expr_stmt|;
 block|}
-name|azSwork_files
+name|asSwork_files
 index|[
 name|cSwork_files
 index|]
+operator|.
+name|zfile
 operator|=
 name|zname
+expr_stmt|;
+name|asSwork_files
+index|[
+name|cSwork_files
+index|]
+operator|.
+name|bgrade
+operator|=
+name|bfilegrade
 expr_stmt|;
 operator|++
 name|cSwork_files
 expr_stmt|;
+if|if
+condition|(
+name|cSwork_files
+operator|-
+name|chad
+operator|>
+name|COMMANDS_PER_SCAN
+condition|)
+break|break;
 block|}
 block|}
 if|#
@@ -1444,6 +1521,15 @@ argument_list|(
 name|qdir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cSwork_files
+operator|-
+name|chad
+operator|>
+name|COMMANDS_PER_SCAN
+condition|)
+break|break;
 block|}
 name|qdir
 operator|=
@@ -1466,7 +1552,7 @@ if|if
 condition|(
 name|cSwork_files
 operator|>
-name|chad
+name|iSwork_file
 condition|)
 name|qsort
 argument_list|(
@@ -1474,19 +1560,19 @@ call|(
 name|pointer
 call|)
 argument_list|(
-name|azSwork_files
+name|asSwork_files
 operator|+
-name|chad
+name|iSwork_file
 argument_list|)
 argument_list|,
 name|cSwork_files
 operator|-
-name|chad
+name|iSwork_file
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+expr|struct
+name|ssfilename
 argument_list|)
 argument_list|,
 name|iswork_cmp
@@ -1551,7 +1637,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|azSwork_files
+name|asSwork_files
 operator|==
 name|NULL
 condition|)
@@ -1608,6 +1694,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|zname
+decl_stmt|;
+name|char
+name|bfilegrade
 decl_stmt|;
 comment|/* Read all the lines of a command file into memory.  */
 do|do
@@ -1695,11 +1784,22 @@ name|zsysdep_in_dir
 argument_list|(
 name|zdir
 argument_list|,
-name|azSwork_files
+name|asSwork_files
 index|[
 name|iSwork_file
 index|]
+operator|.
+name|zfile
 argument_list|)
+expr_stmt|;
+name|bfilegrade
+operator|=
+name|asSwork_files
+index|[
+name|iSwork_file
+index|]
+operator|.
+name|bgrade
 expr_stmt|;
 operator|++
 name|iSwork_file
@@ -1970,6 +2070,12 @@ name|zname
 expr_stmt|;
 name|qfile
 operator|->
+name|bgrade
+operator|=
+name|bfilegrade
+expr_stmt|;
+name|qfile
+operator|->
 name|clines
 operator|=
 name|iline
@@ -2079,6 +2185,14 @@ name|NULL
 expr_stmt|;
 continue|continue;
 block|}
+name|qcmd
+operator|->
+name|bgrade
+operator|=
+name|qSwork_file
+operator|->
+name|bgrade
+expr_stmt|;
 name|qSwork_file
 operator|->
 name|aslines
@@ -2433,7 +2547,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|azSwork_files
+name|asSwork_files
 operator|!=
 name|NULL
 condition|)
@@ -2459,10 +2573,12 @@ argument_list|(
 operator|(
 name|pointer
 operator|)
-name|azSwork_files
+name|asSwork_files
 index|[
 name|i
 index|]
+operator|.
+name|zfile
 argument_list|)
 expr_stmt|;
 name|xfree
@@ -2470,10 +2586,10 @@ argument_list|(
 operator|(
 name|pointer
 operator|)
-name|azSwork_files
+name|asSwork_files
 argument_list|)
 expr_stmt|;
-name|azSwork_files
+name|asSwork_files
 operator|=
 name|NULL
 expr_stmt|;
@@ -2732,6 +2848,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+comment|/* Leave the file where it was, not that is much help.  */
 name|ubuffree
 argument_list|(
 name|zto
@@ -2863,7 +2980,7 @@ comment|/* Get the grade of a work file.  The pseq argument can be NULL when    
 end_comment
 
 begin_function
-name|char
+name|int
 name|bsgrade
 parameter_list|(
 name|pseq

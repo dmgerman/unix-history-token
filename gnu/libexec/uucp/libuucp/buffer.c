@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* buffer.c    Manipulate buffers used to hold strings.     Copyright (C) 1992 Ian Lance Taylor     This file is part of Taylor UUCP.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* buffer.c    Manipulate buffers used to hold strings.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of Taylor UUCP.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -256,13 +256,14 @@ modifier|*
 name|z
 decl_stmt|;
 block|{
-name|size_t
-name|ioff
-decl_stmt|;
 name|struct
 name|sbuf
 modifier|*
 name|q
+decl_stmt|;
+comment|/* The type of ioff should be size_t, but making it int avoids a bug      in some versions of the HP/UX compiler, and will always work.  */
+name|int
+name|ioff
 decl_stmt|;
 if|if
 condition|(
@@ -297,6 +298,54 @@ operator|-
 name|ioff
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_BUFFER
+block|{
+name|struct
+name|sbuf
+modifier|*
+name|qlook
+decl_stmt|;
+for|for
+control|(
+name|qlook
+operator|=
+name|qBlist
+init|;
+name|qlook
+operator|!=
+name|NULL
+condition|;
+name|qlook
+operator|=
+name|qlook
+operator|->
+name|qnext
+control|)
+block|{
+if|if
+condition|(
+name|qlook
+operator|==
+name|q
+condition|)
+block|{
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"ubuffree: Attempt to free buffer twice"
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+block|}
+endif|#
+directive|endif
 name|q
 operator|->
 name|qnext

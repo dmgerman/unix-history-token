@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uucnfi.h    Internal header file for the uuconf package.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* uucnfi.h    Internal header file for the uuconf package.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_comment
@@ -135,6 +135,12 @@ decl_stmt|;
 comment|/* The maximum number of simultaneously executing uuxqts.  */
 name|int
 name|cmaxuuxqts
+decl_stmt|;
+comment|/* How often to spawn a uuxqt process.  */
+specifier|const
+name|char
+modifier|*
+name|zrunuuxqt
 decl_stmt|;
 comment|/* Whether we are reading the V2 configuration files.  */
 name|boolean
@@ -1108,6 +1114,42 @@ operator|(
 name|long
 operator|,
 name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Parse a debugging string.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_uuconf_idebug_cmd
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sglobal
+operator|*
+name|qglobal
+operator|,
+name|char
+operator|*
+operator|*
+name|pzdebug
+operator|,
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+operator|*
+name|argv
+operator|,
+name|pointer
+name|pblock
 operator|)
 argument_list|)
 decl_stmt|;
