@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	6.4	84/09/04	*/
+comment|/*	socket.h	6.5	84/12/20	*/
 end_comment
 
 begin_comment
@@ -156,6 +156,76 @@ end_define
 
 begin_comment
 comment|/* linger on close if data present */
+end_comment
+
+begin_comment
+comment|/*  * Additional options, not kept in so_options.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_SNDBUF
+value|0x1001
+end_define
+
+begin_comment
+comment|/* send buffer size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_RCVBUF
+value|0x1002
+end_define
+
+begin_comment
+comment|/* receive buffer size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_SNDLOWAT
+value|0x1003
+end_define
+
+begin_comment
+comment|/* send low-water mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_RCVLOWAT
+value|0x1004
+end_define
+
+begin_comment
+comment|/* receive low-water mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_SNDTIMEO
+value|0x1005
+end_define
+
+begin_comment
+comment|/* send timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_RCVTIMEO
+value|0x1006
+end_define
+
+begin_comment
+comment|/* receive timeout */
 end_comment
 
 begin_comment
