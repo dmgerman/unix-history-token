@@ -1220,6 +1220,16 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
+literal|"cm"
+block|,
+literal|"SMC COM90Cx6-based Arcnet adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"cs"
 block|,
 literal|"IBM EtherJet, CS89x0-based Ethernet adapters"
