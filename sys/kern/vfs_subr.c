@@ -3276,7 +3276,7 @@ name|PVFS
 argument_list|,
 literal|"vlruwt"
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
 continue|continue;
