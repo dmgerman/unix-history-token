@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hd_input.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hd_input.c	8.1 (Berkeley) 6/10/93  * $Id: hd_input.c,v 1.2 1994/08/02 07:47:01 davidg Exp $  */
 end_comment
 
 begin_include
@@ -81,37 +81,45 @@ directive|include
 file|<netccitt/x25.h>
 end_include
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|frame_reject
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|rej_routine
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|free_iframes
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|process_sframe
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  *      HDLC INPUT INTERFACE  *  *      This routine is called when the HDLC physical device has  *      completed reading a frame.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|hdintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -313,33 +321,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|process_rxframe
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|fbuf
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|fbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1235,43 +1238,35 @@ name|queued
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|process_iframe
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|fbuf
-argument_list|,
+parameter_list|,
 name|frame
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|fbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|Hdlc_iframe
 modifier|*
 name|frame
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1599,7 +1594,7 @@ name|queued
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   *  This routine is used to determine if a value (the middle parameter)  *  is between two other values. The low value is  the first  parameter  *  the high value is the last parameter. The routine checks the middle  *  value to see if it is within the range of the first and last values.  *  The reason we need this routine is the values are modulo some  base  *  hence a simple test for greater or less than is not sufficient.  */
@@ -1676,32 +1671,30 @@ begin_comment
 comment|/*   *  This routine handles all the frame reject conditions which can  *  arise as a result  of secondary  processing.  The frame reject  *  condition Y (frame length error) are handled elsewhere.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|frame_reject
-argument_list|(
-argument|hdp
-argument_list|,
-argument|rejectcode
-argument_list|,
-argument|frame
-argument_list|)
-expr|struct
-name|hdcb
-operator|*
+parameter_list|(
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|rejectcode
+parameter_list|,
+name|frame
+parameter_list|)
+name|struct
+name|hdcb
+modifier|*
+name|hdp
+decl_stmt|;
+name|int
+name|rejectcode
+decl_stmt|;
 name|struct
 name|Hdlc_iframe
 modifier|*
 name|frame
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1855,45 +1848,37 @@ name|hdp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   *  This procedure is invoked when ever we receive a supervisor  *  frame such as RR, RNR and REJ. All processing for these  *  frames is done here.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|process_sframe
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|frame
-argument_list|,
+parameter_list|,
 name|frametype
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|Hdlc_sframe
 modifier|*
 name|frame
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|frametype
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2125,7 +2110,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Invalid N(R). */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   *  This routine tests the validity of the N(R) which we have received.  *  If it is ok,  then all the  iframes which it acknowledges  (if any)  *  will be freed.  */
@@ -2146,6 +2131,9 @@ name|struct
 name|hdcb
 modifier|*
 name|hdp
+decl_stmt|;
+name|int
+name|nr
 decl_stmt|;
 specifier|register
 name|int
@@ -2272,30 +2260,25 @@ begin_comment
 comment|/*   *  This routine determines how many iframes need to be retransmitted.  *  It then resets the Send State Variable V(S) to accomplish this.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|rej_routine
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|rejnr
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|rejnr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2394,45 +2377,37 @@ name|hdp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   *  This routine frees iframes from the retransmit queue. It is called  *  when a previously written iframe is acknowledged.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|free_iframes
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|nr
-argument_list|,
+parameter_list|,
 name|finalbit
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 modifier|*
 name|nr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|finalbit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2548,7 +2523,7 @@ name|MODULUS
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
