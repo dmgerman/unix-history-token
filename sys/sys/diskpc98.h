@@ -15,6 +15,12 @@ directive|define
 name|_SYS_DISKPC98_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -158,6 +164,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DIOCGPC98
+value|_IOR('M', 128, u_char[8192])
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCSPC98
+value|_IOW('M', 129, u_char[8192])
+end_define
 
 begin_endif
 endif|#
