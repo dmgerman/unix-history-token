@@ -635,7 +635,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ifaddr
+name|at_ifaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
