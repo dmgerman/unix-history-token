@@ -4717,6 +4717,14 @@ name|si_drv1
 operator|=
 name|cs
 expr_stmt|;
+name|cs
+operator|->
+name|sc_dev
+operator|->
+name|si_iosize_max
+operator|=
+name|MAXPHYS
+expr_stmt|;
 name|ccdunlock
 argument_list|(
 name|cs
