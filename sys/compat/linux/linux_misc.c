@@ -4538,9 +4538,13 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_xxx
 argument_list|(
+name|NULL
+argument_list|,
 name|p
+argument_list|,
+name|PRISON_ROOT
 argument_list|)
 operator|)
 operator|!=
