@@ -1391,9 +1391,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"awk -F: '{if ($3< 10 || $1 == "
-name|ftp
-literal|") print $0}' /etc/passwd> %s/etc/passwd&& chmod 444 %s/etc/passwd"
+literal|"awk -F: '{if ($3< 10 || $1 == \"ftp\") print $0}' /etc/passwd> %s/etc/passwd&& chmod 444 %s/etc/passwd"
 argument_list|,
 name|tconf
 operator|.
