@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.45 1999/05/07 07:03:17 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.46 1999/05/07 10:09:42 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1507,9 +1507,14 @@ name|ci
 operator|->
 name|ci_dev
 operator|=
+name|udev2dev
+argument_list|(
 name|va
 operator|.
 name|va_rdev
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Get partition information for the component. 		 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.83 1999/04/28 11:37:27 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.84 1999/05/06 18:12:51 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1463,9 +1463,12 @@ name|vap
 operator|->
 name|va_fsid
 operator|=
+name|dev2udev
+argument_list|(
 name|dep
 operator|->
 name|de_dev
+argument_list|)
 expr_stmt|;
 comment|/* 	 * The following computation of the fileid must be the same as that 	 * used in msdosfs_readdir() to compute d_fileno. If not, pwd 	 * doesn't work. 	 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.43 1998/12/07 21:58:34 archie Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.44 1999/01/02 11:34:56 bde Exp $ */
 end_comment
 
 begin_comment
@@ -150,7 +150,7 @@ name|dcl
 parameter_list|,
 name|doff
 parameter_list|)
-value|(dehashtbl[((dev) + (dcl) + (doff) / 	\ 				sizeof(struct direntry))& dehash])
+value|(dehashtbl[(minor(dev) + (dcl) + (doff) / 	\ 				sizeof(struct direntry))& dehash])
 end_define
 
 begin_ifndef
