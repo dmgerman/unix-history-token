@@ -739,12 +739,12 @@ literal|"real memory  = %ld (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|Maxmem
+name|physmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
-name|Maxmem
+name|physmem
 argument_list|)
 operator|/
 literal|1048576
@@ -752,7 +752,7 @@ argument_list|)
 expr_stmt|;
 name|realmem
 operator|=
-name|Maxmem
+name|physmem
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
