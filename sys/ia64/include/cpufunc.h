@@ -670,7 +670,15 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|psr
+operator|&
+name|IA64_PSR_I
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 operator|)
 return|;
 block|}
@@ -682,11 +690,17 @@ name|__inline
 name|void
 name|intr_restore
 parameter_list|(
-name|critical_t
-name|psr
+name|register_t
+name|ie
 parameter_list|)
 block|{
-asm|__asm __volatile ("mov psr.l=%0;; srlz.d" :: "r"(psr));
+if|if
+condition|(
+name|ie
+condition|)
+name|enable_intr
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
