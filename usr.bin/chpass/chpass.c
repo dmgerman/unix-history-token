@@ -46,17 +46,6 @@ literal|"From: @(#)chpass.c	8.4 (Berkeley) 4/2/94"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -65,6 +54,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -242,22 +245,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|char
+name|localhost
+index|[]
+init|=
+literal|"localhost"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 enum|enum
 block|{
@@ -488,7 +496,7 @@ name|NULL
 condition|)
 name|yp_server
 operator|=
-literal|"localhost"
+name|localhost
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1008,7 +1016,9 @@ end_function
 begin_function
 name|void
 name|baduser
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|errx
 argument_list|(
@@ -1028,7 +1038,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void

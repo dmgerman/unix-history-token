@@ -29,6 +29,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This module is used to copy the master password file, replacing a single  * record, by chpass(1) and passwd(1).  */
 end_comment
@@ -277,30 +291,22 @@ begin_function
 name|void
 name|pw_copy
 parameter_list|(
-name|ffd
-parameter_list|,
-name|tfd
-parameter_list|,
-name|pw
-parameter_list|,
-name|old_pw
-parameter_list|)
 name|int
 name|ffd
-decl_stmt|,
+parameter_list|,
+name|int
 name|tfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
 name|old_pw
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -959,7 +965,7 @@ name|to
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

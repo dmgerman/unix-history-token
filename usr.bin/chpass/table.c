@@ -32,6 +32,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -81,7 +95,9 @@ block|,
 literal|5
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"password"
@@ -93,7 +109,9 @@ block|,
 literal|8
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"uid"
@@ -105,7 +123,9 @@ block|,
 literal|3
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"gid"
@@ -117,7 +137,9 @@ block|,
 literal|3
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"class"
@@ -129,7 +151,9 @@ block|,
 literal|5
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"change"
@@ -141,7 +165,9 @@ block|,
 literal|6
 block|,
 name|NULL
-block|, }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"expire"
@@ -153,7 +179,9 @@ block|,
 literal|6
 block|,
 name|NULL
-block|, }
+block|,
+name|NULL
+block|}
 block|,
 ifdef|#
 directive|ifdef
@@ -169,7 +197,9 @@ block|,
 literal|9
 block|,
 name|e2
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 else|#
 directive|else
@@ -183,7 +213,9 @@ block|,
 literal|9
 block|,
 name|e2
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 endif|#
 directive|endif
@@ -197,7 +229,9 @@ block|,
 literal|12
 block|,
 name|e2
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"home phone"
@@ -209,7 +243,9 @@ block|,
 literal|10
 block|,
 name|e2
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"office location"
@@ -221,7 +257,9 @@ block|,
 literal|15
 block|,
 name|e2
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"other information"
@@ -233,7 +271,9 @@ block|,
 literal|11
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"home directory"
@@ -245,7 +285,9 @@ block|,
 literal|14
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 literal|"shell"
@@ -257,13 +299,23 @@ block|,
 literal|5
 block|,
 name|e1
-block|,   }
+block|,
+name|NULL
+block|}
 block|,
 block|{
 name|NULL
 block|,
+name|NULL
+block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

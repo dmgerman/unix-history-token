@@ -9,26 +9,14 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)util.c	8.4 (Berkeley) 4/2/94";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)util.c	8.4 (Berkeley) 4/2/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +28,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -103,6 +105,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|months
@@ -143,11 +146,9 @@ name|char
 modifier|*
 name|ttoa
 parameter_list|(
-name|tval
-parameter_list|)
 name|time_t
 name|tval
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|tm
@@ -220,18 +221,14 @@ begin_function
 name|int
 name|atot
 parameter_list|(
-name|p
-parameter_list|,
-name|store
-parameter_list|)
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|time_t
 modifier|*
 name|store
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -242,7 +239,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|t
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 modifier|*
 name|mp
@@ -595,12 +594,10 @@ name|char
 modifier|*
 name|ok_shell
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
