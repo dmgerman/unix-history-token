@@ -794,25 +794,22 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|getnfsargs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|nfs_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* void	set_rpc_maxgrouplist __P((int)); */
+comment|/* void	set_rpc_maxgrouplist(int); */
 end_comment
 
 begin_function_decl
@@ -846,48 +843,39 @@ end_function_decl
 begin_decl_stmt
 name|void
 name|usage
-name|__P
 argument_list|(
-operator|(
 name|void
-operator|)
 argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|xdr_dir
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|xdr_fh
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|XDR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|nfhret
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|enum

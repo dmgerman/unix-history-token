@@ -7,61 +7,52 @@ begin_comment
 comment|/* vfslist.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|checkvfsname
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|makevfslist
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* mount_ufs.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|mount_ufs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

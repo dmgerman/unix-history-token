@@ -144,11 +144,8 @@ begin_decl_stmt
 specifier|static
 name|void
 name|usage
-name|__P
 argument_list|(
-operator|(
 name|void
-operator|)
 argument_list|)
 name|__dead2
 decl_stmt|;
