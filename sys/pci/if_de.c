@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.72 1998/07/05 06:49:14 jonathan Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.85 1998/07/15 02:32:27 bde Exp $ */
+comment|/*	$Id: if_de.c,v 1.86 1998/09/24 13:31:01 peter Exp $ */
 end_comment
 
 begin_comment
@@ -22426,12 +22426,12 @@ name|defined
 argument_list|(
 name|TULIP_BUS_DMA_NOTX
 argument_list|)
+name|again
+label|:
 name|m0
 operator|=
 name|m
 expr_stmt|;
-name|again
-label|:
 endif|#
 directive|endif
 name|d_status
