@@ -191,6 +191,10 @@ asm|__asm __volatile("mov ar.rsc=0;; flushrs;;");
 end_asm
 
 begin_asm
+asm|__asm __volatile("mov r8=%0" :: "r" (bi));
+end_asm
+
+begin_asm
 asm|__asm __volatile("rfi;;");
 end_asm
 
