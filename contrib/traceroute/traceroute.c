@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.5 1996/10/08 19:16:24 sef Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.6 1998/06/06 23:33:28 jb Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2846,6 +2846,28 @@ argument_list|,
 operator|&
 name|tz
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wait
+operator|.
+name|tv_sec
+operator|<
+name|now
+operator|.
+name|tv_sec
+operator|+
+literal|1
+condition|)
+name|wait
+operator|.
+name|tv_sec
+operator|=
+name|now
+operator|.
+name|tv_sec
+operator|+
+literal|1
 expr_stmt|;
 name|tvsub
 argument_list|(
