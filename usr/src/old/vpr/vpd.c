@@ -14,8 +14,17 @@ value|if (debug) prcons
 end_define
 
 begin_comment
-comment|/*  * Varian or Versatec printer daemon  */
+comment|/*  * vpd.c						updated %G%  * Varian or Versatec printer daemon  */
 end_comment
+
+begin_decl_stmt
+name|char
+name|vpdSCCSid
+index|[]
+init|=
+literal|"@(#)vpd.c	1.2\t%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -89,6 +98,20 @@ define|#
 directive|define
 name|VRAST
 value|"/usr/local/lib/vrast"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDMP
+value|"/usr/lib/vdmp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPLTDMP
+value|"/usr/lib/vpltdmp"
 end_define
 
 begin_ifdef
@@ -207,6 +230,15 @@ name|char
 name|banbuf
 index|[
 literal|64
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|banner
+index|[
+literal|512
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -950,6 +982,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|banner
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 for|for
 control|(
 operator|*
@@ -985,6 +1024,48 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
+literal|'B'
+case|:
+comment|/* banner */
+if|if
+condition|(
+name|banner
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|strcat
+argument_list|(
+name|banner
+argument_list|,
+name|line
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|strcat
+argument_list|(
+name|banner
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|banner
+argument_list|,
+name|line
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+case|case
 literal|'1'
 case|:
 case|case
@@ -1014,6 +1095,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
+case|case
+literal|'C'
+case|:
+comment|/* called by cifplot */
+case|case
+literal|'V'
+case|:
+comment|/* called by vplot */
 case|case
 literal|'F'
 case|:
@@ -1935,6 +2024,46 @@ literal|"-v"
 argument|, line+
 literal|1
 argument|, linep,
+literal|0
+argument|); 		break; 	case
+literal|'C'
+argument|: 		execl(VDMP,
+literal|"vdmp"
+argument|,
+literal|"-n"
+argument|,banbuf,
+literal|"-b"
+argument|,banner,
+ifdef|#
+directive|ifdef
+name|VERSATEC
+literal|"-W"
+argument|,
+endif|#
+directive|endif
+argument|line+
+literal|1
+argument|,
+literal|0
+argument|); 		break; 	case
+literal|'V'
+argument|: 		execl(VPLTDMP,
+literal|"vpltdmp"
+argument|,
+literal|"-n"
+argument|,banbuf,
+literal|"-b"
+argument|,banner,
+ifdef|#
+directive|ifdef
+name|VERSATEC
+literal|"-W"
+argument|,
+endif|#
+directive|endif
+argument|line+
+literal|1
+argument|,
 literal|0
 argument|); 		break; 	} 	exit(
 literal|2
