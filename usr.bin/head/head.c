@@ -409,6 +409,8 @@ name|ch
 decl_stmt|;
 while|while
 condition|(
+name|cnt
+operator|&&
 operator|(
 name|ch
 operator|=
@@ -419,8 +421,6 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
-operator|&&
-name|cnt
 condition|)
 block|{
 if|if
