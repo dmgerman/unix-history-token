@@ -1008,7 +1008,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\ 								\
-value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=ar." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov ar." #name "=%0" :: "r" (v));	\ }
+value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=ar." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov ar." #name "=%0;;" :: "r" (v));	\ }
 end_define
 
 begin_macro
@@ -1212,7 +1212,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\ 								\
-value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=cr." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov cr." #name "=%0" :: "r" (v));	\ }
+value|static __inline u_int64_t					\ ia64_get_##name(void)						\ {								\ 	u_int64_t result;					\ 	__asm __volatile("mov %0=cr." #name : "=r" (result));	\ 	return result;						\ }								\ 								\ static __inline void						\ ia64_set_##name(u_int64_t v)					\ {								\ 	__asm __volatile("mov cr." #name "=%0;;" :: "r" (v));	\ }
 end_define
 
 begin_macro
