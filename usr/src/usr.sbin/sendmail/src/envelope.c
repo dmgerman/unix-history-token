@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.22 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,16 +571,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|QUEUE
-name|FILE
-modifier|*
-name|lockfp
-decl_stmt|,
-modifier|*
-name|queueup
-argument_list|()
-decl_stmt|;
-name|lockfp
-operator|=
 name|queueup
 argument_list|(
 name|e
@@ -588,20 +578,6 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|FALSE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lockfp
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|lockfp
 argument_list|)
 expr_stmt|;
 else|#

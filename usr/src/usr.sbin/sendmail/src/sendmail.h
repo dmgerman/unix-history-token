@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.24		%G%"
+literal|"@(#)sendmail.h	5.25		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1107,6 +1107,11 @@ modifier|*
 name|e_xfp
 decl_stmt|;
 comment|/* transcript file */
+name|FILE
+modifier|*
+name|e_lockfp
+decl_stmt|;
+comment|/* the lock file for this message */
 name|FILE
 modifier|*
 name|e_qfp
@@ -2642,6 +2647,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* load average refusing connections are */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|CurrentLA
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current load average */
 end_comment
 
 begin_decl_stmt

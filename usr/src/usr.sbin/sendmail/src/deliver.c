@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.48 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5035,16 +5035,6 @@ decl_stmt|;
 name|int
 name|nsent
 decl_stmt|;
-name|FILE
-modifier|*
-name|lockfp
-init|=
-name|NULL
-decl_stmt|,
-modifier|*
-name|queueup
-argument_list|()
-decl_stmt|;
 comment|/* determine actual delivery mode */
 if|if
 condition|(
@@ -5213,8 +5203,6 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
-name|lockfp
-operator|=
 name|queueup
 argument_list|(
 name|e
@@ -5259,20 +5247,6 @@ name|EF_INQUEUE
 operator||
 name|EF_KEEPQUEUE
 expr_stmt|;
-if|if
-condition|(
-name|lockfp
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|lockfp
-argument_list|)
-expr_stmt|;
 return|return;
 case|case
 name|SM_FORK
@@ -5301,7 +5275,9 @@ name|LOCKF
 comment|/* 		**  Since lockf has the interesting semantic that the 		**  lock is lost when we close the file in the parent, 		**  we'll risk losing the lock here by closing before 		**  the fork, and then trying to get it back in the 		**  child. 		*/
 if|if
 condition|(
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 operator|!=
 name|NULL
 condition|)
@@ -5311,10 +5287,14 @@ name|void
 operator|)
 name|fclose
 argument_list|(
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 argument_list|)
 expr_stmt|;
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 operator|=
 name|NULL
 expr_stmt|;
@@ -5362,7 +5342,9 @@ directive|ifndef
 name|LOCKF
 if|if
 condition|(
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 operator|!=
 name|NULL
 condition|)
@@ -5371,7 +5353,9 @@ name|void
 operator|)
 name|fclose
 argument_list|(
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5401,7 +5385,9 @@ ifdef|#
 directive|ifdef
 name|LOCKF
 comment|/* 		**  Now try to get our lock back. 		*/
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 operator|=
 name|fopen
 argument_list|(
@@ -5417,7 +5403,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 operator|==
 name|NULL
 operator|||
@@ -5425,7 +5413,9 @@ name|lockf
 argument_list|(
 name|fileno
 argument_list|(
-name|lockfp
+name|e
+operator|->
+name|e_lockfp
 argument_list|)
 argument_list|,
 name|F_TLOCK
@@ -5557,12 +5547,6 @@ operator|>=
 name|CheckpointInterval
 condition|)
 block|{
-name|FILE
-modifier|*
-name|nlockfp
-decl_stmt|;
-name|nlockfp
-operator|=
 name|queueup
 argument_list|(
 name|e
@@ -5571,21 +5555,6 @@ name|TRUE
 argument_list|,
 name|FALSE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lockfp
-operator|!=
-name|NULL
-condition|)
-name|fclose
-argument_list|(
-name|lockfp
-argument_list|)
-expr_stmt|;
-name|lockfp
-operator|=
-name|nlockfp
 expr_stmt|;
 name|nsent
 operator|=
@@ -5622,23 +5591,7 @@ name|mode
 operator|==
 name|SM_VERIFY
 condition|)
-block|{
-if|if
-condition|(
-name|lockfp
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|lockfp
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 for|for
 control|(
 name|q
@@ -5884,21 +5837,6 @@ name|e_errorqueue
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* this removes the lock on the file */
-if|if
-condition|(
-name|lockfp
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|lockfp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mode

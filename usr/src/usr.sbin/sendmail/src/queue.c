@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.35 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.36 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.35 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.36 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,13 +159,6 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|la
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|WORK
 modifier|*
 name|WorkQ
@@ -180,46 +173,42 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	Parameters: **		e -- the envelope to queue up. **		queueall -- if TRUE, queue all addresses, rather than **			just those with the QQUEUEUP flag set. **		announce -- if TRUE, tell when you are queueing up. ** **	Returns: **		locked FILE* to q file ** **	Side Effects: **		The current request are saved in a control file. */
+comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	Parameters: **		e -- the envelope to queue up. **		queueall -- if TRUE, queue all addresses, rather than **			just those with the QQUEUEUP flag set. **		announce -- if TRUE, tell when you are queueing up. ** **	Returns: **		none. ** **	Side Effects: **		The current request are saved in a control file. **		The queue file is left locked. */
 end_comment
 
-begin_function
-name|FILE
-modifier|*
+begin_expr_stmt
 name|queueup
-parameter_list|(
+argument_list|(
 name|e
-parameter_list|,
+argument_list|,
 name|queueall
-parameter_list|,
+argument_list|,
 name|announce
-parameter_list|)
+argument_list|)
 specifier|register
 name|ENVELOPE
-modifier|*
+operator|*
 name|e
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|queueall
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|announce
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|char
 modifier|*
 name|qf
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|,
-name|tf
-index|[
-name|MAXLINE
-index|]
 decl_stmt|;
 specifier|register
 name|FILE
@@ -236,17 +225,40 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|bool
+name|newid
+decl_stmt|;
 name|MAILER
 name|nullmailer
 decl_stmt|;
-name|int
-name|fd
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
 decl_stmt|,
-name|ret
+name|tf
+index|[
+name|MAXLINE
+index|]
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
-do|do
-block|{
+name|newid
+operator|=
+operator|(
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+operator|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|tf
@@ -259,6 +271,50 @@ literal|'t'
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tfp
+operator|=
+name|e
+operator|->
+name|e_lockfp
+expr_stmt|;
+if|if
+condition|(
+name|tfp
+operator|==
+name|NULL
+condition|)
+name|newid
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|newid
+condition|)
+block|{
+name|tfp
+operator|=
+name|e
+operator|->
+name|e_lockfp
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* get a locked tf file */
+for|for
+control|(
+name|i
+operator|=
+literal|100
+init|;
+operator|--
+name|i
+operator|>=
+literal|0
+condition|;
+control|)
+block|{
 name|fd
 operator|=
 name|open
@@ -284,10 +340,10 @@ block|{
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EEXIST
 condition|)
-block|{
+continue|continue;
 name|syserr
 argument_list|(
 literal|"queueup: cannot create temp file %s"
@@ -295,13 +351,8 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+return|return;
 block|}
-block|}
-else|else
-block|{
 ifdef|#
 directive|ifdef
 name|LOCKF
@@ -315,10 +366,10 @@ name|F_TLOCK
 argument_list|,
 literal|0
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
-block|{
+break|break;
 if|if
 condition|(
 name|errno
@@ -336,17 +387,6 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -359,10 +399,10 @@ name|LOCK_EX
 operator||
 name|LOCK_NB
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
-block|{
+break|break;
 if|if
 condition|(
 name|errno
@@ -376,28 +416,14 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 block|}
-endif|#
-directive|endif
-block|}
-block|}
-do|while
-condition|(
-name|fd
-operator|<
-literal|0
-condition|)
-do|;
 name|tfp
 operator|=
 name|fdopen
@@ -407,6 +433,7 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
@@ -488,6 +515,11 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|newid
+condition|)
 operator|(
 name|void
 operator|)
@@ -496,9 +528,7 @@ argument_list|(
 name|tfp
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+return|return;
 block|}
 name|dfp
 operator|=
@@ -538,7 +568,7 @@ operator|=
 name|putbody
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/* 	**  Output future work requests. 	**	Priority and creation time should be first, since 	**	they are required by orderq. 	*/
@@ -1203,7 +1233,13 @@ begin_comment
 comment|/* 	**  Clean up. 	*/
 end_comment
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+operator|!
+name|newid
+condition|)
+block|{
 name|qf
 operator|=
 name|queuename
@@ -1213,9 +1249,6 @@ argument_list|,
 literal|'q'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|rename
@@ -1239,6 +1272,36 @@ name|e
 operator|->
 name|e_df
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_lockfp
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|e
+operator|->
+name|e_lockfp
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_lockfp
+operator|=
+name|tfp
+expr_stmt|;
+block|}
+else|else
+name|qf
+operator|=
+name|tf
 expr_stmt|;
 end_if
 
@@ -1300,9 +1363,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_return
-return|return
-name|tfp
-return|;
+return|return;
 end_return
 
 begin_escape
@@ -1331,7 +1392,7 @@ name|shouldqueue
 parameter_list|()
 function_decl|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
-name|la
+name|CurrentLA
 operator|=
 name|getla
 argument_list|()
@@ -2403,6 +2464,11 @@ name|bool
 name|shouldqueue
 parameter_list|()
 function_decl|;
+specifier|extern
+name|bool
+name|readqf
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|tTd
@@ -2493,14 +2559,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|FILE
-modifier|*
-name|qflock
-decl_stmt|,
-modifier|*
-name|readqf
-argument_list|()
-decl_stmt|;
 comment|/* 		**  CHILD 		**	Lock the control file to avoid duplicate deliveries. 		**		Then run the file as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
 comment|/* set basic modes, etc. */
 operator|(
@@ -2571,22 +2629,14 @@ name|e_header
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* read the queue control file */
-comment|/*  and lock the control file during processing */
+comment|/* read the queue control file -- return if locked */
 if|if
 condition|(
-operator|(
-name|qflock
-operator|=
+operator|!
 name|readqf
 argument_list|(
 name|CurEnv
-argument_list|,
-name|TRUE
 argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 if|if
@@ -2646,11 +2696,6 @@ argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|qflock
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2675,7 +2720,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. **		full -- if set, read in all information.  Otherwise just **			read in info needed for a queue print. ** **	Returns: **		FILE * pointing to flock()ed fd so it can be closed **		after the mail is delivered ** **	Side Effects: **		cf is read and created as the current job, as though **		we had been invoked by argument. */
+comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
 end_comment
 
 begin_ifdef
@@ -2709,21 +2754,15 @@ directive|endif
 end_endif
 
 begin_function
-name|FILE
-modifier|*
+name|bool
 name|readqf
 parameter_list|(
 name|e
-parameter_list|,
-name|full
 parameter_list|)
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
-decl_stmt|;
-name|bool
-name|full
 decl_stmt|;
 block|{
 name|char
@@ -2806,7 +2845,7 @@ name|qf
 argument_list|)
 expr_stmt|;
 return|return
-name|NULL
+name|FALSE
 return|;
 block|}
 ifdef|#
@@ -2849,9 +2888,6 @@ condition|)
 endif|#
 directive|endif
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 comment|/* being processed by another queuer */
 if|if
 condition|(
@@ -2860,6 +2896,26 @@ condition|)
 name|printf
 argument_list|(
 literal|"%s: locked\n"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|9
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s: locked"
 argument_list|,
 name|CurEnv
 operator|->
@@ -2878,9 +2934,16 @@ name|qfp
 argument_list|)
 expr_stmt|;
 return|return
-name|NULL
+name|FALSE
 return|;
 block|}
+comment|/* save this lock */
+name|e
+operator|->
+name|e_lockfp
+operator|=
+name|qfp
+expr_stmt|;
 comment|/* do basic system initialization */
 name|initsys
 argument_list|()
@@ -2896,8 +2959,6 @@ expr_stmt|;
 if|if
 condition|(
 name|Verbose
-operator|&&
-name|full
 condition|)
 name|printf
 argument_list|(
@@ -3021,10 +3082,6 @@ case|case
 literal|'H'
 case|:
 comment|/* header */
-if|if
-condition|(
-name|full
-condition|)
 operator|(
 name|void
 operator|)
@@ -3079,12 +3136,6 @@ case|case
 literal|'D'
 case|:
 comment|/* data file name */
-if|if
-condition|(
-operator|!
-name|full
-condition|)
-break|break;
 name|e
 operator|->
 name|e_df
@@ -3247,7 +3298,7 @@ name|EF_RESPONSE
 expr_stmt|;
 block|}
 return|return
-name|qfp
+name|TRUE
 return|;
 block|}
 end_function
@@ -3314,7 +3365,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|la
+name|CurrentLA
 operator|=
 name|getla
 argument_list|()
@@ -3891,7 +3942,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  QUEUENAME -- build a file name in the queue directory for this envelope. ** **	Assigns an id code if one does not already exist. **	This code is very careful to avoid trashing existing files **	under any circumstances. ** **	Parameters: **		e -- envelope to build it in/from. **		type -- the file type, used as the first character **			of the file name. ** **	Returns: **		a pointer to the new file name (in a static buffer). ** **	Side Effects: **		Will create the qf file if no id code is **		already assigned.  This will cause the envelope **		to be modified. */
+comment|/* **  QUEUENAME -- build a file name in the queue directory for this envelope. ** **	Assigns an id code if one does not already exist. **	This code is very careful to avoid trashing existing files **	under any circumstances. ** **	Parameters: **		e -- envelope to build it in/from. **		type -- the file type, used as the first character **			of the file name. ** **	Returns: **		a pointer to the new file name (in a static buffer). ** **	Side Effects: **		If no id code is already assigned, queuename will **		assign an id code, create a qf file, and leave a **		locked, open-for-write file pointer in the envelope. */
 end_comment
 
 begin_function
@@ -4076,10 +4127,10 @@ block|{
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EEXIST
 condition|)
-block|{
+continue|continue;
 name|syserr
 argument_list|(
 literal|"queuename: Cannot create \"%s\" in \"%s\""
@@ -4095,9 +4146,54 @@ name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
+ifdef|#
+directive|ifdef
+name|LOCKF
+if|if
+condition|(
+name|lockf
+argument_list|(
+name|i
+argument_list|,
+name|F_TLOCK
+argument_list|,
+literal|0
+argument_list|)
+operator|>=
+literal|0
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|flock
+argument_list|(
+name|i
+argument_list|,
+name|LOCK_EX
+operator||
+name|LOCK_NB
+argument_list|)
+operator|>=
+literal|0
+condition|)
+endif|#
+directive|endif
 block|{
+name|e
+operator|->
+name|e_lockfp
+operator|=
+name|fdopen
+argument_list|(
+name|i
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* a reader got the file; abandon it and try again */
 operator|(
 name|void
 operator|)
@@ -4106,8 +4202,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -4277,6 +4371,28 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/* if there is a lock file in the envelope, close it */
+if|if
+condition|(
+name|e
+operator|->
+name|e_lockfp
+operator|!=
+name|NULL
+condition|)
+name|fclose
+argument_list|(
+name|e
+operator|->
+name|e_lockfp
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_lockfp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* remove the transcript */
 ifdef|#
 directive|ifdef
