@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,9 +858,6 @@ block|}
 if|if
 condition|(
 operator|!
-name|edit
-operator|&&
-operator|!
 name|noheader
 operator|&&
 name|value
@@ -923,13 +920,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|edit
-condition|)
-name|newfileinfo
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
