@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 2.0.0.23 94/09/15 21:35:44 wolf Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.3 1994/09/16 00:22:29 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
 end_comment
 
 begin_ifndef
@@ -3200,79 +3200,6 @@ directive|include
 file|<i386/isa/isa.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANCIENT
-end_ifdef
-
-begin_comment
-comment|/* **	Doch das ist alles nur geklaut .. **	aus:  386bsd:/sys/i386/include/pio.h ** ** Mach Operating System ** Copyright (c) 1990 Carnegie-Mellon University ** All rights reserved.  The CMU software License Agreement specifies ** the terms and conditions for use and redistribution. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|inb
-end_undef
-
-begin_define
-define|#
-directive|define
-name|inb
-parameter_list|(
-name|port
-parameter_list|)
-define|\
-value|({ unsigned char data; \ 	__asm __volatile("inb %1, %0": "=a" (data): "d" ((u_short)(port))); \ 	data; })
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|outb
-end_undef
-
-begin_define
-define|#
-directive|define
-name|outb
-parameter_list|(
-name|port
-parameter_list|,
-name|data
-parameter_list|)
-define|\
-value|{__asm __volatile("outb %0, %1"::"a" ((u_char)(data)), "d" ((u_short)(port)));}
-end_define
-
-begin_define
-define|#
-directive|define
-name|disable_intr
-parameter_list|()
-define|\
-value|{__asm __volatile("cli");}
-end_define
-
-begin_define
-define|#
-directive|define
-name|enable_intr
-parameter_list|()
-define|\
-value|{__asm __volatile("sti");}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ANCIENT */
-end_comment
-
 begin_escape
 end_escape
 
@@ -3408,7 +3335,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 2.0.0.23 94/09/15 21:35:44 wolf Exp $\n"
+literal|"\n$Id: ncr.c,v 1.3 1994/09/16 00:22:29 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -9219,7 +9146,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%s scanning for targets 0..%d ($Revision: 2.0.0.23 $)\n"
+literal|"%s scanning for targets 0..%d ($Revision: 1.3 $)\n"
 argument_list|,
 name|ncr_name
 argument_list|(

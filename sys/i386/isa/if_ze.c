@@ -202,12 +202,6 @@ directive|include
 file|"i386/isa/if_zereg.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"i386/include/pio.h"
-end_include
-
 begin_escape
 end_escape
 

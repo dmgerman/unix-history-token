@@ -90,16 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/pio.h>
-end_include
-
-begin_comment
-comment|/* Julian's fast IO macros */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
