@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995, 1996 Wolfgang Solfrank.  * Copyright (C) 1995, 1996 TooLs GmbH.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$NetBSD: trap.h,v 1.3 2000/05/25 21:10:14 is Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995, 1996 Wolfgang Solfrank.  * Copyright (C) 1995, 1996 TooLs GmbH.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by TooLs GmbH.  * 4. The name of TooLs GmbH may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY TOOLS GMBH ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $NetBSD: trap.h,v 1.7 2002/02/22 13:51:40 kleink Exp $  * $FreeBSD$   */
 end_comment
 
 begin_ifndef
@@ -34,7 +34,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* Reset */
+comment|/* Reset; all but IBM4xx */
 end_comment
 
 begin_define
@@ -159,7 +159,48 @@ comment|/* Floating-point Assist */
 end_comment
 
 begin_comment
-comment|/* The following are only available on 604: */
+comment|/* The following is only available on the 601: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_RUNMODETRC
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Run Mode/Trace Exception */
+end_comment
+
+begin_comment
+comment|/* The following are only available on 7400(G4): */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_VEC
+value|0x0f20
+end_define
+
+begin_comment
+comment|/* AltiVec Unavailable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_VECAST
+value|0x1600
+end_define
+
+begin_comment
+comment|/* AltiVec Assist */
+end_comment
+
+begin_comment
+comment|/* The following are only available on 604/750/7400: */
 end_comment
 
 begin_define
@@ -192,7 +233,22 @@ value|0x1400
 end_define
 
 begin_comment
-comment|/* System Management Interrupt */
+comment|/* System Managment Interrupt */
+end_comment
+
+begin_comment
+comment|/* The following are only available on 750/7400: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_THRM
+value|0x1700
+end_define
+
+begin_comment
+comment|/* Thermal Management Interrupt */
 end_comment
 
 begin_comment
@@ -232,6 +288,87 @@ begin_comment
 comment|/* Data store translation miss */
 end_comment
 
+begin_comment
+comment|/* The following are only available on 405 (and 403?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_CII
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Critical Input Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_PIT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Programmable Interval Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_FIT
+value|0x1010
+end_define
+
+begin_comment
+comment|/* Fixed Interval Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_WDOG
+value|0x1020
+end_define
+
+begin_comment
+comment|/* Watchdog Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_DTMISS
+value|0x1100
+end_define
+
+begin_comment
+comment|/* Data TLB Miss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_ITMISS
+value|0x1200
+end_define
+
+begin_comment
+comment|/* Instruction TLB Miss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_DEBUG
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Debug trap */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -241,6 +378,17 @@ end_define
 
 begin_comment
 comment|/* Last possible exception vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_AST
+value|0x3000
+end_define
+
+begin_comment
+comment|/* Fake AST vector */
 end_comment
 
 begin_comment
@@ -309,43 +457,6 @@ name|dsisr
 parameter_list|)
 value|(dsisr& 0x1f)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_function_decl
-name|void
-name|trap
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|syscall
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !LOCORE */
-end_comment
 
 begin_endif
 endif|#
