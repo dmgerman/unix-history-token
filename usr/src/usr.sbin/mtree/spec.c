@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.1 (Berkeley) %G%"
+literal|"@(#)spec.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,11 +467,12 @@ block|{
 comment|/* don't go up, if haven't gone down */
 if|if
 condition|(
-name|last
-operator|!=
+operator|!
 name|root
 condition|)
-block|{
+name|noparent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|last
@@ -488,12 +489,23 @@ name|flags
 operator|&
 name|F_DONE
 condition|)
+block|{
+if|if
+condition|(
+name|last
+operator|==
+name|root
+condition|)
+name|noparent
+argument_list|()
+expr_stmt|;
 name|last
 operator|=
 name|last
 operator|->
 name|parent
 expr_stmt|;
+block|}
 name|last
 operator|->
 name|flags
@@ -501,20 +513,6 @@ operator||=
 name|F_DONE
 expr_stmt|;
 continue|continue;
-block|}
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: no parent node.\n"
-argument_list|)
-expr_stmt|;
-name|specerr
-argument_list|()
-expr_stmt|;
 block|}
 name|centry
 operator|=
@@ -677,6 +675,29 @@ name|centry
 expr_stmt|;
 block|}
 block|}
+block|}
+end_block
+
+begin_macro
+name|noparent
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mtree: no parent node.\n"
+argument_list|)
+expr_stmt|;
+name|specerr
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
