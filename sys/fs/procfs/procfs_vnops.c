@@ -1194,7 +1194,7 @@ name|procp
 operator|->
 name|p_pfsflags
 expr_stmt|;
-comment|/* FALLTHROUGH */
+break|break;
 case|case
 name|PIOCSTATUS
 case|:
