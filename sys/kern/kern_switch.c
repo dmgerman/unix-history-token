@@ -323,7 +323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a surplus KSE, either assign a new runable thread to it  * (and put it in the run queue) or put it in the ksegrp's idle KSE list.  * Or maybe give it back to its owner if it's been loaned.  * Assumes that the original thread is either not runnable or  * already on the run queue  */
+comment|/*  * Given a surplus KSE, either assign a new runable thread to it  * (and put it in the run queue) or put it in the ksegrp's idle KSE list.  * Assumes that the original thread is not runnable.  */
 end_comment
 
 begin_function

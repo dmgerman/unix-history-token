@@ -1764,7 +1764,7 @@ operator|&
 name|P_KSES
 condition|)
 block|{
-comment|/* 		 * We will not be on the run queue. So we must be 		 * sleeping or similar. As it's available, 		 * someone else can use the KSE if they need it. 		 * (If bound LOANING can still occur). 		 */
+comment|/* 		 * We will not be on the run queue. So we must be 		 * sleeping or similar. As it's available, 		 * someone else can use the KSE if they need it. 		 */
 name|kse_reassign
 argument_list|(
 name|ke
