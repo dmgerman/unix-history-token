@@ -10,7 +10,7 @@ file|"vv.h"
 end_include
 
 begin_comment
-comment|/*  * Proteon 10 Meg Ring Driver.  * This device is called "vv" because its "real name",  * V2LNI won't work if shortened to the obvious "v2".  * Hence the subterfuge.  *  * UNTESTED WITH 4.1C  */
+comment|/*  * Proteon 10 Meg Ring Driver.  * This device is called "vv" because its "real name",  * V2LNI won't work if shortened to the obvious "v2".  * Hence the subterfuge.  *  */
 end_comment
 
 begin_include
@@ -651,7 +651,7 @@ name|VV_RST
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100000
+literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* generate interrupt by doing 1 word DMA from 0 in uba space!! */
@@ -1251,15 +1251,9 @@ operator||
 name|VV_CONF
 expr_stmt|;
 comment|/* close logical relay */
-name|sleep
+name|DELAY
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|lbolt
-argument_list|,
-name|PZERO
+literal|500000
 argument_list|)
 expr_stmt|;
 comment|/* let contacts settle */
