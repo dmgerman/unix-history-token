@@ -595,7 +595,6 @@ name|error
 decl_stmt|;
 comment|/* status of controller */
 name|unsigned
-name|short
 name|DATAPORT
 decl_stmt|,
 name|CMDPORT

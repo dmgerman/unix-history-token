@@ -413,11 +413,11 @@ name|ushort
 name|numports
 decl_stmt|;
 comment|/* number of ports on card */
-name|ushort
+name|u_int
 name|port
 decl_stmt|;
 comment|/* I/O port */
-name|ushort
+name|u_int
 name|wport
 decl_stmt|;
 comment|/* window select I/O port */

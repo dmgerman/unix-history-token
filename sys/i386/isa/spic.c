@@ -250,7 +250,7 @@ begin_struct
 struct|struct
 name|spic_softc
 block|{
-name|u_short
+name|u_int
 name|sc_port_addr
 decl_stmt|;
 name|u_char

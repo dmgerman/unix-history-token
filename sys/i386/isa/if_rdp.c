@@ -219,7 +219,7 @@ name|arpcom
 decl_stmt|;
 comment|/* 				 * Ethernet common, always goes first so 				 * a rdp_softc * can be cast into an 				 * arpcom * or into an ifnet *. 				 */
 comment|/* 	 * local stuff, somewhat sorted by memory alignment class 	 */
-name|u_short
+name|u_int
 name|baseaddr
 decl_stmt|;
 comment|/* IO port address */
