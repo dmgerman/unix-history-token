@@ -294,13 +294,6 @@ argument_list|)
 name|v_nmntvnodes
 expr_stmt|;
 comment|/* m vnodes for mount point */
-name|LIST_ENTRY
-argument_list|(
-argument|vnode
-argument_list|)
-name|v_synclist
-expr_stmt|;
-comment|/* S dirty vnode list */
 name|enum
 name|vtype
 name|v_type
@@ -750,21 +743,6 @@ end_define
 
 begin_comment
 comment|/* VOP_INACTIVE is in progress */
-end_comment
-
-begin_comment
-comment|/*  * XXX VI_ONWORKLST could be replaced with a check for NULL list elements  * in v_synclist.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VI_ONWORKLST
-value|0x0200
-end_define
-
-begin_comment
-comment|/* On syncer work-list */
 end_comment
 
 begin_define

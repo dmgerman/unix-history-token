@@ -188,9 +188,36 @@ modifier|*
 name|bo_object
 decl_stmt|;
 comment|/* v Place to store VM object */
+name|LIST_ENTRY
+argument_list|(
+argument|bufobj
+argument_list|)
+name|bo_synclist
+expr_stmt|;
+comment|/* S dirty vnode list */
+name|void
+modifier|*
+name|bo_private
+decl_stmt|;
+comment|/* private pointer */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * XXX BO_ONWORKLST could be replaced with a check for NULL list elements  * in v_synclist.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BO_ONWORKLST
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* On syncer work-list */
+end_comment
 
 begin_define
 define|#

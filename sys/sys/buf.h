@@ -69,6 +69,12 @@ name|vnode
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * To avoid including<ufs/ffs/softdep.h>   */
 end_comment
@@ -2027,12 +2033,6 @@ end_decl_stmt
 begin_comment
 comment|/* Number of swap I/O buffer headers. */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|uio
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|caddr_t
