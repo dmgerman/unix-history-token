@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key.c,v 1.189 2001/05/31 15:02:56 sakane Exp $	*/
+comment|/*	$KAME: key.c,v 1.190 2001/06/04 22:35:10 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -8573,8 +8573,9 @@ literal|0
 condition|?
 literal|1
 else|:
-operator|++
 name|policy_id
+operator|+
+literal|1
 operator|)
 operator|)
 expr_stmt|;
