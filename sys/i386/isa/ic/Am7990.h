@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Am7990, Local Area Network Controller for Ethernet (LANCE)  *  * Copyright (c) 1994, Paul Richards. This software may be used,  * modified, copied, distributed, and sold, in both source and binary  * form provided that the above copyright and these terms are retained.  * Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any  * responsibility for damages incurred with its use.  *  */
+comment|/*  * Am7990, Local Area Network Controller for Ethernet (LANCE)  *  * Copyright (c) 1994, Paul Richards. This software may be used,  * modified, copied, distributed, and sold, in both source and binary  * form provided that the above copyright and these terms are retained.  * Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any  * responsibility for damages incurred with its use.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -47,6 +47,34 @@ define|#
 directive|define
 name|CSR89
 value|89
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR49
+value|49
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR32
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR33
+value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCR34
+value|34
 end_define
 
 begin_comment

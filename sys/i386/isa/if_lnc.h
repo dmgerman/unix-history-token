@@ -452,6 +452,17 @@ begin_comment
 comment|/* Am79C972 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCnet_Home
+value|11
+end_define
+
+begin_comment
+comment|/* Am79C978 */
+end_comment
+
 begin_comment
 comment|/* CSR88-89: Chip ID masks */
 end_comment
@@ -524,6 +535,13 @@ define|#
 directive|define
 name|Am79C972
 value|0x2624
+end_define
+
+begin_define
+define|#
+directive|define
+name|Am79C978
+value|0x2626
 end_define
 
 begin_comment
