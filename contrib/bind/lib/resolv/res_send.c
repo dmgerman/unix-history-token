@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 8.48 2001/07/03 06:27:17 marka Exp $"
+literal|"$Id: res_send.c,v 8.49 2002/03/29 21:50:51 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2502,7 +2502,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAVE_SA_LEN
-comment|/* there are people do not set sa_len.  be forgibing to them */
+comment|/* There are people do not set sa_len.  Be forgiving to them. */
 if|if
 condition|(
 name|sa
@@ -2510,9 +2510,11 @@ operator|->
 name|sa_len
 condition|)
 return|return
+operator|(
 name|sa
 operator|->
 name|sa_len
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2525,11 +2527,13 @@ operator|==
 name|AF_INET
 condition|)
 return|return
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sockaddr_in
 argument_list|)
+operator|)
 return|;
 elseif|else
 if|if
@@ -2538,18 +2542,22 @@ name|sa
 operator|->
 name|sa_family
 operator|==
-name|AF_INET
+name|AF_INET6
 condition|)
 return|return
+operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|sockaddr_in6
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* unknown, die on connect */
 block|}

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_config.c,v 8.133 2002/02/01 00:05:39 marka Exp $"
+literal|"$Id: ns_config.c,v 8.134 2002/04/25 05:27:04 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1484,7 +1484,7 @@ name|zp
 operator|->
 name|z_notify
 operator|!=
-name|znotify_use_default
+name|notify_use_default
 condition|)
 block|{
 if|if
@@ -4313,7 +4313,7 @@ name|zp
 operator|->
 name|z_notify
 operator|=
-name|znotify_yes
+name|notify_yes
 expr_stmt|;
 endif|#
 directive|endif
@@ -4340,7 +4340,8 @@ parameter_list|(
 name|zone_config
 name|zh
 parameter_list|,
-name|int
+name|enum
+name|notify
 name|value
 parameter_list|)
 block|{
@@ -4365,22 +4366,11 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|zp
+operator|->
+name|z_notify
+operator|=
 name|value
-condition|)
-name|zp
-operator|->
-name|z_notify
-operator|=
-name|znotify_yes
-expr_stmt|;
-else|else
-name|zp
-operator|->
-name|z_notify
-operator|=
-name|znotify_no
 expr_stmt|;
 endif|#
 directive|endif
@@ -5741,6 +5731,17 @@ name|preferred_glue
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+name|op
+operator|->
+name|notify
+operator|=
+name|notify_yes
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|op
@@ -6093,9 +6094,6 @@ name|OPTION_FORWARD_ONLY
 case|:
 case|case
 name|OPTION_FAKE_IQUERY
-case|:
-case|case
-name|OPTION_NONOTIFY
 case|:
 case|case
 name|OPTION_SUPNOTIFY_INITIAL

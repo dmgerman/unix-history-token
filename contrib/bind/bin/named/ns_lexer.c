@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_lexer.c,v 8.28 2001/12/28 04:07:47 marka Exp $"
+literal|"$Id: ns_lexer.c,v 8.30 2002/04/25 05:27:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,7 +215,6 @@ typedef|typedef
 struct|struct
 name|lexer_file_context
 block|{
-specifier|const
 name|char
 modifier|*
 name|name
@@ -1120,6 +1119,12 @@ name|T_DYNAMIC
 block|}
 block|,
 block|{
+literal|"explicit"
+block|,
+name|T_EXPLICIT
+block|}
+block|,
+block|{
 literal|"fail"
 block|,
 name|T_FAIL
@@ -1934,9 +1939,13 @@ name|lf
 operator|->
 name|name
 operator|=
+name|savestr
+argument_list|(
 name|filename
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
-comment|/* note copy by reference */
 name|lf
 operator|->
 name|line_number
@@ -2018,6 +2027,13 @@ argument_list|(
 name|lf
 operator|->
 name|stream
+argument_list|)
+expr_stmt|;
+name|freestr
+argument_list|(
+name|lf
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|memput

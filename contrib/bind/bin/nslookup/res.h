@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    Th
 end_comment
 
 begin_comment
-comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.9 2001/06/20 12:30:34 marka Exp $  */
+comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.10 2002/04/09 05:55:22 marka Exp $  */
 end_comment
 
 begin_comment
@@ -153,6 +153,25 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|int
+name|addrType
+decl_stmt|;
+name|int
+name|addrLen
+decl_stmt|;
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+block|}
+name|AddrInfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
 name|char
 modifier|*
 name|name
@@ -164,7 +183,7 @@ modifier|*
 name|domains
 decl_stmt|;
 comment|/* domains it serves */
-name|char
+name|AddrInfo
 modifier|*
 modifier|*
 name|addrList
@@ -190,20 +209,12 @@ modifier|*
 name|aliases
 decl_stmt|;
 comment|/* alias list */
-name|char
+name|AddrInfo
 modifier|*
 modifier|*
 name|addrList
 decl_stmt|;
 comment|/* list of addresses from name server */
-name|int
-name|addrType
-decl_stmt|;
-comment|/* host address type */
-name|int
-name|addrLen
-decl_stmt|;
-comment|/* length of address */
 name|ServerInfo
 modifier|*
 modifier|*
@@ -491,8 +502,8 @@ specifier|extern
 name|int
 name|GetHostInfoByName
 parameter_list|(
-name|struct
-name|in_addr
+name|union
+name|res_sockaddr_union
 modifier|*
 parameter_list|,
 name|int
@@ -507,15 +518,9 @@ name|HostInfo
 modifier|*
 parameter_list|,
 name|Boolean
+parameter_list|,
+name|Boolean
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|GetHostInfoByAddr
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -524,8 +529,8 @@ specifier|extern
 name|int
 name|GetHostDomain
 parameter_list|(
-name|struct
-name|in_addr
+name|union
+name|res_sockaddr_union
 modifier|*
 parameter_list|,
 name|int
@@ -541,6 +546,8 @@ modifier|*
 parameter_list|,
 name|HostInfo
 modifier|*
+parameter_list|,
+name|Boolean
 parameter_list|,
 name|Boolean
 parameter_list|)
@@ -600,8 +607,8 @@ specifier|extern
 name|int
 name|SendRequest
 parameter_list|(
-name|struct
-name|in_addr
+name|union
+name|res_sockaddr_union
 modifier|*
 parameter_list|,
 specifier|const
@@ -863,8 +870,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|struct
-name|in_addr
+name|union
+name|res_sockaddr_union
 modifier|*
 parameter_list|)
 function_decl|;
@@ -883,12 +890,12 @@ begin_function_decl
 name|int
 name|GetHostInfoByAddr
 parameter_list|(
-name|struct
-name|in_addr
+name|union
+name|res_sockaddr_union
 modifier|*
 parameter_list|,
-name|struct
-name|in_addr
+name|union
+name|res_sockaddr_union
 modifier|*
 parameter_list|,
 name|HostInfo

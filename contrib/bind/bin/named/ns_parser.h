@@ -2,13 +2,6 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_define
 define|#
 directive|define
-name|YYEMPTY
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|L_EOS
 value|257
 end_define
@@ -128,785 +121,827 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_QUERY_SOURCE
+name|T_HITCOUNT
 value|274
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LISTEN_ON
+name|T_PREFERRED_GLUE
 value|275
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PORT
+name|T_QUERY_SOURCE
 value|276
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ADDRESS
+name|T_LISTEN_ON
 value|277
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_RRSET_ORDER
+name|T_PORT
 value|278
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ORDER
+name|T_ADDRESS
 value|279
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NAME
+name|T_RRSET_ORDER
 value|280
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CLASS
+name|T_ORDER
 value|281
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CONTROLS
+name|T_NAME
 value|282
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_INET
+name|T_CLASS
 value|283
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_UNIX
+name|T_CONTROLS
 value|284
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PERM
+name|T_INET
 value|285
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_OWNER
+name|T_UNIX
 value|286
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_GROUP
+name|T_PERM
 value|287
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALLOW
+name|T_OWNER
 value|288
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DATASIZE
+name|T_GROUP
 value|289
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_STACKSIZE
+name|T_ALLOW
 value|290
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CORESIZE
+name|T_DATASIZE
 value|291
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DEFAULT
+name|T_STACKSIZE
 value|292
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_UNLIMITED
+name|T_CORESIZE
 value|293
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FILES
+name|T_DEFAULT
 value|294
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_VERSION
+name|T_UNLIMITED
 value|295
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_HOSTSTATS
+name|T_FILES
 value|296
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DEALLOC_ON_EXIT
+name|T_VERSION
 value|297
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRANSFERS_IN
+name|T_HOSTNAME
 value|298
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRANSFERS_OUT
+name|T_HOSTSTATS
 value|299
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRANSFERS_PER_NS
+name|T_HOSTSTATSMAX
 value|300
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRANSFER_FORMAT
+name|T_DEALLOC_ON_EXIT
 value|301
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MAX_TRANSFER_TIME_IN
+name|T_TRANSFERS_IN
 value|302
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SERIAL_QUERIES
+name|T_TRANSFERS_OUT
 value|303
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ONE_ANSWER
+name|T_TRANSFERS_PER_NS
 value|304
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MANY_ANSWERS
+name|T_TRANSFER_FORMAT
 value|305
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NOTIFY
+name|T_MAX_TRANSFER_TIME_IN
 value|306
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_AUTH_NXDOMAIN
+name|T_SERIAL_QUERIES
 value|307
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MULTIPLE_CNAMES
+name|T_ONE_ANSWER
 value|308
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_USE_IXFR
+name|T_MANY_ANSWERS
 value|309
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MAINTAIN_IXFR_BASE
+name|T_NOTIFY
 value|310
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CLEAN_INTERVAL
+name|T_EXPLICIT
 value|311
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_INTERFACE_INTERVAL
+name|T_NOTIFY_INITIAL
 value|312
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_STATS_INTERVAL
+name|T_AUTH_NXDOMAIN
 value|313
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MAX_LOG_SIZE_IXFR
+name|T_MULTIPLE_CNAMES
 value|314
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_HEARTBEAT
+name|T_USE_IXFR
 value|315
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_USE_ID_POOL
+name|T_MAINTAIN_IXFR_BASE
 value|316
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MAX_NCACHE_TTL
+name|T_CLEAN_INTERVAL
 value|317
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_HAS_OLD_CLIENTS
+name|T_INTERFACE_INTERVAL
 value|318
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_RFC2308_TYPE1
+name|T_STATS_INTERVAL
 value|319
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LAME_TTL
+name|T_MAX_LOG_SIZE_IXFR
 value|320
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MIN_ROOTS
+name|T_HEARTBEAT
 value|321
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TREAT_CR_AS_SPACE
+name|T_USE_ID_POOL
 value|322
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LOGGING
+name|T_MAX_NCACHE_TTL
 value|323
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CATEGORY
+name|T_HAS_OLD_CLIENTS
 value|324
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CHANNEL
+name|T_RFC2308_TYPE1
 value|325
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SEVERITY
+name|T_LAME_TTL
 value|326
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DYNAMIC
+name|T_MIN_ROOTS
 value|327
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FILE
+name|T_TREAT_CR_AS_SPACE
 value|328
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_VERSIONS
+name|T_LOGGING
 value|329
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SIZE
+name|T_CATEGORY
 value|330
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SYSLOG
+name|T_CHANNEL
 value|331
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DEBUG
+name|T_SEVERITY
 value|332
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NULL_OUTPUT
+name|T_DYNAMIC
 value|333
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PRINT_TIME
+name|T_FILE
 value|334
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PRINT_CATEGORY
+name|T_VERSIONS
 value|335
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PRINT_SEVERITY
+name|T_SIZE
 value|336
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SORTLIST
+name|T_SYSLOG
 value|337
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TOPOLOGY
+name|T_DEBUG
 value|338
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SERVER
+name|T_NULL_OUTPUT
 value|339
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_LONG_AXFR
+name|T_PRINT_TIME
 value|340
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_BOGUS
+name|T_PRINT_CATEGORY
 value|341
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRANSFERS
+name|T_PRINT_SEVERITY
 value|342
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_KEYS
+name|T_SORTLIST
 value|343
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SUPPORT_IXFR
+name|T_TOPOLOGY
 value|344
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ZONE
+name|T_SERVER
 value|345
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_IN
+name|T_LONG_AXFR
 value|346
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CHAOS
+name|T_BOGUS
 value|347
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_HESIOD
+name|T_TRANSFERS
 value|348
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TYPE
+name|T_KEYS
 value|349
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MASTER
+name|T_SUPPORT_IXFR
 value|350
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SLAVE
+name|T_ZONE
 value|351
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_STUB
+name|T_IN
 value|352
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_RESPONSE
+name|T_CHAOS
 value|353
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_HINT
+name|T_HESIOD
 value|354
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_MASTERS
+name|T_TYPE
 value|355
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRANSFER_SOURCE
+name|T_MASTER
 value|356
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_PUBKEY
+name|T_SLAVE
 value|357
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALSO_NOTIFY
+name|T_STUB
 value|358
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_DIALUP
+name|T_RESPONSE
 value|359
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FILE_IXFR
+name|T_HINT
 value|360
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_IXFR_TMP
+name|T_MASTERS
 value|361
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRUSTED_KEYS
+name|T_TRANSFER_SOURCE
 value|362
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ACL
+name|T_PUBKEY
 value|363
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALLOW_UPDATE
+name|T_ALSO_NOTIFY
 value|364
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALLOW_QUERY
+name|T_DIALUP
 value|365
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALLOW_TRANSFER
+name|T_FILE_IXFR
 value|366
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALLOW_RECURSION
+name|T_IXFR_TMP
 value|367
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_BLACKHOLE
+name|T_TRUSTED_KEYS
 value|368
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SEC_KEY
+name|T_ACL
 value|369
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ALGID
+name|T_ALLOW_UPDATE
 value|370
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SECRET
+name|T_ALLOW_QUERY
 value|371
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_CHECK_NAMES
+name|T_ALLOW_TRANSFER
 value|372
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_WARN
+name|T_ALLOW_RECURSION
 value|373
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FAIL
+name|T_BLACKHOLE
 value|374
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_IGNORE
+name|T_SEC_KEY
 value|375
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FORWARD
+name|T_ALGID
 value|376
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FORWARDERS
+name|T_SECRET
 value|377
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_ONLY
+name|T_CHECK_NAMES
 value|378
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FIRST
+name|T_WARN
 value|379
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_IF_NO_ANSWER
+name|T_FAIL
 value|380
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_IF_NO_DOMAIN
+name|T_IGNORE
 value|381
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_YES
+name|T_FORWARD
 value|382
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_TRUE
+name|T_FORWARDERS
 value|383
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_NO
+name|T_ONLY
 value|384
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_FALSE
+name|T_FIRST
 value|385
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_IF_NO_ANSWER
+value|386
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_IF_NO_DOMAIN
+value|387
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_YES
+value|388
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_TRUE
+value|389
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_NO
+value|390
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_FALSE
+value|391
 end_define
 
 begin_typedef

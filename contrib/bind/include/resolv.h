@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium. 
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.44 2001/12/19 01:44:19 marka Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.45 2002/04/12 06:27:48 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -683,7 +683,7 @@ comment|/* EDNS0 caused errors */
 end_comment
 
 begin_comment
-comment|/* res_findzonecut() options */
+comment|/* res_findzonecut2() options */
 end_comment
 
 begin_define
@@ -695,6 +695,28 @@ end_define
 
 begin_comment
 comment|/* always do all queries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_IPV4ONLY
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* IPv4 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_IPV6ONLY
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* IPv6 only */
 end_comment
 
 begin_comment
@@ -1755,6 +1777,13 @@ define|#
 directive|define
 name|res_findzonecut
 value|__res_findzonecut
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_findzonecut2
+value|__res_findzonecut2
 end_define
 
 begin_define
@@ -2849,6 +2878,37 @@ name|size_t
 operator|,
 expr|struct
 name|in_addr
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_findzonecut2
+name|__P
+argument_list|(
+operator|(
+name|res_state
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|ns_class
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|,
+expr|union
+name|res_sockaddr_union
 operator|*
 operator|,
 name|int

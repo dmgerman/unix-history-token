@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_xfr.c,v 8.67 2001/07/10 05:06:50 marka Exp $"
+literal|"$Id: ns_xfr.c,v 8.68 2002/04/11 05:19:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -913,6 +913,7 @@ name|in_tsig
 operator|==
 name|NULL
 condition|)
+block|{
 name|qsp
 operator|->
 name|xfr
@@ -921,6 +922,15 @@ name|tsig_state
 operator|=
 name|NULL
 expr_stmt|;
+name|qsp
+operator|->
+name|xfr
+operator|.
+name|tsig_size
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 name|qsp
@@ -965,6 +975,16 @@ operator|.
 name|tsig_skip
 operator|=
 literal|0
+expr_stmt|;
+name|qsp
+operator|->
+name|xfr
+operator|.
+name|tsig_size
+operator|=
+name|in_tsig
+operator|->
+name|tsig_size
 expr_stmt|;
 block|}
 if|if
@@ -2261,6 +2281,12 @@ operator|->
 name|xfr
 operator|.
 name|cp
+operator|-
+name|qsp
+operator|->
+name|xfr
+operator|.
+name|tsig_size
 argument_list|,
 literal|0
 argument_list|,
@@ -2337,6 +2363,12 @@ operator|->
 name|xfr
 operator|.
 name|cp
+operator|-
+name|qsp
+operator|->
+name|xfr
+operator|.
+name|tsig_size
 argument_list|,
 literal|0
 argument_list|,
