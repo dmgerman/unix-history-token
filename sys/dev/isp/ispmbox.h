@@ -710,6 +710,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_DRIVER_HEARTBEAT
+value|0x005B
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_FW_HEARTBEAT
+value|0x005C
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_GET_SET_DATA_RATE
 value|0x005D
 end_define
@@ -3665,6 +3679,17 @@ end_define
 
 begin_comment
 comment|/* SCSI-3 via Fivre Channel Protocol (FCP) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC4_FC_SVC
+value|0x20
+end_define
+
+begin_comment
+comment|/* Fibre Channel Services */
 end_comment
 
 begin_define
