@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)string.c	3.3 84/01/05"
+literal|"@(#)string.c	3.4 84/01/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,11 +440,6 @@ name|struct
 name|string
 modifier|*
 name|s
-init|=
-name|str_stos
-argument_list|(
-name|s
-argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -504,9 +499,11 @@ name|s_back
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|s
-operator|->
-name|s_data
 argument_list|)
 expr_stmt|;
 block|}
