@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.14 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7879,6 +7879,8 @@ expr_stmt|;
 while|while
 condition|(
 name|nfnd
+operator|>
+literal|0
 condition|)
 block|{
 name|FD_SET
