@@ -180,23 +180,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|EXCLUDE_ADLIB
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXCLUDE_ADLIB
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|EXCLUDE_GUS
 end_ifndef
 
@@ -391,23 +374,6 @@ begin_undef
 undef|#
 directive|undef
 name|EXCLUDE_SB
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AUDIO_ADLIB
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|EXCLUDE_ADLIB
 end_undef
 
 begin_endif
