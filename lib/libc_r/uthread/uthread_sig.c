@@ -1062,8 +1062,11 @@ operator|(
 name|sig
 operator|,
 operator|(
-name|siginfo_t
+name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|info
 operator|->
