@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.48	%G%"
+literal|"@(#)deliver.c	3.49	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,6 +262,8 @@ argument_list|,
 name|to
 operator|->
 name|q_mailer
+operator|->
+name|m_mno
 argument_list|,
 name|to
 operator|->
@@ -287,12 +289,9 @@ end_comment
 begin_expr_stmt
 name|m
 operator|=
-name|Mailer
-index|[
 name|to
 operator|->
 name|q_mailer
-index|]
 expr_stmt|;
 end_expr_stmt
 
@@ -762,7 +761,7 @@ name|to
 operator|->
 name|q_mailer
 operator|==
-name|MN_PROG
+name|ProgMailer
 condition|)
 name|ctladdr
 operator|=
@@ -893,6 +892,8 @@ index|[
 name|to
 operator|->
 name|q_mailer
+operator|->
+name|m_mno
 index|]
 operator|++
 expr_stmt|;
@@ -903,6 +904,8 @@ index|[
 name|to
 operator|->
 name|q_mailer
+operator|->
+name|m_mno
 index|]
 operator|+=
 name|kbytes
@@ -915,10 +918,7 @@ if|if
 condition|(
 name|m
 operator|==
-name|Mailer
-index|[
-name|MN_LOCAL
-index|]
+name|LocalMailer
 condition|)
 block|{
 if|if
@@ -3473,17 +3473,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|M_LOCAL
+argument_list|,
 name|q
 operator|->
 name|q_mailer
-operator|==
-name|MN_LOCAL
-operator|||
-name|q
 operator|->
-name|q_mailer
-operator|==
-name|MN_PROG
+name|m_flags
+argument_list|)
 condition|)
 name|message
 argument_list|(

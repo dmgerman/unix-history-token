@@ -59,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.45	%G%"
+literal|"@(#)main.c	3.46	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,6 +264,10 @@ name|bool
 name|safefile
 parameter_list|()
 function_decl|;
+name|STAB
+modifier|*
+name|st
+decl_stmt|;
 name|bool
 name|canrename
 decl_stmt|;
@@ -1177,7 +1181,7 @@ comment|/* at Eric Schmidt's suggestion, this will not be an error.... 			syserr
 break|break;
 block|}
 block|}
-comment|/* 	**  Read system control file. 	*/
+comment|/* 	**  Read system control file. 	**	Extract special fields for local use. 	*/
 name|readcf
 argument_list|(
 name|ConfFile
@@ -1185,6 +1189,7 @@ argument_list|,
 name|safecf
 argument_list|)
 expr_stmt|;
+comment|/* our name for SMTP codes */
 operator|(
 name|void
 operator|)
@@ -1207,6 +1212,65 @@ expr_stmt|;
 name|HostName
 operator|=
 name|ibuf
+expr_stmt|;
+comment|/* the indices of local and program mailers */
+name|st
+operator|=
+name|stab
+argument_list|(
+literal|"local"
+argument_list|,
+name|ST_MAILER
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"No local mailer defined"
+argument_list|)
+expr_stmt|;
+else|else
+name|LocalMailer
+operator|=
+name|st
+operator|->
+name|s_mailer
+expr_stmt|;
+name|st
+operator|=
+name|stab
+argument_list|(
+literal|"prog"
+argument_list|,
+name|ST_MAILER
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"No prog mailer defined"
+argument_list|)
+expr_stmt|;
+else|else
+name|ProgMailer
+operator|=
+name|st
+operator|->
+name|s_mailer
 expr_stmt|;
 comment|/* 	**  Initialize aliases. 	*/
 name|initaliases
@@ -1429,6 +1493,8 @@ index|[
 name|From
 operator|.
 name|q_mailer
+operator|->
+name|m_mno
 index|]
 operator|++
 expr_stmt|;
@@ -1439,6 +1505,8 @@ index|[
 name|From
 operator|.
 name|q_mailer
+operator|->
+name|m_mno
 index|]
 operator|+=
 name|kbytes

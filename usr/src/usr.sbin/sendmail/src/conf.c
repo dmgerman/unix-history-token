@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.35	%G%"
+literal|"@(#)conf.c	3.36	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1034,7 +1034,7 @@ name|to
 operator|->
 name|q_mailer
 operator|!=
-name|MN_LOCAL
+name|LocalMailer
 operator|&&
 name|MsgSize
 operator|>
@@ -1079,7 +1079,7 @@ name|From
 operator|.
 name|q_mailer
 operator|!=
-name|MN_LOCAL
+name|LocalMailer
 operator|&&
 name|to
 operator|->
@@ -1088,8 +1088,6 @@ operator|==
 name|s
 operator|->
 name|s_mailer
-operator|->
-name|m_mno
 condition|)
 block|{
 name|usrerr

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.30	%G%"
+literal|"@(#)parseaddr.c	3.31	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,12 +182,9 @@ operator|)
 return|;
 name|m
 operator|=
-name|Mailer
-index|[
 name|a
 operator|->
 name|q_mailer
-index|]
 expr_stmt|;
 comment|/* 	**  Make local copies of the host& user and then 	**  transport them out. 	*/
 if|if
@@ -2376,10 +2373,6 @@ control|(
 name|mp
 operator|=
 name|Mailer
-operator|,
-name|i
-operator|=
-literal|0
 init|;
 operator|(
 name|m
@@ -2391,8 +2384,6 @@ operator|)
 operator|!=
 name|NULL
 condition|;
-name|i
-operator|++
 control|)
 block|{
 if|if
@@ -2436,7 +2427,7 @@ name|a
 operator|->
 name|q_mailer
 operator|=
-name|i
+name|m
 expr_stmt|;
 comment|/* figure out what host (if any) */
 name|tv
@@ -2779,12 +2770,9 @@ name|bitset
 argument_list|(
 name|M_LOCAL
 argument_list|,
-name|Mailer
-index|[
 name|a
 operator|->
 name|q_mailer
-index|]
 operator|->
 name|m_flags
 argument_list|)
@@ -2910,13 +2898,12 @@ argument_list|,
 name|a
 operator|->
 name|q_mailer
+operator|->
+name|m_mno
 argument_list|,
-name|Mailer
-index|[
 name|a
 operator|->
 name|q_mailer
-index|]
 operator|->
 name|m_name
 argument_list|,

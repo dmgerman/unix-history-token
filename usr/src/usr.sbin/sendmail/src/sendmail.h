@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.48	%G%"
+literal|"@(#)sendmail.h	3.49	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,7 +254,9 @@ modifier|*
 name|q_host
 decl_stmt|;
 comment|/* host name */
-name|short
+name|struct
+name|mailer
+modifier|*
 name|q_mailer
 decl_stmt|;
 comment|/* mailer to use */
@@ -579,34 +581,28 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|LocalMailer
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* special mailer numbers */
+comment|/* ptr to local mailer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MN_LOCAL
-value|0
-end_define
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|ProgMailer
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* local mailer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MN_PROG
-value|1
-end_define
-
-begin_comment
-comment|/* program mailer */
-end_comment
-
-begin_comment
-comment|/* mailers from 2 on are arbitrary */
+comment|/* ptr to program mailer */
 end_comment
 
 begin_comment

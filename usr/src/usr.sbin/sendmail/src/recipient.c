@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.26	%G%"
+literal|"@(#)recipient.c	3.27	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,12 +429,9 @@ name|q_paddr
 expr_stmt|;
 name|m
 operator|=
-name|Mailer
-index|[
 name|a
 operator|->
 name|q_mailer
-index|]
 expr_stmt|;
 name|errno
 operator|=
@@ -486,7 +483,7 @@ name|a
 operator|->
 name|q_mailer
 operator|==
-name|MN_LOCAL
+name|LocalMailer
 condition|)
 block|{
 if|if
@@ -505,14 +502,9 @@ name|a
 operator|->
 name|q_mailer
 operator|=
-name|MN_PROG
-expr_stmt|;
 name|m
 operator|=
-name|Mailer
-index|[
-name|MN_PROG
-index|]
+name|ProgMailer
 expr_stmt|;
 name|a
 operator|->
@@ -689,7 +681,7 @@ name|a
 operator|->
 name|q_mailer
 operator|==
-name|MN_LOCAL
+name|LocalMailer
 condition|)
 block|{
 if|if
@@ -793,7 +785,7 @@ name|a
 operator|->
 name|q_mailer
 operator|==
-name|MN_LOCAL
+name|LocalMailer
 condition|)
 block|{
 name|char

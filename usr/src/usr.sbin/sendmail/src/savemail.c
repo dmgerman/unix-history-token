@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.19	%G%"
+literal|"@(#)savemail.c	3.20	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,7 +517,7 @@ name|From
 operator|.
 name|q_mailer
 operator|==
-name|MN_LOCAL
+name|LocalMailer
 condition|)
 block|{
 if|if
@@ -660,10 +660,7 @@ name|i
 argument_list|,
 name|TRUE
 argument_list|,
-name|Mailer
-index|[
-name|MN_LOCAL
-index|]
+name|LocalMailer
 argument_list|)
 expr_stmt|;
 block|}
