@@ -23,12 +23,46 @@ name|va_list
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|va_alist
+value|__builtin_va_alist
+end_define
+
+begin_define
+define|#
+directive|define
+name|va_dcl
+value|int va_alist; ...
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|va_dcl
 value|int va_alist;
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
