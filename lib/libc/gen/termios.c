@@ -566,8 +566,6 @@ operator|(
 name|CSIZE
 operator||
 name|PARENB
-operator||
-name|PARODD
 operator|)
 expr_stmt|;
 name|t
