@@ -1235,8 +1235,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|GIANT_REQUIRED
-expr_stmt|;
+comment|/* 	GIANT_REQUIRED; 	 * Giant hasn't been acquired yet. 	 */
 name|cnt
 operator|.
 name|v_trap
@@ -1468,7 +1467,7 @@ goto|;
 case|case
 name|ALPHA_KENTRY_IF
 case|:
-comment|/* 		 * These are always fatal in kernel, and should never 		 * happen. 		 */
+comment|/* 		 * These are always fatal in kernel, and should never happen. 		 */
 if|if
 condition|(
 operator|!
