@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.63 1999/08/15 17:28:39 marcel Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.64 1999/08/16 11:49:30 marcel Exp $  */
 end_comment
 
 begin_include
@@ -708,8 +708,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): uselib(%s)\n"
+literal|"Linux-emul(%ld): uselib(%s)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -1617,8 +1620,11 @@ directive|ifdef
 name|SELECT_DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): select(%x)\n"
+literal|"Linux-emul(%ld): select(%x)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2033,8 +2039,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): real select returns %d\n"
+literal|"Linux-emul(%ld): real select returns %d\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2185,8 +2194,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): newselect_out -> %d\n"
+literal|"Linux-emul(%ld): newselect_out -> %d\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2227,8 +2239,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): getpgid(%d)\n"
+literal|"Linux-emul(%ld): getpgid(%d)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2314,8 +2329,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): fork()\n"
+literal|"Linux-emul(%ld): fork()\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2395,8 +2413,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): fork()\n"
+literal|"Linux-emul(%ld): vfork()\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2539,8 +2560,11 @@ name|CLONE_PID
 condition|)
 name|printf
 argument_list|(
-literal|"linux_clone(%d): CLONE_PID not yet supported\n"
+literal|"linux_clone(%ld): CLONE_PID not yet supported\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2548,8 +2572,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"linux_clone(%d): invoked with flags %x and stack %x\n"
+literal|"linux_clone(%ld): invoked with flags %x and stack %x\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -2734,12 +2761,18 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"linux_clone(%d): successful rfork to %d\n"
+literal|"linux_clone(%ld): successful rfork to %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p2
 operator|->
 name|p_pid
@@ -3350,8 +3383,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): pipe(*)\n"
+literal|"Linux-emul(%ld): pipe(*)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -3487,8 +3523,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): time(*)\n"
+literal|"Linux-emul(%ld): time(*)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -3627,8 +3666,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): times(*)\n"
+literal|"Linux-emul(%ld): times(*)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -3835,8 +3877,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): newuname(*)\n"
+literal|"Linux-emul(%ld): newuname(*)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -4068,8 +4113,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): utime(%s, *)\n"
+literal|"Linux-emul(%ld): utime(%s, *)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -4775,8 +4823,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): mknod(%s, %d, %d)\n"
+literal|"Linux-emul(%ld): mknod(%s, %d, %d)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
@@ -4894,8 +4945,11 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%d): personality(%d)\n"
+literal|"Linux-emul(%ld): personality(%d)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|p_pid
