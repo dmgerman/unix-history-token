@@ -118,6 +118,11 @@ directive|define
 name|DTYPE_KQUEUE
 value|5
 comment|/* event queue */
+define|#
+directive|define
+name|DTYPE_CRYPTO
+value|6
+comment|/* crypto */
 name|short
 name|f_type
 decl_stmt|;
