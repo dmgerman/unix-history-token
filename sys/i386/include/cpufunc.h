@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Functions to provide access to special i386 instructions.  */
+comment|/*  * Functions to provide access to special i386 instructions.  * This in included in sys/systm.h, and that file should be  * used in preference to this.  */
 end_comment
 
 begin_ifndef
