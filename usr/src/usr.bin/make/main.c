@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.28 (Berkeley) %G%"
+literal|"@(#)main.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,15 +383,11 @@ modifier|*
 name|optarg
 decl_stmt|;
 specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|optind
