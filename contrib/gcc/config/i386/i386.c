@@ -4987,7 +4987,7 @@ literal|2
 condition|)
 name|flag_pcc_struct_return
 operator|=
-literal|1
+name|DEFAULT_PCC_STRUCT_RETURN
 expr_stmt|;
 block|}
 ifdef|#
@@ -6323,6 +6323,10 @@ operator|>=
 literal|1
 condition|)
 name|flag_omit_frame_pointer
+operator|=
+literal|2
+expr_stmt|;
+name|flag_pcc_struct_return
 operator|=
 literal|2
 expr_stmt|;
