@@ -42,9 +42,16 @@ end_include
 begin_function_decl
 name|void
 name|my_exit
-parameter_list|()
+parameter_list|(
+name|int
+name|_status
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* in patch.c */
+end_comment
 
 begin_comment
 comment|/* Print out the version number and die. */
@@ -53,7 +60,9 @@ end_comment
 begin_function
 name|void
 name|version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(

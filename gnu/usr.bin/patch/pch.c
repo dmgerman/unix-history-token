@@ -303,13 +303,15 @@ comment|/* beg of faked up lines */
 end_comment
 
 begin_comment
-comment|/* Prepare to look for the next patch in the patch file. */
+comment|/*  * Prepare to look for the next patch in the patch file.  */
 end_comment
 
 begin_function
 name|void
 name|re_patch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|p_first
 operator|=
@@ -354,12 +356,10 @@ begin_function
 name|void
 name|open_patch_file
 parameter_list|(
-name|filename
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -492,7 +492,9 @@ end_comment
 begin_function
 name|void
 name|set_hunkmax
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -595,7 +597,9 @@ end_comment
 begin_function
 name|void
 name|grow_hunkmax
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|hunkmax
 operator|*=
@@ -752,13 +756,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* True if the remainder of the patch file contains a diff of some sort. */
+comment|/*  * True if the remainder of the patch file contains a diff of some sort.  */
 end_comment
 
 begin_function
 name|bool
 name|there_is_another_patch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1061,13 +1067,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Determine what kind of diff is in the remaining part of the patch file. */
+comment|/*  * Determine what kind of diff is in the remaining part of the patch file.  */
 end_comment
 
 begin_function
 name|int
 name|intuit_diff_type
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Reg4
 name|long
@@ -2227,23 +2235,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Remember where this patch ends so we know where to start up again. */
+comment|/*  * Remember where this patch ends so we know where to start up again.  */
 end_comment
 
 begin_function
 name|void
 name|next_intuit_at
 parameter_list|(
+name|long
 name|file_pos
 parameter_list|,
+name|long
 name|file_line
 parameter_list|)
-name|long
-name|file_pos
-decl_stmt|;
-name|long
-name|file_line
-decl_stmt|;
 block|{
 name|p_base
 operator|=
@@ -2257,23 +2261,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Basically a verbose fseek() to the actual diff listing. */
+comment|/*  * Basically a verbose fseek() to the actual diff listing.  */
 end_comment
 
 begin_function
 name|void
 name|skip_to
 parameter_list|(
+name|long
 name|file_pos
 parameter_list|,
+name|long
 name|file_line
 parameter_list|)
-name|long
-name|file_pos
-decl_stmt|;
-name|long
-name|file_line
-decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -2379,7 +2379,9 @@ begin_function
 specifier|static
 name|void
 name|malformed
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fatal3
 argument_list|(
@@ -2477,7 +2479,9 @@ end_comment
 begin_function
 name|bool
 name|another_hunk
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Reg1
 name|char
@@ -5933,7 +5937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Input a line from the patch file, worrying about indentation. */
+comment|/*  * Input a line from the patch file, worrying about indentation.  */
 end_comment
 
 begin_function
@@ -5941,23 +5945,17 @@ name|char
 modifier|*
 name|pgets
 parameter_list|(
-name|bf
-parameter_list|,
-name|sz
-parameter_list|,
-name|fp
-parameter_list|)
 name|char
 modifier|*
 name|bf
-decl_stmt|;
+parameter_list|,
 name|int
 name|sz
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6066,13 +6064,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reverse the old and new portions of the current hunk. */
+comment|/*  * Reverse the old and new portions of the current hunk.  */
 end_comment
 
 begin_function
 name|bool
 name|pch_swap
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6670,13 +6670,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the specified line position in the old file of the old context. */
+comment|/*  * Return the specified line position in the old file of the old context.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_first
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_first
@@ -6685,13 +6687,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the number of lines of old context. */
+comment|/*  * Return the number of lines of old context.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_ptrn_lines
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_ptrn_lines
@@ -6700,13 +6704,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the probable line position in the new file of the first line. */
+comment|/*  * Return the probable line position in the new file of the first line.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_newfirst
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_newfirst
@@ -6715,13 +6721,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the number of lines in the replacement text including context. */
+comment|/*  * Return the number of lines in the replacement text including context.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_repl_lines
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_repl_lines
@@ -6730,13 +6738,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the number of lines in the whole hunk. */
+comment|/*  * Return the number of lines in the whole hunk.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_end
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_end
@@ -6745,13 +6755,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the number of context lines before the first changed line. */
+comment|/*  * Return the number of context lines before the first changed line.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_context
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_context
@@ -6760,18 +6772,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the length of a particular patch line. */
+comment|/*  * Return the length of a particular patch line.  */
 end_comment
 
 begin_function
 name|short
 name|pch_line_len
 parameter_list|(
-name|line
-parameter_list|)
 name|LINENUM
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|p_len
@@ -6783,18 +6793,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the control character (+, -, *, !, etc) for a patch line. */
+comment|/*  * Return the control character (+, -, *, !, etc) for a patch line.  */
 end_comment
 
 begin_function
 name|char
 name|pch_char
 parameter_list|(
-name|line
-parameter_list|)
 name|LINENUM
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|p_Char
@@ -6806,7 +6814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a pointer to a particular patch line. */
+comment|/*  * Return a pointer to a particular patch line.  */
 end_comment
 
 begin_function
@@ -6814,11 +6822,9 @@ name|char
 modifier|*
 name|pfetch
 parameter_list|(
-name|line
-parameter_list|)
 name|LINENUM
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|p_line
@@ -6830,13 +6836,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return where in the patch file this hunk began, for error messages. */
+comment|/*  * Return where in the patch file this hunk began, for error messages.  */
 end_comment
 
 begin_function
 name|LINENUM
 name|pch_hunk_beg
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|p_hunk_beg
@@ -6845,13 +6853,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Apply an ed script by feeding ed itself. */
+comment|/*  * Apply an ed script by feeding ed itself.  */
 end_comment
 
 begin_function
 name|void
 name|do_ed_script
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Reg1
 name|char

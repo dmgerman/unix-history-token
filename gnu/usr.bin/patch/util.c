@@ -42,9 +42,16 @@ end_include
 begin_function_decl
 name|void
 name|my_exit
-parameter_list|()
+parameter_list|(
+name|int
+name|_status
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* in patch.c */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -120,20 +127,14 @@ begin_function
 name|int
 name|move_file
 parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|)
 name|char
 modifier|*
 name|from
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|to
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|bakname
@@ -696,7 +697,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Copy a file. */
@@ -706,20 +707,14 @@ begin_function
 name|void
 name|copy_file
 parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|)
 name|char
 modifier|*
 name|from
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|to
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|Reg3
 name|int
@@ -826,7 +821,7 @@ name|tofd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Allocate a unique area for a string. */
@@ -837,13 +832,10 @@ name|char
 modifier|*
 name|savestr
 parameter_list|(
-name|s
-parameter_list|)
-name|Reg1
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|Reg3
 name|char
@@ -1548,11 +1540,9 @@ begin_function
 name|void
 name|set_signals
 parameter_list|(
-name|reset
-parameter_list|)
 name|int
 name|reset
-decl_stmt|;
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -1656,7 +1646,9 @@ end_comment
 begin_function
 name|void
 name|ignore_signals
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -1902,22 +1894,16 @@ name|char
 modifier|*
 name|fetchname
 parameter_list|(
-name|at
-parameter_list|,
-name|strip_leading
-parameter_list|,
-name|assume_exists
-parameter_list|)
 name|char
 modifier|*
 name|at
-decl_stmt|;
+parameter_list|,
 name|int
 name|strip_leading
-decl_stmt|;
+parameter_list|,
 name|int
 name|assume_exists
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2257,11 +2243,10 @@ name|char
 modifier|*
 name|xmalloc
 parameter_list|(
+name|unsigned
+name|int
 name|size
 parameter_list|)
-name|unsigned
-name|size
-decl_stmt|;
 block|{
 specifier|register
 name|char

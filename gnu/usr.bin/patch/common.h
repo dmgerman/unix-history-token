@@ -1121,7 +1121,10 @@ begin_function_decl
 name|char
 modifier|*
 name|mktemp
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 

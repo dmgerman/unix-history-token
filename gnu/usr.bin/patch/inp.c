@@ -153,13 +153,15 @@ comment|/* length of records in tmp file */
 end_comment
 
 begin_comment
-comment|/* New patch--prepare to edit another file. */
+comment|/*  * New patch--prepare to edit another file.  */
 end_comment
 
 begin_function
 name|void
 name|re_input
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -287,19 +289,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* Constuct the line index, somehow or other. */
+comment|/*  * Constuct the line index, somehow or other.  */
 end_comment
 
 begin_function
 name|void
 name|scan_input
 parameter_list|(
-name|filename
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -339,19 +339,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* Try keeping everything in memory. */
+comment|/*  * Try keeping everything in memory.  */
 end_comment
 
 begin_function
 name|bool
 name|plan_a
 parameter_list|(
-name|filename
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ifd
@@ -1236,19 +1234,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* Keep (virtually) nothing in memory. */
+comment|/*  * Keep (virtually) nothing in memory.  */
 end_comment
 
 begin_function
 name|void
 name|plan_b
 parameter_list|(
-name|filename
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|Reg3
 name|FILE
@@ -1671,7 +1667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fetch a line from the input file, \n terminated, not necessarily \0. */
+comment|/*  * Fetch a line from the input file, \n terminated, not necessarily \0.  */
 end_comment
 
 begin_function
@@ -1830,19 +1826,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* True if the string argument contains the revision number we want. */
+comment|/*  * True if the string argument contains the revision number we want.  */
 end_comment
 
 begin_function
 name|bool
 name|rev_in_string
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|Reg1
 name|char
