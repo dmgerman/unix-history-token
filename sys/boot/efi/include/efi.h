@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"efifpswa.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"efierr.h"
 end_include
 

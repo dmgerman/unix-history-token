@@ -1075,6 +1075,15 @@ name|bi_esymtab
 operator|=
 name|esym
 expr_stmt|;
+name|fpswa_init
+argument_list|(
+operator|&
+name|bi
+operator|->
+name|bi_fpswa
+argument_list|)
+expr_stmt|;
+comment|/* find FPSWA interface */
 comment|/* find the last module in the chain */
 name|addr
 operator|=

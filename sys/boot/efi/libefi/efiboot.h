@@ -295,6 +295,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|fpswa_init
+parameter_list|(
+name|u_int64_t
+modifier|*
+name|fpswa_interface
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|bootinfo
