@@ -928,6 +928,17 @@ begin_comment
 comment|/*<2>*/
 end_comment
 
+begin_comment
+comment|/*  * Special version of CDIOCREADSUBCHANNEL which assumes that  * ioc_read_subchannel->data points to the kernel memory. For  * use in compatibility layers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDIOCREADSUBCHANNEL_SYSSPACE
+value|_IOWR('c', 31, struct ioc_read_subchannel)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -8163,29 +8163,8 @@ name|bsdsc
 decl_stmt|;
 name|struct
 name|cd_sub_channel_info
-modifier|*
 name|bsdinfo
 decl_stmt|;
-name|caddr_t
-name|sg
-init|=
-name|stackgap_init
-argument_list|()
-decl_stmt|;
-name|bsdinfo
-operator|=
-name|stackgap_alloc
-argument_list|(
-operator|&
-name|sg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bsdinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bsdsc
 operator|.
 name|address_format
@@ -8210,7 +8189,6 @@ name|data_len
 operator|=
 sizeof|sizeof
 argument_list|(
-operator|*
 name|bsdinfo
 argument_list|)
 expr_stmt|;
@@ -8218,6 +8196,7 @@ name|bsdsc
 operator|.
 name|data
 operator|=
+operator|&
 name|bsdinfo
 expr_stmt|;
 name|error
@@ -8226,7 +8205,7 @@ name|fo_ioctl
 argument_list|(
 name|fp
 argument_list|,
-name|CDIOCREADSUBCHANNEL
+name|CDIOCREADSUBCHANNEL_SYSSPACE
 argument_list|,
 operator|(
 name|caddr_t
@@ -8277,7 +8256,7 @@ operator|.
 name|cdsc_audiostatus
 operator|=
 name|bsdinfo
-operator|->
+operator|.
 name|header
 operator|.
 name|audio_status
@@ -8287,7 +8266,7 @@ operator|.
 name|cdsc_adr
 operator|=
 name|bsdinfo
-operator|->
+operator|.
 name|what
 operator|.
 name|position
@@ -8299,7 +8278,7 @@ operator|.
 name|cdsc_ctrl
 operator|=
 name|bsdinfo
-operator|->
+operator|.
 name|what
 operator|.
 name|position
@@ -8311,7 +8290,7 @@ operator|.
 name|cdsc_trk
 operator|=
 name|bsdinfo
-operator|->
+operator|.
 name|what
 operator|.
 name|position
@@ -8323,7 +8302,7 @@ operator|.
 name|cdsc_ind
 operator|=
 name|bsdinfo
-operator|->
+operator|.
 name|what
 operator|.
 name|position
@@ -8342,7 +8321,7 @@ operator|.
 name|cdsc_format
 argument_list|,
 name|bsdinfo
-operator|->
+operator|.
 name|what
 operator|.
 name|position
@@ -8364,7 +8343,7 @@ operator|.
 name|cdsc_format
 argument_list|,
 name|bsdinfo
-operator|->
+operator|.
 name|what
 operator|.
 name|position
