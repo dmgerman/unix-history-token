@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.33 1996/10/09 09:53:35 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.34 1996/12/08 12:27:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -114,18 +114,45 @@ modifier|*
 name|h
 parameter_list|)
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+literal|"/etc/update-by-hand"
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"/etc/%s is one of those files that this upgrade procedure just isn't\n"
 literal|"smart enough to deal with right now.  You'll need to merge the old and\n"
 literal|"new versions by hand when the option to do so manually is later\n"
-literal|"presented (in the meantime, you might want to write the name of\n"
-literal|"this file down! - the holographic shell on VTY4 is a good place for\n"
-literal|"this)."
+literal|"presented.  This has also been noted in the file /etc/update-by-hand."
 argument_list|,
 name|h
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/etc/%s\n"
+argument_list|,
+name|h
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -141,6 +168,26 @@ modifier|*
 name|h
 parameter_list|)
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+literal|"/etc/update-by-hand"
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/etc/sysconfig\n"
+argument_list|)
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"/etc/sysconfig is one of those files that this upgrade procedure just isn't\n"
@@ -149,6 +196,11 @@ literal|"will also come up with a very different \"personality\" than it had\n"
 literal|"before if you do not merge at LEAST the hostname and ifconfig lines\n"
 literal|"from the old one!  This is very important, so please do this merge\n"
 literal|"even if you do no others before the system is allowed to reboot."
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1026,7 +1078,7 @@ condition|(
 name|msgYesNo
 argument_list|(
 literal|"You didn't select the bin distribution as one of the distributons to load.\n"
-literal|"This one is pretty vital to a successful 2.1 upgrade.  Are you SURE you don't\n"
+literal|"This one is pretty vital to a successful upgrade.  Are you SURE you don't\n"
 literal|"want to select the bin distribution?  Chose _No_ to bring up the Distributions\n"
 literal|"menu."
 argument_list|)
@@ -1212,7 +1264,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"The disk label editor failed to work properly!  Upgrade operation\n"
+literal|"The disk label editor returned an error status.  Upgrade operation\n"
 literal|"aborted."
 argument_list|)
 expr_stmt|;
