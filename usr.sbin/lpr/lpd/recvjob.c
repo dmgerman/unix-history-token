@@ -178,7 +178,7 @@ define|#
 directive|define
 name|ack
 parameter_list|()
-value|(void) write(1, sp, 1);
+value|(void) write(STDOUT_FILENO, sp, 1);
 end_define
 
 begin_decl_stmt
@@ -676,7 +676,7 @@ name|size
 operator|=
 name|read
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|cp
 argument_list|,
@@ -929,7 +929,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 literal|"\2"
 argument_list|,
@@ -1067,7 +1067,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 literal|"\2"
 argument_list|,
@@ -1313,7 +1313,7 @@ name|j
 operator|=
 name|read
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|cp
 argument_list|,
@@ -1476,7 +1476,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 operator|&
 name|resp
