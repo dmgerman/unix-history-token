@@ -232,16 +232,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|char
-name|RESULT
-index|[]
-init|=
-literal|"clnt_res"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Print the C-version of an xdr definition  */
 end_comment
