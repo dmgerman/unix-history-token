@@ -416,48 +416,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Add a cdevsw entry  */
-end_comment
-
-begin_function
-name|int
-name|cdevsw_add
-parameter_list|(
-name|struct
-name|cdevsw
-modifier|*
-name|newentry
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *  Remove a cdevsw entry  */
-end_comment
-
-begin_function
-name|int
-name|cdevsw_remove
-parameter_list|(
-name|struct
-name|cdevsw
-modifier|*
-name|oldentry
-parameter_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * dev_t and u_dev_t primitives  */
 end_comment
 
