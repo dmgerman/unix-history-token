@@ -184,6 +184,7 @@ comment|/*  * descriptors for active devices. also used as the public softc  * o
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|mididev_info
 name|midi_info
 index|[
@@ -193,24 +194,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+specifier|static
+name|int
 name|nmidi
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total number of midi devices, filled in by the driver */
-end_comment
-
-begin_decl_stmt
-name|u_long
+decl_stmt|,
 name|nsynth
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* total number of synthesizers, filled in by the driver */
-end_comment
 
 begin_comment
 comment|/* These make the buffer for /dev/midistat */
@@ -388,12 +378,6 @@ block|{
 name|int
 name|u
 decl_stmt|;
-name|mididev_info
-modifier|*
-name|d
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|MIDIDEV
@@ -422,9 +406,35 @@ name|unit
 operator|=
 name|u
 expr_stmt|;
+return|return
+name|get_mididev_info_unit
+argument_list|(
+name|u
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * a small utility function which, given a unit number, returns  * a pointer to the associated mididev_info struct.  */
+end_comment
+
+begin_function
+name|mididev_info
+modifier|*
+name|get_mididev_info_unit
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+block|{
+name|mididev_info
+modifier|*
+name|d
+decl_stmt|;
 if|if
 condition|(
-name|u
+name|unit
 operator|>=
 name|nmidi
 operator|+
@@ -435,7 +445,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"get_mididev_info: unit %d is not configured.\n"
+literal|"get_mididev_info_unit: unit %d is not configured.\n"
 argument_list|,
 name|u
 argument_list|)
@@ -450,11 +460,94 @@ operator|=
 operator|&
 name|midi_info
 index|[
-name|u
+name|unit
 index|]
 expr_stmt|;
 return|return
 name|d
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Create a new midi device info structure. */
+end_comment
+
+begin_function
+name|mididev_info
+modifier|*
+name|create_mididev_info_unit
+parameter_list|(
+name|int
+modifier|*
+name|unit
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+block|{
+comment|/* XXX midi_info is still static. */
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MDT_MIDI
+case|:
+name|nmidi
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|MDT_SYNTH
+case|:
+name|nsynth
+operator|++
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"unsupported device type"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+operator|*
+name|unit
+operator|=
+name|nmidi
+operator|+
+name|nsynth
+operator|-
+literal|1
+expr_stmt|;
+return|return
+name|get_mididev_info_unit
+argument_list|(
+operator|*
+name|unit
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return the number of configured devices. */
+end_comment
+
+begin_function
+name|int
+name|mididev_info_number
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|nmidi
+operator|+
+name|nsynth
 return|;
 block|}
 end_function

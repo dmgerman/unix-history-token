@@ -417,6 +417,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Not used in this file. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|notdef
+end_if
+
 begin_function_decl
 specifier|static
 name|u_int32_t
@@ -447,6 +457,15 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -709,11 +728,13 @@ name|devinfo
 operator|=
 name|devinfo
 operator|=
+name|create_mididev_info_unit
+argument_list|(
 operator|&
-name|midi_info
-index|[
 name|unit
-index|]
+argument_list|,
+name|MDT_MIDI
+argument_list|)
 expr_stmt|;
 comment|/* Fill the midi info. */
 name|bcopy
@@ -814,10 +835,6 @@ name|devinfo
 operator|->
 name|midi_dbuf_out
 argument_list|)
-expr_stmt|;
-comment|/* Increase the number of midi devices. */
-name|nmidi
-operator|++
 expr_stmt|;
 comment|/* Enable interrupt. */
 if|if
@@ -920,31 +937,6 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|nmidi
-operator|+
-name|nsynth
-condition|)
-block|{
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"csamidi_ioctl: unit %d does not exist.\n"
-argument_list|,
-name|unit
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|devinfo
 operator|=
 name|get_mididev_info
@@ -1006,14 +998,6 @@ condition|(
 name|synthinfo
 operator|->
 name|device
-operator|>
-name|nmidi
-operator|+
-name|nsynth
-operator|||
-name|synthinfo
-operator|->
-name|device
 operator|!=
 name|unit
 condition|)
@@ -1061,14 +1045,6 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-name|midiinfo
-operator|->
-name|device
-operator|>
-name|nmidi
-operator|+
-name|nsynth
-operator|||
 name|midiinfo
 operator|->
 name|device
@@ -2111,6 +2087,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Not used in this file. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|notdef
+end_if
+
 begin_function
 specifier|static
 name|u_int32_t
@@ -2186,6 +2172,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notdef */
+end_comment
 
 begin_comment
 comment|/* Allocates resources. */

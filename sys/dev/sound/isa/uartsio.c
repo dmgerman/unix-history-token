@@ -745,11 +745,13 @@ name|devinfo
 operator|=
 name|devinfo
 operator|=
+name|create_mididev_info_unit
+argument_list|(
 operator|&
-name|midi_info
-index|[
 name|unit
-index|]
+argument_list|,
+name|MDT_MIDI
+argument_list|)
 expr_stmt|;
 comment|/* Fill the midi info. */
 name|bcopy
@@ -1005,10 +1007,6 @@ argument_list|,
 name|com_data
 argument_list|)
 expr_stmt|;
-comment|/* Increase the number of midi devices. */
-name|nmidi
-operator|++
-expr_stmt|;
 comment|/* Now we can handle the interrupts. */
 name|bus_setup_intr
 argument_list|(
@@ -1098,31 +1096,6 @@ argument_list|(
 name|i_dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|nmidi
-operator|+
-name|nsynth
-condition|)
-block|{
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"uartsio_ioctl: unit %d does not exist.\n"
-argument_list|,
-name|unit
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|devinfo
 operator|=
 name|get_mididev_info
@@ -1184,14 +1157,6 @@ condition|(
 name|synthinfo
 operator|->
 name|device
-operator|>
-name|nmidi
-operator|+
-name|nsynth
-operator|||
-name|synthinfo
-operator|->
-name|device
 operator|!=
 name|unit
 condition|)
@@ -1239,14 +1204,6 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-name|midiinfo
-operator|->
-name|device
-operator|>
-name|nmidi
-operator|+
-name|nsynth
-operator|||
 name|midiinfo
 operator|->
 name|device
