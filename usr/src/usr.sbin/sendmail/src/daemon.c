@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.45 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.46 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.45 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.46 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,7 +358,9 @@ comment|/* get a socket for the SMTP connection */
 name|socksize
 operator|=
 name|opendaemonsocket
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
