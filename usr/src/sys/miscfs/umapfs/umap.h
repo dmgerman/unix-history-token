@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap.h	8.3 (Berkeley) %G%  *  * @(#)null_vnops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap.h	8.4 (Berkeley) %G%  *  * @(#)null_vnops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_define
@@ -133,17 +133,13 @@ begin_struct
 struct|struct
 name|umap_node
 block|{
-name|struct
-name|umap_node
-modifier|*
-name|umap_forw
-decl_stmt|;
-comment|/* Hash chain */
-name|struct
-name|umap_node
-modifier|*
-name|umap_back
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|umap_node
+argument_list|)
+name|umap_hash
+expr_stmt|;
+comment|/* Hash list */
 name|struct
 name|vnode
 modifier|*
