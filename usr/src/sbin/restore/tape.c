@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.14	(Berkeley)	83/05/06"
+literal|"@(#)tape.c	3.15	(Berkeley)	83/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -1302,7 +1302,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong dump date\n\tgot: %s\twanted %s"
+literal|"Wrong dump date\n\tgot: %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1311,9 +1311,17 @@ name|tmpbuf
 operator|.
 name|c_date
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\twanted: %s"
 argument_list|,
 name|ctime
 argument_list|(
+operator|&
 name|dumpdate
 argument_list|)
 argument_list|)
