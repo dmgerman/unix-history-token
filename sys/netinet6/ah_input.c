@@ -185,6 +185,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet6/in6_pcb.h>
 end_include
 
@@ -4035,6 +4041,11 @@ name|ip6
 operator|=
 name|NULL
 expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+comment|/* calm gcc */
 block|}
 if|if
 condition|(
