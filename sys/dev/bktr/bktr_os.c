@@ -1424,7 +1424,7 @@ literal|"BrookTree 848"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|PCI_PRODUCT_BROOKTREE_BT849
@@ -1437,7 +1437,7 @@ literal|"BrookTree 849A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|PCI_PRODUCT_BROOKTREE_BT878
@@ -1450,7 +1450,7 @@ literal|"BrookTree 878"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|PCI_PRODUCT_BROOKTREE_BT879
@@ -1463,7 +1463,7 @@ literal|"BrookTree 879"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 block|}
