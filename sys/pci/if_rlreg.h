@@ -2085,6 +2085,28 @@ value|0x1360
 end_define
 
 begin_comment
+comment|/*  * D-Link vendor ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLINK_VENDORID
+value|0x1186
+end_define
+
+begin_comment
+comment|/*  * D-Link DFE-530TX+ device ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLINK_DEVICEID_530TXPLUS
+value|0x1300
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 

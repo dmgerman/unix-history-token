@@ -280,6 +280,14 @@ literal|"Addtron Technolgy 8139 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DLINK_VENDORID
+block|,
+name|DLINK_DEVICEID_530TXPLUS
+block|,
+literal|"D-Link DFE-530TX+ 10/100BaseTX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -3646,6 +3654,10 @@ operator|||
 name|rl_did
 operator|==
 name|ADDTRON_DEVICEID_8139
+operator|||
+name|rl_did
+operator|==
+name|DLINK_DEVICEID_530TXPLUS
 condition|)
 name|sc
 operator|->
