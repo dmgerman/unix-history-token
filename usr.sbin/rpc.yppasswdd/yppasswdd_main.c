@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yppasswdd_main.c,v 1.8 1996/02/09 04:21:35 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995, 1996  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yppasswdd_main.c,v 1.10 1996/02/24 21:41:15 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -256,7 +256,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yppasswdd_main.c,v 1.8 1996/02/09 04:21:35 wpaul Exp $"
+literal|"$Id: yppasswdd_main.c,v 1.10 1996/02/24 21:41:15 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,6 +399,14 @@ name|int
 name|verbose
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|resvport
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -599,6 +607,23 @@ end_function
 begin_function
 specifier|static
 name|void
+name|reload
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+name|load_securenets
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|closedown
 parameter_list|(
 name|int
@@ -765,7 +790,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-t master.passwd file] [-d domain] \ [-p path] [-s] [-f] [-m] [-a] [-v] [-h]\n"
+literal|"Usage: %s [-t master.passwd file] [-d domain] \ [-p path] [-s] [-f] [-m] [-a] [-v] [-u] [-h]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -933,6 +958,14 @@ name|verbose
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'u'
+case|:
+name|resvport
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 default|default:
 case|case
 literal|'h'
@@ -969,6 +1002,9 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|load_securenets
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|getrpcport
@@ -1095,6 +1131,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|debug
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|getsockname
@@ -1566,7 +1606,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set up resporce limits and block signals */
+comment|/* set up resource limits and block signals */
 name|pw_init
 argument_list|()
 expr_stmt|;
@@ -1584,6 +1624,16 @@ operator|(
 name|SIG_PF
 operator|)
 name|terminate
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+operator|(
+name|SIG_PF
+operator|)
+name|reload
 argument_list|)
 expr_stmt|;
 name|unlink
