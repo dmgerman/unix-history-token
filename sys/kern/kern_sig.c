@@ -7467,6 +7467,11 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|setrunnable
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
