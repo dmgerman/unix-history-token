@@ -72,18 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -660,7 +648,7 @@ name|d_sbsize
 argument_list|,
 literal|"sb"
 argument_list|,
-name|SBSIZE
+literal|0
 argument_list|)
 expr_stmt|;
 name|strcpy

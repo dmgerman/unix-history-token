@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|SBSIZE
-value|8192
+value|0
 end_define
 
 begin_define

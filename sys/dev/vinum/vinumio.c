@@ -3546,7 +3546,7 @@ name|lp
 operator|->
 name|d_sbsize
 operator|=
-name|SBSIZE
+literal|0
 expr_stmt|;
 name|lp
 operator|->

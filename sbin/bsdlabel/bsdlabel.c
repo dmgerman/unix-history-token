@@ -127,12 +127,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -4965,7 +4959,7 @@ name|lp
 operator|->
 name|d_sbsize
 operator|=
-name|SBSIZE
+literal|0
 expr_stmt|;
 comment|/* XXX */
 while|while
@@ -6826,42 +6820,6 @@ condition|)
 name|Warning
 argument_list|(
 literal|"boot block size %% sector-size != 0"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lp
-operator|->
-name|d_sbsize
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"super block size 0\n"
-argument_list|)
-expr_stmt|;
-name|errors
-operator|++
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|lp
-operator|->
-name|d_sbsize
-operator|%
-name|lp
-operator|->
-name|d_secsize
-condition|)
-name|Warning
-argument_list|(
-literal|"super block size %% sector-size != 0"
 argument_list|)
 expr_stmt|;
 if|if

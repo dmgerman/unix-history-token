@@ -75,12 +75,6 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -479,20 +473,6 @@ operator|->
 name|d_bbsize
 operator|=
 name|BBSIZE
-expr_stmt|;
-if|if
-condition|(
-name|lp1
-operator|->
-name|d_sbsize
-operator|==
-literal|0
-condition|)
-name|lp1
-operator|->
-name|d_sbsize
-operator|=
-name|SBSIZE
 expr_stmt|;
 name|lp1
 operator|->
@@ -1872,7 +1852,7 @@ name|lp
 operator|->
 name|d_sbsize
 operator|=
-name|SBSIZE
+literal|0
 expr_stmt|;
 name|lp
 operator|->

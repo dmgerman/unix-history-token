@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/devicestat.h>
 end_include
 
@@ -7131,9 +7125,8 @@ name|lp
 operator|->
 name|d_sbsize
 operator|=
-name|SBSIZE
+literal|0
 expr_stmt|;
-comment|/* XXX */
 name|lp
 operator|->
 name|d_magic
