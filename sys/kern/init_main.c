@@ -1417,7 +1417,7 @@ argument_list|)
 argument_list|,
 name|trunc_page
 argument_list|(
-name|USRSTACK
+name|VM_MAXUSER_ADDRESS
 argument_list|)
 argument_list|,
 name|TRUE
