@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.39 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2633,6 +2633,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|long
+name|ans
+decl_stmt|;
 if|if
 condition|(
 name|bot
@@ -2644,15 +2647,20 @@ operator|(
 literal|0
 operator|)
 return|;
-return|return
+name|ans
+operator|=
 operator|(
-operator|(
+name|quad_t
+operator|)
 name|top
 operator|*
 literal|100
-operator|)
 operator|/
 name|bot
+expr_stmt|;
+return|return
+operator|(
+name|ans
 operator|)
 return|;
 block|}
