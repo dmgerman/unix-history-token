@@ -4447,6 +4447,12 @@ block|{
 name|int
 name|s
 decl_stmt|;
+specifier|static
+name|int
+name|standby
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -4471,7 +4477,33 @@ case|:
 case|case
 name|V_DISPLAY_STAND_BY
 case|:
-comment|/* 	 * FIXME: I don't know how to put the display into `suspend' 	 * or `stand-by' mode via GDC...  	 */
+name|outb
+argument_list|(
+literal|0x09a2
+argument_list|,
+literal|0x80
+operator||
+literal|0x40
+argument_list|)
+expr_stmt|;
+comment|/* V/H-SYNC mask */
+if|if
+condition|(
+name|inb
+argument_list|(
+literal|0x09a2
+argument_list|)
+operator|==
+operator|(
+literal|0x80
+operator||
+literal|0x40
+operator|)
+condition|)
+name|standby
+operator|=
+literal|1
+expr_stmt|;
 comment|/* FALL THROUGH */
 case|case
 name|V_DISPLAY_BLANK
@@ -4546,12 +4578,12 @@ name|outb
 argument_list|(
 name|TEXT_GDC
 operator|+
-literal|2
+literal|8
 argument_list|,
-literal|0xc
+literal|0x0e
 argument_list|)
 expr_stmt|;
-comment|/* text off */
+comment|/* DISP off */
 block|}
 break|break;
 case|case
@@ -4623,12 +4655,30 @@ name|outb
 argument_list|(
 name|TEXT_GDC
 operator|+
-literal|2
+literal|8
 argument_list|,
-literal|0xd
+literal|0x0f
 argument_list|)
 expr_stmt|;
-comment|/* text on */
+comment|/* DISP on */
+block|}
+if|if
+condition|(
+name|standby
+condition|)
+block|{
+name|outb
+argument_list|(
+literal|0x09a2
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+comment|/* V/H-SYNC unmask */
+name|standby
+operator|=
+literal|0
+expr_stmt|;
 block|}
 break|break;
 block|}
