@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	1.2	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	1.3	%G% */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|bool
-value|int
+value|char
 end_define
 
 begin_define

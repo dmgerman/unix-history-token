@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.4	%G% */
+comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.5	%G% */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"useful.h"
+end_include
 
 begin_comment
 comment|/* **  Manifest constants. */
@@ -63,7 +69,7 @@ comment|/* maximum value of HopCount */
 end_comment
 
 begin_comment
-comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it. ** **	The flags are as follows: **		M_FOPT -- if set, the mailer has a picky "-f" **			option.  In this mode, the mailer will only **			accept the "-f" option if the sender is **			actually "root", "network", and possibly **			(but not necessarily) if the -f argument **			matches the real sender.  The effect is **			that if the "-f" option is given to **			delivermail then it will be passed through **			(as arguments 1& 2) to the mailer. **		M_ROPT -- identical to M_FOPT, except uses -r instead. **			UGH! **		M_QUIET -- if set, don't print a message if the mailer **			returns bad status. **		M_RESTR -- if set, this mailer is restricted to use **			by "daemon"; otherwise, we do a **			setuid(getuid()) before calling the mailer. **		M_HDR -- if set, the mailer wants us to insert a **			UNIX "From" line before outputting. **		M_NOHOST -- if set, this mailer doesn't care about **			the host part (e.g., the local mailer). **		M_STRIPQ -- if set, strip quote (`"') characters **			out of parameters as you transliterate them **			into the argument vector.  For example, the **			local mailer is called directly, so these **			should be stripped, but the program-mailer **			(i.e., csh) should leave them in. ** **	The argument vector is expanded before actual use.  Every- **	thing is passed through except for things starting with "$". **	"$x" defines some interpolation, as defined by x: **		$f	The "from" person. **		$h	The host being sent to. **		$u	The user being sent to. **		$c	The current hop count. **	"$x" where x is unknown expands to "x", so use "$$" to get "$". */
+comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The argument vector is expanded before actual use.  Every- **	thing is passed through except for things starting with "$". **	"$x" defines some interpolation, as described in conf.c **	"$x" where x is unknown expands to "x", so use "$$" to get "$". */
 end_comment
 
 begin_struct
@@ -387,7 +393,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|ArpaFmt
 decl_stmt|;
 end_decl_stmt
@@ -398,7 +404,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|FromFlag
 decl_stmt|;
 end_decl_stmt
@@ -409,7 +415,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|Debug
 decl_stmt|;
 end_decl_stmt
@@ -420,7 +426,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|MailBack
 decl_stmt|;
 end_decl_stmt
@@ -431,7 +437,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|BerkNet
 decl_stmt|;
 end_decl_stmt
@@ -442,7 +448,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|WriteBack
 decl_stmt|;
 end_decl_stmt
@@ -453,7 +459,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|NoAlias
 decl_stmt|;
 end_decl_stmt
@@ -464,7 +470,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|ForceMail
 decl_stmt|;
 end_decl_stmt
@@ -475,7 +481,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|MeToo
 decl_stmt|;
 end_decl_stmt
@@ -486,13 +492,46 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|bool
 name|Error
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* set if errors */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|UseMsgId
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* put msg-id's in all msgs [conf.c] */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|IgnrDot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't let dot end messages */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|SaveFrom
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* save leading "From" lines */
 end_comment
 
 begin_decl_stmt
@@ -528,6 +567,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* the transcript file name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|MsgId
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the message id for this message */
 end_comment
 
 begin_decl_stmt
@@ -591,23 +642,6 @@ name|s
 parameter_list|)
 value|{ if (ExitStat == EX_OK) ExitStat = s; }
 end_define
-
-begin_include
-include|#
-directive|include
-file|"useful.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|BADMAIL
-value|YES
-end_define
-
-begin_comment
-comment|/* mail doesn't know about new returncodes */
-end_comment
 
 end_unit
 

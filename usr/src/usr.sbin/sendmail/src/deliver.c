@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.4	%G%"
+literal|"@(#)deliver.c	1.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,14 +413,8 @@ block|}
 block|}
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BADMAIL
-end_ifdef
-
 begin_comment
-comment|/* 	**  If the mailer doesn't return the proper 	**  exit statuses, check here to see if the 	**  user exists so that we can give a pretty 	**  error message. 	*/
+comment|/* 	**  See if the user exists. 	**	Strictly, this is only needed to print a pretty 	**	error message. 	** 	**>>>>>>>>>> This clause assumes that the local mailer 	**>> NOTE>> cannot do any further aliasing; that 	**>>>>>>>>>> function is subsumed by delivermail. 	*/
 end_comment
 
 begin_if
@@ -462,12 +456,6 @@ return|;
 block|}
 block|}
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|BADMAIL
-end_endif
 
 begin_comment
 comment|/* 	**  If the mailer wants a From line, insert a new editfcn. 	*/
@@ -1173,15 +1161,10 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
-if|if
-condition|(
-name|ExitStat
-operator|==
-name|EX_OK
-condition|)
-name|ExitStat
-operator|=
+name|setstat
+argument_list|(
 name|stat
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
