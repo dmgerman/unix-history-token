@@ -8340,6 +8340,15 @@ name|p
 operator|->
 name|p_aioinfo
 expr_stmt|;
+if|if
+condition|(
+name|ki
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|done
+goto|;
 name|s
 operator|=
 name|splnet
@@ -8528,6 +8537,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 if|if
 condition|(
 name|notcancelled
