@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)htable.c	4.6 (Berkeley) %G%"
+literal|"@(#)htable.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -637,6 +637,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|arg
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
 block|}
 do|while
 condition|(
