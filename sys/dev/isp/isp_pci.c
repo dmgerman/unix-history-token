@@ -3155,6 +3155,15 @@ operator|=
 literal|0x400000007F000009ull
 expr_stmt|;
 block|}
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|default_id
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|resource_int_value
@@ -3201,7 +3210,8 @@ name|isp_osinfo
 operator|.
 name|default_id
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 if|if
