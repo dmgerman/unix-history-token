@@ -1117,7 +1117,7 @@ name|NULL
 condition|)
 name|g_destroy_provider
 argument_list|(
-name|pp
+name|newpp
 argument_list|)
 expr_stmt|;
 if|if
