@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)api.c	4.2 (Berkeley) %G%"
+literal|"@(#)api.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,18 @@ include|#
 directive|include
 file|"../general/globals.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|apitrace
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Should we trace API interactions */
+end_comment
 
 begin_comment
 comment|/*  * General utility routines.  */
@@ -226,6 +238,21 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|apitrace
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'('
+argument_list|,
+name|parms
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -281,6 +308,21 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|apitrace
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|')'
+argument_list|,
+name|parms
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3517,6 +3559,43 @@ end_decl_stmt
 
 begin_block
 block|{
+comment|/*  * Do we need to log this transaction?  */
+if|if
+condition|(
+name|apitrace
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'<'
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|regs
+argument_list|,
+sizeof|sizeof
+expr|*
+name|regs
+argument_list|)
+expr_stmt|;
+name|Dump
+argument_list|(
+literal|'<'
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|sregs
+argument_list|,
+sizeof|sizeof
+expr|*
+name|sregs
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|regs
@@ -4089,6 +4168,43 @@ expr_stmt|;
 comment|/* Invalid GATE entry */
 break|break;
 block|}
+block|}
+comment|/*  * Do we need to log this transaction?  */
+if|if
+condition|(
+name|apitrace
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'>'
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|regs
+argument_list|,
+sizeof|sizeof
+expr|*
+name|regs
+argument_list|)
+expr_stmt|;
+name|Dump
+argument_list|(
+literal|'>'
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|sregs
+argument_list|,
+sizeof|sizeof
+expr|*
+name|sregs
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block
