@@ -188,7 +188,7 @@ decl_stmt|;
 name|long
 name|sc_fpstate
 index|[
-literal|128
+literal|64
 index|]
 name|__aligned
 argument_list|(
