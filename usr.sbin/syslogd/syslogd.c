@@ -1958,11 +1958,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|setlinebuf
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|NumAllowed
@@ -2401,11 +2403,13 @@ block|}
 block|}
 block|}
 else|else
+block|{
 name|dprintf
 argument_list|(
 literal|"listening on inet and/or inet6 socket\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|dprintf
 argument_list|(
 literal|"sending on inet and/or inet6 socket\n"
@@ -3605,12 +3609,14 @@ name|c
 operator|==
 literal|'\n'
 condition|)
+block|{
 operator|*
 name|q
 operator|++
 operator|=
 literal|' '
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3618,12 +3624,14 @@ name|c
 operator|==
 literal|'\t'
 condition|)
+block|{
 operator|*
 name|q
 operator|++
 operator|=
 literal|'\t'
 expr_stmt|;
+block|}
 else|else
 block|{
 operator|*
@@ -3643,12 +3651,14 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 operator|*
 name|q
 operator|++
 operator|=
 name|c
 expr_stmt|;
+block|}
 block|}
 operator|*
 name|q
@@ -3733,6 +3743,7 @@ name|i
 operator|>
 literal|0
 condition|)
+block|{
 name|line
 index|[
 name|i
@@ -3742,7 +3753,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|i
@@ -3768,10 +3781,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 break|break;
 block|}
-else|else
-break|break;
 for|for
 control|(
 name|p
@@ -4161,6 +4173,7 @@ name|flags
 operator|&
 name|ADDDATE
 condition|)
+block|{
 name|timestamp
 operator|=
 name|ctime
@@ -4171,6 +4184,7 @@ argument_list|)
 operator|+
 literal|4
 expr_stmt|;
+block|}
 else|else
 block|{
 name|timestamp
@@ -7249,10 +7263,12 @@ name|p
 expr_stmt|;
 block|}
 else|else
+block|{
 name|LocalDomain
 operator|=
 literal|""
 expr_stmt|;
+block|}
 comment|/* 	 *  Close all open log files. 	 */
 name|Initialized
 operator|=
@@ -8853,12 +8869,14 @@ name|buf
 operator|==
 literal|'*'
 condition|)
+block|{
 name|pri
 operator|=
 name|LOG_PRIMASK
 operator|+
 literal|1
 expr_stmt|;
+block|}
 else|else
 block|{
 name|pri
@@ -8955,6 +8973,7 @@ name|buf
 operator|==
 literal|'*'
 condition|)
+block|{
 for|for
 control|(
 name|i
@@ -8987,6 +9006,7 @@ index|]
 operator|=
 name|pri_cmp
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -9798,29 +9818,15 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Walk the dead queue, and see if we should signal somebody. */
-for|for
-control|(
-name|q
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|deadq_head
-argument_list|)
-init|;
-name|q
-operator|!=
-name|NULL
-condition|;
-name|q
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|q
+argument|q
 argument_list|,
-name|dq_entries
+argument|&deadq_head
+argument_list|,
+argument|dq_entries
 argument_list|)
-control|)
+block|{
 switch|switch
 condition|(
 name|q
@@ -9890,6 +9896,7 @@ operator|->
 name|dq_timeout
 operator|--
 expr_stmt|;
+block|}
 block|}
 name|MarkSet
 operator|=
@@ -10366,6 +10373,7 @@ literal|"udp"
 argument_list|)
 operator|)
 condition|)
+block|{
 name|ap
 operator|.
 name|port
@@ -10377,6 +10385,7 @@ operator|->
 name|s_port
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|ap
@@ -10543,16 +10552,20 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
+block|{
 name|cp2
 operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|cp2
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|memset
@@ -11195,6 +11208,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"domainname = %s; "
@@ -11204,6 +11218,7 @@ operator|.
 name|a_name
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"port = %d\n"
@@ -12559,29 +12574,15 @@ block|{
 name|dq_t
 name|q
 decl_stmt|;
-for|for
-control|(
-name|q
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|deadq_head
-argument_list|)
-init|;
-name|q
-operator|!=
-name|NULL
-condition|;
-name|q
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|q
+argument|q
 argument_list|,
-name|dq_entries
+argument|&deadq_head
+argument_list|,
+argument|dq_entries
 argument_list|)
-control|)
+block|{
 if|if
 condition|(
 name|q
@@ -12611,6 +12612,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
