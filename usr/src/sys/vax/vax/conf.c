@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.47	82/02/06	*/
+comment|/*	conf.c	4.48	82/02/08	*/
 end_comment
 
 begin_include
@@ -122,6 +122,9 @@ argument_list|()
 decl_stmt|,
 name|hpdump
 argument_list|()
+decl_stmt|,
+name|hpioctl
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -155,6 +158,13 @@ begin_define
 define|#
 directive|define
 name|hpdump
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|hpioctl
 value|nodev
 end_define
 
@@ -2211,7 +2221,7 @@ block|,
 name|hpwrite
 block|,
 comment|/*4*/
-name|nodev
+name|hpioctl
 block|,
 name|nodev
 block|,
