@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmt[] = "@(#)fmt.c	1.2";  *  * fortran format parser  */
+comment|/* char id_fmt[] = "@(#)fmt.c	1.3";  *  * fortran format parser  */
 end_comment
 
 begin_include
@@ -615,6 +615,23 @@ operator|)
 argument_list|)
 condition|)
 block|{
+case|case
+literal|'\0'
+case|:
+name|op_gen
+argument_list|(
+name|BN
+argument_list|,
+name|cblank
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'z'
 case|:
