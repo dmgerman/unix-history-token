@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_var.h	7.6.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_var.h	7.6.1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,10 +24,24 @@ begin_comment
 comment|/* if we're not 4.3, pretend we're 4.2 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OLDSTAT
+end_define
+
+begin_comment
+comment|/* set if we have to use old netstat binaries */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* #define OLDSTAT	/* set if we have to use old netstat binaries */
+end_comment
 
 begin_if
 if|#
@@ -396,6 +410,40 @@ begin_struct
 struct|struct
 name|tcpstat
 block|{
+ifdef|#
+directive|ifdef
+name|OLDSTAT
+comment|/* 	 * Declare statistics the same as in 4.3 	 * at the start of tcpstat (same size and 	 * position) for netstat. 	 */
+name|int
+name|tcps_rcvbadsum
+decl_stmt|;
+name|int
+name|tcps_rcvbadoff
+decl_stmt|;
+name|int
+name|tcps_rcvshort
+decl_stmt|;
+name|int
+name|tcps_badsegs
+decl_stmt|;
+name|int
+name|tcps_unack
+decl_stmt|;
+define|#
+directive|define
+name|tcps_badsum
+value|tcps_rcvbadsum
+define|#
+directive|define
+name|tcps_badoff
+value|tcps_rcvbadoff
+define|#
+directive|define
+name|tcps_hdrops
+value|tcps_rcvshort
+endif|#
+directive|endif
+endif|OLDSTAT
 name|u_long
 name|tcps_connattempt
 decl_stmt|;
@@ -508,6 +556,9 @@ name|u_long
 name|tcps_rcvbyte
 decl_stmt|;
 comment|/* bytes received in sequence */
+ifndef|#
+directive|ifndef
+name|OLDSTAT
 name|u_long
 name|tcps_rcvbadsum
 decl_stmt|;
@@ -520,6 +571,8 @@ name|u_long
 name|tcps_rcvshort
 decl_stmt|;
 comment|/* packets received too short */
+endif|#
+directive|endif
 name|u_long
 name|tcps_rcvduppack
 decl_stmt|;
