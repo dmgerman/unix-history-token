@@ -623,7 +623,18 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* Vpp_valid */
+comment|/* Vpp_valid or reserved*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RICOH_5VCARD
+value|0x80
+end_define
+
+begin_comment
+comment|/* 5V card detected */
 end_comment
 
 begin_define
