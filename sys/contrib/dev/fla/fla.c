@@ -1616,6 +1616,8 @@ name|sc
 operator|->
 name|disk
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|fla_cdevsw
 argument_list|)
