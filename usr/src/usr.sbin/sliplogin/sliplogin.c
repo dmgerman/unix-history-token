@@ -1,4 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,18 +39,22 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sliplogin.c	1.4 (Berkeley) %G%"
+literal|"@(#)sliplogin.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* from static char *sccsid = "@(#)sliplogin.c	1.3	MS/ACF	89/04/18"; */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/* from static char *sccsid = "@(#)sliplogin.c	1.3	MS/ACF	89/04/18"; */
+end_comment
 
 begin_comment
 comment|/*  * sliplogin.c  * [MUST BE RUN SUID, SLOPEN DOES A SUSER()!]  *  * This program initializes its own tty port to be an async TCP/IP interface.  * It merely sets up the SLIP module all by its lonesome on the STREAMS stack,  * initializes the network interface, and pauses forever waiting for hangup.  *  * It is a remote descendant of several similar programs with incestuous ties:  * - Kirk Smith's slipconf, modified by Richard Johnsson @ DEC WRL.  * - slattach, probably by Rick Adams but touched by countless hordes.  * - the original sliplogin for 4.2bsd, Doug Kingston the mover behind it.  * - a simple slattach-like program used to test the STREAMS SLIP code.  *  * There are three basic forms of usage:  *  * "sliplogin"  * Invoked simply as "sliplogin" and a realuid != 0, the program looks up  * the uid in /etc/passwd, and then the username in the file /etc/hosts.slip.  * If and entry is found, the line on fd0 is configured for SLIP operation  * as specified in the file.  *  * "sliplogin IPhost1</dev/ttyb"  * Invoked by root with a username, the name is looked up in the  * /etc/hosts.slip file and if found fd0 is configured as in case 1.  *  * "sliplogin 192.100.1.1 192.100.1.2 255.255.255.0< /dev/ttyb"  * Finally, if invoked with a remote addr, local addr, and optionally  * a net mask, the line on fd0 is setup as specified if the user is root.  *  * Doug Kingston 8810??		- logging + first pass at adding I_STR ioctl's  * Rayan Zachariassen 881011	- version for SunOS STREAMS SLIP  */
