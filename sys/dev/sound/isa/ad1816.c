@@ -436,16 +436,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|FULL_DUPLEX
-parameter_list|(
-name|x
-parameter_list|)
-value|(pcm_getflags(x)& SD_F_SIMPLEX)
-end_define
-
-begin_define
-define|#
-directive|define
 name|AD1816_MUTE
 value|31
 end_define
@@ -2503,12 +2493,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ad1816
-operator|->
-name|drq2_rid
-operator|>=
-literal|0
-operator|&&
 operator|!
 name|ad1816
 operator|->
@@ -2555,23 +2539,6 @@ operator|!
 name|ad1816
 operator|->
 name|irq
-condition|)
-name|ok
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|ad1816
-operator|->
-name|drq2_rid
-operator|>=
-literal|0
-operator|&&
-operator|!
-name|ad1816
-operator|->
-name|drq2
 condition|)
 name|ok
 operator|=
@@ -2787,7 +2754,7 @@ case|:
 comment|/* ADS7180 */
 name|s
 operator|=
-literal|"Terratec Soundsystem BASE 1"
+literal|"AD1816"
 expr_stmt|;
 break|break;
 block|}
@@ -3042,10 +3009,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|FULL_DUPLEX
-argument_list|(
-name|dev
-argument_list|)
+name|ad1816
+operator|->
+name|drq2
 condition|)
 name|snprintf
 argument_list|(
@@ -3069,7 +3035,7 @@ name|rman_get_start
 argument_list|(
 name|ad1816
 operator|->
-name|drq1
+name|drq2
 argument_list|)
 argument_list|)
 expr_stmt|;
