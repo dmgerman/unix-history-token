@@ -4938,6 +4938,22 @@ operator|(
 literal|"VIA 82C598MVP/82C694X (Apollo MVP3/Pro133A) PCI-PCI (AGP) bridge"
 operator|)
 return|;
+case|case
+literal|0x83911106
+case|:
+return|return
+operator|(
+literal|"VIA 8371 (KX133) PCI-PCI (AGP) bridge"
+operator|)
+return|;
+case|case
+literal|0x83051106
+case|:
+return|return
+operator|(
+literal|"VIA 8363 (KT133) PCI-PCI (AGP) bridge"
+operator|)
+return|;
 comment|/* AcerLabs -- vendor 0x10b9 */
 comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
 comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
@@ -5758,7 +5774,7 @@ literal|0x05961106
 case|:
 return|return
 operator|(
-literal|"VIA 82C596B PCI-ISA bridge"
+literal|"VIA 82C596 PCI-ISA bridge"
 operator|)
 return|;
 case|case
@@ -6999,15 +7015,12 @@ operator|(
 literal|"VIA 82C597 (Apollo VP3) system controller"
 operator|)
 return|;
-comment|/* XXX Here is MVP3, I got the datasheet but NO M/B to test it  */
-comment|/* totally. Please let me know if anything wrong.            -F */
-comment|/* XXX need info on the MVP3 -- any takers? */
 case|case
 literal|0x05981106
 case|:
 return|return
 operator|(
-literal|"VIA 82C598MVP (Apollo MVP3) host bridge"
+literal|"VIA 82C598 (Apollo MVP3) host bridge"
 operator|)
 return|;
 case|case
@@ -7015,7 +7028,23 @@ literal|0x06911106
 case|:
 return|return
 operator|(
-literal|"VIA 82C691/693A/694X (Apollo Pro133A) host bridge"
+literal|"VIA 82C691 (Apollo Pro) host bridge"
+operator|)
+return|;
+case|case
+literal|0x06931106
+case|:
+return|return
+operator|(
+literal|"VIA 82C693 (Apollo Pro+) host bridge"
+operator|)
+return|;
+case|case
+literal|0x03911106
+case|:
+return|return
+operator|(
+literal|"VIA 8371 (KX133) host to PCI bridge"
 operator|)
 return|;
 case|case
