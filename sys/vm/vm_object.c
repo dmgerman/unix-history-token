@@ -2119,7 +2119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with PG_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with PG_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	When stuffing pages asynchronously, allow clustering.  XXX we need a  *	synchronous clustering mode implementation.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -2201,7 +2201,7 @@ operator|)
 condition|?
 name|VM_PAGER_PUT_SYNC
 else|:
-literal|0
+name|VM_PAGER_CLUSTER_OK
 expr_stmt|;
 name|pagerflags
 operator||=
@@ -2290,6 +2290,10 @@ condition|)
 name|scanreset
 operator|=
 literal|16
+expr_stmt|;
+name|pagerflags
+operator||=
+name|VM_PAGER_IGNORE_CLEANCHK
 expr_stmt|;
 name|scanlimit
 operator|=
@@ -2472,6 +2476,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|pagerflags
+operator|&=
+operator|~
+name|VM_PAGER_IGNORE_CLEANCHK
+expr_stmt|;
 block|}
 comment|/* 	 * Generally set CLEANCHK interlock and make the page read-only so 	 * we can then clear the object flags. 	 * 	 * However, if this is a nosync mmap then the object is likely to  	 * stay dirty so do not mess with the page and do not clear the 	 * object flags. 	 */
 name|clearobjflags
@@ -3013,6 +3022,15 @@ name|PG_BUSY
 operator|)
 operator|||
 operator|(
+operator|(
+name|pagerflags
+operator|&
+name|VM_PAGER_IGNORE_CLEANCHK
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|tp
 operator|->
 name|flags
@@ -3021,6 +3039,7 @@ name|PG_CLEANCHK
 operator|)
 operator|==
 literal|0
+operator|)
 operator|||
 operator|(
 name|tp
@@ -3161,6 +3180,15 @@ name|PG_BUSY
 operator|)
 operator|||
 operator|(
+operator|(
+name|pagerflags
+operator|&
+name|VM_PAGER_IGNORE_CLEANCHK
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|tp
 operator|->
 name|flags
@@ -3169,6 +3197,7 @@ name|PG_CLEANCHK
 operator|)
 operator|==
 literal|0
+operator|)
 operator|||
 operator|(
 name|tp
