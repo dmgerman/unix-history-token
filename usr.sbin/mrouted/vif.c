@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.c,v 3.6 1995/06/25 19:53:01 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.c,v 1.6 1995/06/28 17:58:48 wollman Exp $  */
 end_comment
 
 begin_include
@@ -6145,7 +6145,11 @@ name|cbk
 operator|->
 name|q_time
 argument_list|,
-literal|0
+name|cbk
+operator|->
+name|g
+operator|->
+name|al_addr
 argument_list|,
 literal|0
 argument_list|)
