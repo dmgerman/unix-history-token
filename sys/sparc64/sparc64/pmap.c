@@ -4925,6 +4925,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|pmap_context_destroy
+argument_list|(
+name|pm
+operator|->
+name|pm_context
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|m
