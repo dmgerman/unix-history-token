@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	5.9 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,12 @@ ifdef|#
 directive|ifdef
 name|KERBEROS
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<kerberosIV/des.h>
+end_include
 
 begin_include
 include|#
@@ -1463,13 +1469,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"in eacces"
-argument_list|)
-expr_stmt|;
 name|nfssvc_flag
 operator|=
 name|NFSSVC_MNTD
@@ -1481,21 +1480,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Calling krb uid=%d inst=%s realm=%s"
-argument_list|,
-name|ncd
-operator|.
-name|ncd_authuid
-argument_list|,
-name|inst
-argument_list|,
-name|realm
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Set up as ncd_authuid for the kerberos call. 			 * Must set ruid to ncd_authuid and reset the 			 * ticket name iff ncd_authuid is not the same 			 * as last time, so that the right ticket file 			 * is found. 			 */
 if|if
 condition|(
@@ -1558,13 +1542,6 @@ name|NFSX_UNSIGNED
 operator|)
 condition|)
 block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Got it\n"
-argument_list|)
-expr_stmt|;
 name|ncd
 operator|.
 name|ncd_authtype
@@ -1603,17 +1580,6 @@ argument_list|(
 literal|0
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"ktlen=%d\n"
-argument_list|,
-name|kt
-operator|.
-name|length
 argument_list|)
 expr_stmt|;
 endif|#

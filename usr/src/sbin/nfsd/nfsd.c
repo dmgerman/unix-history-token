@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	5.12 (Berkeley) %G%"
+literal|"@(#)nfsd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,6 +218,12 @@ ifdef|#
 directive|ifdef
 name|KERBEROS
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<kerberosIV/des.h>
+end_include
 
 begin_include
 include|#
@@ -1105,15 +1111,6 @@ comment|/* KERBEROS */
 block|}
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"errno=%d\n"
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
