@@ -177,6 +177,8 @@ name|pg
 decl_stmt|;
 name|u_int32_t
 name|nbytes
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|int
 name|dflags
@@ -389,6 +391,12 @@ name|pgno_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|=
+name|key
+operator|->
+name|size
+expr_stmt|;
 name|memmove
 argument_list|(
 name|kb
@@ -399,9 +407,7 @@ name|pgno_t
 argument_list|)
 argument_list|,
 operator|&
-name|key
-operator|->
-name|size
+name|tmp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -478,6 +484,12 @@ name|pgno_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|=
+name|data
+operator|->
+name|size
+expr_stmt|;
 name|memmove
 argument_list|(
 name|db
@@ -488,9 +500,7 @@ name|pgno_t
 argument_list|)
 argument_list|,
 operator|&
-name|data
-operator|->
-name|size
+name|tmp
 argument_list|,
 sizeof|sizeof
 argument_list|(
