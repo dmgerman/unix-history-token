@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.4	%G%	*/
+comment|/*	kern_proc.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -317,6 +317,28 @@ argument_list|(
 name|ip
 argument_list|,
 name|IEXEC
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
+operator|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|STRC
+operator|)
+operator|&&
+name|access
+argument_list|(
+name|ip
+argument_list|,
+name|IREAD
 argument_list|)
 condition|)
 goto|goto
