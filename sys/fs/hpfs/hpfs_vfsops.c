@@ -147,31 +147,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* XXXKSE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|a_p
-value|a_td
-end_define
-
-begin_define
-define|#
-directive|define
-name|cn_proc
-value|cn_thread
-end_define
-
-begin_define
-define|#
-directive|define
-name|proc
-value|thread
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|sockaddr
@@ -214,7 +189,7 @@ name|statfs
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -235,7 +210,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -288,7 +263,7 @@ name|hpfs_args
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -469,7 +444,7 @@ modifier|*
 name|ndp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -826,7 +801,7 @@ modifier|*
 name|argsp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 decl_stmt|;
@@ -1472,7 +1447,7 @@ name|int
 name|mntflags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -1766,7 +1741,7 @@ modifier|*
 name|sbp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
