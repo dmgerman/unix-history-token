@@ -243,6 +243,22 @@ name|REVFMT_MAJMIN
 block|}
 block|,
 block|{
+literal|"Motorola PowerPC 7447A"
+block|,
+name|MPC7447A
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
+literal|"Motorola PowerPC 7448"
+block|,
+name|MPC7448
+block|,
+name|REVFMT_MAJMIN
+block|}
+block|,
+block|{
 literal|"Motorola PowerPC 8240"
 block|,
 name|MPC8240
@@ -580,6 +596,12 @@ endif|#
 directive|endif
 break|break;
 case|case
+name|MPC7448
+case|:
+case|case
+name|MPC7447A
+case|:
+case|case
 name|MPC7457
 case|:
 case|case
@@ -588,6 +610,21 @@ case|:
 case|case
 name|MPC7450
 case|:
+comment|/* Enable the 7450 branch caches */
+name|hid0
+operator||=
+name|HID0_SGE
+operator||
+name|HID0_BTIC
+expr_stmt|;
+name|hid0
+operator||=
+name|HID0_LRSTK
+operator||
+name|HID0_FOLD
+operator||
+name|HID0_BHT
+expr_stmt|;
 comment|/* Disable BTIC on 7450 Rev 2.0 or earlier and on 7457 */
 if|if
 condition|(
@@ -723,6 +760,12 @@ name|vers
 condition|)
 block|{
 case|case
+name|MPC7447A
+case|:
+case|case
+name|MPC7448
+case|:
+case|case
 name|MPC7450
 case|:
 case|case
@@ -759,6 +802,12 @@ name|MPC7400
 case|:
 case|case
 name|MPC7410
+case|:
+case|case
+name|MPC7447A
+case|:
+case|case
+name|MPC7448
 case|:
 case|case
 name|MPC7450
