@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xlreg.h,v 1.25 1999/04/14 22:21:36 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_xlreg.h,v 1.27 1999/04/29 17:56:55 wpaul Exp $  */
 end_comment
 
 begin_define
@@ -2281,14 +2281,14 @@ begin_define
 define|#
 directive|define
 name|XL_RX_LIST_CNT
-value|16
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
 name|XL_TX_LIST_CNT
-value|16
+value|256
 end_define
 
 begin_define
@@ -2345,9 +2345,6 @@ name|struct
 name|xl_chain
 modifier|*
 name|xl_next
-decl_stmt|;
-name|u_int8_t
-name|xl_unsent
 decl_stmt|;
 block|}
 struct|;
@@ -3061,21 +3058,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_CYCLONE_10BT
+name|TC_DEVICEID_KRAKATOA_10BT
 value|0x9004
 end_define
 
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_CYCLONE_10BT_COMBO
+name|TC_DEVICEID_KRAKATOA_10BT_COMBO
 value|0x9005
 end_define
 
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_CYCLONE_10BT_TPC
+name|TC_DEVICEID_KRAKATOA_10BT_TPC
 value|0x9006
 end_define
 
@@ -3089,7 +3086,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_CYCLONE_10_100BT
+name|TC_DEVICEID_HURRICANE_10_100BT
 value|0x9055
 end_define
 
@@ -3117,7 +3114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_CYCLONE_10_100BT_SERV
+name|TC_DEVICEID_HURRICANE_10_100BT_SERV
 value|0x9800
 end_define
 
@@ -3943,6 +3940,28 @@ name|va
 parameter_list|)
 value|(pmap_kextract(((vm_offset_t) (va))) \ 					+ 1*1024*1024*1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IFM_10_FL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IFM_10_FL
+value|13
+end_define
+
+begin_comment
+comment|/* 10baseFL - Fiber */
+end_comment
 
 begin_endif
 endif|#
