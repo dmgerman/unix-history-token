@@ -46,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.7 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.8 %G%";  */
 end_comment
 
 begin_comment
@@ -206,7 +206,7 @@ name|short
 name|m_offset
 decl_stmt|;
 comment|/* offset in block of message */
-name|unsigned
+name|long
 name|m_size
 decl_stmt|;
 comment|/* Bytes in the message */
@@ -1131,6 +1131,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGRETRO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|sigchild
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Forward declarations of routine types to keep lint and cc happy.  */
 end_comment
@@ -1592,9 +1610,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
-name|int
-name|msize
+name|long
+name|transmit
 parameter_list|()
 function_decl|;
 end_function_decl
