@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_compare.c	5.4 (Berkeley) %G%"
+literal|"@(#)proc_compare.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_define
@@ -93,23 +99,24 @@ name|BOTH
 value|3
 end_define
 
-begin_expr_stmt
+begin_function
+name|int
 name|proc_compare
-argument_list|(
+parameter_list|(
 name|p1
-argument_list|,
+parameter_list|,
 name|p2
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|p2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
