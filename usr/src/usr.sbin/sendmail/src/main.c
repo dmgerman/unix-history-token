@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.41 (Berkeley) %G%"
+literal|"@(#)main.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3787,11 +3787,6 @@ name|newenvelope
 argument_list|(
 name|CurEnv
 argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
-name|openxscript
-argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;

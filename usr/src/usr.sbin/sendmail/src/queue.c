@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.33 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.34 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.33 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.34 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -5109,6 +5109,16 @@ name|e_lockfp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* don't create a queue id if we don't already have one */
+if|if
+condition|(
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* remove the transcript */
 ifdef|#
 directive|ifdef

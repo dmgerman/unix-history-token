@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.18 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.19 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.18 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.19 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
