@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.124
+literal|3.125
 operator|%
 name|G
 operator|%
@@ -1048,6 +1048,28 @@ name|safecf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* do heuristic mode adjustment */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|Verbose
+condition|)
+name|setoption
+argument_list|(
+literal|'b'
+argument_list|,
+literal|"a"
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* our name for SMTP codes */
