@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      294X and aic7870 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.6 1995/02/03 17:08:17 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      294X and aic7870 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.7 1995/03/17 04:27:15 davidg Exp $  */
 end_comment
 
 begin_include
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -222,6 +228,16 @@ block|{
 name|u_long
 name|io_port
 decl_stmt|;
+name|unsigned
+name|opri
+init|=
+literal|0
+decl_stmt|;
+name|ahc_type
+name|ahc_t
+init|=
+name|AHC_NONE
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -237,11 +253,40 @@ argument_list|)
 operator|)
 condition|)
 return|return;
+comment|/* 	 * Make the offsets the same as for EISA 	 * The first bit of PCI_BASEADR0 is always 	 * set hence we subtract 0xc01 instead of the 	 * 0xc00 that you would expect. 	 */
 name|io_port
 operator|-=
 literal|0xc01ul
 expr_stmt|;
-comment|/* 	printf("io_port = 0x%lx\n", io_port); 				 * Make the offsets the same as for EISA  				 * The first bit of PCI_BASEADR0 is always 				 * set hence we subtract 0xc01 instead of the 				 * 0xc00 that you would expect. 				 */
+switch|switch
+condition|(
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_ID_REG
+argument_list|)
+condition|)
+block|{
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_2940
+case|:
+name|ahc_t
+operator|=
+name|AHC_294
+expr_stmt|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7870
+case|:
+name|ahc_t
+operator|=
+name|AHC_AIC7870
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 if|if
 condition|(
 name|ahcprobe
@@ -250,21 +295,18 @@ name|unit
 argument_list|,
 name|io_port
 argument_list|,
-name|AHC_294
+name|ahc_t
 argument_list|)
 condition|)
 block|{
 name|ahc_unit
 operator|++
 expr_stmt|;
+comment|/* 		 * To be compatible with the isa style of 		 * interrupt handler, we pass the unit number 		 * not a pointer to our per device structure. 		 */
 if|if
 condition|(
-name|ahc_attach
-argument_list|(
-name|unit
-argument_list|)
-condition|)
-comment|/* 			 * To be compatible with the isa style of  			 * interrupt handler, we pass the unit number 			 * not a pointer to our per device structure. 			 */
+operator|!
+operator|(
 name|pci_map_int
 argument_list|(
 name|config_id
@@ -279,6 +321,43 @@ name|unit
 argument_list|,
 operator|&
 name|bio_imask
+argument_list|)
+operator|)
+condition|)
+block|{
+name|free
+argument_list|(
+name|ahcdata
+index|[
+name|unit
+index|]
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|ahcdata
+index|[
+name|unit
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+return|return;
+block|}
+comment|/* 		 * Since ahc_attach will poll, protect ourself 		 * from the registered interrupt handler. 		 */
+name|opri
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+name|ahc_attach
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|opri
 argument_list|)
 expr_stmt|;
 block|}
