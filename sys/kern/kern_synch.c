@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -110,6 +116,23 @@ include|#
 directive|include
 file|<vm/vm_extern.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2529,6 +2552,21 @@ operator|)
 literal|1000000
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB
+comment|/* 	 * Don't perform context switches from the debugger. 	 */
+if|if
+condition|(
+name|db_active
+condition|)
+name|db_error
+argument_list|(
+literal|"Context switches not allowed in the debugger."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
