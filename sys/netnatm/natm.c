@@ -141,6 +141,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_long
 name|natm5_sendspace
 init|=
@@ -152,6 +153,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_long
 name|natm5_recvspace
 init|=
@@ -163,6 +165,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_long
 name|natm0_sendspace
 init|=
@@ -174,6 +177,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_long
 name|natm0_recvspace
 init|=
