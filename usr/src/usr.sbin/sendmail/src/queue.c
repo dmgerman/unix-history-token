@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.48
+literal|3.49
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.48
+literal|3.49
 operator|%
 name|G
 operator|%
@@ -969,7 +969,7 @@ name|readdir
 parameter_list|(
 name|f
 parameter_list|)
-value|(fread(dbuf, sizeof dbuf, 1, f)> 0 ?&dbuf : 0)
+value|((fread(&dbuf, sizeof dbuf, 1, f)> 0) ?&dbuf : 0)
 end_define
 
 begin_decl_stmt
@@ -1168,6 +1168,39 @@ modifier|*
 name|cf
 decl_stmt|;
 comment|/* is this an interesting entry? */
+if|if
+condition|(
+name|d
+operator|->
+name|d_ino
+operator|==
+literal|0
+condition|)
+continue|continue;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"orderq: %12s\n"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|d
