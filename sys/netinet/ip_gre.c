@@ -697,20 +697,13 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* Unlike NetBSD, in FreeBSD m_adj() adjusts m->m_pkthdr.len as well */
 name|m_adj
 argument_list|(
 name|m
 argument_list|,
 name|hlen
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|-=
-name|hlen
 expr_stmt|;
 if|if
 condition|(
