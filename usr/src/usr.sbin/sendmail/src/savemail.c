@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.75 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3366,6 +3366,15 @@ condition|(
 name|r
 operator|!=
 name|q
+operator|&&
+name|q
+operator|->
+name|q_user
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
