@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.117		%G%"
+literal|"@(#)sendmail.h	3.118		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,7 +1130,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
+comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. ** **	WKTIMEFACT is negative since jobs that fail once have a high **	probability of failing again.  Making it negative tends to force **	them to the back rather than the front of the queue, where they **	only clog things.  Thanks go to Jay Lepreau at Utah for pointing **	out the error in my thinking. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
 end_comment
 
 begin_struct
@@ -1187,11 +1187,11 @@ begin_define
 define|#
 directive|define
 name|WKTIMEFACT
-value|400
+value|(-600)
 end_define
 
 begin_comment
-comment|/* bytes each time unit is worth */
+comment|/* bytes each reprocessing is worth */
 end_comment
 
 begin_escape
