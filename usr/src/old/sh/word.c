@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)word.c	4.3 %G%"
+literal|"@(#)word.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,14 @@ name|IF
 name|c
 operator|==
 literal|'#'
+name|ANDF
+argument_list|(
+name|flags
+operator|&
+name|ttyflg
+argument_list|)
+operator|==
+literal|0
 name|THEN
 name|WHILE
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.2	83/06/10	*/
+comment|/*	defs.h	4.3	85/02/13	*/
 end_comment
 
 begin_empty
@@ -1260,6 +1260,13 @@ define|#
 directive|define
 name|keyflg
 value|020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|batchflg
+value|040000
 end_define
 
 begin_decl_stmt
