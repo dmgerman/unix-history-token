@@ -72,7 +72,7 @@ name|sum
 init|=
 literal|0
 decl_stmt|;
-name|u_short
+name|u_char
 modifier|*
 name|w
 decl_stmt|;
@@ -128,6 +128,10 @@ literal|0
 expr_stmt|;
 name|w
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|ipx
 operator|->
@@ -248,10 +252,6 @@ literal|0
 index|]
 operator|=
 operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
 name|w
 expr_stmt|;
 if|if
@@ -299,7 +299,7 @@ name|mtod
 argument_list|(
 name|m
 argument_list|,
-name|u_short
+name|u_char
 operator|*
 argument_list|)
 expr_stmt|;
@@ -316,10 +316,6 @@ literal|1
 index|]
 operator|=
 operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
 name|w
 expr_stmt|;
 name|sum
@@ -328,13 +324,7 @@ name|buf
 operator|.
 name|w
 expr_stmt|;
-operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|w
-operator|)
 operator|++
 expr_stmt|;
 if|if
