@@ -24,7 +24,7 @@ file|"time.h"
 end_include
 
 begin_comment
-comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 4.1 of %G%  */
+comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 4.2 of %G%  */
 end_comment
 
 begin_define
@@ -344,6 +344,32 @@ name|zeropad
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* 	size of login name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SZLNAM
+value|9
+end_define
+
+begin_comment
+comment|/* size of login name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNLNAM
+value|8
+end_define
+
+begin_comment
+comment|/* length of login name */
+end_comment
 
 begin_comment
 comment|/* 	SCCS Internal Structures. */
@@ -809,32 +835,6 @@ directive|define
 name|WARNING
 value|(32)
 end_define
-
-begin_comment
-comment|/* 	size of login name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SZLNAM
-value|9
-end_define
-
-begin_comment
-comment|/* size of login name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LNLNAM
-value|8
-end_define
-
-begin_comment
-comment|/* length of login name */
-end_comment
 
 begin_struct
 struct|struct
