@@ -258,6 +258,28 @@ begin_comment
 comment|/* "Terminate-element" list separators */
 end_comment
 
+begin_comment
+comment|/* The value of this selects how extra parameters to `ps' are handled. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PS_BACKWARD_COMPATIBILITY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PS_BACKWARD_COMPATIBILITY
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1791,12 +1813,11 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-define|#
-directive|define
-name|BACKWARD_COMPATIBILITY
-ifndef|#
-directive|ifndef
-name|BACKWARD_COMPATIBILITY
+if|#
+directive|if
+name|PS_BACKWARD_COMPATIBILITY
+operator|==
+literal|0
 comment|/* This is the 5.x behavior. */
 comment|/* 	 * If there arguments after processing all the options, attempt 	 * to treat them as a list of process ids. 	 */
 while|while
@@ -1875,9 +1896,12 @@ name|xkeep
 operator|=
 name|xkeep_implied
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BACKWARD_COMPATIBILITY
+if|#
+directive|if
+name|PS_BACKWARD_COMPATIBILITY
+operator|!=
+literal|0
+comment|/* Historical (undocumented) behavior */
 if|if
 condition|(
 operator|*
