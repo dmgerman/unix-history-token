@@ -58,6 +58,12 @@ directive|define
 name|IEEE_FLOAT
 end_define
 
+begin_define
+define|#
+directive|define
+name|LONG_LONG
+end_define
+
 begin_comment
 comment|/* Library stuff: POSIX tty (not supported yet), V7 tty (sigh), vprintf.  */
 end_comment
@@ -309,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|LONGEST
-value|long
+value|long long
 end_define
 
 begin_comment
@@ -320,7 +326,7 @@ begin_define
 define|#
 directive|define
 name|BUILTIN_TYPE_LONGEST
-value|builtin_type_long
+value|builtin_type_long_long
 end_define
 
 begin_comment
