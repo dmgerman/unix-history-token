@@ -569,6 +569,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|witness_list_locks
+parameter_list|(
+name|struct
+name|lock_list_entry
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|witness_list
 parameter_list|(
 name|struct
