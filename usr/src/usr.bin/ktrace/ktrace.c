@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ktrace.c	5.2 (Berkeley) %G%"
+literal|"@(#)ktrace.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ literal|0
 expr_stmt|;
 name|trpoints
 operator|=
-name|ALL_POINTS
+name|DEF_POINTS
 expr_stmt|;
 name|tracefile
 operator|=
@@ -381,6 +381,10 @@ operator|=
 name|KTROP_CLEAR
 operator||
 name|KTRFLAG_DESCEND
+expr_stmt|;
+name|trpoints
+operator|=
+name|ALL_POINTS
 expr_stmt|;
 name|pid
 operator|=
