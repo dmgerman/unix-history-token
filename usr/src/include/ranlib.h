@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ranlib.h	4.2	87/04/06	*/
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ranlib.h	5.1 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -11,7 +11,18 @@ value|"__.SYMDEF"
 end_define
 
 begin_comment
-comment|/*  * Structure of the __.SYMDEF table of contents for an archive.  * __.SYMDEF begins with a word giving the number of ranlib structures  * which immediately follow, and then continues with a string  * table consisting of a word giving the number of bytes of strings  * which follow and then the strings themselves.  * The ran_strx fields index the string table whose first byte is numbered 0.  */
+comment|/* archive file name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RANLIBSKEW
+value|3
+end_define
+
+begin_comment
+comment|/* creation time offset */
 end_comment
 
 begin_struct
@@ -23,19 +34,19 @@ block|{
 name|off_t
 name|ran_strx
 decl_stmt|;
-comment|/* string table index of */
+comment|/* string table index */
 name|char
 modifier|*
 name|ran_name
 decl_stmt|;
-comment|/* symbol defined by */
+comment|/* in memory symbol name */
 block|}
 name|ran_un
 union|;
 name|off_t
 name|ran_off
 decl_stmt|;
-comment|/* library member at this offset */
+comment|/* archive file offset */
 block|}
 struct|;
 end_struct
