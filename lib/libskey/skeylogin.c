@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   Login code for S/KEY Authentication.  S/KEY is a trademark  *   of Bellcore.  *  *   Mink is the former name of the S/KEY authentication system.  *   Many references for mink  may still be found in this program.  */
+comment|/*   Login code for S/KEY Authentication.  S/KEY is a trademark  *   of Bellcore.  *  *   Mink is the former name of the S/KEY authentication system.  *   Many references for mink  may still be found in this program.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -48,25 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
