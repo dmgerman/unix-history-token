@@ -3489,6 +3489,59 @@ block|}
 block|,             }
 block|,         }
 block|,
+block|{
+literal|"Titan VScom PCI-200HV2"
+block|,
+comment|/* 2S */
+name|NULL
+block|,
+block|{
+literal|0x14d2
+block|,
+literal|0xe020
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x14
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* NEC PK-UG-X001 K56flex PCI Modem card. 	   NEC MARTH bridge chip and Rockwell RCVDL56ACF/SP using. */
 block|{
 literal|"NEC PK-UG-X001 K56flex PCI Modem"
