@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.23 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -3269,18 +3269,44 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+specifier|register
+name|int
+name|j
+decl_stmt|;
+if|if
+condition|(
 operator|(
-name|void
-operator|)
-name|ioctl
+name|j
+operator|=
+name|fcntl
 argument_list|(
 name|i
 argument_list|,
-name|FIOCLEX
+name|F_GETFD
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|j
+operator||
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* try to execute the mailer */
 name|execve
 argument_list|(
