@@ -7469,7 +7469,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sain
 decl_stmt|;
 comment|/* 	 * Get physical interface name 	 */
 if|if
@@ -7508,11 +7508,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|sin
+name|sain
 operator|=
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -7527,7 +7531,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|sin
+name|sain
 operator|->
 name|sin_addr
 operator|.
