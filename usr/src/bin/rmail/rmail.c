@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.10 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -852,6 +852,15 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 		 * don't copy arguments beginning with - as they will 		 * be passed to sendmail and could be interpreted as flags 		 */
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
+operator|!=
+literal|'-'
+condition|)
 name|args
 index|[
 name|i
