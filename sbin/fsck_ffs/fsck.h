@@ -94,6 +94,20 @@ define|\
 value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(dp)->dp1.field : (dp)->dp2.field)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DIP_SET
+parameter_list|(
+name|dp
+parameter_list|,
+name|field
+parameter_list|,
+name|val
+parameter_list|)
+value|do { \ 	if (sblock.fs_magic == FS_UFS1_MAGIC) \ 		(dp)->dp1.field = (val); \ 	else \ 		(dp)->dp2.field = (val); \ 	} while (0)
+end_define
+
 begin_comment
 comment|/*  * Each inode on the file system is described by the following structure.  * The linkcnt is initially set to the value in the inode. Each time it  * is found during the descent in passes 2, 3, and 4 the count is  * decremented. Any inodes whose count is non-zero after pass 4 needs to  * have its link count adjusted by the value remaining in ino_linkcnt.  */
 end_comment
@@ -306,6 +320,20 @@ name|i
 parameter_list|)
 define|\
 value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(bp)->b_un.b_indir1[i] : (bp)->b_un.b_indir2[i])
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBLK_SET
+parameter_list|(
+name|bp
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|do { \ 	if (sblock.fs_magic == FS_UFS1_MAGIC) \ 		(bp)->b_un.b_indir1[i] = (val); \ 	else \ 		(bp)->b_un.b_indir2[i] = (val); \ 	} while (0)
 end_define
 
 begin_define
