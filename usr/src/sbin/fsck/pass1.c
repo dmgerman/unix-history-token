@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.4 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,6 +488,32 @@ operator|.
 name|fs_bsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ndb
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"bad size %d ndb %d:"
+argument_list|,
+name|dp
+operator|->
+name|di_size
+argument_list|,
+name|ndb
+argument_list|)
+expr_stmt|;
+goto|goto
+name|unknown
+goto|;
+block|}
 if|if
 condition|(
 name|SPECIAL
