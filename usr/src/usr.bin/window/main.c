@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.7 83/08/26"
+literal|"@(#)main.c	3.8 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,14 +634,12 @@ expr_stmt|;
 name|wwflush
 argument_list|()
 expr_stmt|;
+while|while
+condition|(
 name|imask
 operator|=
 literal|1
-operator|<<
-literal|0
-expr_stmt|;
-while|while
-condition|(
+operator|,
 name|wwforce
 argument_list|(
 operator|&
@@ -657,8 +655,6 @@ operator|(
 name|imask
 operator|&
 literal|1
-operator|<<
-literal|0
 operator|)
 operator|==
 literal|0

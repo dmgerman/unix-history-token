@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwiomux.c	3.2 83/08/26"
+literal|"@(#)wwiomux.c	3.3 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,17 @@ operator|)
 operator|->
 name|ww_pty
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|imask
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|n
 operator|=
 name|select
@@ -141,16 +152,10 @@ name|n
 operator|<=
 literal|0
 condition|)
-block|{
-name|wwerrno
-operator|=
-name|WWE_SYS
-expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-block|}
 for|for
 control|(
 name|w
