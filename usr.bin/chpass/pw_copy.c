@@ -190,6 +190,9 @@ argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_change
@@ -206,6 +209,9 @@ argument_list|)
 argument_list|,
 literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_expire
