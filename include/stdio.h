@@ -896,6 +896,7 @@ end_if
 
 begin_decl_stmt
 specifier|extern
+name|__const
 name|int
 name|sys_nerr
 decl_stmt|;
