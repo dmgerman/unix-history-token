@@ -98,40 +98,6 @@ value|"\   %{!maout: \     %{!shared:crtend.o%s} \     %{shared:crtendS.o%s} crt
 end_define
 
 begin_comment
-comment|/* FreeBSD conditionalizes the use of ".section rodata" depending on    ELF mode - otherwise .text.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|USE_CONST_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|USE_CONST_SECTION
-value|TARGET_ELF
-end_define
-
-begin_comment
-comment|/* ".string" doesn't work for the aout case. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|STRING_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STRING_ASM_OP
-value|(TARGET_AOUT ? "\t.asciz\t" : "\t.string\t")
-end_define
-
-begin_comment
 comment|/************************[  Target stuff  ]***********************************/
 end_comment
 
@@ -458,6 +424,40 @@ define|#
 directive|define
 name|ASM_APP_OFF
 value|"#NO_APP\n"
+end_define
+
+begin_comment
+comment|/* Override the default string pseudo-op of "\t.string\t" from ../elfos.h.    ".string" doesn't work for the aout case.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STRING_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STRING_ASM_OP
+value|(TARGET_AOUT ? "\t.asciz\t" : "\t.string\t")
+end_define
+
+begin_comment
+comment|/* Override the use of "\t.section\t.rodata" from ../elfos.h.  Neither    ".section" nor "rodata" works for the aout case.  This forces a fallback    to ".text".  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_CONST_SECTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|USE_CONST_SECTION
+value|TARGET_ELF
 end_define
 
 begin_comment
