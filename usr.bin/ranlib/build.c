@@ -486,6 +486,8 @@ specifier|register
 name|char
 modifier|*
 name|strtab
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|sym
