@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.2 82/04/06"
+literal|"@(#)rlogin.c	4.3 82/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -2422,14 +2422,16 @@ literal|512
 argument_list|)
 expr_stmt|;
 block|}
-name|ioctl
+name|recv
 argument_list|(
 name|rem
 argument_list|,
-name|SIOCRCVOOB
-argument_list|,
 operator|&
 name|mark
+argument_list|,
+literal|1
+argument_list|,
+name|SOF_OOB
 argument_list|)
 expr_stmt|;
 if|if
