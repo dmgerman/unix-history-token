@@ -1136,6 +1136,25 @@ name|ah_aes_xcbc_mac_loop
 block|,
 name|ah_aes_xcbc_mac_result
 block|, }
+block|,
+block|{
+name|ah_sumsiz_1216
+block|,
+name|ah_none_mature
+block|,
+literal|1
+block|,
+literal|80
+block|,
+comment|/* TCP_KEYLEN_MIN/MAX */
+literal|"TCP-MD5"
+block|,
+name|ah_none_init
+block|,
+name|ah_none_loop
+block|,
+name|ah_none_result
+block|, }
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1256,6 +1275,16 @@ operator|&
 name|ah_algorithms
 index|[
 literal|9
+index|]
+return|;
+case|case
+name|SADB_X_AALG_TCP_MD5
+case|:
+return|return
+operator|&
+name|ah_algorithms
+index|[
+literal|10
 index|]
 return|;
 default|default:

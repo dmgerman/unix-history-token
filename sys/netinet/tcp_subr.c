@@ -356,6 +356,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netkey/key.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
