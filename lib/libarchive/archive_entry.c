@@ -581,7 +581,7 @@ if|if
 condition|(
 name|src
 operator|->
-name|aes_mbs_alloc
+name|aes_mbs
 operator|!=
 name|NULL
 condition|)
@@ -594,7 +594,7 @@ name|strdup
 argument_list|(
 name|src
 operator|->
-name|aes_mbs_alloc
+name|aes_mbs
 argument_list|)
 expr_stmt|;
 name|dest
@@ -610,7 +610,7 @@ if|if
 condition|(
 name|src
 operator|->
-name|aes_wcs_alloc
+name|aes_wcs
 operator|!=
 name|NULL
 condition|)
@@ -626,7 +626,7 @@ name|wcslen
 argument_list|(
 name|src
 operator|->
-name|aes_wcs_alloc
+name|aes_wcs
 argument_list|)
 operator|+
 literal|1
