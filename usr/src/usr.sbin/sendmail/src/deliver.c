@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.56 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6160,10 +6160,11 @@ name|mci
 operator|->
 name|mci_in
 argument_list|,
-name|pv
-index|[
-literal|0
-index|]
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_name
 argument_list|,
 literal|"mci_in"
 argument_list|)
@@ -6185,10 +6186,11 @@ name|mci
 operator|->
 name|mci_out
 argument_list|,
-name|pv
-index|[
-literal|0
-index|]
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_name
 argument_list|,
 literal|"mci_out"
 argument_list|)
@@ -6280,10 +6282,11 @@ name|syserr
 argument_list|(
 literal|"mailer %s died with signal %o"
 argument_list|,
-name|pv
-index|[
-literal|0
-index|]
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_name
 argument_list|,
 name|st
 argument_list|)
