@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  *  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	1.2 (Berkeley) 6/18/92  *  * $Id: null_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
-comment|/*  * Loopback Filesystem  */
+comment|/*  * Null layer Filesystem  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ comment|/*  * Mount loopback copy of existing name space  */
 end_comment
 
 begin_macro
-name|lofs_mount
+name|nullfs_mount
 argument_list|(
 argument|mp
 argument_list|,
@@ -127,7 +127,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|lofs_args
+name|null_args
 name|args
 decl_stmt|;
 name|struct
@@ -138,10 +138,10 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|rootvp
+name|nullm_rootvp
 decl_stmt|;
 name|struct
-name|lofsmount
+name|null_mount
 modifier|*
 name|amp
 decl_stmt|;
@@ -150,10 +150,10 @@ name|size
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_mount(mp = %x)\n"
+literal|"nullfs_mount(mp = %x)\n"
 argument_list|,
 name|mp
 argument_list|)
@@ -175,7 +175,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* return VFS_MOUNT(VFSTOLOFS(mp)->looped_vfs, path, data, ndp, p);*/
+comment|/* return VFS_MOUNT(MOUNTTONULLMOUNT(mp)->nullm_vfs, path, data, ndp, p);*/
 block|}
 comment|/* 	 * Get argument 	 */
 if|if
@@ -195,7 +195,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|lofs_args
+name|null_args
 argument_list|)
 argument_list|)
 condition|)
@@ -249,7 +249,7 @@ name|ni_vp
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"vp = %x, check for VDIR...\n"
@@ -294,7 +294,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"mp = %x\n"
@@ -308,7 +308,7 @@ name|amp
 operator|=
 operator|(
 expr|struct
-name|lofsmount
+name|null_mount
 operator|*
 operator|)
 name|malloc
@@ -316,7 +316,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|lofsmount
+name|null_mount
 argument_list|)
 argument_list|,
 name|M_UFSMNT
@@ -328,7 +328,7 @@ comment|/* XXX */
 comment|/* 	 * Save reference to underlying target FS 	 */
 name|amp
 operator|->
-name|looped_vfs
+name|nullm_vfs
 operator|=
 name|vp
 operator|->
@@ -337,7 +337,7 @@ expr_stmt|;
 comment|/* 	 * Save reference.  Each mount also holds 	 * a reference on the root vnode. 	 */
 name|error
 operator|=
-name|make_lofs
+name|make_null_node
 argument_list|(
 name|mp
 argument_list|,
@@ -376,12 +376,12 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Keep a held reference to the root vnode. 	 * It is vrele'd in lofs_unmount. 	 */
-name|rootvp
+comment|/* 	 * Keep a held reference to the root vnode. 	 * It is vrele'd in nullfs_unmount. 	 */
+name|nullm_rootvp
 operator|=
 name|vp
 expr_stmt|;
-name|rootvp
+name|nullm_rootvp
 operator|->
 name|v_flag
 operator||=
@@ -389,15 +389,15 @@ name|VROOT
 expr_stmt|;
 name|amp
 operator|->
-name|rootvp
+name|nullm_rootvp
 operator|=
-name|rootvp
+name|nullm_rootvp
 expr_stmt|;
 if|if
 condition|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 operator|->
 name|v_mount
@@ -504,10 +504,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_mount: target %s, alias at %s\n"
+literal|"nullfs_mount: target %s, alias at %s\n"
 argument_list|,
 name|mp
 operator|->
@@ -537,7 +537,7 @@ comment|/*  * VFS start.  Nothing needed here - the start routine  * on the unde
 end_comment
 
 begin_macro
-name|lofs_start
+name|nullfs_start
 argument_list|(
 argument|mp
 argument_list|,
@@ -576,7 +576,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* return VFS_START(VFSTOLOFS(mp)->looped_vfs, flags, p); */
+comment|/* return VFS_START(MOUNTTONULLMOUNT(mp)->nullm_vfs, flags, p); */
 block|}
 end_block
 
@@ -585,7 +585,7 @@ comment|/*  * Free reference to looped FS  */
 end_comment
 
 begin_macro
-name|lofs_unmount
+name|nullfs_unmount
 argument_list|(
 argument|mp
 argument_list|,
@@ -622,14 +622,14 @@ block|{
 name|struct
 name|vnode
 modifier|*
-name|rootvp
+name|nullm_rootvp
 init|=
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 decl_stmt|;
 name|int
 name|error
@@ -645,10 +645,10 @@ name|doforce
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_unmount(mp = %x)\n"
+literal|"nullfs_unmount(mp = %x)\n"
 argument_list|,
 name|mp
 argument_list|)
@@ -702,7 +702,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|rootvp
+name|nullm_rootvp
 operator|->
 name|v_usecount
 operator|>
@@ -721,7 +721,7 @@ name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|rootvp
+name|nullm_rootvp
 argument_list|,
 name|flags
 argument_list|)
@@ -733,9 +733,9 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 comment|/* 	 * Flush any remaining vnode references 	 */
-name|lofs_flushmp
+name|null_node_flushmp
 argument_list|(
 name|mp
 argument_list|)
@@ -744,12 +744,12 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
 literal|"alias root of target"
 argument_list|,
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -757,16 +757,16 @@ directive|endif
 comment|/* 	 * Release reference on underlying root vnode 	 */
 name|vrele
 argument_list|(
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * And blow it away for future re-use 	 */
 name|vgone
 argument_list|(
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finally, throw away the lofsmount structure 	 */
+comment|/* 	 * Finally, throw away the null_mount structure 	 */
 name|free
 argument_list|(
 name|mp
@@ -790,7 +790,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_root
+name|nullfs_root
 argument_list|(
 argument|mp
 argument_list|,
@@ -826,28 +826,28 @@ name|vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_root(mp = %x, vp = %x->%x)\n"
+literal|"nullfs_root(mp = %x, vp = %x->%x)\n"
 argument_list|,
 name|mp
 argument_list|,
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -856,12 +856,12 @@ directive|endif
 comment|/* 	 * Return locked reference to root. 	 */
 name|vp
 operator|=
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 expr_stmt|;
 name|VREF
 argument_list|(
@@ -885,7 +885,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_quotactl
+name|nullfs_quotactl
 argument_list|(
 argument|mp
 argument_list|,
@@ -938,12 +938,12 @@ block|{
 return|return
 name|VFS_QUOTACTL
 argument_list|(
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|looped_vfs
+name|nullm_vfs
 argument_list|,
 name|cmd
 argument_list|,
@@ -958,7 +958,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_statfs
+name|nullfs_statfs
 argument_list|(
 argument|mp
 argument_list|,
@@ -1003,28 +1003,28 @@ name|mstat
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_statfs(mp = %x, vp = %x->%x)\n"
+literal|"nullfs_statfs(mp = %x, vp = %x->%x)\n"
 argument_list|,
 name|mp
 argument_list|,
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1045,12 +1045,12 @@ name|error
 operator|=
 name|VFS_STATFS
 argument_list|(
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|looped_vfs
+name|nullm_vfs
 argument_list|,
 operator|&
 name|mstat
@@ -1212,7 +1212,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_sync
+name|nullfs_sync
 argument_list|(
 argument|mp
 argument_list|,
@@ -1245,7 +1245,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_fhtovp
+name|nullfs_fhtovp
 argument_list|(
 argument|mp
 argument_list|,
@@ -1293,12 +1293,12 @@ block|{
 return|return
 name|VFS_FHTOVP
 argument_list|(
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|looped_vfs
+name|nullm_vfs
 argument_list|,
 name|fhp
 argument_list|,
@@ -1311,7 +1311,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_vptofh
+name|nullfs_vptofh
 argument_list|(
 argument|vp
 argument_list|,
@@ -1340,7 +1340,7 @@ block|{
 return|return
 name|VFS_VPTOFH
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|vp
 argument_list|)
@@ -1353,7 +1353,7 @@ end_block
 
 begin_decl_stmt
 name|int
-name|lofs_init
+name|nullfs_init
 name|__P
 argument_list|(
 operator|(
@@ -1366,28 +1366,28 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|vfsops
-name|lofs_vfsops
+name|null_vfsops
 init|=
 block|{
-name|lofs_mount
+name|nullfs_mount
 block|,
-name|lofs_start
+name|nullfs_start
 block|,
-name|lofs_unmount
+name|nullfs_unmount
 block|,
-name|lofs_root
+name|nullfs_root
 block|,
-name|lofs_quotactl
+name|nullfs_quotactl
 block|,
-name|lofs_statfs
+name|nullfs_statfs
 block|,
-name|lofs_sync
+name|nullfs_sync
 block|,
-name|lofs_fhtovp
+name|nullfs_fhtovp
 block|,
-name|lofs_vptofh
+name|nullfs_vptofh
 block|,
-name|lofs_init
+name|nullfs_init
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -71,22 +71,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NLOFSCACHE
+name|NNULLNODECACHE
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOFS_NHASH
+name|NULL_NHASH
 parameter_list|(
 name|vp
 parameter_list|)
-value|((((u_long)vp)>>LOG2_SIZEVNODE)& (NLOFSCACHE-1))
+value|((((u_long)vp)>>LOG2_SIZEVNODE)& (NNULLNODECACHE-1))
 end_define
 
 begin_comment
-comment|/*  * Loopback cache:  * Each cache entry holds a reference to the target vnode  * along with a pointer to the alias vnode.  When an  * entry is added the target vnode is VREF'd.  When the  * alias is removed the target vnode is vrele'd.  */
+comment|/*  * Null layer cache:  * Each cache entry holds a reference to the target vnode  * along with a pointer to the alias vnode.  When an  * entry is added the target vnode is VREF'd.  When the  * alias is removed the target vnode is vrele'd.  */
 end_comment
 
 begin_comment
@@ -95,15 +95,15 @@ end_comment
 
 begin_struct
 struct|struct
-name|lofscache
+name|null_node_cache
 block|{
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|ac_forw
 decl_stmt|;
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|ac_back
 decl_stmt|;
@@ -114,10 +114,10 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|struct
-name|lofscache
-name|lofscache
+name|null_node_cache
+name|null_node_cache
 index|[
-name|NLOFSCACHE
+name|NNULLNODECACHE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -127,23 +127,23 @@ comment|/*  * Initialise cache headers  */
 end_comment
 
 begin_macro
-name|lofs_init
+name|nullfs_init
 argument_list|()
 end_macro
 
 begin_block
 block|{
 name|struct
-name|lofscache
+name|null_node_cache
 modifier|*
 name|ac
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_init\n"
+literal|"nullfs_init\n"
 argument_list|)
 expr_stmt|;
 comment|/* printed during system boot */
@@ -153,13 +153,13 @@ for|for
 control|(
 name|ac
 operator|=
-name|lofscache
+name|null_node_cache
 init|;
 name|ac
 operator|<
-name|lofscache
+name|null_node_cache
 operator|+
-name|NLOFSCACHE
+name|NNULLNODECACHE
 condition|;
 name|ac
 operator|++
@@ -174,7 +174,7 @@ name|ac_back
 operator|=
 operator|(
 expr|struct
-name|lofsnode
+name|null_node
 operator|*
 operator|)
 name|ac
@@ -189,9 +189,9 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|lofscache
+name|null_node_cache
 modifier|*
-name|lofs_hash
+name|null_node_hash
 parameter_list|(
 name|targetvp
 parameter_list|)
@@ -204,9 +204,9 @@ block|{
 return|return
 operator|(
 operator|&
-name|lofscache
+name|null_node_cache
 index|[
-name|LOFS_NHASH
+name|NULL_NHASH
 argument_list|(
 name|targetvp
 argument_list|)
@@ -217,13 +217,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a new lofsnode node.  * Vp is the alias vnode, lofsvp is the target vnode.  * Maintain a reference to (targetvp).  */
+comment|/*  * Make a new null_node node.  * Vp is the alias vnode, lofsvp is the target vnode.  * Maintain a reference to (targetvp).  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|lofs_alloc
+name|null_node_alloc
 parameter_list|(
 name|vp
 parameter_list|,
@@ -241,21 +241,21 @@ name|targetvp
 decl_stmt|;
 block|{
 name|struct
-name|lofscache
+name|null_node_cache
 modifier|*
 name|hd
 decl_stmt|;
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|a
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_alloc(%x, %x)\n"
+literal|"null_node_alloc(%x, %x)\n"
 argument_list|,
 name|vp
 argument_list|,
@@ -269,13 +269,13 @@ argument_list|(
 name|a
 argument_list|,
 expr|struct
-name|lofsnode
+name|null_node
 operator|*
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|lofsnode
+name|null_node
 argument_list|)
 argument_list|,
 name|M_TEMP
@@ -285,7 +285,7 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|->
-name|a_vnode
+name|null_vnode
 operator|=
 name|vp
 expr_stmt|;
@@ -302,13 +302,13 @@ argument_list|)
 expr_stmt|;
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 operator|=
 name|targetvp
 expr_stmt|;
 name|hd
 operator|=
-name|lofs_hash
+name|null_node_hash
 argument_list|(
 name|targetvp
 argument_list|)
@@ -322,7 +322,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
 literal|"alloc vp"
@@ -345,12 +345,12 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 end_ifdef
 
 begin_function
 name|void
-name|lofs_flushmp
+name|null_node_flushmp
 parameter_list|(
 name|mp
 parameter_list|)
@@ -361,7 +361,7 @@ name|mp
 decl_stmt|;
 block|{
 name|struct
-name|lofscache
+name|null_node_cache
 modifier|*
 name|ac
 decl_stmt|;
@@ -371,47 +371,47 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|roota
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"lofs_flushmp(%x)\n"
+literal|"null_node_flushmp (%x)\n"
 argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
 name|roota
 operator|=
-name|LOFSP
+name|VTONULLNODE
 argument_list|(
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 argument_list|(
 name|mp
 argument_list|)
 operator|->
-name|rootvp
+name|nullm_rootvp
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|ac
 operator|=
-name|lofscache
+name|null_node_cache
 init|;
 name|ac
 operator|<
-name|lofscache
+name|null_node_cache
 operator|+
-name|NLOFSCACHE
+name|NNULLNODECACHE
 condition|;
 name|ac
 operator|++
 control|)
 block|{
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|a
 init|=
@@ -425,7 +425,7 @@ name|a
 operator|!=
 operator|(
 expr|struct
-name|lofsnode
+name|null_node
 operator|*
 operator|)
 name|ac
@@ -439,7 +439,7 @@ name|roota
 operator|&&
 name|a
 operator|->
-name|a_vnode
+name|null_vnode
 operator|->
 name|v_mount
 operator|==
@@ -453,7 +453,7 @@ name|vp
 init|=
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 decl_stmt|;
 if|if
 condition|(
@@ -462,7 +462,7 @@ condition|)
 block|{
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 operator|=
 literal|0
 expr_stmt|;
@@ -483,7 +483,7 @@ name|a
 operator|=
 name|a
 operator|->
-name|a_forw
+name|null_forw
 expr_stmt|;
 block|}
 block|}
@@ -495,7 +495,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"lofsnode: vrele'd %d aliases\n"
+literal|"null_node: vrele'd %d aliases\n"
 argument_list|,
 name|i
 argument_list|)
@@ -515,9 +515,9 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
-name|lofs_find
+name|null_node_find
 parameter_list|(
 name|mp
 parameter_list|,
@@ -535,21 +535,21 @@ name|targetvp
 decl_stmt|;
 block|{
 name|struct
-name|lofscache
+name|null_node_cache
 modifier|*
 name|hd
 decl_stmt|;
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|a
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_find(mp = %x, target = %x)\n"
+literal|"null_node_find(mp = %x, target = %x)\n"
 argument_list|,
 name|mp
 argument_list|,
@@ -558,10 +558,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a lofsnode structure which is referencing 	 * the target vnode.  If found, the increment the lofsnode 	 * reference count (but NOT the target vnode's VREF counter). 	 */
+comment|/* 	 * Find hash base, and then search the (two-way) linked 	 * list looking for a null_node structure which is referencing 	 * the target vnode.  If found, the increment the null_node 	 * reference count (but NOT the target vnode's VREF counter). 	 */
 name|hd
 operator|=
-name|lofs_hash
+name|null_node_hash
 argument_list|(
 name|targetvp
 argument_list|)
@@ -578,7 +578,7 @@ name|a
 operator|!=
 operator|(
 expr|struct
-name|lofsnode
+name|null_node
 operator|*
 operator|)
 name|hd
@@ -587,20 +587,20 @@ name|a
 operator|=
 name|a
 operator|->
-name|a_forw
+name|null_forw
 control|)
 block|{
 if|if
 condition|(
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 operator|==
 name|targetvp
 operator|&&
 name|a
 operator|->
-name|a_vnode
+name|null_vnode
 operator|->
 name|v_mount
 operator|==
@@ -609,10 +609,10 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_find(%x): found (%x,%x)->%x\n"
+literal|"null_node_find(%x): found (%x,%x)->%x\n"
 argument_list|,
 name|targetvp
 argument_list|,
@@ -620,7 +620,7 @@ name|mp
 argument_list|,
 name|a
 operator|->
-name|a_vnode
+name|null_vnode
 argument_list|,
 name|targetvp
 argument_list|)
@@ -636,10 +636,10 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_find(%x, %x): NOT found\n"
+literal|"null_node_find(%x, %x): NOT found\n"
 argument_list|,
 name|mp
 argument_list|,
@@ -659,7 +659,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|lofs_alias
+name|null_node_alias
 parameter_list|(
 name|mp
 parameter_list|,
@@ -685,7 +685,7 @@ name|newvpp
 decl_stmt|;
 block|{
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|ap
 decl_stmt|;
@@ -706,7 +706,7 @@ name|targetvp
 operator|->
 name|v_op
 operator|==
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 condition|)
 block|{
 operator|*
@@ -718,7 +718,7 @@ return|return;
 block|}
 name|ap
 operator|=
-name|lofs_find
+name|null_node_find
 argument_list|(
 name|mp
 argument_list|,
@@ -733,14 +733,14 @@ block|{
 comment|/* 		 * Take another reference to the alias vnode 		 */
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"lofs_alias: exists"
+literal|"null_node_alias: exists"
 argument_list|,
 name|ap
 operator|->
-name|a_vnode
+name|null_vnode
 argument_list|)
 expr_stmt|;
 endif|#
@@ -749,7 +749,7 @@ name|aliasvp
 operator|=
 name|ap
 operator|->
-name|a_vnode
+name|null_vnode
 expr_stmt|;
 name|VREF
 argument_list|(
@@ -765,10 +765,10 @@ decl_stmt|;
 comment|/* 		 * Get new vnode. 		 */
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_alias: create new alias vnode\n"
+literal|"null_node_alias: create new alias vnode\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -783,7 +783,7 @@ name|VT_UFS
 argument_list|,
 name|mp
 argument_list|,
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 argument_list|,
 operator|&
 name|aliasvp
@@ -802,8 +802,8 @@ name|v_type
 operator|=
 name|VDIR
 expr_stmt|;
-comment|/* 		 * Make new vnode reference the lofsnode. 		 */
-name|lofs_alloc
+comment|/* 		 * Make new vnode reference the null_node. 		 */
+name|null_node_alloc
 argument_list|(
 name|aliasvp
 argument_list|,
@@ -819,17 +819,17 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"lofs_alias alias"
+literal|"null_node_alias alias"
 argument_list|,
 name|aliasvp
 argument_list|)
 expr_stmt|;
 name|vprint
 argument_list|(
-literal|"lofs_alias target"
+literal|"null_node_alias target"
 argument_list|,
 name|targetvp
 argument_list|)
@@ -850,11 +850,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to find an existing lofsnode vnode refering  * to it, otherwise make a new lofsnode vnode which  * contains a reference to the target vnode.  */
+comment|/*  * Try to find an existing null_node vnode refering  * to it, otherwise make a new null_node vnode which  * contains a reference to the target vnode.  */
 end_comment
 
 begin_macro
-name|make_lofs
+name|make_null_node
 argument_list|(
 argument|mp
 argument_list|,
@@ -896,10 +896,10 @@ name|targetvp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"make_lofs(mp = %x, vp = %x\n"
+literal|"make_null_node(mp = %x, vp = %x\n"
 argument_list|,
 name|mp
 argument_list|,
@@ -917,7 +917,7 @@ name|vpp
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 if|if
 condition|(
 name|targetvp
@@ -926,7 +926,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"make_lofs: null vp"
+literal|"make_null_node: null vp"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -934,7 +934,7 @@ directive|endif
 comment|/* 	 * Try to find an existing reference to the target vnodes. 	 */
 return|return
 operator|(
-name|lofs_alias
+name|null_node_alias
 argument_list|(
 name|mp
 argument_list|,
@@ -950,14 +950,14 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 end_ifdef
 
 begin_function
 name|struct
 name|vnode
 modifier|*
-name|lofs_checkvp
+name|null_checkvp
 parameter_list|(
 name|vp
 parameter_list|,
@@ -979,11 +979,11 @@ name|lno
 decl_stmt|;
 block|{
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
 name|a
 init|=
-name|LOFSP
+name|VTONULLNODE
 argument_list|(
 name|vp
 argument_list|)
@@ -992,7 +992,7 @@ if|if
 condition|(
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 operator|==
 literal|0
 condition|)
@@ -1057,7 +1057,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"lofs_checkvp"
+literal|"null_checkvp"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1069,25 +1069,25 @@ literal|"aliasvp %x/%d -> %x/%d [%s, %d]\n"
 argument_list|,
 name|a
 operator|->
-name|a_vnode
+name|null_vnode
 argument_list|,
 name|a
 operator|->
-name|a_vnode
+name|null_vnode
 operator|->
 name|v_usecount
 argument_list|,
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 argument_list|,
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 condition|?
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 operator|->
 name|v_usecount
 else|:
@@ -1102,7 +1102,7 @@ expr_stmt|;
 return|return
 name|a
 operator|->
-name|a_lofsvp
+name|null_lowervp
 return|;
 block|}
 end_function

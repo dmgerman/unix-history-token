@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 The Regents of the University of California  * 
 end_comment
 
 begin_comment
-comment|/*  * Loopback Filesystem  */
+comment|/*  * Null layer Filesystem  */
 end_comment
 
 begin_include
@@ -91,7 +91,7 @@ parameter_list|,
 name|nd
 parameter_list|)
 define|\
-value|{ \ 	struct { struct vnode *vnp; } v; \ 	v.vnp = (nd); \ 	(nd) = LOFSVP(v.vnp)
+value|{ \ 	struct { struct vnode *vnp; } v; \ 	v.vnp = (nd); \ 	(nd) = NULLTOLOWERVP(v.vnp)
 end_define
 
 begin_comment
@@ -116,7 +116,7 @@ comment|/*  * vp is the current namei directory  * ndp is the name to locate in 
 end_comment
 
 begin_macro
-name|lofs_lookup
+name|null_lookup
 argument_list|(
 argument|ap
 argument_list|)
@@ -168,14 +168,14 @@ comment|/*& OPMASK*/
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lookup(ap->a_dvp = %x->%x, \"%s\", op = %d)\n"
+literal|"null_lookup(ap->a_dvp = %x->%x, \"%s\", op = %d)\n"
 argument_list|,
 name|dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|dvp
 argument_list|)
@@ -191,10 +191,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * (ap->a_dvp) was locked when passed in, and it will be replaced 	 * with the target vnode, BUT that will already have been 	 * locked when (ap->a_dvp) was locked [see lofs_lock].  all that 	 * must be done here is to keep track of reference counts. 	 */
+comment|/* 	 * (ap->a_dvp) was locked when passed in, and it will be replaced 	 * with the target vnode, BUT that will already have been 	 * locked when (ap->a_dvp) was locked [see null_lock].  all that 	 * must be done here is to keep track of reference counts. 	 */
 name|targetdvp
 operator|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|dvp
 argument_list|)
@@ -202,7 +202,7 @@ expr_stmt|;
 comment|/*VREF(targetdvp);*/
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|vprint
 argument_list|(
 literal|"lofs VOP_LOOKUP"
@@ -242,14 +242,14 @@ name|NULLVP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lookup(%x->%x) = %d\n"
+literal|"null_lookup(%x->%x) = %d\n"
 argument_list|,
 name|dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|dvp
 argument_list|)
@@ -267,14 +267,14 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lookup(%x->%x) = OK\n"
+literal|"null_lookup(%x->%x) = OK\n"
 argument_list|,
 name|dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|dvp
 argument_list|)
@@ -307,10 +307,10 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lookup: found VDIR\n"
+literal|"null_lookup: found VDIR\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -318,7 +318,7 @@ directive|endif
 comment|/* 		 * At this point, newvp is the vnode to be looped. 		 * Activate a loopback and return the looped vnode. 		 */
 return|return
 operator|(
-name|make_lofs
+name|make_null_node
 argument_list|(
 name|dvp
 operator|->
@@ -333,10 +333,10 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lookup: not VDIR\n"
+literal|"null_lookup: not VDIR\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -354,7 +354,7 @@ comment|/*  * this = ni_dvp  * ni_dvp references the locked directory.  * ni_vp 
 end_comment
 
 begin_macro
-name|lofs_mknod
+name|null_mknod
 argument_list|(
 argument|ap
 argument_list|)
@@ -377,16 +377,16 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_mknod(vp = %x->%x)\n"
+literal|"null_mknod(vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -462,7 +462,7 @@ comment|/*  * this = ni_dvp;  * ni_dvp references the locked directory  * ni_vp 
 end_comment
 
 begin_macro
-name|lofs_create
+name|null_create
 argument_list|(
 argument|ap
 argument_list|)
@@ -485,16 +485,16 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_create(ap->a_dvp = %x->%x)\n"
+literal|"null_create(ap->a_dvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -559,16 +559,16 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_create(ap->a_dvp = %x->%x)\n"
+literal|"null_create(ap->a_dvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -587,7 +587,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_open
+name|null_open
 argument_list|(
 argument|ap
 argument_list|)
@@ -607,16 +607,16 @@ name|USES_VOP_OPEN
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_open(ap->a_vp = %x->%x)\n"
+literal|"null_open(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -629,7 +629,7 @@ directive|endif
 return|return
 name|VOP_OPEN
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -653,7 +653,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_close
+name|null_close
 argument_list|(
 argument|ap
 argument_list|)
@@ -673,16 +673,16 @@ name|USES_VOP_CLOSE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_close(ap->a_vp = %x->%x)\n"
+literal|"null_close(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -695,7 +695,7 @@ directive|endif
 return|return
 name|VOP_CLOSE
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -719,7 +719,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_access
+name|null_access
 argument_list|(
 argument|ap
 argument_list|)
@@ -739,16 +739,16 @@ name|USES_VOP_ACCESS
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_access(ap->a_vp = %x->%x)\n"
+literal|"null_access(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -761,7 +761,7 @@ directive|endif
 return|return
 name|VOP_ACCESS
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -785,7 +785,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_getattr
+name|null_getattr
 argument_list|(
 argument|ap
 argument_list|)
@@ -808,16 +808,16 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_getattr(ap->a_vp = %x->%x)\n"
+literal|"null_getattr(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -832,7 +832,7 @@ name|error
 operator|=
 name|VOP_GETATTR
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -892,7 +892,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_setattr
+name|null_setattr
 argument_list|(
 argument|ap
 argument_list|)
@@ -912,16 +912,16 @@ name|USES_VOP_SETATTR
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_setattr(ap->a_vp = %x->%x)\n"
+literal|"null_setattr(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -934,7 +934,7 @@ directive|endif
 return|return
 name|VOP_SETATTR
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -958,7 +958,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_read
+name|null_read
 argument_list|(
 argument|ap
 argument_list|)
@@ -978,16 +978,16 @@ name|USES_VOP_READ
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_read(ap->a_vp = %x->%x)\n"
+literal|"null_read(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1000,7 +1000,7 @@ directive|endif
 return|return
 name|VOP_READ
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1024,7 +1024,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_write
+name|null_write
 argument_list|(
 argument|ap
 argument_list|)
@@ -1044,16 +1044,16 @@ name|USES_VOP_WRITE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_write(ap->a_vp = %x->%x)\n"
+literal|"null_write(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1066,7 +1066,7 @@ directive|endif
 return|return
 name|VOP_WRITE
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1090,7 +1090,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_ioctl
+name|null_ioctl
 argument_list|(
 argument|ap
 argument_list|)
@@ -1110,16 +1110,16 @@ name|USES_VOP_IOCTL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_ioctl(ap->a_vp = %x->%x)\n"
+literal|"null_ioctl(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1132,7 +1132,7 @@ directive|endif
 return|return
 name|VOP_IOCTL
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1164,7 +1164,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_select
+name|null_select
 argument_list|(
 argument|ap
 argument_list|)
@@ -1184,16 +1184,16 @@ name|USES_VOP_SELECT
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_select(ap->a_vp = %x->%x)\n"
+literal|"null_select(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1206,7 +1206,7 @@ directive|endif
 return|return
 name|VOP_SELECT
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1234,7 +1234,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_mmap
+name|null_mmap
 argument_list|(
 argument|ap
 argument_list|)
@@ -1254,16 +1254,16 @@ name|USES_VOP_MMAP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_mmap(ap->a_vp = %x->%x)\n"
+literal|"null_mmap(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1276,7 +1276,7 @@ directive|endif
 return|return
 name|VOP_MMAP
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1300,7 +1300,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_fsync
+name|null_fsync
 argument_list|(
 argument|ap
 argument_list|)
@@ -1320,16 +1320,16 @@ name|USES_VOP_FSYNC
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_fsync(ap->a_vp = %x->%x)\n"
+literal|"null_fsync(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1342,7 +1342,7 @@ directive|endif
 return|return
 name|VOP_FSYNC
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1370,7 +1370,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_seek
+name|null_seek
 argument_list|(
 argument|ap
 argument_list|)
@@ -1390,16 +1390,16 @@ name|USES_VOP_SEEK
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_seek(ap->a_vp = %x->%x)\n"
+literal|"null_seek(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1412,7 +1412,7 @@ directive|endif
 return|return
 name|VOP_SEEK
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1436,7 +1436,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_remove
+name|null_remove
 argument_list|(
 argument|ap
 argument_list|)
@@ -1459,16 +1459,16 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_remove(ap->a_vp = %x->%x)\n"
+literal|"null_remove(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1572,7 +1572,7 @@ comment|/*  * vp is this.  * ni_dvp is the locked parent of the target.  * ni_vp
 end_comment
 
 begin_macro
-name|lofs_link
+name|null_link
 argument_list|(
 argument|ap
 argument_list|)
@@ -1595,16 +1595,16 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_link(ap->a_tdvp = %x->%x)\n"
+literal|"null_link(ap->a_tdvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1638,7 +1638,7 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1675,7 +1675,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_rename
+name|null_rename
 argument_list|(
 argument|ap
 argument_list|)
@@ -1717,16 +1717,16 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename(fdvp = %x->%x)\n"
+literal|"null_rename(fdvp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_fdvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1734,15 +1734,15 @@ name|a_fdvp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*printf("lofs_rename(tdvp = %x->%x)\n", tndp->ni_dvp, LOFSVP(tndp->ni_dvp));*/
+comment|/*printf("null_rename(tdvp = %x->%x)\n", tndp->ni_dvp, NULLTOLOWERVP(tndp->ni_dvp));*/
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - switch source dvp\n"
+literal|"null_rename - switch source dvp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1766,10 +1766,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - switch source vp\n"
+literal|"null_rename - switch source vp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1789,14 +1789,14 @@ name|fvp
 operator|->
 name|v_op
 operator|==
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 condition|)
 block|{
 name|ap
 operator|->
 name|a_fvp
 operator|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|fvp
 argument_list|)
@@ -1821,20 +1821,20 @@ directive|if
 literal|0
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - switch source start vp\n");
+name|NULLFS_DIAGNOSTIC
+block|printf("null_rename - switch source start vp\n");
 endif|#
 directive|endif
 comment|/* 	 * And source startdir object if it is lofsed... 	 */
-block|fsvp = fndp->ni_startdir; 	if (fsvp&& fsvp->v_op == lofs_vnodeop_p) { 		fndp->ni_startdir = LOFSVP(fsvp); 		VREF(fndp->ni_startdir); 	} else { 		fsvp = 0; 	}
+block|fsvp = fndp->ni_startdir; 	if (fsvp&& fsvp->v_op == null_vnodeop_p) { 		fndp->ni_startdir = NULLTOLOWERVP(fsvp); 		VREF(fndp->ni_startdir); 	} else { 		fsvp = 0; 	}
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - switch target dvp\n"
+literal|"null_rename - switch target dvp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1854,14 +1854,14 @@ name|tdvp
 operator|->
 name|v_op
 operator|==
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 condition|)
 block|{
 name|ap
 operator|->
 name|a_tdvp
 operator|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|tdvp
 argument_list|)
@@ -1883,10 +1883,10 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - switch target vp\n"
+literal|"null_rename - switch target vp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1906,14 +1906,14 @@ name|tvp
 operator|->
 name|v_op
 operator|==
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 condition|)
 block|{
 name|ap
 operator|->
 name|a_tvp
 operator|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|tvp
 argument_list|)
@@ -1938,20 +1938,20 @@ directive|if
 literal|0
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - switch target start vp\n");
+name|NULLFS_DIAGNOSTIC
+block|printf("null_rename - switch target start vp\n");
 endif|#
 directive|endif
 comment|/* 	 * And target startdir object if it is lofsed... 	 */
-block|tsvp = tndp->ni_startdir; 	if (tsvp&& tsvp->v_op == lofs_vnodeop_p) { 		tndp->ni_startdir = LOFSVP(fsvp); 		VREF(tndp->ni_startdir); 	} else { 		tsvp = 0; 	}
+block|tsvp = tndp->ni_startdir; 	if (tsvp&& tsvp->v_op == null_vnodeop_p) { 		tndp->ni_startdir = NULLTOLOWERVP(fsvp); 		VREF(tndp->ni_startdir); 	} else { 		tsvp = 0; 	}
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - VOP_RENAME(%x, %x, %x, %x)\n"
+literal|"null_rename - VOP_RENAME(%x, %x, %x, %x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -2054,8 +2054,8 @@ directive|if
 literal|0
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - restore target startdir\n");
+name|NULLFS_DIAGNOSTIC
+block|printf("null_rename - restore target startdir\n");
 endif|#
 directive|endif
 block|if (tsvp) { 		if (tndp->ni_startdir) 			vrele(tndp->ni_startdir); 		tndp->ni_startdir = tsvp; 	}
@@ -2063,10 +2063,10 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - restore target vp\n"
+literal|"null_rename - restore target vp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2092,10 +2092,10 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - restore target dvp\n"
+literal|"null_rename - restore target dvp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2124,8 +2124,8 @@ directive|if
 literal|0
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - restore source startdir\n");
+name|NULLFS_DIAGNOSTIC
+block|printf("null_rename - restore source startdir\n");
 endif|#
 directive|endif
 block|if (fsvp) { 		if (fndp->ni_startdir) 			vrele(fndp->ni_startdir); 		fndp->ni_startdir = fsvp; 	}
@@ -2133,10 +2133,10 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - restore source vp\n"
+literal|"null_rename - restore source vp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2162,10 +2162,10 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rename - restore source dvp\n"
+literal|"null_rename - restore source dvp\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2199,7 +2199,7 @@ comment|/*  * ni_dvp is the locked (alias) parent.  * ni_vp is NULL.  */
 end_comment
 
 begin_macro
-name|lofs_mkdir
+name|null_mkdir
 argument_list|(
 argument|ap
 argument_list|)
@@ -2241,14 +2241,14 @@ name|newvp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_mkdir(vp = %x->%x)\n"
+literal|"null_mkdir(vp = %x->%x)\n"
 argument_list|,
 name|dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|dvp
 argument_list|)
@@ -2262,7 +2262,7 @@ name|dvp
 expr_stmt|;
 name|dvp
 operator|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|xdvp
 argument_list|)
@@ -2309,7 +2309,7 @@ comment|/* 	 * Make a new lofs node 	 */
 comment|/*VREF(dvp);*/
 name|error
 operator|=
-name|make_lofs
+name|make_null_node
 argument_list|(
 name|dvp
 operator|->
@@ -2339,7 +2339,7 @@ comment|/*  * ni_dvp is the locked parent.  * ni_vp is the entry to be removed. 
 end_comment
 
 begin_macro
-name|lofs_rmdir
+name|null_rmdir
 argument_list|(
 argument|ap
 argument_list|)
@@ -2380,14 +2380,14 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_rmdir(dvp = %x->%x)\n"
+literal|"null_rmdir(dvp = %x->%x)\n"
 argument_list|,
 name|dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|dvp
 argument_list|)
@@ -2469,7 +2469,7 @@ comment|/*  * ni_dvp is the locked parent.  * ni_vp is NULL.  */
 end_comment
 
 begin_macro
-name|lofs_symlink
+name|null_symlink
 argument_list|(
 argument|ap
 argument_list|)
@@ -2492,7 +2492,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"VOP_SYMLINK(vp = %x->%x)\n"
@@ -2501,7 +2501,7 @@ name|ap
 operator|->
 name|a_dvp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2577,7 +2577,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_readdir
+name|null_readdir
 argument_list|(
 argument|ap
 argument_list|)
@@ -2597,16 +2597,16 @@ name|USES_VOP_READDIR
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_readdir(ap->a_vp = %x->%x)\n"
+literal|"null_readdir(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2619,7 +2619,7 @@ directive|endif
 return|return
 name|VOP_READDIR
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2643,7 +2643,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_readlink
+name|null_readlink
 argument_list|(
 argument|ap
 argument_list|)
@@ -2663,16 +2663,16 @@ name|USES_VOP_READLINK
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_readlink(ap->a_vp = %x->%x)\n"
+literal|"null_readlink(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2685,7 +2685,7 @@ directive|endif
 return|return
 name|VOP_READLINK
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2709,7 +2709,7 @@ comment|/*  * Anyone's guess...  */
 end_comment
 
 begin_macro
-name|lofs_abortop
+name|null_abortop
 argument_list|(
 argument|ap
 argument_list|)
@@ -2770,7 +2770,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_inactive
+name|null_inactive
 argument_list|(
 argument|ap
 argument_list|)
@@ -2793,7 +2793,7 @@ name|vnode
 modifier|*
 name|targetvp
 init|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2802,10 +2802,10 @@ argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_inactive(ap->a_vp = %x->%x)\n"
+literal|"null_inactive(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -2838,7 +2838,7 @@ literal|0
 condition|)
 name|vprint
 argument_list|(
-literal|"lofs_inactive: pushing active"
+literal|"null_inactive: pushing active"
 argument_list|,
 name|ap
 operator|->
@@ -2858,14 +2858,14 @@ argument_list|(
 name|targetvp
 argument_list|)
 expr_stmt|;
-name|LOFSP
+name|VTONULLNODE
 argument_list|(
 name|ap
 operator|->
 name|a_vp
 argument_list|)
 operator|->
-name|a_lofsvp
+name|null_lowervp
 operator|=
 literal|0
 expr_stmt|;
@@ -2874,7 +2874,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_reclaim
+name|null_reclaim
 argument_list|(
 argument|ap
 argument_list|)
@@ -2899,16 +2899,16 @@ name|targetvp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_reclaim(ap->a_vp = %x->%x)\n"
+literal|"null_reclaim(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2920,7 +2920,7 @@ endif|#
 directive|endif
 name|remque
 argument_list|(
-name|LOFSP
+name|VTONULLNODE
 argument_list|(
 name|ap
 operator|->
@@ -2930,7 +2930,7 @@ argument_list|)
 expr_stmt|;
 name|targetvp
 operator|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -2984,7 +2984,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_lock
+name|null_lock
 argument_list|(
 argument|ap
 argument_list|)
@@ -3010,7 +3010,7 @@ name|vnode
 modifier|*
 name|targetvp
 init|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3019,10 +3019,10 @@ argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_lock(ap->a_vp = %x->%x)\n"
+literal|"null_lock(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3031,7 +3031,7 @@ argument_list|,
 name|targetvp
 argument_list|)
 expr_stmt|;
-comment|/*vprint("lofs_lock ap->a_vp", ap->a_vp); 	if (targetvp) 		vprint("lofs_lock ->ap->a_vp", targetvp); 	else 		printf("lofs_lock ->ap->a_vp = NIL\n");*/
+comment|/*vprint("null_lock ap->a_vp", ap->a_vp); 	if (targetvp) 		vprint("null_lock ->ap->a_vp", targetvp); 	else 		printf("null_lock ->ap->a_vp = NIL\n");*/
 endif|#
 directive|endif
 if|if
@@ -3065,7 +3065,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_unlock
+name|null_unlock
 argument_list|(
 argument|ap
 argument_list|)
@@ -3088,7 +3088,7 @@ name|vnode
 modifier|*
 name|targetvp
 init|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3097,10 +3097,10 @@ argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_unlock(ap->a_vp = %x->%x)\n"
+literal|"null_unlock(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3132,7 +3132,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_bmap
+name|null_bmap
 argument_list|(
 argument|ap
 argument_list|)
@@ -3152,16 +3152,16 @@ name|USES_VOP_BMAP
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_bmap(ap->a_vp = %x->%x)\n"
+literal|"null_bmap(ap->a_vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3174,7 +3174,7 @@ directive|endif
 return|return
 name|VOP_BMAP
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3198,7 +3198,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_strategy
+name|null_strategy
 argument_list|(
 argument|ap
 argument_list|)
@@ -3221,10 +3221,10 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"lofs_strategy(vp = %x->%x)\n"
+literal|"null_strategy(vp = %x->%x)\n"
 argument_list|,
 name|ap
 operator|->
@@ -3232,7 +3232,7 @@ name|a_bp
 operator|->
 name|b_vp
 argument_list|,
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3284,7 +3284,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_print
+name|null_print
 argument_list|(
 argument|ap
 argument_list|)
@@ -3307,7 +3307,7 @@ name|vnode
 modifier|*
 name|targetvp
 init|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3345,7 +3345,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_islocked
+name|null_islocked
 argument_list|(
 argument|ap
 argument_list|)
@@ -3368,7 +3368,7 @@ name|vnode
 modifier|*
 name|targetvp
 init|=
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3396,7 +3396,7 @@ block|}
 end_block
 
 begin_macro
-name|lofs_advlock
+name|null_advlock
 argument_list|(
 argument|ap
 argument_list|)
@@ -3417,7 +3417,7 @@ expr_stmt|;
 return|return
 name|VOP_ADVLOCK
 argument_list|(
-name|LOFSVP
+name|NULLTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -3449,7 +3449,7 @@ comment|/*  * LOFS directory offset lookup.  * Currently unsupported.  */
 end_comment
 
 begin_macro
-name|lofs_blkatoff
+name|null_blkatoff
 argument_list|(
 argument|ap
 argument_list|)
@@ -3478,7 +3478,7 @@ comment|/*  * LOFS flat namespace lookup.  * Currently unsupported.  */
 end_comment
 
 begin_macro
-name|lofs_vget
+name|null_vget
 argument_list|(
 argument|ap
 argument_list|)
@@ -3507,7 +3507,7 @@ comment|/*  * LOFS flat namespace allocation.  * Currently unsupported.  */
 end_comment
 
 begin_macro
-name|lofs_valloc
+name|null_valloc
 argument_list|(
 argument|ap
 argument_list|)
@@ -3540,7 +3540,7 @@ comment|/*void*/
 end_comment
 
 begin_macro
-name|lofs_vfree
+name|null_vfree
 argument_list|(
 argument|ap
 argument_list|)
@@ -3565,7 +3565,7 @@ comment|/*  * LOFS file truncation.  */
 end_comment
 
 begin_macro
-name|lofs_truncate
+name|null_truncate
 argument_list|(
 argument|ap
 argument_list|)
@@ -3581,10 +3581,10 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Use lofs_setattr */
+comment|/* Use null_setattr */
 name|printf
 argument_list|(
-literal|"lofs_truncate: need to implement!!"
+literal|"null_truncate: need to implement!!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3600,7 +3600,7 @@ comment|/*  * LOFS update.  */
 end_comment
 
 begin_macro
-name|lofs_update
+name|null_update
 argument_list|(
 argument|ap
 argument_list|)
@@ -3616,10 +3616,10 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Use lofs_setattr */
+comment|/* Use null_setattr */
 name|printf
 argument_list|(
-literal|"lofs_update: need to implement!!"
+literal|"null_update: need to implement!!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3635,7 +3635,7 @@ comment|/*  * LOFS bwrite  */
 end_comment
 
 begin_macro
-name|lofs_bwrite
+name|null_bwrite
 argument_list|(
 argument|ap
 argument_list|)
@@ -3668,7 +3668,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -3692,7 +3692,7 @@ block|{
 operator|&
 name|vop_lookup_desc
 block|,
-name|lofs_lookup
+name|null_lookup
 block|}
 block|,
 comment|/* lookup */
@@ -3700,7 +3700,7 @@ block|{
 operator|&
 name|vop_create_desc
 block|,
-name|lofs_create
+name|null_create
 block|}
 block|,
 comment|/* create */
@@ -3708,7 +3708,7 @@ block|{
 operator|&
 name|vop_mknod_desc
 block|,
-name|lofs_mknod
+name|null_mknod
 block|}
 block|,
 comment|/* mknod */
@@ -3716,7 +3716,7 @@ block|{
 operator|&
 name|vop_open_desc
 block|,
-name|lofs_open
+name|null_open
 block|}
 block|,
 comment|/* open */
@@ -3724,7 +3724,7 @@ block|{
 operator|&
 name|vop_close_desc
 block|,
-name|lofs_close
+name|null_close
 block|}
 block|,
 comment|/* close */
@@ -3732,7 +3732,7 @@ block|{
 operator|&
 name|vop_access_desc
 block|,
-name|lofs_access
+name|null_access
 block|}
 block|,
 comment|/* access */
@@ -3740,7 +3740,7 @@ block|{
 operator|&
 name|vop_getattr_desc
 block|,
-name|lofs_getattr
+name|null_getattr
 block|}
 block|,
 comment|/* getattr */
@@ -3748,7 +3748,7 @@ block|{
 operator|&
 name|vop_setattr_desc
 block|,
-name|lofs_setattr
+name|null_setattr
 block|}
 block|,
 comment|/* setattr */
@@ -3756,7 +3756,7 @@ block|{
 operator|&
 name|vop_read_desc
 block|,
-name|lofs_read
+name|null_read
 block|}
 block|,
 comment|/* read */
@@ -3764,7 +3764,7 @@ block|{
 operator|&
 name|vop_write_desc
 block|,
-name|lofs_write
+name|null_write
 block|}
 block|,
 comment|/* write */
@@ -3772,7 +3772,7 @@ block|{
 operator|&
 name|vop_ioctl_desc
 block|,
-name|lofs_ioctl
+name|null_ioctl
 block|}
 block|,
 comment|/* ioctl */
@@ -3780,7 +3780,7 @@ block|{
 operator|&
 name|vop_select_desc
 block|,
-name|lofs_select
+name|null_select
 block|}
 block|,
 comment|/* select */
@@ -3788,7 +3788,7 @@ block|{
 operator|&
 name|vop_mmap_desc
 block|,
-name|lofs_mmap
+name|null_mmap
 block|}
 block|,
 comment|/* mmap */
@@ -3796,7 +3796,7 @@ block|{
 operator|&
 name|vop_fsync_desc
 block|,
-name|lofs_fsync
+name|null_fsync
 block|}
 block|,
 comment|/* fsync */
@@ -3804,7 +3804,7 @@ block|{
 operator|&
 name|vop_seek_desc
 block|,
-name|lofs_seek
+name|null_seek
 block|}
 block|,
 comment|/* seek */
@@ -3812,7 +3812,7 @@ block|{
 operator|&
 name|vop_remove_desc
 block|,
-name|lofs_remove
+name|null_remove
 block|}
 block|,
 comment|/* remove */
@@ -3820,7 +3820,7 @@ block|{
 operator|&
 name|vop_link_desc
 block|,
-name|lofs_link
+name|null_link
 block|}
 block|,
 comment|/* link */
@@ -3828,7 +3828,7 @@ block|{
 operator|&
 name|vop_rename_desc
 block|,
-name|lofs_rename
+name|null_rename
 block|}
 block|,
 comment|/* rename */
@@ -3836,7 +3836,7 @@ block|{
 operator|&
 name|vop_mkdir_desc
 block|,
-name|lofs_mkdir
+name|null_mkdir
 block|}
 block|,
 comment|/* mkdir */
@@ -3844,7 +3844,7 @@ block|{
 operator|&
 name|vop_rmdir_desc
 block|,
-name|lofs_rmdir
+name|null_rmdir
 block|}
 block|,
 comment|/* rmdir */
@@ -3852,7 +3852,7 @@ block|{
 operator|&
 name|vop_symlink_desc
 block|,
-name|lofs_symlink
+name|null_symlink
 block|}
 block|,
 comment|/* symlink */
@@ -3860,7 +3860,7 @@ block|{
 operator|&
 name|vop_readdir_desc
 block|,
-name|lofs_readdir
+name|null_readdir
 block|}
 block|,
 comment|/* readdir */
@@ -3868,7 +3868,7 @@ block|{
 operator|&
 name|vop_readlink_desc
 block|,
-name|lofs_readlink
+name|null_readlink
 block|}
 block|,
 comment|/* readlink */
@@ -3876,7 +3876,7 @@ block|{
 operator|&
 name|vop_abortop_desc
 block|,
-name|lofs_abortop
+name|null_abortop
 block|}
 block|,
 comment|/* abortop */
@@ -3884,7 +3884,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|lofs_inactive
+name|null_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -3892,7 +3892,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|lofs_reclaim
+name|null_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -3900,7 +3900,7 @@ block|{
 operator|&
 name|vop_lock_desc
 block|,
-name|lofs_lock
+name|null_lock
 block|}
 block|,
 comment|/* lock */
@@ -3908,7 +3908,7 @@ block|{
 operator|&
 name|vop_unlock_desc
 block|,
-name|lofs_unlock
+name|null_unlock
 block|}
 block|,
 comment|/* unlock */
@@ -3916,7 +3916,7 @@ block|{
 operator|&
 name|vop_bmap_desc
 block|,
-name|lofs_bmap
+name|null_bmap
 block|}
 block|,
 comment|/* bmap */
@@ -3924,7 +3924,7 @@ block|{
 operator|&
 name|vop_strategy_desc
 block|,
-name|lofs_strategy
+name|null_strategy
 block|}
 block|,
 comment|/* strategy */
@@ -3932,7 +3932,7 @@ block|{
 operator|&
 name|vop_print_desc
 block|,
-name|lofs_print
+name|null_print
 block|}
 block|,
 comment|/* print */
@@ -3940,7 +3940,7 @@ block|{
 operator|&
 name|vop_islocked_desc
 block|,
-name|lofs_islocked
+name|null_islocked
 block|}
 block|,
 comment|/* islocked */
@@ -3948,7 +3948,7 @@ block|{
 operator|&
 name|vop_advlock_desc
 block|,
-name|lofs_advlock
+name|null_advlock
 block|}
 block|,
 comment|/* advlock */
@@ -3956,7 +3956,7 @@ block|{
 operator|&
 name|vop_blkatoff_desc
 block|,
-name|lofs_blkatoff
+name|null_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
@@ -3964,7 +3964,7 @@ block|{
 operator|&
 name|vop_vget_desc
 block|,
-name|lofs_vget
+name|null_vget
 block|}
 block|,
 comment|/* vget */
@@ -3972,7 +3972,7 @@ block|{
 operator|&
 name|vop_valloc_desc
 block|,
-name|lofs_valloc
+name|null_valloc
 block|}
 block|,
 comment|/* valloc */
@@ -3980,7 +3980,7 @@ block|{
 operator|&
 name|vop_vfree_desc
 block|,
-name|lofs_vfree
+name|null_vfree
 block|}
 block|,
 comment|/* vfree */
@@ -3988,7 +3988,7 @@ block|{
 operator|&
 name|vop_truncate_desc
 block|,
-name|lofs_truncate
+name|null_truncate
 block|}
 block|,
 comment|/* truncate */
@@ -3996,7 +3996,7 @@ block|{
 operator|&
 name|vop_update_desc
 block|,
-name|lofs_update
+name|null_update
 block|}
 block|,
 comment|/* update */
@@ -4004,7 +4004,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|lofs_bwrite
+name|null_bwrite
 block|}
 block|,
 comment|/* bwrite */
@@ -4036,7 +4036,7 @@ name|lofs_vnodeop_opv_desc
 init|=
 block|{
 operator|&
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 block|,
 name|lofs_vnodeop_entries
 block|}

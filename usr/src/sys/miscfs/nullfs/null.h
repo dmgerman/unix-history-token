@@ -5,7 +5,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|lofs_args
+name|null_args
 block|{
 name|char
 modifier|*
@@ -18,19 +18,19 @@ end_struct
 
 begin_struct
 struct|struct
-name|lofsmount
+name|null_mount
 block|{
 name|struct
 name|mount
 modifier|*
-name|looped_vfs
+name|nullm_vfs
 decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|rootvp
+name|nullm_rootvp
 decl_stmt|;
-comment|/* Reference to root lofsnode */
+comment|/* Reference to root null_node */
 block|}
 struct|;
 end_struct
@@ -47,31 +47,31 @@ end_comment
 
 begin_struct
 struct|struct
-name|lofsnode
+name|null_node
 block|{
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
-name|a_forw
+name|null_forw
 decl_stmt|;
 comment|/* Hash chain */
 name|struct
-name|lofsnode
+name|null_node
 modifier|*
-name|a_back
+name|null_back
 decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|a_lofsvp
+name|null_lowervp
 decl_stmt|;
 comment|/* Aliased vnode - VREFed once */
 name|struct
 name|vnode
 modifier|*
-name|a_vnode
+name|null_vnode
 decl_stmt|;
-comment|/* Back pointer to vnode/lofsnode */
+comment|/* Back pointer to vnode/null_node */
 block|}
 struct|;
 end_struct
@@ -79,7 +79,7 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
-name|make_lofs
+name|make_null_node
 name|__P
 argument_list|(
 operator|(
@@ -101,27 +101,27 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|VFSTOLOFS
+name|MOUNTTONULLMOUNT
 parameter_list|(
 name|mp
 parameter_list|)
-value|((struct lofsmount *)((mp)->mnt_data))
+value|((struct null_mount *)((mp)->mnt_data))
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOFSP
+name|VTONULLNODE
 parameter_list|(
 name|vp
 parameter_list|)
-value|((struct lofsnode *)(vp)->v_data)
+value|((struct null_node *)(vp)->v_data)
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOFS_DIAGNOSTIC
+name|NULLFS_DIAGNOSTIC
 end_ifdef
 
 begin_decl_stmt
@@ -129,7 +129,7 @@ specifier|extern
 name|struct
 name|vnode
 modifier|*
-name|lofs_checkvp
+name|null_checkvp
 name|__P
 argument_list|(
 operator|(
@@ -152,11 +152,11 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|LOFSVP
+name|NULLTOLOWERVP
 parameter_list|(
 name|vp
 parameter_list|)
-value|lofs_checkvp(vp, __FILE__, __LINE__)
+value|null_checkvp(vp, __FILE__, __LINE__)
 end_define
 
 begin_else
@@ -167,11 +167,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|LOFSVP
+name|NULLTOLOWERVP
 parameter_list|(
 name|vp
 parameter_list|)
-value|(LOFSP(vp)->a_lofsvp)
+value|(VTONULLNODE(vp)->null_lowervp)
 end_define
 
 begin_endif
@@ -185,7 +185,7 @@ name|int
 function_decl|(
 modifier|*
 modifier|*
-name|lofs_vnodeop_p
+name|null_vnodeop_p
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -195,7 +195,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|vfsops
-name|lofs_vfsops
+name|null_vfsops
 decl_stmt|;
 end_decl_stmt
 
