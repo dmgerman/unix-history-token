@@ -3,6 +3,10 @@ begin_comment
 comment|/* Specific flags and argument handling of the C++ front-end.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -69,6 +73,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MATH_LIBRARY_PROFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MATH_LIBRARY_PROFILE
+value|"-lm"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|LIBSTDCXX
 end_ifndef
 
@@ -76,6 +98,24 @@ begin_define
 define|#
 directive|define
 name|LIBSTDCXX
+value|"-lstdc++"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIBSTDCXX_PROFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LIBSTDCXX_PROFILE
 value|"-lstdc++"
 end_define
 
@@ -134,6 +174,12 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|;
+comment|/* If non-zero, the user gave us the `-p' or `-pg' flag.  */
+name|int
+name|saw_profile_flag
+init|=
+literal|0
 decl_stmt|;
 comment|/* If non-zero, the user gave us the `-v' flag.  */
 name|int
@@ -462,6 +508,36 @@ name|i
 index|]
 operator||=
 name|WITHLIBC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-pg"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-p"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|saw_profile_flag
+operator|++
 expr_stmt|;
 elseif|else
 if|if
@@ -957,6 +1033,10 @@ name|j
 operator|++
 index|]
 operator|=
+name|saw_profile_flag
+condition|?
+name|LIBSTDCXX_PROFILE
+else|:
 name|LIBSTDCXX
 expr_stmt|;
 name|added_libraries
@@ -989,6 +1069,10 @@ name|j
 operator|++
 index|]
 operator|=
+name|saw_profile_flag
+condition|?
+name|MATH_LIBRARY_PROFILE
+else|:
 name|MATH_LIBRARY
 expr_stmt|;
 name|added_libraries

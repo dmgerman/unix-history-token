@@ -183,6 +183,20 @@ name|LIBGCC_SPEC
 value|"%{!pg: -lgcc} %{pg: -lgcc_p}"
 end_define
 
+begin_define
+define|#
+directive|define
+name|LIBSTDCXX_PROFILE
+value|"-lstdc++_p"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MATH_LIBRARY_PROFILE
+value|"-lm_p"
+end_define
+
 begin_comment
 comment|/* FreeBSD is 4.4BSD derived */
 end_comment
