@@ -73,6 +73,14 @@ name|char
 modifier|*
 name|date_fmt
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|alt_month
+index|[
+literal|12
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

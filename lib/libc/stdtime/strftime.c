@@ -378,6 +378,9 @@ specifier|const
 name|ptlim
 decl_stmt|;
 block|{
+name|int
+name|alternative
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -396,6 +399,10 @@ operator|==
 literal|'%'
 condition|)
 block|{
+name|alternative
+operator|=
+literal|0
+expr_stmt|;
 name|label
 label|:
 switch|switch
@@ -511,9 +518,17 @@ operator|)
 condition|?
 literal|"?"
 else|:
+operator|(
+name|alternative
+condition|?
+name|Locale
+operator|->
+name|alt_month
+else|:
 name|Locale
 operator|->
 name|month
+operator|)
 index|[
 name|t
 operator|->
@@ -655,6 +670,10 @@ case|case
 literal|'O'
 case|:
 comment|/* 				** POSIX locale extensions, a la 				** Arnold Robbins' strftime version 3.0. 				** The sequences 				**	%Ec %EC %Ex %Ey %EY 				**	%Od %oe %OH %OI %Om %OM 				**	%OS %Ou %OU %OV %Ow %OW %Oy 				** are supposed to provide alternate 				** representations. 				** (ado, 5/24/93) 				*/
+name|alternative
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|label
 goto|;
