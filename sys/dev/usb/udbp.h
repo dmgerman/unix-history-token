@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|NG_UDBP_STATS_TYPE_INFO
-value|{				\ 	{							\ 	  { "packets_in",&ng_parse_int32_type	},	\ 	  { "packets_out",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	  { "packets_in",&ng_parse_int32_type	},	\ 	  { "packets_out",&ng_parse_int32_type	},	\ 	  { NULL },						\ }
 end_define
 
 begin_endif

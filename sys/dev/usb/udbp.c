@@ -443,8 +443,9 @@ begin_expr_stmt
 name|Static
 specifier|const
 expr|struct
-name|ng_parse_struct_info
-name|ng_udbp_stat_type_info
+name|ng_parse_struct_field
+name|ng_udbp_stat_type_fields
+index|[]
 operator|=
 name|NG_UDBP_STATS_TYPE_INFO
 expr_stmt|;
@@ -462,7 +463,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_udbp_stat_type_info
+name|ng_udbp_stat_type_fields
 block|}
 expr_stmt|;
 end_expr_stmt
