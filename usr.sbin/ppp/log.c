@@ -126,6 +126,8 @@ literal|"Phase"
 block|,
 literal|"Physical"
 block|,
+literal|"Radius"
+block|,
 literal|"Sync"
 block|,
 literal|"TCP/IP"

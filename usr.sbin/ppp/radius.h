@@ -179,6 +179,19 @@ comment|/* Radius config file */
 block|}
 name|cfg
 struct|;
+struct|struct
+block|{
+name|struct
+name|pppTimer
+name|timer
+decl_stmt|;
+comment|/* for this long */
+name|int
+name|interval
+decl_stmt|;
+block|}
+name|alive
+struct|;
 block|}
 struct|;
 end_struct
@@ -312,6 +325,30 @@ modifier|*
 parameter_list|,
 name|struct
 name|prompt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|radius_StartTimer
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|radius_StopTimer
+parameter_list|(
+name|struct
+name|radius
 modifier|*
 parameter_list|)
 function_decl|;
@@ -453,6 +490,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|RAD_ALIVE
+value|3
+end_define
 
 begin_comment
 comment|/* Get address from NAS pool */
