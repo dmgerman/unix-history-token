@@ -751,9 +751,6 @@ modifier|*
 name|last
 decl_stmt|;
 name|int
-name|omask
-decl_stmt|;
-name|int
 name|pstat
 decl_stmt|;
 name|pid_t
