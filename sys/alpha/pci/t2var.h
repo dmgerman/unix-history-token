@@ -6,7 +6,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
-name|t2_csr_base
+name|sable_lynx_base
 decl_stmt|;
 end_decl_stmt
 
@@ -16,6 +16,16 @@ name|void
 name|t2_init
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t2_intr_map
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -224,7 +224,7 @@ name|dev
 parameter_list|)
 block|{
 return|return
-literal|31
+literal|9
 return|;
 block|}
 end_function
