@@ -1829,7 +1829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bfreekva() - free the kva allocation for a buffer.  *  *	Must be called at splbio() or higher as this is the only locking for  *	buffer_map.  *  *	Since this call frees up buffer space, we call bufspacewakeup().  *  *	Can be called with or without the vm_mtx.  */
+comment|/*  * bfreekva() - free the kva allocation for a buffer.  *  *	Must be called at splbio() or higher as this is the only locking for  *	buffer_map.  *  *	Since this call frees up buffer space, we call bufspacewakeup().  *  *	Must be called without the vm_mtx.  */
 end_comment
 
 begin_function
@@ -1843,6 +1843,14 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1850,9 +1858,6 @@ operator|->
 name|b_kvasize
 condition|)
 block|{
-name|int
-name|hadvmlock
-decl_stmt|;
 operator|++
 name|buffreekvacnt
 expr_stmt|;
@@ -1862,19 +1867,6 @@ name|bp
 operator|->
 name|b_kvasize
 expr_stmt|;
-name|hadvmlock
-operator|=
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1904,11 +1896,6 @@ operator|->
 name|b_kvasize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5160,17 +5147,10 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -5315,11 +5295,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|pmap_qremove
 argument_list|(
 name|trunc_page
@@ -6682,16 +6657,15 @@ name|addr
 init|=
 literal|0
 decl_stmt|;
-comment|/* we'll hold the lock over some vm ops */
+name|bfreekva
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|vm_mtx
-argument_list|)
-expr_stmt|;
-name|bfreekva
-argument_list|(
-name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7531,7 +7505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vfs_setdirty:  *  *	Sets the dirty range for a buffer based on the status of the dirty  *	bits in the pages comprising the buffer.  *  *	The range is limited to the size of the buffer.  *  *	This routine is primarily used by NFS, but is generalized for the  *	B_VMIO case.  *  *	Can be called with or without vm_mtx  */
+comment|/*  *	vfs_setdirty:  *  *	Sets the dirty range for a buffer based on the status of the dirty  *	bits in the pages comprising the buffer.  *  *	The range is limited to the size of the buffer.  *  *	This routine is primarily used by NFS, but is generalized for the  *	B_VMIO case.  *  *	Must be called with vm_mtx  */
 end_comment
 
 begin_function
@@ -7548,12 +7522,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|int
-name|hadvmlock
-decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Degenerate case - empty buffer 	 */
 if|if
 condition|(
@@ -7578,25 +7557,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|hadvmlock
-operator|=
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|object
 operator|=
 name|bp
@@ -7871,17 +7831,6 @@ name|eoffset
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -12145,7 +12094,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_hold_load_pages and vm_hold_unload pages get pages into  * a buffers address space.  The pages are anonymous and are  * not associated with a file object.  *  * vm_mtx should not be held  */
+comment|/*  * vm_hold_load_pages and vm_hold_free_pages get pages into  * a buffers address space.  The pages are anonymous and are  * not associated with a file object.  *  * vm_mtx should not be held  */
 end_comment
 
 begin_function
@@ -12367,9 +12316,14 @@ name|index
 decl_stmt|,
 name|newnpages
 decl_stmt|;
-name|int
-name|hadvmlock
-decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|from
 operator|=
 name|round_page
@@ -12404,19 +12358,6 @@ operator|)
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|hadvmlock
-operator|=
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -12523,11 +12464,6 @@ name|b_npages
 operator|=
 name|newnpages
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
