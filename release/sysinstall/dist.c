@@ -2230,14 +2230,9 @@ literal|"Do you wish to install cryptographic software?\n\n"
 literal|"If you choose No, FreeBSD will use an MD5-based password scheme which,\n"
 literal|"while more secure, is not interoperable with the traditional\n"
 literal|"DES-based passwords used on other Unix systems.\n\n"
-literal|"Please do NOT choose Yes at this point if you are outside the United\n"
-literal|"States and Canada and are installing from a U.S. FTP server (installing\n"
-literal|"from the CD is fine). Instead, install everything but the crypto bits\n"
-literal|"from the U.S. site and then switch to an international FTP server to\n"
-literal|"install crypto on a second pass with the Custom Installation option.\n\n"
 literal|"Note that the international crypto distribution has a better\n"
-literal|"implementation of the RSA algorithm, which cannot be used in the U.S.\n"
-literal|"for patent reasons.\n"
+literal|"implementation of the RSA algorithm, which is patented in the U.S.\n"
+literal|"If you are in the USA, use crypto + the rsaref port/package\n."
 argument_list|)
 condition|)
 block|{
@@ -2259,14 +2254,6 @@ expr_stmt|;
 block|}
 name|dialog_clear_norefresh
 argument_list|()
-expr_stmt|;
-name|USAResident
-operator|=
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Are you actually resident in the United States?"
-argument_list|)
 expr_stmt|;
 name|distVerifyFlags
 argument_list|()

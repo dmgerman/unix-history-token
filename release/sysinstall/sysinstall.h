@@ -1714,16 +1714,6 @@ comment|/* On a syscons VTY?				*/
 end_comment
 
 begin_decl_stmt
-name|Boolean
-name|USAResident
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Are we cryptographically challenged?		*/
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|Variable
 modifier|*
@@ -2539,18 +2529,6 @@ name|void
 name|configRC_conf
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|configMake_conf
-parameter_list|(
-name|char
-modifier|*
-name|config
 parameter_list|)
 function_decl|;
 end_function_decl
