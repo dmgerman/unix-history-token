@@ -76,6 +76,27 @@ modifier|*
 name|irq_handle
 decl_stmt|;
 comment|/* handle for irq handler */
+name|bus_space_tag_t
+name|bst
+decl_stmt|;
+comment|/* Bus Space tag */
+name|bus_space_handle_t
+name|bsh
+decl_stmt|;
+comment|/* Bus Space handle */
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|u_int
+name|asic_addr
+decl_stmt|;
+comment|/* ASIC I/O bus address */
+name|u_int
+name|nic_addr
+decl_stmt|;
+comment|/* NIC (DS8390) I/O bus address */
+else|#
+directive|else
 name|u_short
 name|asic_addr
 decl_stmt|;
@@ -84,6 +105,8 @@ name|u_short
 name|nic_addr
 decl_stmt|;
 comment|/* NIC (DS8390) I/O bus address */
+endif|#
+directive|endif
 comment|/*  * The following 'proto' variable is part of a work-around for 8013EBT asics  *	being write-only. It's sort of a prototype/shadow of the real thing.  */
 name|u_char
 name|wd_laar_proto
@@ -108,23 +131,23 @@ name|u_short
 name|hpp_id
 decl_stmt|;
 comment|/* software revision and other fields */
-name|caddr_t
+name|u_long
 name|hpp_mem_start
 decl_stmt|;
 comment|/* Memory-mapped IO register address */
-name|caddr_t
+name|u_long
 name|mem_start
 decl_stmt|;
 comment|/* NIC memory start address */
-name|caddr_t
+name|u_long
 name|mem_end
 decl_stmt|;
 comment|/* NIC memory end address */
-name|u_long
+name|u_int32_t
 name|mem_size
 decl_stmt|;
 comment|/* total NIC memory size */
-name|caddr_t
+name|u_long
 name|mem_ring
 decl_stmt|;
 comment|/* start of RX ring-buffer (in NIC mem) */
@@ -325,6 +348,20 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ed_get_Linksys
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ed_ax88190_geteprom
 name|__P
 argument_list|(
 operator|(
