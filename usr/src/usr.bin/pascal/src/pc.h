@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.2 %G%"; */
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ value|( ( 1<< 15 ) | ( 1<< 14 ) )
 end_define
 
 begin_comment
-comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	    PLABELPREFIX	with atol(symbol) makes up global pascal labels.      *	    GLABELPREFIX	with getlab() makes up nested label names      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
+comment|/*      *	formats for various names      *	    NAMEFORMAT		arbitrary length strings.      *	    EXTFORMAT		for externals, a preceding underscore.      *	    PREFIXFORMAT	used to print made up names with prefixes.      *	    LABELPREFIX		with getlab() makes up label names.      *	    LLABELPREFIX	with getlab() makes up sdb labels.      *	a typical use might be to print out a name with a preceeding underscore      *	with putprintf( EXTFORMAT , 0 , name );      */
 end_comment
 
 begin_define
@@ -180,20 +180,6 @@ define|#
 directive|define
 name|LLABELPREFIX
 value|"LL"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PLABELPREFIX
-value|"P"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GLABELPREFIX
-value|"G"
 end_define
 
 begin_comment
