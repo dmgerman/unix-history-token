@@ -8490,6 +8490,9 @@ decl_stmt|;
 name|u_char
 name|isr
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -8511,7 +8514,7 @@ operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-comment|/* 	 * loop until there are no more new interrupts 	 */
+comment|/* 	 * loop until there are no more new interrupts.  When the card 	 * goes away, the hardware will read back 0xff.  Looking at 	 * the interrupts, it would appear that 0xff is impossible, 	 * or at least extremely unlikely. 	 */
 while|while
 condition|(
 operator|(
@@ -8526,6 +8529,10 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|isr
+operator|!=
+literal|0xff
 condition|)
 block|{
 comment|/* 		 * reset all the bits that we are 'acknowledging' by writing a 		 * '1' to each bit position that was set (writing a '1' 		 * *clears* the bit) 		 */
@@ -8538,7 +8545,7 @@ argument_list|,
 name|isr
 argument_list|)
 expr_stmt|;
-comment|/* XXX workaround for AX88190 */
+comment|/*  		 * XXX workaround for AX88190 		 * We limit this to 5000 iterations.  At 1us per inb/outb, 		 * this translates to about 15ms, which should be plenty 		 * of time, and also gives protection in the card eject 		 * case. 		 */
 if|if
 condition|(
 name|sc
@@ -8548,8 +8555,17 @@ operator|==
 name|ED_CHIP_TYPE_AX88190
 condition|)
 block|{
+name|count
+operator|=
+literal|5000
+expr_stmt|;
+comment|/* 15ms */
 while|while
 condition|(
+name|count
+operator|--
+operator|&&
+operator|(
 name|ed_nic_inb
 argument_list|(
 name|sc
@@ -8558,6 +8574,7 @@ name|ED_P0_ISR
 argument_list|)
 operator|&
 name|isr
+operator|)
 condition|)
 block|{
 name|ed_nic_outb
@@ -8579,6 +8596,13 @@ name|isr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 comment|/* 		 * Handle transmitter interrupts. Handle these first because 		 * the receiver will reset the board under some conditions. 		 */
 if|if
