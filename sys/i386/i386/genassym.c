@@ -1,41 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)genassym.c	5.11 (Berkeley) 5/10/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00154  * --------------------         -----   ----------------------  *  * 24 Apr 93	Bruce Evans/Dave Rivers	Npx-0.5 support  *  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Header: /usr/bill/working/sys/i386/i386/RCS/genassym.c,v 1.2 92/01/21 14:22:02 william Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)genassym.c	5.11 (Berkeley) 5/10/91"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id$  */
 end_comment
 
 begin_include
@@ -102,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"machine/psl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/reg.h"
 end_include
 
 begin_include
@@ -234,6 +193,30 @@ init|=
 operator|(
 expr|struct
 name|pcb
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+name|struct
+name|trapframe
+modifier|*
+name|tf
+init|=
+operator|(
+expr|struct
+name|trapframe
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+name|struct
+name|sigframe
+modifier|*
+name|sigf
+init|=
+operator|(
+expr|struct
+name|sigframe
 operator|*
 operator|)
 literal|0
@@ -544,6 +527,13 @@ argument_list|(
 literal|"#define\tUSRSTACK %d\n"
 argument_list|,
 name|USRSTACK
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tKERNBASE %d\n"
+argument_list|,
+name|KERNBASE
 argument_list|)
 expr_stmt|;
 name|printf
@@ -876,6 +866,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tPCB_USERLDT %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_ldt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tPCB_IOOPT %d\n"
 argument_list|,
 operator|&
@@ -989,32 +989,6 @@ operator|->
 name|pcb_savefpu
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notused
-name|printf
-argument_list|(
-literal|"#define\tFP_WASUSED %d\n"
-argument_list|,
-name|FP_WASUSED
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tFP_NEEDSSAVE %d\n"
-argument_list|,
-name|FP_NEEDSSAVE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tFP_NEEDSRESTORE %d\n"
-argument_list|,
-name|FP_NEEDSRESTORE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"#define\tFP_USESEMC %d\n"
@@ -1044,15 +1018,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SIGC %d\n"
-argument_list|,
-name|pcb
-operator|->
-name|pcb_sigc
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tPCB_IML %d\n"
 argument_list|,
 operator|&
@@ -1069,6 +1034,226 @@ operator|&
 name|pcb
 operator|->
 name|pcb_onfault
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_ES %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_es
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_DS %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_ds
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EDI %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_edi
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_ESI %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_esi
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EBP %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_ebp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_ISP %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_isp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EBX %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_ebx
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EDX %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_edx
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_ECX %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_ecx
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EAX %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_eax
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_TRAPNO %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_trapno
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_ERR %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_err
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EIP %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_eip
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_CS %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_cs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_EFLAGS %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_eflags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_ESP %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_esp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tTF_SS %d\n"
+argument_list|,
+operator|&
+name|tf
+operator|->
+name|tf_ss
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIGF_SIGNUM %d\n"
+argument_list|,
+operator|&
+name|sigf
+operator|->
+name|sf_signum
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIGF_CODE %d\n"
+argument_list|,
+operator|&
+name|sigf
+operator|->
+name|sf_code
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIGF_SCP %d\n"
+argument_list|,
+operator|&
+name|sigf
+operator|->
+name|sf_scp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIGF_HANDLER %d\n"
+argument_list|,
+operator|&
+name|sigf
+operator|->
+name|sf_handler
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIGF_SC %d\n"
+argument_list|,
+operator|&
+name|sigf
+operator|->
+name|sf_sc
 argument_list|)
 expr_stmt|;
 name|printf
