@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	5.4 (Berkeley) %G%"
+literal|"@(#)lookup.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"[arclookup] parentp == 0 || childp == 0\n"
 argument_list|)
 expr_stmt|;
