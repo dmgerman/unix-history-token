@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_bio.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_bio.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1675,53 +1675,6 @@ argument_list|(
 literal|"getblk: size too big"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * To prevent overflow of 32-bit ints when converting block 	 * numbers to byte offsets, blknos> 2^32 / DEV_BSIZE are set 	 * to the maximum number that can be converted to a byte offset 	 * without overflow. This is historic code; what bug it fixed, 	 * or whether it is still a reasonable thing to do is open to 	 * dispute. mkm 9/85 	 * 	 * Make it a panic to see if it ever really happens. mkm 11/89 	 */
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|blkno
-operator|>=
-literal|1
-operator|<<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|*
-name|NBBY
-operator|-
-name|DEV_BSHIFT
-operator|)
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"getblk: blkno too big"
-argument_list|)
-expr_stmt|;
-name|blkno
-operator|=
-literal|1
-operator|<<
-operator|(
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|*
-name|NBBY
-operator|-
-name|DEV_BSHIFT
-operator|)
-operator|+
-literal|1
-operator|)
-expr_stmt|;
-block|}
 comment|/* 	 * Search the cache for the block.  If we hit, but 	 * the buffer is in use for i/o, then we wait until 	 * the i/o has completed. 	 */
 name|dp
 operator|=
