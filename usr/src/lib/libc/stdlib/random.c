@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	4.2	(Berkeley)	83/01/02"
+literal|"@(#)random.c	4.3	(Berkeley)	84/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +382,6 @@ init|=
 operator|&
 name|randtbl
 index|[
-operator|-
 literal|1
 index|]
 decl_stmt|;
