@@ -2823,6 +2823,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_COLLAPSE_CODE
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * this version of collapse allows the operation to occur earlier and  * when paging_in_progress is true for an object...  This is not a complete  * operation, but should plug 99.9% of the rest of the leaks.  */
 end_comment
@@ -3180,6 +3189,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	vm_object_collapse:  *  *	Collapse an object with the object backing it.  *	Pages in the backing object are moved into the  *	parent, and the backing object is deallocated.  */
 end_comment
@@ -3317,11 +3331,19 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_COLLAPSE_CODE
+argument_list|)
 name|vm_object_qcollapse
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* 		 * We know that we can either collapse the backing object (if 		 * the parent is the only reference to it) or (perhaps) remove 		 * the parent's reference to it. 		 */
@@ -4548,12 +4570,20 @@ name|FALSE
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_COLLAPSE_CODE
+argument_list|)
 comment|/* 	 * Try to collapse the object first 	 */
 name|vm_object_collapse
 argument_list|(
 name|prev_object
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Can't coalesce if: . more than one reference . paged out . shadows 	 * another object . has a copy elsewhere (any of which mean that the 	 * pages not mapped to prev_entry may be in use anyway) 	 */
 if|if
 condition|(

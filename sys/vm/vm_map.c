@@ -7472,6 +7472,12 @@ operator|.
 name|vm_object
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_COLLAPSE_CODE
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -7517,6 +7523,8 @@ operator|.
 name|vm_object
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|++
 name|src_entry
 operator|->
