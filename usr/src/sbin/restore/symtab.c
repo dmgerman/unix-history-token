@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.2	(Berkeley)	83/02/26"
+literal|"@(#)symtab.c	3.3	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,6 +329,7 @@ if|if
 condition|(
 operator|*
 name|cp
+operator|++
 operator|==
 literal|'\0'
 condition|)
@@ -338,7 +339,11 @@ name|ep
 operator|)
 return|;
 block|}
-comment|/* NOTREACHED */
+return|return
+operator|(
+name|NIL
+operator|)
+return|;
 block|}
 end_function
 
@@ -400,6 +405,11 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+operator|*
+name|tailindex
+operator|=
+literal|'/'
+expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -425,11 +435,6 @@ literal|"%s is not a directory\n"
 argument_list|,
 name|name
 argument_list|)
-expr_stmt|;
-operator|*
-name|tailindex
-operator|=
-literal|'/'
 expr_stmt|;
 return|return
 operator|(
@@ -1518,6 +1523,10 @@ block|{
 name|long
 name|len
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
 name|name
@@ -1549,8 +1558,8 @@ operator|&
 operator|~
 literal|3
 expr_stmt|;
-return|return
-operator|(
+name|cp
+operator|=
 operator|(
 name|char
 operator|*
@@ -1562,6 +1571,17 @@ name|unsigned
 operator|)
 name|len
 argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|cp
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|cp
 operator|)
 return|;
 block|}

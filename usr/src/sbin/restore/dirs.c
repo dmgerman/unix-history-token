@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.1	(Berkeley)	83/02/18"
+literal|"@(#)dirs.c	3.2	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<file.h>
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -84,15 +84,23 @@ name|long
 name|t_size
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|inotab
 modifier|*
 name|inotab
 index|[
 name|HASHSIZE
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
+specifier|extern
 name|struct
 name|inotab
 modifier|*
@@ -128,12 +136,14 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|daddr_t
 name|seekpt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|df
@@ -144,6 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|DIR
 modifier|*
 name|dirp
@@ -151,6 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|dirfile
 index|[]
@@ -298,7 +310,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|df
+name|mf
 operator|==
 literal|0
 condition|)
@@ -1967,6 +1979,12 @@ argument_list|(
 name|mf
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|fread
 argument_list|(
 operator|(
@@ -1987,15 +2005,14 @@ argument_list|,
 name|mf
 argument_list|)
 expr_stmt|;
-while|while
+if|if
 condition|(
-operator|!
 name|feof
 argument_list|(
 name|mf
 argument_list|)
 condition|)
-block|{
+break|break;
 name|ep
 operator|=
 name|lookupino
@@ -2011,6 +2028,14 @@ name|ep
 operator|==
 name|NIL
 condition|)
+block|{
+if|if
+condition|(
+name|command
+operator|==
+literal|'x'
+condition|)
+continue|continue;
 name|panic
 argument_list|(
 literal|"cannot find directory inode %d\n"
@@ -2020,6 +2045,7 @@ operator|.
 name|ino
 argument_list|)
 expr_stmt|;
+block|}
 name|cp
 operator|=
 name|myname
@@ -2058,26 +2084,6 @@ operator|.
 name|timep
 argument_list|)
 expr_stmt|;
-name|fread
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|node
-argument_list|,
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|modeinfo
-argument_list|)
-argument_list|,
-name|mf
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2094,6 +2100,11 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|mf
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|modefile
 argument_list|)
 expr_stmt|;
 block|}

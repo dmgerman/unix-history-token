@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.2	(Berkeley)	83/02/26"
+literal|"@(#)main.c	3.3	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
 name|char
 modifier|*
 name|inputdev
@@ -168,13 +171,13 @@ name|char
 modifier|*
 name|symtbl
 init|=
-literal|"./lost+found/restoresymtable"
+literal|"./restoresymtable"
 decl_stmt|;
 name|char
 modifier|*
 name|dirmodefile
 init|=
-literal|"./lost+found/dirmodes"
+literal|"./dirmodes"
 decl_stmt|;
 name|int
 argument_list|(
@@ -189,9 +192,6 @@ name|int
 name|onintr
 parameter_list|()
 function_decl|;
-name|ino_t
-name|ino
-decl_stmt|;
 if|if
 condition|(
 name|signal
@@ -226,6 +226,11 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 if|if
@@ -775,7 +780,13 @@ name|LEAF
 argument_list|)
 expr_stmt|;
 block|}
+name|createnodes
+argument_list|()
+expr_stmt|;
 name|createfiles
+argument_list|()
+expr_stmt|;
+name|createlinks
 argument_list|()
 expr_stmt|;
 name|setdirmodes

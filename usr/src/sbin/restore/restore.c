@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.1	(Berkeley)	83/02/18"
+literal|"@(#)restore.c	3.2	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +267,30 @@ condition|(
 name|mflag
 condition|)
 block|{
+if|if
+condition|(
+name|ino
+operator|==
+name|ROOTINO
+condition|)
+return|return;
+name|ep
+operator|=
+name|lookupino
+argument_list|(
+name|ino
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|!=
+name|NIL
+condition|)
+name|type
+operator||=
+name|LINK
+expr_stmt|;
 name|ep
 operator|=
 name|addentry
@@ -2271,6 +2295,20 @@ argument_list|,
 literal|"Extract requested files\n"
 argument_list|)
 expr_stmt|;
+name|curfile
+operator|.
+name|action
+operator|=
+name|SKIP
+expr_stmt|;
+name|getvol
+argument_list|(
+operator|(
+name|long
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|first
 operator|=
 name|lowerbnd
@@ -2283,6 +2321,8 @@ operator|=
 name|upperbnd
 argument_list|(
 name|maxino
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -2624,6 +2664,13 @@ name|HARDLINK
 argument_list|)
 expr_stmt|;
 block|}
+name|np
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|NEW
+expr_stmt|;
 block|}
 block|}
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.1	(Berkeley)	83/02/18"
+literal|"@(#)utilities.c	3.2	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,9 +227,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|start
-decl_stmt|,
-modifier|*
-name|last
 decl_stmt|;
 name|start
 operator|=
@@ -240,33 +237,11 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
-name|last
-operator|=
-name|rindex
-argument_list|(
-name|name
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|last
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"bad name %s to pathcheck\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|start
 operator|==
-name|last
+literal|0
 condition|)
 return|return
 operator|(
@@ -569,7 +544,7 @@ name|mkdir
 argument_list|(
 name|cp
 argument_list|,
-literal|0666
+literal|0777
 argument_list|)
 operator|<
 literal|0

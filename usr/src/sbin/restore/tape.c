@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.2	(Berkeley)	83/02/26"
+literal|"@(#)tape.c	3.3	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -2147,17 +2147,7 @@ operator|)
 operator|<=
 literal|0
 condition|)
-block|{
-name|gethead
-argument_list|(
-operator|&
-name|spcl
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+break|break;
 block|}
 if|if
 condition|(
@@ -2167,8 +2157,15 @@ operator|&
 name|spcl
 argument_list|)
 operator|==
-name|FAIL
-operator|||
+name|GOOD
+operator|&&
+name|size
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|checktype
 argument_list|(
 operator|&
@@ -2177,9 +2174,11 @@ argument_list|,
 name|TS_ADDR
 argument_list|)
 operator|==
-name|FAIL
+name|GOOD
 condition|)
-block|{
+goto|goto
+name|loop
+goto|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -2191,22 +2190,13 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
-goto|goto
-name|loop
-goto|;
-name|out
-label|:
 if|if
 condition|(
 name|curblk
 operator|>
 literal|0
 condition|)
-block|{
 call|(
 modifier|*
 name|f1
@@ -2223,7 +2213,6 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-block|}
 name|findinode
 argument_list|(
 operator|&
