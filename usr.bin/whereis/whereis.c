@@ -17,34 +17,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_expr_stmt
-name|__COPYRIGHT
+name|__FBSDID
 argument_list|(
-literal|"@(#) Copyright (c) 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
 
 begin_if
 if|#
@@ -57,23 +36,6 @@ unit|static char sccsid[] = "@(#)whereis.c	8.3 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: whereis.c,v 1.11 2002/06/11 06:06:21 itojun Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
