@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -23,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -3677,6 +3689,18 @@ name|PPP_HDRLEN
 operator|+
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_mbuf
+argument_list|(
+name|cmp
+argument_list|,
+name|dmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Fill in the ppp header, but not the last byte of the protocol      * (that comes from the decompressed data).      */
 name|wptr
 index|[
