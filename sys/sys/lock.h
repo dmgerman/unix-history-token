@@ -395,6 +395,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|lockmgr_printinfo
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lock
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|lockstatus
 name|__P
