@@ -181,23 +181,14 @@ index|[]
 init|=
 block|{
 block|{
-literal|"_swapmap"
+literal|"_swaplist"
 block|}
 block|,
 comment|/* list of free swap areas */
 define|#
 directive|define
-name|VM_SWAPMAP
+name|VM_SWAPLIST
 value|0
-block|{
-literal|"_nswapmap"
-block|}
-block|,
-comment|/* size of the swap map */
-define|#
-directive|define
-name|VM_NSWAPMAP
-value|1
 block|{
 literal|"_swdevt"
 block|}
@@ -206,7 +197,7 @@ comment|/* list of swap devices and sizes */
 define|#
 directive|define
 name|VM_SWDEVT
-value|2
+value|1
 block|{
 literal|"_nswap"
 block|}
@@ -215,7 +206,7 @@ comment|/* size of largest swap device */
 define|#
 directive|define
 name|VM_NSWAP
-value|3
+value|2
 block|{
 literal|"_nswdev"
 block|}
@@ -224,7 +215,7 @@ comment|/* number of swap devices */
 define|#
 directive|define
 name|VM_NSWDEV
-value|4
+value|3
 block|{
 literal|"_dmmax"
 block|}
@@ -233,7 +224,7 @@ comment|/* maximum size of a swap block */
 define|#
 directive|define
 name|VM_DMMAX
-value|5
+value|4
 literal|0
 block|}
 decl_stmt|;
@@ -247,8 +238,6 @@ decl_stmt|,
 name|nswdev
 decl_stmt|,
 name|dmmax
-decl_stmt|,
-name|nswapmap
 decl_stmt|;
 end_decl_stmt
 
@@ -273,31 +262,18 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|map
-modifier|*
-name|swapmap
-decl_stmt|,
-modifier|*
-name|kswapmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mapent
-modifier|*
-name|mp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|nfree
 decl_stmt|,
 name|hlen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|rlisthdr
+name|swaplist
 decl_stmt|;
 end_decl_stmt
 
@@ -325,7 +301,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|KGET1(idx,&var, sizeof(var), SVAR(var))
+value|KGET1(idx,&var, sizeof(var), SVAR(var), (0))
 end_define
 
 begin_define
@@ -340,9 +316,11 @@ parameter_list|,
 name|s
 parameter_list|,
 name|msg
+parameter_list|,
+name|rv
 parameter_list|)
 define|\
-value|KGET2(syms[idx].n_value, p, s, msg)
+value|KGET2(syms[idx].n_value, p, s, msg, rv)
 end_define
 
 begin_define
@@ -357,9 +335,11 @@ parameter_list|,
 name|s
 parameter_list|,
 name|msg
+parameter_list|,
+name|rv
 parameter_list|)
 define|\
-value|if (kvm_read(kd, addr, p, s) != s) { \ 		error("cannot read %s: %s", msg, kvm_geterr(kd)); \ 		return (0); \ 	}
+value|if (kvm_read(kd, addr, p, s) != s) { \ 		error("cannot read %s: %s", msg, kvm_geterr(kd)); \ 		return rv; \ 	}
 end_define
 
 begin_function
@@ -427,6 +407,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The meat of all the swap stuff is stolen from pstat(8)'s  * swapmode(), which is based on a program called swapinfo written by  * Kevin Lahey<kml@rokkaku.atl.ga.us>.  */
+end_comment
+
 begin_macro
 name|initswap
 argument_list|()
@@ -449,21 +433,209 @@ name|once
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
+name|u_long
+name|ptr
+decl_stmt|;
+if|if
+condition|(
+name|once
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|kvm_nlist
+argument_list|(
+name|kd
+argument_list|,
+name|syms
+argument_list|)
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|msgbuf
+argument_list|,
+literal|"systat: swap: cannot find"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
 literal|0
-block|if (once) 		return (1); 	if (kvm_nlist(kd, syms)) { 		strcpy(msgbuf, "systat: swap: cannot find"); 		for (i = 0; syms[i].n_name != NULL; i++) { 			if (syms[i].n_value == 0) { 				strcat(msgbuf, " "); 				strcat(msgbuf, syms[i].n_name); 			} 		} 		error(msgbuf); 		return (0); 	} 	KGET(VM_NSWAP, nswap); 	KGET(VM_NSWDEV, nswdev); 	KGET(VM_DMMAX, dmmax); 	KGET(VM_NSWAPMAP, nswapmap); 	KGET(VM_SWAPMAP, kswapmap);
-comment|/* kernel `swapmap' is a pointer */
-block|if ((sw = malloc(nswdev * sizeof(*sw))) == NULL || 	    (perdev = malloc(nswdev * sizeof(*perdev))) == NULL || 	    (mp = malloc(nswapmap * sizeof(*mp))) == NULL) { 		error("swap malloc"); 		return (0); 	} 	KGET1(VM_SWDEVT, sw, nswdev * sizeof(*sw), "swdevt"); 	once = 1; 	return (1);
-else|#
-directive|else
+init|;
+name|syms
+index|[
+name|i
+index|]
+operator|.
+name|n_name
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|syms
+index|[
+name|i
+index|]
+operator|.
+name|n_value
+operator|==
+literal|0
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|msgbuf
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|msgbuf
+argument_list|,
+name|syms
+index|[
+name|i
+index|]
+operator|.
+name|n_name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|error
+argument_list|(
+name|msgbuf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
+block|}
+name|KGET
+argument_list|(
+name|VM_NSWAP
+argument_list|,
+name|nswap
+argument_list|)
+expr_stmt|;
+name|KGET
+argument_list|(
+name|VM_NSWDEV
+argument_list|,
+name|nswdev
+argument_list|)
+expr_stmt|;
+name|KGET
+argument_list|(
+name|VM_DMMAX
+argument_list|,
+name|dmmax
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sw
+operator|=
+name|malloc
+argument_list|(
+name|nswdev
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sw
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|(
+name|perdev
+operator|=
+name|malloc
+argument_list|(
+name|nswdev
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|perdev
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
+argument_list|)
+expr_stmt|;
+name|KGET1
+argument_list|(
+name|VM_SWDEVT
+argument_list|,
+operator|&
+name|ptr
+argument_list|,
+sizeof|sizeof
+name|ptr
+argument_list|,
+literal|"swdevt"
+argument_list|,
+operator|(
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+name|KGET2
+argument_list|(
+name|ptr
+argument_list|,
+name|sw
+argument_list|,
+name|nswdev
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sw
+argument_list|)
+argument_list|,
+literal|"*swdevt"
+argument_list|,
+operator|(
+literal|0
+operator|)
+argument_list|)
+expr_stmt|;
+name|once
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -472,32 +644,182 @@ name|void
 name|fetchswap
 parameter_list|()
 block|{
-name|int
-name|s
-decl_stmt|,
-name|e
-decl_stmt|,
-name|i
+name|struct
+name|rlist
+name|head
 decl_stmt|;
-if|#
-directive|if
+name|struct
+name|rlist
+modifier|*
+name|swapptr
+decl_stmt|;
+comment|/* Count up swap space. */
+name|nfree
+operator|=
 literal|0
-block|s = nswapmap * sizeof(*mp); 	if (kvm_read(kd, (long)kswapmap, mp, s) != s) 		error("cannot read swapmap: %s", kvm_geterr(kd));
-comment|/* first entry in map is `struct map'; rest are mapent's */
-block|swapmap = (struct map *)mp; 	if (nswapmap != swapmap->m_limit - (struct mapent *)kswapmap) 		error("panic: swap: nswapmap goof");
-comment|/* 	 * Count up swap space. 	 */
-block|nfree = 0; 	bzero(perdev, nswdev * sizeof(*perdev)); 	for (mp++; mp->m_addr != 0; mp++) { 		s = mp->m_addr;
-comment|/* start of swap region */
-block|e = mp->m_addr + mp->m_size;
-comment|/* end of region */
-block|nfree += mp->m_size;
-comment|/* 		 * Swap space is split up among the configured disks. 		 * The first dmmax blocks of swap space some from the 		 * first disk, the next dmmax blocks from the next, 		 * and so on.  The list of free space joins adjacent 		 * free blocks, ignoring device boundries.  If we want 		 * to keep track of this information per device, we'll 		 * just have to extract it ourselves. 		 */
-comment|/* calculate first device on which this falls */
-block|i = (s / dmmax) % nswdev; 		while (s< e) {
-comment|/* XXX this is inefficient */
-block|int bound = roundup(s + 1, dmmax);  			if (bound> e) 				bound = e; 			perdev[i] += bound - s; 			if (++i>= nswdev) 				i = 0; 			s = bound; 		} 	}
-endif|#
-directive|endif
+expr_stmt|;
+name|memset
+argument_list|(
+name|perdev
+argument_list|,
+literal|0
+argument_list|,
+name|nswdev
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|perdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|KGET1
+argument_list|(
+name|VM_SWAPLIST
+argument_list|,
+operator|&
+name|swaplist
+argument_list|,
+sizeof|sizeof
+name|swaplist
+argument_list|,
+literal|"swaplist"
+argument_list|,
+comment|/* none */
+argument_list|)
+expr_stmt|;
+name|swapptr
+operator|=
+name|swaplist
+operator|.
+name|rlh_list
+expr_stmt|;
+while|while
+condition|(
+name|swapptr
+condition|)
+block|{
+name|int
+name|top
+decl_stmt|,
+name|bottom
+decl_stmt|,
+name|next_block
+decl_stmt|;
+name|KGET2
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+name|swapptr
+argument_list|,
+operator|&
+name|head
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rlist
+argument_list|)
+argument_list|,
+literal|"swapptr"
+argument_list|,
+comment|/* none */
+argument_list|)
+expr_stmt|;
+name|top
+operator|=
+name|head
+operator|.
+name|rl_end
+expr_stmt|;
+name|bottom
+operator|=
+name|head
+operator|.
+name|rl_start
+expr_stmt|;
+name|nfree
+operator|+=
+name|top
+operator|-
+name|bottom
+operator|+
+literal|1
+expr_stmt|;
+comment|/* 		 * Swap space is split up among the configured disks. 		 * 		 * For interleaved swap devices, the first dmmax blocks 		 * of swap space some from the first disk, the next dmmax 		 * blocks from the next, and so on up to nswap blocks. 		 * 		 * The list of free space joins adjacent free blocks, 		 * ignoring device boundries.  If we want to keep track 		 * of this information per device, we'll just have to 		 * extract it ourselves. 		 */
+while|while
+condition|(
+name|top
+operator|/
+name|dmmax
+operator|!=
+name|bottom
+operator|/
+name|dmmax
+condition|)
+block|{
+name|next_block
+operator|=
+operator|(
+operator|(
+name|bottom
+operator|+
+name|dmmax
+operator|)
+operator|/
+name|dmmax
+operator|)
+expr_stmt|;
+name|perdev
+index|[
+operator|(
+name|bottom
+operator|/
+name|dmmax
+operator|)
+operator|%
+name|nswdev
+index|]
+operator|+=
+name|next_block
+operator|*
+name|dmmax
+operator|-
+name|bottom
+expr_stmt|;
+name|bottom
+operator|=
+name|next_block
+operator|*
+name|dmmax
+expr_stmt|;
+block|}
+name|perdev
+index|[
+operator|(
+name|bottom
+operator|/
+name|dmmax
+operator|)
+operator|%
+name|nswdev
+index|]
+operator|+=
+name|top
+operator|-
+name|bottom
+operator|+
+literal|1
+expr_stmt|;
+name|swapptr
+operator|=
+name|head
+operator|.
+name|rl_next
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -553,7 +875,7 @@ operator|++
 argument_list|,
 literal|0
 argument_list|,
-literal|"%-5s%*s%9s  %55s"
+literal|"%-5s%*s%9s %55s"
 argument_list|,
 literal|"Disk"
 argument_list|,
@@ -563,7 +885,7 @@ name|header
 argument_list|,
 literal|"Used"
 argument_list|,
-literal|"/0%  /10% /20% /30% /40% /50% /60% /70% /80% /90% /100%"
+literal|"/0%  /10% /20% /30% /40% /50% /60% /70% /80% /90% /100"
 argument_list|)
 expr_stmt|;
 for|for
@@ -580,6 +902,17 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_freed
+condition|)
+continue|continue;
 name|mvwprintw
 argument_list|(
 name|wnd
@@ -592,6 +925,15 @@ literal|0
 argument_list|,
 literal|"%-5s"
 argument_list|,
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_dev
+operator|!=
+name|NODEV
+condition|?
 name|devname
 argument_list|(
 name|sw
@@ -603,6 +945,8 @@ name|sw_dev
 argument_list|,
 name|S_IFBLK
 argument_list|)
+else|:
+literal|"[NFS]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -624,6 +968,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|k
 decl_stmt|,
 name|avail
 decl_stmt|,
@@ -651,6 +997,8 @@ for|for
 control|(
 name|i
 operator|=
+name|k
+operator|=
 literal|0
 init|;
 name|i
@@ -661,6 +1009,18 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 		 * Don't report statistics for partitions which have not 		 * yet been activated via swapon(8). 		 */
+if|if
+condition|(
+operator|!
+name|sw
+index|[
+name|i
+index|]
+operator|.
+name|sw_freed
+condition|)
+continue|continue;
 name|col
 operator|=
 literal|5
@@ -693,35 +1053,7 @@ name|col
 operator|+=
 name|hlen
 expr_stmt|;
-comment|/* 		 * Don't report statistics for partitions which have not 		 * yet been activated via swapon(8). 		 */
-if|if
-condition|(
-operator|!
-name|sw
-index|[
-name|i
-index|]
-operator|.
-name|sw_freed
-condition|)
-block|{
-name|mvwprintw
-argument_list|(
-name|wnd
-argument_list|,
-name|i
-operator|+
-literal|1
-argument_list|,
-name|col
-operator|+
-literal|8
-argument_list|,
-literal|"0  *** not available for swapping ***"
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
+comment|/* 		 * The first dmmax is never allocated to avoid trashing of 		 * disklabels 		 */
 name|xsize
 operator|=
 name|sw
@@ -730,6 +1062,8 @@ name|i
 index|]
 operator|.
 name|sw_nblks
+operator|-
+name|dmmax
 expr_stmt|;
 name|xfree
 operator|=
@@ -798,6 +1132,9 @@ name|avail
 operator|+=
 name|xsize
 expr_stmt|;
+name|k
+operator|++
+expr_stmt|;
 block|}
 comment|/* 	 * If only one partition has been set up via swapon(8), we don't 	 * need to bother with totals. 	 */
 if|if
@@ -817,7 +1154,7 @@ name|mvwprintw
 argument_list|(
 name|wnd
 argument_list|,
-name|i
+name|k
 operator|+
 literal|1
 argument_list|,
