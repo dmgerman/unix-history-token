@@ -142,12 +142,6 @@ decl_stmt|;
 name|u_int
 name|gd_other_cpus
 decl_stmt|;
-name|int
-name|gd_inside_intr
-decl_stmt|;
-name|u_int
-name|gd_ss_eflags
-decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|gd_prv_CMAP1

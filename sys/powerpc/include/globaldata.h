@@ -79,9 +79,6 @@ name|u_int
 name|gd_other_cpus
 decl_stmt|;
 comment|/* all other cpus */
-name|int
-name|gd_inside_intr
-decl_stmt|;
 name|u_int64_t
 name|gd_idlepcbphys
 decl_stmt|;
