@@ -1342,7 +1342,7 @@ name|m
 operator|)
 operator|->
 name|m_len
-operator|<
+operator|>=
 operator|*
 name|off
 operator|+
@@ -1381,7 +1381,7 @@ operator|=
 name|ip6f
 operator|->
 name|ip6f_offlg
-operator||
+operator|&
 name|IP6F_OFF_MASK
 expr_stmt|;
 block|}
