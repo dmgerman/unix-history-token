@@ -68,6 +68,10 @@ name|extract_flags
 decl_stmt|;
 comment|/* Flags for extract operation */
 name|char
+name|mode
+decl_stmt|;
+comment|/* Program mode: 'c', 't', 'r', 'u', 'x' */
+name|char
 name|symlink_mode
 decl_stmt|;
 comment|/* H or L, per BSD conventions */

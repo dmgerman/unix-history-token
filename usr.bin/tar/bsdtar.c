@@ -298,9 +298,6 @@ name|struct
 name|bsdtar
 modifier|*
 parameter_list|,
-name|char
-name|mode
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -338,6 +335,21 @@ specifier|const
 name|char
 modifier|*
 name|optstring
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|set_mode
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+parameter_list|,
+name|char
+name|opt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -936,9 +948,6 @@ decl_stmt|,
 name|t
 decl_stmt|;
 name|char
-name|mode
-decl_stmt|;
-name|char
 name|option_o
 decl_stmt|;
 name|char
@@ -1028,10 +1037,6 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mode
-operator|=
-literal|'\0'
-expr_stmt|;
 name|possible_help_request
 operator|=
 literal|0
@@ -1254,30 +1259,12 @@ case|case
 literal|'c'
 case|:
 comment|/* SUSv2 */
-if|if
-condition|(
-name|mode
-operator|!=
-literal|'\0'
-condition|)
-name|bsdtar_errc
+name|set_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"Can't specify both -%c and -%c"
-argument_list|,
 name|opt
-argument_list|,
-name|mode
 argument_list|)
-expr_stmt|;
-name|mode
-operator|=
-name|opt
 expr_stmt|;
 break|break;
 case|case
@@ -1697,30 +1684,12 @@ case|case
 literal|'r'
 case|:
 comment|/* SUSv2 */
-if|if
-condition|(
-name|mode
-operator|!=
-literal|'\0'
-condition|)
-name|bsdtar_errc
+name|set_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"Can't specify both -%c and -%c"
-argument_list|,
 name|opt
-argument_list|,
-name|mode
 argument_list|)
-expr_stmt|;
-name|mode
-operator|=
-name|opt
 expr_stmt|;
 break|break;
 case|case
@@ -1738,30 +1707,12 @@ case|case
 literal|'t'
 case|:
 comment|/* SUSv2 */
-if|if
-condition|(
-name|mode
-operator|!=
-literal|'\0'
-condition|)
-name|bsdtar_errc
+name|set_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"Can't specify both -%c and -%c"
-argument_list|,
 name|opt
-argument_list|,
-name|mode
 argument_list|)
-expr_stmt|;
-name|mode
-operator|=
-name|opt
 expr_stmt|;
 name|bsdtar
 operator|->
@@ -1800,30 +1751,12 @@ case|case
 literal|'u'
 case|:
 comment|/* SUSv2 */
-if|if
-condition|(
-name|mode
-operator|!=
-literal|'\0'
-condition|)
-name|bsdtar_errc
+name|set_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"Can't specify both -%c and -%c"
-argument_list|,
 name|opt
-argument_list|,
-name|mode
 argument_list|)
-expr_stmt|;
-name|mode
-operator|=
-name|opt
 expr_stmt|;
 break|break;
 case|case
@@ -1885,30 +1818,12 @@ case|case
 literal|'x'
 case|:
 comment|/* SUSv2 */
-if|if
-condition|(
-name|mode
-operator|!=
-literal|'\0'
-condition|)
-name|bsdtar_errc
+name|set_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"Can't specify both -%c and -%c"
-argument_list|,
 name|opt
-argument_list|,
-name|mode
 argument_list|)
-expr_stmt|;
-name|mode
-operator|=
-name|opt
 expr_stmt|;
 break|break;
 case|case
@@ -2084,6 +1999,8 @@ comment|/* 	 * Sanity-check options. 	 */
 if|if
 condition|(
 operator|(
+name|bsdtar
+operator|->
 name|mode
 operator|==
 literal|'\0'
@@ -2105,6 +2022,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|bsdtar
+operator|->
 name|mode
 operator|==
 literal|'\0'
@@ -2131,8 +2050,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 literal|"-P"
 argument_list|,
 literal|"xcru"
@@ -2147,8 +2064,6 @@ condition|)
 name|only_mode
 argument_list|(
 name|bsdtar
-argument_list|,
-name|mode
 argument_list|,
 literal|"-X"
 argument_list|,
@@ -2165,8 +2080,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 literal|"--fast-read"
 argument_list|,
 literal|"xt"
@@ -2182,8 +2095,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 literal|"--nodump"
 argument_list|,
 literal|"cru"
@@ -2198,6 +2109,8 @@ condition|)
 block|{
 switch|switch
 condition|(
+name|bsdtar
+operator|->
 name|mode
 condition|)
 block|{
@@ -2236,8 +2149,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 literal|"-o"
 argument_list|,
 literal|"xc"
@@ -2256,8 +2167,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 literal|"-n"
 argument_list|,
 literal|"cru"
@@ -2272,8 +2181,6 @@ condition|)
 name|only_mode
 argument_list|(
 name|bsdtar
-argument_list|,
-name|mode
 argument_list|,
 literal|"-O"
 argument_list|,
@@ -2290,8 +2197,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 literal|"--check-links"
 argument_list|,
 literal|"cr"
@@ -2306,6 +2211,8 @@ name|create_compression
 operator|==
 literal|'Z'
 operator|&&
+name|bsdtar
+operator|->
 name|mode
 operator|==
 literal|'c'
@@ -2355,8 +2262,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 name|buff
 argument_list|,
 literal|"cxt"
@@ -2374,8 +2279,6 @@ condition|)
 name|only_mode
 argument_list|(
 name|bsdtar
-argument_list|,
-name|mode
 argument_list|,
 literal|"-F"
 argument_list|,
@@ -2411,8 +2314,6 @@ name|only_mode
 argument_list|(
 name|bsdtar
 argument_list|,
-name|mode
-argument_list|,
 name|buff
 argument_list|,
 literal|"cru"
@@ -2433,6 +2334,8 @@ name|optind
 expr_stmt|;
 switch|switch
 condition|(
+name|bsdtar
+operator|->
 name|mode
 condition|)
 block|{
@@ -2497,6 +2400,60 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|set_mode
+parameter_list|(
+name|struct
+name|bsdtar
+modifier|*
+name|bsdtar
+parameter_list|,
+name|char
+name|opt
+parameter_list|)
+block|{
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|mode
+operator|!=
+literal|'\0'
+operator|&&
+name|bsdtar
+operator|->
+name|mode
+operator|!=
+name|opt
+condition|)
+name|bsdtar_errc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Can't specify both -%c and -%c"
+argument_list|,
+name|opt
+argument_list|,
+name|bsdtar
+operator|->
+name|mode
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|mode
+operator|=
+name|opt
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Verify that the mode is correct.  */
 end_comment
@@ -2510,9 +2467,6 @@ name|struct
 name|bsdtar
 modifier|*
 name|bsdtar
-parameter_list|,
-name|char
-name|mode
 parameter_list|,
 specifier|const
 name|char
@@ -2531,6 +2485,8 @@ name|strchr
 argument_list|(
 name|valid_modes
 argument_list|,
+name|bsdtar
+operator|->
 name|mode
 argument_list|)
 operator|==
@@ -2548,6 +2504,8 @@ literal|"Option %s is not permitted in mode -%c"
 argument_list|,
 name|opt
 argument_list|,
+name|bsdtar
+operator|->
 name|mode
 argument_list|)
 expr_stmt|;
@@ -3007,7 +2965,7 @@ name|_PATH_DEFTAPE
 literal|")\n"
 literal|"  -v    Verbose\n"
 literal|"  -w    Interactive\n"
-literal|"Create: %p -c [options] [<file> |<dir> | @<archive> | C=<dir> ]\n"
+literal|"Create: %p -c [options] [<file> |<dir> | @<archive> | -C<dir> ]\n"
 literal|"<file>,<dir>  add these items to archive\n"
 literal|"  -z, -j  Compress archive with gzip/bzip2\n"
 literal|"  -F {ustar|pax|cpio|shar}  Select archive format\n"
@@ -3020,7 +2978,7 @@ directive|else
 literal|"  -W exclude=<pattern>  Skip files that match pattern\n"
 endif|#
 directive|endif
-literal|"  C=<dir>  Change to<dir> before processing remaining files\n"
+literal|"  -C<dir>  Change to<dir> before processing remaining files\n"
 literal|"  @<archive>  Add entries from<archive> to output\n"
 literal|"List: %p -t [options] [<patterns>]\n"
 literal|"<patterns>  If specified, list only entries that match\n"
