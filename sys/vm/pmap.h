@@ -422,6 +422,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_remove_all
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_remove_pages
 parameter_list|(
 name|pmap_t

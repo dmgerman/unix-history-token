@@ -883,17 +883,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pmap_remove_all
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|pmap_enter_quick
 parameter_list|(
 name|pmap_t
@@ -5950,7 +5939,6 @@ comment|/*  *	Routine:	pmap_remove_all  *	Function:  *		Removes this physical pa
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|pmap_remove_all
 parameter_list|(
