@@ -953,7 +953,8 @@ name|w_spin
 condition|)
 name|panic
 argument_list|(
-literal|"mutex_enter: MTX_SPIN on MTX_DEF mutex %s @ %s:%d"
+literal|"mutex_enter: MTX_SPIN on MTX_DEF mutex %s @"
+literal|" %s:%d"
 argument_list|,
 name|m
 operator|->
@@ -1008,8 +1009,8 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"mutex_enter(%s:%x, MTX_SPIN) out of order @ %s:%d"
-literal|" already holding %s:%x"
+literal|"mutex_enter(%s:%x, MTX_SPIN) out of order @"
+literal|" %s:%d already holding %s:%x"
 argument_list|,
 name|m
 operator|->
@@ -1617,7 +1618,8 @@ name|w_spin
 condition|)
 name|panic
 argument_list|(
-literal|"mutex_exit: MTX_SPIN on MTX_DEF mutex %s @ %s:%d"
+literal|"mutex_exit: MTX_SPIN on MTX_DEF mutex %s @"
+literal|" %s:%d"
 argument_list|,
 name|m
 operator|->

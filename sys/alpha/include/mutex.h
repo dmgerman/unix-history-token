@@ -1676,8 +1676,6 @@ argument_list|,
 name|STR_mtx_bad_type
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 if|if
 condition|(
 operator|(
@@ -1687,7 +1685,7 @@ operator|&
 name|MTX_SPIN
 condition|)
 block|{
-comment|/* 			 * Easy cases of spin locks: 			 * 			 * 1) We already own the lock and will simply 			 *    recurse on it (if RLIKELY) 			 * 			 * 2) The lock is free, we just get it 			 */
+comment|/* 		 * Easy cases of spin locks: 		 * 		 * 1) We already own the lock and will simply recurse on it (if 		 *    RLIKELY) 		 * 		 * 2) The lock is free, we just get it 		 */
 if|if
 condition|(
 operator|(
@@ -1697,7 +1695,7 @@ operator|&
 name|MTX_RLIKELY
 condition|)
 block|{
-comment|/* 				 * Check for recursion, if we already 				 * have this lock we just bump the 				 * recursion count. 				 */
+comment|/* 			 * Check for recursion, if we already have this lock we 			 * just bump the recursion count. 			 */
 if|if
 condition|(
 name|mpp
@@ -1712,8 +1710,9 @@ operator|->
 name|mtx_recurse
 operator|++
 expr_stmt|;
-break|break;
-comment|/* Done */
+goto|goto
+name|done
+goto|;
 block|}
 block|}
 if|if
@@ -1728,7 +1727,8 @@ operator|)
 operator|==
 literal|0
 condition|)
-comment|/* 				 * If an interrupt thread uses this 				 * we must block interrupts here. 				 */
+block|{
+comment|/* 			 * If an interrupt thread uses this we must block 			 * interrupts here. 			 */
 name|_getlock_spin_block
 argument_list|(
 name|mpp
@@ -1742,8 +1742,8 @@ operator|&
 name|MTX_HARDOPTS
 argument_list|)
 expr_stmt|;
+block|}
 else|else
-block|{
 name|_getlock_norecurse
 argument_list|(
 name|mpp
@@ -1758,7 +1758,6 @@ name|MTX_HARDOPTS
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
 comment|/* Sleep locks */
@@ -1770,7 +1769,6 @@ operator|)
 operator|&
 name|MTX_RLIKELY
 condition|)
-block|{
 name|_getlock_sleep
 argument_list|(
 name|mpp
@@ -1784,9 +1782,7 @@ operator|&
 name|MTX_HARDOPTS
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|_getlock_norecurse
 argument_list|(
 name|mpp
@@ -1801,13 +1797,8 @@ name|MTX_HARDOPTS
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-do|while
-condition|(
-literal|0
-condition|)
-do|;
+name|done
+label|:
 name|WITNESS_ENTER
 argument_list|(
 name|mpp
