@@ -9798,8 +9798,6 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-literal|"fd"
-argument_list|,
 literal|"hard error"
 argument_list|,
 name|LOG_PRINTF

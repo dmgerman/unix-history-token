@@ -4855,9 +4855,7 @@ endif|#
 directive|endif
 argument|}  static void wderror(struct buf *bp, struct disk *du, char *mesg) { 	if (bp == NULL) 		printf(
 literal|"wd%d: %s"
-argument|, du->dk_lunit, mesg); 	else 		diskerr(bp,
-literal|"wd"
-argument|, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->b_dev, du->dk_slices)); 	printf(
+argument|, du->dk_lunit, mesg); 	else 		diskerr(bp, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->b_dev, du->dk_slices)); 	printf(
 literal|" (status %b error %b)\n"
 argument|, 	       du->dk_status, WDCS_BITS, du->dk_error, WDERR_BITS); }
 comment|/*  * Discard any interrupts that were latched by the interrupt system while  * we were doing polled i/o.  */

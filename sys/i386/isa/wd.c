@@ -9865,8 +9865,6 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-literal|"wd"
-argument_list|,
 name|mesg
 argument_list|,
 name|LOG_PRINTF

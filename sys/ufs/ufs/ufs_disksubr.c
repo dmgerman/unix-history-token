@@ -1298,8 +1298,6 @@ name|diskerr
 parameter_list|(
 name|bp
 parameter_list|,
-name|dname
-parameter_list|,
 name|what
 parameter_list|,
 name|pri
@@ -1316,31 +1314,19 @@ name|bp
 decl_stmt|;
 name|char
 modifier|*
-name|dname
-decl_stmt|,
-decl|*
 name|what
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|pri
 decl_stmt|,
 name|blkdone
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|disklabel
 modifier|*
 name|lp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|unit
@@ -1669,7 +1655,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

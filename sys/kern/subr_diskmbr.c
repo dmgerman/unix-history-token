@@ -931,13 +931,6 @@ name|diskerr
 argument_list|(
 name|bp
 argument_list|,
-name|devtoname
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|,
 literal|"error reading primary partition table"
 argument_list|,
 name|LOG_PRINTF
@@ -1814,13 +1807,6 @@ block|{
 name|diskerr
 argument_list|(
 name|bp
-argument_list|,
-name|devtoname
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
 argument_list|,
 literal|"error reading extended partition table"
 argument_list|,
