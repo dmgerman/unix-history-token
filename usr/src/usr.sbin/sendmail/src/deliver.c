@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.78 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.79 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5030,6 +5030,13 @@ operator|++
 index|]
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* run disconnected from terminal */
+operator|(
+name|void
+operator|)
+name|setsid
+argument_list|()
 expr_stmt|;
 comment|/* try to execute the mailer */
 name|execve
