@@ -20,25 +20,6 @@ name|void
 name|tninit
 parameter_list|()
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-name|Sent3270TerminalType
-operator|=
-literal|0
-expr_stmt|;
-name|Ifrontp
-operator|=
-name|Ibackp
-operator|=
-name|Ibuf
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(TN3270) */
 name|init_terminal
 argument_list|()
 expr_stmt|;
@@ -48,28 +29,6 @@ expr_stmt|;
 name|init_telnet
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
-name|init_ctlr
-argument_list|()
-expr_stmt|;
-comment|/* Initialize some things */
-name|init_keyboard
-argument_list|()
-expr_stmt|;
-name|init_screen
-argument_list|()
-expr_stmt|;
-name|init_system
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(TN3270) */
 block|}
 end_function
 
