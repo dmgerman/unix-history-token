@@ -406,7 +406,10 @@ name|iobase2
 decl_stmt|;
 name|u_int32_t
 name|iocfg
+init|=
+literal|0
 decl_stmt|;
+comment|/* quiet bogus gcc warning */
 name|int
 name|unit
 init|=
