@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.4 %G%"
+literal|"@(#)pcfunc.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,10 +129,6 @@ name|struct
 name|nl
 modifier|*
 name|rettype
-decl_stmt|;
-name|struct
-name|tmps
-name|soffset
 decl_stmt|;
 comment|/* 	 * Verify that the given name 	 * is defined and the name of 	 * a function. 	 */
 name|p
@@ -1327,15 +1323,6 @@ return|;
 case|case
 name|O_SQR2
 case|:
-name|soffset
-operator|=
-name|sizes
-index|[
-name|cbn
-index|]
-operator|.
-name|curtmps
-expr_stmt|;
 if|if
 condition|(
 name|isa
@@ -1503,12 +1490,6 @@ argument_list|(
 name|P2COMOP
 argument_list|,
 name|temptype
-argument_list|)
-expr_stmt|;
-name|tmpfree
-argument_list|(
-operator|&
-name|soffset
 argument_list|)
 expr_stmt|;
 return|return
