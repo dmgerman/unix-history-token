@@ -220,36 +220,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|user_from_uid
-name|__P
-argument_list|(
-operator|(
-name|uid_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|group_from_gid
-name|__P
-argument_list|(
-operator|(
-name|gid_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * rm --  *	This rm is different from historic rm's, but is expected to match  *	POSIX 1003.2 behavior.  The most visible difference is that -f  *	has two specific effects now, ignore non-existent files and force  * 	file removal.  */
 end_comment
