@@ -27,9 +27,6 @@ name|u_int32_t
 name|phys_hi
 decl_stmt|;
 name|u_int32_t
-name|phys_mid
-decl_stmt|;
-name|u_int32_t
 name|phys_lo
 decl_stmt|;
 name|u_int32_t
@@ -70,6 +67,28 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UPA_REG_PHYS
+parameter_list|(
+name|r
+parameter_list|)
+define|\
+value|(((u_int64_t)(r)->phys_hi<< 32) | (u_int64_t)(r)->phys_lo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPA_REG_SIZE
+parameter_list|(
+name|r
+parameter_list|)
+define|\
+value|(((u_int64_t)(r)->size_hi<< 32) | (u_int64_t)(r)->size_lo)
+end_define
 
 begin_define
 define|#

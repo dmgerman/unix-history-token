@@ -35,30 +35,10 @@ name|NEXUS_IVAR_INTERRUPTS
 block|,
 name|NEXUS_IVAR_NINTERRUPTS
 block|,
-name|NEXUS_IVAR_BUSTAG
-block|,
 name|NEXUS_IVAR_DMATAG
 block|, }
 enum|;
 end_enum
-
-begin_comment
-comment|/* XXX: these are the UPA registers and should probably go elsewhere */
-end_comment
-
-begin_struct
-struct|struct
-name|ofw_nexus_reg
-block|{
-name|int64_t
-name|or_paddr
-decl_stmt|;
-name|int64_t
-name|or_len
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Simplified accessors for nexus devices  * XXX: These should be made specializations of generic bus accessor macros  * instead of having multiple implementations around.  */
@@ -130,7 +110,7 @@ argument|reg
 argument_list|,
 argument|REG
 argument_list|,
-argument|struct ofw_nexus_reg *
+argument|struct upa_regs *
 argument_list|)
 end_macro
 
@@ -164,17 +144,6 @@ argument_list|,
 argument|NINTERRUPTS
 argument_list|,
 argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|NEXUS_ACCESSOR
-argument_list|(
-argument|bustag
-argument_list|,
-argument|BUSTAG
-argument_list|,
-argument|bus_space_tag_t
 argument_list|)
 end_macro
 

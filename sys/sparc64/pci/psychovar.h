@@ -26,7 +26,7 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-comment|/* 	 * PSYCHO register.  we record the base physical address of these  	 * also as it is the base of the entire PSYCHO 	 */
+comment|/* 	 * PSYCHO register.  we record the base physical address of these 	 * also as it is the base of the entire PSYCHO 	 */
 name|struct
 name|psychoreg
 modifier|*
@@ -42,6 +42,9 @@ decl_stmt|;
 comment|/* our tags (from parent) */
 name|bus_space_tag_t
 name|sc_bustag
+decl_stmt|;
+name|bus_space_handle_t
+name|sc_bushandle
 decl_stmt|;
 name|bus_dma_tag_t
 name|sc_dmatag
@@ -72,7 +75,12 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
-name|sc_irq
+name|sc_mem_res
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|sc_irq_res
 index|[
 literal|6
 index|]
