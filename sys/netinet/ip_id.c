@@ -623,6 +623,7 @@ name|struct
 name|timeval
 name|time
 decl_stmt|;
+comment|/* XXX not reentrant */
 name|getmicrotime
 argument_list|(
 operator|&
