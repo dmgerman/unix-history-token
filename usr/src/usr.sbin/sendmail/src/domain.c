@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.8.1.1 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.9 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.8.1.1 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.9 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,6 +550,17 @@ name|rcode
 operator|=
 name|EX_NOHOST
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|UseNameServer
+condition|)
+block|{
+comment|/* might exist in /etc/hosts */
+goto|goto
+name|punt
+goto|;
+block|}
 break|break;
 case|case
 name|TRY_AGAIN
