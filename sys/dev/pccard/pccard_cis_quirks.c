@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: pcmcia_cis_quirks.c,v 1.5 1999/10/11 17:50:21 thorpej Exp $	*/
+comment|/*	$NetBSD: pcmcia_cis_quirks.c,v 1.6 2000/04/12 21:07:55 scw Exp $ */
 end_comment
 
 begin_comment
@@ -480,6 +480,80 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
+name|pccard_function
+name|pccard_ndc_nd5100_func0
+init|=
+block|{
+literal|0
+block|,
+comment|/* function number */
+name|PCCARD_FUNCTION_NETWORK
+block|,
+literal|0x23
+block|,
+comment|/* last cfe number */
+literal|0x3f8
+block|,
+comment|/* ccr_base */
+literal|0x3
+block|,
+comment|/* ccr_mask */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_config_entry
+name|pccard_ndc_nd5100_func0_cfe0
+init|=
+block|{
+literal|0x20
+block|,
+comment|/* cfe number */
+name|PCCARD_CFE_MWAIT_REQUIRED
+operator||
+name|PCCARD_CFE_IO16
+operator||
+name|PCCARD_CFE_IRQLEVEL
+block|,
+name|PCCARD_IFTYPE_IO
+block|,
+literal|1
+block|,
+comment|/* num_iospace */
+literal|5
+block|,
+comment|/* iomask */
+block|{
+block|{
+literal|0x20
+block|,
+literal|0x300
+block|}
+block|}
+block|,
+comment|/* iospace */
+literal|0xdeb8
+block|,
+comment|/* irqmask */
+literal|0
+block|,
+comment|/* num_memspace */
+block|{ }
+block|,
+comment|/* memspace */
+literal|0
+block|,
+comment|/* maxtwins */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|pccard_cis_quirk
 name|pccard_cis_quirks
 index|[]
@@ -581,6 +655,20 @@ name|pccard_sveclancard_func0
 block|,
 operator|&
 name|pccard_sveclancard_func0_cfe0
+block|}
+block|,
+block|{
+name|PCCARD_VENDOR_INVALID
+block|,
+name|PCCARD_PRODUCT_INVALID
+block|,
+name|PCCARD_CIS_NDC_ND5100_E
+block|,
+operator|&
+name|pccard_ndc_nd5100_func0
+block|,
+operator|&
+name|pccard_ndc_nd5100_func0_cfe0
 block|}
 block|, }
 decl_stmt|;
