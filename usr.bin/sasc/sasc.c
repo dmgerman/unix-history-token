@@ -4,13 +4,19 @@ comment|/* sasc(1) - utility for the `asc' scanner device driver  *  *  * Copyri
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: sasc.c,v 1.4 1997/02/22 19:56:57 peter Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
