@@ -2530,8 +2530,9 @@ block|{
 name|size_t
 name|asize
 init|=
+literal|4
+operator|-
 operator|(
-operator|~
 name|noffset
 operator|&
 literal|3
@@ -2716,8 +2717,9 @@ block|{
 name|size_t
 name|asize
 init|=
+literal|4
+operator|-
 operator|(
-operator|~
 name|noffset
 operator|&
 literal|3
@@ -2906,8 +2908,9 @@ block|{
 name|size_t
 name|asize
 init|=
+literal|4
+operator|-
 operator|(
-operator|~
 name|noffset
 operator|&
 literal|3
