@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.10 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -213,9 +219,10 @@ specifier|register
 name|int
 name|nent
 decl_stmt|,
-name|strsize
-decl_stmt|,
 name|cc
+decl_stmt|;
+name|size_t
+name|strsize
 decl_stmt|;
 name|struct
 name|nlist
@@ -307,6 +314,30 @@ name|symoff
 operator|+
 name|symsize
 expr_stmt|;
+comment|/* Check for files too large to mmap. */
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|-
+name|stroff
+operator|>
+name|SIZE_T_MAX
+condition|)
+block|{
+name|errno
+operator|=
+name|EFBIG
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 	 * Map string table into our address space.  This gives us 	 * an easy way to randomly access all the strings, without 	 * making the memory allocation permanent as with malloc/free 	 * (i.e., munmap will return it to the system). 	 */
 name|strsize
 operator|=
 name|st
@@ -315,18 +346,20 @@ name|st_size
 operator|-
 name|stroff
 expr_stmt|;
-comment|/* 	 * Map string table into our address space.  This gives us 	 * an easy way to randomly access all the strings, without 	 * making the memory allocation permanent as with malloc/free 	 * (i.e., munmap will return it to the system). 	 */
 name|strtab
 operator|=
 name|mmap
 argument_list|(
-literal|0
+name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|strsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
+literal|0
 argument_list|,
 name|fd
 argument_list|,
