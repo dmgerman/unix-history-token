@@ -254,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_ONE_FILE_SYSTEM
-value|5
+value|6
 end_define
 
 begin_decl_stmt
