@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: rpc_fwd.c,v 5.2 90/06/23 22:19:57 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)rpc_fwd.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: rpc_fwd.c,v 5.2.1.2 91/03/03 20:46:57 jsp Alpha $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)rpc_fwd.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -373,6 +373,9 @@ directive|endif
 comment|/* DEBUG */
 name|free
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -785,16 +788,25 @@ comment|/* 	 * The sendto may fail if, for example, the route 	 * to a remote ho
 ifdef|#
 directive|ifdef
 name|DEBUG
+block|{
+name|char
+name|dq
+index|[
+literal|20
+index|]
+decl_stmt|;
 name|dlog
 argument_list|(
-literal|"Sending packet id %#x to %#08x.%04x"
+literal|"Sending packet id %#x to %s.%d"
 argument_list|,
 name|p
 operator|->
 name|rf_xid
 argument_list|,
-name|ntohl
+name|inet_dquad
 argument_list|(
+name|dq
+argument_list|,
 name|fwdto
 operator|->
 name|sin_addr
@@ -810,6 +822,7 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DEBUG */
@@ -1259,6 +1272,9 @@ operator|->
 name|rf_fwd
 call|)
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|pkt
 argument_list|,
 name|rc
@@ -1294,6 +1310,9 @@ name|DYNAMIC_BUFFERS
 comment|/* 	 * Free the packet 	 */
 name|free
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|pkt
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: misc_rpc.c,v 5.2 90/06/23 22:19:38 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)misc_rpc.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: misc_rpc.c,v 5.2.1.2 90/11/04 23:17:21 jsp Exp $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)misc_rpc.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -533,15 +533,15 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISC_RPC
-end_ifdef
-
 begin_comment
 comment|/*  * Early RPC seems to be missing these..  * Extracted from the RPC 3.9 sources as indicated  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_XDR_POINTER
+end_ifdef
 
 begin_comment
 comment|/* @(#)xdr_reference.c	1.1 87/11/04 3.9 RPCSRC */
@@ -647,6 +647,21 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEED_XDR_POINTER */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_CLNT_SPERRNO
+end_ifdef
 
 begin_comment
 comment|/* @(#)clnt_perror.c	1.1 87/11/04 3.9 RPCSRC */
@@ -866,7 +881,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MISC_RPC */
+comment|/* NEED_CLNT_SPERRNO */
 end_comment
 
 end_unit

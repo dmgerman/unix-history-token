@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mtab.c,v 5.2 90/06/23 22:19:44 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: mtab.c,v 5.2.1.1 90/10/21 22:29:27 jsp Exp $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,6 +12,21 @@ end_include
 begin_comment
 comment|/*  * Firewall /etc/mtab entries  */
 end_comment
+
+begin_decl_stmt
+name|void
+name|mnt_free
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|mntent
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -68,6 +83,20 @@ begin_comment
 comment|/*  * Discard memory allocated for mount list  */
 end_comment
 
+begin_decl_stmt
+name|void
+name|discard_mntlist
+name|P
+argument_list|(
+operator|(
+name|mntlist
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|discard_mntlist
@@ -111,6 +140,9 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|mp2
 argument_list|)
 expr_stmt|;
@@ -121,6 +153,20 @@ end_function
 begin_comment
 comment|/*  * Throw away a mount list  */
 end_comment
+
+begin_decl_stmt
+name|void
+name|free_mntlist
+name|P
+argument_list|(
+operator|(
+name|mntlist
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -147,6 +193,25 @@ end_function
 begin_comment
 comment|/*  * Utility routine which determines the value of a  * numeric option in the mount options (such as port=%d).  * Returns 0 if the option is not specified.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|hasmntval
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|mntent
+operator|*
+name|mnt
+operator|,
+name|char
+operator|*
+name|opt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int

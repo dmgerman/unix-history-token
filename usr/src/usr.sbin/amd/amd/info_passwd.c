@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: info_passwd.c,v 5.2 90/06/23 22:19:34 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)info_passwd.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: info_passwd.c,v 5.2.1.2 91/03/03 20:39:38 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)info_passwd.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -36,22 +36,46 @@ begin_comment
 comment|/*  * Nothing to probe - check the map name is PASSWD_MAP.  */
 end_comment
 
-begin_macro
-name|passwd_init
-argument_list|(
-argument|map
-argument_list|)
-end_macro
-
 begin_decl_stmt
+name|int
+name|passwd_init
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|map
+operator|,
+name|time_t
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|passwd_init
+parameter_list|(
+name|map
+parameter_list|,
+name|tp
+parameter_list|)
 name|char
 modifier|*
 name|map
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|time_t
+modifier|*
+name|tp
+decl_stmt|;
 block|{
+operator|*
+name|tp
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|strcmp
 argument_list|(
@@ -67,11 +91,42 @@ else|:
 name|ENOENT
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Grab the entry via the getpwname routine  * Modify time is ignored by passwd - XXX  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|passwd_search
+name|P
+argument_list|(
+operator|(
+name|mnt_map
+operator|*
+name|m
+operator|,
+name|char
+operator|*
+name|map
+operator|,
+name|char
+operator|*
+name|key
+operator|,
+name|char
+operator|*
+operator|*
+name|pval
+operator|,
+name|time_t
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int

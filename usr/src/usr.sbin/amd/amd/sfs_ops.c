@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: sfs_ops.c,v 5.2 90/06/23 22:19:59 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sfs_ops.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: sfs_ops.c,v 5.2.1.2 90/12/21 16:41:47 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sfs_ops.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,7 +25,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|char
+modifier|*
 name|sfs_match
 parameter_list|(
 name|fo
@@ -148,40 +149,31 @@ name|opt_sublink
 operator|=
 name|fullpath
 expr_stmt|;
-name|free
-argument_list|(
-name|fo
-operator|->
-name|opt_fs
-argument_list|)
-expr_stmt|;
 name|fo
 operator|->
 name|opt_fs
 operator|=
-name|strdup
+name|str3cat
 argument_list|(
+name|fo
+operator|->
+name|opt_fs
+argument_list|,
 literal|"."
+argument_list|,
+name|fullpath
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
-name|fo
-operator|->
-name|fs_mtab
-operator|=
-name|strealloc
+return|return
+name|strdup
 argument_list|(
-name|fo
-operator|->
-name|fs_mtab
-argument_list|,
 name|fo
 operator|->
 name|opt_fs
 argument_list|)
-expr_stmt|;
-return|return
-literal|1
 return|;
 block|}
 end_function
@@ -193,13 +185,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|sfs_mount
+name|sfs_fmount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
+name|mntfs
 modifier|*
-name|mp
+name|mf
 decl_stmt|;
 block|{
 comment|/* 	 * Wow - this is hard to implement! 	 */
@@ -216,13 +208,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|sfs_umount
+name|sfs_fumount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
+name|mntfs
 modifier|*
-name|mp
+name|mf
 decl_stmt|;
 block|{
 return|return
@@ -247,9 +239,13 @@ block|,
 literal|0
 block|,
 comment|/* sfs_init */
-name|sfs_mount
+name|auto_fmount
 block|,
-name|sfs_umount
+name|sfs_fmount
+block|,
+name|auto_fumount
+block|,
+name|sfs_fumount
 block|,
 name|efs_lookuppn
 block|,

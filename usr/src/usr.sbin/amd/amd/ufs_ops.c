@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: ufs_ops.c,v 5.2 90/06/23 22:20:03 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ops.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: ufs_ops.c,v 5.2.1.1 90/10/21 22:29:47 jsp Exp $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ops.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_comment
 comment|/* NFS_3 */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -70,6 +64,12 @@ begin_comment
 comment|/* UFS_HDR */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
 begin_comment
 comment|/*  * UN*X file system  */
 end_comment
@@ -78,9 +78,26 @@ begin_comment
 comment|/*  * UFS needs local filesystem and device.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|ufs_match
+name|P
+argument_list|(
+operator|(
+name|am_opts
+operator|*
+name|fo
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
-name|int
+name|char
+modifier|*
 name|ufs_match
 parameter_list|(
 name|fo
@@ -109,22 +126,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * Determine magic cookie to put in mtab 	 */
-name|fo
-operator|->
-name|fs_mtab
-operator|=
-name|strealloc
-argument_list|(
-name|fo
-operator|->
-name|fs_mtab
-argument_list|,
-name|fo
-operator|->
-name|opt_dev
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -144,8 +145,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
+comment|/* 	 * Determine magic cookie to put in mtab 	 */
 return|return
-literal|1
+name|strdup
+argument_list|(
+name|fo
+operator|->
+name|opt_dev
+argument_list|)
 return|;
 block|}
 end_function
@@ -334,23 +341,15 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ufs_mount
+name|ufs_fmount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
-modifier|*
-name|mp
-decl_stmt|;
-block|{
 name|mntfs
 modifier|*
 name|mf
-init|=
-name|mp
-operator|->
-name|am_mnt
 decl_stmt|;
+block|{
 name|int
 name|error
 decl_stmt|;
@@ -368,9 +367,7 @@ name|mf_info
 argument_list|,
 name|mf
 operator|->
-name|mf_fo
-operator|->
-name|opt_opts
+name|mf_mopts
 argument_list|)
 expr_stmt|;
 if|if
@@ -402,23 +399,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ufs_umount
+name|ufs_fumount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
-modifier|*
-name|mp
-decl_stmt|;
-block|{
 name|mntfs
 modifier|*
 name|mf
-init|=
-name|mp
-operator|->
-name|am_mnt
 decl_stmt|;
+block|{
 return|return
 name|UMOUNT_FS
 argument_list|(
@@ -446,9 +435,13 @@ block|,
 literal|0
 block|,
 comment|/* ufs_init */
-name|ufs_mount
+name|auto_fmount
 block|,
-name|ufs_umount
+name|ufs_fmount
+block|,
+name|auto_fumount
+block|,
+name|ufs_fumount
 block|,
 name|efs_lookuppn
 block|,

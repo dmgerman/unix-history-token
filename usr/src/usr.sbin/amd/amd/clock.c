@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: clock.c,v 5.2 90/06/23 22:19:21 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: clock.c,v 5.2.1.4 91/03/03 20:41:36 jsp Alpha $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Callouts.  *  * Modelled on kernel object of the same name.  * See usual references.  *  * Use of a heap-based mechanism was rejected:  * 1.  more complext implementation needed.  * 2.  not obvious that a list is too slow for amd.  */
+comment|/*  * Callouts.  *  * Modelled on kernel object of the same name.  * See usual references.  *  * Use of a heap-based mechanism was rejected:  * 1.  more complex implementation needed.  * 2.  not obvious that a list is too slow for Amd.  */
 end_comment
 
 begin_include
@@ -121,7 +121,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * Assumption: valid id's are non-zero.  */
+comment|/*  * Global assumption: valid id's are non-zero.  */
 end_comment
 
 begin_define
@@ -138,6 +138,17 @@ directive|define
 name|CID_UNDEF
 value|(0)
 end_define
+
+begin_function_decl
+specifier|static
+name|callout
+modifier|*
+name|alloc_callout
+parameter_list|(
+name|P_void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -178,6 +189,21 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|void
+name|free_callout
+name|P
+argument_list|(
+operator|(
+name|callout
+operator|*
+name|cp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -229,6 +255,30 @@ end_function
 begin_comment
 comment|/*  * Schedule a callout.  *  * (*fn)(closure) will be called at clocktime() + secs  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|timeout
+name|P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+name|secs
+operator|,
+name|void
+argument_list|(
+operator|*
+name|fn
+argument_list|)
+argument_list|()
+operator|,
+name|voidp
+name|closure
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -375,6 +425,19 @@ begin_comment
 comment|/*  * De-schedule a callout  */
 end_comment
 
+begin_decl_stmt
+name|void
+name|untimeout
+name|P
+argument_list|(
+operator|(
+name|int
+name|id
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|untimeout
@@ -439,8 +502,132 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Reschedule after clock changed  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|reschedule_timeouts
+name|P
+argument_list|(
+operator|(
+name|time_t
+name|now
+operator|,
+name|time_t
+name|then
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|reschedule_timeouts
+parameter_list|(
+name|now
+parameter_list|,
+name|then
+parameter_list|)
+name|time_t
+name|now
+decl_stmt|;
+name|time_t
+name|then
+decl_stmt|;
+block|{
+name|callout
+modifier|*
+name|cp
+decl_stmt|;
+for|for
+control|(
+name|cp
+operator|=
+name|callouts
+operator|.
+name|c_next
+init|;
+name|cp
+condition|;
+name|cp
+operator|=
+name|cp
+operator|->
+name|c_next
+control|)
+block|{
+if|if
+condition|(
+name|cp
+operator|->
+name|c_time
+operator|>=
+name|now
+operator|&&
+name|cp
+operator|->
+name|c_time
+operator|<=
+name|then
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"job %d rescheduled to run immediately"
+argument_list|,
+name|cp
+operator|->
+name|c_id
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|dlog
+argument_list|(
+literal|"rescheduling job %d back %d seconds"
+argument_list|,
+name|cp
+operator|->
+name|c_id
+argument_list|,
+name|cp
+operator|->
+name|c_time
+operator|-
+name|now
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|next_softclock
+operator|=
+name|cp
+operator|->
+name|c_time
+operator|=
+name|now
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * Clock handler  */
 end_comment
+
+begin_function_decl
+name|int
+name|softclock
+parameter_list|(
+name|P_void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -460,7 +647,7 @@ if|if
 condition|(
 name|task_notify_todo
 condition|)
-name|task_notify
+name|do_task_notify
 argument_list|()
 expr_stmt|;
 name|now

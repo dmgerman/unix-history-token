@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: umount_fs.c,v 5.2 90/06/23 22:20:04 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)umount_fs.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: umount_fs.c,v 5.2.1.2 91/03/03 20:34:23 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)umount_fs.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,6 +24,20 @@ end_include
 begin_comment
 comment|/* For MNT_NOFORCE */
 end_comment
+
+begin_decl_stmt
+name|int
+name|umount_fs
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|fs_name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -71,6 +85,9 @@ case|:
 case|case
 name|ENOTBLK
 case|:
+case|case
+name|ENOENT
+case|:
 name|plog
 argument_list|(
 name|XLOG_WARNING
@@ -85,19 +102,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Not really an error */
-break|break;
-case|case
-name|ENOENT
-case|:
-name|plog
-argument_list|(
-name|XLOG_ERROR
-argument_list|,
-literal|"mount point %s: %m"
-argument_list|,
-name|fs_name
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|EINTR

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: amd.c,v 5.2 90/06/23 22:19:18 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amd.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: amd.c,v 5.2.1.4 91/03/17 17:48:40 jsp Alpha $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amd.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -75,12 +69,27 @@ directive|ifdef
 name|HAS_HOST
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HOST_EXEC
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
 name|host_helper
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HOST_EXEC */
+end_comment
 
 begin_endif
 endif|#
@@ -115,6 +124,8 @@ name|hostname
 index|[
 name|MAXHOSTNAMELEN
 index|]
+init|=
+literal|"localhost"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +188,13 @@ comment|/* Big or Little endian */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|wire
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|foreground
 init|=
@@ -222,8 +240,6 @@ end_comment
 begin_decl_stmt
 name|serv_state
 name|amd_state
-init|=
-name|Start
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +311,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|* SYS5_SIGNALS */
+comment|/* SYS5_SIGNALS */
 switch|switch
 condition|(
 name|sig
@@ -348,6 +364,10 @@ begin_comment
 comment|/*  * Hook for cache reload.  * When a SIGHUP arrives it schedules a call to mapc_reload  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -371,7 +391,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SUS5_SIGNALS */
+comment|/* SYS5_SIGNALS */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -403,6 +423,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -432,10 +456,19 @@ parameter_list|)
 block|{
 name|int
 name|bgpid
-init|=
+decl_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|parent_exit
+argument_list|)
+expr_stmt|;
+name|bgpid
+operator|=
 name|background
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|bgpid
@@ -462,13 +495,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Now wait for the automount points to 		 * complete. 		 */
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|parent_exit
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -478,6 +504,13 @@ name|pause
 argument_list|()
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Pretend we are in the foreground again 	 */
 name|foreground
 operator|=
@@ -519,7 +552,8 @@ literal|"Could not open controlling tty: %m"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|ioctl
@@ -532,13 +566,24 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOTTY
 condition|)
-block|{
 name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
 literal|"Could not disassociate tty (TIOCNOTTY): %m"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|t
 argument_list|)
 expr_stmt|;
 block|}
@@ -577,15 +622,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|,
-modifier|*
-name|gethostbyname
-argument_list|()
-decl_stmt|;
 name|char
 modifier|*
 name|domdot
@@ -627,6 +663,63 @@ comment|/* 	 * Set processing status. 	 */
 name|amd_state
 operator|=
 name|Start
+expr_stmt|;
+comment|/* 	 * Determine program name 	 */
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|progname
+operator|=
+name|strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|progname
+operator|&&
+name|progname
+index|[
+literal|1
+index|]
+condition|)
+name|progname
+operator|++
+expr_stmt|;
+else|else
+name|progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|progname
+condition|)
+name|progname
+operator|=
+literal|"amd"
+expr_stmt|;
+comment|/* 	 * Initialise process id.  This is kept 	 * cached since it is used for generating 	 * and using file handles. 	 */
+name|mypid
+operator|=
+name|getpid
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Get local machine name 	 */
 if|if
@@ -754,27 +847,6 @@ argument_list|,
 name|sigchld
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialise process id.  This is kept 	 * cached since it is used for generating 	 * and using file handles. 	 */
-name|mypid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/*  * XXX - Doing this plugs most of a memory leak in  * gethostbyname on SunOS 4.  I see no good reason  * why the host database needs to grab 1.5K of  * private data space...  However, for the moment,  * I will take its word that it is a _good thing_  * (jsp)  */
-operator|(
-name|void
-operator|)
-name|sethostent
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* notdef */
 comment|/* 	 * Fix-up any umask problems.  Most systems default 	 * to 002 which is not too convenient for our purposes 	 */
 name|orig_umask
 operator|=
@@ -782,6 +854,12 @@ name|umask
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Figure out primary network name 	 */
+name|wire
+operator|=
+name|getwire
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Determine command-line arguments 	 */
 name|get_args
@@ -791,53 +869,29 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get our own IP address so that we 	 * can mount the automounter.  There 	 * is probably a better way of doing 	 * this, but messing about with SIOCGIFCONF 	 * seems to be heading towards the non-portable 	 * arena. 	 */
-name|hp
-operator|=
-name|gethostbyname
-argument_list|(
-name|hostname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hp
-operator|||
-name|hp
-operator|->
-name|h_addrtype
-operator|!=
-name|AF_INET
-condition|)
+comment|/* 	 * Get our own IP address so that we 	 * can mount the automounter. 	 */
 block|{
-name|plog
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|;
+name|get_myaddress
 argument_list|(
-name|XLOG_FATAL
-argument_list|,
-literal|"Can't determine IP address of this host (%s)"
-argument_list|,
-name|hostname
+operator|&
+name|sin
 argument_list|)
 expr_stmt|;
-name|going_down
-argument_list|(
-literal|1
-argument_list|)
+name|myipaddr
+operator|.
+name|s_addr
+operator|=
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
 expr_stmt|;
 block|}
-name|myipaddr
-operator|=
-operator|*
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
-name|hp
-operator|->
-name|h_addr
-expr_stmt|;
 comment|/* 	 * Now check we are root. 	 */
 if|if
 condition|(

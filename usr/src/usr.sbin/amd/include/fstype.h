@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: fstype.h,v 5.2 90/06/23 22:20:30 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)fstype.h	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: fstype.h,v 5.2.1.2 90/11/04 23:17:38 jsp Exp $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)fstype.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -26,6 +26,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* Automount file system (this!) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|toplvl_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Top-level automount file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|root_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Root file system */
 end_comment
 
 begin_decl_stmt
@@ -161,6 +183,12 @@ directive|define
 name|HAS_HOST
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAS_NFSX
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|am_ops
@@ -170,6 +198,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* NFS */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|nfsx_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* NFS X */
 end_comment
 
 begin_decl_stmt
@@ -321,6 +360,27 @@ end_decl_stmt
 
 begin_comment
 comment|/* Symlink FS */
+end_comment
+
+begin_comment
+comment|/*  * Union file system  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_UNION_FS
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|union_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Union FS */
 end_comment
 
 end_unit

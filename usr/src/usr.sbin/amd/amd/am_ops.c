@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: am_ops.c,v 5.2 90/06/23 22:19:19 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)am_ops.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: am_ops.c,v 5.2.1.3 91/03/03 20:37:39 jsp Alpha $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)am_ops.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,7 +25,6 @@ name|ufs_ops
 block|,
 endif|#
 directive|endif
-comment|/* HAS_UFS */
 ifdef|#
 directive|ifdef
 name|HAS_NFS
@@ -34,7 +33,14 @@ name|nfs_ops
 block|,
 endif|#
 directive|endif
-comment|/* HAS_NFS */
+ifdef|#
+directive|ifdef
+name|HAS_NFSX
+operator|&
+name|nfsx_ops
+block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAS_HOST
@@ -43,7 +49,6 @@ name|host_ops
 block|,
 endif|#
 directive|endif
-comment|/* HAS_HOST */
 ifdef|#
 directive|ifdef
 name|HAS_SFS
@@ -52,7 +57,6 @@ name|sfs_ops
 block|,
 endif|#
 directive|endif
-comment|/* HAS_SFS */
 ifdef|#
 directive|ifdef
 name|HAS_LOFS
@@ -61,7 +65,6 @@ name|lofs_ops
 block|,
 endif|#
 directive|endif
-comment|/* HAS_LOFS */
 ifdef|#
 directive|ifdef
 name|HAS_PFS
@@ -70,23 +73,108 @@ name|pfs_ops
 block|,
 endif|#
 directive|endif
-comment|/* HAS_PFS */
+ifdef|#
+directive|ifdef
+name|HAS_UNION_FS
+operator|&
+name|union_ops
+block|,
+endif|#
+directive|endif
 operator|&
 name|afs_ops
 block|,
-comment|/* These three should be last ... */
+comment|/* These four should be last ... */
 operator|&
 name|dfs_ops
 block|,
 comment|/* ... */
 operator|&
+name|toplvl_ops
+block|,
+comment|/* ... */
+operator|&
 name|efs_ops
 block|,
-comment|/* ... in the order afs; dfs; efs */
+comment|/* ... in the order afs; dfs; toplvl; efs */
 literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ops_showfstypes
+name|P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+name|fp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|ops_showfstypes
+parameter_list|(
+name|fp
+parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+name|struct
+name|am_ops
+modifier|*
+modifier|*
+name|ap
+decl_stmt|;
+name|char
+modifier|*
+name|sep
+init|=
+literal|""
+decl_stmt|;
+for|for
+control|(
+name|ap
+operator|=
+name|vops
+init|;
+operator|*
+name|ap
+condition|;
+name|ap
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|sep
+argument_list|,
+operator|(
+operator|*
+name|ap
+operator|)
+operator|->
+name|fs_type
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|", "
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -328,7 +416,11 @@ name|plog
 argument_list|(
 name|XLOG_USER
 argument_list|,
-literal|"No fs type specified (somewhere!)"
+literal|"No fs type specified (key = \"%s\", map = \"%s\")"
+argument_list|,
+name|keym
+argument_list|,
+name|map
 argument_list|)
 expr_stmt|;
 name|rop
@@ -427,6 +519,26 @@ expr_stmt|;
 comment|/* 	 * Check the filesystem is happy 	 */
 if|if
 condition|(
+name|fo
+operator|->
+name|fs_mtab
+condition|)
+name|free
+argument_list|(
+operator|(
+name|voidp
+operator|)
+name|fo
+operator|->
+name|fs_mtab
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fo
+operator|->
+name|fs_mtab
+operator|=
 call|(
 modifier|*
 name|rop
@@ -441,15 +553,16 @@ return|return
 name|rop
 return|;
 comment|/* 	 * Return error file system 	 */
+name|fo
+operator|->
+name|fs_mtab
+operator|=
 call|(
-name|void
-call|)
-argument_list|(
-operator|*
+modifier|*
 name|efs_ops
 operator|.
 name|fs_match
-argument_list|)
+call|)
 argument_list|(
 name|fo
 argument_list|)

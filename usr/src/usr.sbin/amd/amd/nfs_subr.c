@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: nfs_subr.c,v 5.2 90/06/23 22:19:50 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subr.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: nfs_subr.c,v 5.2.1.4 91/03/03 20:46:34 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subr.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,7 +19,7 @@ directive|ifdef
 name|NFS_ERROR_MAPPING
 end_ifdef
 
-begin_function
+begin_decl_stmt
 name|NFS_ERROR_MAPPING
 define|#
 directive|define
@@ -41,6 +41,32 @@ value|((nfsstat)(e))
 endif|#
 directive|endif
 comment|/* NFS_ERROR_MAPPING */
+specifier|static
+name|char
+modifier|*
+name|do_readlink
+name|P
+argument_list|(
+operator|(
+name|am_node
+operator|*
+name|mp
+operator|,
+name|int
+operator|*
+name|error_return
+operator|,
+expr|struct
+name|attrstat
+operator|*
+operator|*
+name|attrpp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -160,9 +186,7 @@ operator|=
 operator|&
 name|mp
 operator|->
-name|am_mnt
-operator|->
-name|mf_attr
+name|am_attr
 expr_stmt|;
 return|return
 name|ln
@@ -313,9 +337,7 @@ init|=
 operator|&
 name|mp
 operator|->
-name|am_mnt
-operator|->
-name|mf_attr
+name|am_attr
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -324,9 +346,7 @@ if|if
 condition|(
 name|mp
 operator|->
-name|am_mnt
-operator|->
-name|mf_fattr
+name|am_fattr
 operator|.
 name|type
 operator|==
@@ -709,37 +729,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|ap
-operator|->
-name|am_mnt
-operator|->
-name|mf_fattr
-operator|.
-name|size
-operator|<
-literal|0
-condition|)
-name|dlog
-argument_list|(
-literal|"\tERROR: size = %d!"
-argument_list|,
-name|ap
-operator|->
-name|am_mnt
-operator|->
-name|mf_fattr
-operator|.
-name|size
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|mp_to_fh
 argument_list|(
 name|ap
@@ -764,9 +753,7 @@ name|attributes
 operator|=
 name|ap
 operator|->
-name|am_mnt
-operator|->
-name|mf_fattr
+name|am_fattr
 expr_stmt|;
 name|res
 operator|.
@@ -899,6 +886,7 @@ argument_list|,
 operator|(
 expr|struct
 name|attrstat
+operator|*
 operator|*
 operator|)
 literal|0
@@ -1225,6 +1213,9 @@ name|svc_req
 modifier|*
 name|rqstp
 decl_stmt|;
+name|int
+name|unlinkp
+decl_stmt|;
 block|{
 specifier|static
 name|nfsstat
@@ -1233,10 +1224,7 @@ decl_stmt|;
 name|int
 name|retry
 decl_stmt|;
-name|mntfs
-modifier|*
-name|mf
-decl_stmt|;
+comment|/*mntfs *mf;*/
 name|am_node
 modifier|*
 name|mp
@@ -1281,17 +1269,12 @@ goto|goto
 name|out
 goto|;
 block|}
-name|mf
-operator|=
-name|mp
-operator|->
-name|am_mnt
-expr_stmt|;
+comment|/*mf = mp->am_mnt;*/
 if|if
 condition|(
-name|mf
+name|mp
 operator|->
-name|mf_fattr
+name|am_fattr
 operator|.
 name|type
 operator|!=
@@ -1449,7 +1432,7 @@ name|argp
 argument_list|,
 name|rqstp
 argument_list|,
-literal|1
+name|TRUE
 argument_list|)
 return|;
 block|}
@@ -1784,7 +1767,7 @@ name|argp
 argument_list|,
 name|rqstp
 argument_list|,
-literal|0
+name|FALSE
 argument_list|)
 return|;
 block|}
@@ -1822,7 +1805,7 @@ specifier|static
 name|entry
 name|e_res
 index|[
-literal|2
+name|MAX_READDIR_ENTRIES
 index|]
 decl_stmt|;
 name|am_node
@@ -1942,6 +1925,10 @@ operator|.
 name|reply
 argument_list|,
 name|e_res
+argument_list|,
+name|argp
+operator|->
+name|count
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1953,7 +1940,6 @@ name|s_readdir
 operator|++
 expr_stmt|;
 block|}
-comment|/* XXX - need to take argp->count into account */
 return|return
 operator|&
 name|res
@@ -2097,14 +2083,27 @@ name|fp
 operator|->
 name|bsize
 operator|=
-literal|4192
+literal|4096
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAS_EMPTY_AUTOMOUNTS
+name|fp
+operator|->
+name|blocks
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 name|fp
 operator|->
 name|blocks
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|fp
 operator|->
 name|bfree

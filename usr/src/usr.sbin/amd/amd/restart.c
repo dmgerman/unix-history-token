@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: restart.c,v 5.2 90/06/23 22:19:55 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)restart.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: restart.c,v 5.2.1.2 90/11/04 23:17:27 jsp Exp $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)restart.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -338,6 +338,14 @@ name|me
 operator|->
 name|mnt_dir
 expr_stmt|;
+name|mo
+operator|.
+name|opt_opts
+operator|=
+name|me
+operator|->
+name|mnt_opts
+expr_stmt|;
 comment|/* 			 * Make a new mounted filesystem 			 */
 name|mf
 operator|=
@@ -355,6 +363,8 @@ argument_list|,
 name|me
 operator|->
 name|mnt_fsname
+argument_list|,
+literal|""
 argument_list|,
 name|me
 operator|->
@@ -385,6 +395,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Already mounted correctly */
+name|mf
+operator|->
+name|mf_fo
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 				 * If the restarted type is a link then 				 * don't time out. 				 */
 if|if
 condition|(
@@ -392,6 +408,11 @@ name|fs_ops
 operator|==
 operator|&
 name|sfs_ops
+operator|||
+name|fs_ops
+operator|==
+operator|&
+name|ufs_ops
 condition|)
 name|mf
 operator|->

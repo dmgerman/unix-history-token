@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pfs_ops.c,v 5.2 90/06/23 22:19:53 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)pfs_ops.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: pfs_ops.c,v 5.2.1.1 90/10/21 22:29:36 jsp Exp $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)pfs_ops.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,7 +25,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|char
+modifier|*
 name|pfs_match
 parameter_list|(
 name|fo
@@ -60,7 +61,7 @@ literal|"program: no mount/unmount specified"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+literal|0
 return|;
 block|}
 name|prog
@@ -74,18 +75,9 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fo
-operator|->
-name|fs_mtab
-operator|=
-name|strealloc
+return|return
+name|strdup
 argument_list|(
-name|fo
-operator|->
-name|fs_mtab
-argument_list|,
 name|prog
 condition|?
 name|prog
@@ -96,12 +88,6 @@ name|fo
 operator|->
 name|opt_mount
 argument_list|)
-condition|)
-return|return
-name|TRUE
-return|;
-return|return
-name|FALSE
 return|;
 block|}
 end_function
@@ -206,6 +192,8 @@ operator|=
 name|strsplit
 argument_list|(
 name|info
+argument_list|,
+literal|' '
 argument_list|,
 literal|'\''
 argument_list|)
@@ -376,11 +364,17 @@ expr_stmt|;
 comment|/* 	 * Free allocate memory 	 */
 name|free
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|xivec
 argument_list|)
 expr_stmt|;
@@ -394,23 +388,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pfs_mount
+name|pfs_fmount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
-modifier|*
-name|mp
-decl_stmt|;
-block|{
 name|mntfs
 modifier|*
 name|mf
-init|=
-name|mp
-operator|->
-name|am_mnt
 decl_stmt|;
+block|{
 return|return
 name|pfs_exec
 argument_list|(
@@ -427,23 +413,15 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pfs_umount
+name|pfs_fumount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
-modifier|*
-name|mp
-decl_stmt|;
-block|{
 name|mntfs
 modifier|*
 name|mf
-init|=
-name|mp
-operator|->
-name|am_mnt
 decl_stmt|;
+block|{
 return|return
 name|pfs_exec
 argument_list|(
@@ -474,9 +452,13 @@ name|pfs_match
 block|,
 name|pfs_init
 block|,
-name|pfs_mount
+name|auto_fmount
 block|,
-name|pfs_umount
+name|pfs_fmount
+block|,
+name|auto_fumount
+block|,
+name|pfs_fumount
 block|,
 name|efs_lookuppn
 block|,

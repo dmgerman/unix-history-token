@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: sched.c,v 5.2 90/06/23 22:19:58 jsp Rel $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sched.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: sched.c,v 5.2.1.3 91/03/17 17:42:03 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sched.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -652,14 +652,18 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|w
 argument_list|,
 name|WNOHANG
 argument_list|,
 operator|(
-expr|union
-name|wait
+expr|struct
+name|rusage
 operator|*
 operator|)
 literal|0
@@ -817,13 +821,13 @@ name|longjmp
 argument_list|(
 name|select_intr
 argument_list|,
-name|sigchld
+name|sig
 argument_list|)
 expr_stmt|;
 block|}
 comment|/*  * Run any pending tasks.  * This must be called with SIGCHLD disabled  */
 name|void
-name|task_notify
+name|do_task_notify
 parameter_list|(
 name|P_void
 parameter_list|)
@@ -905,6 +909,9 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|voidp
+operator|)
 name|p
 argument_list|)
 expr_stmt|;

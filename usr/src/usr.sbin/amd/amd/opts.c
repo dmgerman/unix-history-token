@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: opts.c,v 5.2 90/06/23 22:19:51 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)opts.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: opts.c,v 5.2.1.5 91/03/17 17:45:34 jsp Alpha $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)opts.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -117,6 +117,10 @@ directive|define
 name|NLEN
 value|16
 end_define
+
+begin_comment
+comment|/* conservative */
+end_comment
 
 begin_define
 define|#
@@ -404,6 +408,18 @@ literal|0
 block|,
 operator|&
 name|cluster
+block|}
+block|,
+block|{
+name|S
+argument_list|(
+literal|"wire"
+argument_list|)
+block|,
+literal|0
+block|,
+operator|&
+name|wire
 block|}
 block|,
 block|{
@@ -1119,6 +1135,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1130,10 +1149,16 @@ name|int
 name|eval_opts
 parameter_list|(
 name|opts
+parameter_list|,
+name|mapkey
 parameter_list|)
 name|char
 modifier|*
 name|opts
+decl_stmt|;
+name|char
+modifier|*
+name|mapkey
 decl_stmt|;
 block|{
 comment|/* 	 * Fill in the global structure fs_static by 	 * cracking the string opts.  opts may be 	 * scribbled on at will. 	 */
@@ -1217,7 +1242,9 @@ name|plog
 argument_list|(
 name|XLOG_USER
 argument_list|,
-literal|"No value component in \"%s\""
+literal|"key %s: No value component in \"%s\""
+argument_list|,
+name|mapkey
 argument_list|,
 name|f
 argument_list|)
@@ -1410,6 +1437,19 @@ literal|5000108
 case|case
 name|OldSyn
 case|:
+name|plog
+argument_list|(
+name|XLOG_WARNING
+argument_list|,
+literal|"key %s: Old syntax selector found: %s=%s"
+argument_list|,
+name|mapkey
+argument_list|,
+name|f
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1466,7 +1506,9 @@ name|plog
 argument_list|(
 name|XLOG_MAP
 argument_list|,
-literal|"map selector %s (=%s) did not %smatch %s"
+literal|"key %s: map selector %s (=%s) did not %smatch %s"
+argument_list|,
+name|mapkey
 argument_list|,
 name|op
 operator|->
@@ -1507,7 +1549,9 @@ name|plog
 argument_list|(
 name|XLOG_USER
 argument_list|,
-literal|"Can't assign to a selector (%s)"
+literal|"key %s: Can't assign to a selector (%s)"
+argument_list|,
+name|mapkey
 argument_list|,
 name|op
 operator|->
@@ -1541,7 +1585,9 @@ name|plog
 argument_list|(
 name|XLOG_USER
 argument_list|,
-literal|"Unrecognised key \"%s\""
+literal|"key %s: Unrecognised key/option \"%s\""
+argument_list|,
+name|mapkey
 argument_list|,
 name|f
 argument_list|)
@@ -1617,6 +1663,123 @@ name|opt
 operator|=
 literal|0
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Normalize slashes in the string.  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|normalize_slash
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|normalize_slash
+parameter_list|(
+name|p
+parameter_list|)
+name|char
+modifier|*
+name|p
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|f
+init|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'/'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|f
+condition|)
+block|{
+name|char
+modifier|*
+name|t
+init|=
+name|f
+decl_stmt|;
+do|do
+block|{
+comment|/* assert(*f == '/'); */
+comment|/* copy a single / across */
+operator|*
+name|t
+operator|++
+operator|=
+operator|*
+name|f
+operator|++
+expr_stmt|;
+comment|/* assert(f[-1] == '/'); */
+comment|/* skip past more /'s */
+while|while
+condition|(
+operator|*
+name|f
+operator|==
+literal|'/'
+condition|)
+name|f
+operator|++
+expr_stmt|;
+comment|/* assert(*f != '/'); */
+comment|/* keep copying up to next / */
+do|do
+block|{
+operator|*
+name|t
+operator|++
+operator|=
+operator|*
+name|f
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|*
+name|f
+operator|&&
+operator|*
+name|f
+operator|!=
+literal|'/'
+condition|)
+do|;
+comment|/* assert(*f == 0 || *f == '/'); */
+block|}
+do|while
+condition|(
+operator|*
+name|f
+condition|)
+do|;
+operator|*
+name|t
+operator|=
+literal|0
+expr_stmt|;
+comment|/* derived from fix by Steven Glassman */
 block|}
 block|}
 end_function
@@ -1868,6 +2031,10 @@ block|,
 name|E_Dir
 block|,
 name|E_File
+block|,
+name|E_Domain
+block|,
+name|E_Host
 block|}
 name|todo
 enum|;
@@ -1953,6 +2120,48 @@ comment|/* 				 * Take all but the last component 				 */
 name|todo
 operator|=
 name|E_Dir
+expr_stmt|;
+operator|--
+name|len
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'.'
+condition|)
+block|{
+comment|/* 				 * Take domain name 				 */
+name|todo
+operator|=
+name|E_Domain
+expr_stmt|;
+name|cp
+operator|++
+expr_stmt|;
+operator|--
+name|len
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|br_p
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'.'
+condition|)
+block|{
+comment|/* 				 * Take host name 				 */
+name|todo
+operator|=
+name|E_Host
 expr_stmt|;
 operator|--
 name|len
@@ -2075,6 +2284,12 @@ name|E_File
 condition|?
 literal|"/"
 else|:
+name|todo
+operator|==
+name|E_Domain
+condition|?
+literal|"."
+else|:
 literal|""
 argument_list|,
 name|nbuf
@@ -2084,6 +2299,12 @@ operator|==
 name|E_Dir
 condition|?
 literal|"/"
+else|:
+name|todo
+operator|==
+name|E_Host
+condition|?
+literal|"."
 else|:
 literal|""
 argument_list|)
@@ -2129,7 +2350,7 @@ condition|(
 name|val
 condition|)
 block|{
-comment|/* 						 * Do expansion: 						 * ${/var} means take just the last part 						 * ${var/} means take all but the last part 						 * ${var} means take the whole lot 						 */
+comment|/* 						 * Do expansion: 						 * ${/var} means take just the last part 						 * ${var/} means take all but the last part 						 * ${.var} means take all but first part 						 * ${var.} means take just the first part 						 * ${var} means take the whole lot 						 */
 name|int
 name|vlen
 init|=
@@ -2209,6 +2430,77 @@ name|vptr
 operator|=
 name|val
 expr_stmt|;
+break|break;
+case|case
+name|E_Domain
+case|:
+name|vptr
+operator|=
+name|strchr
+argument_list|(
+name|val
+argument_list|,
+literal|'.'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vptr
+condition|)
+block|{
+name|vptr
+operator|++
+expr_stmt|;
+name|vlen
+operator|=
+name|strlen
+argument_list|(
+name|vptr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vptr
+operator|=
+literal|""
+expr_stmt|;
+name|vlen
+operator|=
+literal|0
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|E_Host
+case|:
+name|vptr
+operator|=
+name|strchr
+argument_list|(
+name|val
+argument_list|,
+literal|'.'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vptr
+condition|)
+name|vlen
+operator|=
+name|vptr
+operator|-
+name|val
+expr_stmt|;
+name|vptr
+operator|=
+name|val
+expr_stmt|;
+break|break;
+case|case
+name|E_All
+case|:
 break|break;
 block|}
 ifdef|#
@@ -2464,91 +2756,14 @@ name|expbuf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Normalize slashes in the string. 	 */
-block|{
-name|char
-modifier|*
-name|f
-init|=
-name|strchr
+name|normalize_slash
 argument_list|(
 operator|*
 name|p
 operator|->
 name|opt
-argument_list|,
-literal|'/'
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|f
-condition|)
-block|{
-name|char
-modifier|*
-name|t
-init|=
-name|f
-decl_stmt|;
-do|do
-block|{
-comment|/* assert(*f == '/'); */
-comment|/* copy a single / across */
-operator|*
-name|t
-operator|++
-operator|=
-operator|*
-name|f
-operator|++
 expr_stmt|;
-comment|/* assert(f[-1] == '/'); */
-comment|/* skip past more /'s */
-while|while
-condition|(
-operator|*
-name|f
-operator|==
-literal|'/'
-condition|)
-name|f
-operator|++
-expr_stmt|;
-comment|/* assert(*f != '/'); */
-comment|/* keep copying up to next / */
-do|do
-block|{
-operator|*
-name|t
-operator|++
-operator|=
-operator|*
-name|f
-operator|++
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|*
-name|f
-operator|&&
-operator|*
-name|f
-operator|!=
-literal|'/'
-condition|)
-do|;
-comment|/* assert(*f == 0 || *f == '/'); */
-block|}
-do|while
-condition|(
-operator|*
-name|f
-condition|)
-do|;
-block|}
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2829,11 +3044,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove trailing / from a string  */
+comment|/*  * Remove trailing /'s from a string  * unless the string is a single / (Steven Glassman)  */
 end_comment
 
+begin_decl_stmt
+name|void
+name|deslashify
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|s
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
-specifier|static
 name|void
 name|deslashify
 parameter_list|(
@@ -2847,29 +3075,33 @@ block|{
 if|if
 condition|(
 name|s
+operator|&&
+operator|*
+name|s
 condition|)
 block|{
 name|char
 modifier|*
 name|sl
 init|=
-name|strrchr
+name|s
+operator|+
+name|strlen
 argument_list|(
 name|s
-argument_list|,
-literal|'/'
 argument_list|)
 decl_stmt|;
-if|if
+while|while
 condition|(
+operator|*
+operator|--
 name|sl
+operator|==
+literal|'/'
 operator|&&
 name|sl
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
+operator|>
+name|s
 condition|)
 operator|*
 name|sl
@@ -3014,6 +3246,8 @@ argument_list|(
 name|fs_static
 operator|.
 name|fs_glob
+argument_list|,
+name|key
 argument_list|)
 condition|)
 name|ok
@@ -3031,6 +3265,8 @@ argument_list|(
 name|fs_static
 operator|.
 name|fs_local
+argument_list|,
+name|key
 argument_list|)
 condition|)
 name|ok

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: efs_ops.c,v 5.2 90/06/23 22:19:23 jsp Rel $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)efs_ops.c	5.1 (Berkeley) %G%  */
+comment|/*  * $Id: efs_ops.c,v 5.2.1.2 90/11/04 23:17:14 jsp Exp $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)efs_ops.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,7 +25,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|char
+modifier|*
 name|efs_match
 parameter_list|(
 name|fo
@@ -35,21 +36,11 @@ modifier|*
 name|fo
 decl_stmt|;
 block|{
-name|fo
-operator|->
-name|fs_mtab
-operator|=
-name|strealloc
+return|return
+name|strdup
 argument_list|(
-name|fo
-operator|->
-name|fs_mtab
-argument_list|,
 literal|"(error-hook)"
 argument_list|)
-expr_stmt|;
-return|return
-literal|1
 return|;
 block|}
 end_function
@@ -61,13 +52,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|efs_mount
+name|efs_fmount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
+name|mntfs
 modifier|*
-name|mp
+name|mf
 decl_stmt|;
 block|{
 return|return
@@ -83,13 +74,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|efs_umount
+name|efs_fumount
 parameter_list|(
-name|mp
+name|mf
 parameter_list|)
-name|am_node
+name|mntfs
 modifier|*
-name|mp
+name|mf
 decl_stmt|;
 block|{
 comment|/* 	 * Always succeed 	 */
@@ -166,6 +157,8 @@ parameter_list|,
 name|dp
 parameter_list|,
 name|ep
+parameter_list|,
+name|count
 parameter_list|)
 name|am_node
 modifier|*
@@ -181,6 +174,9 @@ decl_stmt|;
 name|entry
 modifier|*
 name|ep
+decl_stmt|;
+name|int
+name|count
 decl_stmt|;
 block|{
 return|return
@@ -205,9 +201,13 @@ block|,
 literal|0
 block|,
 comment|/* efs_init */
-name|efs_mount
+name|auto_fmount
 block|,
-name|efs_umount
+name|efs_fmount
+block|,
+name|auto_fumount
+block|,
+name|efs_fumount
 block|,
 name|efs_lookuppn
 block|,
