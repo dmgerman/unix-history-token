@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.3 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1901,7 +1901,7 @@ call|)
 argument_list|(
 name|da
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|)
 argument_list|,
 literal|0
@@ -1941,7 +1941,7 @@ operator|+
 operator|(
 name|cnt
 operator|/
-name|DEV_BSIZE
+name|dev_bsize
 operator|)
 operator|>
 name|fsbtodb
@@ -1954,10 +1954,10 @@ name|fs_size
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Trying to read the final fragment. 		 * 		 * NB - dump only works in TP_BSIZE blocks, hence 		 * rounds DEV_BSIZE fragments up to TP_BSIZE pieces. 		 * It should be smarter about not actually trying to 		 * read more than it can get, but for the time being 		 * we punt and scale back the read only when it gets 		 * us into trouble. (mkm 9/25/83) 		 */
+comment|/* 		 * Trying to read the final fragment. 		 * 		 * NB - dump only works in TP_BSIZE blocks, hence 		 * rounds `dev_bsize' fragments up to TP_BSIZE pieces. 		 * It should be smarter about not actually trying to 		 * read more than it can get, but for the time being 		 * we punt and scale back the read only when it gets 		 * us into trouble. (mkm 9/25/83) 		 */
 name|cnt
 operator|-=
-name|DEV_BSIZE
+name|dev_bsize
 expr_stmt|;
 goto|goto
 name|loop

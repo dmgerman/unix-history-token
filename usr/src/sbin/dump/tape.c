@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.7 (Berkeley) %G%"
+literal|"@(#)tape.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +550,7 @@ operator|*
 operator|(
 name|TP_BSIZE
 operator|/
-name|DEV_BSIZE
+name|dev_bsize
 operator|)
 expr_stmt|;
 name|tpblks

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Assume non-cartridge tape */
+end_comment
+
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* recalculated below */
 end_comment
 
 begin_ifdef
@@ -1032,7 +1044,7 @@ argument_list|()
 expr_stmt|;
 name|bread
 argument_list|(
-name|SBLOCK
+name|SBOFF
 argument_list|,
 name|sblock
 argument_list|,
@@ -1057,6 +1069,19 @@ name|dumpabort
 argument_list|()
 expr_stmt|;
 block|}
+name|dev_bsize
+operator|=
+name|sblock
+operator|->
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+name|sblock
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|msiz
 operator|=
 name|roundup
