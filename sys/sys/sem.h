@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: sem.h,v 1.12 1997/02/22 09:45:51 peter Exp $ */
 end_comment
 
 begin_comment
@@ -633,19 +633,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* semaphore pool */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sem_undo
-modifier|*
-name|semu_list
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of active undo structures */
 end_comment
 
 begin_decl_stmt
