@@ -222,6 +222,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -709,6 +721,34 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_INIT
+operator|)
+condition|)
+name|res_init
+argument_list|()
+expr_stmt|;
+name|_res
+operator|.
+name|retrans
+operator|=
+literal|2
+expr_stmt|;
+comment|/* resolver timeout to 2 seconds per try */
+name|_res
+operator|.
+name|retry
+operator|=
+literal|1
+expr_stmt|;
+comment|/* only try once.. */
+if|if
+condition|(
 operator|(
 name|kd
 operator|=
@@ -1047,7 +1087,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 define|#
 directive|define
 name|HEADER
@@ -1064,6 +1103,7 @@ argument_list|(
 name|HEADER
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
