@@ -1029,46 +1029,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-unit|RO seminfo.semmap
-comment|/* SEMMAP unused */
+comment|/*-  * RW seminfo.semmap: SEMMAP unused  * RO seminfo.semmni  * RO seminfo.semmns  * RO seminfo.semmnu: undo entries per system  * RW seminfo.semmsl  * RO seminfo.semopm: SEMOPM unused  * RO seminfo.semume  * RO seminfo.semusz: param - derived from SEMUME for per-proc sizeof  * RW seminfo.semvmx: SEMVMX unused - user param  * RW seminfo.semaem: SEMAEM unused - user param  */
 end_comment
-
-begin_comment
-unit|RO seminfo.semmni RO seminfo.semmns RO seminfo.semmnu
-comment|/* undo entries per system */
-end_comment
-
-begin_comment
-unit|RW seminfo.semmsl RO seminfo.semopm
-comment|/* SEMOPM unused */
-end_comment
-
-begin_comment
-unit|RO seminfo.semume RO seminfo.semusz
-comment|/* param - derived from SEMUME for per-proc sizeof */
-end_comment
-
-begin_comment
-unit|RO seminfo.semvmx
-comment|/* SEMVMX unused - user param */
-end_comment
-
-begin_comment
-unit|RO seminfo.semaem
-comment|/* SEMAEM unused - user param */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
