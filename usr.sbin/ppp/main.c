@@ -1346,6 +1346,9 @@ name|struct
 name|switches
 name|sw
 decl_stmt|;
+name|probe_Init
+argument_list|()
+expr_stmt|;
 comment|/*    * We open 3 descriptors to ensure that STDIN_FILENO, STDOUT_FILENO and    * STDERR_FILENO are always open.  These are closed before DoLoop(),    * but *after* we've avoided the possibility of erroneously closing    * an important descriptor with close(STD{IN,OUT,ERR}_FILENO).    */
 if|if
 condition|(
@@ -2507,16 +2510,6 @@ name|nfds
 decl_stmt|,
 name|nothing_done
 decl_stmt|;
-name|struct
-name|probe
-name|probe
-decl_stmt|;
-name|probe_Init
-argument_list|(
-operator|&
-name|probe
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

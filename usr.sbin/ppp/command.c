@@ -418,6 +418,12 @@ directive|include
 file|"id.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"probe.h"
+end_include
+
 begin_comment
 comment|/* ``set'' values */
 end_comment
@@ -17817,9 +17823,6 @@ decl_stmt|;
 comment|/* Add these bits */
 if|if
 condition|(
-operator|(
-name|cmd
-operator|=
 name|ident_cmd
 argument_list|(
 name|arg
@@ -17839,13 +17842,39 @@ argument_list|,
 operator|&
 name|add
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
 return|return
 literal|1
 return|;
+if|if
+condition|(
+name|add
+operator|==
+name|NEG_ENABLED
+operator|&&
+name|bit
+operator|==
+name|OPT_IPV6CP
+operator|&&
+operator|!
+name|probe
+operator|.
+name|ipv6_available
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"IPv6 is not available on this machine\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|add
