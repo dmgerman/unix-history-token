@@ -1662,6 +1662,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* 		 * We are able to check only exclusive lock here, 		 * we cannot assert that *this* thread owns slock. 		 */
 name|mtx_lock
 argument_list|(
 name|sx
@@ -1671,12 +1672,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sx
-operator|->
-name|sx_cnt
-operator|!=
-literal|0
-operator|&&
 name|sx
 operator|->
 name|sx_xholder
