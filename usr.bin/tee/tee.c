@@ -301,9 +301,6 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|BSIZE
 argument_list|)
 operator|)
@@ -493,11 +490,11 @@ argument_list|,
 literal|"read"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 name|exitval
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -553,9 +550,6 @@ name|p
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|LIST
