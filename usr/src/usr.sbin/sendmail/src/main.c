@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.35 (Berkeley) %G%"
+literal|"@(#)main.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1119,10 +1119,10 @@ name|OPTIONS
 value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:x"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1140,10 +1140,37 @@ name|OPTIONS
 value|"B:b:C:cd:e:F:f:h:IiM:mno:p:q:r:sTtvX:"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NeXT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPTIONS
+value|"B:b:C:cd:e:F:f:h:IimnOo:p:q:r:sTtvX:"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPTIONS
+end_ifndef
 
 begin_define
 define|#
@@ -1151,11 +1178,6 @@ directive|define
 name|OPTIONS
 value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2727,6 +2749,19 @@ case|case
 literal|'x'
 case|:
 comment|/* random flag that OSF/1& AIX mailx passes */
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NeXT
+argument_list|)
+case|case
+literal|'O'
+case|:
+comment|/* random flag that NeXT Mail.app passes */
 break|break;
 endif|#
 directive|endif
