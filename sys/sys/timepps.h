@@ -382,6 +382,19 @@ begin_struct
 struct|struct
 name|pps_state
 block|{
+comment|/* capture information */
+name|struct
+name|timecounter
+modifier|*
+name|captc
+decl_stmt|;
+name|u_int
+name|capgen
+decl_stmt|;
+name|u_int
+name|capcount
+decl_stmt|;
+comment|/* state information */
 name|pps_params_t
 name|ppsparam
 decl_stmt|;
@@ -411,20 +424,24 @@ end_struct
 
 begin_function_decl
 name|void
+name|pps_capture
+parameter_list|(
+name|struct
+name|pps_state
+modifier|*
+name|pps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pps_event
 parameter_list|(
 name|struct
 name|pps_state
 modifier|*
 name|pps
-parameter_list|,
-name|struct
-name|timecounter
-modifier|*
-name|tc
-parameter_list|,
-name|unsigned
-name|count
 parameter_list|,
 name|int
 name|event
