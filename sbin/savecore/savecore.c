@@ -3136,6 +3136,9 @@ argument_list|)
 expr_stmt|;
 name|dumpsize
 operator|=
+operator|(
+name|off_t
+operator|)
 name|kdumpsize
 operator|*
 name|getpagesize
