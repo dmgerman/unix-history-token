@@ -2619,19 +2619,6 @@ operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fault_flags
-operator|&
-name|VM_FAULT_HOLD
-condition|)
-name|vm_page_hold
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If the page is not wired down, then put it where the pageout daemon 	 * can find it. 	 */
 if|if
 condition|(

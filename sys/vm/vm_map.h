@@ -771,17 +771,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_FAULT_HOLD
-value|4
-end_define
-
-begin_comment
-comment|/* Hold the page */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VM_FAULT_DIRTY
 value|8
 end_define
