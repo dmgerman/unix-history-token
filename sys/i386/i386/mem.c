@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
+file|<sys/memrange.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/memrange.h>
+file|<sys/module.h>
 end_include
 
 begin_include
