@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.2 (Berkeley) %G%"
+literal|"@(#)util.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -61,13 +67,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -79,7 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -91,7 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -211,7 +217,7 @@ operator|=
 name|ENOTDIR
 expr_stmt|;
 block|}
-name|err
+name|run_err
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -311,14 +317,9 @@ operator|)
 return|;
 name|bad
 label|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: %s: invalid user name\n"
+literal|"%s: invalid user name"
 argument_list|,
 name|cp0
 argument_list|)
@@ -518,7 +519,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|run_err
 argument_list|(
 literal|"fstat: %s"
 argument_list|,
@@ -594,7 +595,7 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
-name|err
+name|run_err
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -639,42 +640,9 @@ condition|(
 operator|!
 name|iamremote
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: lost connection\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|nospace
-parameter_list|()
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rcp: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lost connection"
 argument_list|)
 expr_stmt|;
 name|exit
