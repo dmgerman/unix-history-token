@@ -2494,11 +2494,6 @@ name|p_limit
 operator|->
 name|p_cpulimit
 operator|=
-operator|(
-name|rlim_t
-operator|)
-literal|1000000
-operator|*
 name|limp
 operator|->
 name|rlim_cur

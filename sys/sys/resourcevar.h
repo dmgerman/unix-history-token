@@ -162,7 +162,7 @@ comment|/* number of references */
 name|rlim_t
 name|p_cpulimit
 decl_stmt|;
-comment|/* current cpu limit in usec */
+comment|/* current cpu limit in sec */
 block|}
 struct|;
 end_struct
