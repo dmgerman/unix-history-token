@@ -3279,6 +3279,10 @@ name|struct
 name|ipfw_flow_id
 modifier|*
 name|pkt
+parameter_list|,
+name|int
+modifier|*
+name|match_direction
 parameter_list|)
 block|{
 comment|/*      * stateful ipfw extensions.      * Lookup into dynamic session queue      */
@@ -3339,15 +3343,63 @@ name|NULL
 condition|;
 control|)
 block|{
-switch|switch
+if|if
 condition|(
+name|TIME_LEQ
+argument_list|(
 name|q
 operator|->
-name|type
+name|expire
+argument_list|,
+name|time_second
+argument_list|)
 condition|)
 block|{
-default|default:
-comment|/* bidirectional rule, no masks */
+comment|/* expire entry */
+name|old_q
+operator|=
+name|q
+expr_stmt|;
+if|if
+condition|(
+name|prev
+operator|!=
+name|NULL
+condition|)
+name|prev
+operator|->
+name|next
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|ipfw_dyn_v
+index|[
+name|i
+index|]
+operator|=
+name|q
+operator|=
+name|q
+operator|->
+name|next
+expr_stmt|;
+name|dyn_count
+operator|--
+expr_stmt|;
+name|free
+argument_list|(
+name|old_q
+argument_list|,
+name|M_IPFW
+argument_list|)
+expr_stmt|;
+continue|continue ;
+block|}
 if|if
 condition|(
 name|pkt
@@ -3361,6 +3413,15 @@ operator|.
 name|proto
 condition|)
 block|{
+switch|switch
+condition|(
+name|q
+operator|->
+name|type
+condition|)
+block|{
+default|default:
+comment|/* bidirectional rule, no masks */
 if|if
 condition|(
 name|pkt
@@ -3464,68 +3525,9 @@ goto|goto
 name|found
 goto|;
 block|}
-block|}
 break|break ;
 block|}
-if|if
-condition|(
-name|TIME_LEQ
-argument_list|(
-name|q
-operator|->
-name|expire
-argument_list|,
-name|time_second
-argument_list|)
-condition|)
-block|{
-comment|/* expire entry */
-name|old_q
-operator|=
-name|q
-expr_stmt|;
-if|if
-condition|(
-name|prev
-operator|!=
-name|NULL
-condition|)
-name|prev
-operator|->
-name|next
-operator|=
-name|q
-operator|=
-name|q
-operator|->
-name|next
-expr_stmt|;
-else|else
-name|ipfw_dyn_v
-index|[
-name|i
-index|]
-operator|=
-name|q
-operator|=
-name|q
-operator|->
-name|next
-expr_stmt|;
-name|dyn_count
-operator|--
-expr_stmt|;
-name|free
-argument_list|(
-name|old_q
-argument_list|,
-name|M_IPFW
-argument_list|)
-expr_stmt|;
-continue|continue ;
 block|}
-else|else
-block|{
 name|prev
 operator|=
 name|q
@@ -3536,7 +3538,6 @@ name|q
 operator|->
 name|next
 expr_stmt|;
-block|}
 block|}
 return|return
 name|NULL
@@ -3544,14 +3545,6 @@ return|;
 comment|/* clearly not found */
 name|found
 label|:
-if|if
-condition|(
-name|q
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* redundant check! */
 if|if
 condition|(
 name|prev
@@ -3784,7 +3777,15 @@ operator|+
 name|dyn_short_lifetime
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|match_direction
+condition|)
+operator|*
+name|match_direction
+operator|=
+name|dir
+expr_stmt|;
 return|return
 name|q
 return|;
@@ -4113,6 +4114,8 @@ name|lookup_dyn_rule
 argument_list|(
 operator|&
 name|last_pkt
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -4183,6 +4186,8 @@ name|lookup_dyn_rule
 argument_list|(
 operator|&
 name|last_pkt
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* XXX this just sets the lifetime ... */
@@ -4431,6 +4436,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* set after dyn.rules have been checked. */
+name|int
+name|direction
+init|=
+name|MATCH_FORWARD
+decl_stmt|;
+comment|/* dirty trick... */
 name|struct
 name|ipfw_dyn_rule
 modifier|*
@@ -5060,6 +5071,9 @@ name|lookup_dyn_rule
 argument_list|(
 operator|&
 name|last_pkt
+argument_list|,
+operator|&
+name|direction
 argument_list|)
 expr_stmt|;
 if|if
@@ -5072,14 +5086,24 @@ block|{
 name|DEB
 argument_list|(
 argument|printf(
-literal|"-- dynamic match 0x%08x %d -> 0x%08x %d\n"
-argument|, 			    (q->id.src_ip), (q->id.src_port), 			    (q->id.dst_ip), (q->id.dst_port) );
+literal|"-- dynamic match 0x%08x %d %s 0x%08x %d\n"
+argument|, 			    (q->id.src_ip), (q->id.src_port), 			    (direction == MATCH_FORWARD ?
+literal|"-->"
+argument|:
+literal|"<--"
+argument|), 			    (q->id.dst_ip), (q->id.dst_port) );
 argument_list|)
 name|chain
 operator|=
 name|q
 operator|->
 name|chain
+expr_stmt|;
+name|f
+operator|=
+name|chain
+operator|->
+name|rule
 expr_stmt|;
 name|q
 operator|->
@@ -6106,22 +6130,13 @@ if|#
 directive|if
 name|STATEFUL
 comment|/* stateful ipfw */
-comment|/* 		 * If have a dynamic match (q != NULL) set f to the right rule; 		 * else, if have keep-state, install a new dynamic entry. 		 * The packet info is in last_pkt. 		 */
+comment|/* 		 * If not a dynamic match (q == NULL) and keep-state, install 		 * a new dynamic entry. 		 */
 if|if
 condition|(
 name|q
-operator|!=
+operator|==
 name|NULL
-condition|)
-name|f
-operator|=
-name|chain
-operator|->
-name|rule
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|&&
 name|f
 operator|->
 name|fw_flg
@@ -6323,8 +6338,18 @@ condition|(
 name|next_hop
 operator|!=
 name|NULL
-condition|)
 comment|/* Make sure, first... */
+operator|&&
+operator|(
+name|q
+operator|==
+name|NULL
+operator|||
+name|direction
+operator|==
+name|MATCH_FORWARD
+operator|)
+condition|)
 operator|*
 name|next_hop
 operator|=
