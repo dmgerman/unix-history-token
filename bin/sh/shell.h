@@ -18,6 +18,48 @@ begin_comment
 comment|/* #define DEBUG 1 */
 end_comment
 
+begin_comment
+comment|/*  * Type of used arithmetics. SUSv3 requires us to have at least signed long.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|arith_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|strtoarith_t
+parameter_list|(
+name|nptr
+parameter_list|,
+name|endptr
+parameter_list|,
+name|base
+parameter_list|)
+value|strtol(nptr, endptr, base)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atoarith_t
+parameter_list|(
+name|arg
+parameter_list|)
+value|strtol(arg, NULL, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARITH_FORMAT_STR
+value|"%ld"
+end_define
+
 begin_typedef
 typedef|typedef
 name|void

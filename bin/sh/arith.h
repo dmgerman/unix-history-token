@@ -5,6 +5,18 @@ end_comment
 
 begin_function_decl
 name|int
+name|arith_assign
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|arith_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|arith
 parameter_list|(
 name|char
