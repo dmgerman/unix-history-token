@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*static	char sccsid[] = "@(#)c2.h 4.2 %G%";*/
+comment|/*static	char sccsid[] = "@(#)c2.h 4.3 %G%";*/
 end_comment
 
 begin_comment
@@ -641,6 +641,13 @@ parameter_list|)
 value|(a|((b)<<4))
 end_define
 
+begin_define
+define|#
+directive|define
+name|C2_ASIZE
+value|64
+end_define
+
 begin_struct
 struct|struct
 name|optab
@@ -915,7 +922,7 @@ begin_decl_stmt
 name|char
 name|conloc
 index|[
-literal|20
+name|C2_ASIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -924,7 +931,7 @@ begin_decl_stmt
 name|char
 name|conval
 index|[
-literal|20
+name|C2_ASIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -933,7 +940,7 @@ begin_decl_stmt
 name|char
 name|ccloc
 index|[
-literal|20
+name|C2_ASIZE
 index|]
 decl_stmt|;
 end_decl_stmt

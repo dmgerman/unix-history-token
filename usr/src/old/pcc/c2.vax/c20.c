@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c 4.3 %G%"
+literal|"@(#)c20.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2567,7 +2567,7 @@ index|]
 operator|=
 name|alloc
 argument_list|(
-literal|20
+name|C2_ASIZE
 argument_list|)
 expr_stmt|;
 for|for
@@ -2688,7 +2688,7 @@ decl_stmt|;
 name|char
 name|tempop
 index|[
-literal|20
+name|C2_ASIZE
 index|]
 decl_stmt|;
 specifier|static
