@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	6.1	83/07/29	*/
+comment|/*	mem.h	6.2	84/02/02	*/
 end_comment
 
 begin_comment
-comment|/*  * Memory controller registers  *  * The way in which the data is stored in these registers varies  * per cpu, so we define macros here to mask that.  */
+comment|/*  * Memory controller registers  *  * The way in which the data is stored in these registers varies  * per controller and cpu, so we define macros here to mask that.  */
 end_comment
 
 begin_struct
@@ -14,7 +14,7 @@ block|{
 name|int
 name|mc_reg
 index|[
-literal|3
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -56,7 +56,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * For each processor type we define 5 macros:  *	M???_INH(mcr)		inhibits further crd interrupts from mcr  *	M???_ENA(mcr)		enables another crd interrupt from mcr  *	M???_ERR(mcr)		tells whether an error is waiting  *	M???_SYN(mcr)		gives the syndrome bits of the error  *	M???_ADDR(mcr)		gives the address of the error  */
+comment|/*  * For each controller type we define 5 macros:  *	M???_INH(mcr)		inhibits further crd interrupts from mcr  *	M???_ENA(mcr)		enables another crd interrupt from mcr  *	M???_ERR(mcr)		tells whether an error is waiting  *	M???_SYN(mcr)		gives the syndrome bits of the error  *	M???_ADDR(mcr)		gives the address of the error  */
 end_comment
 
 begin_if
@@ -113,7 +113,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M780_INH
+name|M780C_INH
 parameter_list|(
 name|mcr
 parameter_list|)
@@ -124,7 +124,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M780_ENA
+name|M780C_ENA
 parameter_list|(
 name|mcr
 parameter_list|)
@@ -135,7 +135,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M780_ERR
+name|M780C_ERR
 parameter_list|(
 name|mcr
 parameter_list|)
@@ -146,7 +146,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M780_SYN
+name|M780C_SYN
 parameter_list|(
 name|mcr
 parameter_list|)
@@ -156,11 +156,117 @@ end_define
 begin_define
 define|#
 directive|define
-name|M780_ADDR
+name|M780C_ADDR
 parameter_list|(
 name|mcr
 parameter_list|)
 value|(((mcr)->mc_reg[2]>> 8)& 0xfffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EL_INH
+parameter_list|(
+name|mcr
+parameter_list|)
+define|\
+value|(((mcr)->mc_reg[2] = (M780_ICRD|M780_HIER|M780_ERLOG)), mtpr(SBIER, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EL_ENA
+parameter_list|(
+name|mcr
+parameter_list|)
+define|\
+value|(((mcr)->mc_reg[2] = (M780_HIER|M780_ERLOG)), mtpr(SBIER, 3<<14))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EL_ERR
+parameter_list|(
+name|mcr
+parameter_list|)
+define|\
+value|((mcr)->mc_reg[2]& (M780_ERLOG))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EL_SYN
+parameter_list|(
+name|mcr
+parameter_list|)
+value|((mcr)->mc_reg[2]& 0x7f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EL_ADDR
+parameter_list|(
+name|mcr
+parameter_list|)
+value|(((mcr)->mc_reg[2]>> 11)& 0x1ffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EU_INH
+parameter_list|(
+name|mcr
+parameter_list|)
+define|\
+value|(((mcr)->mc_reg[3] = (M780_ICRD|M780_HIER|M780_ERLOG)), mtpr(SBIER, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EU_ENA
+parameter_list|(
+name|mcr
+parameter_list|)
+define|\
+value|(((mcr)->mc_reg[3] = (M780_HIER|M780_ERLOG)), mtpr(SBIER, 3<<14))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EU_ERR
+parameter_list|(
+name|mcr
+parameter_list|)
+define|\
+value|((mcr)->mc_reg[3]& (M780_ERLOG))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EU_SYN
+parameter_list|(
+name|mcr
+parameter_list|)
+value|((mcr)->mc_reg[3]& 0x7f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EU_ADDR
+parameter_list|(
+name|mcr
+parameter_list|)
+value|(((mcr)->mc_reg[3]>> 11)& 0x1ffff)
 end_define
 
 begin_endif
@@ -389,6 +495,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* controller types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M780C
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|M780EU
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|M750
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|M730
+value|5
+end_define
+
 begin_define
 define|#
 directive|define
@@ -417,6 +562,15 @@ name|struct
 name|mcr
 modifier|*
 name|mcraddr
+index|[
+name|MAXNMCR
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mcrtype
 index|[
 name|MAXNMCR
 index|]
