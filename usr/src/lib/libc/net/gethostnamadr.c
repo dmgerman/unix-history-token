@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.3	83/12/21	*/
+comment|/*	gethostnamadr.c	4.4	84/01/31	*/
 end_comment
 
 begin_include
@@ -59,13 +59,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|datum
-name|curkey
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|hostent
 name|host
@@ -79,6 +72,18 @@ modifier|*
 name|host_aliases
 index|[
 name|MAXALIASES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|hostbuf
+index|[
+name|BUFSIZ
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -112,6 +117,9 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
+name|tp
+decl_stmt|,
+modifier|*
 modifier|*
 name|ap
 decl_stmt|;
@@ -119,13 +127,9 @@ specifier|register
 name|int
 name|naliases
 decl_stmt|;
-name|curkey
-operator|=
-name|key
-expr_stmt|;
 if|if
 condition|(
-name|curkey
+name|key
 operator|.
 name|dptr
 operator|==
@@ -147,7 +151,7 @@ name|dbmfetch
 argument_list|(
 name|_host_db
 argument_list|,
-name|curkey
+name|key
 argument_list|)
 expr_stmt|;
 if|if
@@ -174,14 +178,22 @@ name|key
 operator|.
 name|dptr
 expr_stmt|;
+name|tp
+operator|=
+name|hostbuf
+expr_stmt|;
 name|host
 operator|.
 name|h_name
 operator|=
-name|cp
+name|tp
 expr_stmt|;
 while|while
 condition|(
+operator|*
+name|tp
+operator|++
+operator|=
 operator|*
 name|cp
 operator|++
@@ -221,10 +233,14 @@ operator|*
 name|ap
 operator|++
 operator|=
-name|cp
+name|tp
 expr_stmt|;
 while|while
 condition|(
+operator|*
+name|tp
+operator|++
+operator|=
 operator|*
 name|cp
 operator|++
@@ -286,7 +302,18 @@ name|host
 operator|.
 name|h_addr
 operator|=
+name|tp
+expr_stmt|;
+name|bcopy
+argument_list|(
 name|cp
+argument_list|,
+name|tp
+argument_list|,
+name|host
+operator|.
+name|h_length
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
