@@ -1576,7 +1576,6 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|smsghdr
 argument_list|)
 argument_list|)
@@ -1590,7 +1589,6 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|smsgiov
 argument_list|)
 argument_list|)
