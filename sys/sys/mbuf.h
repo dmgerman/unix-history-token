@@ -168,8 +168,7 @@ name|len
 decl_stmt|;
 comment|/* total packet length */
 comment|/* variables for ip and tcp reassembly */
-name|void
-modifier|*
+name|caddr_t
 name|header
 decl_stmt|;
 comment|/* pointer to packet header */
@@ -489,7 +488,7 @@ begin_define
 define|#
 directive|define
 name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG)
+value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3 | \ 			    M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG)
 end_define
 
 begin_comment
@@ -529,45 +528,71 @@ begin_comment
 comment|/* packet header */
 end_comment
 
-begin_comment
-comment|/*efine	MT_SOCKET	3*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|MT_SOCKET
+value|3
+end_define
 
 begin_comment
 comment|/* socket structure */
 end_comment
 
-begin_comment
-comment|/*efine	MT_PCB		4*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MT_PCB
+value|4
+end_define
 
 begin_comment
 comment|/* protocol control block */
 end_comment
 
-begin_comment
-comment|/*efine	MT_RTABLE	5*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MT_RTABLE
+value|5
+end_define
 
 begin_comment
 comment|/* routing tables */
 end_comment
 
-begin_comment
-comment|/*efine	MT_HTABLE	6*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MT_HTABLE
+value|6
+end_define
 
 begin_comment
 comment|/* IMP host tables */
 end_comment
 
-begin_comment
-comment|/*efine	MT_ATABLE	7*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MT_ATABLE
+value|7
+end_define
 
 begin_comment
 comment|/* address resolution tables */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -580,13 +605,27 @@ begin_comment
 comment|/* socket name */
 end_comment
 
-begin_comment
-comment|/*efine	MT_SOOPTS	10*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|MT_SOOPTS
+value|10
+end_define
 
 begin_comment
 comment|/* socket options */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -599,21 +638,38 @@ begin_comment
 comment|/* fragment reassembly header */
 end_comment
 
-begin_comment
-comment|/*efine	MT_RIGHTS	12*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|MT_RIGHTS
+value|12
+end_define
 
 begin_comment
 comment|/* access rights */
 end_comment
 
-begin_comment
-comment|/*efine	MT_IFADDR	13*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MT_IFADDR
+value|13
+end_define
 
 begin_comment
 comment|/* interface address */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -638,7 +694,7 @@ comment|/* expedited data  */
 end_comment
 
 begin_comment
-comment|/*  * Mbuf statistics.  */
+comment|/*  * mbuf statistics  */
 end_comment
 
 begin_struct
@@ -712,22 +768,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
-comment|/* We'll need wakeup_one(). */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
 begin_comment
 comment|/* flags to m_get/MGET */
 end_comment
@@ -770,25 +810,7 @@ union|;
 end_union
 
 begin_comment
-comment|/* mbuf and mbuf cluster wait count variables */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|m_mballoc_wid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|m_clalloc_wid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Identifying number passed to the m_mballoc_wait function, allowing  * us to determine that the call came from an MGETHDR and not an MGET --  * this way we are sure to run the MGETHDR macro when the call came from there.  */
+comment|/*  * These are identifying numbers passed to the m_mballoc_wait function,  * allowing us to determine whether the call came from an MGETHDR or  * an MGET.  */
 end_comment
 
 begin_define
@@ -806,66 +828,28 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Wakeup the next instance -- if any -- of m_mballoc_wait() which  * is waiting for an mbuf to be freed. Make sure to decrement sleep count.  * XXX: If there is another free mbuf, this routine will be called [again]  * from the m_mballoc_wait routine in order to wake another sleep instance.  * Should be called at splimp()  */
+comment|/*  * Wake up the next instance (if any) of m_mballoc_wait() which is  * waiting for an mbuf to be freed.  This should be called at splimp().  *  * XXX: If there is another free mbuf, this routine will be called [again]  * from the m_mballoc_wait routine in order to wake another sleep instance.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|m_mballoc_wakeup
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|m_mballoc_wid
-condition|)
-block|{
-name|m_mballoc_wid
-operator|--
-expr_stmt|;
-name|wakeup_one
-argument_list|(
-operator|&
-name|m_mballoc_wid
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+begin_define
+define|#
+directive|define
+name|MMBWAKEUP
+parameter_list|()
+value|do {						\ 	if (m_mballoc_wid) {						\ 		m_mballoc_wid--;					\ 		wakeup_one(&m_mballoc_wid); 				\ 	}								\ } while (0)
+end_define
 
 begin_comment
-comment|/*  * Same as above, only for mbuf cluster(s). Should be called at splimp()  */
+comment|/*  * Same as above, but for mbuf cluster(s).  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|m_clalloc_wakeup
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|m_clalloc_wid
-condition|)
-block|{
-name|m_clalloc_wid
-operator|--
-expr_stmt|;
-name|wakeup_one
-argument_list|(
-operator|&
-name|m_clalloc_wid
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+begin_define
+define|#
+directive|define
+name|MCLWAKEUP
+parameter_list|()
+value|do {						\ 	if (m_clalloc_wid) {						\ 		m_clalloc_wid--;					\ 		wakeup_one(&m_clalloc_wid);				\ 	}								\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * mbuf utility macros:  *  *	MBUFLOCK(code)  * prevents a section of code from from being interrupted by network  * drivers.  */
@@ -878,8 +862,7 @@ name|MBUFLOCK
 parameter_list|(
 name|code
 parameter_list|)
-define|\
-value|do { int ms = splimp(); \ 	  { code } \ 	  splx(ms); \ 	} while(0)
+value|do {						\ 	int ms = splimp();						\ 	do {								\ 		code							\ 	} while (0);							\ 	splx(ms);							\ } while(0)
 end_define
 
 begin_comment
@@ -897,8 +880,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-define|\
-value|do { \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 		splx(_ms); \ 	  } else { \ 		splx(_ms); \ 		if (((m) = m_retry((how), (type))) == NULL&& (how) == M_WAIT) \ 			(m) = m_mballoc_wait(MGET_C, (type)); \ 	  } \ 	} while (0)
+value|do {						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, (how));				\ 	(m) = mmbfree;							\ 	if ((m) != NULL) {						\ 		mmbfree = (m)->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		(m)->m_type = (type);					\ 		mbstat.m_mtypes[type]++;				\ 		(m)->m_next = (struct mbuf *)NULL;			\ 		(m)->m_nextpkt = (struct mbuf *)NULL;			\ 		(m)->m_data = (m)->m_dat;				\ 		(m)->m_flags = 0;					\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		(m) = m_retry((how), (type));				\ 		if ((m) == NULL&& (how) == M_WAIT)			\ 			(m) = m_mballoc_wait(MGET_C, (type));		\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -912,8 +894,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-define|\
-value|do { \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 		splx(_ms); \ 	  } else { \ 		splx(_ms); \ 		if (((m) = m_retryhdr((how), (type))) == NULL&& \ 		    (how) == M_WAIT) \ 			(m) = m_mballoc_wait(MGETHDR_C, (type)); \ 	  } \ 	} while (0)
+value|do {					\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, (how));				\ 	(m) = mmbfree;							\ 	if ((m) != NULL) {						\ 		mmbfree = (m)->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		(m)->m_type = (type);					\ 		mbstat.m_mtypes[type]++;				\ 		(m)->m_next = (struct mbuf *)NULL;			\ 		(m)->m_nextpkt = (struct mbuf *)NULL;			\ 		(m)->m_data = (m)->m_pktdat;				\ 		(m)->m_flags = M_PKTHDR;				\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		(m) = m_retryhdr((how), (type));			\ 		if ((m) == NULL&& (how) == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, (type));	\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -929,8 +910,7 @@ name|p
 parameter_list|,
 name|how
 parameter_list|)
-define|\
-value|do { \ 	  int _ms = splimp(); \ 	  if (mclfree == 0) \ 		(void)m_clalloc(1, (how)); \ 	  if (((p) = (caddr_t)mclfree) != 0) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 		splx(_ms); \ 	  } else if ((how) == M_WAIT) { \ 		splx(_ms); \ 		(p) = m_clalloc_wait(); \ 	  } \  	} while (0)
+value|do {						\ 	int _ms = splimp();						\ 									\ 	if (mclfree == NULL)						\ 		(void)m_clalloc(1, (how));				\ 	(p) = (caddr_t)mclfree;						\ 	if ((p) != NULL) {						\ 		mclrefcnt[mtocl(p)]++;					\ 		mbstat.m_clfree--;					\ 		mclfree = ((union mcluster *)(p))->mcl_next;		\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		if ((how) == M_WAIT)					\ 			(p) = m_clalloc_wait();				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -942,8 +922,7 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-define|\
-value|{ MCLALLOC((m)->m_ext.ext_buf, (how)); \ 	  if ((m)->m_ext.ext_buf != NULL) { \ 		(m)->m_data = (m)->m_ext.ext_buf; \ 		(m)->m_flags |= M_EXT; \ 		(m)->m_ext.ext_free = NULL;  \ 		(m)->m_ext.ext_ref = NULL;  \ 		(m)->m_ext.ext_size = MCLBYTES;  \ 	  } \ 	}
+value|do {						\ 	MCLALLOC((m)->m_ext.ext_buf, (how));				\ 	if ((m)->m_ext.ext_buf != NULL) {				\ 		(m)->m_data = (m)->m_ext.ext_buf;			\ 		(m)->m_flags |= M_EXT;					\ 		(m)->m_ext.ext_free = NULL;				\ 		(m)->m_ext.ext_ref = NULL;				\ 		(m)->m_ext.ext_size = MCLBYTES;				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -953,8 +932,7 @@ name|MCLFREE1
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|do { \ 	  	if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 			m_clalloc_wakeup(); \ 	  	} \ 	} while (0)
+value|do {						\ 	if (--mclrefcnt[mtocl(p)] == 0) {				\ 		((union mcluster *)(p))->mcl_next = mclfree;		\ 		mclfree = (union mcluster *)(p);			\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -964,8 +942,7 @@ name|MCLFREE
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|MBUFLOCK( \ 		MCLFREE1(p); \ 	)
+value|MBUFLOCK(						\ 	MCLFREE1(p);							\ )
 end_define
 
 begin_define
@@ -975,8 +952,7 @@ name|MEXTFREE1
 parameter_list|(
 name|m
 parameter_list|)
-define|\
-value|do { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 		    	(m)->m_ext.ext_size); \ 		else { \ 			char *p = (m)->m_ext.ext_buf; \ 			MCLFREE1(p); \ 		} \ 	} while (0)
+value|do {						\ 		if ((m)->m_ext.ext_free != NULL)			\ 			(*(m)->m_ext.ext_free)((m)->m_ext.ext_buf,	\ 		    	    (m)->m_ext.ext_size);			\ 		else							\ 			MCLFREE1((m)->m_ext.ext_buf);			\ } while (0)
 end_define
 
 begin_define
@@ -986,8 +962,7 @@ name|MEXTFREE
 parameter_list|(
 name|m
 parameter_list|)
-define|\
-value|MBUFLOCK( \ 		MCLEXTFREE1(m); \ 	)
+value|MBUFLOCK(						\ 	MEXTFREE1(m);							\ )
 end_define
 
 begin_comment
@@ -1003,12 +978,11 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|MBUFLOCK(  \ 	  mbstat.m_mtypes[(m)->m_type]--; \ 	  if ((m)->m_flags& M_EXT) { \ 		MEXTFREE1(m); \ 	  } \ 	  (n) = (m)->m_next; \ 	  (m)->m_type = MT_FREE; \ 	  mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_next = mmbfree; \ 	  mmbfree = (m); \ 	  m_mballoc_wakeup(); \ 	)
+value|MBUFLOCK(						\ 	mbstat.m_mtypes[(m)->m_type]--;					\ 	if ((m)->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = (m)->m_next;						\ 	(m)->m_type = MT_FREE;						\ 	mbstat.m_mtypes[MT_FREE]++;					\ 	(m)->m_next = mmbfree;						\ 	mmbfree = (m);							\ 	MMBWAKEUP();							\ )
 end_define
 
 begin_comment
-comment|/*  * Copy mbuf pkthdr from from to to.  * from must have M_PKTHDR set, and to must be empty.  */
+comment|/*  * Copy mbuf pkthdr from "from" to "to".  * from must have M_PKTHDR set, and to must be empty.  */
 end_comment
 
 begin_define
@@ -1020,7 +994,7 @@ name|to
 parameter_list|,
 name|from
 parameter_list|)
-value|{ \ 	(to)->m_pkthdr = (from)->m_pkthdr; \ 	(to)->m_flags = (from)->m_flags& M_COPYFLAGS; \ 	(to)->m_data = (to)->m_pktdat; \ }
+value|do {					\ 	(to)->m_data = (to)->m_pktdat;					\ 	(to)->m_flags = (from)->m_flags& M_COPYFLAGS;			\ 	(to)->m_pkthdr = (from)->m_pkthdr;				\ } while (0)
 end_define
 
 begin_comment
@@ -1036,8 +1010,7 @@ name|m
 parameter_list|,
 name|len
 parameter_list|)
-define|\
-value|{ (m)->m_data += (MLEN - (len))&~ (sizeof(long) - 1); }
+value|do {						\ 	(m)->m_data += (MLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
 end_define
 
 begin_comment
@@ -1053,8 +1026,7 @@ name|m
 parameter_list|,
 name|len
 parameter_list|)
-define|\
-value|{ (m)->m_data += (MHLEN - (len))&~ (sizeof(long) - 1); }
+value|do {						\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } while (0)
 end_define
 
 begin_comment
@@ -1069,9 +1041,9 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m)->m_flags& M_EXT ?
+value|((m)->m_flags& M_EXT ?						\
 comment|/* (m)->m_data - (m)->m_ext.ext_buf */
-value|0 : \ 	    (m)->m_flags& M_PKTHDR ? (m)->m_data - (m)->m_pktdat : \ 	    (m)->m_data - (m)->m_dat)
+value|NULL :		\ 	    (m)->m_flags& M_PKTHDR ? (m)->m_data - (m)->m_pktdat :	\ 	    (m)->m_data - (m)->m_dat)
 end_define
 
 begin_comment
@@ -1086,7 +1058,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m)->m_flags& M_EXT ? (m)->m_ext.ext_buf + (m)->m_ext.ext_size - \ 	    ((m)->m_data + (m)->m_len) : \&(m)->m_dat[MLEN] - ((m)->m_data + (m)->m_len))
+value|((m)->m_flags& M_EXT ? (m)->m_ext.ext_buf +			\ 	    (m)->m_ext.ext_size - ((m)->m_data + (m)->m_len) :		\&(m)->m_dat[MLEN] - ((m)->m_data + (m)->m_len))
 end_define
 
 begin_comment
@@ -1104,7 +1076,7 @@ name|plen
 parameter_list|,
 name|how
 parameter_list|)
-value|{ \ 	if (M_LEADINGSPACE(m)>= (plen)) { \ 		(m)->m_data -= (plen); \ 		(m)->m_len += (plen); \ 	} else \ 		(m) = m_prepend((m), (plen), (how)); \ 	if ((m)&& (m)->m_flags& M_PKTHDR) \ 		(m)->m_pkthdr.len += (plen); \ }
+value|do {					\ 	if ((m) == NULL)						\ 		MGET((m), (how), MT_DATA);				\ 	if ((m) == NULL)						\ 		break;							\ 	if (M_LEADINGSPACE(m)>= (plen)) {				\ 		(m)->m_data -= (plen);					\ 		(m)->m_len += (plen);					\ 	} else								\ 		(m) = m_prepend((m), (plen), (how));			\ 	if ((m)->m_flags& M_PKTHDR)					\ 		(m)->m_pkthdr.len += (plen);				\ } while (0)
 end_define
 
 begin_comment
@@ -1120,7 +1092,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|do { \ 	MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[t]++;); \ 	(m)->m_type = t;\ } while(0)
+value|do {						\ 	int _ms = splimp();						\ 									\ 	mbstat.m_mtypes[(m)->m_type]--;					\ 	mbstat.m_mtypes[t]++;						\ 	splx(_ms);							\ 	(m)->m_type = t;						\ } while(0)
 end_define
 
 begin_comment
@@ -1152,77 +1124,33 @@ parameter_list|)
 value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mbuf
-modifier|*
-name|mbutl
+name|u_int
+name|m_clalloc_wid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* virtual address of mclusters */
+comment|/* mbuf cluster wait count */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|mclrefcnt
+name|u_int
+name|m_mballoc_wid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* cluster reference counts */
+comment|/* mbuf wait count */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mbstat
-name|mbstat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nmbclusters
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nmbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mbuf
-modifier|*
-name|mmbfree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|union
-name|mcluster
-modifier|*
-name|mclfree
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1270,6 +1198,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mbstat
+name|mbstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|mbuf_wait
 decl_stmt|;
@@ -1280,16 +1216,164 @@ comment|/* mbuf sleep time */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|m_mballoc_wait
+name|mbutl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual address of mclusters */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|mclrefcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cluster reference counts */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|mcluster
+modifier|*
+name|mclfree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|mmbfree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nmbclusters
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nmbufs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsfbufs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_adj
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_cat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|m_clalloc
 name|__P
 argument_list|(
 operator|(
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|m_clalloc_wait
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_copyback
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_copydata
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|caddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1407,6 +1491,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|m_freem
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
@@ -1443,6 +1541,36 @@ name|struct
 name|mbuf
 modifier|*
 name|m_gethdr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|m_mballoc
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_mballoc_wait
 name|__P
 argument_list|(
 operator|(
@@ -1555,134 +1683,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|m_adj
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|m_cat
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|m_mballoc
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|m_clalloc
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|m_clalloc_wait
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|m_copyback
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|caddr_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|m_copydata
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|caddr_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|m_freem
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
