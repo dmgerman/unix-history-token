@@ -16465,7 +16465,8 @@ literal|0x52
 argument_list|,
 literal|1
 argument_list|)
-operator||
+operator|&
+operator|~
 literal|0x04
 argument_list|,
 literal|1
@@ -16492,7 +16493,8 @@ literal|0x49
 argument_list|,
 literal|1
 argument_list|)
-operator||
+operator|&
+operator|~
 literal|0x01
 argument_list|,
 literal|1
@@ -16516,8 +16518,8 @@ literal|0x50
 argument_list|,
 literal|2
 argument_list|)
-operator|&
-literal|0xfff7
+operator||
+literal|0x0008
 argument_list|,
 literal|2
 argument_list|)
@@ -16536,8 +16538,8 @@ literal|0x52
 argument_list|,
 literal|2
 argument_list|)
-operator|&
-literal|0xfff7
+operator||
+literal|0x0008
 argument_list|,
 literal|2
 argument_list|)
