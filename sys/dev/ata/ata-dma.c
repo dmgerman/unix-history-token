@@ -1698,13 +1698,9 @@ name|udmamode
 operator|>=
 literal|2
 operator|&&
-name|pci_read_config
+name|pci_get_revid
 argument_list|(
 name|parent
-argument_list|,
-literal|0x08
-argument_list|,
-literal|1
 argument_list|)
 operator|>
 literal|0x20
@@ -2517,6 +2513,13 @@ condition|(
 name|udmamode
 operator|>=
 literal|2
+operator|&&
+name|pci_get_revid
+argument_list|(
+name|parent
+argument_list|)
+operator|>
+literal|0xc1
 condition|)
 block|{
 name|error
@@ -4581,7 +4584,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA5 on HPT370 chip\n"
+literal|"%s setting UDMA5 on HighPoint chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4684,7 +4687,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA4 on HPT366 chip\n"
+literal|"%s setting UDMA4 on HighPoint chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4765,7 +4768,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting UDMA2 on HPT366 chip\n"
+literal|"%s setting UDMA2 on HighPoint chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4850,7 +4853,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting WDMA2 on HPT366 chip\n"
+literal|"%s setting WDMA2 on HighPoint chip\n"
 argument_list|,
 operator|(
 name|error
@@ -4927,7 +4930,7 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting PIO%d on HPT366 chip\n"
+literal|"%s setting PIO%d on HighPoint chip\n"
 argument_list|,
 operator|(
 name|error
