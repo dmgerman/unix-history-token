@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: hlfsd.h,v 1.2 1999/01/10 21:54:32 ezk Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: hlfsd.h,v 1.4.2.2 2001/01/12 22:47:21 ro Exp $  *  * HLFSD was written at Columbia University Computer Science Department, by  * Erez Zadok<ezk@cs.columbia.edu> and Alexander Dupuy<dupuy@cs.columbia.edu>  * It is being distributed under the same terms and conditions as amd does.  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|HLFSD_VERSION
-value|"hlfsd 1.1 (March 4, 1997-1999)"
+value|"hlfsd 1.1 (1993-2001)"
 end_define
 
 begin_define
@@ -51,49 +51,6 @@ begin_comment
 comment|/*  * ROOTID and SLINKID are the fixed "faked" node IDs (inodes) for  * the '.' (also '..') and the one symlink within the hlfs.  * They must always be unique, and should never match what a UID  * could be.  * They used to be -1 and -2, respectively.  *  * I used to cast these to (uid_t) but it failed to compile  * with /opt/SUNWspro/bin/cc because uid_t is long, while struct fattr's  * uid field is u_int.  Then it failed to compile on some linux systems  * which define uid_t to be unsigned short, so I used the lowest common  * size which is unsigned short.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EXPERIMENTAL_UID_SIZE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UID_SHIFT
-value|30
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROOTID
-value|((1<< UID_SHIFT) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLINKID
-value|((1<< UID_SHIFT) - 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INVALIDID
-value|((1<< UID_SHIFT) - 3)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not EXPERIMENTAL_UID_SIZE */
-end_comment
-
 begin_comment
 comment|/*  * XXX: this will cause problems to systems with UIDs greater than  * MAX_UNSIGNED_SHORT-3.  */
 end_comment
@@ -112,6 +69,16 @@ name|SLINKID
 value|(((unsigned short) ~0) - 2)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVALIDID
+end_ifndef
+
+begin_comment
+comment|/* this is also defined in include/am_utils.h */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -125,7 +92,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not EXPERIMENTAL_UID_SIZE */
+comment|/* not INVALIDID */
 end_comment
 
 begin_define

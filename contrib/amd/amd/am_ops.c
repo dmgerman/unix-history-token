@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_ops.c,v 1.4 1999/03/13 17:03:26 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_ops.c,v 1.6.2.3 2001/02/23 01:03:39 ezk Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -37,7 +37,7 @@ file|<amd.h>
 end_include
 
 begin_comment
-comment|/*  * The order of these entries matters, since lookups in this table are done  * on a first-match basis.  The entries below are a mixture of native  * filesystems supported by the OS (HAVE_FS_FOO), and some meta-filesystems  * supported by amd (HAVE_AM_FS_FOO).  The order is set here in expected  * match-hit such that more popular filesystems are listed first (nfs is the  * most popular, followed by a symlink F/S)  */
+comment|/*  * The order of these entries matters, since lookups in this table are done  * on a first-match basis.  The entries below are a mixture of native  * filesystems supported by the OS (HAVE_FS_FOO), and some meta-filesystems  * supported by amd (HAVE_AMU_FS_FOO).  The order is set here in expected  * match-hit such that more popular filesystems are listed first (nfs is the  * most popular, followed by a symlink F/S)  */
 end_comment
 
 begin_decl_stmt
@@ -60,85 +60,85 @@ directive|endif
 comment|/* HAVE_FS_NFS */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_LINK
+name|HAVE_AMU_FS_LINK
 operator|&
 name|amfs_link_ops
 block|,
 comment|/* symlink F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_LINK */
+comment|/* HAVE_AMU_FS_LINK */
 comment|/*    * Other amd-supported meta-filesystems.    */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_NFSX
+name|HAVE_AMU_FS_NFSX
 operator|&
 name|amfs_nfsx_ops
 block|,
 comment|/* multiple-nfs F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_NFSX */
+comment|/* HAVE_AMU_FS_NFSX */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_NFSL
+name|HAVE_AMU_FS_NFSL
 operator|&
 name|amfs_nfsl_ops
 block|,
 comment|/* NFS with local link existence check */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_NFSL */
+comment|/* HAVE_AMU_FS_NFSL */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_HOST
+name|HAVE_AMU_FS_HOST
 operator|&
 name|amfs_host_ops
 block|,
 comment|/* multiple exported nfs F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_HOST */
+comment|/* HAVE_AMU_FS_HOST */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_LINKX
+name|HAVE_AMU_FS_LINKX
 operator|&
 name|amfs_linkx_ops
 block|,
 comment|/* symlink F/S with link target verify */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_LINKX */
+comment|/* HAVE_AMU_FS_LINKX */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_PROGRAM
+name|HAVE_AMU_FS_PROGRAM
 operator|&
 name|amfs_program_ops
 block|,
 comment|/* program F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_PROGRAM */
+comment|/* HAVE_AMU_FS_PROGRAM */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_UNION
+name|HAVE_AMU_FS_UNION
 operator|&
 name|amfs_union_ops
 block|,
 comment|/* union F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_UNION */
+comment|/* HAVE_AMU_FS_UNION */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_INHERIT
+name|HAVE_AMU_FS_INHERIT
 operator|&
 name|amfs_inherit_ops
 block|,
 comment|/* inheritance F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_INHERIT */
+comment|/* HAVE_AMU_FS_INHERIT */
 comment|/*    * A few more native filesystems.    */
 ifdef|#
 directive|ifdef
@@ -237,34 +237,34 @@ comment|/* HAVE_FS_UMAPFS */
 comment|/*    * These 5 should be last, in the order:    *	(1) amfs_auto    *	(2) amfs_direct    *	(3) amfs_toplvl    *	(4) autofs    *	(5) amfs_error    */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_AUTO
+name|HAVE_AMU_FS_AUTO
 operator|&
 name|amfs_auto_ops
 block|,
 comment|/* Automounter F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_AUTO */
+comment|/* HAVE_AMU_FS_AUTO */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_DIRECT
+name|HAVE_AMU_FS_DIRECT
 operator|&
 name|amfs_direct_ops
 block|,
 comment|/* direct-mount F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_DIRECT */
+comment|/* HAVE_AMU_FS_DIRECT */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_TOPLVL
+name|HAVE_AMU_FS_TOPLVL
 operator|&
 name|amfs_toplvl_ops
 block|,
 comment|/* top-level mount F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_TOPLVL */
+comment|/* HAVE_AMU_FS_TOPLVL */
 ifdef|#
 directive|ifdef
 name|HAVE_FS_AUTOFS
@@ -277,14 +277,14 @@ directive|endif
 comment|/* HAVE_FS_AUTOFS */
 ifdef|#
 directive|ifdef
-name|HAVE_AM_FS_ERROR
+name|HAVE_AMU_FS_ERROR
 operator|&
 name|amfs_error_ops
 block|,
 comment|/* error F/S */
 endif|#
 directive|endif
-comment|/* HAVE_AM_FS_ERROR */
+comment|/* HAVE_AMU_FS_ERROR */
 literal|0
 block|}
 decl_stmt|;
@@ -998,7 +998,7 @@ name|char
 modifier|*
 name|eq
 decl_stmt|;
-comment|/* pointer to '=' within temp */
+comment|/* pointer to whatever follows '=' within temp */
 name|char
 name|oneopt
 index|[
@@ -1108,18 +1108,14 @@ condition|(
 operator|(
 name|eq
 operator|=
-name|strchr
+name|haseq
 argument_list|(
 name|oneopt
-argument_list|,
-literal|'='
 argument_list|)
 operator|)
 condition|)
+operator|*
 name|eq
-index|[
-literal|1
-index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1483,7 +1479,7 @@ argument_list|)
 expr_stmt|;
 name|plog
 argument_list|(
-name|XLOG_USER
+name|XLOG_INFO
 argument_list|,
 literal|"merge rem/opts \"%s\" add \"%s\" => \"%s\""
 argument_list|,
@@ -1552,7 +1548,7 @@ argument_list|)
 expr_stmt|;
 name|plog
 argument_list|(
-name|XLOG_USER
+name|XLOG_INFO
 argument_list|,
 literal|"merge opts \"%s\" add \"%s\" => \"%s\""
 argument_list|,
@@ -1595,7 +1591,7 @@ argument_list|)
 expr_stmt|;
 name|plog
 argument_list|(
-name|XLOG_USER
+name|XLOG_INFO
 argument_list|,
 literal|"merge remopts \"%s\" add \"%s\" => \"%s\""
 argument_list|,

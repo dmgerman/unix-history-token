@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: srvr_nfs.c,v 1.5 1999/09/08 23:36:39 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-2001 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: srvr_nfs.c,v 1.7.2.5 2001/04/14 21:08:23 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -213,7 +213,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* protocols we know about, in order of preference */
+comment|/*  * Protocols we know about, in order of preference.  *  * Note that Solaris 8 and newer NetBSD systems are switching to UDP first,  * so this order may have to be adjusted for Amd in the future once more  * vendors make that change. -Erez 11/24/2000  */
 end_comment
 
 begin_decl_stmt
@@ -2237,7 +2237,7 @@ name|char
 modifier|*
 name|proto_opt
 init|=
-name|hasmntopt
+name|hasmnteq
 argument_list|(
 operator|&
 name|mnt
@@ -2255,16 +2255,6 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
-name|proto_opt
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|MNTTAB_OPT_PROTO
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
-comment|/* skip the "proto" */
 for|for
 control|(
 name|p
@@ -2279,20 +2269,9 @@ operator|++
 control|)
 if|if
 condition|(
-name|proto_opt
-index|[
-literal|0
-index|]
-operator|==
-literal|'='
-operator|&&
 name|NSTREQ
 argument_list|(
-operator|&
 name|proto_opt
-index|[
-literal|1
-index|]
 argument_list|,
 operator|*
 name|p
@@ -2367,7 +2346,7 @@ name|plog
 argument_list|(
 name|XLOG_WARNING
 argument_list|,
-literal|"found compatiblity option \"nfsv2\": set options vers=2, proto=udp for host %s"
+literal|"found compatiblity option \"nfsv2\": set options vers=2,proto=udp for host %s"
 argument_list|,
 name|host
 argument_list|)
@@ -2376,6 +2355,56 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_NFS_NFSV2_H */
+comment|/* check if we globally overridden the NFS version/protocol */
+if|if
+condition|(
+name|gopt
+operator|.
+name|nfs_vers
+condition|)
+block|{
+name|nfs_version
+operator|=
+name|gopt
+operator|.
+name|nfs_vers
+expr_stmt|;
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"find_nfs_srvr: force NFS version to %d"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|nfs_version
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|gopt
+operator|.
+name|nfs_proto
+condition|)
+block|{
+name|nfs_proto
+operator|=
+name|gopt
+operator|.
+name|nfs_proto
+expr_stmt|;
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"find_nfs_srvr: force NFS protocol transport to %s"
+argument_list|,
+name|nfs_proto
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*    * lookup host address and canonical name    */
 name|hp
 operator|=
