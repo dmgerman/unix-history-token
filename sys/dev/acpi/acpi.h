@@ -112,6 +112,7 @@ define|#
 directive|define
 name|ACPI_PR_MAX
 value|3
+comment|/* _PR[0-2] */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -161,10 +162,16 @@ modifier|*
 name|facs
 decl_stmt|;
 name|int
+name|system_state
+decl_stmt|;
+name|int
 name|system_state_initialized
 decl_stmt|;
 name|int
 name|broken_wakeuplogic
+decl_stmt|;
+name|int
+name|enabled
 decl_stmt|;
 name|struct
 name|acpi_system_state_package
@@ -289,7 +296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_ACPI_ACPI_H_ */
+comment|/* !_DEV_ACPI_ACPI_H_ */
 end_comment
 
 end_unit
