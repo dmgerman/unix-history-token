@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_STARTCONFIG
-value|_IOC(0, L, 78, 0)
+value|_IOW(L, 78, int)
 end_define
 
 begin_comment
