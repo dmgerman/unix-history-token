@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vfsops.c	6.5	84/07/08	*/
+comment|/*	lfs_vfsops.c	6.6	84/07/08	*/
 end_comment
 
 begin_include
@@ -135,6 +135,9 @@ name|u
 operator|.
 name|u_nd
 decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
 name|u
 operator|.
 name|u_error
@@ -249,20 +252,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|bzero
-argument_list|(
-name|fs
-operator|->
-name|fs_fsmnt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fs
-operator|->
-name|fs_fsmnt
-argument_list|)
-argument_list|)
-expr_stmt|;
+operator|(
+name|void
+operator|)
 name|copyinstr
 argument_list|(
 name|uap
@@ -279,6 +271,27 @@ name|fs
 operator|->
 name|fs_fsmnt
 argument_list|)
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|len
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+operator|-
+name|len
 argument_list|)
 expr_stmt|;
 block|}

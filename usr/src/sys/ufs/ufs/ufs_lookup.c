@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.12	84/07/08	*/
+comment|/*	ufs_lookup.c	6.13	84/07/08	*/
 end_comment
 
 begin_include
@@ -489,6 +489,12 @@ operator|.
 name|b_addr
 argument_list|,
 name|MAXPATHLEN
+argument_list|,
+operator|(
+name|u_int
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -507,6 +513,12 @@ operator|.
 name|b_addr
 argument_list|,
 name|MAXPATHLEN
+argument_list|,
+operator|(
+name|u_int
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
