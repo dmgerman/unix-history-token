@@ -99,9 +99,9 @@ value|0x8000
 comment|/* reserved fragment flag */
 define|#
 directive|define
-name|IP_EVIL
+name|IP_EF
 value|0x8000
-comment|/* packet is evil */
+comment|/* evil flag, per RFC 3514 */
 define|#
 directive|define
 name|IP_DF

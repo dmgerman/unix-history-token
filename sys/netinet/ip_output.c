@@ -1109,7 +1109,7 @@ name|ip_off
 operator|&=
 name|IP_DF
 operator||
-name|IP_EVIL
+name|IP_EF
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1182,7 +1182,7 @@ name|ip
 operator|->
 name|ip_off
 operator||=
-name|IP_EVIL
+name|IP_EF
 expr_stmt|;
 if|if
 condition|(
@@ -1193,7 +1193,7 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-name|IP_EVIL
+name|IP_EF
 operator|)
 condition|)
 block|{
@@ -6707,6 +6707,9 @@ case|:
 case|case
 name|IP_FAITH
 case|:
+case|case
+name|IP_EF
+case|:
 switch|switch
 condition|(
 name|sopt
@@ -6831,7 +6834,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IP_EVIL
+name|IP_EF
 case|:
 name|optval
 operator|=

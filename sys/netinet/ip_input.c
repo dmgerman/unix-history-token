@@ -1972,7 +1972,7 @@ name|ip
 operator|->
 name|ip_off
 operator|&
-name|IP_EVIL
+name|IP_EF
 condition|)
 block|{
 name|ipstat
