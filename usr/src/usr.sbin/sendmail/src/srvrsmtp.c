@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.32 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.33 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.32 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.33 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1503,6 +1503,21 @@ name|gotmail
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* optimize: non-interactive, don't expand aliases */
+if|if
+condition|(
+name|e
+operator|->
+name|e_sendmode
+operator|!=
+name|SM_INTERACTIVE
+condition|)
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_VRFYONLY
+expr_stmt|;
 break|break;
 case|case
 name|CMDRCPT
@@ -1564,21 +1579,6 @@ expr_stmt|;
 name|LogUsrErrs
 operator|=
 name|TRUE
-expr_stmt|;
-comment|/* optimization -- if queueing, don't expand aliases */
-if|if
-condition|(
-name|e
-operator|->
-name|e_sendmode
-operator|==
-name|SM_QUEUE
-condition|)
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_VRFYONLY
 expr_stmt|;
 name|p
 operator|=
