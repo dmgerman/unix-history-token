@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.52 (Berkeley) %G%"
+literal|"@(#)map.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6683,27 +6683,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|38
-argument_list|,
-literal|20
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"  %d %s\n"
-argument_list|,
-name|i
-argument_list|,
-name|hp
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bitset
