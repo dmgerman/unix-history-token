@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	1.2	(Berkeley)	%G%"
+literal|"@(#)atq.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,11 +525,6 @@ modifier|*
 name|ptr
 decl_stmt|;
 comment|/* scratch pointer */
-name|struct
-name|stat
-name|stbuf
-decl_stmt|;
-comment|/* buffer for file stats */
 comment|/* 	 * For each file in the queue, see if the user(s) own the file. We 	 * have to use "entryfound" (rather than simply incrementing "numfiles") 	 * so that if a person's name appears twice on the command line we  	 * don't double the number of files owned by him/her. 	 */
 for|for
 control|(
@@ -545,28 +540,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
-name|stat
-argument_list|(
-name|queue
-index|[
-name|i
-index|]
-operator|->
-name|d_name
-argument_list|,
-operator|&
-name|stbuf
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-continue|continue;
-block|}
 name|ptr
 operator|=
 name|namelist
@@ -583,15 +556,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|getid
+name|isowner
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+name|queue
+index|[
+name|i
+index|]
+operator|->
+name|d_name
 argument_list|)
-operator|==
-name|stbuf
-operator|.
-name|st_uid
 condition|)
 operator|++
 name|entryfound
@@ -662,6 +638,11 @@ parameter_list|()
 function_decl|;
 comment|/* print the last time the  						   spooling area was updated */
 name|int
+name|powner
+parameter_list|()
+function_decl|;
+comment|/* print the name of the owner 						   of the job */
+name|int
 name|getid
 parameter_list|()
 function_decl|;
@@ -672,12 +653,6 @@ modifier|*
 name|ptr
 decl_stmt|;
 comment|/* scratch pointer */
-name|char
-modifier|*
-name|getname
-parameter_list|()
-function_decl|;
-comment|/* get the login name of a  						   person using their uid */
 name|struct
 name|stat
 name|stbuf
@@ -750,15 +725,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|getid
+name|isowner
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+name|queue
+index|[
+name|i
+index|]
+operator|->
+name|d_name
 argument_list|)
-operator|==
-name|stbuf
-operator|.
-name|st_uid
 condition|)
 operator|++
 name|entryfound
@@ -790,16 +768,14 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-name|printf
+name|powner
 argument_list|(
-literal|"%-10.9s"
-argument_list|,
-name|getname
-argument_list|(
-name|stbuf
-operator|.
-name|st_uid
-argument_list|)
+name|queue
+index|[
+name|i
+index|]
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 name|printf
@@ -829,60 +805,231 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get the full login name of a person using his/her user id.  */
+comment|/*  * See if "name" owns "job".  */
 end_comment
 
-begin_function
+begin_macro
+name|isowner
+argument_list|(
+argument|name
+argument_list|,
+argument|job
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
-name|getname
-parameter_list|(
-name|uid
-parameter_list|)
-name|int
-name|uid
+name|name
 decl_stmt|;
-block|{
-name|struct
-name|passwd
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
-name|pwdinfo
+name|job
 decl_stmt|;
-comment|/* password info structure */
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+name|buf
+index|[
+literal|30
+index|]
+decl_stmt|;
+comment|/* buffer for 1st line of spoolfile  					   header */
+name|FILE
+modifier|*
+name|infile
+decl_stmt|;
+comment|/* I/O stream to spoolfile */
 if|if
 condition|(
 operator|(
-name|pwdinfo
+name|infile
 operator|=
-name|getpwuid
+name|fopen
 argument_list|(
-name|uid
+name|job
+argument_list|,
+literal|"r"
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Couldn't open spoolfile"
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-name|uid
+name|job
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
-name|pwdinfo
-operator|->
-name|pw_name
+literal|0
 operator|)
 return|;
 block|}
-end_function
+if|if
+condition|(
+name|fscanf
+argument_list|(
+name|infile
+argument_list|,
+literal|"# owner: %s\n"
+argument_list|,
+name|buf
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|infile
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|fclose
+argument_list|(
+name|infile
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+name|buf
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Print the owner of the job. This is stored on the first line of the  * spoolfile. If we run into trouble getting the name, we'll just print "???".  */
+end_comment
+
+begin_macro
+name|powner
+argument_list|(
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+name|owner
+index|[
+literal|80
+index|]
+decl_stmt|;
+comment|/* the owner */
+name|FILE
+modifier|*
+name|infile
+decl_stmt|;
+comment|/* I/O stream to spoolfile */
+comment|/* 	 * Open the job file and grab the first line. 	 */
+if|if
+condition|(
+operator|(
+name|infile
+operator|=
+name|fopen
+argument_list|(
+name|file
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%-10.9s"
+argument_list|,
+literal|"???"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|fscanf
+argument_list|(
+name|infile
+argument_list|,
+literal|"# owner: %s"
+argument_list|,
+name|owner
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%-10.9s"
+argument_list|,
+literal|"???"
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|infile
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|fclose
+argument_list|(
+name|infile
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-10.9s"
+argument_list|,
+name|owner
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Get the uid of a person using his/her login name. Return -1 if no  * such account name exists.  */
@@ -1484,9 +1631,9 @@ begin_block
 block|{
 name|char
 modifier|*
-name|ch
+name|ptr
 decl_stmt|;
-comment|/* char ptr */
+comment|/* scratch pointer */
 name|char
 name|jobname
 index|[
@@ -1499,7 +1646,7 @@ modifier|*
 name|filename
 decl_stmt|;
 comment|/* job file in spooling area */
-comment|/* 	 * Open the job file and grab the first line. 	 */
+comment|/* 	 * Open the job file and grab the second line. 	 */
 name|printf
 argument_list|(
 literal|"   "
@@ -1528,13 +1675,19 @@ argument_list|,
 literal|"???"
 argument_list|)
 expr_stmt|;
-name|fclose
+return|return;
+block|}
+comment|/* 	 * We'll yank the first line into the buffer temporarily. 	 */
+name|fgets
 argument_list|(
+name|jobname
+argument_list|,
+literal|80
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+comment|/* 	 * Now get the job name. 	 */
 if|if
 condition|(
 name|fscanf
@@ -1569,14 +1722,14 @@ name|filename
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put a pointer at the begining of the line and remove the basename 	 * from the job file. 	 */
-name|ch
+name|ptr
 operator|=
 name|jobname
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ch
+name|ptr
 operator|=
 operator|(
 name|char
@@ -1593,18 +1746,35 @@ operator|!=
 literal|0
 condition|)
 operator|++
-name|ch
+name|ptr
 expr_stmt|;
 else|else
-name|ch
+name|ptr
 operator|=
 name|jobname
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|ptr
+argument_list|)
+operator|>
+literal|23
+condition|)
+name|printf
+argument_list|(
+literal|"%.23s ...\n"
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%.27s\n"
 argument_list|,
-name|ch
+name|ptr
 argument_list|)
 expr_stmt|;
 block|}
