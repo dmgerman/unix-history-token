@@ -3113,13 +3113,6 @@ operator|!=
 name|BDG_LOCAL
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|oldm
-init|=
-name|m
-decl_stmt|;
 name|save_eh
 operator|=
 operator|*
@@ -3163,13 +3156,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|m
-operator|!=
-name|oldm
-condition|)
-comment|/* m changed! */
 name|eh
 operator|=
 operator|&
