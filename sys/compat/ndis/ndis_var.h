@@ -3598,6 +3598,12 @@ name|ndis_config_parm
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_struct
 struct|struct
 name|ndis_list_entry
@@ -3624,6 +3630,11 @@ name|ndis_list_entry
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|ndis_bind_paths
@@ -3649,6 +3660,12 @@ name|ndis_bind_paths
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_struct
 struct|struct
 name|dispatch_header
@@ -3668,12 +3685,24 @@ decl_stmt|;
 name|uint32_t
 name|dh_sigstate
 decl_stmt|;
-name|ndis_list_entry
+name|list_entry
 name|dh_waitlisthead
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|dispatch_header
+value|nt_dispatch_header
+end_define
 
 begin_struct
 struct|struct
@@ -3686,7 +3715,7 @@ decl_stmt|;
 name|uint64_t
 name|nk_duetime
 decl_stmt|;
-name|ndis_list_entry
+name|list_entry
 name|nk_timerlistentry
 decl_stmt|;
 name|void
@@ -3779,7 +3808,7 @@ decl_stmt|;
 name|uint8_t
 name|nk_importance
 decl_stmt|;
-name|ndis_list_entry
+name|list_entry
 name|nk_dpclistentry
 decl_stmt|;
 name|ndis_kdpc_func
@@ -5446,7 +5475,7 @@ decl_stmt|;
 name|uint32_t
 name|nmb_pnpflags
 decl_stmt|;
-name|ndis_list_entry
+name|list_entry
 name|nmb_packetlist
 decl_stmt|;
 name|ndis_packet
@@ -5693,6 +5722,9 @@ name|nmb_dummybuf
 index|[
 literal|128
 index|]
+decl_stmt|;
+name|device_object
+name|nmb_devobj
 decl_stmt|;
 name|ndis_config_parm
 name|nmb_replyparm
