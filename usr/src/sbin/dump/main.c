@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.8 (Berkeley) %G%"
+literal|"@(#)main.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,7 +721,7 @@ argument_list|)
 expr_stmt|;
 name|msgtail
 argument_list|(
-literal|"to %s"
+literal|"to %s\n"
 argument_list|,
 name|tape
 argument_list|)
