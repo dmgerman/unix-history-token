@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.60 1996/07/05 08:36:02 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.61 1996/07/08 08:54:34 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -119,6 +119,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|file_readable
+argument_list|(
+name|fname
+argument_list|)
+operator|||
 name|vsystem
 argument_list|(
 literal|"gzip -c -d %s> %s"
@@ -996,20 +1002,6 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
-name|OnVTY
-operator|&&
-name|isDebug
-argument_list|()
-operator|&&
-name|RunningAsInit
-condition|)
-name|msgInfo
-argument_list|(
-literal|"Command output is on VTY2 - type ALT-F2 to see it"
-argument_list|)
-expr_stmt|;
 name|dup2
 argument_list|(
 name|DebugFD
