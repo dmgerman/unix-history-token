@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000,2001,2002 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 - 2003 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ata/ata-all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ata/ata-pci.h>
 end_include
 
 begin_include
@@ -590,37 +596,12 @@ operator|->
 name|channel
 operator|->
 name|chiptype
+operator|&
+literal|0xffff
 condition|)
 block|{
 case|case
-literal|0x4d33105a
-case|:
-case|case
-literal|0x4d38105a
-case|:
-case|case
-literal|0x4d30105a
-case|:
-case|case
-literal|0x0d30105a
-case|:
-case|case
-literal|0x4d68105a
-case|:
-case|case
-literal|0x6268105a
-case|:
-case|case
-literal|0x4d69105a
-case|:
-case|case
-literal|0x5275105a
-case|:
-case|case
-literal|0x6269105a
-case|:
-case|case
-literal|0x7275105a
+name|ATA_PROMISE_ID
 case|:
 comment|/* test RAID bit in PCI reg XXX */
 return|return
@@ -636,13 +617,7 @@ argument_list|)
 operator|)
 return|;
 case|case
-literal|0x00041103
-case|:
-case|case
-literal|0x00051103
-case|:
-case|case
-literal|0x00081103
+name|ATA_HIGHPOINT_ID
 case|:
 return|return
 operator|(
@@ -1219,7 +1194,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"         "
+literal|"	     "
 argument_list|)
 expr_stmt|;
 name|ata_enclosure_print
@@ -1522,7 +1497,7 @@ literal|0xffff
 condition|)
 block|{
 case|case
-literal|0x1103
+name|ATA_HIGHPOINT_ID
 case|:
 name|ctlr
 operator||=
@@ -1557,7 +1532,7 @@ name|AR_F_FREEBSD_RAID
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-literal|0x105a
+name|ATA_PROMISE_ID
 case|:
 name|ctlr
 operator||=
@@ -2068,11 +2043,50 @@ index|]
 operator|=
 name|rdp
 expr_stmt|;
+comment|/* kick off rebuild here */
+if|if
+condition|(
+name|setup
+operator|->
+name|type
+operator|==
+literal|2
+condition|)
+block|{
+name|rdp
+operator|->
+name|disks
+index|[
+literal|1
+index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|AR_DF_ONLINE
+expr_stmt|;
+name|rdp
+operator|->
+name|disks
+index|[
+literal|1
+index|]
+operator|.
+name|flags
+operator||=
+name|AR_DF_SPARE
+expr_stmt|;
+block|}
 name|ar_attach_raid
 argument_list|(
 name|rdp
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|ata_raid_rebuild
+argument_list|(
+name|array
 argument_list|)
 expr_stmt|;
 name|setup
