@@ -25206,6 +25206,25 @@ argument_list|,
 name|AUTHKEYLEN
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Fixup the LCP timeout value to milliseconds so 		 * spppcontrol doesn't need to bother about the value 		 * of "hz".  We do the reverse calculation below when 		 * setting it. 		 */
+name|spr
+operator|.
+name|defs
+operator|.
+name|lcp
+operator|.
+name|timeout
+operator|=
+name|sp
+operator|->
+name|lcp
+operator|.
+name|timeout
+operator|*
+literal|1000
+operator|/
+name|hz
+expr_stmt|;
 return|return
 name|copyout
 argument_list|(
@@ -25235,7 +25254,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
-comment|/* 		 * We have a very specific idea of which fields we allow 		 * being passed back from userland, so to not clobber our 		 * current state.  For one, we only allow setting 		 * anything if LCP is in dead phase.  Once the LCP 		 * negotiations started, the authentication settings must 		 * not be changed again.  (The administrator can force an 		 * ifconfig down in order to get LCP back into dead 		 * phase.) 		 * 		 * Also, we only allow for authentication parameters to be 		 * specified. 		 * 		 * XXX Should allow to set or clear pp_flags. 		 * 		 * Finally, if the respective authentication protocol to 		 * be used is set differently than 0, but the secret is 		 * passed as all zeros, we don't trash the existing secret. 		 * This allows an administrator to change the system name 		 * only without clobbering the secret (which he didn't get 		 * back in a previous SPPPIOGDEFS call).  However, the 		 * secrets are cleared if the authentication protocol is 		 * reset to 0. 		 */
+comment|/* 		 * We have a very specific idea of which fields we 		 * allow being passed back from userland, so to not 		 * clobber our current state.  For one, we only allow 		 * setting anything if LCP is in dead or establish 		 * phase.  Once the authentication negotiations 		 * started, the authentication settings must not be 		 * changed again.  (The administrator can force an 		 * ifconfig down in order to get LCP back into dead 		 * phase.) 		 * 		 * Also, we only allow for authentication parameters to be 		 * specified. 		 * 		 * XXX Should allow to set or clear pp_flags. 		 * 		 * Finally, if the respective authentication protocol to 		 * be used is set differently than 0, but the secret is 		 * passed as all zeros, we don't trash the existing secret. 		 * This allows an administrator to change the system name 		 * only without clobbering the secret (which he didn't get 		 * back in a previous SPPPIOGDEFS call).  However, the 		 * secrets are cleared if the authentication protocol is 		 * reset to 0.  */
 if|if
 condition|(
 name|sp
@@ -25243,6 +25262,12 @@ operator|->
 name|pp_phase
 operator|!=
 name|PHASE_DEAD
+operator|&&
+name|sp
+operator|->
+name|pp_phase
+operator|!=
+name|PHASE_ESTABLISH
 condition|)
 return|return
 name|EBUSY
@@ -25524,6 +25549,37 @@ name|AUTHKEYLEN
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* set LCP restart timer timeout */
+if|if
+condition|(
+name|spr
+operator|.
+name|defs
+operator|.
+name|lcp
+operator|.
+name|timeout
+operator|!=
+literal|0
+condition|)
+name|sp
+operator|->
+name|lcp
+operator|.
+name|timeout
+operator|=
+name|spr
+operator|.
+name|defs
+operator|.
+name|lcp
+operator|.
+name|timeout
+operator|*
+name|hz
+operator|/
+literal|1000
+expr_stmt|;
 comment|/* set VJ enable flag */
 name|sp
 operator|->
