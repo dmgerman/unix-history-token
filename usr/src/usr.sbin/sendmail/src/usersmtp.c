@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.18 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.19 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.18 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.19 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1166,6 +1166,74 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_8BITMIME
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+literal|" BODY="
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+name|e
+operator|->
+name|e_bodytype
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|e
+operator|->
+name|e_bodytype
+argument_list|,
+literal|"7bit"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* cannot just send a 7-bit version */
+name|usrerr
+argument_list|(
+literal|"%s does not support 8BITMIME"
+argument_list|,
+name|mci
+operator|->
+name|mci_host
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_DATAERR
+return|;
+block|}
+block|}
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
 name|mci

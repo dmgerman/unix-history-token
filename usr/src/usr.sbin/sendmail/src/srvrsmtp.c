@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.39 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.40 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.39 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.40 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1737,9 +1737,15 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-ifdef|#
-directive|ifdef
-name|MIME
+name|e
+operator|->
+name|e_bodytype
+operator|=
+name|newstr
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcasecmp
@@ -1752,12 +1758,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|e
-operator|->
-name|e_bodytype
-operator|=
-literal|"8BITMIME"
-expr_stmt|;
 name|SevenBit
 operator|=
 name|FALSE
@@ -1776,12 +1776,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|e
-operator|->
-name|e_bodytype
-operator|=
-literal|"7BIT"
-expr_stmt|;
 name|SevenBit
 operator|=
 name|TRUE
@@ -1796,9 +1790,8 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
