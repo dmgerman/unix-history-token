@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Font translation to vfonts (RST format) from character format.  *  *	Use:	ch2vft  [ -i ]  charfile> vfontfile  *  *		Takes input from charfile (which must be in the format written  *	by xxx2ch), converts to rst format and writes to stdout.  If charfile  *	is missing, stdin is read.  The -i flag tells ch2rst to ignore the  *	character codes at the start of each glyph definition, and pack the  *	glyphs in consecutive code positions starting with 0.  */
+comment|/* ch2vft.c	1.2	84/02/16  *  * Font translation to vfonts (RST format) from character format.  *  *	Use:	ch2vft  [ -i ]  charfile> vfontfile  *  *		Takes input from charfile (which must be in the format written  *	by xxx2ch), converts to rst format and writes to stdout.  If charfile  *	is missing, stdin is read.  The -i flag tells ch2rst to ignore the  *	character codes at the start of each glyph definition, and pack the  *	glyphs in consecutive code positions starting with 0.  */
 end_comment
 
 begin_include
@@ -37,6 +37,13 @@ define|#
 directive|define
 name|MAXLINE
 value|200
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLYPHSPACE
+value|(MAXLINE * MAXLINE)
 end_define
 
 begin_define
@@ -186,7 +193,7 @@ begin_decl_stmt
 name|char
 name|charbits
 index|[
-literal|20000
+name|GLYPHSPACE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -775,6 +782,8 @@ name|maxh
 operator|=
 literal|0
 expr_stmt|;
+name|refv
+operator|=
 name|minv
 operator|=
 operator|-
@@ -795,6 +804,23 @@ name|length
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|length
+operator|+
+literal|1
+operator|)
+operator|*
+name|width
+operator|>
+name|GLYPHSPACE
+condition|)
+name|error
+argument_list|(
+literal|"out of glyph space"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -854,9 +880,6 @@ case|case
 literal|'@'
 case|:
 case|case
-literal|'a'
-case|:
-case|case
 literal|'*'
 case|:
 name|maxv
@@ -866,9 +889,8 @@ expr_stmt|;
 if|if
 condition|(
 name|minv
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|minv
 operator|=
@@ -928,6 +950,39 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* for length */
+if|if
+condition|(
+name|refv
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"no reference point in glyph %d."
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|minv
+operator|<
+literal|0
+condition|)
+block|{
+name|minv
+operator|=
+name|maxv
+operator|=
+name|refv
+expr_stmt|;
+name|minh
+operator|=
+name|maxh
+operator|=
+name|refh
+expr_stmt|;
+block|}
 name|g
 index|[
 name|i
@@ -1441,7 +1496,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ch2rst: write failed"
+literal|"ch2vft: write failed"
 argument_list|)
 expr_stmt|;
 name|exit
