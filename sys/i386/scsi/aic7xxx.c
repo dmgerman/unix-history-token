@@ -12570,6 +12570,10 @@ argument|scb
 argument_list|)
 name|removed_scbs
 expr_stmt|;
+name|found
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
