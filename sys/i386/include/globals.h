@@ -244,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|prv_PMAP1
-value|GLOBAL_LVALUE(prv_PMAP1, pt_entry_t *)
+value|GLOBAL_LVALUE(prv_PMAP1, pd_entry_t *)
 end_define
 
 begin_define
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|prv_PADDR1
-value|GLOBAL_RVALUE(prv_PADDR1, unsigned *)
+value|GLOBAL_RVALUE(prv_PADDR1, pt_entry_t *)
 end_define
 
 begin_endif

@@ -471,12 +471,10 @@ operator|,
 name|int
 name|flags
 operator|,
-name|unsigned
-name|long
+name|vm_paddr_t
 name|low
 operator|,
-name|unsigned
-name|long
+name|vm_paddr_t
 name|high
 operator|,
 name|unsigned

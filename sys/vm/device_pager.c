@@ -201,7 +201,7 @@ name|dev_pager_getfake
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -687,7 +687,7 @@ block|{
 name|vm_offset_t
 name|offset
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 name|vm_page_t
@@ -970,7 +970,7 @@ name|dev_pager_getfake
 parameter_list|(
 name|paddr
 parameter_list|)
-name|vm_offset_t
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 block|{

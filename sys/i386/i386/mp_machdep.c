@@ -9200,6 +9200,10 @@ name|gd
 operator|->
 name|gd_prv_PMAP1
 operator|=
+operator|(
+name|pd_entry_t
+operator|*
+operator|)
 operator|&
 name|SMPpt
 index|[
@@ -9246,7 +9250,7 @@ operator|->
 name|gd_prv_PADDR1
 operator|=
 operator|(
-name|unsigned
+name|pt_entry_t
 operator|*
 operator|)
 name|SMP_prvspace
@@ -10516,11 +10520,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PTD[MPPTDI] = %p\n"
+literal|"PTD[MPPTDI] = %llx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|u_int64_t
 operator|)
 name|PTD
 index|[

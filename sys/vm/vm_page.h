@@ -98,7 +98,7 @@ name|vm_pindex_t
 name|pindex
 decl_stmt|;
 comment|/* offset into object (O,P) */
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_addr
 decl_stmt|;
 comment|/* physical address of page */
@@ -1445,7 +1445,7 @@ begin_function_decl
 name|vm_page_t
 name|vm_add_new_page
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;

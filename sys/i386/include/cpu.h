@@ -325,6 +325,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+name|KERNend
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_char
 name|intr_nesting_level
 decl_stmt|;

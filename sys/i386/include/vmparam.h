@@ -185,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|VADDR(KPTDI+NKPDE, 0)
+value|VADDR(KPTDI+NKPDE-1, NPTEPG-1)
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|VADDR(UMAXPTDI, UMAXPTEOFF)
+value|VADDR(PTDPTDI, 0)
 end_define
 
 begin_define

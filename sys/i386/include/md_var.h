@@ -365,6 +365,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|cpu_idle
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|cpu_reset
 name|__P
 argument_list|(
@@ -696,7 +708,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|vm_paddr_t
 name|kvtop
 name|__P
 argument_list|(

@@ -675,9 +675,9 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
 name|vm_offset_t
 operator|)

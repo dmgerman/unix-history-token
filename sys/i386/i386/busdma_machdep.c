@@ -348,7 +348,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_offset_t
+name|bus_addr_t
 name|add_bounce_page
 parameter_list|(
 name|bus_dma_tag_t
@@ -610,7 +610,7 @@ operator|=
 name|trunc_page
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 name|lowaddr
 argument_list|)
@@ -628,7 +628,7 @@ operator|=
 name|trunc_page
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 name|highaddr
 argument_list|)
@@ -801,6 +801,9 @@ name|lowaddr
 operator|<
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 operator|&&
@@ -1027,6 +1030,9 @@ name|lowaddr
 operator|<
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 condition|)
@@ -1358,6 +1364,9 @@ name|lowaddr
 operator|>=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 condition|)
@@ -1498,6 +1507,9 @@ name|lowaddr
 operator|>=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 condition|)
@@ -1566,7 +1578,7 @@ block|{
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 ifdef|#
@@ -1600,7 +1612,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|nextpaddr
 decl_stmt|;
 if|if
@@ -1627,6 +1639,9 @@ name|lowaddr
 operator|<
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 operator|&&
@@ -2440,6 +2455,9 @@ name|lowaddr
 operator|>=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 operator|||
@@ -2707,6 +2725,9 @@ name|lowaddr
 operator|>=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 operator|||
@@ -3375,7 +3396,7 @@ end_function
 
 begin_function
 specifier|static
-name|vm_offset_t
+name|bus_addr_t
 name|add_bounce_page
 parameter_list|(
 name|bus_dma_tag_t

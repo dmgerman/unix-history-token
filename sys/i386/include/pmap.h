@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|PG_FRAME
-value|(~PAGE_MASK)
+value|(~((vm_paddr_t)PAGE_MASK))
 end_define
 
 begin_define
@@ -257,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|KVA_PAGES
-value|256
+value|(1<< (30 - PDRSHIFT))
 end_define
 
 begin_endif
@@ -287,6 +287,28 @@ directive|ifndef
 name|NKPT
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NKPT
+value|120
+end_define
+
+begin_comment
+comment|/* actual number of kernel page tables */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -297,6 +319,11 @@ end_define
 begin_comment
 comment|/* actual number of kernel page tables */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -319,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES - 2)
+value|(KVA_PAGES - 1)
 end_define
 
 begin_comment
@@ -335,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES - 1)
+value|(KVA_PAGES)
 end_define
 
 begin_comment
@@ -356,17 +383,6 @@ begin_comment
 comment|/*  * The *PTDI values control the layout of virtual memory  *  * XXX This works for now, but I am not real happy with it, I'll fix it  * right after I fix locore.s and the magic 28K hole  *  * SMP_PRIVPAGES: The per-cpu address space is 0xff80000 -> 0xffbfffff  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|APTDPTDI
-value|(NPDEPG-1)
-end_define
-
-begin_comment
-comment|/* alt ptd entry that points to APTD */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -377,7 +393,7 @@ begin_define
 define|#
 directive|define
 name|MPPTDI
-value|(APTDPTDI-1)
+value|(NPDEPTD-1)
 end_define
 
 begin_comment
@@ -404,7 +420,7 @@ begin_define
 define|#
 directive|define
 name|KPTDI
-value|(APTDPTDI-NKPDE)
+value|(NPDEPTD-NKPDE)
 end_define
 
 begin_comment
@@ -424,33 +440,11 @@ begin_define
 define|#
 directive|define
 name|PTDPTDI
-value|(KPTDI-1)
+value|(KPTDI-NPGPTD)
 end_define
 
 begin_comment
 comment|/* ptd entry that points to ptd! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMAXPTDI
-value|(PTDPTDI-1)
-end_define
-
-begin_comment
-comment|/* ptd entry for user space end */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMAXPTEOFF
-value|(NPTEPG)
-end_define
-
-begin_comment
-comment|/* pte entry for user space end */
 end_comment
 
 begin_comment
@@ -483,23 +477,84 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-modifier|*
+name|u_int64_t
+name|pdpt_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
 name|pd_entry_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
-modifier|*
+name|u_int64_t
 name|pt_entry_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|PTESHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDESHIFT
+value|3
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|pd_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|pt_entry_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PTESHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDESHIFT
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -538,11 +593,6 @@ specifier|extern
 name|pt_entry_t
 name|PTmap
 index|[]
-decl_stmt|,
-name|APTmap
-index|[]
-decl_stmt|,
-name|Upte
 decl_stmt|;
 end_decl_stmt
 
@@ -552,20 +602,14 @@ name|pd_entry_t
 name|PTD
 index|[]
 decl_stmt|,
-name|APTD
-index|[]
-decl_stmt|,
 name|PTDpde
-decl_stmt|,
-name|APTDpde
-decl_stmt|,
-name|Upde
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|pd_entry_t
+name|u_int32_t
 name|IdlePTD
 decl_stmt|;
 end_decl_stmt
@@ -573,6 +617,25 @@ end_decl_stmt
 begin_comment
 comment|/* physical address of "Idle" state directory */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|pdpt_entry_t
+name|IdlePDPT
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -599,16 +662,6 @@ parameter_list|)
 value|(PTmap + i386_btop(va))
 end_define
 
-begin_define
-define|#
-directive|define
-name|avtopte
-parameter_list|(
-name|va
-parameter_list|)
-value|(APTmap + i386_btop(va))
-end_define
-
 begin_comment
 comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
 end_comment
@@ -616,14 +669,14 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 if|if
@@ -631,9 +684,6 @@ condition|(
 operator|(
 name|pa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|PTD
 index|[
 name|va
@@ -674,10 +724,6 @@ block|{
 name|pa
 operator|=
 operator|*
-operator|(
-name|vm_offset_t
-operator|*
-operator|)
 name|vtopte
 argument_list|(
 name|va
@@ -704,12 +750,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -717,37 +757,7 @@ name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|(((vm_offset_t) (*vtopte(va))&PG_FRAME) | ((vm_offset_t)(va)& PAGE_MASK))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|pmap_kextract(((vm_offset_t) (va)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|avtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|(((vm_offset_t) (*avtopte(va))&PG_FRAME) | ((vm_offset_t)(va)& PAGE_MASK))
+value|pmap_kextract((vm_offset_t) (va))
 end_define
 
 begin_endif
@@ -805,10 +815,6 @@ name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
 name|int
-name|pm_count
-decl_stmt|;
-comment|/* reference count */
-name|int
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -823,6 +829,22 @@ modifier|*
 name|pm_ptphint
 decl_stmt|;
 comment|/* pmap ptp hint */
+ifdef|#
+directive|ifdef
+name|PAE
+name|pdpt_entry_t
+modifier|*
+name|pm_pdpt
+decl_stmt|;
+comment|/* KVA of page dir ptr table */
+else|#
+directive|else
+name|void
+modifier|*
+name|pm_pdpt_dontuse
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -903,35 +925,6 @@ name|pv_entry_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|PV_ENTRY_NULL
-value|((pv_entry_t) 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PV_CI
-value|0x01
-end_define
-
-begin_comment
-comment|/* all entries must be cache inhibited */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PV_PTPAGE
-value|0x02
-end_define
-
-begin_comment
-comment|/* entry maps a page table page */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -985,29 +978,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|caddr_t
-name|CADDR1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|CMAP1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_start
 decl_stmt|;
 end_decl_stmt
@@ -1028,7 +1006,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[]
 decl_stmt|;
@@ -1066,9 +1044,9 @@ name|pmap_bootstrap
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1093,7 +1071,7 @@ name|pmap_mapdev
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
 name|vm_size_t
 operator|)
@@ -1116,24 +1094,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|pt_entry_t
 modifier|*
 name|pmap_pte
-name|__P
-argument_list|(
-operator|(
-name|pmap_t
-operator|,
-name|vm_offset_t
-operator|)
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_page_t
-name|pmap_use_pt
 name|__P
 argument_list|(
 operator|(

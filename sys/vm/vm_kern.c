@@ -696,14 +696,6 @@ name|min
 operator|+
 name|size
 expr_stmt|;
-name|pmap_reference
-argument_list|(
-name|vm_map_pmap
-argument_list|(
-name|parent
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|vm_map_create

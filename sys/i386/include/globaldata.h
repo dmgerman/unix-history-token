@@ -90,7 +90,7 @@ name|pt_entry_t
 modifier|*
 name|gd_prv_CMAP3
 decl_stmt|;
-name|pt_entry_t
+name|pd_entry_t
 modifier|*
 name|gd_prv_PMAP1
 decl_stmt|;
@@ -103,7 +103,7 @@ decl_stmt|;
 name|caddr_t
 name|gd_prv_CADDR3
 decl_stmt|;
-name|unsigned
+name|pt_entry_t
 modifier|*
 name|gd_prv_PADDR1
 decl_stmt|;

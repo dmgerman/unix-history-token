@@ -12284,7 +12284,7 @@ name|v
 decl_stmt|,
 name|kva
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|int

@@ -252,11 +252,40 @@ name|NPTEPG
 value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|NPDEPG
-value|(PAGE_SIZE/(sizeof (pd_entry_t)))
+name|NPGPTD
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|21
+end_define
+
+begin_comment
+comment|/* LOG2(NBPDR) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NPGPTD
+value|1
 end_define
 
 begin_define
@@ -269,6 +298,11 @@ end_define
 begin_comment
 comment|/* LOG2(NBPDR) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -286,6 +320,20 @@ define|#
 directive|define
 name|PDRMASK
 value|(NBPDR-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPDEPG
+value|(PAGE_SIZE/(sizeof (pd_entry_t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPDEPTD
+value|(NPDEPG*NPGPTD)
 end_define
 
 begin_define
@@ -592,7 +640,7 @@ name|trunc_4mpage
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& ~PDRMASK)
+value|((x)& ~PDRMASK)
 end_define
 
 begin_define
@@ -602,7 +650,7 @@ name|round_4mpage
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned)(x)) + PDRMASK)& ~PDRMASK)
+value|((((x)) + PDRMASK)& ~PDRMASK)
 end_define
 
 begin_define
@@ -612,7 +660,7 @@ name|atop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -622,7 +670,7 @@ name|ptoa
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -632,7 +680,7 @@ name|i386_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -642,7 +690,7 @@ name|i386_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define

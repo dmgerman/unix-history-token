@@ -170,21 +170,9 @@ name|pmap_copy_page
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
-name|vm_offset_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|pmap_destroy
-name|__P
-argument_list|(
-operator|(
-name|pmap_t
+name|vm_paddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -211,7 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_extract
 name|__P
 argument_list|(
@@ -244,9 +232,9 @@ name|pmap_init
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -285,10 +273,8 @@ name|__P
 argument_list|(
 operator|(
 name|vm_offset_t
-name|va
 operator|,
-name|vm_offset_t
-name|pa
+name|vm_paddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -314,9 +300,9 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
 name|int
 operator|)
@@ -403,7 +389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_phys_address
 name|__P
 argument_list|(
@@ -501,18 +487,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|pmap_reference
-name|__P
-argument_list|(
-operator|(
-name|pmap_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|pmap_release
 name|__P
 argument_list|(
@@ -561,7 +535,7 @@ name|pmap_zero_page
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -573,7 +547,7 @@ name|pmap_zero_page_area
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 operator|,
 name|int
 name|off
@@ -718,7 +692,7 @@ name|pmap_kenter_temporary
 name|__P
 argument_list|(
 operator|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 operator|,
 name|int

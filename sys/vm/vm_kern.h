@@ -107,9 +107,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_long
+name|vm_paddr_t
 parameter_list|,
-name|u_long
+name|vm_paddr_t
 parameter_list|,
 name|u_long
 parameter_list|,
