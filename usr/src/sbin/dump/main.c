@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1474,7 +1474,7 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
-name|rewind
+name|trewind
 argument_list|()
 expr_stmt|;
 block|}
@@ -1485,7 +1485,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|rewind
+name|trewind
 argument_list|()
 expr_stmt|;
 endif|#

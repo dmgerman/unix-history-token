@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.10 (Berkeley) %G%"
+literal|"@(#)tape.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -846,7 +852,7 @@ block|}
 end_block
 
 begin_macro
-name|rewind
+name|trewind
 argument_list|()
 end_macro
 
@@ -972,7 +978,7 @@ end_macro
 
 begin_block
 block|{
-name|rewind
+name|trewind
 argument_list|()
 expr_stmt|;
 if|if
@@ -1565,6 +1571,12 @@ argument_list|(
 argument|status
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|status
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
