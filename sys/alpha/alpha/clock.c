@@ -412,7 +412,11 @@ literal|0
 block|,
 comment|/* frequency */
 literal|"alpha"
+block|,
 comment|/* name */
+literal|800
+block|,
+comment|/* quality */
 block|}
 decl_stmt|;
 end_decl_stmt
