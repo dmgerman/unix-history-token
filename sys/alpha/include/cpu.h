@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: cpu.h,v 1.5 1999/02/02 09:08:23 bde Exp $ */
+comment|/* $Id: cpu.h,v 1.6 1999/04/20 22:53:53 dt Exp $ */
 end_comment
 
 begin_comment
@@ -909,35 +909,6 @@ name|long
 operator|,
 expr|struct
 name|trapframe
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|cpu_set_fork_handler
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-name|void
-argument_list|(
-operator|*
-name|pc
-argument_list|)
-argument_list|(
-specifier|const
-name|void
-operator|*
-argument_list|)
-operator|,
-specifier|const
-name|void
 operator|*
 operator|)
 argument_list|)
