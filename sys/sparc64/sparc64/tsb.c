@@ -173,17 +173,19 @@ value|KTR_CT3
 end_define
 
 begin_expr_stmt
-name|ASSERT_EQUAL
+name|CTASSERT
 argument_list|(
+operator|(
+literal|1
+operator|<<
+name|TTE_SHIFT
+operator|)
+operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tte
 argument_list|)
-argument_list|,
-literal|1
-operator|<<
-name|TTE_SHIFT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
