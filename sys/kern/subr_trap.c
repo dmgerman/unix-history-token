@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *
 end_comment
 
 begin_comment
-comment|/*  * 386 Trap and System call handleing  */
+comment|/*  * 386 Trap and System call handling  */
 end_comment
 
 begin_include
