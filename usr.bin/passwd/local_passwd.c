@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: local_passwd.c,v 1.10 1996/11/03 03:11:57 jkh Exp $  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: local_passwd.c,v 1.9.2.1 1996/11/05 20:13:31 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -141,6 +141,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -241,6 +258,10 @@ decl_stmt|;
 block|{
 name|int
 name|tries
+decl_stmt|,
+name|min_length
+init|=
+literal|6
 decl_stmt|;
 name|char
 modifier|*
@@ -249,6 +270,15 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+name|login_cap_t
+modifier|*
+name|lc
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|buf
 index|[
@@ -328,6 +358,88 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+comment|/* 	 * Determine minimum password length and next password change date. 	 * Note that even for NIS passwords, login_cap is still used. 	 */
+if|if
+condition|(
+operator|(
+name|lc
+operator|=
+name|login_getpwclass
+argument_list|(
+name|pw
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|time_t
+name|period
+decl_stmt|;
+comment|/* minpasswordlen capablity */
+name|min_length
+operator|=
+operator|(
+name|int
+operator|)
+name|login_getcapnum
+argument_list|(
+name|lc
+argument_list|,
+literal|"minpasswordlen"
+argument_list|,
+name|min_length
+argument_list|,
+name|min_length
+argument_list|)
+expr_stmt|;
+comment|/* passwordperiod capability */
+name|period
+operator|=
+name|login_getcaptime
+argument_list|(
+name|lc
+argument_list|,
+literal|"passwordperiod"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|period
+operator|>
+operator|(
+name|time_t
+operator|)
+literal|0
+condition|)
+block|{
+name|pw
+operator|->
+name|pw_change
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|+
+name|period
+expr_stmt|;
+block|}
+name|login_close
+argument_list|(
+name|lc
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|buf
@@ -382,8 +494,8 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
-operator|<=
-literal|5
+operator|<
+name|min_length
 operator|&&
 operator|(
 name|uid
@@ -402,7 +514,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Please enter a longer password.\n"
+literal|"Please enter a password at least %d characters in length.\n"
+argument_list|,
+name|min_length
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -801,7 +915,13 @@ operator|=
 name|pw_tmp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Get the new password.  Reset passwd change time to zero; when 	 * classes are implemented, go and get the "offset" value for this 	 * class and reset the timer. 	 */
+comment|/* 	 * Get the new password.  Reset passwd change time to zero by 	 * default. If the user has a valid login class (or the default 	 * fallback exists), then the next password change date is set 	 * by getnewpasswd() according to the "passwordperiod" capability 	 * if one has been specified. 	 */
+name|pw
+operator|->
+name|pw_change
+operator|=
+literal|0
+expr_stmt|;
 name|pw
 operator|->
 name|pw_passwd
@@ -812,12 +932,6 @@ name|pw
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|pw
-operator|->
-name|pw_change
-operator|=
-literal|0
 expr_stmt|;
 name|pw_copy
 argument_list|(
