@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.16 %G%"
+literal|"@(#)lex.c	1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,8 +362,23 @@ index|]
 decl_stmt|;
 name|int
 name|hangup
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+name|contin
+argument_list|()
+decl_stmt|;
+name|sigset
+argument_list|(
+name|SIGCONT
+argument_list|,
+name|contin
+argument_list|)
+expr_stmt|;
+name|sighold
+argument_list|(
+name|SIGCONT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rcvmode
@@ -505,11 +520,18 @@ operator|&&
 operator|!
 name|sourcing
 condition|)
+block|{
+name|sigrelse
+argument_list|(
+name|SIGCONT
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"_\r"
 argument_list|)
 expr_stmt|;
+block|}
 name|flush
 argument_list|()
 expr_stmt|;
@@ -630,6 +652,11 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+name|sighold
+argument_list|(
+name|SIGCONT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|execute
@@ -1435,6 +1462,32 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * When we wake up after ^Z, reprint the prompt.  */
+end_comment
+
+begin_macro
+name|contin
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"_\r"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
