@@ -1604,6 +1604,10 @@ if|if
 condition|(
 name|ptd
 operator|==
+operator|(
+name|u_int
+operator|*
+operator|)
 name|IdlePTD
 condition|)
 block|{
