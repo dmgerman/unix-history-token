@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_inquire[] = "@(#)inquire.c	1.2";  *  * inquire.c - f77 i/o inquire statement routine  */
+comment|/* char id_inquire[] = "@(#)inquire.c	1.3";  *  * inquire.c - f77 i/o inquire statement routine  */
 end_comment
 
 begin_include
@@ -662,12 +662,20 @@ operator|->
 name|innrec
 operator|=
 operator|(
+operator|(
 name|ftell
 argument_list|(
 name|p
 operator|->
 name|ufd
 argument_list|)
+operator|+
+name|p
+operator|->
+name|url
+operator|-
+literal|1
+operator|)
 operator|/
 name|p
 operator|->
@@ -697,7 +705,7 @@ name|ublnk
 condition|?
 literal|"zero"
 else|:
-literal|"blank"
+literal|"null"
 argument_list|,
 name|a
 operator|->
