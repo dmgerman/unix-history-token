@@ -1438,25 +1438,25 @@ block|{
 name|Boolean
 name|noSpecials
 decl_stmt|;
-comment|/* true if we shouldn't worry about 				     * inserting special commands into 				     * the input stream. */
+comment|/* true if we shouldn't worry about 				 * inserting special commands into 				 * the input stream. */
 name|Boolean
 name|shutUp
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* true if we put a no echo command 				     * into the command file */
+comment|/* true if we put a no echo command 				 * into the command file */
 name|Boolean
 name|errOff
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* true if we turned error checking 				     * off before printing the command 				     * and need to turn it back on */
+comment|/* true if we turned error checking 				 * off before printing the command 				 * and need to turn it back on */
 specifier|const
 name|char
 modifier|*
 name|cmdTemplate
 decl_stmt|;
-comment|/* Template to use when printing the 				     * command */
+comment|/* Template to use when printing the 				 * command */
 name|char
 modifier|*
 name|cmdStart
