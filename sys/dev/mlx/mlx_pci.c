@@ -449,9 +449,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|10
 operator|)
 return|;
+comment|/* allow room to be overridden */
 block|}
 block|}
 return|return
