@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.8 (Berkeley) 83/01/03"
+literal|"@(#)mv.c	4.9 (Berkeley) 83/01/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -960,6 +960,12 @@ name|s1
 argument_list|)
 condition|)
 block|{
+name|time_t
+name|tv
+index|[
+literal|2
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|mknod
@@ -989,6 +995,25 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* kludge prior to utimes */
+name|tv
+index|[
+literal|0
+index|]
+operator|=
+name|s1
+operator|.
+name|st_atime
+expr_stmt|;
+name|tv
+index|[
+literal|1
+index|]
+operator|=
+name|s1
+operator|.
+name|st_mtime
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -996,10 +1021,7 @@ name|utime
 argument_list|(
 name|target
 argument_list|,
-operator|&
-name|s1
-operator|.
-name|st_atime
+name|tv
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1020,6 +1042,12 @@ decl_stmt|,
 name|c
 decl_stmt|,
 name|status
+decl_stmt|;
+name|time_t
+name|tv
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|i
 operator|=
@@ -1107,6 +1135,25 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* kludge prior to utimes */
+name|tv
+index|[
+literal|0
+index|]
+operator|=
+name|s1
+operator|.
+name|st_atime
+expr_stmt|;
+name|tv
+index|[
+literal|1
+index|]
+operator|=
+name|s1
+operator|.
+name|st_mtime
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1114,10 +1161,7 @@ name|utime
 argument_list|(
 name|target
 argument_list|,
-operator|&
-name|s1
-operator|.
-name|st_atime
+name|tv
 argument_list|)
 expr_stmt|;
 goto|goto
