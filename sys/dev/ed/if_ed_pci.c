@@ -291,7 +291,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|ed_probe_Novell_generic
+name|ed_probe_Novell
 argument_list|(
 name|dev
 argument_list|,
