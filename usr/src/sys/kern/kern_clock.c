@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.22	81/06/11	*/
+comment|/*	kern_clock.c	4.23	81/07/09	*/
 end_comment
 
 begin_include
@@ -541,6 +541,12 @@ end_block
 begin_comment
 comment|/*  * The digital decay cpu usage priority assignment is scaled to run in  * time as expanded by the 1 minute load average.  Each second we  * multiply the the previous cpu usage estimate by  *		nrscale*avenrun[0]  * The following relates the load average to the period over which  * cpu usage is 90% forgotten:  *	loadav 1	 5 seconds  *	loadav 5	24 seconds  *	loadav 10	47 seconds  *	loadav 20	93 seconds  * This is a great improvement on the previous algorithm which  * decayed the priorities by a constant, and decayed away all knowledge  * of previous activity in about 20 seconds.  Under heavy load,  * the previous algorithm degenerated to round-robin with poor response  * time when there was a high load average.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ave
+end_undef
 
 begin_define
 define|#

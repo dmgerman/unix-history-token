@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.18	81/04/02	*/
+comment|/*	lp.c	4.19	81/07/09	*/
 end_comment
 
 begin_include
@@ -395,6 +395,23 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+endif|#
+directive|endif
 name|lpaddr
 operator|->
 name|lpsr
@@ -598,6 +615,9 @@ name|timeout
 argument_list|(
 name|lptout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dev
 argument_list|,
 literal|10
@@ -704,7 +724,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|unsigned
 name|n
 decl_stmt|;
 specifier|register
@@ -1565,6 +1585,9 @@ name|timeout
 argument_list|(
 name|lptout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dev
 argument_list|,
 literal|2
@@ -1643,6 +1666,9 @@ name|timeout
 argument_list|(
 name|lptout
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dev
 argument_list|,
 literal|10

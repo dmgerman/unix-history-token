@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.40	81/06/03	*/
+comment|/*	hp.c	4.41	81/07/09	*/
 end_comment
 
 begin_ifdef
@@ -2066,6 +2066,9 @@ operator|&
 name|HPER2_SSE
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|hpecc
 argument_list|(
 name|mi

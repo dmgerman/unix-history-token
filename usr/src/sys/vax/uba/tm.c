@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.39	81/07/05	*/
+comment|/*	tm.c	4.40	81/07/09	*/
 end_comment
 
 begin_include
@@ -1797,6 +1797,9 @@ name|imax
 argument_list|(
 literal|10
 operator|*
+operator|(
+name|int
+operator|)
 name|bp
 operator|->
 name|b_repcnt

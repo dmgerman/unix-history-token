@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.17	81/07/09	*/
+comment|/*	ts.c	4.19	81/07/09	*/
 end_comment
 
 begin_include
@@ -448,6 +448,10 @@ end_endif
 
 begin_comment
 comment|/*  * Determine if there is a controller for  * a ts at address reg.  Our goal is to make the  * device interrupt.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -3451,12 +3455,6 @@ decl_stmt|;
 specifier|register
 name|ts11
 expr_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
 for|for
 control|(
 name|ts11
@@ -3564,6 +3562,9 @@ name|um
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|tsinit
 argument_list|(
 name|ts11
