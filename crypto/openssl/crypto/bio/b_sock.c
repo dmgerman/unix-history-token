@@ -313,14 +313,13 @@ block|}
 comment|/* At this point, we have something that is most probably correct 	   in some way, so let's init the socket. */
 if|if
 condition|(
-operator|!
 name|BIO_sock_init
 argument_list|()
+operator|!=
+literal|1
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* don't generate another error code here */
 comment|/* If the string actually contained an IP address, we need not do 	   anything more */
@@ -2370,8 +2369,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-operator|-
-literal|1
+name|INVALID_SOCKET
 decl_stmt|,
 name|cs
 decl_stmt|;
@@ -2389,6 +2387,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|str
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|e
@@ -2410,9 +2410,10 @@ name|err_num
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|BIO_sock_init
 argument_list|()
+operator|!=
+literal|1
 condition|)
 return|return
 operator|(
@@ -2528,11 +2529,9 @@ operator|&
 name|port
 argument_list|)
 condition|)
-return|return
-operator|(
-name|INVALID_SOCKET
-operator|)
-return|;
+goto|goto
+name|err
+goto|;
 name|memset
 argument_list|(
 operator|(
@@ -2602,11 +2601,9 @@ index|]
 operator|)
 argument_list|)
 condition|)
-return|return
-operator|(
-name|INVALID_SOCKET
-operator|)
-return|;
+goto|goto
+name|err
+goto|;
 name|l
 operator|=
 call|(

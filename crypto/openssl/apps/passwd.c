@@ -1660,7 +1660,12 @@ name|salt_out
 operator|=
 name|out_buf
 operator|+
-literal|6
+literal|2
+operator|+
+name|strlen
+argument_list|(
+name|magic
+argument_list|)
 expr_stmt|;
 name|salt_len
 operator|=

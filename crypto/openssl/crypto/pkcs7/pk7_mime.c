@@ -752,21 +752,21 @@ name|BIO_printf
 argument_list|(
 name|bio
 argument_list|,
-literal|"Content-Type: multipart/signed ; "
+literal|"Content-Type: multipart/signed;"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio
 argument_list|,
-literal|"protocol=\"application/x-pkcs7-signature\" ; "
+literal|" protocol=\"application/x-pkcs7-signature\";"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio
 argument_list|,
-literal|"micalg=sha1 ; boundary=\"----%s\"\n\n"
+literal|" micalg=sha1; boundary=\"----%s\"\n\n"
 argument_list|,
 name|bound
 argument_list|)

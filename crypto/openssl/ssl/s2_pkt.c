@@ -7,6 +7,10 @@ begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
+begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -116,75 +120,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
-name|int
-name|ssl2_peek
-parameter_list|(
-name|SSL
-modifier|*
-name|s
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-block|{
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
-name|ssl2_read
-argument_list|(
-name|s
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|>
-literal|0
-condition|)
-block|{
-name|s
-operator|->
-name|s2
-operator|->
-name|ract_data_length
-operator|+=
-name|ret
-expr_stmt|;
-name|s
-operator|->
-name|s2
-operator|->
-name|ract_data
-operator|-=
-name|ret
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
-comment|/* SSL_read -  * This routine will return 0 to len bytes, decrypted etc if required.  */
+comment|/* SSL 2.0 imlementation for SSL_read/SSL_peek -  * This routine will return 0 to len bytes, decrypted etc if required.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|ssl2_read
+name|ssl2_read_internal
 parameter_list|(
 name|SSL
 modifier|*
@@ -196,6 +139,9 @@ name|buf
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|peek
 parameter_list|)
 block|{
 name|int
@@ -266,7 +212,7 @@ condition|)
 block|{
 name|SSLerr
 argument_list|(
-name|SSL_F_SSL2_READ
+name|SSL_F_SSL2_READ_INTERNAL
 argument_list|,
 name|SSL_R_SSL_HANDSHAKE_FAILURE
 argument_list|)
@@ -351,6 +297,12 @@ operator|)
 name|n
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|peek
+condition|)
+block|{
 name|s
 operator|->
 name|s2
@@ -383,12 +335,14 @@ name|rstate
 operator|=
 name|SSL_ST_READ_HEADER
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|n
 operator|)
 return|;
 block|}
+comment|/* s->s2->ract_data_length == 0 	 *  	 * Fill the buffer, then goto ssl2_read_again. 	 */
 if|if
 condition|(
 name|s
@@ -481,7 +435,7 @@ condition|)
 block|{
 name|SSLerr
 argument_list|(
-name|SSL_F_SSL2_READ
+name|SSL_F_SSL2_READ_INTERNAL
 argument_list|,
 name|SSL_R_NON_SSLV2_INITIAL_PACKET
 argument_list|)
@@ -980,7 +934,7 @@ condition|)
 block|{
 name|SSLerr
 argument_list|(
-name|SSL_F_SSL2_READ
+name|SSL_F_SSL2_READ_INTERNAL
 argument_list|,
 name|SSL_R_BAD_MAC_DECODE
 argument_list|)
@@ -1004,52 +958,17 @@ argument_list|)
 expr_stmt|;
 comment|/* expect next number */
 comment|/* s->s2->ract_data is now available for processing */
-if|#
-directive|if
-literal|1
-comment|/* How should we react when a packet containing 0 		 * bytes is received?  (Note that SSLeay/OpenSSL itself 		 * never sends such packets; see ssl2_write.) 		 * Returning 0 would be interpreted by the caller as 		 * indicating EOF, so it's not a good idea. 		 * Instead, we just continue reading.  Note that using 		 * select() for blocking sockets *never* guarantees 		 * that the next SSL_read will not block -- the available 		 * data may contain incomplete packets, and except for SSL 2 		 * renegotiation can confuse things even more. */
+comment|/* Possibly the packet that we just read had 0 actual data bytes. 		 * (SSLeay/OpenSSL itself never sends such packets; see ssl2_write.) 		 * In this case, returning 0 would be interpreted by the caller 		 * as indicating EOF, so it's not a good idea.  Instead, we just 		 * continue reading; thus ssl2_read_internal may have to process 		 * multiple packets before it can return. 		 * 		 * [Note that using select() for blocking sockets *never* guarantees 		 * that the next SSL_read will not block -- the available 		 * data may contain incomplete packets, and except for SSL 2, 		 * renegotiation can confuse things even more.] */
 goto|goto
 name|ssl2_read_again
 goto|;
-comment|/* This should really be 				       * "return ssl2_read(s,buf,len)", 				       * but that would allow for 				       * denial-of-service attacks if a 				       * C compiler is used that does not 				       * recognize end-recursion. */
-else|#
-directive|else
-comment|/* If a 0 byte packet was sent, return 0, otherwise 		 * we play havoc with people using select with 		 * blocking sockets.  Let them handle a packet at a time, 		 * they should really be using non-blocking sockets. */
-if|if
-condition|(
-name|s
-operator|->
-name|s2
-operator|->
-name|ract_data_length
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-name|ssl2_read
-argument_list|(
-name|s
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
+comment|/* This should really be 		                       * "return ssl2_read(s,buf,len)", 		                       * but that would allow for 		                       * denial-of-service attacks if a 		                       * C compiler is used that does not 		                       * recognize end-recursion. */
 block|}
 else|else
 block|{
 name|SSLerr
 argument_list|(
-name|SSL_F_SSL2_READ
+name|SSL_F_SSL2_READ_INTERNAL
 argument_list|,
 name|SSL_R_BAD_STATE
 argument_list|)
@@ -1061,6 +980,68 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|ssl2_read
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+return|return
+name|ssl2_read_internal
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ssl2_peek
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+return|return
+name|ssl2_read_internal
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|,
+literal|1
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -2184,6 +2165,7 @@ name|len
 operator|+
 name|mac_size
 expr_stmt|;
+comment|/* Two-byte headers allow for a larger record length than 		 * three-byte headers, but we can't use them if we need 		 * padding or if we have to set the escape bit. */
 if|if
 condition|(
 operator|(
@@ -2262,7 +2244,7 @@ name|escape
 operator|)
 condition|)
 block|{
-comment|/* len=len; */
+comment|/* j<= SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER, thus 			 * j< SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER */
 name|s
 operator|->
 name|s2
@@ -2277,9 +2259,9 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-comment|/* 3 byte header */
+comment|/* we may have to use a 3 byte header */
 block|{
-comment|/*len=len; */
+comment|/* If s->s2->escape is not set, then 			 * j<= SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER, and thus 			 * j< SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER. */
 name|p
 operator|=
 operator|(
@@ -2312,6 +2294,7 @@ name|s2
 operator|->
 name|escape
 condition|)
+block|{
 name|s
 operator|->
 name|s2
@@ -2320,6 +2303,17 @@ name|three_byte_header
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+name|SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER
+condition|)
+name|j
+operator|=
+name|SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER
+expr_stmt|;
+block|}
 else|else
 name|s
 operator|->
@@ -2339,7 +2333,8 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* mac_size is the number of MAC bytes 	 * len is the number of data bytes we are going to send 	 * p is the number of padding bytes 	 * if p == 0, it is a 2 byte header */
+comment|/* Now 	 *      j<= SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER 	 * holds, and if s->s2->three_byte_header is set, then even 	 *      j<= SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER. 	 */
+comment|/* mac_size is the number of MAC bytes 	 * len is the number of data bytes we are going to send 	 * p is the number of padding bytes 	 * (if it is a two-byte header, then p == 0) */
 name|s
 operator|->
 name|s2

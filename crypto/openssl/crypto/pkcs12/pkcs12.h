@@ -966,6 +966,9 @@ name|char
 modifier|*
 name|asc
 parameter_list|,
+name|int
+name|asclen
+parameter_list|,
 name|unsigned
 name|char
 modifier|*

@@ -756,6 +756,19 @@ literal|0
 operator|)
 return|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+comment|/* or the copying loop will go berserk */
+block|}
 name|f
 operator|=
 operator|&

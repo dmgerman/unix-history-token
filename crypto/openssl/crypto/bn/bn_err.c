@@ -285,6 +285,19 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|BN_F_BN_RAND_RANGE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"BN_rand_range"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|BN_F_BN_USUB
 argument_list|,
 literal|0
@@ -322,6 +335,12 @@ literal|"bad reciprocal"
 block|}
 block|,
 block|{
+name|BN_R_BIGNUM_TOO_LONG
+block|,
+literal|"bignum too long"
+block|}
+block|,
+block|{
 name|BN_R_CALLED_WITH_EVEN_MODULUS
 block|,
 literal|"called with even modulus"
@@ -349,6 +368,12 @@ block|{
 name|BN_R_INVALID_LENGTH
 block|,
 literal|"invalid length"
+block|}
+block|,
+block|{
+name|BN_R_INVALID_RANGE
+block|,
+literal|"invalid range"
 block|}
 block|,
 block|{

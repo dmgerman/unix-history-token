@@ -323,12 +323,6 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|tmp
-operator|->
-name|neg
-operator|=
-literal|0
-expr_stmt|;
 name|snum
 operator|=
 name|BN_CTX_get
@@ -363,6 +357,10 @@ name|dv
 expr_stmt|;
 if|if
 condition|(
+name|sdiv
+operator|==
+name|NULL
+operator|||
 name|res
 operator|==
 name|NULL
@@ -370,6 +368,12 @@ condition|)
 goto|goto
 name|err
 goto|;
+name|tmp
+operator|->
+name|neg
+operator|=
+literal|0
+expr_stmt|;
 comment|/* First we normalise the numbers */
 name|norm_shift
 operator|=
@@ -672,9 +676,18 @@ name|q
 decl_stmt|,
 name|l0
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BN_DIV3W
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_ASM
+argument_list|)
 name|q
 operator|=
 name|bn_div_3_words

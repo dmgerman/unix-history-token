@@ -2385,10 +2385,22 @@ block|}
 else|else
 block|{
 comment|/* Make sure that, if we found no leaks, memory-leak debugging itself 		 * does not introduce memory leaks (which might irritate 		 * external debugging tools). 		 * (When someone enables leak checking, but does not call 		 * this function, we declare it to be their fault.) 		 * 		 * XXX    This should be in CRYPTO_mem_leaks_cb, 		 * and CRYPTO_mem_leaks should be implemented by 		 * using CRYPTO_mem_leaks_cb. 		 * (Also their should be a variant of lh_doall_arg 		 * that takes a function pointer instead of a void *; 		 * this would obviate the ugly and illegal 		 * void_fn_to_char kludge in CRYPTO_mem_leaks_cb. 		 * Otherwise the code police will come and get us.) 		 */
+name|int
+name|old_mh_mode
+decl_stmt|;
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
+expr_stmt|;
+comment|/* avoid deadlock when lh_free() uses CRYPTO_dbg_free(), 		 * which uses CRYPTO_is_mem_check_on */
+name|old_mh_mode
+operator|=
+name|mh_mode
+expr_stmt|;
+name|mh_mode
+operator|=
+name|CRYPTO_MEM_CHECK_OFF
 expr_stmt|;
 if|if
 condition|(
@@ -2435,6 +2447,10 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+name|mh_mode
+operator|=
+name|old_mh_mode
+expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC

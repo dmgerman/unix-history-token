@@ -243,6 +243,18 @@ literal|"no conf"
 block|}
 block|,
 block|{
+name|CONF_R_NO_CONF_OR_ENVIRONMENT_VARIABLE
+block|,
+literal|"no conf or environment variable"
+block|}
+block|,
+block|{
+name|CONF_R_NO_SECTION
+block|,
+literal|"no section"
+block|}
+block|,
+block|{
 name|CONF_R_UNABLE_TO_CREATE_NEW_SECTION
 block|,
 literal|"unable to create new section"

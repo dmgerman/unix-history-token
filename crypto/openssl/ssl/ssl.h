@@ -5147,7 +5147,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|SSL_CTX_ctrl(ctx,SSL_CTRL_SET_READ_AHEAD,0,NULL)
+value|SSL_CTX_ctrl(ctx,SSL_CTRL_SET_READ_AHEAD,m,NULL)
 comment|/* NB: the keylength is only applicable when is_export is true */
 ifndef|#
 directive|ifndef
@@ -5398,8 +5398,16 @@ name|SSL_F_SSL2_ENC_INIT
 value|124
 define|#
 directive|define
+name|SSL_F_SSL2_PEEK
+value|234
+define|#
+directive|define
 name|SSL_F_SSL2_READ
 value|125
+define|#
+directive|define
+name|SSL_F_SSL2_READ_INTERNAL
+value|236
 define|#
 directive|define
 name|SSL_F_SSL2_SET_CERTIFICATE
@@ -5496,6 +5504,10 @@ define|#
 directive|define
 name|SSL_F_SSL3_OUTPUT_CERT_CHAIN
 value|147
+define|#
+directive|define
+name|SSL_F_SSL3_PEEK
+value|235
 define|#
 directive|define
 name|SSL_F_SSL3_READ_BYTES

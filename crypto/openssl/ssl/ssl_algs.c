@@ -141,6 +141,13 @@ argument_list|,
 literal|"ssl3-sha1"
 argument_list|)
 expr_stmt|;
+name|EVP_add_digest_alias
+argument_list|(
+name|SN_sha1WithRSAEncryption
+argument_list|,
+name|SN_sha1WithRSA
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|#
@@ -163,6 +170,27 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* DSA with sha1 */
+name|EVP_add_digest_alias
+argument_list|(
+name|SN_dsaWithSHA1
+argument_list|,
+name|SN_dsaWithSHA1_2
+argument_list|)
+expr_stmt|;
+name|EVP_add_digest_alias
+argument_list|(
+name|SN_dsaWithSHA1
+argument_list|,
+literal|"DSS1"
+argument_list|)
+expr_stmt|;
+name|EVP_add_digest_alias
+argument_list|(
+name|SN_dsaWithSHA1
+argument_list|,
+literal|"dss1"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* If you want support for phased out ciphers, add the following */

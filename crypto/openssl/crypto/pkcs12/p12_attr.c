@@ -541,6 +541,8 @@ name|asc2uni
 argument_list|(
 name|name
 argument_list|,
+name|namelen
+argument_list|,
 operator|&
 name|uniname
 argument_list|,

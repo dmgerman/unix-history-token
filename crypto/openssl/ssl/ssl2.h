@@ -249,20 +249,21 @@ name|MPE
 define|#
 directive|define
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
-value|(unsigned int)29998
+value|29998u
 else|#
 directive|else
 define|#
 directive|define
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
-value|(unsigned int)32767
+value|32767u
+comment|/* 2^15-1 */
 endif|#
 directive|endif
 define|#
 directive|define
 name|SSL2_MAX_RECORD_LENGTH_3_BYTE_HEADER
 value|16383
-comment|/**/
+comment|/* 2^14-1 */
 define|#
 directive|define
 name|SSL2_CHALLENGE_LENGTH

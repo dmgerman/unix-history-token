@@ -618,6 +618,7 @@ if|if
 condition|(
 name|shl_findsym
 argument_list|(
+operator|&
 name|ptr
 argument_list|,
 name|symname
@@ -772,6 +773,7 @@ if|if
 condition|(
 name|shl_findsym
 argument_list|(
+operator|&
 name|ptr
 argument_list|,
 name|symname

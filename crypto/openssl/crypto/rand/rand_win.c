@@ -1978,9 +1978,9 @@ name|have_perfc
 init|=
 literal|1
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__GNUC__
+ifdef|#
+directive|ifdef
+name|_MSC_VER
 specifier|static
 name|int
 name|have_tsc
