@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.3 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1141,10 +1141,22 @@ decl_stmt|;
 name|long
 name|reloffset
 decl_stmt|;
-comment|/* 			 * Offset relative to start of text image in VM. 			 * On tahoe, first 0x800 is reserved for 			 * communication with the console processor. 			 */
+comment|/* offset relative to start of text image in VM. */
+ifdef|#
+directive|ifdef
+name|hp300
+name|reloffset
+operator|=
+name|s
+operator|->
+name|n_value
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|tahoe
+comment|/* 			 * on tahoe, first 0x800 is reserved for communication 			 * with the console processor. 			 */
 name|reloffset
 operator|=
 operator|(
@@ -1178,17 +1190,17 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 			 * When loaded, data is rounded 			 * to next 1024 after text, but not in file. 			 */
+comment|/* 			 * When loaded, data is rounded 			 * to next page cluster after text, but not in file. 			 */
 name|reloffset
 operator|-=
-literal|1024
+name|CLBYTES
 operator|-
 operator|(
 name|ebuf
 operator|.
 name|a_text
 operator|%
-literal|1024
+name|CLBYTES
 operator|)
 expr_stmt|;
 name|versoff
