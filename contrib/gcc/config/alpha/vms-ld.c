@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* VMS linker wrapper.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Douglas B. Rupp (rupp@gnat.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* VMS linker wrapper.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Douglas B. Rupp (rupp@gnat.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_typedef
@@ -98,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* verbose = 1 if -v passed.   */
+comment|/* verbose = 1 if -v passed.  */
 end_comment
 
 begin_decl_stmt
@@ -292,179 +304,152 @@ begin_comment
 comment|/* Add STR to the list of arguments to pass to the linker. Expand the list as    necessary to accommodate.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|addarg
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Check to see if NAME is a regular file, i.e. not a directory */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|is_regular_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Translate a Unix syntax file specification FILESPEC into VMS syntax.    If indicators of VMS syntax found, return input string. */
+comment|/* Translate a Unix syntax file specification FILESPEC into VMS syntax.    If indicators of VMS syntax found, return input string.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|to_host_file_spec
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Locate the library named LIB_NAME in the set of paths PATH_VAL. */
+comment|/* Locate the library named LIB_NAME in the set of paths PATH_VAL.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|locate_lib
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Given a library name NAME, i.e. foo,  Look for libfoo.lib and then    libfoo.a in the set of directories we are allowed to search in.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|expand_lib
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Preprocess the number of args P_ARGC in ARGV.    Look for special flags, etc. that must be handled first. */
+comment|/* Preprocess the number of args P_ARGC in ARGV.    Look for special flags, etc. that must be handled first.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|preprocess_args
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Preprocess the number of args P_ARGC in ARGV.  Look for    special flags, etc. that must be handled for the VMS linker. */
+comment|/* Preprocess the number of args P_ARGC in ARGV.  Look for    special flags, etc. that must be handled for the VMS linker.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|process_args
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Action routine called by decc$to_vms. NAME is a file name or    directory name. TYPE is unused. */
+comment|/* Action routine called by decc$to_vms. NAME is a file name or    directory name. TYPE is unused.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|translate_unix
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -474,13 +459,11 @@ specifier|static
 name|void
 name|addarg
 parameter_list|(
-name|str
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -575,18 +558,14 @@ name|char
 modifier|*
 name|locate_lib
 parameter_list|(
+name|char
+modifier|*
 name|lib_name
 parameter_list|,
+name|char
+modifier|*
 name|path_val
 parameter_list|)
-name|char
-modifier|*
-name|lib_name
-decl_stmt|;
-name|char
-modifier|*
-name|path_val
-decl_stmt|;
 block|{
 name|int
 name|lib_len
@@ -883,12 +862,10 @@ name|char
 modifier|*
 name|expand_lib
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -999,12 +976,10 @@ specifier|static
 name|int
 name|is_regular_file
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ret
@@ -1042,19 +1017,15 @@ specifier|static
 name|void
 name|preprocess_args
 parameter_list|(
-name|p_argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 modifier|*
 name|p_argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1371,19 +1342,15 @@ specifier|static
 name|void
 name|process_args
 parameter_list|(
-name|p_argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 modifier|*
 name|p_argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1775,18 +1742,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3807,18 +3770,14 @@ specifier|static
 name|int
 name|translate_unix
 parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|strcpy
 argument_list|(
@@ -3839,12 +3798,10 @@ name|char
 modifier|*
 name|to_host_file_spec
 parameter_list|(
-name|filespec
-parameter_list|)
 name|char
 modifier|*
 name|filespec
-decl_stmt|;
+parameter_list|)
 block|{
 name|strcpy
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for PowerPC running Darwin (Mac OS X).    Copyright (C) 1997, 2000, 2001 Free Software Foundation, Inc.    Contributed by Apple Computer Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for PowerPC running Darwin (Mac OS X).    Copyright (C) 1997, 2000, 2001, 2003, 2004 Free Software Foundation, Inc.    Contributed by Apple Computer Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -57,6 +57,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Darwin switches.  */
+end_comment
+
+begin_comment
+comment|/* Use dynamic-no-pic codegen (no picbase reg; not suitable for shlibs.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_MACHO_DYNAMIC_NO_PIC
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_DYNAMIC_NO_PIC
+value|(target_flags& MASK_MACHO_DYNAMIC_NO_PIC)
+end_define
+
+begin_comment
 comment|/* Handle #pragma weak and #pragma pack.  */
 end_comment
 
@@ -65,18 +87,6 @@ define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
 value|1
-end_define
-
-begin_comment
-comment|/* The Darwin ABI always includes AltiVec, can't be (validly) turned    off.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_OVERRIDE_OPTIONS
-define|\
-value|rs6000_altivec_abi = 1;
 end_define
 
 begin_define
@@ -89,6 +99,38 @@ value|do                                            \     {                     
 end_define
 
 begin_comment
+comment|/*  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_SWITCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_SWITCHES
+define|\
+value|{"dynamic-no-pic",	MASK_MACHO_DYNAMIC_NO_PIC,			\       N_("Generate code suitable for executables (NOT shared libs)")},	\   {"no-dynamic-no-pic",	-MASK_MACHO_DYNAMIC_NO_PIC, ""},
+end_define
+
+begin_comment
+comment|/* The Darwin ABI always includes AltiVec, can't be (validly) turned    off.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OVERRIDE_OPTIONS
+define|\
+value|do {									\   rs6000_altivec_abi = 1;						\   rs6000_altivec_vrsave = 1;						\   if (DEFAULT_ABI == ABI_DARWIN)					\   {									\     if (MACHO_DYNAMIC_NO_PIC_P)						\       {									\         if (flag_pic)							\             warning ("-mdynamic-no-pic overrides -fpic or -fPIC");	\         flag_pic = 0;							\       }									\     else if (flag_pic == 1)						\       {									\
+comment|/* Darwin doesn't support -fpic.  */
+value|\         warning ("-fpic is not supported; -fPIC assumed");		\         flag_pic = 2;							\       }									\   }									\ }while(0)
+end_define
+
+begin_comment
 comment|/* We want -fPIC by default, unless we're using -static to compile for    the kernel or some such.  */
 end_comment
 
@@ -96,7 +138,32 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"\ %{static: %{Zdynamic: %e conflicting code gen style switches are used}}\ %{!static:-fPIC}"
+value|"\ %{gused: -feliminate-unused-debug-symbols<gused }\ %{static: %{Zdynamic: %e conflicting code gen style switches are used}}\ %{!static:%{!mdynamic-no-pic:-fPIC}}"
+end_define
+
+begin_comment
+comment|/* It's virtually impossible to predict all the possible combinations    of -mcpu and -maltivec and whatnot, so just supply    -force_cpusubtype_ALL if any are seen.  Radar 3492132 against the    assembler is asking for a .machine directive so we could get this    really right.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"-arch ppc \   %{Zforce_cpusubtype_ALL:-force_cpusubtype_ALL} \   %{!Zforce_cpusubtype_ALL:%{maltivec|mcpu=*|mpowerpc64:-force_cpusubtype_ALL}}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "darwin_arch", "ppc" },
 end_define
 
 begin_comment
@@ -183,6 +250,25 @@ value|(RS6000_ALIGN (current_function_outgoing_args_size, 16)		\    + (STACK_POI
 end_define
 
 begin_comment
+comment|/* These are used by -fbranch-probabilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOT_TEXT_SECTION_NAME
+value|"__TEXT,__text,regular,pure_instructions"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLIKELY_EXECUTED_TEXT_SECTION_NAME
+define|\
+value|"__TEXT,__text2,regular,pure_instructions"
+end_define
+
+begin_comment
 comment|/* Define cutoff for using external functions to save floating point.    Currently on Darwin, always use inline stores.  */
 end_comment
 
@@ -203,7 +289,7 @@ value|((FIRST_REG)< 64)
 end_define
 
 begin_comment
-comment|/* Always use the "debug" register names, they're what the assembler    wants to see.  */
+comment|/* The assembler wants the alternate register names, but without    leading percent sign.  */
 end_comment
 
 begin_undef
@@ -216,7 +302,8 @@ begin_define
 define|#
 directive|define
 name|REGISTER_NAMES
-value|DEBUG_REGISTER_NAMES
+define|\
+value|{									\      "r0",  "r1",  "r2",  "r3",  "r4",  "r5",  "r6",  "r7",		\      "r8",  "r9", "r10", "r11", "r12", "r13", "r14", "r15",		\     "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",		\     "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31",		\      "f0",  "f1",  "f2",  "f3",  "f4",  "f5",  "f6",  "f7",		\      "f8",  "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\     "f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\     "f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",		\      "mq",  "lr", "ctr",  "ap",						\     "cr0", "cr1", "cr2", "cr3", "cr4", "cr5", "cr6", "cr7",		\     "xer",								\      "v0",  "v1",  "v2",  "v3",  "v4",  "v5",  "v6",  "v7",             \      "v8",  "v9", "v10", "v11", "v12", "v13", "v14", "v15",             \     "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",             \     "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31",             \     "vrsave", "vscr",							\     "spe_acc", "spefscr"                                                \ }
 end_define
 
 begin_comment
@@ -239,7 +326,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|assemble_name (FILE, NAME);
+value|assemble_name (FILE, NAME)
 end_define
 
 begin_comment
@@ -320,7 +407,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|do { fputs (".comm ", (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        fprintf ((FILE), ",%d\n", (SIZE)); } while (0)
+value|do { fputs (".comm ", (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED"\n",\ 		(SIZE)); } while (0)
 end_define
 
 begin_comment
@@ -434,7 +521,7 @@ value|PROCESSOR_PPC7400
 end_define
 
 begin_comment
-comment|/* Default target flag settings.  Despite the fact that STMW/LMW    serializes, it's still a big codesize win to use them.  Use FSEL by    default as well.  */
+comment|/* Default target flag settings.  Despite the fact that STMW/LMW    serializes, it's still a big code size win to use them.  Use FSEL by    default as well.  */
 end_comment
 
 begin_undef
@@ -503,7 +590,7 @@ parameter_list|,
 name|CLASS
 parameter_list|)
 define|\
-value|(((GET_CODE (X) == CONST_DOUBLE			\&& GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT)	\    ? NO_REGS						\    : (GET_MODE_CLASS (GET_MODE (X)) == MODE_INT 	\&& (CLASS) == NON_SPECIAL_REGS)			\    ? GENERAL_REGS					\    : (GET_CODE (X) == SYMBOL_REF || GET_CODE (X) == HIGH)	\    ? BASE_REGS						\    : (CLASS)))
+value|((GET_CODE (X) == CONST_DOUBLE				\&& GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT)		\    ? NO_REGS							\    : ((GET_CODE (X) == SYMBOL_REF || GET_CODE (X) == HIGH)	\&& reg_class_subset_p (BASE_REGS, (CLASS)))		\    ? BASE_REGS							\    : (GET_MODE_CLASS (GET_MODE (X)) == MODE_INT			\&& (CLASS) == NON_SPECIAL_REGS)				\    ? GENERAL_REGS						\    : (CLASS))
 end_define
 
 begin_comment
@@ -516,6 +603,10 @@ directive|define
 name|ALWAYS_PUSH_CONSTS_USING_REGS_P
 value|1
 end_define
+
+begin_comment
+comment|/* This now supports a natural alignment mode */
+end_comment
 
 begin_comment
 comment|/* Darwin word-aligns FP doubles but doubleword-aligns 64-bit ints.  */
@@ -531,7 +622,7 @@ parameter_list|,
 name|COMPUTED
 parameter_list|)
 define|\
-value|(TYPE_MODE (TREE_CODE (TREE_TYPE (FIELD)) == ARRAY_TYPE \ 	      ? get_inner_array_type (FIELD) \ 	      : TREE_TYPE (FIELD)) == DFmode \    ? MIN ((COMPUTED), 32) : (COMPUTED))
+value|(TARGET_ALIGN_NATURAL ? (COMPUTED) : \   (TYPE_MODE (TREE_CODE (TREE_TYPE (FIELD)) == ARRAY_TYPE \ 	      ? get_inner_array_type (FIELD) \ 	      : TREE_TYPE (FIELD)) == DFmode \    ? MIN ((COMPUTED), 32) : (COMPUTED)))
 end_define
 
 begin_comment
@@ -550,7 +641,7 @@ parameter_list|,
 name|SPECIFIED
 parameter_list|)
 define|\
-value|((TREE_CODE (STRUCT) == RECORD_TYPE			\     || TREE_CODE (STRUCT) == UNION_TYPE			\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)		\&& TYPE_FIELDS (STRUCT) != 0				\&& DECL_MODE (TYPE_FIELDS (STRUCT)) == DFmode	\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 64)		\    : (TARGET_ALTIVEC&& TREE_CODE (STRUCT) == VECTOR_TYPE) \    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 128)           \    : MAX ((COMPUTED), (SPECIFIED)))
+value|((TREE_CODE (STRUCT) == RECORD_TYPE					\     || TREE_CODE (STRUCT) == UNION_TYPE					\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)				\&& TARGET_ALIGN_NATURAL == 0                         		\    ? rs6000_special_round_type_align (STRUCT, COMPUTED, SPECIFIED)	\    : (TARGET_ALTIVEC&& TREE_CODE (STRUCT) == VECTOR_TYPE) 		\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 128)          			 \    : MAX ((COMPUTED), (SPECIFIED)))
 end_define
 
 begin_comment

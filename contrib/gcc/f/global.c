@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* global.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:     Description:       Manages information kept across individual program units within a single       source file.  This includes reporting errors when a name is defined       multiple times (for example, two program units named FOO) and when a       COMMON block is given initial data in more than one program unit.     Modifications: */
+comment|/* global.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1997, 2003 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:     Description:       Manages information kept across individual program units within a single       source file.  This includes reporting errors when a name is defined       multiple times (for example, two program units named FOO) and when a       COMMON block is given initial data in more than one program unit.     Modifications: */
 end_comment
 
 begin_comment
@@ -107,41 +107,49 @@ block|{
 index|[
 name|FFEGLOBAL_typeNONE
 index|]
+operator|=
 literal|"??"
 block|,
 index|[
 name|FFEGLOBAL_typeMAIN
 index|]
+operator|=
 literal|"main program"
 block|,
 index|[
 name|FFEGLOBAL_typeEXT
 index|]
+operator|=
 literal|"external"
 block|,
 index|[
 name|FFEGLOBAL_typeSUBR
 index|]
+operator|=
 literal|"subroutine"
 block|,
 index|[
 name|FFEGLOBAL_typeFUNC
 index|]
+operator|=
 literal|"function"
 block|,
 index|[
 name|FFEGLOBAL_typeBDATA
 index|]
+operator|=
 literal|"block data"
 block|,
 index|[
 name|FFEGLOBAL_typeCOMMON
 index|]
+operator|=
 literal|"common block"
 block|,
 index|[
 name|FFEGLOBAL_typeANY
 index|]
+operator|=
 literal|"?any?"
 block|}
 decl_stmt|;
@@ -239,9 +247,6 @@ argument_list|)
 expr_stmt|;
 name|g
 operator|=
-operator|(
-name|ffeglobal
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -262,17 +267,12 @@ name|n
 operator|=
 name|n
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FFECOM_globalHOOK
 name|g
 operator|->
 name|hook
 operator|=
 name|FFECOM_globalNULL
 expr_stmt|;
-endif|#
-directive|endif
 name|g
 operator|->
 name|tick
@@ -304,7 +304,9 @@ end_comment
 begin_function
 name|void
 name|ffeglobal_init_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3171,9 +3173,6 @@ name|proc
 operator|.
 name|arg_info
 operator|=
-operator|(
-name|ffeglobalArgInfo_
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -4605,9 +4604,6 @@ name|proc
 operator|.
 name|arg_info
 operator|=
-operator|(
-name|ffeglobalArgInfo_
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -5951,9 +5947,6 @@ name|type
 operator|=
 name|type
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FFECOM_globalHOOK
 name|g
 operator|->
 name|hook
@@ -5961,8 +5954,6 @@ operator|=
 name|FFECOM_globalNULL
 expr_stmt|;
 comment|/* Discard previous _DECL. */
-endif|#
-directive|endif
 name|g
 operator|->
 name|u
@@ -6670,7 +6661,9 @@ end_endif
 begin_function
 name|void
 name|ffeglobal_terminate_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 

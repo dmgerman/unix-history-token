@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate from machine description:    - some flags HAVE_... saying which simple standard instructions are    available for this machine.    Copyright (C) 1987, 1991, 1995, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate from machine description:    - some flags HAVE_... saying which simple standard instructions are    available for this machine.    Copyright (C) 1987, 1991, 1995, 1998,    1999, 2000, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -73,76 +85,61 @@ name|max_opno
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|max_operand_1
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|num_operands
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_proto
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_macro
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Count the number of match_operand's found.  */
@@ -153,11 +150,9 @@ specifier|static
 name|void
 name|max_operand_1
 parameter_list|(
-name|x
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|RTX_CODE
 name|code
@@ -323,11 +318,9 @@ specifier|static
 name|int
 name|num_operands
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -389,22 +382,17 @@ specifier|static
 name|void
 name|gen_macro
 parameter_list|(
-name|name
-parameter_list|,
-name|real
-parameter_list|,
-name|expect
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|real
-decl_stmt|,
+parameter_list|,
+name|int
 name|expect
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -545,11 +533,9 @@ specifier|static
 name|void
 name|gen_proto
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|num
@@ -701,7 +687,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"extern rtx        gen_%-*s PARAMS (("
+literal|"extern rtx        gen_%-*s ("
 argument_list|,
 name|max_id_len
 argument_list|,
@@ -711,7 +697,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"static inline rtx gen_%-*s PARAMS (("
+literal|"static inline rtx gen_%-*s ("
 argument_list|,
 name|max_id_len
 argument_list|,
@@ -763,7 +749,7 @@ expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"));"
+literal|");"
 argument_list|)
 expr_stmt|;
 comment|/* Some back ends want to take the address of generator functions,      so we cannot simply use #define for these dummy definitions.  */
@@ -810,7 +796,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"%c, "
+literal|"rtx %c ATTRIBUTE_UNUSED, "
 argument_list|,
 literal|'a'
 operator|+
@@ -819,29 +805,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%c)\n"
-argument_list|,
-literal|'a'
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"     rtx %c ATTRIBUTE_UNUSED;\n"
+literal|"rtx %c ATTRIBUTE_UNUSED)\n"
 argument_list|,
 literal|'a'
 operator|+
@@ -852,7 +816,7 @@ block|}
 else|else
 name|puts
 argument_list|(
-literal|"()"
+literal|"(void)"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -869,11 +833,9 @@ specifier|static
 name|void
 name|gen_insn
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -949,7 +911,7 @@ name|truth
 operator|==
 literal|0
 condition|)
-comment|/* emit nothing */
+comment|/* Emit nothing.  */
 empty_stmt|;
 elseif|else
 if|if
@@ -1041,39 +1003,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|desc
@@ -1297,12 +1238,10 @@ name|char
 modifier|*
 name|get_insn_name
 parameter_list|(
-name|code
-parameter_list|)
 name|int
 name|code
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|NULL

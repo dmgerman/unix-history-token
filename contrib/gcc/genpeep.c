@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to perform peephole optimizations.    Copyright (C) 1987, 1989, 1992, 1997, 1998,    1999, 2000, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -87,65 +99,53 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_peephole
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|match_rtx
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|link
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_path
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|link
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_code
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|RTX_CODE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -155,11 +155,9 @@ specifier|static
 name|void
 name|gen_peephole
 parameter_list|(
-name|peep
-parameter_list|)
 name|rtx
 name|peep
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ninsns
@@ -183,12 +181,6 @@ argument_list|(
 literal|"  insn = ins1;\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf ("  want_jump = 0;\n");
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -250,12 +242,6 @@ name|insn_code_number
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|printf ("  if (GET_CODE (insn) == JUMP_INSN)\n");       printf ("    want_jump = JUMP_LABEL (insn);\n");
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"  pat = PATTERN (insn);\n"
@@ -321,12 +307,6 @@ argument_list|,
 name|n_operands
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf ("  if (want_jump&& GET_CODE (ins1) != JUMP_INSN)\n");   printf ("    {\n");   printf ("      rtx insn2 = emit_jump_insn_before (PATTERN (ins1), ins1);\n");   printf ("      delete_related_insns (ins1);\n");   printf ("      ins1 = ins2;\n");   printf ("    }\n");
-endif|#
-directive|endif
 comment|/* Record this define_peephole's insn code in the insn,      as if it had been recognized to match this.  */
 name|printf
 argument_list|(
@@ -371,23 +351,17 @@ specifier|static
 name|void
 name|match_rtx
 parameter_list|(
-name|x
-parameter_list|,
-name|path
-parameter_list|,
-name|fail_label
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|struct
 name|link
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|,
 name|int
 name|fail_label
-decl_stmt|;
+parameter_list|)
 block|{
 name|RTX_CODE
 name|code
@@ -1445,13 +1419,11 @@ specifier|static
 name|void
 name|print_path
 parameter_list|(
-name|path
-parameter_list|)
 name|struct
 name|link
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1535,11 +1507,9 @@ specifier|static
 name|void
 name|print_code
 parameter_list|(
-name|code
-parameter_list|)
 name|RTX_CODE
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1573,39 +1543,32 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|desc
@@ -1659,6 +1622,16 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"system.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"coretypes.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"tm.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1723,7 +1696,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rtx\npeephole (ins1)\n     rtx ins1;\n{\n"
+literal|"rtx\npeephole (rtx ins1)\n{\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1895,12 +1868,10 @@ name|char
 modifier|*
 name|get_insn_name
 parameter_list|(
-name|code
-parameter_list|)
 name|int
 name|code
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|NULL

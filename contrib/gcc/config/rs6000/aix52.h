@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX V5.2.    Copyright (C) 2002 Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX V5.2.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.    Contributed by David Edelsohn (edelsohn@gnu.org).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -50,11 +50,11 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"-u %{maix64:-a64 -mppc64} %(asm_cpu)"
+value|"-u %{maix64:-a64 %{!mcpu*:-mppc64}} %(asm_cpu)"
 end_define
 
 begin_comment
-comment|/* Common ASM definitions used by ASM_SPEC amonst the various targets    for handling -mcpu=xxx switches.  */
+comment|/* Common ASM definitions used by ASM_SPEC amongst the various targets    for handling -mcpu=xxx switches.  */
 end_comment
 
 begin_undef
@@ -68,7 +68,7 @@ define|#
 directive|define
 name|ASM_CPU_SPEC
 define|\
-value|"%{!mcpu*: %{!maix64: \   %{mpowerpc64: -mppc64} \   %{!mpower64: %(asm_default)}}} \ %{mcpu=power3: -m604} \ %{mcpu=power4: -m604} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rs64a: -mppc} \ %{mcpu=603: -m603} \ %{mcpu=603e: -m603} \ %{mcpu=604: -m604} \ %{mcpu=604e: -m604} \ %{mcpu=620: -mppc} \ %{mcpu=630: -m604}"
+value|"%{!mcpu*: %{!maix64: \   %{mpowerpc64: -mppc64} \   %{!mpower64: %(asm_default)}}} \ %{mcpu=power3: -m620} \ %{mcpu=power4: -m620} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rs64a: -mppc} \ %{mcpu=603: -m603} \ %{mcpu=603e: -m603} \ %{mcpu=604: -m604} \ %{mcpu=604e: -m604} \ %{mcpu=620: -m620} \ %{mcpu=630: -m620}"
 end_define
 
 begin_undef
@@ -333,6 +333,23 @@ define|#
 directive|define
 name|LD_INIT_SWITCH
 value|"-binitfini"
+end_define
+
+begin_comment
+comment|/* AIX 5.2 has the float and long double forms of math functions.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_C99_FUNCTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|1
 end_define
 
 end_unit

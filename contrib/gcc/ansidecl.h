@@ -1116,47 +1116,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Bootstrap support:  Adjust certain macros defined by Autoconf,    which are only valid for the stage1 compiler.  If we detect    a modern version of GCC, we are probably in stage2 or beyond,    so unconditionally reset the values.  Note that const, inline,    etc. have been dealt with above.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|GCC_VERSION
-operator|>=
-literal|2007
-operator|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_LONG_DOUBLE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_LONG_DOUBLE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GCC>= 2.7 */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

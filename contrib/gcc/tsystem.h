@@ -134,6 +134,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|abort
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|void
+name|abort
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|strlen
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|strlen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -209,26 +260,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POSIX
-end_ifdef
+begin_comment
+comment|/* GCC (fixproto) guarantees these system headers exist.  */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GCC (fixproto) guarantees these system headers exist.  */
-end_comment
 
 begin_include
 include|#
@@ -252,22 +292,15 @@ directive|include
 file|<limits.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POSIX
-end_ifdef
+begin_comment
+comment|/* GCC (fixproto) guarantees this system headers exists.  */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

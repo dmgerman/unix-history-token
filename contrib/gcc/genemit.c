@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to emit insns as rtl.    Copyright (C) 1987, 1988, 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to emit insns as rtl.    Copyright (C) 1987, 1988, 1991, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -57,13 +69,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|register_constraints
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|insn_code_number
 decl_stmt|;
 end_decl_stmt
@@ -76,7 +81,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Data structure for recording the patterns of insns that have CLOBBERs.    We use this to output a function that adds these CLOBBERs to a     previously-allocated PARALLEL expression.  */
+comment|/* Data structure for recording the patterns of insns that have CLOBBERs.    We use this to output a function that adds these CLOBBERs to a    previously-allocated PARALLEL expression.  */
 end_comment
 
 begin_struct
@@ -129,161 +134,128 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|max_operand_1
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|max_operand_vec
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_code
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|RTX_CODE
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_exp
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|rtx_code
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_expand
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_split
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|output_add_clobbers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|output_added_clobbers_hard_reg_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_rtx_scratch
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|rtx_code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|output_peephole2_scratches
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -293,11 +265,9 @@ specifier|static
 name|void
 name|max_operand_1
 parameter_list|(
-name|x
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|RTX_CODE
 name|code
@@ -326,64 +296,6 @@ name|GET_CODE
 argument_list|(
 name|x
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-name|MATCH_OPERAND
-operator|&&
-name|XSTR
-argument_list|(
-name|x
-argument_list|,
-literal|2
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|*
-name|XSTR
-argument_list|(
-name|x
-argument_list|,
-literal|2
-argument_list|)
-operator|!=
-literal|'\0'
-condition|)
-name|register_constraints
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-name|MATCH_SCRATCH
-operator|&&
-name|XSTR
-argument_list|(
-name|x
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|*
-name|XSTR
-argument_list|(
-name|x
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|'\0'
-condition|)
-name|register_constraints
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -569,16 +481,12 @@ specifier|static
 name|int
 name|max_operand_vec
 parameter_list|(
-name|insn
-parameter_list|,
-name|arg
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|,
 name|int
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -649,11 +557,9 @@ specifier|static
 name|void
 name|print_code
 parameter_list|(
-name|code
-parameter_list|)
 name|RTX_CODE
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -692,17 +598,13 @@ specifier|static
 name|void
 name|gen_rtx_scratch
 parameter_list|(
-name|x
-parameter_list|,
-name|subroutine_type
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|enum
 name|rtx_code
 name|subroutine_type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -752,23 +654,17 @@ specifier|static
 name|void
 name|gen_exp
 parameter_list|(
-name|x
-parameter_list|,
-name|subroutine_type
-parameter_list|,
-name|used
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|enum
 name|rtx_code
 name|subroutine_type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|used
-decl_stmt|;
+parameter_list|)
 block|{
 name|RTX_CODE
 name|code
@@ -1437,16 +1333,12 @@ specifier|static
 name|void
 name|gen_insn
 parameter_list|(
-name|insn
-parameter_list|,
-name|lineno
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|,
 name|int
 name|lineno
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|operands
@@ -1581,11 +1473,6 @@ name|clobber_ent
 modifier|*
 name|link
 init|=
-operator|(
-expr|struct
-name|clobber_ent
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -1704,7 +1591,7 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/* OLD and NEW are the same if both are to be a SCRATCH 		     of the same mode,  		     or if both are registers of the same mode and number.  */
+comment|/* OLD and NEW are the same if both are to be a SCRATCH 		     of the same mode, 		     or if both are registers of the same mode and number.  */
 if|if
 condition|(
 operator|!
@@ -1788,11 +1675,6 @@ condition|)
 block|{
 name|p
 operator|=
-operator|(
-expr|struct
-name|clobber_pat
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -1892,11 +1774,7 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
-comment|/* Find out how many operands this function has,      and also whether any of them have register constraints.  */
-name|register_constraints
-operator|=
-literal|0
-expr_stmt|;
+comment|/* Find out how many operands this function has.  */
 name|operands
 operator|=
 name|max_operand_vec
@@ -1930,6 +1808,10 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|operands
+condition|)
 for|for
 control|(
 name|i
@@ -1949,7 +1831,7 @@ name|i
 condition|)
 name|printf
 argument_list|(
-literal|", operand%d"
+literal|",\n\trtx operand%d ATTRIBUTE_UNUSED"
 argument_list|,
 name|i
 argument_list|)
@@ -1957,9 +1839,15 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"operand%d"
+literal|"rtx operand%d ATTRIBUTE_UNUSED"
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"void"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1967,32 +1855,12 @@ argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|operands
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"     rtx operand%d;\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"{\n"
 argument_list|)
 expr_stmt|;
-comment|/* Output code to construct and return the rtl for the instruction body */
+comment|/* Output code to construct and return the rtl for the instruction body.  */
 if|if
 condition|(
 name|XVECLEN
@@ -2108,11 +1976,9 @@ specifier|static
 name|void
 name|gen_expand
 parameter_list|(
-name|expand
-parameter_list|)
 name|rtx
 name|expand
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|operands
@@ -2162,11 +2028,7 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Find out how many operands this function has,      and also whether any of them have register constraints.  */
-name|register_constraints
-operator|=
-literal|0
-expr_stmt|;
+comment|/* Find out how many operands this function has.  */
 name|operands
 operator|=
 name|max_operand_vec
@@ -2189,6 +2051,10 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|operands
+condition|)
 for|for
 control|(
 name|i
@@ -2208,7 +2074,7 @@ name|i
 condition|)
 name|printf
 argument_list|(
-literal|", operand%d"
+literal|",\n\trtx operand%d"
 argument_list|,
 name|i
 argument_list|)
@@ -2216,34 +2082,20 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"operand%d"
+literal|"rtx operand%d"
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"void"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|")\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|operands
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"     rtx operand%d;\n"
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2913,11 +2765,9 @@ specifier|static
 name|void
 name|gen_split
 parameter_list|(
-name|split
-parameter_list|)
 name|rtx
 name|split
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3054,7 +2904,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"extern rtx gen_%s_%d PARAMS ((rtx, rtx *));\n"
+literal|"extern rtx gen_%s_%d (rtx, rtx *);\n"
 argument_list|,
 name|name
 argument_list|,
@@ -3063,21 +2913,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rtx\ngen_%s_%d (curr_insn, operands)\n"
+literal|"rtx\ngen_%s_%d (rtx curr_insn ATTRIBUTE_UNUSED, rtx *operands%s)\n"
 argument_list|,
 name|name
 argument_list|,
 name|insn_code_number
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     rtx curr_insn ATTRIBUTE_UNUSED;\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     rtx *operands%s;\n"
 argument_list|,
 name|unused
 argument_list|)
@@ -3087,23 +2927,18 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"extern rtx gen_split_%d PARAMS ((rtx *));\n"
+literal|"extern rtx gen_split_%d (rtx *);\n"
 argument_list|,
 name|insn_code_number
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rtx\ngen_%s_%d (operands)\n"
+literal|"rtx\ngen_%s_%d (rtx *operands%s)\n"
 argument_list|,
 name|name
 argument_list|,
 name|insn_code_number
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"      rtx *operands%s;\n"
 argument_list|,
 name|unused
 argument_list|)
@@ -3564,7 +3399,9 @@ begin_function
 specifier|static
 name|void
 name|output_add_clobbers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|clobber_pat
@@ -3581,12 +3418,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n\nvoid\nadd_clobbers (pattern, insn_code_number)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     rtx pattern ATTRIBUTE_UNUSED;\n     int insn_code_number;\n"
+literal|"\n\nvoid\nadd_clobbers (rtx pattern ATTRIBUTE_UNUSED, int insn_code_number)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3743,7 +3575,9 @@ begin_function
 specifier|static
 name|void
 name|output_added_clobbers_hard_reg_p
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|clobber_pat
@@ -3762,12 +3596,7 @@ name|used
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n\nint\nadded_clobbers_hard_reg_p (insn_code_number)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     int insn_code_number;\n"
+literal|"\n\nint\nadded_clobbers_hard_reg_p (int insn_code_number)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3902,11 +3731,9 @@ specifier|static
 name|void
 name|output_peephole2_scratches
 parameter_list|(
-name|split
-parameter_list|)
 name|rtx
 name|split
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -4114,39 +3941,18 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|desc
@@ -4204,6 +4010,16 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"system.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"coretypes.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"tm.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4437,12 +4253,10 @@ name|char
 modifier|*
 name|get_insn_name
 parameter_list|(
-name|code
-parameter_list|)
 name|int
 name|code
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|NULL

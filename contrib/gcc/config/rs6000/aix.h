@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for IBM RS/6000 POWER running AIX.    Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -203,7 +203,7 @@ value|""
 end_define
 
 begin_comment
-comment|/* Tell the assembler to assume that all undefined names are external.     Don't do this until the fixed IBM assembler is more generally available.    When this becomes permanently defined, the ASM_OUTPUT_EXTERNAL,    ASM_OUTPUT_EXTERNAL_LIBCALL, and RS6000_OUTPUT_BASENAME macros will no    longer be needed.  Also, the extern declaration of mcount in ASM_FILE_START    will no longer be needed.  */
+comment|/* Tell the assembler to assume that all undefined names are external.     Don't do this until the fixed IBM assembler is more generally available.    When this becomes permanently defined, the ASM_OUTPUT_EXTERNAL,    ASM_OUTPUT_EXTERNAL_LIBCALL, and RS6000_OUTPUT_BASENAME macros will no    longer be needed.  Also, the extern declaration of mcount in     rs6000_xcoff_file_start will no longer be needed.  */
 end_comment
 
 begin_comment
@@ -301,6 +301,10 @@ value|"%{pg:-L/lib/profiled -L/usr/lib/profiled}\ %{p:-L/lib/profiled -L/usr/lib
 end_define
 
 begin_comment
+comment|/* This now supports a natural alignment mode.  */
+end_comment
+
+begin_comment
 comment|/* AIX word-aligns FP doubles but doubleword-aligns 64-bit ints.  */
 end_comment
 
@@ -314,7 +318,7 @@ parameter_list|,
 name|COMPUTED
 parameter_list|)
 define|\
-value|(TYPE_MODE (TREE_CODE (TREE_TYPE (FIELD)) == ARRAY_TYPE \ 	      ? get_inner_array_type (FIELD) \ 	      : TREE_TYPE (FIELD)) == DFmode \    ? MIN ((COMPUTED), 32) : (COMPUTED))
+value|(TARGET_ALIGN_NATURAL ? (COMPUTED) : \   (TYPE_MODE (TREE_CODE (TREE_TYPE (FIELD)) == ARRAY_TYPE \ 	      ? get_inner_array_type (FIELD) \ 	      : TREE_TYPE (FIELD)) == DFmode \    ? MIN ((COMPUTED), 32) : (COMPUTED)))
 end_define
 
 begin_comment
@@ -333,7 +337,61 @@ parameter_list|,
 name|SPECIFIED
 parameter_list|)
 define|\
-value|((TREE_CODE (STRUCT) == RECORD_TYPE			\     || TREE_CODE (STRUCT) == UNION_TYPE			\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)		\&& TYPE_FIELDS (STRUCT) != 0				\&& DECL_MODE (TYPE_FIELDS (STRUCT)) == DFmode	\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 64)		\    : MAX ((COMPUTED), (SPECIFIED)))
+value|((TREE_CODE (STRUCT) == RECORD_TYPE						\     || TREE_CODE (STRUCT) == UNION_TYPE						\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)					\&& TARGET_ALIGN_NATURAL == 0							\    ? rs6000_special_round_type_align (STRUCT, COMPUTED, SPECIFIED)		\    : MAX ((COMPUTED), (SPECIFIED)))
+end_define
+
+begin_comment
+comment|/* The AIX ABI isn't explicit on whether aggregates smaller than a    word/doubleword should be padded upward or downward.  One could    reasonably assume that they follow the normal rules for structure    layout treating the parameter area as any other block of memory,    then map the reg param area to registers, i.e., pad upward, which    is the way IBM Compilers for AIX behave.    Setting both of the following defines results in this behavior.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGGREGATE_PADDING_FIXED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGGREGATES_PAD_UPWARD_ALWAYS
+value|1
+end_define
+
+begin_comment
+comment|/* We don't want anything in the reg parm area being passed on the    stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUST_PASS_IN_STACK
+parameter_list|(
+name|MODE
+parameter_list|,
+name|TYPE
+parameter_list|)
+define|\
+value|((TYPE) != 0							\&& (TREE_CODE (TYPE_SIZE (TYPE)) != INTEGER_CST		\ 	|| TREE_ADDRESSABLE (TYPE)))
+end_define
+
+begin_comment
+comment|/* Specify padding for the last element of a block move between    registers and memory.  FIRST is nonzero if this is the only    element.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_REG_PADDING
+parameter_list|(
+name|MODE
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|FIRST
+parameter_list|)
+define|\
+value|(!(FIRST) ? upward : FUNCTION_ARG_PADDING (MODE, TYPE))
 end_define
 
 begin_comment
@@ -424,46 +482,6 @@ value|((FIRST_REG) == 62 || (FIRST_REG) == 63)
 end_define
 
 begin_comment
-comment|/* Optabs entries for the int->float routines and quad FP operations    using the standard AIX names.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDTF3_LIBCALL
-value|"_xlqadd"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIVTF3_LIBCALL
-value|"_xlqdiv"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MULTF3_LIBCALL
-value|"_xlqmul"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUBTF3_LIBCALL
-value|"_xlqsub"
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_TARGET_OPTABS
-define|\
-value|do {									\     if (! TARGET_POWER2&& ! TARGET_POWERPC&& TARGET_HARD_FLOAT)	\       {									\ 	fixdfsi_libfunc = init_one_libfunc (RS6000_ITRUNC);		\ 	fixunsdfsi_libfunc = init_one_libfunc (RS6000_UITRUNC);		\       }									\     if (TARGET_HARD_FLOAT)						\       {									\ 	add_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (ADDTF3_LIBCALL);				\ 	sub_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (SUBTF3_LIBCALL);				\ 	smul_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (MULTF3_LIBCALL);				\ 	sdiv_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (DIVTF3_LIBCALL);				\       }									\   } while (0)
-end_define
-
-begin_comment
 comment|/* __throw will restore its own return address to be the same as the    return address of the function that the throw is being made to.    This is unfortunate, because we want to check the original    return address to see if we need to restore the TOC.    So we have to squirrel it away with this.  */
 end_comment
 
@@ -474,6 +492,52 @@ name|SETUP_FRAME_ADDRESSES
 parameter_list|()
 value|rs6000_aix_emit_builtin_unwind_init ()
 end_define
+
+begin_comment
+comment|/* If the current unwind info (FS) does not contain explicit info    saving R2, then we have to do a minor amount of code reading to    figure out if it was saved.  The big problem here is that the    code that does the save/restore is generated by the linker, so    we have no good way to determine at compile time what to do.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MD_FROB_UPDATE_CONTEXT
+parameter_list|(
+name|CTX
+parameter_list|,
+name|FS
+parameter_list|)
+define|\
+value|do {									\     if ((FS)->regs.reg[2].how == REG_UNSAVED)				\       {									\ 	unsigned int *insn						\ 	  = (unsigned int *)						\ 	    _Unwind_GetGR ((CTX), LINK_REGISTER_REGNUM);		\ 	if (*insn == 0xE8410028)					\ 	  _Unwind_SetGRPtr ((CTX), 2, (CTX)->cfa + 40);			\       }									\   } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MD_FROB_UPDATE_CONTEXT
+parameter_list|(
+name|CTX
+parameter_list|,
+name|FS
+parameter_list|)
+define|\
+value|do {									\     if ((FS)->regs.reg[2].how == REG_UNSAVED)				\       {									\ 	unsigned int *insn						\ 	  = (unsigned int *)						\ 	    _Unwind_GetGR ((CTX), LINK_REGISTER_REGNUM);		\ 	if (*insn == 0x80410014)					\ 	  _Unwind_SetGRPtr ((CTX), 2, (CTX)->cfa + 20);			\       }									\   } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -494,6 +558,24 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|;
+end_define
+
+begin_comment
+comment|/* No version of AIX fully supports AltiVec or 64-bit instructions in    32-bit mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_MISSING_POWERPC64
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_MISSING_ALTIVEC
+value|1
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* PowerPC E500 user include file.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.    Contributed by Aldy Hernandez (aldyh@redhat.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* PowerPC E500 user include file.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.    Contributed by Aldy Hernandez (aldyh@redhat.com).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -132,14 +132,6 @@ name|__ev64_fs__
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|int
-name|__vector
-name|__ev64_opaque__
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -158,24 +150,14 @@ begin_define
 define|#
 directive|define
 name|__ev_addw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evaddw((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evaddw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_addiw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evaddiw ((__v2si) (a), (b))
+value|__builtin_spe_evaddiw
 end_define
 
 begin_define
@@ -187,24 +169,15 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evsubfw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evsubfw ((b), (a))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_subw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evsubfw ((__v2si) (b), (__v2si) (a))
+value|__builtin_spe_evsubfw
 end_define
-
-begin_comment
-comment|/* ??? The spe_evsubifw pattern accepts operands reversed, so we need to also    reverse them here between the intrinsic and the builtin function.  */
-end_comment
 
 begin_define
 define|#
@@ -215,383 +188,238 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evsubifw ((__v2si) (b), (a))
+value|__builtin_spe_evsubifw ((b), (a))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_subiw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evsubifw ((__v2si) (a), (b))
+value|__builtin_spe_evsubifw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_abs
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evabs ((__v2si) (a))
+value|__builtin_spe_evabs
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_neg
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evneg ((__v2si) (a))
+value|__builtin_spe_evneg
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_extsb
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evextsb ((__v2si) (a))
+value|__builtin_spe_evextsb
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_extsh
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evextsh ((__v2si) (a))
+value|__builtin_spe_evextsh
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_and
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evand ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evand
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_or
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evor ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evor
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_xor
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evxor ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evxor
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_nand
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evnand ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evnand
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_nor
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evnor ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evnor
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_eqv
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_eveqv ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_eveqv
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_andc
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evandc ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evandc
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_orc
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evorc ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evorc
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_rlw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evrlw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evrlw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_rlwi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evrlwi ((__v2si) (a), (b))
+value|__builtin_spe_evrlwi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_slw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evslw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evslw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_slwi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evslwi ((__v2si) (a), (b))
+value|__builtin_spe_evslwi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_srws
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evsrws ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evsrws
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_srwu
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evsrwu ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evsrwu
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_srwis
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evsrwis ((__v2si) (a), (b))
+value|__builtin_spe_evsrwis
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_srwiu
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evsrwiu ((__v2si) (a), (b))
+value|__builtin_spe_evsrwiu
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_cntlzw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evcntlzw ((__v2si) (a))
+value|__builtin_spe_evcntlzw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_cntlsw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evcntlsw ((__v2si) (a))
+value|__builtin_spe_evcntlsw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_rndw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evrndw ((__v2si) (a))
+value|__builtin_spe_evrndw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mergehi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmergehi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmergehi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mergelo
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmergelo ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmergelo
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mergelohi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmergelohi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmergelohi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mergehilo
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmergehilo ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmergehilo
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_splati
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evsplati ((a))
+value|__builtin_spe_evsplati
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_splatfi
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evsplatfi ((a))
+value|__builtin_spe_evsplatfi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_divws
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evdivws ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evdivws
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_divwu
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evdivwu ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evdivwu
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mra
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evmra ((__v2si) (a))
+value|__builtin_spe_evmra
 end_define
 
 begin_define
@@ -609,264 +437,154 @@ begin_define
 define|#
 directive|define
 name|__ev_lddx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlddx ((void *)(a), (b))
+value|__builtin_spe_evlddx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_ldwx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evldwx ((void *)(a), (b))
+value|__builtin_spe_evldwx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_ldhx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evldhx ((void *)(a), (b))
+value|__builtin_spe_evldhx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhex
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhex ((a), (b))
+value|__builtin_spe_evlwhex
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhoux
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhoux ((a), (b))
+value|__builtin_spe_evlwhoux
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhosx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhosx ((a), (b))
+value|__builtin_spe_evlwhosx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwwsplatx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwwsplatx ((a), (b))
+value|__builtin_spe_evlwwsplatx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhsplatx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhsplatx ((a), (b))
+value|__builtin_spe_evlwhsplatx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lhhesplatx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlhhesplatx ((a), (b))
+value|__builtin_spe_evlhhesplatx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lhhousplatx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlhhousplatx ((a), (b))
+value|__builtin_spe_evlhhousplatx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lhhossplatx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlhhossplatx ((a), (b))
+value|__builtin_spe_evlhhossplatx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_ldd
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evldd ((void *)(a), (b))
+value|__builtin_spe_evldd
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_ldw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evldw ((void *)(a), (b))
+value|__builtin_spe_evldw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_ldh
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evldh ((void *)(a), (b))
+value|__builtin_spe_evldh
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhe
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhe ((a), (b))
+value|__builtin_spe_evlwhe
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhou
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhou ((a), (b))
+value|__builtin_spe_evlwhou
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhos
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhos ((a), (b))
+value|__builtin_spe_evlwhos
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwwsplat
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwwsplat ((a), (b))
+value|__builtin_spe_evlwwsplat
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lwhsplat
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlwhsplat ((a), (b))
+value|__builtin_spe_evlwhsplat
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lhhesplat
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlhhesplat ((a), (b))
+value|__builtin_spe_evlhhesplat
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lhhousplat
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlhhousplat ((a), (b))
+value|__builtin_spe_evlhhousplat
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_lhhossplat
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evlhhossplat ((a), (b))
+value|__builtin_spe_evlhhossplat
 end_define
 
 begin_comment
@@ -877,196 +595,98 @@ begin_define
 define|#
 directive|define
 name|__ev_stddx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstddx ((__v2si)(a), (void *)(b), (c))
+value|__builtin_spe_evstddx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stdwx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstdwx ((__v2si)(a), (void *)(b), (c))
+value|__builtin_spe_evstdwx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stdhx
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstdhx ((__v2si)(a), (void *)(b), (c))
+value|__builtin_spe_evstdhx
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwwex
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwwex ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwwex
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwwox
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwwox ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwwox
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwhex
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwhex ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwhex
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwhox
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwhox ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwhox
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stdd
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstdd ((__v2si)(a), (void *)(b), (c))
+value|__builtin_spe_evstdd
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stdw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstdw ((__v2si)(a), (void *)(b), (c))
+value|__builtin_spe_evstdw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stdh
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstdh ((__v2si)(a), (void *)(b), (c))
+value|__builtin_spe_evstdh
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwwe
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwwe ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwwe
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwwo
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwwo ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwwo
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwhe
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwhe ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwhe
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_stwho
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__builtin_spe_evstwho ((__v2si)(a), (b), (c))
+value|__builtin_spe_evstwho
 end_define
 
 begin_comment
@@ -1077,192 +697,112 @@ begin_define
 define|#
 directive|define
 name|__ev_mhossf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhossf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhossf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhoumi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhoumi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhoumi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhessf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhessf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhessf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mheumi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmheumi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmheumi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhossfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhossfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhossfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmia
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhoumia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhoumia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhoumia
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhessfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhessfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhessfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmia
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mheumia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmheumia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmheumia
 end_define
 
 begin_define
@@ -1297,144 +837,84 @@ begin_define
 define|#
 directive|define
 name|__ev_mhossfaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhossfaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhossfaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhossiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhossiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhossiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmfaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmfaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmfaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhousiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhousiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhousiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhoumiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhoumiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhoumiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhessfaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhessfaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhessfaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhessiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhessiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhessiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmfaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmfaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmfaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mheusiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmheusiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmheusiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mheumiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmheumiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmheumiaaw
 end_define
 
 begin_define
@@ -1469,144 +949,84 @@ begin_define
 define|#
 directive|define
 name|__ev_mhossfanw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhossfanw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhossfanw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhossianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhossianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhossianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmfanw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmfanw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmfanw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhosmianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhosmianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhosmianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhousianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhousianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhousianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhoumianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhoumianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhoumianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhessfanw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhessfanw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhessfanw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhessianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhessianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhessianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmfanw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmfanw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmfanw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhesmianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhesmianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhesmianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mheusianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmheusianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmheusianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mheumianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmheumianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmheumianw
 end_define
 
 begin_define
@@ -1641,72 +1061,42 @@ begin_define
 define|#
 directive|define
 name|__ev_mhogsmfaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhogsmfaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhogsmfaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhogsmiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhogsmiaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhogsmiaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhogumiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhogumiaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhogumiaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhegsmfaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhegsmfaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhegsmfaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhegsmiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhegsmiaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhegsmiaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhegumiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhegumiaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhegumiaa
 end_define
 
 begin_define
@@ -1727,72 +1117,42 @@ begin_define
 define|#
 directive|define
 name|__ev_mhogsmfan
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhogsmfan ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhogsmfan
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhogsmian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhogsmian ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhogsmian
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhogumian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhogumian ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhogumian
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhegsmfan
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhegsmfan ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhegsmfan
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhegsmian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhegsmian ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhegsmian
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mhegumian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmhegumian ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmhegumian
 end_define
 
 begin_define
@@ -1813,96 +1173,56 @@ begin_define
 define|#
 directive|define
 name|__ev_mwhssf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhssf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhssf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhsmf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhsmf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhsmi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhsmi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhumi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhumi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhumi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhssfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhssfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhssfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhsmfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhsmfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhsmia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhsmia
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhumia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwhumia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwhumia
 end_define
 
 begin_define
@@ -1923,228 +1243,133 @@ begin_define
 define|#
 directive|define
 name|__ev_mwlumi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlumi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlumi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlumia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlumia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlumia
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlumiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlumiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlumiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlssiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlssiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlssiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlsmiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlsmiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlsmiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlusiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlusiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlusiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlusiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlusiaaw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlusiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlssianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlssianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlssianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlsmianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlsmianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlsmianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlusianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlusianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlusianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwlumianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwlumianw ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwlumianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwssf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwssf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwssf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmf
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmf ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwumi
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwumi ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwumi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwssfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwssfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwssfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmfa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmfa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmfa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmia
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwumia
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwumia ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwumia
 end_define
 
 begin_define
@@ -2165,48 +1390,28 @@ begin_define
 define|#
 directive|define
 name|__ev_mwssfaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwssfaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwssfaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmfaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmfaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmfaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmiaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmiaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwumiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwumiaa ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwumiaa
 end_define
 
 begin_define
@@ -2220,48 +1425,28 @@ begin_define
 define|#
 directive|define
 name|__ev_mwssfan
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwssfan ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwssfan
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmfan
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmfan ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmfan
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwsmian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwsmian ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwsmian
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwumian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__builtin_spe_evmwumian ((__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evmwumian
 end_define
 
 begin_define
@@ -2275,40 +1460,28 @@ begin_define
 define|#
 directive|define
 name|__ev_addssiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evaddssiaaw ((__v2si) (a))
+value|__builtin_spe_evaddssiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_addsmiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evaddsmiaaw ((__v2si) (a))
+value|__builtin_spe_evaddsmiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_addusiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evaddusiaaw ((__v2si) (a))
+value|__builtin_spe_evaddusiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_addumiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evaddumiaaw ((__v2si) (a))
+value|__builtin_spe_evaddumiaaw
 end_define
 
 begin_define
@@ -2343,40 +1516,28 @@ begin_define
 define|#
 directive|define
 name|__ev_subfssiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evsubfssiaaw ((__v2si) (a))
+value|__builtin_spe_evsubfssiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_subfsmiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evsubfsmiaaw ((__v2si) (a))
+value|__builtin_spe_evsubfsmiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_subfusiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evsubfusiaaw ((__v2si) (a))
+value|__builtin_spe_evsubfusiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_subfumiaaw
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evsubfumiaaw ((__v2si) (a))
+value|__builtin_spe_evsubfumiaaw
 end_define
 
 begin_define
@@ -2411,186 +1572,123 @@ begin_comment
 comment|/* Floating Point SIMD Instructions  */
 end_comment
 
-begin_comment
-comment|/* These all return V2SF, but we need to cast them to V2SI    because the SPE expect all functions to be __ev64_opaque__.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|__ev_fsabs
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsabs ((__v2sf) (a)))
+value|__builtin_spe_evfsabs
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsnabs
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsnabs ((__v2sf) (a)))
+value|__builtin_spe_evfsnabs
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsneg
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsneg ((__v2sf) (a)))
+value|__builtin_spe_evfsneg
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsadd
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsadd ((__v2sf) (a), (__v2sf) (b)))
+value|__builtin_spe_evfsadd
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fssub
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((__v2si) __builtin_spe_evfssub ((__v2sf) (a), (__v2sf) (b)))
+value|__builtin_spe_evfssub
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsmul
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsmul ((__v2sf) (a), (__v2sf) b))
+value|__builtin_spe_evfsmul
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsdiv
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsdiv ((__v2sf) (a), (__v2sf) b))
+value|__builtin_spe_evfsdiv
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fscfui
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfscfui ((__v2si) (a)))
+value|__builtin_spe_evfscfui
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fscfsi
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfscfsi ((__v2sf) (a)))
+value|__builtin_spe_evfscfsi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fscfuf
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfscfuf ((__v2sf) (a)))
+value|__builtin_spe_evfscfuf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fscfsf
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfscfsf ((__v2sf) (a)))
+value|__builtin_spe_evfscfsf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsctui
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsctui ((__v2sf) (a)))
+value|__builtin_spe_evfsctui
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsctsi
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsctsi ((__v2sf) (a)))
+value|__builtin_spe_evfsctsi
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsctuf
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsctuf ((__v2sf) (a)))
+value|__builtin_spe_evfsctuf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsctsf
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsctsf ((__v2sf) (a)))
+value|__builtin_spe_evfsctsf
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsctuiz
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsctuiz ((__v2sf) (a)))
+value|__builtin_spe_evfsctuiz
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_fsctsiz
-parameter_list|(
-name|a
-parameter_list|)
-value|((__v2si) __builtin_spe_evfsctsiz ((__v2sf) (a)))
+value|__builtin_spe_evfsctsiz
 end_define
 
 begin_comment
@@ -2643,240 +1741,140 @@ begin_define
 define|#
 directive|define
 name|__ev_mwhgssfaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgssfaa ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgssfaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgsmfaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgsmfaa ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgsmfaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgsmiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgsmiaa ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgsmiaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgumiaa
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgumiaa ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgumiaa
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgssfan
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgssfan ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgssfan
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgsmfan
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgsmfan ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgsmfan
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgsmian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgsmian ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgsmian
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhgumian
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhgumian ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhgumian
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhssiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhssiaaw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhssiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhssfaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhssfaaw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhssfaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmfaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhsmfaaw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhsmfaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhsmiaaw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhsmiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhusiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhusiaaw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhusiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhumiaaw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhumiaaw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhumiaaw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhssfanw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhssfanw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhssfanw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhssianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhssianw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhssianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmfanw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhsmfanw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhsmfanw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhsmianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhsmianw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhsmianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhusianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhusianw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhusianw
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_mwhumianw
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__internal_ev_mwhumianw ((__v2si) (a), (__v2si) (b))
+value|__internal_ev_mwhumianw
 end_define
 
 begin_function
@@ -4187,7 +3185,7 @@ name|__ev_get_upper_u32
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_u32_internal ((__ev64_opaque__) (a), 0)
+value|__ev_get_u32_internal ((a), 0)
 end_define
 
 begin_define
@@ -4197,7 +3195,7 @@ name|__ev_get_lower_u32
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_u32_internal ((__ev64_opaque__) (a), 1)
+value|__ev_get_u32_internal ((a), 1)
 end_define
 
 begin_define
@@ -4207,7 +3205,7 @@ name|__ev_get_upper_s32
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_s32_internal ((__ev64_opaque__) (a), 0)
+value|__ev_get_s32_internal ((a), 0)
 end_define
 
 begin_define
@@ -4217,7 +3215,7 @@ name|__ev_get_lower_s32
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_s32_internal ((__ev64_opaque__) (a), 1)
+value|__ev_get_s32_internal ((a), 1)
 end_define
 
 begin_define
@@ -4227,7 +3225,7 @@ name|__ev_get_upper_fs
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_fs_internal ((__ev64_opaque__) (a), 0)
+value|__ev_get_fs_internal ((a), 0)
 end_define
 
 begin_define
@@ -4237,47 +3235,35 @@ name|__ev_get_lower_fs
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_fs_internal ((__ev64_opaque__) (a), 1)
+value|__ev_get_fs_internal ((a), 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_upper_ufix32_u32
-parameter_list|(
-name|a
-parameter_list|)
-value|__ev_get_upper_u32(a)
+value|__ev_get_upper_u32
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_lower_ufix32_u32
-parameter_list|(
-name|a
-parameter_list|)
-value|__ev_get_lower_u32(a)
+value|__ev_get_lower_u32
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_upper_sfix32_s32
-parameter_list|(
-name|a
-parameter_list|)
-value|__ev_get_upper_s32(a)
+value|__ev_get_upper_s32
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_lower_sfix32_s32
-parameter_list|(
-name|a
-parameter_list|)
-value|__ev_get_lower_s32(a)
+value|__ev_get_lower_s32
 end_define
 
 begin_define
@@ -4287,7 +3273,7 @@ name|__ev_get_upper_sfix32_fs
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_sfix32_fs (a, 0)
+value|__ev_get_sfix32_fs ((a), 0)
 end_define
 
 begin_define
@@ -4297,7 +3283,7 @@ name|__ev_get_lower_sfix32_fs
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_sfix32_fs (a, 1)
+value|__ev_get_sfix32_fs ((a), 1)
 end_define
 
 begin_define
@@ -4307,7 +3293,7 @@ name|__ev_get_upper_ufix32_fs
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_ufix32_fs (a, 0)
+value|__ev_get_ufix32_fs ((a), 0)
 end_define
 
 begin_define
@@ -4317,115 +3303,70 @@ name|__ev_get_lower_ufix32_fs
 parameter_list|(
 name|a
 parameter_list|)
-value|__ev_get_ufix32_fs (a, 1)
+value|__ev_get_ufix32_fs ((a), 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_u32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_u32_internal ((__ev64_opaque__) (a), b)
+value|__ev_get_u32_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_s32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_s32_internal ((__ev64_opaque__) (a), b)
+value|__ev_get_s32_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_fs
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_fs_internal ((__ev64_opaque__) (a), b)
+value|__ev_get_fs_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_u16
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_u16_internal ((__ev64_opaque__) (a), b)
+value|__ev_get_u16_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_s16
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_s16_internal ((__ev64_opaque__) (a), b)
+value|__ev_get_s16_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_ufix32_u32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_u32 (a, b)
+value|__ev_get_u32
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_sfix32_s32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_s32 (a, b)
+value|__ev_get_s32
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_ufix32_fs
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_ufix32_fs_internal ((__ev64_opaque__)(a), b)
+value|__ev_get_ufix32_fs_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_get_sfix32_fs
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|__ev_get_sfix32_fs_internal ((__ev64_opaque__)(a), b)
+value|__ev_get_sfix32_fs_internal
 end_define
 
 begin_function
@@ -4736,70 +3677,35 @@ begin_define
 define|#
 directive|define
 name|__ev_set_u32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_u32_internal ((__ev64_opaque__) a, b, c)
+value|__ev_set_u32_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_set_s32
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_s32_internal ((__ev64_opaque__) a, b, c)
+value|__ev_set_s32_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_set_fs
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_fs_internal ((__ev64_opaque__) a, b, c)
+value|__ev_set_fs_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_set_u16
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_u16_internal ((__ev64_opaque__) a, b, c)
+value|__ev_set_u16_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_set_s16
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_s16_internal ((__ev64_opaque__) a, b, c)
+value|__ev_set_s16_internal
 end_define
 
 begin_define
@@ -4820,28 +3726,14 @@ begin_define
 define|#
 directive|define
 name|__ev_set_sfix32_fs
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_sfix32_fs_internal ((__ev64_opaque__) (a), b, c)
+value|__ev_set_sfix32_fs_internal
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_set_ufix32_fs
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|__ev_set_ufix32_fs_internal ((__ev64_opaque__) (a), b, c)
+value|__ev_set_ufix32_fs_internal
 end_define
 
 begin_define
@@ -4996,10 +3888,7 @@ begin_define
 define|#
 directive|define
 name|__ev_set_acc_vec64
-parameter_list|(
-name|a
-parameter_list|)
-value|__builtin_spe_evmra ((__ev64_opaque__)(a))
+value|__builtin_spe_evmra
 end_define
 
 begin_function
@@ -5490,7 +4379,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgts (__pred_any, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgts (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5502,7 +4391,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgts (__pred_all, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgts (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5514,7 +4403,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgts (__pred_upper, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgts (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5526,23 +4415,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgts (__pred_lower, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgts (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_gts
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_gts ((__v2si) (a), (__v2si) (b), (__v2si) (c), (__v2si) (d)))
+value|__builtin_spe_evsel_gts
 end_define
 
 begin_define
@@ -5554,7 +4434,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgtu (__pred_any, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgtu (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5566,7 +4446,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgtu (__pred_all, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgtu (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5578,7 +4458,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgtu (__pred_upper, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgtu (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5590,23 +4470,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpgtu (__pred_lower, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpgtu (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_gtu
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_gtu ((__v2si) (a), (__v2si) (b), (__v2si) (c), (__v2si) (d)))
+value|__builtin_spe_evsel_gtu
 end_define
 
 begin_define
@@ -5618,7 +4489,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmplts (__pred_any, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmplts (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5630,7 +4501,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmplts (__pred_all, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmplts (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5642,7 +4513,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmplts (__pred_upper, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmplts (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5654,7 +4525,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmplts (__pred_lower, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmplts (__pred_lower, (a), (b))
 end_define
 
 begin_define
@@ -5670,7 +4541,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|((__v2si) __builtin_spe_evsel_lts ((__v2si) (a), (__v2si) (b), (__v2si) (c), (__v2si) (d)))
+value|((__v2si) __builtin_spe_evsel_lts ((a), (b), (c), (d)))
 end_define
 
 begin_define
@@ -5682,7 +4553,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpltu (__pred_any, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpltu (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5694,7 +4565,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpltu (__pred_all, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpltu (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5706,7 +4577,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpltu (__pred_upper, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpltu (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5718,23 +4589,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpltu (__pred_lower, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpltu (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_ltu
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_ltu ((__v2si) (a), (__v2si) (b), (__v2si) (c), (__v2si) (d)))
+value|__builtin_spe_evsel_ltu
 end_define
 
 begin_define
@@ -5746,7 +4608,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpeq (__pred_any, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpeq (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5758,7 +4620,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpeq (__pred_all, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpeq (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5770,7 +4632,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpeq (__pred_upper, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpeq (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5782,23 +4644,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evcmpeq (__pred_lower, (__v2si) (a), (__v2si) (b))
+value|__builtin_spe_evcmpeq (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_eq
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_eq ((__v2si) (a), (__v2si) (b), (__v2si) (c), (__v2si) (d)))
+value|__builtin_spe_evsel_eq
 end_define
 
 begin_define
@@ -5810,7 +4663,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpgt (__pred_any, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpgt (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5822,7 +4675,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpgt (__pred_all, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpgt (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5834,7 +4687,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpgt (__pred_upper, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpgt (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5846,23 +4699,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpgt (__pred_lower, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpgt (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_fs_gt
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_fsgt ((__v2sf) (a), (__v2sf) (b), (__v2sf) (c), (__v2sf) (d)))
+value|__builtin_spe_evsel_fsgt
 end_define
 
 begin_define
@@ -5874,7 +4718,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmplt (__pred_any, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmplt (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5886,7 +4730,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmplt (__pred_all, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmplt (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5898,7 +4742,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmplt (__pred_upper, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmplt (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5910,23 +4754,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmplt (__pred_lower, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmplt (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_fs_lt
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_fslt ((__v2sf) (a), (__v2sf) (b), (__v2sf) (c), (__v2sf) (d)))
+value|__builtin_spe_evsel_fslt
 end_define
 
 begin_define
@@ -5938,7 +4773,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpeq (__pred_any, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpeq (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -5950,7 +4785,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpeq (__pred_all, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpeq (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -5962,7 +4797,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpeq (__pred_upper, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpeq (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -5974,23 +4809,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfscmpeq (__pred_lower, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfscmpeq (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_fs_eq
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_fseq ((__v2sf) (a), (__v2sf) (b), (__v2sf) (c), (__v2sf) (d)))
+value|__builtin_spe_evsel_fseq
 end_define
 
 begin_define
@@ -6002,7 +4828,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststgt (__pred_any, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststgt (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -6014,7 +4840,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststgt (__pred_all, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststgt (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -6026,7 +4852,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststgt (__pred_upper, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststgt (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -6038,23 +4864,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststgt (__pred_lower, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststgt (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_fs_tst_gt
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_fststgt ((__v2sf) (a), (__v2sf) (b), (__v2sf) (c), (__v2sf) (d)))
+value|__builtin_spe_evsel_fststgt
 end_define
 
 begin_define
@@ -6066,7 +4883,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststlt (__pred_any, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststlt (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -6078,7 +4895,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststlt (__pred_all, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststlt (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -6090,7 +4907,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststlt (__pred_upper, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststlt (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -6102,23 +4919,14 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststlt (__pred_lower, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststlt (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_fs_tst_lt
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_fststlt ((__v2sf) (a), (__v2sf) (b), (__v2sf) (c), (__v2sf) (d)))
+value|__builtin_spe_evsel_fststlt
 end_define
 
 begin_define
@@ -6130,7 +4938,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststeq (__pred_any, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststeq (__pred_any, (a), (b))
 end_define
 
 begin_define
@@ -6142,7 +4950,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststeq (__pred_all, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststeq (__pred_all, (a), (b))
 end_define
 
 begin_define
@@ -6154,7 +4962,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststeq (__pred_upper, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststeq (__pred_upper, (a), (b))
 end_define
 
 begin_define
@@ -6166,27 +4974,18 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|__builtin_spe_evfststeq (__pred_lower, (__v2sf) (a), (__v2sf) (b))
+value|__builtin_spe_evfststeq (__pred_lower, (a), (b))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__ev_select_fs_tst_eq
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|((__v2si) __builtin_spe_evsel_fststeq ((__v2sf) (a), (__v2sf) (b), (__v2sf) (c), (__v2sf) (d)))
+value|__builtin_spe_evsel_fststeq
 end_define
 
 begin_comment
-comment|/* SPEFSCR accesor functions.  */
+comment|/* SPEFSCR accessor functions.  */
 end_comment
 
 begin_define
@@ -6734,6 +5533,11 @@ expr_stmt|;
 name|i
 operator||=
 name|rnd
+expr_stmt|;
+name|__builtin_spe_mtspefscr
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 block|}
 end_function

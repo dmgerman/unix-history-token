@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running Linux-based GNU systems with ELF format.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002    Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running Linux-based GNU systems with ELF format.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002    Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_DEFAULT_ELF
-end_define
 
 begin_comment
 comment|/* Output at beginning of assembler file.  */
@@ -17,21 +11,11 @@ begin_comment
 comment|/* The .file command should always begin the output.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {									\ 	output_file_directive (FILE, main_input_filename);		\ 	if (ix86_asm_dialect == ASM_INTEL)				\ 	  fputs ("\t.intel_syntax\n", FILE);				\   } while (0)
+name|TARGET_ASM_FILE_START_FILE_DIRECTIVE
+value|true
 end_define
 
 begin_define
@@ -56,6 +40,23 @@ define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
 value|1
+end_define
+
+begin_comment
+comment|/* We arrange for the whole %gs segment to map the tls area.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_TLS_DIRECT_SEG_REFS_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_TLS_DIRECT_SEG_REFS_DEFAULT
+value|MASK_TLS_DIRECT_SEG_REFS
 end_define
 
 begin_undef
@@ -96,6 +97,7 @@ begin_define
 define|#
 directive|define
 name|NO_PROFILE_COUNTERS
+value|1
 end_define
 
 begin_undef
@@ -186,7 +188,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\ 	builtin_define_std ("linux");		\ 	builtin_define_std ("unix");		\ 	builtin_define ("__ELF__");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_assert ("system=posix");	\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
+value|do						\     {						\ 	LINUX_TARGET_OS_CPP_BUILTINS();		\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
 end_define
 
 begin_undef
@@ -258,35 +260,12 @@ directive|ifdef
 name|USE_GNULIBC_1
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LINUX_DEFAULT_ELF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/elf/ld-linux.so.1} \ 	%{!rpath:-rpath /lib/elf/}} %{static:-static}}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|LINK_SPEC
 value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.1}} \ 	%{static:-static}}}"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -467,6 +446,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|NEED_INDICATE_EXEC_STACK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NEED_INDICATE_EXEC_STACK
+value|1
+end_define
+
 begin_comment
 comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
 end_comment
@@ -481,11 +473,27 @@ begin_comment
 comment|/* There's no sys/ucontext.h for some (all?) libc1, so no    signal-turned-exceptions for them.  There's also no configure-run for    the target, so we can't check on (e.g.) HAVE_SYS_UCONTEXT_H.  Using the    target libc1 macro should be enough.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
 name|USE_GNULIBC_1
-end_ifndef
+argument_list|)
+operator|||
+operator|(
+name|__GLIBC__
+operator|==
+literal|2
+operator|&&
+name|__GLIBC_MINOR__
+operator|==
+literal|0
+operator|)
+operator|)
+end_if
 
 begin_include
 include|#

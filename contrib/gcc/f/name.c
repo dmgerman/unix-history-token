@@ -267,9 +267,6 @@ name|n
 return|;
 name|newn
 operator|=
-operator|(
-name|ffename
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|ns
@@ -742,9 +739,6 @@ name|ns
 decl_stmt|;
 name|ns
 operator|=
-operator|(
-name|ffenameSpace
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|pool

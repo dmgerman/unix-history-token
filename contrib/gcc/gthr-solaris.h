@@ -1519,27 +1519,6 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|__gthread_key_dtor
-parameter_list|(
-name|__gthread_key_t
-name|key
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-comment|/* Nothing needed.  */
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
 name|__gthread_key_delete
 parameter_list|(
 name|__gthread_key_t

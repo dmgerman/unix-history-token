@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -47,39 +59,41 @@ name|optabs
 index|[]
 init|=
 block|{
-literal|"extendtab[$B][$A][0] = CODE_FOR_$(extend$a$b2$)"
+literal|"sext_optab->handlers[$B][$A].insn_code = CODE_FOR_$(extend$a$b2$)"
 block|,
-literal|"extendtab[$B][$A][1] = CODE_FOR_$(zero_extend$a$b2$)"
+literal|"zext_optab->handlers[$B][$A].insn_code = CODE_FOR_$(zero_extend$a$b2$)"
 block|,
-literal|"fixtab[$A][$B][0] = CODE_FOR_$(fix$F$a$I$b2$)"
+literal|"sfix_optab->handlers[$B][$A].insn_code = CODE_FOR_$(fix$F$a$I$b2$)"
 block|,
-literal|"fixtab[$A][$B][1] = CODE_FOR_$(fixuns$F$a$b2$)"
+literal|"ufix_optab->handlers[$B][$A].insn_code = CODE_FOR_$(fixuns$F$a$b2$)"
 block|,
-literal|"fixtrunctab[$A][$B][0] = CODE_FOR_$(fix_trunc$F$a$I$b2$)"
+literal|"sfixtrunc_optab->handlers[$B][$A].insn_code = CODE_FOR_$(fix_trunc$F$a$I$b2$)"
 block|,
-literal|"fixtrunctab[$A][$B][1] = CODE_FOR_$(fixuns_trunc$F$a$I$b2$)"
+literal|"ufixtrunc_optab->handlers[$B][$A].insn_code = CODE_FOR_$(fixuns_trunc$F$a$I$b2$)"
 block|,
-literal|"floattab[$B][$A][0] = CODE_FOR_$(float$I$a$F$b2$)"
+literal|"sfloat_optab->handlers[$B][$A].insn_code = CODE_FOR_$(float$I$a$F$b2$)"
 block|,
-literal|"floattab[$B][$A][1] = CODE_FOR_$(floatuns$I$a$F$b2$)"
+literal|"ufloat_optab->handlers[$B][$A].insn_code = CODE_FOR_$(floatuns$I$a$F$b2$)"
+block|,
+literal|"trunc_optab->handlers[$B][$A].insn_code = CODE_FOR_$(trunc$a$b2$)"
 block|,
 literal|"add_optab->handlers[$A].insn_code = CODE_FOR_$(add$P$a3$)"
 block|,
-literal|"addv_optab->handlers[(int) $A].insn_code =\n\     add_optab->handlers[(int) $A].insn_code = CODE_FOR_$(add$F$a3$)"
+literal|"addv_optab->handlers[$A].insn_code =\n\     add_optab->handlers[$A].insn_code = CODE_FOR_$(add$F$a3$)"
 block|,
-literal|"addv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(addv$I$a3$)"
+literal|"addv_optab->handlers[$A].insn_code = CODE_FOR_$(addv$I$a3$)"
 block|,
 literal|"sub_optab->handlers[$A].insn_code = CODE_FOR_$(sub$P$a3$)"
 block|,
-literal|"subv_optab->handlers[(int) $A].insn_code =\n\     sub_optab->handlers[(int) $A].insn_code = CODE_FOR_$(sub$F$a3$)"
+literal|"subv_optab->handlers[$A].insn_code =\n\     sub_optab->handlers[$A].insn_code = CODE_FOR_$(sub$F$a3$)"
 block|,
-literal|"subv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(subv$I$a3$)"
+literal|"subv_optab->handlers[$A].insn_code = CODE_FOR_$(subv$I$a3$)"
 block|,
 literal|"smul_optab->handlers[$A].insn_code = CODE_FOR_$(mul$P$a3$)"
 block|,
-literal|"smulv_optab->handlers[(int) $A].insn_code =\n\     smul_optab->handlers[(int) $A].insn_code = CODE_FOR_$(mul$F$a3$)"
+literal|"smulv_optab->handlers[$A].insn_code =\n\     smul_optab->handlers[$A].insn_code = CODE_FOR_$(mul$F$a3$)"
 block|,
-literal|"smulv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(mulv$I$a3$)"
+literal|"smulv_optab->handlers[$A].insn_code = CODE_FOR_$(mulv$I$a3$)"
 block|,
 literal|"umul_highpart_optab->handlers[$A].insn_code = CODE_FOR_$(umul$a3_highpart$)"
 block|,
@@ -91,7 +105,7 @@ literal|"umul_widen_optab->handlers[$B].insn_code = CODE_FOR_$(umul$a$b3$)$N"
 block|,
 literal|"sdiv_optab->handlers[$A].insn_code = CODE_FOR_$(div$a3$)"
 block|,
-literal|"sdivv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(div$V$I$a3$)"
+literal|"sdivv_optab->handlers[$A].insn_code = CODE_FOR_$(div$V$I$a3$)"
 block|,
 literal|"udiv_optab->handlers[$A].insn_code = CODE_FOR_$(udiv$I$a3$)"
 block|,
@@ -133,19 +147,33 @@ literal|"umin_optab->handlers[$A].insn_code = CODE_FOR_$(umin$I$a3$)"
 block|,
 literal|"umax_optab->handlers[$A].insn_code = CODE_FOR_$(umax$I$a3$)"
 block|,
+literal|"pow_optab->handlers[$A].insn_code = CODE_FOR_$(pow$a3$)"
+block|,
+literal|"atan2_optab->handlers[$A].insn_code = CODE_FOR_$(atan2$a3$)"
+block|,
 literal|"neg_optab->handlers[$A].insn_code = CODE_FOR_$(neg$P$a2$)"
 block|,
-literal|"negv_optab->handlers[(int) $A].insn_code =\n\     neg_optab->handlers[(int) $A].insn_code = CODE_FOR_$(neg$F$a2$)"
+literal|"negv_optab->handlers[$A].insn_code =\n\     neg_optab->handlers[$A].insn_code = CODE_FOR_$(neg$F$a2$)"
 block|,
-literal|"negv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(negv$I$a2$)"
+literal|"negv_optab->handlers[$A].insn_code = CODE_FOR_$(negv$I$a2$)"
 block|,
 literal|"abs_optab->handlers[$A].insn_code = CODE_FOR_$(abs$P$a2$)"
 block|,
-literal|"absv_optab->handlers[(int) $A].insn_code =\n\     abs_optab->handlers[(int) $A].insn_code = CODE_FOR_$(abs$F$a2$)"
+literal|"absv_optab->handlers[$A].insn_code =\n\     abs_optab->handlers[$A].insn_code = CODE_FOR_$(abs$F$a2$)"
 block|,
-literal|"absv_optab->handlers[(int) $A].insn_code = CODE_FOR_$(absv$I$a2$)"
+literal|"absv_optab->handlers[$A].insn_code = CODE_FOR_$(absv$I$a2$)"
 block|,
 literal|"sqrt_optab->handlers[$A].insn_code = CODE_FOR_$(sqrt$a2$)"
+block|,
+literal|"floor_optab->handlers[$A].insn_code = CODE_FOR_$(floor$a2$)"
+block|,
+literal|"ceil_optab->handlers[$A].insn_code = CODE_FOR_$(ceil$a2$)"
+block|,
+literal|"round_optab->handlers[$A].insn_code = CODE_FOR_$(round$a2$)"
+block|,
+literal|"trunc_optab->handlers[$A].insn_code = CODE_FOR_$(trunc$a2$)"
+block|,
+literal|"nearbyint_optab->handlers[$A].insn_code = CODE_FOR_$(nearbyint$a2$)"
 block|,
 literal|"sin_optab->handlers[$A].insn_code = CODE_FOR_$(sin$a2$)"
 block|,
@@ -155,11 +183,23 @@ literal|"exp_optab->handlers[$A].insn_code = CODE_FOR_$(exp$a2$)"
 block|,
 literal|"log_optab->handlers[$A].insn_code = CODE_FOR_$(log$a2$)"
 block|,
+literal|"tan_optab->handlers[$A].insn_code = CODE_FOR_$(tan$a2$)"
+block|,
+literal|"atan_optab->handlers[$A].insn_code = CODE_FOR_$(atan$a2$)"
+block|,
 literal|"strlen_optab->handlers[$A].insn_code = CODE_FOR_$(strlen$a$)"
 block|,
 literal|"one_cmpl_optab->handlers[$A].insn_code = CODE_FOR_$(one_cmpl$a2$)"
 block|,
 literal|"ffs_optab->handlers[$A].insn_code = CODE_FOR_$(ffs$a2$)"
+block|,
+literal|"clz_optab->handlers[$A].insn_code = CODE_FOR_$(clz$a2$)"
+block|,
+literal|"ctz_optab->handlers[$A].insn_code = CODE_FOR_$(ctz$a2$)"
+block|,
+literal|"popcount_optab->handlers[$A].insn_code = CODE_FOR_$(popcount$a2$)"
+block|,
+literal|"parity_optab->handlers[$A].insn_code = CODE_FOR_$(parity$a2$)"
 block|,
 literal|"mov_optab->handlers[$A].insn_code = CODE_FOR_$(mov$a$)"
 block|,
@@ -168,6 +208,8 @@ block|,
 literal|"cmp_optab->handlers[$A].insn_code = CODE_FOR_$(cmp$a$)"
 block|,
 literal|"tst_optab->handlers[$A].insn_code = CODE_FOR_$(tst$a$)"
+block|,
+literal|"addcc_optab->handlers[$A].insn_code = CODE_FOR_$(add$acc$)"
 block|,
 literal|"bcc_gen_fctn[$C] = gen_$(b$c$)"
 block|,
@@ -190,33 +232,38 @@ block|,
 literal|"movstr_optab[$A] = CODE_FOR_$(movstr$a$)"
 block|,
 literal|"clrstr_optab[$A] = CODE_FOR_$(clrstr$a$)"
+block|,
+literal|"cmpstr_optab[$A] = CODE_FOR_$(cmpstr$a$)"
+block|,
+literal|"cmpmem_optab[$A] = CODE_FOR_$(cmpmem$a$)"
+block|,
+literal|"vec_set_optab->handlers[$A].insn_code = CODE_FOR_$(vec_set$a$)"
+block|,
+literal|"vec_extract_optab->handlers[$A].insn_code = CODE_FOR_$(vec_extract$a$)"
+block|,
+literal|"vec_init_optab->handlers[$A].insn_code = CODE_FOR_$(vec_init$a$)"
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|gen_insn
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -534,15 +581,12 @@ case|:
 case|case
 literal|'b'
 case|:
-comment|/* This loop will stop at the first prefix match, so                    look through the modes in reverse order, in case                    EXTRA_CC_MODES was used and CC is a prefix of the                    CC modes (as it should be).  */
+comment|/* This loop will stop at the first prefix match, so                    look through the modes in reverse order, in case                    there are extra CC modes and CC is a prefix of the                    CC modes (as it should be).  */
 for|for
 control|(
 name|i
 operator|=
 operator|(
-operator|(
-name|int
-operator|)
 name|MAX_MACHINE_MODE
 operator|)
 operator|-
@@ -933,7 +977,7 @@ literal|'A'
 case|:
 name|printf
 argument_list|(
-literal|"(int) %smode"
+literal|"%smode"
 argument_list|,
 name|GET_MODE_NAME
 argument_list|(
@@ -947,7 +991,7 @@ literal|'B'
 case|:
 name|printf
 argument_list|(
-literal|"(int) %smode"
+literal|"%smode"
 argument_list|,
 name|GET_MODE_NAME
 argument_list|(
@@ -973,11 +1017,6 @@ break|break;
 case|case
 literal|'C'
 case|:
-name|printf
-argument_list|(
-literal|"(int) "
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|np
@@ -1013,39 +1052,32 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|desc
@@ -1098,6 +1130,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"coretypes.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"tm.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"rtl.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -1133,7 +1175,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"void\ninit_all_optabs ()\n{\n"
+literal|"void\ninit_all_optabs (void)\n{\n"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"\ #ifdef FIXUNS_TRUNC_LIKE_FIX_TRUNC\n\   int i, j;\n\ #endif\n"
 argument_list|)
 expr_stmt|;
 comment|/* Read the machine description.  */
@@ -1189,9 +1236,9 @@ name|desc
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|puts
 argument_list|(
-literal|"}\n"
+literal|"\ \n\ #ifdef FIXUNS_TRUNC_LIKE_FIX_TRUNC\n\   /* This flag says the same insns that convert to a signed fixnum\n\      also convert validly to an unsigned one.  */\n\   for (i = 0; i< NUM_MACHINE_MODES; i++)\n\     for (j = 0; j< NUM_MACHINE_MODES; j++)\n\       ufixtrunc_optab->handlers[i][j].insn_code\n\       = sfixtrunc_optab->handlers[i][j].insn_code;\n\ #endif\n\ }"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -1226,12 +1273,10 @@ name|char
 modifier|*
 name|get_insn_name
 parameter_list|(
-name|code
-parameter_list|)
 name|int
 name|code
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|NULL

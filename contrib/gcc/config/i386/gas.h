@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 using GAS.    Copyright (C) 1988, 1993, 1994, 1996, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 using GAS.    Copyright (C) 1988, 1993, 1994, 1996, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -180,29 +180,11 @@ name|GAS_MNEMONICS
 value|1
 end_define
 
-begin_comment
-comment|/* Output at beginning of assembler file.  */
-end_comment
-
-begin_comment
-comment|/* The .file command should always begin the output.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {									\ 	if (ix86_asm_dialect == ASM_INTEL)				\ 	  fputs ("\t.intel_syntax\n", FILE);				\         output_file_directive (FILE, main_input_filename);		\   } while (0)
+name|TARGET_ASM_FILE_START_FILE_DIRECTIVE
+value|true
 end_define
 
 end_unit

@@ -162,9 +162,6 @@ name|type
 decl_stmt|;
 name|type
 operator|=
-operator|(
-name|ffetype
-operator|)
 name|malloc_new_kp
 argument_list|(
 name|malloc_pool_image
@@ -263,9 +260,6 @@ name|base_type
 operator|->
 name|kinds_
 operator|=
-operator|(
-name|ffetype_indexes_
-operator|)
 name|malloc_new_kp
 argument_list|(
 name|malloc_pool_image
@@ -379,9 +373,6 @@ name|base_type
 operator|->
 name|stars_
 operator|=
-operator|(
-name|ffetype_indexes_
-operator|)
 name|malloc_new_kp
 argument_list|(
 name|malloc_pool_image

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Variables and structures for declaration processing.    Copyright (C) 1993, 2000, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Variables and structures for declaration processing.    Copyright (C) 1993, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -42,43 +42,25 @@ begin_comment
 comment|/* We need this in here to get the decl_context definition.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|tree
 name|grokdeclarator
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|,
+parameter_list|,
 name|tree
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|decl_context
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|tree
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Parsing a function declarator leaves a list of parameter names    or a chain or parameter decls here.  */
-end_comment
-
-begin_extern
-extern|extern GTY((
-end_extern
-
-begin_decl_stmt
-unit|))
-name|tree
-name|last_function_parms
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

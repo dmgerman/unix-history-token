@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Linux for S/390.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Hartmut Penner (hpenner@de.ibm.com) and                   Ulrich Weigand (uweigand@de.ibm.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Linux for S/390.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Hartmut Penner (hpenner@de.ibm.com) and                   Ulrich Weigand (uweigand@de.ibm.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -131,19 +131,13 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\       builtin_define_std ("linux");		\       builtin_define_std ("unix");		\       builtin_assert ("system=linux");		\       builtin_assert ("system=unix");		\       builtin_define ("__ELF__");		\       builtin_define ("__gnu_linux__");		\       if (flag_pic)				\         {					\           builtin_define ("__PIC__");		\           builtin_define ("__pic__");		\         }					\     }						\   while (0)
+value|do						\     {						\       LINUX_TARGET_OS_CPP_BUILTINS();		\       if (flag_pic)				\         {					\           builtin_define ("__PIC__");		\           builtin_define ("__pic__");		\         }					\     }						\   while (0)
 end_define
 
 begin_comment
 comment|/* Target specific assembler settings.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEFAULT_TARGET_64BIT
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
@@ -154,31 +148,8 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{m31:-m31 -Aesa}"
+value|"%{m31&m64}%{mesa&mzarch}%{march=*}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|"%{m64:-m64 -Aesame}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Target specific linker settings.  */
@@ -214,28 +185,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|LINK_ARCH31_SPEC
-define|\
-value|"-m elf_s390 \    %{shared:-shared} \    %{!shared: \       %{static:-static} \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}}"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINK_ARCH64_SPEC
-define|\
-value|"-m elf64_s390 \    %{shared:-shared} \    %{!shared: \       %{static:-static} \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld64.so.1}}}"
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEFAULT_TARGET_64BIT
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
@@ -246,46 +195,18 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%{m31:%(link_arch31)} %{!m31:%(link_arch64)}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-value|"%{m64:%(link_arch64)} %{!m64:%(link_arch31)}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* This macro defines names of additional specifications to put in the specs    that can be used in various specifications like CC1_SPEC.  Its definition    is an initializer with a subgrouping for each command option.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SPECS
 define|\
-value|{ "link_arch31",	LINK_ARCH31_SPEC },	\   { "link_arch64",	LINK_ARCH64_SPEC },
+value|"%{m31:-m elf_s390}%{m64:-m elf64_s390} \    %{shared:-shared} \    %{!shared: \       %{static:-static} \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker: \           %{m31:-dynamic-linker /lib/ld.so.1} \           %{m64:-dynamic-linker /lib/ld64.so.1}}}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FILE_END
+value|file_end_indicate_exec_stack
 end_define
 
 begin_comment
-unit|\
 comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
 end_comment
 

@@ -1,11 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for 64 bit PowerPC linux.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for 64 bit PowerPC linux.    Copyright (C) 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
-begin_comment
-comment|/* Yes!  We are AIX! Err. Wait. We're Linux!. No, wait, we're a   combo of both!*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RS6000_BI_ARCH
+end_ifndef
 
 begin_undef
 undef|#
@@ -23,61 +25,229 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|TARGET_AIX
+name|TARGET_64BIT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_AIX
+name|TARGET_64BIT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_ARCH64_P
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS6000_BI_ARCH_P
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ARCH64_P
+value|(TARGET_DEFAULT& MASK_64BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS6000_BI_ARCH_P
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
 begin_undef
 undef|#
 directive|undef
-name|TARGET_DEFAULT
+name|TARGET_64BIT
+end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TARGET_64BIT
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TARGET_64BIT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_AIX
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_DEFAULT
+name|TARGET_AIX
+value|TARGET_64BIT
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PROCESSOR_DEFAULT64
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_DEFAULT64
+value|PROCESSOR_PPC630
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_RELOCATABLE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_RELOCATABLE
+value|(!TARGET_64BIT&& (target_flags& MASK_RELOCATABLE))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|RS6000_ABI_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|RS6000_ABI_NAME
+value|(TARGET_64BIT ? "aixdesc" : "sysv")
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVALID_64BIT
+value|"-m%s not supported in this configuration"
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVALID_32BIT
+value|INVALID_64BIT
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBSUBTARGET_OVERRIDE_OPTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBSUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|(MASK_POWERPC | MASK_POWERPC64 | MASK_64BIT | MASK_NEW_MNEMONICS)
+value|do								\     {								\       if (rs6000_alignment_string == 0)				\ 	rs6000_alignment_flags = MASK_ALIGN_NATURAL;		\       if (TARGET_64BIT)						\ 	{							\ 	  if (DEFAULT_ABI != ABI_AIX)				\ 	    {							\ 	      rs6000_current_abi = ABI_AIX;			\ 	      error (INVALID_64BIT, "call");			\ 	    }							\ 	  if (target_flags& MASK_RELOCATABLE)			\ 	    {							\ 	      target_flags&= ~MASK_RELOCATABLE;		\ 	      error (INVALID_64BIT, "relocatable");		\ 	    }							\ 	  if (target_flags& MASK_EABI)				\ 	    {							\ 	      target_flags&= ~MASK_EABI;			\ 	      error (INVALID_64BIT, "eabi");			\ 	    }							\ 	  if (target_flags& MASK_PROTOTYPE)			\ 	    {							\ 	      target_flags&= ~MASK_PROTOTYPE;			\ 	      error (INVALID_64BIT, "prototype");		\ 	    }							\           if ((target_flags& MASK_POWERPC64) == 0)		\ 	    {							\ 	      target_flags |= MASK_POWERPC64;			\ 	      error ("-m64 requires a PowerPC64 cpu");		\ 	    }							\ 	}							\       else							\ 	{							\ 	  if (!RS6000_BI_ARCH_P)				\ 	    error (INVALID_32BIT, "32");			\ 	  if (TARGET_PROFILE_KERNEL)				\ 	    {							\ 	      target_flags&= ~MASK_PROFILE_KERNEL;		\ 	      error (INVALID_32BIT, "profile-kernel");		\ 	    }							\ 	}							\     }								\   while (0)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RS6000_BI_ARCH
+end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|PROCESSOR_DEFAULT
+name|OVERRIDE_OPTIONS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|PROCESSOR_DEFAULT
-value|PROCESSOR_PPC630
+name|OVERRIDE_OPTIONS
+define|\
+value|rs6000_override_options (((TARGET_DEFAULT ^ target_flags)& MASK_64BIT) \ 			   ? (char *) 0 : TARGET_CPU_DEFAULT)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|PROCESSOR_DEFAULT64
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PROCESSOR_DEFAULT64
-value|PROCESSOR_PPC630
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
 directive|undef
 name|ASM_DEFAULT_SPEC
 end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_SPEC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_OS_LINUX_SPEC
+end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RS6000_BI_ARCH
+end_ifndef
 
 begin_define
 define|#
@@ -86,17 +256,180 @@ name|ASM_DEFAULT_SPEC
 value|"-mppc64"
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|ASM_SPEC
-end_undef
+value|"%(asm_spec64) %(asm_spec_common)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_OS_LINUX_SPEC
+value|"%(link_os_linux_spec64)"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH64_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|ASM_DEFAULT_SPEC
+value|"-mppc%{!m32:64}"
+end_define
 
 begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{.s: %{mregnames} %{mno-regnames}} \ %{.S: %{mregnames} %{mno-regnames}} \ %{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian} \ %{v:-V} %{Qy:} %{!Qn:-Qy} -a64 %(asm_cpu) %{Wa,*:%*}"
+value|"%{m32:%(asm_spec32)}%{!m32:%(asm_spec64)} %(asm_spec_common)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_OS_LINUX_SPEC
+value|"%{m32:%(link_os_linux_spec32)}%{!m32:%(link_os_linux_spec64)}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASM_DEFAULT_SPEC
+value|"-mppc%{m64:64}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"%{!m64:%(asm_spec32)}%{m64:%(asm_spec64)} %(asm_spec_common)"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_OS_LINUX_SPEC
+value|"%{!m64:%(link_os_linux_spec32)}%{m64:%(link_os_linux_spec64)}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC32
+value|"-a32 %{n} %{T} %{Ym,*} %{Yd,*} \ %{mrelocatable} %{mrelocatable-lib} %{fpic:-K PIC} %{fPIC:-K PIC} \ %{memb} %{!memb: %{msdata: -memb} %{msdata=eabi: -memb}} \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-freebsd: -mbig} \     %{mcall-i960-old: -mlittle} \     %{mcall-linux: -mbig} \     %{mcall-gnu: -mbig} \     %{mcall-netbsd: -mbig} \ }}}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC64
+value|"-a64"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC_COMMON
+value|"%(asm_cpu) \ %{.s: %{mregnames} %{mno-regnames}} %{.S: %{mregnames} %{mno-regnames}} \ %{v:-V} %{Qy:} %{!Qn:-Qy} %{Wa,*:%*} \ %{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBSUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBSUBTARGET_EXTRA_SPECS
+define|\
+value|{ "asm_spec_common",		ASM_SPEC_COMMON },			\   { "asm_spec32",		ASM_SPEC32 },				\   { "asm_spec64",		ASM_SPEC64 },				\   { "link_os_linux_spec32",	LINK_OS_LINUX_SPEC32 },			\   { "link_os_linux_spec64",	LINK_OS_LINUX_SPEC64 },
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MULTILIB_DEFAULTS
+end_undef
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH64_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|MULTILIB_DEFAULTS
+value|{ "m64" }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MULTILIB_DEFAULTS
+value|{ "m32" }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RS6000_BI_ARCH
+end_ifndef
+
+begin_comment
+comment|/* 64-bit PowerPC Linux is always big-endian.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_ENDIAN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_ENDIAN
+value|0
 end_define
 
 begin_comment
@@ -106,19 +439,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_NO_TOC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_NO_TOC
-value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|TARGET_TOC
 end_undef
 
@@ -127,6 +447,90 @@ define|#
 directive|define
 name|TARGET_TOC
 value|1
+end_define
+
+begin_comment
+comment|/* Some things from sysv4.h we don't do when 64 bit.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_RELOCATABLE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_RELOCATABLE
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_EABI
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_EABI
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_PROTOTYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_PROTOTYPE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MASK_PROFILE_KERNEL
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Non-standard profiling for kernels, which just saves LR then calls    _mcount without worrying about arg saves.  The idea is to change    the function prologue as little as possible as it isn't easy to    account for arg save/restore code added just for _mcount.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_PROFILE_KERNEL
+value|(target_flags& MASK_PROFILE_KERNEL)
+end_define
+
+begin_comment
+comment|/* Override sysv4.h.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|EXTRA_SUBTARGET_SWITCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|EXTRA_SUBTARGET_SWITCHES
+define|\
+value|{"profile-kernel",	 MASK_PROFILE_KERNEL,				\    N_("Call mcount for profiling before a function prologue") },	\   {"no-profile-kernel",	-MASK_PROFILE_KERNEL,				\    N_("Call mcount for profiling after a function prologue") },
 end_define
 
 begin_comment
@@ -137,46 +541,8 @@ begin_define
 define|#
 directive|define
 name|NO_PROFILE_COUNTERS
-value|1
+value|TARGET_64BIT
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|PROFILE_BEFORE_PROLOGUE
-end_undef
-
-begin_comment
-comment|/* Define this for kernel profiling, which just saves LR then calls    _mcount without worrying about arg saves.  The idea is to change    the function prologue as little as possible as it isn't easy to    account for arg save/restore code added just for _mcount.  */
-end_comment
-
-begin_comment
-comment|/* #define PROFILE_KERNEL 1 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|PROFILE_KERNEL
-end_if
-
-begin_define
-define|#
-directive|define
-name|PROFILE_BEFORE_PROLOGUE
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|PROFILE_HOOK
-end_undef
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -185,13 +551,9 @@ name|PROFILE_HOOK
 parameter_list|(
 name|LABEL
 parameter_list|)
-value|output_profile_hook (LABEL)
+define|\
+value|do { if (TARGET_64BIT) output_profile_hook (LABEL); } while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* We don't need to generate entries in .fixup.  */
@@ -203,15 +565,8 @@ directive|undef
 name|RELOCATABLE_NEEDS_FIXUP
 end_undef
 
-begin_define
-define|#
-directive|define
-name|USER_LABEL_PREFIX
-value|""
-end_define
-
 begin_comment
-comment|/* AIX word-aligns FP doubles but doubleword-aligns 64-bit ints.  */
+comment|/* PowerPC64 Linux word-aligns FP doubles when -malign-power is given.  */
 end_comment
 
 begin_undef
@@ -230,11 +585,11 @@ parameter_list|,
 name|COMPUTED
 parameter_list|)
 define|\
-value|(TYPE_MODE (TREE_CODE (TREE_TYPE (FIELD)) == ARRAY_TYPE \ 	      ? get_inner_array_type (FIELD) \ 	      : TREE_TYPE (FIELD)) == DFmode \    ? MIN ((COMPUTED), 32) : (COMPUTED))
+value|((TARGET_ALTIVEC&& TREE_CODE (TREE_TYPE (FIELD)) == VECTOR_TYPE)	\    ? 128								\    : (TARGET_64BIT							\&& TARGET_ALIGN_NATURAL == 0					\&& TYPE_MODE (TREE_CODE (TREE_TYPE (FIELD)) == ARRAY_TYPE		\ 		    ? get_inner_array_type (FIELD)			\ 		    : TREE_TYPE (FIELD)) == DFmode)			\    ? MIN ((COMPUTED), 32)						\    : (COMPUTED))
 end_define
 
 begin_comment
-comment|/* AIX increases natural record alignment to doubleword if the first    field is an FP double while the FP fields remain word aligned.  */
+comment|/* PowerPC64 Linux increases natural record alignment to doubleword if    the first field is an FP double, only if in power alignment mode.  */
 end_comment
 
 begin_undef
@@ -255,7 +610,7 @@ parameter_list|,
 name|SPECIFIED
 parameter_list|)
 define|\
-value|((TREE_CODE (STRUCT) == RECORD_TYPE			\     || TREE_CODE (STRUCT) == UNION_TYPE			\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)		\&& TYPE_FIELDS (STRUCT) != 0				\&& DECL_MODE (TYPE_FIELDS (STRUCT)) == DFmode	\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 64)		\    : MAX ((COMPUTED), (SPECIFIED)))
+value|((TARGET_ALTIVEC&& TREE_CODE (STRUCT) == VECTOR_TYPE)		\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 128)				\    : (TARGET_64BIT							\&& (TREE_CODE (STRUCT) == RECORD_TYPE				\ 	  || TREE_CODE (STRUCT) == UNION_TYPE				\ 	  || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)			\&& TARGET_ALIGN_NATURAL == 0)					\    ? rs6000_special_round_type_align (STRUCT, COMPUTED, SPECIFIED)	\    : MAX ((COMPUTED), (SPECIFIED)))
 end_define
 
 begin_comment
@@ -272,18 +627,61 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
-value|1
+value|TARGET_64BIT
 end_define
 
 begin_comment
-comment|/* 64-bit PowerPC Linux always has GPR13 fixed.  */
+comment|/* The linux ppc64 ABI isn't explicit on whether aggregates smaller    than a doubleword should be padded upward or downward.  You could    reasonably assume that they follow the normal rules for structure    layout treating the parameter area as any other block of memory,    then map the reg param area to registers.  ie. pad updard.    Setting both of the following defines results in this behavior.    Setting just the first one will result in aggregates that fit in a    doubleword being padded downward, and others being padded upward.    Not a bad idea as this results in struct { int x; } being passed    the same way as an int.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FIXED_R13
-value|1
+name|AGGREGATE_PADDING_FIXED
+value|TARGET_64BIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGGREGATES_PAD_UPWARD_ALWAYS
+value|0
+end_define
+
+begin_comment
+comment|/* We don't want anything in the reg parm area being passed on the    stack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUST_PASS_IN_STACK
+parameter_list|(
+name|MODE
+parameter_list|,
+name|TYPE
+parameter_list|)
+define|\
+value|((TARGET_64BIT						\&& (TYPE) != 0						\&& (TREE_CODE (TYPE_SIZE (TYPE)) != INTEGER_CST		\ 	|| TREE_ADDRESSABLE (TYPE)))				\    || (!TARGET_64BIT						\&& default_must_pass_in_stack ((MODE), (TYPE))))
+end_define
+
+begin_comment
+comment|/* Specify padding for the last element of a block move between    registers and memory.  FIRST is nonzero if this is the only    element.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_REG_PADDING
+parameter_list|(
+name|MODE
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|FIRST
+parameter_list|)
+define|\
+value|(!(FIRST) ? upward : FUNCTION_ARG_PADDING (MODE, TYPE))
 end_define
 
 begin_comment
@@ -295,7 +693,8 @@ define|#
 directive|define
 name|SETUP_FRAME_ADDRESSES
 parameter_list|()
-value|rs6000_aix_emit_builtin_unwind_init ()
+define|\
+value|do { if (TARGET_64BIT) rs6000_aix_emit_builtin_unwind_init (); } while (0)
 end_define
 
 begin_comment
@@ -326,7 +725,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do                                        \     {                                       \       builtin_define ("__PPC__");           \       builtin_define ("__PPC64__");         \       builtin_define ("__powerpc__");       \       builtin_define ("__powerpc64__");     \       builtin_define ("__PIC__");           \       builtin_define ("__ELF__");           \       builtin_assert ("cpu=powerpc64");     \       builtin_assert ("machine=powerpc64"); \     }                                       \   while (0)
+value|do							\     {							\       if (TARGET_64BIT)					\ 	{						\ 	  builtin_define ("__PPC__");			\ 	  builtin_define ("__PPC64__");			\ 	  builtin_define ("__powerpc__");		\ 	  builtin_define ("__powerpc64__");		\ 	  builtin_define ("__PIC__");			\ 	  builtin_assert ("cpu=powerpc64");		\ 	  builtin_assert ("machine=powerpc64");		\ 	}						\       else						\ 	{						\ 	  builtin_define_std ("PPC");			\ 	  builtin_define_std ("powerpc");		\ 	  builtin_assert ("cpu=powerpc");		\ 	  builtin_assert ("machine=powerpc");		\ 	  TARGET_OS_SYSV_CPP_BUILTINS ();		\ 	}						\     }							\   while (0)
 end_define
 
 begin_undef
@@ -370,14 +769,6 @@ define|#
 directive|define
 name|LINK_SHLIB_SPEC
 value|"%{shared:-shared} %{!shared: %{static:-static}}"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINK_GCC_C_SEQUENCE_SPEC
-define|\
-value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
 end_define
 
 begin_undef
@@ -445,63 +836,20 @@ name|LINK_OS_DEFAULT_SPEC
 value|"%(link_os_linux)"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|LINK_OS_LINUX_SPEC
-end_undef
+begin_define
+define|#
+directive|define
+name|LINK_OS_LINUX_SPEC32
+value|"-m elf32ppclinux %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}}"
+end_define
 
 begin_define
 define|#
 directive|define
-name|LINK_OS_LINUX_SPEC
+name|LINK_OS_LINUX_SPEC64
 value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib64/ld64.so.1}}}"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NATIVE_CROSS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_PREFIX_SPEC
-value|"/usr/local/lib64/ /lib64/ /usr/lib64/"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|STARTFILE_LINUX_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_LINUX_SPEC
-value|"\ %{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} crti.o%s \ %{static:crtbeginT.o%s} \ %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ENDFILE_LINUX_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ENDFILE_LINUX_SPEC
-value|"\ %{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -512,7 +860,8 @@ begin_define
 define|#
 directive|define
 name|TOC_SECTION_ASM_OP
-value|"\t.section\t\".toc\",\"aw\""
+define|\
+value|(TARGET_64BIT						\    ? "\t.section\t\".toc\",\"aw\""			\    : "\t.section\t\".got\",\"aw\"")
 end_define
 
 begin_undef
@@ -525,7 +874,8 @@ begin_define
 define|#
 directive|define
 name|MINIMAL_TOC_SECTION_ASM_OP
-value|"\t.section\t\".toc1\",\"aw\""
+define|\
+value|(TARGET_64BIT						\    ? "\t.section\t\".toc1\",\"aw\""			\    : ((TARGET_RELOCATABLE || flag_pic)			\       ? "\t.section\t\".got2\",\"aw\""			\       : "\t.section\t\".got1\",\"aw\""))
 end_define
 
 begin_undef
@@ -555,7 +905,7 @@ begin_define
 define|#
 directive|define
 name|SIZE_TYPE
-value|"long unsigned int"
+value|(TARGET_64BIT ? "long unsigned int" : "unsigned int")
 end_define
 
 begin_undef
@@ -568,7 +918,7 @@ begin_define
 define|#
 directive|define
 name|PTRDIFF_TYPE
-value|"long int"
+value|(TARGET_64BIT ? "long int" : "int")
 end_define
 
 begin_undef
@@ -581,7 +931,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"int"
+value|(TARGET_64BIT ? "int" : "long int")
 end_define
 
 begin_undef
@@ -645,7 +995,7 @@ begin_define
 define|#
 directive|define
 name|RS6000_CALL_GLUE
-value|"nop"
+value|(TARGET_64BIT ? "nop" : "cror 31,31,31")
 end_define
 
 begin_undef
@@ -703,7 +1053,7 @@ begin_define
 define|#
 directive|define
 name|SAVE_FP_PREFIX
-value|"._savef"
+value|(TARGET_64BIT ? "._savef" : "_savefpr_")
 end_define
 
 begin_undef
@@ -716,7 +1066,7 @@ begin_define
 define|#
 directive|define
 name|SAVE_FP_SUFFIX
-value|""
+value|(TARGET_64BIT ? "" : "_l")
 end_define
 
 begin_undef
@@ -729,7 +1079,7 @@ begin_define
 define|#
 directive|define
 name|RESTORE_FP_PREFIX
-value|"._restf"
+value|(TARGET_64BIT ? "._restf" : "_restfpr_")
 end_define
 
 begin_undef
@@ -742,7 +1092,7 @@ begin_define
 define|#
 directive|define
 name|RESTORE_FP_SUFFIX
-value|""
+value|(TARGET_64BIT ? "" : "_l")
 end_define
 
 begin_comment
@@ -760,67 +1110,6 @@ define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DWARF2_DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_ENCODE_SECTION_INFO
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_ENCODE_SECTION_INFO
-value|rs6000_xcoff_encode_section_info
-end_define
-
-begin_comment
-comment|/* This is how to output a reference to a user-level label named NAME.    `assemble_name' uses this.  */
-end_comment
-
-begin_comment
-comment|/* Override elfos.h definition.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_LABELREF
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {						\   const char *_name = NAME;			\   if (*_name == '@')				\     _name++;					\  						\   if (*_name == '*')				\     fprintf (FILE, "%s", _name + 1);		\   else						\     asm_fprintf (FILE, "%U%s", _name);		\ } while (0)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_DECLARE_FUNCTION_NAME
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_DECLARE_FUNCTION_NAME
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|,
-name|DECL
-parameter_list|)
-define|\
-value|do									\     {									\       fputs ("\t.section\t\".opd\",\"aw\"\n\t.align 3\n", (FILE));	\       ASM_OUTPUT_LABEL ((FILE), (NAME));				\       fputs (DOUBLE_INT_ASM_OP, (FILE));				\       putc ('.', (FILE));						\       assemble_name ((FILE), (NAME));					\       fputs (",.TOC.@tocbase,0\n\t.previous\n\t.size\t", (FILE));	\       assemble_name ((FILE), (NAME));					\       fputs (",24\n\t.type\t.", (FILE));				\       assemble_name ((FILE), (NAME));					\       fputs (",@function\n", (FILE));					\       if (TREE_PUBLIC (DECL)&& ! DECL_WEAK (DECL))			\         {								\ 	  fputs ("\t.globl\t.", (FILE));				\ 	  assemble_name ((FILE), (NAME));				\ 	  putc ('\n', (FILE));						\         }								\       ASM_DECLARE_RESULT ((FILE), DECL_RESULT (DECL));			\       putc ('.', (FILE));						\       ASM_OUTPUT_LABEL ((FILE), (NAME));				\     }									\   while (0)
 end_define
 
 begin_comment
@@ -845,7 +1134,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       if (!flag_inhibit_size_directive)					\ 	{								\ 	  fputs ("\t.size\t.", (FILE));					\ 	  assemble_name ((FILE), (FNAME));				\ 	  fputs (",.-.", (FILE));					\ 	  assemble_name ((FILE), (FNAME));				\ 	  putc ('\n', (FILE));						\ 	}								\     }									\   while (0)
+value|do									\     {									\       if (!flag_inhibit_size_directive)					\ 	{								\ 	  fputs ("\t.size\t", (FILE));					\ 	  if (TARGET_64BIT)						\ 	    putc ('.', (FILE));						\ 	  assemble_name ((FILE), (FNAME));				\ 	  fputs (",.-", (FILE));					\ 	  if (TARGET_64BIT)						\ 	    putc ('.', (FILE));						\ 	  assemble_name ((FILE), (FNAME));				\ 	  putc ('\n', (FILE));						\ 	}								\     }									\   while (0)
 end_define
 
 begin_comment
@@ -868,7 +1157,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (GET_CODE (X) == CONST_DOUBLE					\&& (TARGET_POWERPC64						\ 	       || TARGET_MINIMAL_TOC					\ 	       || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT		\&& ! TARGET_NO_FP_IN_TOC)))))
+value|(TARGET_TOC								\&& (GET_CODE (X) == SYMBOL_REF					\        || (GET_CODE (X) == CONST&& GET_CODE (XEXP (X, 0)) == PLUS	\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == SYMBOL_REF)		\        || GET_CODE (X) == LABEL_REF					\        || (GET_CODE (X) == CONST_INT 					\&& GET_MODE_BITSIZE (MODE)<= GET_MODE_BITSIZE (Pmode))	\        || (GET_CODE (X) == CONST_DOUBLE					\&& ((TARGET_64BIT						\&& (TARGET_POWERPC64					\ 		    || TARGET_MINIMAL_TOC				\ 		    || (GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT	\&& ! TARGET_NO_FP_IN_TOC)))			\ 	       || (!TARGET_64BIT					\&& !TARGET_NO_FP_IN_TOC				\&& !TARGET_RELOCATABLE				\&& GET_MODE_CLASS (GET_MODE (X)) == MODE_FLOAT	\&& BITS_PER_WORD == HOST_BITS_PER_INT)))))
 end_define
 
 begin_comment
@@ -889,9 +1178,11 @@ parameter_list|(
 name|FILE
 parameter_list|,
 name|LINE
+parameter_list|,
+name|COUNTER
 parameter_list|)
 define|\
-value|do									\   {									\     static int sym_lineno = 1;						\     char temp[256];							\     ASM_GENERATE_INTERNAL_LABEL (temp, "LM", sym_lineno);		\     fprintf (FILE, "\t.stabn 68,0,%d,", LINE);				\     assemble_name (FILE, temp);						\     fputs ("-.", FILE);							\     assemble_name (FILE,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     putc ('\n', FILE);							\     ASM_OUTPUT_INTERNAL_LABEL (FILE, "LM", sym_lineno);			\     sym_lineno += 1;							\   }									\ while (0)
+value|do									\   {									\     char temp[256];							\     ASM_GENERATE_INTERNAL_LABEL (temp, "LM", COUNTER);			\     fprintf (FILE, "\t.stabn 68,0,%d,", LINE);				\     assemble_name (FILE, temp);						\     putc ('-', FILE);							\     if (TARGET_64BIT)							\       putc ('.', FILE);							\     assemble_name (FILE,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     putc ('\n', FILE);							\     (*targetm.asm_out.internal_label) (FILE, "LM", COUNTER);		\   }									\ while (0)
 end_define
 
 begin_comment
@@ -910,7 +1201,7 @@ parameter_list|,
 name|BRAC
 parameter_list|)
 define|\
-value|do									\     {									\       const char *flab;							\       fprintf (FILE, "%s%d,0,0,", ASM_STABN_OP, BRAC);			\       assemble_name (FILE, NAME);					\       putc ('-', FILE);							\       if (current_function_func_begin_label != NULL_TREE)		\ 	flab = IDENTIFIER_POINTER (current_function_func_begin_label);	\       else								\ 	{								\ 	  putc ('.', FILE);						\ 	  flab = XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0);	\ 	}								\       assemble_name (FILE, flab);					\       putc ('\n', FILE);						\     }									\   while (0)
+value|do									\     {									\       const char *flab;							\       fprintf (FILE, "%s%d,0,0,", ASM_STABN_OP, BRAC);			\       assemble_name (FILE, NAME);					\       putc ('-', FILE);							\       if (current_function_func_begin_label != NULL_TREE)		\ 	flab = IDENTIFIER_POINTER (current_function_func_begin_label);	\       else								\ 	{								\ 	  if (TARGET_64BIT)						\ 	    putc ('.', FILE);						\ 	  flab = XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0);	\ 	}								\       assemble_name (FILE, flab);					\       putc ('\n', FILE);						\     }									\   while (0)
 end_define
 
 begin_define
@@ -953,24 +1244,8 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf (FILE, "%s\"\",%d,0,0,", ASM_STABS_OP, N_FUN);		\       assemble_name (FILE, LSCOPE);					\       fputs ("-.", FILE);						\       assemble_name (FILE, XSTR (XEXP (DECL_RTL (DECL), 0), 0));	\       putc ('\n', FILE);						\     }									\   while (0)
+value|do									\     {									\       fprintf (FILE, "%s\"\",%d,0,0,", ASM_STABS_OP, N_FUN);		\       assemble_name (FILE, LSCOPE);					\       putc ('-', FILE);							\       if (TARGET_64BIT)							\         putc ('.', FILE);						\       assemble_name (FILE, XSTR (XEXP (DECL_RTL (DECL), 0), 0));	\       putc ('\n', FILE);						\     }									\   while (0)
 end_define
-
-begin_comment
-comment|/* Override sysv4.h as these are ABI_V4 only.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_REG_PUSH
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_REG_POP
-end_undef
 
 begin_comment
 comment|/* Select a format to encode pointers in exception handling data.  CODE    is 0 for data, 1 for code labels, 2 for function pointers.  GLOBAL is    true if the symbol may be affected by dynamic relocations.  */
@@ -992,7 +1267,221 @@ parameter_list|,
 name|GLOBAL
 parameter_list|)
 define|\
-value|(((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel | DW_EH_PE_udata8)
+value|((TARGET_64BIT || flag_pic || TARGET_RELOCATABLE)			\    ? (((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel		\       | (TARGET_64BIT ? DW_EH_PE_udata8 : DW_EH_PE_sdata4))		\    : DW_EH_PE_absptr)
+end_define
+
+begin_comment
+comment|/* For backward compatibility, we must continue to use the AIX    structure return convention.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DRAFT_V4_STRUCT_RET
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DRAFT_V4_STRUCT_RET
+value|(!TARGET_64BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FILE_END
+value|file_end_indicate_exec_stack
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAS_F_SETLKW
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+define|\
+value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
+end_define
+
+begin_comment
+comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_enum
+enum|enum
+block|{
+name|SIGNAL_FRAMESIZE
+init|=
+literal|128
+block|}
+enum|;
+end_enum
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* During the 2.5 kernel series the kernel ucontext was changed, but    the new layout is compatible with the old one, so we just define    and use the old one here for simplicity and compatibility.  */
+end_comment
+
+begin_struct
+struct|struct
+name|kernel_old_ucontext
+block|{
+name|unsigned
+name|long
+name|uc_flags
+decl_stmt|;
+name|struct
+name|ucontext
+modifier|*
+name|uc_link
+decl_stmt|;
+name|stack_t
+name|uc_stack
+decl_stmt|;
+name|struct
+name|sigcontext_struct
+name|uc_mcontext
+decl_stmt|;
+name|sigset_t
+name|uc_sigmask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+block|{
+name|SIGNAL_FRAMESIZE
+init|=
+literal|64
+block|}
+enum|;
+end_enum
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_comment
+comment|/* If the current unwind info (FS) does not contain explicit info    saving R2, then we have to do a minor amount of code reading to    figure out if it was saved.  The big problem here is that the    code that does the save/restore is generated by the linker, so    we have no good way to determine at compile time what to do.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_FROB_UPDATE_CONTEXT
+parameter_list|(
+name|CTX
+parameter_list|,
+name|FS
+parameter_list|)
+define|\
+value|do {									\     if ((FS)->regs.reg[2].how == REG_UNSAVED)				\       {									\ 	unsigned int *insn						\ 	  = (unsigned int *)						\ 	    _Unwind_GetGR ((CTX), LINK_REGISTER_REGNUM);		\ 	if (*insn == 0xE8410028)					\ 	  _Unwind_SetGRPtr ((CTX), 2, (CTX)->cfa + 40);			\       }									\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_FALLBACK_FRAME_STATE_FOR
+parameter_list|(
+name|CONTEXT
+parameter_list|,
+name|FS
+parameter_list|,
+name|SUCCESS
+parameter_list|)
+define|\
+value|do {									\     unsigned char *pc_ = (CONTEXT)->ra;					\     struct sigcontext *sc_;						\     long new_cfa_;							\     int i_;								\ 									\
+comment|/* addi r1, r1, 128; li r0, 0x0077; sc  (sigreturn) */
+value|\
+comment|/* addi r1, r1, 128; li r0, 0x00AC; sc  (rt_sigreturn) */
+value|\     if (*(unsigned int *) (pc_+0) != 0x38210000 + SIGNAL_FRAMESIZE	\ 	|| *(unsigned int *) (pc_+8) != 0x44000002)			\       break;								\     if (*(unsigned int *) (pc_+4) == 0x38000077)			\       {									\ 	struct sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  struct sigcontext sigctx;					\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->sigctx;						\       }									\     else if (*(unsigned int *) (pc_+4) == 0x380000AC)			\       {									\ 	struct rt_sigframe {						\ 	  int tramp[6];							\ 	  struct siginfo *pinfo;					\ 	  struct ucontext *puc;						\ 	} *rt_ = (struct rt_sigframe *) pc_;				\ 	sc_ =&rt_->puc->uc_mcontext;					\       }									\     else								\       break;								\     									\     new_cfa_ = sc_->regs->gpr[STACK_POINTER_REGNUM];			\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = STACK_POINTER_REGNUM;				\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     									\     for (i_ = 0; i_< 32; i_++)						\       if (i_ != STACK_POINTER_REGNUM)					\ 	{	    							\ 	  (FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	  (FS)->regs.reg[i_].loc.offset 				\ 	    = (long)&(sc_->regs->gpr[i_]) - new_cfa_;			\ 	}								\ 									\     (FS)->regs.reg[LINK_REGISTER_REGNUM].how = REG_SAVED_OFFSET;	\     (FS)->regs.reg[LINK_REGISTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->link) - new_cfa_;				\ 									\     (FS)->regs.reg[ARG_POINTER_REGNUM].how = REG_SAVED_OFFSET;		\     (FS)->regs.reg[ARG_POINTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->nip) - new_cfa_;				\     (FS)->retaddr_column = ARG_POINTER_REGNUM;				\     goto SUCCESS;							\   } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MD_FALLBACK_FRAME_STATE_FOR
+parameter_list|(
+name|CONTEXT
+parameter_list|,
+name|FS
+parameter_list|,
+name|SUCCESS
+parameter_list|)
+define|\
+value|do {									\     unsigned char *pc_ = (CONTEXT)->ra;					\     struct sigcontext *sc_;						\     long new_cfa_;							\     int i_;								\ 									\
+comment|/* li r0, 0x7777; sc  (sigreturn old)  */
+value|\
+comment|/* li r0, 0x0077; sc  (sigreturn new)  */
+value|\
+comment|/* li r0, 0x6666; sc  (rt_sigreturn old)  */
+value|\
+comment|/* li r0, 0x00AC; sc  (rt_sigreturn new)  */
+value|\     if (*(unsigned int *) (pc_+4) != 0x44000002)			\       break;								\     if (*(unsigned int *) (pc_+0) == 0x38007777				\ 	|| *(unsigned int *) (pc_+0) == 0x38000077)			\       {									\ 	struct sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  struct sigcontext sigctx;					\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->sigctx;						\       }									\     else if (*(unsigned int *) (pc_+0) == 0x38006666			\ 	     || *(unsigned int *) (pc_+0) == 0x380000AC)		\       {									\ 	struct rt_sigframe {						\ 	  char gap[SIGNAL_FRAMESIZE];					\ 	  unsigned long _unused[2];					\ 	  struct siginfo *pinfo;					\ 	  void *puc;							\ 	  struct siginfo info;						\ 	  struct kernel_old_ucontext uc;				\ 	} *rt_ = (CONTEXT)->cfa;					\ 	sc_ =&rt_->uc.uc_mcontext;					\       }									\     else								\       break;								\     									\     new_cfa_ = sc_->regs->gpr[STACK_POINTER_REGNUM];			\     (FS)->cfa_how = CFA_REG_OFFSET;					\     (FS)->cfa_reg = STACK_POINTER_REGNUM;				\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\     									\     for (i_ = 0; i_< 32; i_++)						\       if (i_ != STACK_POINTER_REGNUM)					\ 	{	    							\ 	  (FS)->regs.reg[i_].how = REG_SAVED_OFFSET;			\ 	  (FS)->regs.reg[i_].loc.offset 				\ 	    = (long)&(sc_->regs->gpr[i_]) - new_cfa_;			\ 	}								\ 									\     (FS)->regs.reg[LINK_REGISTER_REGNUM].how = REG_SAVED_OFFSET;	\     (FS)->regs.reg[LINK_REGISTER_REGNUM].loc.offset 			\       = (long)&(sc_->regs->link) - new_cfa_;				\ 									\     (FS)->regs.reg[CR0_REGNO].how = REG_SAVED_OFFSET;			\     (FS)->regs.reg[CR0_REGNO].loc.offset 				\       = (long)&(sc_->regs->nip) - new_cfa_;				\     (FS)->retaddr_column = CR0_REGNO;					\     goto SUCCESS;							\   } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|OS_MISSING_POWERPC64
+value|!TARGET_64BIT
 end_define
 
 end_unit

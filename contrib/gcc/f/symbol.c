@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation of Fortran symbol manager    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Implementation of Fortran symbol manager    Copyright (C) 1995, 1996, 1997, 2003    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -666,7 +666,9 @@ begin_function
 specifier|static
 name|void
 name|ffesymbol_kill_manifest_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -744,9 +746,6 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-operator|(
-name|ffesymbol
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|FFESYMBOL_SPACE_POOL_
@@ -892,17 +891,12 @@ name|storage
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FFECOM_symbolHOOK
 name|s
 operator|->
 name|hook
 operator|=
 name|FFECOM_symbolNULL
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|->
 name|sfa_dummy_parent
@@ -1030,9 +1024,6 @@ return|;
 block|}
 name|r
 operator|=
-operator|(
-name|ffesymbolRetract_
-operator|)
 name|malloc_new_kp
 argument_list|(
 name|ffesymbol_retract_pool_
@@ -3040,7 +3031,9 @@ end_function
 begin_function
 name|void
 name|ffesymbol_init_0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesymbolAttrs
 name|attrs
@@ -3098,7 +3091,9 @@ end_function
 begin_function
 name|void
 name|ffesymbol_init_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3121,14 +3116,18 @@ end_function
 begin_function
 name|void
 name|ffesymbol_init_2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
 begin_function
 name|void
 name|ffesymbol_init_3
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3159,7 +3158,9 @@ end_function
 begin_function
 name|void
 name|ffesymbol_init_4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesymbol_sfunc_
 operator|=
@@ -3847,7 +3848,9 @@ end_comment
 begin_function
 name|bool
 name|ffesymbol_retractable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffesymbol_retractable_
@@ -3923,9 +3926,6 @@ condition|)
 return|return;
 name|r
 operator|=
-operator|(
-name|ffesymbolRetract_
-operator|)
 name|malloc_new_kp
 argument_list|(
 name|ffesymbol_retract_pool_
@@ -3963,9 +3963,6 @@ name|symbol
 operator|=
 name|sym
 operator|=
-operator|(
-name|ffesymbol
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|FFESYMBOL_SPACE_POOL_
@@ -4075,14 +4072,18 @@ end_function
 begin_function
 name|void
 name|ffesymbol_terminate_0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
 begin_function
 name|void
 name|ffesymbol_terminate_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4116,7 +4117,9 @@ end_function
 begin_function
 name|void
 name|ffesymbol_terminate_2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4134,7 +4137,9 @@ end_function
 begin_function
 name|void
 name|ffesymbol_terminate_3
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4188,7 +4193,9 @@ end_function
 begin_function
 name|void
 name|ffesymbol_terminate_4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffename_space_drive_symbol
 argument_list|(

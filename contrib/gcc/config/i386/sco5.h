@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.    Contributed by Kean Johnston (jkj@sco.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running SCO Unix System V 3.2 Version 5.    Copyright (C) 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.    Contributed by Kean Johnston (jkj@sco.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -14,17 +14,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (i386, SCO OpenServer 5 Syntax)");
-end_define
-
-begin_comment
-comment|/* The native link editor does not support linkonce stuff */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUPPORTS_ONE_ONLY
-value|0
 end_define
 
 begin_undef
@@ -140,13 +129,6 @@ begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWARF_DEBUGGING_INFO
 value|1
 end_define
 
@@ -340,7 +322,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Please note that these specs may look messy but they are required in    order to emulate the SCO Development system as closely as possible.    With SCO Open Server 5.0, you now get the linker and assembler free,    so that is what these specs are targeted for. These utilities are    very argument sensitive: a space in the wrong place breaks everything.    So please forgive this mess. It works.     Parameters which can be passed to gcc, and their SCO equivalents:    GCC Parameter                SCO Equivalent    -ansi                        -a ansi    -posix                       -a posix    -Xpg4                        -a xpg4    -Xpg4plus                    -a xpg4plus    -Xods30                      -a ods30     As with SCO, the default is XPG4 plus mode. SCO also allows you to    specify a C dialect with -Xt, -Xa, -Xc, -Xk and -Xm. These are passed    on to the assembler and linker in the same way that the SCO compiler    does.     SCO also allows you to compile, link and generate either ELF or COFF    binaries. With gcc, we now only support ELF mode.     GCC also requires that the user has installed OSS646, the Execution    Environment Update, or is running release 5.0.7 or later. This has    many fixes to the ELF link editor and assembler, and a considerably    improved libc and RTLD.     In terms of tool usage, we want to use the standard link editor always,    and either the GNU assembler or the native assembler. With OSS646 the    native assembler has grown up quite a bit. Some of the specs below    assume that /usr/gnu is the prefix for the GNU tools, because thats    where the SCO provided ones go. This is especially important for    include and library search path ordering. We want to look in /usr/gnu    first, becuase frequently people are linking against -lintl, and they    MEAN to link with gettext. What they get is the SCO intl library. Its    a REAL pity that GNU gettext chose that name; perhaps in a future    version they can be persuaded to change it to -lgnuintl and have a    link so that -lintl will work for other systems. The same goes for    header files. We want /usr/gnu/include searched for before the system    header files. Hence the -isystem /usr/gnu/include in the CPP_SPEC.    We get /usr/gnu/lib first by virtue of the MD_STARTFILE_PREFIX below. */
+comment|/* Please note that these specs may look messy but they are required in    order to emulate the SCO Development system as closely as possible.    With SCO Open Server 5.0, you now get the linker and assembler free,    so that is what these specs are targeted for. These utilities are    very argument sensitive: a space in the wrong place breaks everything.    So please forgive this mess. It works.     Parameters which can be passed to gcc, and their SCO equivalents:    GCC Parameter                SCO Equivalent    -ansi                        -a ansi    -posix                       -a posix    -Xpg4                        -a xpg4    -Xpg4plus                    -a xpg4plus    -Xods30                      -a ods30     As with SCO, the default is XPG4 plus mode. SCO also allows you to    specify a C dialect with -Xt, -Xa, -Xc, -Xk and -Xm. These are passed    on to the assembler and linker in the same way that the SCO compiler    does.     SCO also allows you to compile, link and generate either ELF or COFF    binaries. With gcc, we now only support ELF mode.     GCC also requires that the user has installed OSS646, the Execution    Environment Update, or is running release 5.0.7 or later. This has    many fixes to the ELF link editor and assembler, and a considerably    improved libc and RTLD.     In terms of tool usage, we want to use the standard link editor always,    and either the GNU assembler or the native assembler. With OSS646 the    native assembler has grown up quite a bit. Some of the specs below    assume that /usr/gnu is the prefix for the GNU tools, because thats    where the SCO provided ones go. This is especially important for    include and library search path ordering. We want to look in /usr/gnu    first because frequently people are linking against -lintl, and they    MEAN to link with gettext. What they get is the SCO intl library. Its    a REAL pity that GNU gettext chose that name; perhaps in a future    version they can be persuaded to change it to -lgnuintl and have a    link so that -lintl will work for other systems. The same goes for    header files. We want /usr/gnu/include searched for before the system    header files. Hence the -isystem /usr/gnu/include in the CPP_SPEC.    We get /usr/gnu/lib first by virtue of the MD_STARTFILE_PREFIX below. */
 end_comment
 
 begin_define
@@ -498,7 +480,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\   -isystem /usr/gnu/include \   %{pthread:-D_REENTRANT} \   %{!Xods30:-D_STRICT_NAMES} \   %{!ansi:%{!posix:%{!Xods30:-D_SCO_XPG_VERS=4}}} \   %{ansi:-isystem include/ansi%s -isystem /usr/include/ansi} \   %{!ansi: \    %{posix:-isystem include/posix%s -isystem /usr/include/posix \            -D_POSIX_C_SOURCE=2 -D_POSIX_SOURCE=1} \     %{!posix:%{Xpg4:-isystem include/xpg4%s -isystem /usr/include/xpg4 \                     -D_XOPEN_SOURCE=1} \      %{!Xpg4:-D_M_I86 -D_M_I86SM -D_M_INTERNAT -D_M_SDATA -D_M_STEXT \              -D_M_BITFIELDS -D_M_SYS5 -D_M_SYSV -D_M_SYSIII \              -D_M_WORDSWAP -Dunix -DM_I386 -DM_UNIX -DM_XENIX \              %{Xods30:-isystem include/ods_30_compat%s \                       -isystem /usr/include/ods_30_compat \                       -D_SCO_ODS_30 -DM_I86 -DM_I86SM -DM_SDATA -DM_STEXT \                       -DM_BITFIELDS -DM_SYS5 -DM_SYSV -DM_INTERNAT -DM_SYSIII \                       -DM_WORDSWAP}}}} \   %{scointl:-DM_INTERNAT -D_M_INTERNAT} \   %{Xa:-D_SCO_C_DIALECT=1} \   %{!Xa:%{Xc:-D_SCO_C_DIALECT=3} \    %{!Xc:%{Xk:-D_SCO_C_DIALECT=4} \     %{!Xk:%{Xt:-D_SCO_C_DIALECT=2} \      %{!Xt:-D_SCO_C_DIALECT=1}}}}"
+value|"\   -isystem /usr/gnu/include \   %{!Xods30:-D_STRICT_NAMES} \   %{!ansi:%{!posix:%{!Xods30:-D_SCO_XPG_VERS=4}}} \   %{ansi:-isystem include/ansi%s -isystem /usr/include/ansi} \   %{!ansi: \    %{posix:-isystem include/posix%s -isystem /usr/include/posix \            -D_POSIX_C_SOURCE=2 -D_POSIX_SOURCE=1} \     %{!posix:%{Xpg4:-isystem include/xpg4%s -isystem /usr/include/xpg4 \                     -D_XOPEN_SOURCE=1} \      %{!Xpg4:-D_M_I86 -D_M_I86SM -D_M_INTERNAT -D_M_SDATA -D_M_STEXT \              -D_M_BITFIELDS -D_M_SYS5 -D_M_SYSV -D_M_SYSIII \              -D_M_WORDSWAP -Dunix -DM_I386 -DM_UNIX -DM_XENIX \              %{Xods30:-isystem include/ods_30_compat%s \                       -isystem /usr/include/ods_30_compat \                       -D_SCO_ODS_30 -DM_I86 -DM_I86SM -DM_SDATA -DM_STEXT \                       -DM_BITFIELDS -DM_SYS5 -DM_SYSV -DM_INTERNAT -DM_SYSIII \                       -DM_WORDSWAP}}}} \   %{scointl:-DM_INTERNAT -D_M_INTERNAT} \   %{Xa:-D_SCO_C_DIALECT=1} \   %{!Xa:%{Xc:-D_SCO_C_DIALECT=3} \    %{!Xc:%{Xk:-D_SCO_C_DIALECT=4} \     %{!Xk:%{Xt:-D_SCO_C_DIALECT=2} \      %{!Xt:-D_SCO_C_DIALECT=1}}}}"
 end_define
 
 begin_undef
@@ -530,7 +512,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared:%{!G:pic/libgcc.a%s}} \   %{G:%{!shared:pic/libgcc.a%s}} \   %{shared:%{G:pic/libgcc.a%s}} \   %{p:%{!pp:-lelfprof -lelf}} %{pp:%{!p:-lelfprof -lelf}} \   %{!shared:%{!symbolic:%{!G:-lcrypt -lgen -lc %{pthread:-lpthread}}}}"
+value|"%{shared:%{!G:pic/libgcc.a%s}} \   %{G:%{!shared:pic/libgcc.a%s}} \   %{shared:%{G:pic/libgcc.a%s}} \   %{p:%{!pp:-lelfprof -lelf}} %{pp:%{!p:-lelfprof -lelf}} \   %{!shared:%{!symbolic:%{!G:-lcrypt -lgen -lc}}}"
 end_define
 
 begin_undef

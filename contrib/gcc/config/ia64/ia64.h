@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine GNU compiler.  IA-64 version.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by James E. Wilson<wilson@cygnus.com> and    		  David Mosberger<davidm@hpl.hp.com>.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine GNU compiler.  IA-64 version.    Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by James E. Wilson<wilson@cygnus.com> and    		  David Mosberger<davidm@hpl.hp.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -32,15 +32,32 @@ directive|define
 name|TARGET_CPU_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {						\ 	builtin_assert("cpu=ia64");		\ 	builtin_assert("machine=ia64");		\ 	builtin_define("__ia64");		\ 	builtin_define("__ia64__");		\ 	builtin_define("__itanium__");		\ 	builtin_define("__ELF__");		\ 	if (!TARGET_ILP32)			\ 	  {					\ 	    builtin_define("_LP64");		\ 	    builtin_define("__LP64__");		\ 	  }					\ 	if (TARGET_BIG_ENDIAN)			\ 	  builtin_define("__BIG_ENDIAN__");	\ } while (0)
+value|do {						\ 	builtin_assert("cpu=ia64");		\ 	builtin_assert("machine=ia64");		\ 	builtin_define("__ia64");		\ 	builtin_define("__ia64__");		\ 	builtin_define("__itanium__");		\ 	if (TARGET_BIG_ENDIAN)			\ 	  builtin_define("__BIG_ENDIAN__");	\ } while (0)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUBTARGET_EXTRA_SPECS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|EXTRA_SPECS
 define|\
-value|{ "asm_extra", ASM_EXTRA_SPEC },
+value|{ "asm_extra", ASM_EXTRA_SPEC }, \   SUBTARGET_EXTRA_SPECS
 end_define
 
 begin_define
@@ -240,12 +257,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MASK_INLINE_SQRT_LAT
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* inline sqrt, min latency.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_INLINE_SQRT_THR
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* inline sqrt, max throughput. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MASK_DWARF2_ASM
 value|0x40000000
 end_define
 
 begin_comment
 comment|/* test dwarf2 line info via gas.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_EARLY_STOP_BITS
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* tune stop bits for the model.  */
 end_comment
 
 begin_define
@@ -372,9 +422,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_INLINE_SQRT_LAT
+value|(target_flags& MASK_INLINE_SQRT_LAT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_INLINE_SQRT_THR
+value|(target_flags& MASK_INLINE_SQRT_THR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_INLINE_SQRT
+define|\
+value|(target_flags& (MASK_INLINE_SQRT_LAT | MASK_INLINE_SQRT_THR))
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_DWARF2_ASM
 value|(target_flags& MASK_DWARF2_ASM)
 end_define
+
+begin_comment
+comment|/* If the assembler supports thread-local storage, assume that the    system does as well.  If a particular target system has an    assembler that supports TLS -- but the rest of the system does not    support TLS -- that system should explicit define TARGET_HAVE_TLS    to false in its own configuration file.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_HAVE_TLS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_AS_TLS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAVE_TLS
+value|true
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -402,6 +505,20 @@ define|#
 directive|define
 name|TARGET_TLS64
 value|(ia64_tls_size == 64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_EARLY_STOP_BITS
+value|(target_flags& MASK_EARLY_STOP_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HPUX
+value|0
 end_define
 
 begin_define
@@ -438,7 +555,7 @@ define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{									\   { "big-endian",	MASK_BIG_ENDIAN,				\       N_("Generate big endian code") },					\   { "little-endian",	-MASK_BIG_ENDIAN,				\       N_("Generate little endian code") },				\   { "gnu-as",		MASK_GNU_AS,					\       N_("Generate code for GNU as") },					\   { "no-gnu-as",	-MASK_GNU_AS,					\       N_("Generate code for Intel as") },				\   { "gnu-ld",		MASK_GNU_LD,					\       N_("Generate code for GNU ld") },					\   { "no-gnu-ld",	-MASK_GNU_LD,					\       N_("Generate code for Intel ld") },				\   { "no-pic",		MASK_NO_PIC,					\       N_("Generate code without GP reg") },				\   { "volatile-asm-stop", MASK_VOL_ASM_STOP,				\       N_("Emit stop bits before and after volatile extended asms") },	\   { "no-volatile-asm-stop", -MASK_VOL_ASM_STOP,				\       N_("Don't emit stop bits before and after volatile extended asms") }, \   { "b-step",		MASK_B_STEP,					\       N_("Emit code for Itanium (TM) processor B step")},		\   { "register-names",	MASK_REG_NAMES,					\       N_("Use in/loc/out register names")},				\   { "no-sdata",		MASK_NO_SDATA,					\       N_("Disable use of sdata/scommon/sbss")},				\   { "sdata",		-MASK_NO_SDATA,					\       N_("Enable use of sdata/scommon/sbss")},				\   { "constant-gp",	MASK_CONST_GP,					\       N_("gp is constant (but save/restore gp on indirect calls)") },	\   { "auto-pic",		MASK_AUTO_PIC,					\       N_("Generate self-relocatable code") },				\   { "inline-float-divide-min-latency", MASK_INLINE_FLOAT_DIV_LAT,	\       N_("Generate inline floating point division, optimize for latency") },\   { "inline-float-divide-max-throughput", MASK_INLINE_FLOAT_DIV_THR,	\       N_("Generate inline floating point division, optimize for throughput") },\   { "inline-int-divide-min-latency", MASK_INLINE_INT_DIV_LAT,		\       N_("Generate inline integer division, optimize for latency") },	\   { "inline-int-divide-max-throughput", MASK_INLINE_INT_DIV_THR,	\       N_("Generate inline integer division, optimize for throughput") },\   { "dwarf2-asm", 	MASK_DWARF2_ASM,				\       N_("Enable Dwarf 2 line debug info via GNU as")},			\   { "no-dwarf2-asm", 	-MASK_DWARF2_ASM,				\       N_("Disable Dwarf 2 line debug info via GNU as")},		\   SUBTARGET_SWITCHES							\   { "",			TARGET_DEFAULT | TARGET_CPU_DEFAULT,		\       NULL }								\ }
+value|{									\   { "big-endian",	MASK_BIG_ENDIAN,				\       N_("Generate big endian code") },					\   { "little-endian",	-MASK_BIG_ENDIAN,				\       N_("Generate little endian code") },				\   { "gnu-as",		MASK_GNU_AS,					\       N_("Generate code for GNU as") },					\   { "no-gnu-as",	-MASK_GNU_AS,					\       N_("Generate code for Intel as") },				\   { "gnu-ld",		MASK_GNU_LD,					\       N_("Generate code for GNU ld") },					\   { "no-gnu-ld",	-MASK_GNU_LD,					\       N_("Generate code for Intel ld") },				\   { "no-pic",		MASK_NO_PIC,					\       N_("Generate code without GP reg") },				\   { "volatile-asm-stop", MASK_VOL_ASM_STOP,				\       N_("Emit stop bits before and after volatile extended asms") },	\   { "no-volatile-asm-stop", -MASK_VOL_ASM_STOP,				\       N_("Don't emit stop bits before and after volatile extended asms") }, \   { "b-step",		MASK_B_STEP,					\       N_("Emit code for Itanium (TM) processor B step")},		\   { "register-names",	MASK_REG_NAMES,					\       N_("Use in/loc/out register names")},				\   { "no-sdata",		MASK_NO_SDATA,					\       N_("Disable use of sdata/scommon/sbss")},				\   { "sdata",		-MASK_NO_SDATA,					\       N_("Enable use of sdata/scommon/sbss")},				\   { "constant-gp",	MASK_CONST_GP,					\       N_("gp is constant (but save/restore gp on indirect calls)") },	\   { "auto-pic",		MASK_AUTO_PIC,					\       N_("Generate self-relocatable code") },				\   { "inline-float-divide-min-latency", MASK_INLINE_FLOAT_DIV_LAT,	\       N_("Generate inline floating point division, optimize for latency") },\   { "inline-float-divide-max-throughput", MASK_INLINE_FLOAT_DIV_THR,	\       N_("Generate inline floating point division, optimize for throughput") },\   { "inline-int-divide-min-latency", MASK_INLINE_INT_DIV_LAT,		\       N_("Generate inline integer division, optimize for latency") },	\   { "inline-int-divide-max-throughput", MASK_INLINE_INT_DIV_THR,	\       N_("Generate inline integer division, optimize for throughput") },\   { "inline-sqrt-min-latency", MASK_INLINE_SQRT_LAT,			\       N_("Generate inline square root, optimize for latency") },	\   { "inline-sqrt-max-throughput", MASK_INLINE_SQRT_THR,			\       N_("Generate inline square root, optimize for throughput") },     \   { "dwarf2-asm", 	MASK_DWARF2_ASM,				\       N_("Enable Dwarf 2 line debug info via GNU as")},			\   { "no-dwarf2-asm", 	-MASK_DWARF2_ASM,				\       N_("Disable Dwarf 2 line debug info via GNU as")},		\   { "early-stop-bits", MASK_EARLY_STOP_BITS,				\       N_("Enable earlier placing stop bits for better scheduling")},	\   { "no-early-stop-bits", -MASK_EARLY_STOP_BITS,			\       N_("Disable earlier placing stop bits")},				\   SUBTARGET_SWITCHES							\   { "",			TARGET_DEFAULT | TARGET_CPU_DEFAULT,		\       NULL }								\ }
 end_define
 
 begin_comment
@@ -520,12 +637,47 @@ name|ia64_tls_size_string
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Which processor to schedule for. The cpu attribute defines a list    that mirrors this list, so changes to i64.md must be made at the    same time.  */
+end_comment
+
+begin_enum
+enum|enum
+name|processor_type
+block|{
+name|PROCESSOR_ITANIUM
+block|,
+comment|/* Original Itanium. */
+name|PROCESSOR_ITANIUM2
+block|,
+name|PROCESSOR_max
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|processor_type
+name|ia64_tune
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ia64_tune_string
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{									\   { "fixed-range=",&ia64_fixed_range_string,			\       N_("Specify range of registers to make fixed")},			\   { "tls-size=",&ia64_tls_size_string,				\       N_("Specify bit size of immediate TLS offsets")},			\ }
+value|{									\   { "fixed-range=",&ia64_fixed_range_string,			\       N_("Specify range of registers to make fixed"), 0},		\   { "tls-size=",&ia64_tls_size_string,				\       N_("Specify bit size of immediate TLS offsets"), 0},		\   { "tune=",&ia64_tune_string,				\       N_("Schedule code for given CPU"), 0},				\ }
 end_define
 
 begin_comment
@@ -555,7 +707,7 @@ comment|/* Driver configuration */
 end_comment
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    `cc1'.  It can also specify how to translate options you give to GNU CC into    options for GNU CC to pass to the `cc1'.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    `cc1'.  It can also specify how to translate options you give to GCC into    options for GCC to pass to the `cc1'.  */
 end_comment
 
 begin_undef
@@ -572,7 +724,7 @@ value|"%{G*}"
 end_define
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    `cc1plus'.  It can also specify how to translate options you give to GNU CC    into options for GNU CC to pass to the `cc1plus'.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    `cc1plus'.  It can also specify how to translate options you give to GCC    into options for GCC to pass to the `cc1plus'.  */
 end_comment
 
 begin_comment
@@ -663,7 +815,7 @@ value|(TARGET_ILP32 ? 32 : 64)
 end_define
 
 begin_comment
-comment|/* A C expression whose value is zero if pointers that need to be extended    from being `POINTER_SIZE' bits wide to `Pmode' are sign-extended and one if    they are zero-extended and negative one if there is an ptr_extend operation.     You need not define this macro if the `POINTER_SIZE' is equal to the width    of `Pmode'.  */
+comment|/* A C expression whose value is zero if pointers that need to be extended    from being `POINTER_SIZE' bits wide to `Pmode' are sign-extended and one if    they are zero-extended and negative one if there is a ptr_extend operation.     You need not define this macro if the `POINTER_SIZE' is equal to the width    of `Pmode'.  */
 end_comment
 
 begin_comment
@@ -926,22 +1078,26 @@ name|DOUBLE_TYPE_SIZE
 value|64
 end_define
 
-begin_define
-define|#
-directive|define
-name|LONG_DOUBLE_TYPE_SIZE
-value|128
-end_define
-
 begin_comment
-comment|/* By default we use the 80-bit Intel extended float format packaged    in a 128-bit entity.  */
+comment|/* long double is XFmode normally, TFmode for HPUX.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTEL_EXTENDED_IEEE_FORMAT
-value|1
+name|LONG_DOUBLE_TYPE_SIZE
+value|(TARGET_HPUX ? 128 : 96)
+end_define
+
+begin_comment
+comment|/* We always want the XFmode operations from libgcc2.c.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBGCC2_LONG_DOUBLE_TYPE_SIZE
+value|96
 end_define
 
 begin_define
@@ -1332,7 +1488,7 @@ value|\      1,  1,   1,  1, 0, 1				\ }
 end_define
 
 begin_comment
-comment|/* Like `CALL_USED_REGISTERS' but used to overcome a historical    problem which makes CALL_USED_REGISTERS *always* include    all the FIXED_REGISTERS.  Until this problem has been    resolved this macro can be used to overcome this situation.    In particular, block_propagate() requires this list    be acurate, or we can remove registers which should be live.    This macro is used in regs_invalidated_by_call.  */
+comment|/* Like `CALL_USED_REGISTERS' but used to overcome a historical    problem which makes CALL_USED_REGISTERS *always* include    all the FIXED_REGISTERS.  Until this problem has been    resolved this macro can be used to overcome this situation.    In particular, block_propagate() requires this list    be accurate, or we can remove registers which should be live.    This macro is used in regs_invalidated_by_call.  */
 end_comment
 
 begin_define
@@ -1424,7 +1580,7 @@ comment|/* Order of allocation of registers */
 end_comment
 
 begin_comment
-comment|/* If defined, an initializer for a vector of integers, containing the numbers    of hard registers in the order in which GNU CC should prefer to use them    (from most preferred to least).     If this macro is not defined, registers are used lowest numbered first (all    else being equal).     One use of this macro is on machines where the highest numbered registers    must always be saved and the save-multiple-registers instruction supports    only sequences of consecutive registers.  On such machines, define    `REG_ALLOC_ORDER' to be an initializer that lists the highest numbered    allocatable register first.  */
+comment|/* If defined, an initializer for a vector of integers, containing the numbers    of hard registers in the order in which GCC should prefer to use them    (from most preferred to least).     If this macro is not defined, registers are used lowest numbered first (all    else being equal).     One use of this macro is on machines where the highest numbered registers    must always be saved and the save-multiple-registers instruction supports    only sequences of consecutive registers.  On such machines, define    `REG_ALLOC_ORDER' to be an initializer that lists the highest numbered    allocatable register first.  */
 end_comment
 
 begin_comment
@@ -1508,7 +1664,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((REGNO) == PR_REG (0)&& (MODE) == DImode ? 64			\    : PR_REGNO_P (REGNO)&& (MODE) == BImode ? 2				\    : PR_REGNO_P (REGNO)&& (MODE) == CCImode ? 1			\    : FR_REGNO_P (REGNO)&& (MODE) == TFmode&& INTEL_EXTENDED_IEEE_FORMAT ? 1 \    : (GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD)
+value|((REGNO) == PR_REG (0)&& (MODE) == DImode ? 64			\    : PR_REGNO_P (REGNO)&& (MODE) == BImode ? 2				\    : PR_REGNO_P (REGNO)&& (MODE) == CCImode ? 1			\    : FR_REGNO_P (REGNO)&& (MODE) == XFmode ? 1				\    : (GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD)
 end_define
 
 begin_comment
@@ -1525,7 +1681,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(FR_REGNO_P (REGNO) ?						\      GET_MODE_CLASS (MODE) != MODE_CC&&			\      (MODE) != TImode&&					\      (MODE) != BImode&&					\      ((MODE) != TFmode || INTEL_EXTENDED_IEEE_FORMAT) 		\    : PR_REGNO_P (REGNO) ?					\      (MODE) == BImode || GET_MODE_CLASS (MODE) == MODE_CC	\    : GR_REGNO_P (REGNO) ? (MODE) != CCImode&& (MODE) != TFmode	\    : AR_REGNO_P (REGNO) ? (MODE) == DImode			\    : BR_REGNO_P (REGNO) ? (MODE) == DImode			\    : 0)
+value|(FR_REGNO_P (REGNO) ?						\      GET_MODE_CLASS (MODE) != MODE_CC&&			\      (MODE) != TImode&&					\      (MODE) != BImode&&					\      (MODE) != TFmode 						\    : PR_REGNO_P (REGNO) ?					\      (MODE) == BImode || GET_MODE_CLASS (MODE) == MODE_CC	\    : GR_REGNO_P (REGNO) ? (MODE) != CCImode&& (MODE) != XFmode	\    : AR_REGNO_P (REGNO) ? (MODE) == DImode			\    : BR_REGNO_P (REGNO) ? (MODE) == DImode			\    : 0)
 end_define
 
 begin_comment
@@ -1533,7 +1689,7 @@ comment|/* A C expression that is nonzero if it is desirable to choose register 
 end_comment
 
 begin_comment
-comment|/* Don't tie integer and FP modes, as that causes us to get integer registers    allocated for FP instructions.  TFmode only supported in FP registers so    we can't tie it with any other modes.  */
+comment|/* Don't tie integer and FP modes, as that causes us to get integer registers    allocated for FP instructions.  XFmode only supported in FP registers so    we can't tie it with any other modes.  */
 end_comment
 
 begin_define
@@ -1546,7 +1702,26 @@ parameter_list|,
 name|MODE2
 parameter_list|)
 define|\
-value|(GET_MODE_CLASS (MODE1) == GET_MODE_CLASS (MODE2)	\&& (((MODE1) == TFmode) == ((MODE2) == TFmode))	\&& (((MODE1) == BImode) == ((MODE2) == BImode)))
+value|(GET_MODE_CLASS (MODE1) == GET_MODE_CLASS (MODE2)	\&& (((MODE1) == XFmode) == ((MODE2) == XFmode))	\&& (((MODE1) == BImode) == ((MODE2) == BImode)))
+end_define
+
+begin_comment
+comment|/* Specify the modes required to caller save a given hard regno.    We need to ensure floating pt regs are not saved as DImode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HARD_REGNO_CALLER_SAVE_MODE
+parameter_list|(
+name|REGNO
+parameter_list|,
+name|NREGS
+parameter_list|,
+name|MODE
+parameter_list|)
+define|\
+value|((FR_REGNO_P (REGNO)&& (NREGS) == 1) ? XFmode        \    : choose_hard_reg_mode ((REGNO), (NREGS), false))
 end_define
 
 begin_escape
@@ -1826,7 +2001,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* ??? May need this, but since we've disallowed TFmode in GR_REGS,    I'm not quite sure how it could be invoked.  The normal problems    with unions should be solved with the addressof fiddling done by    movtf and friends.  */
+comment|/* ??? May need this, but since we've disallowed XFmode in GR_REGS,    I'm not quite sure how it could be invoked.  The normal problems    with unions should be solved with the addressof fiddling done by    movxf and friends.  */
 end_comment
 
 begin_define
@@ -1841,7 +2016,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((MODE) == TFmode&& (((CLASS1) == GR_REGS&& (CLASS2) == FR_REGS)	\ 			|| ((CLASS1) == FR_REGS&& (CLASS2) == GR_REGS)))
+value|((MODE) == XFmode&& (((CLASS1) == GR_REGS&& (CLASS2) == FR_REGS)	\ 			|| ((CLASS1) == FR_REGS&& (CLASS2) == GR_REGS)))
 end_define
 
 begin_endif
@@ -1863,7 +2038,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((MODE) == BImode&& (CLASS) == PR_REGS ? 2			\    : ((CLASS) == FR_REGS&& (MODE) == TFmode) ? 1		\    : (GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD)
+value|((MODE) == BImode&& (CLASS) == PR_REGS ? 2			\    : ((CLASS) == FR_REGS&& (MODE) == XFmode) ? 1		\    : (GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD)
 end_define
 
 begin_comment
@@ -2097,6 +2272,21 @@ define|\
 value|(GET_CODE (VALUE) == MEM					\&& GET_RTX_CLASS (GET_CODE (XEXP ((VALUE), 0))) != 'a'	\&& (reload_in_progress || memory_operand ((VALUE), VOIDmode)))
 end_define
 
+begin_comment
+comment|/* Symbol ref to small-address-area: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONSTRAINT_OK_FOR_T
+parameter_list|(
+name|VALUE
+parameter_list|)
+define|\
+value|(GET_CODE (VALUE) == SYMBOL_REF&& SYMBOL_REF_SMALL_ADDR_P (VALUE))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -2107,7 +2297,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'Q' ? CONSTRAINT_OK_FOR_Q (VALUE)	\    : (C) == 'R' ? CONSTRAINT_OK_FOR_R (VALUE)	\    : (C) == 'S' ? CONSTRAINT_OK_FOR_S (VALUE)	\    : 0)
+value|((C) == 'Q' ? CONSTRAINT_OK_FOR_Q (VALUE)	\    : (C) == 'R' ? CONSTRAINT_OK_FOR_R (VALUE)	\    : (C) == 'S' ? CONSTRAINT_OK_FOR_S (VALUE)	\    : (C) == 'T' ? CONSTRAINT_OK_FOR_T (VALUE)	\    : 0)
 end_define
 
 begin_escape
@@ -2590,6 +2780,23 @@ value|ia64_function_arg_pass_by_reference (&CUM, MODE, TYPE, NAMED)
 end_define
 
 begin_comment
+comment|/* Nonzero if we do not know how to pass TYPE solely in registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUST_PASS_IN_STACK
+parameter_list|(
+name|MODE
+parameter_list|,
+name|TYPE
+parameter_list|)
+define|\
+value|((TYPE) != 0							\&& (TREE_CODE (TYPE_SIZE (TYPE)) != INTEGER_CST		\        || TREE_ADDRESSABLE (TYPE)))
+end_define
+
+begin_comment
 comment|/* A C type for declaring a variable that is used as the first argument of    `FUNCTION_ARG' and other related values.  For some target machines, the type    `int' suffices and can hold the number of bytes of argument so far.  */
 end_comment
 
@@ -2635,6 +2842,8 @@ parameter_list|,
 name|LIBNAME
 parameter_list|,
 name|INDIRECT
+parameter_list|,
+name|N_NAMED_ARGS
 parameter_list|)
 define|\
 value|do {									\   (CUM).words = 0;							\   (CUM).int_regs = 0;							\   (CUM).fp_regs = 0;							\   (CUM).prototype = ((FNTYPE)&& TYPE_ARG_TYPES (FNTYPE)) || (LIBNAME);	\ } while (0)
@@ -2717,7 +2926,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|(((REGNO)>= GR_ARG_FIRST&& (REGNO)< (GR_ARG_FIRST + MAX_ARGUMENT_SLOTS)) \  || ((REGNO)>= FR_ARG_FIRST&& (REGNO)< (FR_ARG_FIRST + MAX_ARGUMENT_SLOTS)))
+value|(((REGNO)>= AR_ARG_FIRST&& (REGNO)< (AR_ARG_FIRST + MAX_ARGUMENT_SLOTS)) \  || ((REGNO)>= FR_ARG_FIRST&& (REGNO)< (FR_ARG_FIRST + MAX_ARGUMENT_SLOTS)))
 end_define
 
 begin_escape
@@ -2776,7 +2985,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|gen_rtx_REG (MODE,							\ 	       (((GET_MODE_CLASS (MODE) == MODE_FLOAT			\ 		 || GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT)&&	\ 		      ((MODE) != TFmode || INTEL_EXTENDED_IEEE_FORMAT))	\ 		? FR_RET_FIRST : GR_RET_FIRST))
+value|gen_rtx_REG (MODE,							\ 	       (((GET_MODE_CLASS (MODE) == MODE_FLOAT			\ 		 || GET_MODE_CLASS (MODE) == MODE_COMPLEX_FLOAT)&&	\ 		      (MODE) != TFmode)	\ 		? FR_RET_FIRST : GR_RET_FIRST))
 end_define
 
 begin_comment
@@ -2825,17 +3034,6 @@ define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
 value|0
-end_define
-
-begin_comment
-comment|/* If the structure value address is passed in a register, then    `STRUCT_VALUE_REGNUM' should be the number of that register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRUCT_VALUE_REGNUM
-value|GR_REG (8)
 end_define
 
 begin_escape
@@ -2901,21 +3099,6 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 value|ia64_eh_uses (REGNO)
-end_define
-
-begin_comment
-comment|/* Output at beginning of assembler file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|emit_safe_across_calls (FILE)
 end_define
 
 begin_comment
@@ -3083,7 +3266,7 @@ comment|/* Implicit Calls to Library Routines */
 end_comment
 
 begin_comment
-comment|/* Define this macro if GNU CC should generate calls to the System V (and ANSI    C) library functions `memcpy' and `memset' rather than the BSD functions    `bcopy' and `bzero'.  */
+comment|/* Define this macro if GCC should generate calls to the System V (and ANSI    C) library functions `memcpy' and `memset' rather than the BSD functions    `bcopy' and `bzero'.  */
 end_comment
 
 begin_define
@@ -3333,66 +3516,6 @@ comment|/* Describing Relative Costs of Operations */
 end_comment
 
 begin_comment
-comment|/* A part of a C `switch' statement that describes the relative costs of    constant RTL expressions.  */
-end_comment
-
-begin_comment
-comment|/* ??? This is incomplete.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_COSTS
-parameter_list|(
-name|X
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case CONST_INT:							\     if ((X) == const0_rtx)						\       return 0;								\     switch (OUTER_CODE)							\       {									\       case SET:								\ 	return CONST_OK_FOR_J (INTVAL (X)) ? 0 : COSTS_N_INSNS (1);	\       case PLUS:							\ 	if (CONST_OK_FOR_I (INTVAL (X)))				\ 	  return 0;							\ 	if (CONST_OK_FOR_J (INTVAL (X)))				\ 	  return 1;							\ 	return COSTS_N_INSNS (1);					\       default:								\ 	if (CONST_OK_FOR_K (INTVAL (X)) || CONST_OK_FOR_L (INTVAL (X)))	\ 	  return 0;							\ 	return COSTS_N_INSNS (1);					\       }									\   case CONST_DOUBLE:							\     return COSTS_N_INSNS (1);						\   case CONST:								\   case SYMBOL_REF:							\   case LABEL_REF:							\     return COSTS_N_INSNS (3);
-end_define
-
-begin_comment
-comment|/* Like `CONST_COSTS' but applies to nonconstant RTL expressions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTX_COSTS
-parameter_list|(
-name|X
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case MULT:								\
-comment|/* For multiplies wider than HImode, we have to go to the FPU,	\        which normally involves copies.  Plus there's the latency	\        of the multiply itself, and the latency of the instructions to	\        transfer integer regs to FP regs.  */
-value|\     if (GET_MODE_SIZE (GET_MODE (X))> 2)				\       return COSTS_N_INSNS (10);					\     return COSTS_N_INSNS (2);						\   case PLUS:								\   case MINUS:								\   case ASHIFT:								\   case ASHIFTRT:							\   case LSHIFTRT:							\     return COSTS_N_INSNS (1);						\   case DIV:								\   case UDIV:								\   case MOD:								\   case UMOD:								\
-comment|/* We make divide expensive, so that divide-by-constant will be	\        optimized to a multiply.  */
-value|\     return COSTS_N_INSNS (60);
-end_define
-
-begin_comment
-comment|/* An expression giving the cost of an addressing mode that contains ADDRESS.    If not defined, the cost is computed from the ADDRESS expression and the    `CONST_COSTS' values.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDRESS_COST
-parameter_list|(
-name|ADDRESS
-parameter_list|)
-value|0
-end_define
-
-begin_comment
 comment|/* A C expression for the cost of moving data from a register in class FROM to    one in class TO, using MODE.  */
 end_comment
 
@@ -3501,13 +3624,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENCODE_SECTION_INFO_CHAR
-value|'@'
-end_define
-
-begin_define
-define|#
-directive|define
 name|IA64_DEFAULT_GVALUE
 value|8
 end_define
@@ -3570,15 +3686,11 @@ begin_comment
 comment|/* A C string constant for text to be output before each `asm' statement or    group of consecutive ones.  */
 end_comment
 
-begin_comment
-comment|/* ??? This won't work with the Intel assembler, because it does not accept    # as a comment start character.  However, //APP does not work in gas, so we    can't use that either.  Same problem for ASM_APP_OFF below.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ASM_APP_ON
-value|"#APP\n"
+value|(TARGET_GNU_AS ? "#APP\n" : "//APP\n")
 end_define
 
 begin_comment
@@ -3589,7 +3701,7 @@ begin_define
 define|#
 directive|define
 name|ASM_APP_OFF
-value|"#NO_APP\n"
+value|(TARGET_GNU_AS ? "#NO_APP\n" : "//NO_APP\n")
 end_define
 
 begin_escape
@@ -3688,26 +3800,14 @@ value|do {									\   sprintf (LABEL, "*.%s%d", PREFIX, NUM);				\ } while (0)
 end_define
 
 begin_comment
-comment|/* A C expression to assign to OUTVAR (which is a variable of type `char *') a    newly allocated string made from the string NAME and the number NUMBER, with    some suitable punctuation added.  */
-end_comment
-
-begin_comment
 comment|/* ??? Not sure if using a ? in the name for Intel as is safe.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_FORMAT_PRIVATE_NAME
-parameter_list|(
-name|OUTVAR
-parameter_list|,
-name|NAME
-parameter_list|,
-name|NUMBER
-parameter_list|)
-define|\
-value|do {									\   (OUTVAR) = (char *) alloca (strlen (NAME) + 12);			\   sprintf (OUTVAR, "%s%c%ld", (NAME), (TARGET_GNU_AS ? '.' : '?'),	\ 	   (long)(NUMBER));						\ } while (0)
+name|ASM_PN_FORMAT
+value|(TARGET_GNU_AS ? "%s.%lu" : "%s?%lu")
 end_define
 
 begin_comment
@@ -3758,7 +3858,7 @@ name|REGISTER_NAMES
 define|\
 value|{									\
 comment|/* General registers.  */
-value|\   "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9",		\   "r10", "r11", "r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19",	\   "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27", "r28", "r29",	\   "r30", "r31",								\
+value|\   "ap", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9",		\   "r10", "r11", "r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19",	\   "r20", "r21", "r22", "r23", "r24", "r25", "r26", "r27", "r28", "r29",	\   "r30", "r31",								\
 comment|/* Local registers.  */
 value|\   "loc0", "loc1", "loc2", "loc3", "loc4", "loc5", "loc6", "loc7",	\   "loc8", "loc9", "loc10","loc11","loc12","loc13","loc14","loc15",	\   "loc16","loc17","loc18","loc19","loc20","loc21","loc22","loc23",	\   "loc24","loc25","loc26","loc27","loc28","loc29","loc30","loc31",	\   "loc32","loc33","loc34","loc35","loc36","loc37","loc38","loc39",	\   "loc40","loc41","loc42","loc43","loc44","loc45","loc46","loc47",	\   "loc48","loc49","loc50","loc51","loc52","loc53","loc54","loc55",	\   "loc56","loc57","loc58","loc59","loc60","loc61","loc62","loc63",	\   "loc64","loc65","loc66","loc67","loc68","loc69","loc70","loc71",	\   "loc72","loc73","loc74","loc75","loc76","loc77","loc78","loc79",	\
 comment|/* Input registers.  */
@@ -3786,6 +3886,36 @@ name|ADDITIONAL_REGISTER_NAMES
 define|\
 value|{									\   { "gp", R_GR (1) },							\   { "sp", R_GR (12) },							\   { "in0", IN_REG (0) },						\   { "in1", IN_REG (1) },						\   { "in2", IN_REG (2) },						\   { "in3", IN_REG (3) },						\   { "in4", IN_REG (4) },						\   { "in5", IN_REG (5) },						\   { "in6", IN_REG (6) },						\   { "in7", IN_REG (7) },						\   { "out0", OUT_REG (0) },						\   { "out1", OUT_REG (1) },						\   { "out2", OUT_REG (2) },						\   { "out3", OUT_REG (3) },						\   { "out4", OUT_REG (4) },						\   { "out5", OUT_REG (5) },						\   { "out6", OUT_REG (6) },						\   { "out7", OUT_REG (7) },						\   { "loc0", LOC_REG (0) },						\   { "loc1", LOC_REG (1) },						\   { "loc2", LOC_REG (2) },						\   { "loc3", LOC_REG (3) },						\   { "loc4", LOC_REG (4) },						\   { "loc5", LOC_REG (5) },						\   { "loc6", LOC_REG (6) },						\   { "loc7", LOC_REG (7) },						\   { "loc8", LOC_REG (8) }, 						\   { "loc9", LOC_REG (9) }, 						\   { "loc10", LOC_REG (10) }, 						\   { "loc11", LOC_REG (11) }, 						\   { "loc12", LOC_REG (12) }, 						\   { "loc13", LOC_REG (13) }, 						\   { "loc14", LOC_REG (14) }, 						\   { "loc15", LOC_REG (15) }, 						\   { "loc16", LOC_REG (16) }, 						\   { "loc17", LOC_REG (17) }, 						\   { "loc18", LOC_REG (18) }, 						\   { "loc19", LOC_REG (19) }, 						\   { "loc20", LOC_REG (20) }, 						\   { "loc21", LOC_REG (21) }, 						\   { "loc22", LOC_REG (22) }, 						\   { "loc23", LOC_REG (23) }, 						\   { "loc24", LOC_REG (24) }, 						\   { "loc25", LOC_REG (25) }, 						\   { "loc26", LOC_REG (26) }, 						\   { "loc27", LOC_REG (27) }, 						\   { "loc28", LOC_REG (28) }, 						\   { "loc29", LOC_REG (29) }, 						\   { "loc30", LOC_REG (30) }, 						\   { "loc31", LOC_REG (31) }, 						\   { "loc32", LOC_REG (32) }, 						\   { "loc33", LOC_REG (33) }, 						\   { "loc34", LOC_REG (34) }, 						\   { "loc35", LOC_REG (35) }, 						\   { "loc36", LOC_REG (36) }, 						\   { "loc37", LOC_REG (37) }, 						\   { "loc38", LOC_REG (38) }, 						\   { "loc39", LOC_REG (39) }, 						\   { "loc40", LOC_REG (40) }, 						\   { "loc41", LOC_REG (41) }, 						\   { "loc42", LOC_REG (42) }, 						\   { "loc43", LOC_REG (43) }, 						\   { "loc44", LOC_REG (44) }, 						\   { "loc45", LOC_REG (45) }, 						\   { "loc46", LOC_REG (46) }, 						\   { "loc47", LOC_REG (47) }, 						\   { "loc48", LOC_REG (48) }, 						\   { "loc49", LOC_REG (49) }, 						\   { "loc50", LOC_REG (50) }, 						\   { "loc51", LOC_REG (51) }, 						\   { "loc52", LOC_REG (52) }, 						\   { "loc53", LOC_REG (53) }, 						\   { "loc54", LOC_REG (54) }, 						\   { "loc55", LOC_REG (55) }, 						\   { "loc56", LOC_REG (56) }, 						\   { "loc57", LOC_REG (57) }, 						\   { "loc58", LOC_REG (58) }, 						\   { "loc59", LOC_REG (59) }, 						\   { "loc60", LOC_REG (60) }, 						\   { "loc61", LOC_REG (61) }, 						\   { "loc62", LOC_REG (62) }, 						\   { "loc63", LOC_REG (63) }, 						\   { "loc64", LOC_REG (64) }, 						\   { "loc65", LOC_REG (65) }, 						\   { "loc66", LOC_REG (66) }, 						\   { "loc67", LOC_REG (67) }, 						\   { "loc68", LOC_REG (68) }, 						\   { "loc69", LOC_REG (69) }, 						\   { "loc70", LOC_REG (70) }, 						\   { "loc71", LOC_REG (71) }, 						\   { "loc72", LOC_REG (72) }, 						\   { "loc73", LOC_REG (73) }, 						\   { "loc74", LOC_REG (74) }, 						\   { "loc75", LOC_REG (75) }, 						\   { "loc76", LOC_REG (76) }, 						\   { "loc77", LOC_REG (77) }, 						\   { "loc78", LOC_REG (78) }, 						\   { "loc79", LOC_REG (79) }, 						\ }
 end_define
+
+begin_comment
+comment|/* Emit a dtp-relative reference to a TLS variable.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AS_TLS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DWARF_DTPREL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|X
+parameter_list|)
+define|\
+value|ia64_output_dwarf_dtprel (FILE, SIZE, X)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* A C compound statement to output to stdio stream STREAM the assembler syntax    for an instruction operand X.  X is an RTL expression.  */
@@ -4090,7 +4220,7 @@ comment|/* Macros for SDB and Dwarf Output.  */
 end_comment
 
 begin_comment
-comment|/* Define this macro if GNU CC should produce dwarf version 2 format debugging    output in response to the `-g' option.  */
+comment|/* Define this macro if GCC should produce dwarf version 2 format debugging    output in response to the `-g' option.  */
 end_comment
 
 begin_define
@@ -4108,7 +4238,7 @@ value|(TARGET_DWARF2_ASM)
 end_define
 
 begin_comment
-comment|/* Use tags for debug info labels, so that they don't break instruction    bundles.  This also avoids getting spurious DV warnings from the    assembler.  This is similar to ASM_OUTPUT_INTERNAL_LABEL, except that we    add brackets around the label.  */
+comment|/* Use tags for debug info labels, so that they don't break instruction    bundles.  This also avoids getting spurious DV warnings from the    assembler.  This is similar to (*targetm.asm_out.internal_label), except that we    add brackets around the label.  */
 end_comment
 
 begin_define
@@ -4123,7 +4253,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|fprintf (FILE, "[.%s%d:]\n", PREFIX, NUM)
+value|fprintf (FILE, TARGET_GNU_AS ? "[.%s%d:]\n" : ".%s%d:\n", PREFIX, NUM)
 end_define
 
 begin_comment
@@ -4196,6 +4326,28 @@ comment|/* Miscellaneous Parameters.  */
 end_comment
 
 begin_comment
+comment|/* Flag to mark data that is in the small address area (addressable    via "addl", that is, within a 2MByte offset of 0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_FLAG_SMALL_ADDR
+value|(SYMBOL_FLAG_MACH_DEP<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REF_SMALL_ADDR_P
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|((SYMBOL_REF_FLAGS (X)& SYMBOL_FLAG_SMALL_ADDR) != 0)
+end_define
+
+begin_comment
 comment|/* Define this if you have defined special-purpose predicates in the file    `MACHINE.c'.  For each predicate, list all rtl codes that can be in    expressions matched by the predicate.  */
 end_comment
 
@@ -4204,7 +4356,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{ "call_operand", {SUBREG, REG, SYMBOL_REF}},				\ { "got_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\ { "sdata_symbolic_operand", {SYMBOL_REF, CONST}},			\ { "symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},			\ { "function_operand", {SYMBOL_REF}},					\ { "setjmp_operand", {SYMBOL_REF}},					\ { "destination_operand", {SUBREG, REG, MEM}},				\ { "not_postinc_memory_operand", {MEM}},					\ { "move_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     CONSTANT_P_RTX, SYMBOL_REF, CONST, LABEL_REF}},	\ { "gr_register_operand", {SUBREG, REG}},				\ { "fr_register_operand", {SUBREG, REG}},				\ { "grfr_register_operand", {SUBREG, REG}},				\ { "gr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "fr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "grfr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "gr_reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\ { "gr_reg_or_5bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_6bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "grfr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_8bit_adjusted_operand", {SUBREG, REG, CONST_INT,		\ 				     CONSTANT_P_RTX}},			\ { "gr_reg_or_8bit_and_adjusted_operand", {SUBREG, REG, CONST_INT,	\ 					 CONSTANT_P_RTX}},		\ { "gr_reg_or_14bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_22bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "shift_count_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "shift_32bit_count_operand", {SUBREG, REG, CONST_INT,			\ 				  CONSTANT_P_RTX}},			\ { "shladd_operand", {CONST_INT}},					\ { "fetchadd_operand", {CONST_INT}},					\ { "fr_reg_or_fp01_operand", {SUBREG, REG, CONST_DOUBLE}},		\ { "normal_comparison_operator", {EQ, NE, GT, LE, GTU, LEU}},		\ { "adjusted_comparison_operator", {LT, GE, LTU, GEU}},			\ { "signed_inequality_operator", {GE, GT, LE, LT}},			\ { "predicate_operator", {NE, EQ}},					\ { "condop_operator", {PLUS, MINUS, IOR, XOR, AND}},			\ { "ar_lc_reg_operand", {REG}},						\ { "ar_ccv_reg_operand", {REG}},						\ { "ar_pfs_reg_operand", {REG}},						\ { "general_tfmode_operand", {SUBREG, REG, CONST_DOUBLE, MEM}},		\ { "destination_tfmode_operand", {SUBREG, REG, MEM}},			\ { "tfreg_or_fp01_operand", {REG, CONST_DOUBLE}},			\ { "basereg_operand", {SUBREG, REG}},
+value|{ "call_operand", {SUBREG, REG, SYMBOL_REF}},				\ { "got_symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},		\ { "sdata_symbolic_operand", {SYMBOL_REF, CONST}},			\ { "small_addr_symbolic_operand", {SYMBOL_REF}},				\ { "symbolic_operand", {SYMBOL_REF, CONST, LABEL_REF}},			\ { "function_operand", {SYMBOL_REF}},					\ { "setjmp_operand", {SYMBOL_REF}},					\ { "destination_operand", {SUBREG, REG, MEM}},				\ { "not_postinc_memory_operand", {MEM}},					\ { "move_operand", {SUBREG, REG, MEM, CONST_INT, CONST_DOUBLE,		\ 		     CONSTANT_P_RTX, SYMBOL_REF, CONST, LABEL_REF}},	\ { "gr_register_operand", {SUBREG, REG}},				\ { "fr_register_operand", {SUBREG, REG}},				\ { "grfr_register_operand", {SUBREG, REG}},				\ { "gr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "fr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "grfr_nonimmediate_operand", {SUBREG, REG, MEM}},			\ { "gr_reg_or_0_operand", {SUBREG, REG, CONST_INT}},			\ { "gr_reg_or_5bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_6bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "gr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "grfr_reg_or_8bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_8bit_adjusted_operand", {SUBREG, REG, CONST_INT,		\ 				     CONSTANT_P_RTX}},			\ { "gr_reg_or_8bit_and_adjusted_operand", {SUBREG, REG, CONST_INT,	\ 					 CONSTANT_P_RTX}},		\ { "gr_reg_or_14bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "gr_reg_or_22bit_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}}, \ { "shift_count_operand", {SUBREG, REG, CONST_INT, CONSTANT_P_RTX}},	\ { "shift_32bit_count_operand", {SUBREG, REG, CONST_INT,			\ 				  CONSTANT_P_RTX}},			\ { "shladd_operand", {CONST_INT}},					\ { "fetchadd_operand", {CONST_INT}},					\ { "fr_reg_or_fp01_operand", {SUBREG, REG, CONST_DOUBLE}},		\ { "normal_comparison_operator", {EQ, NE, GT, LE, GTU, LEU}},		\ { "adjusted_comparison_operator", {LT, GE, LTU, GEU}},			\ { "signed_inequality_operator", {GE, GT, LE, LT}},			\ { "predicate_operator", {NE, EQ}},					\ { "condop_operator", {PLUS, MINUS, IOR, XOR, AND}},			\ { "ar_lc_reg_operand", {REG}},						\ { "ar_ccv_reg_operand", {REG}},						\ { "ar_pfs_reg_operand", {REG}},						\ { "general_xfmode_operand", {SUBREG, REG, CONST_DOUBLE, MEM}},		\ { "destination_xfmode_operand", {SUBREG, REG, MEM}},			\ { "xfreg_or_fp01_operand", {REG, CONST_DOUBLE}},			\ { "basereg_operand", {SUBREG, REG}},
 end_define
 
 begin_comment
@@ -4285,15 +4437,8 @@ comment|/* A C expression describing the value returned by a comparison operator
 end_comment
 
 begin_comment
-comment|/* ??? Investigate using -1 instead of 1.  */
+comment|/* ??? Investigate using STORE_FLAG_VALUE of -1 instead of 1.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|STORE_FLAG_VALUE
-value|1
-end_define
 
 begin_comment
 comment|/* An alias for the machine mode for pointers.  */
@@ -4352,20 +4497,6 @@ define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
 value|1
-end_define
-
-begin_comment
-comment|/* In rare cases, correct code generation requires extra machine dependent    processing between the second jump optimization pass and delayed branch    scheduling.  On those machines, define this macro as a C statement to act on    the code starting at INSN.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MACHINE_DEPENDENT_REORG
-parameter_list|(
-name|INSN
-parameter_list|)
-value|ia64_reorg (INSN)
 end_define
 
 begin_comment
@@ -4582,14 +4713,18 @@ name|PROFILE_BEFORE_PROLOGUE
 value|1
 end_define
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Switch on code for querying unit reservations.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|FUNCTION_OK_FOR_SIBCALL
-parameter_list|(
-name|DECL
-parameter_list|)
-value|ia64_function_ok_for_sibcall (DECL)
+name|CPU_UNITS_QUERY
+value|1
 end_define
 
 begin_comment

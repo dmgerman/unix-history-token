@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for AMD x86-64 running Linux-based GNU systems with ELF format.    Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Jan Hubicka<jh@suse.cz>, based on linux.h.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for AMD x86-64 running Linux-based GNU systems with ELF format.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by Jan Hubicka<jh@suse.cz>, based on linux.h.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_DEFAULT_ELF
-end_define
 
 begin_define
 define|#
@@ -22,7 +16,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do								\     {								\ 	builtin_define_std ("linux");				\ 	builtin_define_std ("unix");				\ 	builtin_define ("__gnu_linux__");			\ 	builtin_define ("__ELF__");				\ 	builtin_assert ("system=posix");			\ 	if (flag_pic)						\ 	  {							\ 	    builtin_define ("__PIC__");				\ 	    builtin_define ("__pic__");				\ 	  }							\ 	if (TARGET_64BIT)					\ 	  {							\ 	    builtin_define ("__LP64__");			\ 	    builtin_define ("_LP64");				\ 	  }							\     }								\   while (0)
+value|do								\     {								\ 	LINUX_TARGET_OS_CPP_BUILTINS();				\ 	if (flag_pic)						\ 	  {							\ 	    builtin_define ("__PIC__");				\ 	    builtin_define ("__pic__");				\ 	  }							\     }								\   while (0)
 end_define
 
 begin_undef
@@ -56,6 +50,23 @@ value|1
 end_define
 
 begin_comment
+comment|/* We arrange for the whole %fs segment to map the tls area.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_TLS_DIRECT_SEG_REFS_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_TLS_DIRECT_SEG_REFS_DEFAULT
+value|MASK_TLS_DIRECT_SEG_REFS
+end_define
+
+begin_comment
 comment|/* Provide a LINK_SPEC.  Here we provide support for the special GCC    options -static and -shared, which allow us to link things in one    of these three modes by applying the appropriate combinations of    options at link-time.     When the -shared link option is used a final link is not being    done.  */
 end_comment
 
@@ -72,38 +83,24 @@ name|LINK_SPEC
 value|"%{!m32:-m elf_x86_64} %{m32:-m elf_i386} \   %{shared:-shared} \   %{!shared: \     %{!static: \       %{rdynamic:-export-dynamic} \       %{m32:%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \       %{!m32:%{!dynamic-linker:-dynamic-linker /lib64/ld-linux-x86-64.so.2}}} \     %{static:-static}}"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|STARTFILE_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \      %{!p:%{profile:gcrt1.o%s} %{!profile:crt1.o%s}}}} \    crti.o%s %{static:crtbeginT.o%s} \    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ENDFILE_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ENDFILE_SPEC
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
-end_define
-
 begin_define
 define|#
 directive|define
 name|MULTILIB_DEFAULTS
 value|{ "m64" }
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_INDICATE_EXEC_STACK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NEED_INDICATE_EXEC_STACK
+value|1
 end_define
 
 begin_comment

@@ -32,7 +32,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {					\ 	builtin_define ("__GNU__");		\ 	builtin_define ("__ELF__");		\ 	builtin_define ("__gnu_hurd__");	\ 	builtin_define ("_LONGLONG");		\ 	builtin_define_std ("unix");		\ 	builtin_assert ("system=gnu");		\     } while (0)
+value|do {					\ 	HURD_TARGET_OS_CPP_BUILTINS();		\ 	builtin_define ("_LONGLONG");		\     } while (0)
 end_define
 
 begin_undef

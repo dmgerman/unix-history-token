@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Frv initialization file linked before all user modules    Copyright (C) 1999, 2000 Free Software Foundation, Inc.     Contributed by Red Hat, Inc.       This file is part of GNU CC.       GNU CC is free software ; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation * either version 2, or (at your option)    any later version.       GNU CC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY ; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.       You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.     This file was originally taken from the file crtstuff.c in the    main compiler directory, and simplified. */
+comment|/* Frv initialization file linked before all user modules    Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.     Contributed by Red Hat, Inc.       This file is part of GCC.       GCC is free software ; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation * either version 2, or (at your option)    any later version.       GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY ; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.       You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.     This file was originally taken from the file crtstuff.c in the    main compiler directory, and simplified.  */
+end_comment
+
+begin_comment
+comment|/* As a special exception, if you link this library with other files,    some of which are compiled with GCC, to produce an executable,    this library does not by itself cause the resulting executable    to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
 end_comment
 
 begin_include
@@ -201,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Register the exeception handling table as the first constructor */
+comment|/* Register the exception handling table as the first constructor.  */
 end_comment
 
 begin_function
@@ -236,7 +240,7 @@ comment|/* Note, do not declare __{,de}register_frame_info weak as it seems    t
 end_comment
 
 begin_comment
-comment|/* Unregister the exeception handling table as a deconstructor */
+comment|/* Unregister the exception handling table as a deconstructor.  */
 end_comment
 
 begin_function
@@ -274,13 +278,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Run the global destructors */
+comment|/* Run the global destructors.  */
 end_comment
 
 begin_function
 name|void
 name|__do_global_dtors
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|func_ptr
@@ -316,13 +322,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Run the global constructors */
+comment|/* Run the global constructors.  */
 end_comment
 
 begin_function
 name|void
 name|__do_global_ctors
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -405,7 +413,9 @@ end_comment
 begin_function
 name|void
 name|__main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Support recursive calls to `main': run initializers just once.  */
 specifier|static

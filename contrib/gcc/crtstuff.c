@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specialized bits of code needed to support construction and    destruction of file-scope objects in C++ code.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specialized bits of code needed to support construction and    destruction of file-scope objects in C++ code.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -31,6 +31,18 @@ begin_include
 include|#
 directive|include
 file|"tsystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -251,6 +263,7 @@ specifier|extern
 name|void
 name|__register_frame_info
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|,
@@ -267,6 +280,7 @@ specifier|extern
 name|void
 name|__register_frame_info_bases
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|,
@@ -290,6 +304,7 @@ name|void
 modifier|*
 name|__deregister_frame_info
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|)
@@ -303,12 +318,23 @@ name|void
 modifier|*
 name|__deregister_frame_info_bases
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|)
 name|TARGET_ATTRIBUTE_WEAK
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|__do_global_ctors_1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Likewise for _Jv_RegisterClasses.  */
@@ -911,17 +937,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|USE_EH_FRAME_REGISTRY
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRT_GET_RFIB_TEXT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|CRT_GET_RFIB_DATA
-argument_list|)
 comment|/* If we used the new __register_frame_info_bases interface,      make sure that we deregister from the same place.  */
 if|if
 condition|(
@@ -1007,17 +1025,9 @@ name|struct
 name|object
 name|object
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRT_GET_RFIB_TEXT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|CRT_GET_RFIB_DATA
-argument_list|)
 name|void
 modifier|*
 name|tbase
@@ -1025,38 +1035,15 @@ decl_stmt|,
 modifier|*
 name|dbase
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CRT_GET_RFIB_TEXT
-name|CRT_GET_RFIB_TEXT
-argument_list|(
-name|tbase
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tbase
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CRT_GET_RFIB_DATA
 name|CRT_GET_RFIB_DATA
 argument_list|(
 name|dbase
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|dbase
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|__register_frame_info_bases
@@ -1089,6 +1076,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* CRT_GET_RFIB_DATA */
 endif|#
 directive|endif
 comment|/* USE_EH_FRAME_REGISTRY */
@@ -1184,26 +1172,6 @@ comment|/* cc1 doesn't know that we are switching! */
 end_comment
 
 begin_comment
-comment|/* On some svr4 systems, the initial .init section preamble code provided in    crti.o may do something, such as bump the stack, which we have to     undo before we reach the function prologue code for __do_global_ctors     (directly below).  For such systems, define the macro INIT_SECTION_PREAMBLE    to expand into the code needed to undo the actions of the crti.o file.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INIT_SECTION_PREAMBLE
-end_ifdef
-
-begin_expr_stmt
-name|INIT_SECTION_PREAMBLE
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* A routine to invoke all of the global constructors upon entry to the    program.  We put this into the .init section (for systems that have    such a thing) so that we can properly perform the construction of    file-scope static-storage C++ objects within shared libraries.  */
 end_comment
 
@@ -1261,6 +1229,16 @@ end_elif
 begin_comment
 comment|/* ! INIT_SECTION_ASM_OP */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|__do_global_dtors
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This case is used by the Irix 6 port, which supports named sections but    not an SVR4-style .fini section.  __do_global_dtors can be non-static    in this case because we protect it with -hidden_symbol.  */
@@ -1899,19 +1877,19 @@ begin_comment
 comment|/* ! INIT_SECTION_ASM_OP */
 end_comment
 
-begin_comment
-comment|/* This case is used by the Irix 6 port, which supports named sections but    not an SVR4-style .init section.  __do_global_ctors can be non-static    in this case because we protect it with -hidden_symbol.  */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|void
-name|__do_global_ctors_1
+name|__do_global_ctors
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* This case is used by the Irix 6 port, which supports named sections but    not an SVR4-style .init section.  __do_global_ctors can be non-static    in this case because we protect it with -hidden_symbol.  */
+end_comment
 
 begin_function
 name|void

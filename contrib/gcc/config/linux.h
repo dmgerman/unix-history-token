@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Linux-based GNU systems with ELF format    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu (hjl@lucon.org).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Linux-based GNU systems with ELF format    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2003    Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu (hjl@lucon.org).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -12,34 +12,6 @@ define|#
 directive|define
 name|NO_IMPLICIT_EXTERN_C
 end_define
-
-begin_comment
-comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|MULTIBYTE_CHARS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MULTIBYTE_CHARS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -103,6 +75,21 @@ define|\
 value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \ 		       %{!p:%{profile:gcrt1.o%s} \ 			 %{!profile:crt1.o%s}}}} \    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|HAVE_LD_PIE
+end_elif
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: %{pg|p|profile:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}} \    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -113,7 +100,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \ 		       %{!p:%{profile:gcrt1.o%s} \ 			 %{!profile:crt1.o%s}}}} \    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared: %{pg|p|profile:gcrt1.o%s;:crt1.o%s}} \    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
 
 begin_endif
@@ -136,7 +123,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+value|"%{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s"
 end_define
 
 begin_comment
@@ -244,6 +231,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LINUX_TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {							\ 	builtin_define ("__gnu_linux__");			\ 	builtin_define_std ("linux");				\ 	builtin_define_std ("unix");				\ 	builtin_assert ("system=linux");			\ 	builtin_assert ("system=unix");				\ 	builtin_assert ("system=posix");			\     } while (0)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -271,14 +267,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|LINK_GCC_C_SEQUENCE_SPEC
-define|\
-value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
-end_define
-
 begin_comment
 comment|/* Define this so we can compile MS code for use with WINE.  */
 end_comment
@@ -288,6 +276,36 @@ define|#
 directive|define
 name|HANDLE_PRAGMA_PACK_PUSH_POP
 end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+define|\
+value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
+end_define
+
+begin_comment
+comment|/* Determine whether the the entire c99 runtime    is present in the runtime library.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_GNULIBC_1
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).     This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Update the symbol table (the .T file) in a MIPS object to    contain debugging information specified by the GNU compiler    in the form of comments (the mips assembler does not support    assembly access to debug information).    Copyright (C) 1991, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Michael Meissner (meissner@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Here is a brief description of the MIPS ECOFF symbol table.  The    MIPS symbol table has the following pieces:  	Symbolic Header 	    | 	    +--	Auxiliary Symbols 	    | 	    +--	Dense number table 	    | 	    +--	Optimizer Symbols 	    | 	    +--	External Strings 	    | 	    +--	External Symbols 	    | 	    +--	Relative file descriptors 	    | 	    +--	File table 		    | 		    +--	Procedure table 		    | 		    +--	Line number table 		    | 		    +--	Local Strings 		    | 		    +--	Local Symbols     The symbolic header points to each of the other tables, and also    contains the number of entries.  It also contains a magic number    and MIPS compiler version number, such as 2.0.     The auxiliary table is a series of 32 bit integers, that are    referenced as needed from the local symbol table.  Unlike standard    COFF, the aux.  information does not follow the symbol that uses    it, but rather is a separate table.  In theory, this would allow    the MIPS compilers to collapse duplicate aux. entries, but I've not    noticed this happening with the 1.31 compiler suite.  The different    types of aux. entries are:      1)	dnLow: Low bound on array dimension.      2)	dnHigh: High bound on array dimension.      3)	isym: Index to the local symbol which is the start of the 	function for the end of function first aux. entry.      4)	width: Width of structures and bitfields.      5)	count: Count of ranges for variant part.      6)	rndx: A relative index into the symbol table.  The relative 	index field has two parts: rfd which is a pointer into the 	relative file index table or ST_RFDESCAPE which says the next 	aux. entry is the file number, and index: which is the pointer 	into the local symbol within a given file table.  This is for 	things like references to types defined in another file.      7)	Type information: This is like the COFF type bits, except it 	is 32 bits instead of 16; they still have room to add new 	basic types; and they can handle more than 6 levels of array, 	pointer, function, etc.  Each type information field contains 	the following structure members:  	    a)	fBitfield: a bit that says this is a bitfield, and the 		size in bits follows as the next aux. entry.  	    b)	continued: a bit that says the next aux. entry is a 		continuation of the current type information (in case 		there are more than 6 levels of array/ptr/function).  	    c)	bt: an integer containing the base type before adding 		array, pointer, function, etc. qualifiers.  The 		current base types that I have documentation for are:  			btNil		-- undefined  			btAdr		-- address - integer same size as ptr 			btChar		-- character  			btUChar		-- unsigned character  			btShort		-- short  			btUShort	-- unsigned short  			btInt		-- int  			btUInt		-- unsigned int  			btLong		-- long  			btULong		-- unsigned long  			btFloat		-- float (real)  			btDouble	-- Double (real)  			btStruct	-- Structure (Record)  			btUnion		-- Union (variant)  			btEnum		-- Enumerated  			btTypedef	-- defined via a typedef isymRef  			btRange		-- subrange of int  			btSet		-- pascal sets  			btComplex	-- fortran complex  			btDComplex	-- fortran double complex  			btIndirect	-- forward or unnamed typedef  			btFixedDec	-- Fixed Decimal  			btFloatDec	-- Float Decimal  			btString	-- Varying Length Character String  			btBit		-- Aligned Bit String  			btPicture	-- Picture 			btVoid		-- Void (MIPS cc revision>= 2.00)  	    d)	tq0 - tq5: type qualifier fields as needed.  The 		current type qualifier fields I have documentation for 		are:  			tqNil		-- no more qualifiers  			tqPtr		-- pointer  			tqProc		-- procedure  			tqArray		-- array  			tqFar		-- 8086 far pointers  			tqVol		-- volatile       The dense number table is used in the front ends, and disappears by    the time the .o is created.     With the 1.31 compiler suite, the optimization symbols don't seem    to be used as far as I can tell.     The linker is the first entity that creates the relative file    descriptor table, and I believe it is used so that the individual    file table pointers don't have to be rewritten when the objects are    merged together into the program file.     Unlike COFF, the basic symbol& string tables are split into    external and local symbols/strings.  The relocation information    only goes off of the external symbol table, and the debug    information only goes off of the internal symbol table.  The    external symbols can have links to an appropriate file index and    symbol within the file to give it the appropriate type information.    Because of this, the external symbols are actually larger than the    internal symbols (to contain the link information), and contain the    local symbol structure as a member, though this member is not the    first member of the external symbol structure (!).  I suspect this    split is to make strip easier to deal with.     Each file table has offsets for where the line numbers, local    strings, local symbols, and procedure table starts from within the    global tables, and the indexs are reset to 0 for each of those    tables for the file.     The procedure table contains the binary equivalents of the .ent    (start of the function address), .frame (what register is the    virtual frame pointer, constant offset from the register to obtain    the VFP, and what register holds the return address), .mask/.fmask    (bitmask of saved registers, and where the first register is stored    relative to the VFP) assembler directives.  It also contains the    low and high bounds of the line numbers if debugging is turned on.     The line number table is a compressed form of the normal COFF line    table.  Each line number entry is either 1 or 3 bytes long, and    contains a signed delta from the previous line, and an unsigned    count of the number of instructions this statement takes.     The local symbol table contains the following fields:      1)	iss: index to the local string table giving the name of the 	symbol.      2)	value: value of the symbol (address, register number, etc.).      3)	st: symbol type.  The current symbol types are:  	    stNil	  -- Nuthin' special 	    stGlobal	  -- external symbol 	    stStatic	  -- static 	    stParam	  -- procedure argument 	    stLocal	  -- local variable 	    stLabel	  -- label 	    stProc	  -- External Procedure 	    stBlock	  -- beginning of block 	    stEnd	  -- end (of anything) 	    stMember	  -- member (of anything) 	    stTypedef	  -- type definition 	    stFile	  -- file name 	    stRegReloc	  -- register relocation 	    stForward	  -- forwarding address 	    stStaticProc  -- Static procedure 	    stConstant	  -- const      4)	sc: storage class.  The current storage classes are:  	    scText	  -- text symbol 	    scData	  -- initialized data symbol 	    scBss	  -- un-initialized data symbol 	    scRegister	  -- value of symbol is register number 	    scAbs	  -- value of symbol is absolute 	    scUndefined   -- who knows? 	    scCdbLocal	  -- variable's value is IN se->va.?? 	    scBits	  -- this is a bit field 	    scCdbSystem	  -- value is IN debugger's address space 	    scRegImage	  -- register value saved on stack 	    scInfo	  -- symbol contains debugger information 	    scUserStruct  -- addr in struct user for current process 	    scSData	  -- load time only small data 	    scSBss	  -- load time only small common 	    scRData	  -- load time only read only data 	    scVar	  -- Var parameter (fortranpascal) 	    scCommon	  -- common variable 	    scSCommon	  -- small common 	    scVarRegister -- Var parameter in a register 	    scVariant	  -- Variant record 	    scSUndefined  -- small undefined(external) data 	    scInit	  -- .init section symbol      5)	index: pointer to a local symbol or aux. entry.       For the following program:  	#include<stdio.h>  	main(){ 		printf("Hello World!\n"); 		return 0; 	}     Mips-tdump produces the following information:        Global file header:        magic number             0x162        # sections               2        timestamp                645311799, Wed Jun 13 17:16:39 1990        symbolic header offset   284        symbolic header size     96        optional header          56        flags                    0x0        Symbolic header, magic number = 0x7009, vstamp = 1.31:            Info                      Offset      Number       Bytes        ====                      ======      ======      =====            Line numbers                 380           4           4 [13]        Dense numbers                  0           0           0        Procedures Tables            384           1          52        Local Symbols                436          16         192        Optimization Symbols           0           0           0        Auxiliary Symbols            628          39         156        Local Strings                784          80          80        External Strings             864         144         144        File Tables                 1008           2         144        Relative Files                 0           0           0        External Symbols            1152          20         320        File #0, "hello2.c"            Name index  = 1          Readin      = No        Merge       = No         Endian      = LITTLE        Debug level = G2         Language    = C        Adr         = 0x00000000            Info                       Start      Number        Size      Offset        ====                       =====      ======        ====      ======        Local strings                  0          15          15         784        Local symbols                  0           6          72         436        Line numbers                   0          13          13         380        Optimization symbols           0           0           0           0        Procedures                     0           1          52         384        Auxiliary symbols              0          14          56         628        Relative Files                 0           0           0           0         There are 6 local symbols, starting at 436  	Symbol# 0: "hello2.c" 	    End+1 symbol  = 6 	    String index  = 1 	    Storage class = Text        Index  = 6 	    Symbol type   = File        Value  = 0  	Symbol# 1: "main" 	    End+1 symbol  = 5 	    Type          = int 	    String index  = 10 	    Storage class = Text        Index  = 12 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "" 	    End+1 symbol  = 4 	    String index  = 0 	    Storage class = Text        Index  = 4 	    Symbol type   = Block       Value  = 8  	Symbol# 3: "" 	    First symbol  = 2 	    String index  = 0 	    Storage class = Text        Index  = 2 	    Symbol type   = End         Value  = 28  	Symbol# 4: "main" 	    First symbol  = 1 	    String index  = 10 	    Storage class = Text        Index  = 1 	    Symbol type   = End         Value  = 52  	Symbol# 5: "hello2.c" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 14 auxiliary table entries, starting at 628.  	* #0               0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #1              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #2               8, [   8/      0], [ 2 0:0 0:0:0:0:0:0] 	* #3              16, [  16/      0], [ 4 0:0 0:0:0:0:0:0] 	* #4              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #5              32, [  32/      0], [ 8 0:0 0:0:0:0:0:0] 	* #6              40, [  40/      0], [10 0:0 0:0:0:0:0:0] 	* #7              44, [  44/      0], [11 0:0 0:0:0:0:0:0] 	* #8              12, [  12/      0], [ 3 0:0 0:0:0:0:0:0] 	* #9              20, [  20/      0], [ 5 0:0 0:0:0:0:0:0] 	* #10             28, [  28/      0], [ 7 0:0 0:0:0:0:0:0] 	* #11             36, [  36/      0], [ 9 0:0 0:0:0:0:0:0] 	  #12              5, [   5/      0], [ 1 1:0 0:0:0:0:0:0] 	  #13             24, [  24/      0], [ 6 0:0 0:0:0:0:0:0]      There are 1 procedure descriptor entries, starting at 0.  	Procedure descriptor 0: 	    Name index   = 10          Name          = "main" 	    .mask 0x80000000,-4        .fmask 0x00000000,0 	    .frame $29,24,$31 	    Opt. start   = -1          Symbols start = 1 	    First line # = 3           Last line #   = 6 	    Line Offset  = 0           Address       = 0x00000000  	There are 4 bytes holding line numbers, starting at 380. 	    Line           3,   delta     0,   count  2 	    Line           4,   delta     1,   count  3 	    Line           5,   delta     1,   count  2 	    Line           6,   delta     1,   count  6     File #1, "/usr/include/stdio.h"      Name index  = 1          Readin      = No     Merge       = Yes        Endian      = LITTLE     Debug level = G2         Language    = C     Adr         = 0x00000000      Info                       Start      Number        Size      Offset     ====                       =====      ======        ====      ======     Local strings                 15          65          65         799     Local symbols                  6          10         120         508     Line numbers                   0           0           0         380     Optimization symbols           0           0           0           0     Procedures                     1           0           0         436     Auxiliary symbols             14          25         100         684     Relative Files                 0           0           0           0      There are 10 local symbols, starting at 442  	Symbol# 0: "/usr/include/stdio.h" 	    End+1 symbol  = 10 	    String index  = 1 	    Storage class = Text        Index  = 10 	    Symbol type   = File        Value  = 0  	Symbol# 1: "_iobuf" 	    End+1 symbol  = 9 	    String index  = 22 	    Storage class = Info        Index  = 9 	    Symbol type   = Block       Value  = 20  	Symbol# 2: "_cnt" 	    Type          = int 	    String index  = 29 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 0  	Symbol# 3: "_ptr" 	    Type          = ptr to char 	    String index  = 34 	    Storage class = Info        Index  = 15 	    Symbol type   = Member      Value  = 32  	Symbol# 4: "_base" 	    Type          = ptr to char 	    String index  = 39 	    Storage class = Info        Index  = 16 	    Symbol type   = Member      Value  = 64  	Symbol# 5: "_bufsiz" 	    Type          = int 	    String index  = 45 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 96  	Symbol# 6: "_flag" 	    Type          = short 	    String index  = 53 	    Storage class = Info        Index  = 3 	    Symbol type   = Member      Value  = 128  	Symbol# 7: "_file" 	    Type          = char 	    String index  = 59 	    Storage class = Info        Index  = 2 	    Symbol type   = Member      Value  = 144  	Symbol# 8: "" 	    First symbol  = 1 	    String index  = 0 	    Storage class = Info        Index  = 1 	    Symbol type   = End         Value  = 0  	Symbol# 9: "/usr/include/stdio.h" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 25 auxiliary table entries, starting at 642.  	* #14             -1, [4095/1048575], [63 1:1 f:f:f:f:f:f] 	  #15          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	  #16          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	* #17         196656, [  48/     48], [12 0:0 3:0:0:0:0:0] 	* #18           8191, [4095/      1], [63 1:1 0:0:0:0:f:1] 	* #19              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #20          20479, [4095/      4], [63 1:1 0:0:0:0:f:4] 	* #21              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #22              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #23              2, [   2/      0], [ 0 0:1 0:0:0:0:0:0] 	* #24            160, [ 160/      0], [40 0:0 0:0:0:0:0:0] 	* #25              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #26              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #27              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #28              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #29              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #30              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #31              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #32              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #33              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #34              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #35              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #36              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #37              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #38              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0]      There are 0 procedure descriptor entries, starting at 1.     There are 20 external symbols, starting at 1152  	Symbol# 0: "_iob" 	    Type          = array [3 {160}] of struct _iobuf { ifd = 1, index = 1 } 	    String index  = 0           Ifd    = 1 	    Storage class = Nil         Index  = 17 	    Symbol type   = Global      Value  = 60  	Symbol# 1: "fopen" 	    String index  = 5           Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "fdopen" 	    String index  = 11          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 3: "freopen" 	    String index  = 18          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 4: "popen" 	    String index  = 26          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 5: "tmpfile" 	    String index  = 32          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 6: "ftell" 	    String index  = 40          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 7: "rewind" 	    String index  = 46          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 8: "setbuf" 	    String index  = 53          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 9: "setbuffer" 	    String index  = 60          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 10: "setlinebuf" 	    String index  = 70          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 11: "fgets" 	    String index  = 81          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 12: "gets" 	    String index  = 87          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 13: "ctermid" 	    String index  = 92          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 14: "cuserid" 	    String index  = 100         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 15: "tempnam" 	    String index  = 108         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 16: "tmpnam" 	    String index  = 116         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 17: "sprintf" 	    String index  = 123         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 18: "main" 	    Type          = int 	    String index  = 131         Ifd    = 0 	    Storage class = Text        Index  = 1 	    Symbol type   = Proc        Value  = 0  	Symbol# 19: "printf" 	    String index  = 136         Ifd    = 0 	    Storage class = Undefined   Index  = 1048575 	    Symbol type   = Proc        Value  = 0     The following auxiliary table entries were unused:      #0               0  0x00000000  void     #2               8  0x00000008  char     #3              16  0x00000010  short     #4              24  0x00000018  int     #5              32  0x00000020  long     #6              40  0x00000028  float     #7              44  0x0000002c  double     #8              12  0x0000000c  unsigned char     #9              20  0x00000014  unsigned short     #10             28  0x0000001c  unsigned int     #11             36  0x00000024  unsigned long     #14              0  0x00000000  void     #15             24  0x00000018  int     #19             32  0x00000020  long     #20             40  0x00000028  float     #21             44  0x0000002c  double     #22             12  0x0000000c  unsigned char     #23             20  0x00000014  unsigned short     #24             28  0x0000001c  unsigned int     #25             36  0x00000024  unsigned long     #26             48  0x00000030  struct no name { ifd = -1, index = 1048575 }  */
+comment|/* Here is a brief description of the MIPS ECOFF symbol table.  The    MIPS symbol table has the following pieces:  	Symbolic Header 	    | 	    +--	Auxiliary Symbols 	    | 	    +--	Dense number table 	    | 	    +--	Optimizer Symbols 	    | 	    +--	External Strings 	    | 	    +--	External Symbols 	    | 	    +--	Relative file descriptors 	    | 	    +--	File table 		    | 		    +--	Procedure table 		    | 		    +--	Line number table 		    | 		    +--	Local Strings 		    | 		    +--	Local Symbols     The symbolic header points to each of the other tables, and also    contains the number of entries.  It also contains a magic number    and MIPS compiler version number, such as 2.0.     The auxiliary table is a series of 32 bit integers, that are    referenced as needed from the local symbol table.  Unlike standard    COFF, the aux.  information does not follow the symbol that uses    it, but rather is a separate table.  In theory, this would allow    the MIPS compilers to collapse duplicate aux. entries, but I've not    noticed this happening with the 1.31 compiler suite.  The different    types of aux. entries are:      1)	dnLow: Low bound on array dimension.      2)	dnHigh: High bound on array dimension.      3)	isym: Index to the local symbol which is the start of the 	function for the end of function first aux. entry.      4)	width: Width of structures and bitfields.      5)	count: Count of ranges for variant part.      6)	rndx: A relative index into the symbol table.  The relative 	index field has two parts: rfd which is a pointer into the 	relative file index table or ST_RFDESCAPE which says the next 	aux. entry is the file number, and index: which is the pointer 	into the local symbol within a given file table.  This is for 	things like references to types defined in another file.      7)	Type information: This is like the COFF type bits, except it 	is 32 bits instead of 16; they still have room to add new 	basic types; and they can handle more than 6 levels of array, 	pointer, function, etc.  Each type information field contains 	the following structure members:  	    a)	fBitfield: a bit that says this is a bitfield, and the 		size in bits follows as the next aux. entry.  	    b)	continued: a bit that says the next aux. entry is a 		continuation of the current type information (in case 		there are more than 6 levels of array/ptr/function).  	    c)	bt: an integer containing the base type before adding 		array, pointer, function, etc. qualifiers.  The 		current base types that I have documentation for are:  			btNil		-- undefined 			btAdr		-- address - integer same size as ptr 			btChar		-- character 			btUChar		-- unsigned character 			btShort		-- short 			btUShort	-- unsigned short 			btInt		-- int 			btUInt		-- unsigned int 			btLong		-- long 			btULong		-- unsigned long 			btFloat		-- float (real) 			btDouble	-- Double (real) 			btStruct	-- Structure (Record) 			btUnion		-- Union (variant) 			btEnum		-- Enumerated 			btTypedef	-- defined via a typedef isymRef 			btRange		-- subrange of int 			btSet		-- pascal sets 			btComplex	-- fortran complex 			btDComplex	-- fortran double complex 			btIndirect	-- forward or unnamed typedef 			btFixedDec	-- Fixed Decimal 			btFloatDec	-- Float Decimal 			btString	-- Varying Length Character String 			btBit		-- Aligned Bit String 			btPicture	-- Picture 			btVoid		-- Void (MIPS cc revision>= 2.00)  	    d)	tq0 - tq5: type qualifier fields as needed.  The 		current type qualifier fields I have documentation for 		are:  			tqNil		-- no more qualifiers 			tqPtr		-- pointer 			tqProc		-- procedure 			tqArray		-- array 			tqFar		-- 8086 far pointers 			tqVol		-- volatile      The dense number table is used in the front ends, and disappears by    the time the .o is created.     With the 1.31 compiler suite, the optimization symbols don't seem    to be used as far as I can tell.     The linker is the first entity that creates the relative file    descriptor table, and I believe it is used so that the individual    file table pointers don't have to be rewritten when the objects are    merged together into the program file.     Unlike COFF, the basic symbol& string tables are split into    external and local symbols/strings.  The relocation information    only goes off of the external symbol table, and the debug    information only goes off of the internal symbol table.  The    external symbols can have links to an appropriate file index and    symbol within the file to give it the appropriate type information.    Because of this, the external symbols are actually larger than the    internal symbols (to contain the link information), and contain the    local symbol structure as a member, though this member is not the    first member of the external symbol structure (!).  I suspect this    split is to make strip easier to deal with.     Each file table has offsets for where the line numbers, local    strings, local symbols, and procedure table starts from within the    global tables, and the indices are reset to 0 for each of those    tables for the file.     The procedure table contains the binary equivalents of the .ent    (start of the function address), .frame (what register is the    virtual frame pointer, constant offset from the register to obtain    the VFP, and what register holds the return address), .mask/.fmask    (bitmask of saved registers, and where the first register is stored    relative to the VFP) assembler directives.  It also contains the    low and high bounds of the line numbers if debugging is turned on.     The line number table is a compressed form of the normal COFF line    table.  Each line number entry is either 1 or 3 bytes long, and    contains a signed delta from the previous line, and an unsigned    count of the number of instructions this statement takes.     The local symbol table contains the following fields:      1)	iss: index to the local string table giving the name of the 	symbol.      2)	value: value of the symbol (address, register number, etc.).      3)	st: symbol type.  The current symbol types are:  	    stNil	  -- Nuthin' special 	    stGlobal	  -- external symbol 	    stStatic	  -- static 	    stParam	  -- procedure argument 	    stLocal	  -- local variable 	    stLabel	  -- label 	    stProc	  -- External Procedure 	    stBlock	  -- beginning of block 	    stEnd	  -- end (of anything) 	    stMember	  -- member (of anything) 	    stTypedef	  -- type definition 	    stFile	  -- file name 	    stRegReloc	  -- register relocation 	    stForward	  -- forwarding address 	    stStaticProc  -- Static procedure 	    stConstant	  -- const      4)	sc: storage class.  The current storage classes are:  	    scText	  -- text symbol 	    scData	  -- initialized data symbol 	    scBss	  -- un-initialized data symbol 	    scRegister	  -- value of symbol is register number 	    scAbs	  -- value of symbol is absolute 	    scUndefined   -- who knows? 	    scCdbLocal	  -- variable's value is IN se->va.?? 	    scBits	  -- this is a bit field 	    scCdbSystem	  -- value is IN debugger's address space 	    scRegImage	  -- register value saved on stack 	    scInfo	  -- symbol contains debugger information 	    scUserStruct  -- addr in struct user for current process 	    scSData	  -- load time only small data 	    scSBss	  -- load time only small common 	    scRData	  -- load time only read only data 	    scVar	  -- Var parameter (fortranpascal) 	    scCommon	  -- common variable 	    scSCommon	  -- small common 	    scVarRegister -- Var parameter in a register 	    scVariant	  -- Variant record 	    scSUndefined  -- small undefined(external) data 	    scInit	  -- .init section symbol      5)	index: pointer to a local symbol or aux. entry.       For the following program:  	#include<stdio.h>  	main(){ 		printf("Hello World!\n"); 		return 0; 	}     Mips-tdump produces the following information:     Global file header:        magic number             0x162        # sections               2        timestamp                645311799, Wed Jun 13 17:16:39 1990        symbolic header offset   284        symbolic header size     96        optional header          56        flags                    0x0     Symbolic header, magic number = 0x7009, vstamp = 1.31:         Info                      Offset      Number       Bytes        ====                      ======      ======      =====         Line numbers                 380           4           4 [13]        Dense numbers                  0           0           0        Procedures Tables            384           1          52        Local Symbols                436          16         192        Optimization Symbols           0           0           0        Auxiliary Symbols            628          39         156        Local Strings                784          80          80        External Strings             864         144         144        File Tables                 1008           2         144        Relative Files                 0           0           0        External Symbols            1152          20         320     File #0, "hello2.c"         Name index  = 1          Readin      = No        Merge       = No         Endian      = LITTLE        Debug level = G2         Language    = C        Adr         = 0x00000000         Info                       Start      Number        Size      Offset        ====                       =====      ======        ====      ======        Local strings                  0          15          15         784        Local symbols                  0           6          72         436        Line numbers                   0          13          13         380        Optimization symbols           0           0           0           0        Procedures                     0           1          52         384        Auxiliary symbols              0          14          56         628        Relative Files                 0           0           0           0      There are 6 local symbols, starting at 436  	Symbol# 0: "hello2.c" 	    End+1 symbol  = 6 	    String index  = 1 	    Storage class = Text        Index  = 6 	    Symbol type   = File        Value  = 0  	Symbol# 1: "main" 	    End+1 symbol  = 5 	    Type          = int 	    String index  = 10 	    Storage class = Text        Index  = 12 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "" 	    End+1 symbol  = 4 	    String index  = 0 	    Storage class = Text        Index  = 4 	    Symbol type   = Block       Value  = 8  	Symbol# 3: "" 	    First symbol  = 2 	    String index  = 0 	    Storage class = Text        Index  = 2 	    Symbol type   = End         Value  = 28  	Symbol# 4: "main" 	    First symbol  = 1 	    String index  = 10 	    Storage class = Text        Index  = 1 	    Symbol type   = End         Value  = 52  	Symbol# 5: "hello2.c" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 14 auxiliary table entries, starting at 628.  	* #0               0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #1              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #2               8, [   8/      0], [ 2 0:0 0:0:0:0:0:0] 	* #3              16, [  16/      0], [ 4 0:0 0:0:0:0:0:0] 	* #4              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #5              32, [  32/      0], [ 8 0:0 0:0:0:0:0:0] 	* #6              40, [  40/      0], [10 0:0 0:0:0:0:0:0] 	* #7              44, [  44/      0], [11 0:0 0:0:0:0:0:0] 	* #8              12, [  12/      0], [ 3 0:0 0:0:0:0:0:0] 	* #9              20, [  20/      0], [ 5 0:0 0:0:0:0:0:0] 	* #10             28, [  28/      0], [ 7 0:0 0:0:0:0:0:0] 	* #11             36, [  36/      0], [ 9 0:0 0:0:0:0:0:0] 	  #12              5, [   5/      0], [ 1 1:0 0:0:0:0:0:0] 	  #13             24, [  24/      0], [ 6 0:0 0:0:0:0:0:0]      There are 1 procedure descriptor entries, starting at 0.  	Procedure descriptor 0: 	    Name index   = 10          Name          = "main" 	    .mask 0x80000000,-4        .fmask 0x00000000,0 	    .frame $29,24,$31 	    Opt. start   = -1          Symbols start = 1 	    First line # = 3           Last line #   = 6 	    Line Offset  = 0           Address       = 0x00000000  	There are 4 bytes holding line numbers, starting at 380. 	    Line           3,   delta     0,   count  2 	    Line           4,   delta     1,   count  3 	    Line           5,   delta     1,   count  2 	    Line           6,   delta     1,   count  6     File #1, "/usr/include/stdio.h"      Name index  = 1          Readin      = No     Merge       = Yes        Endian      = LITTLE     Debug level = G2         Language    = C     Adr         = 0x00000000      Info                       Start      Number        Size      Offset     ====                       =====      ======        ====      ======     Local strings                 15          65          65         799     Local symbols                  6          10         120         508     Line numbers                   0           0           0         380     Optimization symbols           0           0           0           0     Procedures                     1           0           0         436     Auxiliary symbols             14          25         100         684     Relative Files                 0           0           0           0      There are 10 local symbols, starting at 442  	Symbol# 0: "/usr/include/stdio.h" 	    End+1 symbol  = 10 	    String index  = 1 	    Storage class = Text        Index  = 10 	    Symbol type   = File        Value  = 0  	Symbol# 1: "_iobuf" 	    End+1 symbol  = 9 	    String index  = 22 	    Storage class = Info        Index  = 9 	    Symbol type   = Block       Value  = 20  	Symbol# 2: "_cnt" 	    Type          = int 	    String index  = 29 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 0  	Symbol# 3: "_ptr" 	    Type          = ptr to char 	    String index  = 34 	    Storage class = Info        Index  = 15 	    Symbol type   = Member      Value  = 32  	Symbol# 4: "_base" 	    Type          = ptr to char 	    String index  = 39 	    Storage class = Info        Index  = 16 	    Symbol type   = Member      Value  = 64  	Symbol# 5: "_bufsiz" 	    Type          = int 	    String index  = 45 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 96  	Symbol# 6: "_flag" 	    Type          = short 	    String index  = 53 	    Storage class = Info        Index  = 3 	    Symbol type   = Member      Value  = 128  	Symbol# 7: "_file" 	    Type          = char 	    String index  = 59 	    Storage class = Info        Index  = 2 	    Symbol type   = Member      Value  = 144  	Symbol# 8: "" 	    First symbol  = 1 	    String index  = 0 	    Storage class = Info        Index  = 1 	    Symbol type   = End         Value  = 0  	Symbol# 9: "/usr/include/stdio.h" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 25 auxiliary table entries, starting at 642.  	* #14             -1, [4095/1048575], [63 1:1 f:f:f:f:f:f] 	  #15          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	  #16          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	* #17         196656, [  48/     48], [12 0:0 3:0:0:0:0:0] 	* #18           8191, [4095/      1], [63 1:1 0:0:0:0:f:1] 	* #19              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #20          20479, [4095/      4], [63 1:1 0:0:0:0:f:4] 	* #21              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #22              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #23              2, [   2/      0], [ 0 0:1 0:0:0:0:0:0] 	* #24            160, [ 160/      0], [40 0:0 0:0:0:0:0:0] 	* #25              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #26              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #27              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #28              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #29              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #30              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #31              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #32              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #33              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #34              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #35              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #36              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #37              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #38              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0]      There are 0 procedure descriptor entries, starting at 1.     There are 20 external symbols, starting at 1152  	Symbol# 0: "_iob" 	    Type          = array [3 {160}] of struct _iobuf { ifd = 1, index = 1 } 	    String index  = 0           Ifd    = 1 	    Storage class = Nil         Index  = 17 	    Symbol type   = Global      Value  = 60  	Symbol# 1: "fopen" 	    String index  = 5           Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "fdopen" 	    String index  = 11          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 3: "freopen" 	    String index  = 18          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 4: "popen" 	    String index  = 26          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 5: "tmpfile" 	    String index  = 32          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 6: "ftell" 	    String index  = 40          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 7: "rewind" 	    String index  = 46          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 8: "setbuf" 	    String index  = 53          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 9: "setbuffer" 	    String index  = 60          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 10: "setlinebuf" 	    String index  = 70          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 11: "fgets" 	    String index  = 81          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 12: "gets" 	    String index  = 87          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 13: "ctermid" 	    String index  = 92          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 14: "cuserid" 	    String index  = 100         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 15: "tempnam" 	    String index  = 108         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 16: "tmpnam" 	    String index  = 116         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 17: "sprintf" 	    String index  = 123         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 18: "main" 	    Type          = int 	    String index  = 131         Ifd    = 0 	    Storage class = Text        Index  = 1 	    Symbol type   = Proc        Value  = 0  	Symbol# 19: "printf" 	    String index  = 136         Ifd    = 0 	    Storage class = Undefined   Index  = 1048575 	    Symbol type   = Proc        Value  = 0     The following auxiliary table entries were unused:      #0               0  0x00000000  void     #2               8  0x00000008  char     #3              16  0x00000010  short     #4              24  0x00000018  int     #5              32  0x00000020  long     #6              40  0x00000028  float     #7              44  0x0000002c  double     #8              12  0x0000000c  unsigned char     #9              20  0x00000014  unsigned short     #10             28  0x0000001c  unsigned int     #11             36  0x00000024  unsigned long     #14              0  0x00000000  void     #15             24  0x00000018  int     #19             32  0x00000020  long     #20             40  0x00000028  float     #21             44  0x0000002c  double     #22             12  0x0000000c  unsigned char     #23             20  0x00000014  unsigned short     #24             28  0x0000001c  unsigned int     #25             36  0x00000024  unsigned long     #26             48  0x00000030  struct no name { ifd = -1, index = 1048575 }  */
 end_comment
 
 begin_escape
@@ -23,6 +23,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -54,6 +66,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Include getopt.h for the sake of getopt_long.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"getopt.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -135,13 +157,10 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|pfatal_with_name
-name|PARAMS
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
@@ -151,26 +170,21 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|fancy_abort
-name|PARAMS
 argument_list|(
-operator|(
 name|void
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|botch
-name|PARAMS
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
@@ -180,16 +194,13 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|fatal
-name|PARAMS
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
 name|format
-operator|,
+argument_list|,
 operator|...
-operator|)
 argument_list|)
 name|ATTRIBUTE_PRINTF_1
 name|ATTRIBUTE_NORETURN
@@ -200,16 +211,13 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|error
-name|PARAMS
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
 name|format
-operator|,
+argument_list|,
 operator|...
-operator|)
 argument_list|)
 name|ATTRIBUTE_PRINTF_1
 decl_stmt|;
@@ -273,7 +281,9 @@ end_decl_stmt
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -1258,7 +1268,7 @@ value|(((x) + 7)& ~7)
 end_define
 
 begin_comment
-comment|/* Structures to provide n-number of virtual arrays, each of which can    grow linearly, and which are written in the object file as sequential    pages.  On systems with a BSD malloc that define USE_MALLOC, the    MAX_CLUSTER_PAGES should be 1 less than a power of two, since malloc    adds its overhead, and rounds up to the next power of 2.  Pages are    linked together via a linked list.     If PAGE_SIZE is> 4096, the string length in the shash_t structure    can't be represented (assuming there are strings> 4096 bytes).  */
+comment|/* Structures to provide n-number of virtual arrays, each of which can    grow linearly, and which are written in the object file as sequential    pages.  On systems with a BSD malloc that define USE_MALLOC, the    MAX_CLUSTER_PAGES should be 1 less than a power of two, since malloc    adds its overhead, and rounds up to the next power of 2.  Pages are    linked together via a linked list.  */
 end_comment
 
 begin_ifndef
@@ -1271,7 +1281,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE
-value|4096
+value|32768
 end_define
 
 begin_comment
@@ -1478,6 +1488,19 @@ comment|/* objects_per_page */
 value|\   OBJECTS_PER_PAGE (type),
 comment|/* objects_last_page */
 value|\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_VARRAY
+parameter_list|(
+name|x
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|do {							\   (x)->object_size = sizeof (type);			\   (x)->objects_per_page = OBJECTS_PER_PAGE (type);	\   (x)->objects_last_page = OBJECTS_PER_PAGE (type);	\ } while (0)
 end_define
 
 begin_comment
@@ -1922,270 +1945,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|int
+name|init_file_initialized
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|efdr_t
 name|init_file
-init|=
-block|{
-block|{
-comment|/* FDR structure */
-ifdef|#
-directive|ifdef
-name|__alpha
-literal|0
-block|,
-comment|/* adr:		memory address of beginning of file */
-literal|0
-block|,
-comment|/* cbLineOffset: byte offset from header for this file ln's */
-literal|0
-block|,
-comment|/* cbLine:	size of lines for this file */
-literal|0
-block|,
-comment|/* cbSs:	number of bytes in the ss */
-literal|0
-block|,
-comment|/* rss:		file name (of source, if known) */
-literal|0
-block|,
-comment|/* issBase:	file's string space */
-literal|0
-block|,
-comment|/* isymBase:	beginning of symbols */
-literal|0
-block|,
-comment|/* csym:	count file's of symbols */
-literal|0
-block|,
-comment|/* ilineBase:	file's line symbols */
-literal|0
-block|,
-comment|/* cline:	count of file's line symbols */
-literal|0
-block|,
-comment|/* ioptBase:	file's optimization entries */
-literal|0
-block|,
-comment|/* copt:	count of file's optimization entries */
-literal|0
-block|,
-comment|/* ipdFirst:	start of procedures for this file */
-literal|0
-block|,
-comment|/* cpd:		count of procedures for this file */
-literal|0
-block|,
-comment|/* iauxBase:	file's auxiliary entries */
-literal|0
-block|,
-comment|/* caux:	count of file's auxiliary entries */
-literal|0
-block|,
-comment|/* rfdBase:	index into the file indirect table */
-literal|0
-block|,
-comment|/* crfd:	count file indirect entries */
-name|langC
-block|,
-comment|/* lang:	language for this file */
-literal|1
-block|,
-comment|/* fMerge:	whether this file can be merged */
-literal|0
-block|,
-comment|/* fReadin:	true if read in (not just created) */
-ifdef|#
-directive|ifdef
-name|HOST_WORDS_BIG_ENDIAN
-literal|1
-block|,
-comment|/* fBigendian:	if 1, compiled on big endian machine */
-else|#
-directive|else
-literal|0
-block|,
-comment|/* fBigendian:	if 1, compiled on big endian machine */
-endif|#
-directive|endif
-literal|0
-block|,
-comment|/* fTrim:	whether the symbol table was trimmed */
-name|GLEVEL_2
-block|,
-comment|/* glevel:	level this file was compiled with */
-literal|0
-block|,
-comment|/* reserved:	reserved for future use */
-else|#
-directive|else
-literal|0
-block|,
-comment|/* adr:		memory address of beginning of file */
-literal|0
-block|,
-comment|/* rss:		file name (of source, if known) */
-literal|0
-block|,
-comment|/* issBase:	file's string space */
-literal|0
-block|,
-comment|/* cbSs:	number of bytes in the ss */
-literal|0
-block|,
-comment|/* isymBase:	beginning of symbols */
-literal|0
-block|,
-comment|/* csym:	count file's of symbols */
-literal|0
-block|,
-comment|/* ilineBase:	file's line symbols */
-literal|0
-block|,
-comment|/* cline:	count of file's line symbols */
-literal|0
-block|,
-comment|/* ioptBase:	file's optimization entries */
-literal|0
-block|,
-comment|/* copt:	count of file's optimization entries */
-literal|0
-block|,
-comment|/* ipdFirst:	start of procedures for this file */
-literal|0
-block|,
-comment|/* cpd:		count of procedures for this file */
-literal|0
-block|,
-comment|/* iauxBase:	file's auxiliary entries */
-literal|0
-block|,
-comment|/* caux:	count of file's auxiliary entries */
-literal|0
-block|,
-comment|/* rfdBase:	index into the file indirect table */
-literal|0
-block|,
-comment|/* crfd:	count file indirect entries */
-name|langC
-block|,
-comment|/* lang:	language for this file */
-literal|1
-block|,
-comment|/* fMerge:	whether this file can be merged */
-literal|0
-block|,
-comment|/* fReadin:	true if read in (not just created) */
-ifdef|#
-directive|ifdef
-name|HOST_WORDS_BIG_ENDIAN
-literal|1
-block|,
-comment|/* fBigendian:	if 1, compiled on big endian machine */
-else|#
-directive|else
-literal|0
-block|,
-comment|/* fBigendian:	if 1, compiled on big endian machine */
-endif|#
-directive|endif
-name|GLEVEL_2
-block|,
-comment|/* glevel:	level this file was compiled with */
-literal|0
-block|,
-comment|/* reserved:	reserved for future use */
-literal|0
-block|,
-comment|/* cbLineOffset: byte offset from header for this file ln's */
-literal|0
-block|,
-comment|/* cbLine:	size of lines for this file */
-endif|#
-directive|endif
-block|}
-block|,
-operator|(
-name|FDR
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* orig_fdr:	original file header pointer */
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* name:	pointer to filename */
-literal|0
-block|,
-comment|/* name_len:	length of filename */
-literal|0
-block|,
-comment|/* void_type:	ptr to aux node for void type */
-literal|0
-block|,
-comment|/* int_type:	ptr to aux node for int type */
-operator|(
-name|scope_t
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* cur_scope:	current scope being processed */
-literal|0
-block|,
-comment|/* file_index:	current file # */
-literal|0
-block|,
-comment|/* nested_scopes: # nested scopes */
-name|INIT_VARRAY
-argument_list|(
-name|char
-argument_list|)
-block|,
-comment|/* strings:	local string varray */
-name|INIT_VARRAY
-argument_list|(
-name|SYMR
-argument_list|)
-block|,
-comment|/* symbols:	local symbols varray */
-name|INIT_VARRAY
-argument_list|(
-name|PDR
-argument_list|)
-block|,
-comment|/* procs:	procedure varray */
-name|INIT_VARRAY
-argument_list|(
-name|AUXU
-argument_list|)
-block|,
-comment|/* aux_syms:	auxiliary symbols varray */
-operator|(
-expr|struct
-name|efdr
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* next_file:	next file structure */
-operator|(
-name|shash_t
-operator|*
-operator|*
-operator|)
-literal|0
-block|,
-comment|/* shash_head:	string hash table */
-block|{
-literal|0
-block|}
-block|,
-comment|/* thash_head:	type hash table */
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3954,6 +3724,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|file_offset
 init|=
@@ -3967,6 +3738,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|long
 name|max_file_offset
 init|=
@@ -4187,6 +3959,15 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|had_errors
 init|=
 literal|0
@@ -4294,633 +4075,532 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|int
 name|out_of_bounds
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symint_t
-operator|,
+parameter_list|,
 name|symint_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|shash_t
 modifier|*
 name|hash_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Ptrdiff_t
-operator|,
+parameter_list|,
 name|shash_t
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|symint_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|symint_t
 name|add_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|varray_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|shash_t
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|shash_t
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|symint_t
 name|add_local_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|st_t
-operator|,
+parameter_list|,
 name|sc_t
-operator|,
+parameter_list|,
 name|symint_t
-operator|,
+parameter_list|,
 name|symint_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|symint_t
 name|add_ext_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|EXTR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|symint_t
 name|add_aux_sym_symint
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symint_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|symint_t
 name|add_aux_sym_rndx
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|symint_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|symint_t
 name|add_aux_sym_tir
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|type_info_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|hash_state_t
-operator|,
+parameter_list|,
 name|thash_t
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|tag_t
 modifier|*
 name|get_tag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|symint_t
-operator|,
+parameter_list|,
 name|bt_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|add_unknown_tag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tag_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|add_procedure
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|STATIC
+name|void
+name|initialize_init_file
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|STATIC
 name|void
 name|add_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|add_bytes
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|varray_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|add_varray_page
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|varray_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|update_headers
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|write_varray
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|varray_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|off_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|write_object
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 specifier|const
 name|char
 modifier|*
 name|st_to_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|st_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 specifier|const
 name|char
 modifier|*
 name|sc_to_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|sc_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|char
 modifier|*
 name|read_line
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_input
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|mark_stabs
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_begin
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_bend
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_def
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_end
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_ent
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_stabs_common
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_stabs
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|parse_stabn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|page_t
 modifier|*
 name|read_seek
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Size_t
-operator|,
+parameter_list|,
 name|off_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|copy_object
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|STATIC
 name|void
 name|catch_signal
-name|PARAMS
 argument_list|(
-operator|(
 name|int
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|page_t
 modifier|*
 name|allocate_page
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|page_t
 modifier|*
 name|allocate_multiple_pages
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|free_multiple_pages
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|page_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -4928,178 +4608,142 @@ directive|ifndef
 name|MALLOC_CHECK
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|page_t
 modifier|*
 name|allocate_cluster
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|forward_t
 modifier|*
 name|allocate_forward
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|scope_t
 modifier|*
 name|allocate_scope
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|shash_t
 modifier|*
 name|allocate_shash
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|tag_t
 modifier|*
 name|allocate_tag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|thash_t
 modifier|*
 name|allocate_thash
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|thead_t
 modifier|*
 name|allocate_thead
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|vlinks_t
 modifier|*
 name|allocate_vlinks
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|free_forward
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|forward_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|free_scope
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|scope_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|free_tag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tag_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|STATIC
 name|void
 name|free_thead
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|thead_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -5149,15 +4793,14 @@ decl_stmt|;
 comment|/* length of name to compare */
 name|void
 argument_list|(
-argument|*const func
+operator|*
+specifier|const
+name|func
 argument_list|)
-name|PARAMS
 argument_list|(
-operator|(
 specifier|const
 name|char
 operator|*
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* function to handle line */
@@ -5324,6 +4967,55 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Command line options for getopt_long.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|option
+name|options
+index|[]
+init|=
+block|{
+block|{
+literal|"version"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'V'
+block|}
+block|,
+block|{
+literal|"verbose"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* Add a page to a varray object.  */
 end_comment
 
@@ -5332,13 +5024,10 @@ name|STATIC
 name|void
 name|add_varray_page
 parameter_list|(
-name|vp
-parameter_list|)
 name|varray_t
 modifier|*
 name|vp
-decl_stmt|;
-comment|/* varray to add page to */
+parameter_list|)
 block|{
 name|vlinks_t
 modifier|*
@@ -5362,10 +5051,6 @@ name|new_links
 operator|->
 name|datum
 operator|=
-operator|(
-name|page_t
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 literal|1
@@ -5493,35 +5178,23 @@ name|shash_t
 modifier|*
 name|hash_string
 parameter_list|(
-name|text
-parameter_list|,
-name|hash_len
-parameter_list|,
-name|hash_tbl
-parameter_list|,
-name|ret_hash_index
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|text
-decl_stmt|;
-comment|/* ptr to text to hash */
+parameter_list|,
 name|Ptrdiff_t
 name|hash_len
-decl_stmt|;
-comment|/* length of the text */
+parameter_list|,
 name|shash_t
 modifier|*
 modifier|*
 name|hash_tbl
-decl_stmt|;
-comment|/* hash table */
+parameter_list|,
 name|symint_t
 modifier|*
 name|ret_hash_index
-decl_stmt|;
-comment|/* ptr to store hash index */
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -5674,7 +5347,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Add a string (and null pad) to one of the string tables.  A    consequence of hashing strings, is that we don't let strings    cross page boundaries.  The extra nulls will be ignored.  */
+comment|/* Add a string (and null pad) to one of the string tables.  A    consequence of hashing strings, is that we don't let strings cross    page boundaries.  The extra nulls will be ignored.  VP is a string    virtual array, HASH_TBL a pointer to the hash table, the string    starts at START and the position one byte after the string is given    with END_P1, the resulting hash pointer is returned in RET_HASH.  */
 end_comment
 
 begin_function
@@ -5682,45 +5355,30 @@ name|STATIC
 name|symint_t
 name|add_string
 parameter_list|(
-name|vp
-parameter_list|,
-name|hash_tbl
-parameter_list|,
-name|start
-parameter_list|,
-name|end_p1
-parameter_list|,
-name|ret_hash
-parameter_list|)
 name|varray_t
 modifier|*
 name|vp
-decl_stmt|;
-comment|/* string virtual array */
+parameter_list|,
 name|shash_t
 modifier|*
 modifier|*
 name|hash_tbl
-decl_stmt|;
-comment|/* ptr to hash table */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* 1st byte in string */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|end_p1
-decl_stmt|;
-comment|/* 1st byte after string */
+parameter_list|,
 name|shash_t
 modifier|*
 modifier|*
 name|ret_hash
-decl_stmt|;
-comment|/* return hash pointer */
+parameter_list|)
 block|{
 name|Ptrdiff_t
 name|len
@@ -5944,7 +5602,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Add a local symbol.  */
+comment|/* Add a local symbol.  The symbol string starts at STR_START and the    first byte after it is makred by STR_END_P1.  The symbol has type    TYPE and storage class STORAGE and value VALUE.  INDX is an index    to local/aux. symbols.  */
 end_comment
 
 begin_function
@@ -5952,46 +5610,28 @@ name|STATIC
 name|symint_t
 name|add_local_symbol
 parameter_list|(
-name|str_start
-parameter_list|,
-name|str_end_p1
-parameter_list|,
-name|type
-parameter_list|,
-name|storage
-parameter_list|,
-name|value
-parameter_list|,
-name|indx
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str_start
-decl_stmt|;
-comment|/* first byte in string */
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|str_end_p1
-decl_stmt|;
-comment|/* first byte after string */
+parameter_list|,
 name|st_t
 name|type
-decl_stmt|;
-comment|/* symbol type */
+parameter_list|,
 name|sc_t
 name|storage
-decl_stmt|;
-comment|/* storage class */
+parameter_list|,
 name|symint_t
 name|value
-decl_stmt|;
-comment|/* value of symbol */
+parameter_list|,
 name|symint_t
 name|indx
-decl_stmt|;
-comment|/* index to local/aux. syms */
+parameter_list|)
 block|{
 name|symint_t
 name|ret
@@ -6719,7 +6359,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Add an external symbol.  */
+comment|/* Add an external symbol with symbol pointer ESYM and file index    IFD.  */
 end_comment
 
 begin_function
@@ -6727,19 +6367,13 @@ name|STATIC
 name|symint_t
 name|add_ext_symbol
 parameter_list|(
-name|esym
-parameter_list|,
-name|ifd
-parameter_list|)
 name|EXTR
 modifier|*
 name|esym
-decl_stmt|;
-comment|/* symbol pointer */
+parameter_list|,
 name|int
 name|ifd
-decl_stmt|;
-comment|/* file index */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -7009,12 +6643,9 @@ name|STATIC
 name|symint_t
 name|add_aux_sym_symint
 parameter_list|(
-name|aux_word
-parameter_list|)
 name|symint_t
 name|aux_word
-decl_stmt|;
-comment|/* auxiliary information word */
+parameter_list|)
 block|{
 name|AUXU
 modifier|*
@@ -7091,16 +6722,12 @@ name|STATIC
 name|symint_t
 name|add_aux_sym_rndx
 parameter_list|(
-name|file_index
-parameter_list|,
-name|sym_index
-parameter_list|)
 name|int
 name|file_index
-decl_stmt|;
+parameter_list|,
 name|symint_t
 name|sym_index
-decl_stmt|;
+parameter_list|)
 block|{
 name|AUXU
 modifier|*
@@ -7190,27 +6817,18 @@ name|STATIC
 name|symint_t
 name|add_aux_sym_tir
 parameter_list|(
-name|t
-parameter_list|,
-name|state
-parameter_list|,
-name|hash_tbl
-parameter_list|)
 name|type_info_t
 modifier|*
 name|t
-decl_stmt|;
-comment|/* current type information */
+parameter_list|,
 name|hash_state_t
 name|state
-decl_stmt|;
-comment|/* whether to hash type or not */
+parameter_list|,
 name|thash_t
 modifier|*
 modifier|*
 name|hash_tbl
-decl_stmt|;
-comment|/* pointer to hash table to use */
+parameter_list|)
 block|{
 name|AUXU
 modifier|*
@@ -7655,7 +7273,7 @@ operator|->
 name|num_allocated
 operator|++
 expr_stmt|;
-comment|/* Add bitfield length if it exists.            NOTE:  Mips documentation claims bitfield goes at the end of the      AUX record, but the DECstation compiler emits it here.      (This would only make a difference for enum bitfields.)       Also note:  We use the last size given since gcc may emit 2      for an enum bitfield.  */
+comment|/* Add bitfield length if it exists.       NOTE:  Mips documentation claims bitfield goes at the end of the      AUX record, but the DECstation compiler emits it here.      (This would only make a difference for enum bitfields.)       Also note:  We use the last size given since gcc may emit 2      for an enum bitfield.  */
 if|if
 condition|(
 name|t
@@ -8000,33 +7618,25 @@ name|tag_t
 modifier|*
 name|get_tag
 parameter_list|(
-name|tag_start
-parameter_list|,
-name|tag_end_p1
-parameter_list|,
-name|indx
-parameter_list|,
-name|basic_type
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|tag_start
-decl_stmt|;
+parameter_list|,
 comment|/* 1st byte of tag name */
 specifier|const
 name|char
 modifier|*
 name|tag_end_p1
-decl_stmt|;
+parameter_list|,
 comment|/* 1st byte after tag name */
 name|symint_t
 name|indx
-decl_stmt|;
+parameter_list|,
 comment|/* index of tag start block */
 name|bt_t
 name|basic_type
-decl_stmt|;
+parameter_list|)
 comment|/* bt_Struct, bt_Union, or bt_Enum */
 block|{
 name|shash_t
@@ -8240,13 +7850,10 @@ name|STATIC
 name|void
 name|add_unknown_tag
 parameter_list|(
-name|ptag
-parameter_list|)
 name|tag_t
 modifier|*
 name|ptag
-decl_stmt|;
-comment|/* pointer to tag information */
+parameter_list|)
 block|{
 name|shash_t
 modifier|*
@@ -8471,21 +8078,17 @@ name|STATIC
 name|void
 name|add_procedure
 parameter_list|(
-name|func_start
-parameter_list|,
-name|func_end_p1
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|func_start
-decl_stmt|;
+parameter_list|,
 comment|/* 1st byte of func name */
 specifier|const
 name|char
 modifier|*
 name|func_end_p1
-decl_stmt|;
+parameter_list|)
 comment|/* 1st byte after func name */
 block|{
 name|PDR
@@ -8771,6 +8374,115 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Initialize the init_file structure.  */
+end_comment
+
+begin_function
+name|STATIC
+name|void
+name|initialize_init_file
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|memset
+argument_list|(
+operator|&
+name|init_file
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|init_file
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|init_file
+operator|.
+name|fdr
+operator|.
+name|lang
+operator|=
+name|langC
+expr_stmt|;
+name|init_file
+operator|.
+name|fdr
+operator|.
+name|fMerge
+operator|=
+literal|1
+expr_stmt|;
+name|init_file
+operator|.
+name|fdr
+operator|.
+name|glevel
+operator|=
+name|GLEVEL_2
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HOST_WORDS_BIG_ENDIAN
+name|init_file
+operator|.
+name|fdr
+operator|.
+name|fBigendian
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+name|INITIALIZE_VARRAY
+argument_list|(
+operator|&
+name|init_file
+operator|.
+name|strings
+argument_list|,
+name|char
+argument_list|)
+expr_stmt|;
+name|INITIALIZE_VARRAY
+argument_list|(
+operator|&
+name|init_file
+operator|.
+name|symbols
+argument_list|,
+name|SYMR
+argument_list|)
+expr_stmt|;
+name|INITIALIZE_VARRAY
+argument_list|(
+operator|&
+name|init_file
+operator|.
+name|procs
+argument_list|,
+name|PDR
+argument_list|)
+expr_stmt|;
+name|INITIALIZE_VARRAY
+argument_list|(
+operator|&
+name|init_file
+operator|.
+name|aux_syms
+argument_list|,
+name|AUXU
+argument_list|)
+expr_stmt|;
+name|init_file_initialized
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Add a new filename, and set up all of the file relative    virtual arrays (strings, symbols, aux syms, etc.).  Record    where the current file structure lives.  */
 end_comment
 
@@ -8779,21 +8491,17 @@ name|STATIC
 name|void
 name|add_file
 parameter_list|(
-name|file_start
-parameter_list|,
-name|file_end_p1
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|file_start
-decl_stmt|;
+parameter_list|,
 comment|/* first byte in string */
 specifier|const
 name|char
 modifier|*
 name|file_end_p1
-decl_stmt|;
+parameter_list|)
 comment|/* first byte after string */
 block|{
 specifier|static
@@ -8934,6 +8642,14 @@ argument_list|(
 operator|&
 name|file_desc
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|init_file_initialized
+condition|)
+name|initialize_init_file
+argument_list|()
 expr_stmt|;
 name|file_ptr
 operator|=
@@ -9164,25 +8880,19 @@ name|STATIC
 name|void
 name|add_bytes
 parameter_list|(
-name|vp
-parameter_list|,
-name|input_ptr
-parameter_list|,
-name|nitems
-parameter_list|)
 name|varray_t
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|,
 comment|/* virtual array to add too */
 name|char
 modifier|*
 name|input_ptr
-decl_stmt|;
+parameter_list|,
 comment|/* start of the bytes */
 name|Size_t
 name|nitems
-decl_stmt|;
+parameter_list|)
 comment|/* # items to move */
 block|{
 name|Size_t
@@ -9329,11 +9039,9 @@ name|char
 modifier|*
 name|sc_to_string
 parameter_list|(
-name|storage_class
-parameter_list|)
 name|sc_t
 name|storage_class
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -9505,11 +9213,9 @@ name|char
 modifier|*
 name|st_to_string
 parameter_list|(
-name|symbol_type
-parameter_list|)
 name|st_t
 name|symbol_type
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -9661,7 +9367,9 @@ name|STATIC
 name|char
 modifier|*
 name|read_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -9954,14 +9662,11 @@ name|STATIC
 name|void
 name|parse_begin
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -10176,14 +9881,11 @@ name|STATIC
 name|void
 name|parse_bend
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -10398,14 +10100,11 @@ name|STATIC
 name|void
 name|parse_def
 parameter_list|(
-name|name_start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name_start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -10651,7 +10350,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* Pick up the subdirective now */
+comment|/* Pick up the subdirective now.  */
 for|for
 control|(
 name|dir_end_p1
@@ -10782,10 +10481,12 @@ operator|!=
 name|arg_start
 operator|||
 operator|(
+operator|(
 name|ch2
 operator|=
 operator|*
 name|arg_end_p1
+operator|)
 operator|!=
 literal|';'
 operator|)
@@ -11033,10 +10734,12 @@ operator|!=
 name|arg_start
 operator|||
 operator|(
+operator|(
 name|ch2
 operator|=
 operator|*
 name|arg_end_p1
+operator|)
 operator|!=
 literal|';'
 operator|)
@@ -11343,10 +11046,12 @@ operator|!=
 name|arg_start
 operator|||
 operator|(
+operator|(
 name|ch2
 operator|=
 operator|*
 name|arg_end_p1
+operator|)
 operator|!=
 literal|';'
 operator|)
@@ -12480,7 +12185,7 @@ argument_list|,
 name|indx
 argument_list|)
 decl_stmt|;
-comment|/* deal with struct, union, and enum tags.  */
+comment|/* Deal with struct, union, and enum tags.  */
 if|if
 condition|(
 name|symbol_type
@@ -12621,14 +12326,11 @@ name|STATIC
 name|void
 name|parse_end
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -12842,14 +12544,11 @@ name|STATIC
 name|void
 name|parse_ent
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -12982,14 +12681,11 @@ name|STATIC
 name|void
 name|parse_file
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -13104,15 +12800,12 @@ specifier|static
 name|void
 name|mark_stabs
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-comment|/* Start of directive (ignored) */
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13168,29 +12861,23 @@ name|STATIC
 name|void
 name|parse_stabs_common
 parameter_list|(
-name|string_start
-parameter_list|,
-name|string_end
-parameter_list|,
-name|rest
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|string_start
-decl_stmt|;
+parameter_list|,
 comment|/* start of string or NULL */
 specifier|const
 name|char
 modifier|*
 name|string_end
-decl_stmt|;
+parameter_list|,
 comment|/* end+1 of string or NULL */
 specifier|const
 name|char
 modifier|*
 name|rest
-decl_stmt|;
+parameter_list|)
 comment|/* rest of the directive.  */
 block|{
 name|efdr_t
@@ -14032,14 +13719,11 @@ name|STATIC
 name|void
 name|parse_stabs
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -14107,14 +13791,11 @@ name|STATIC
 name|void
 name|parse_stabn
 parameter_list|(
-name|start
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of directive */
+parameter_list|)
 block|{
 name|parse_stabs_common
 argument_list|(
@@ -14149,7 +13830,9 @@ begin_function
 name|STATIC
 name|void
 name|parse_input
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -14219,7 +13902,7 @@ operator|)
 literal|0
 condition|)
 block|{
-comment|/* Skip leading blanks */
+comment|/* Skip leading blanks.  */
 while|while
 condition|(
 name|ISSPACE
@@ -14426,7 +14109,9 @@ begin_function
 name|STATIC
 name|void
 name|update_headers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|symint_t
 name|i
@@ -15344,26 +15029,20 @@ name|STATIC
 name|void
 name|write_varray
 parameter_list|(
-name|vp
-parameter_list|,
-name|offset
-parameter_list|,
-name|str
-parameter_list|)
 name|varray_t
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|,
 comment|/* virtual array */
 name|off_t
 name|offset
-decl_stmt|;
+parameter_list|,
 comment|/* offset to write varray to */
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 comment|/* string to print out when tracing */
 block|{
 name|int
@@ -15388,31 +15067,19 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\twarray\tvp = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\twarray\tvp = "
 name|HOST_PTR_PRINTF
+literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|vp
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -15431,11 +15098,14 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 operator|&&
 name|fseek
@@ -15514,9 +15184,6 @@ name|sys_write
 operator|=
 name|fwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|ptr
 operator|->
 name|datum
@@ -15576,7 +15243,9 @@ begin_function
 name|STATIC
 name|void
 name|write_object
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|sys_write
@@ -15592,32 +15261,20 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\n\twrite\tvp = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\n\twrite\tvp = "
 name|HOST_PTR_PRINTF
+literal|", offset = %7u, size = %7lu, %s\n"
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|symbolic_header
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", offset = %7u, size = %7lu, %s\n"
 argument_list|,
 literal|0
 argument_list|,
@@ -15633,14 +15290,10 @@ argument_list|,
 literal|"symbolic header"
 argument_list|)
 expr_stmt|;
-block|}
 name|sys_write
 operator|=
 name|fwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|symbolic_header
 argument_list|,
@@ -15720,6 +15373,10 @@ if|if
 condition|(
 name|file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbLineOffset
@@ -15746,32 +15403,20 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\twrite\tvp = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\twrite\tvp = "
 name|HOST_PTR_PRINTF
+literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|orig_linenum
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|long
@@ -15790,14 +15435,10 @@ argument_list|,
 literal|"Line numbers"
 argument_list|)
 expr_stmt|;
-block|}
 name|sys_write
 operator|=
 name|fwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|orig_linenum
 argument_list|,
 literal|1
@@ -15885,6 +15526,10 @@ if|if
 condition|(
 name|file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbOptOffset
@@ -15911,32 +15556,20 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\twrite\tvp = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\twrite\tvp = "
 name|HOST_PTR_PRINTF
+literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|orig_opt_syms
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|long
@@ -15950,14 +15583,10 @@ argument_list|,
 literal|"Optimizer symbols"
 argument_list|)
 expr_stmt|;
-block|}
 name|sys_write
 operator|=
 name|fwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|orig_opt_syms
 argument_list|,
 literal|1
@@ -16290,6 +15919,10 @@ if|if
 condition|(
 name|file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 operator|&&
 name|fseek
@@ -16340,34 +15973,22 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\twrite\tvp = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\twrite\tvp = "
 name|HOST_PTR_PRINTF
+literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|file_ptr
 operator|->
 name|fdr
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 name|file_offset
 argument_list|,
@@ -16383,7 +16004,6 @@ argument_list|,
 literal|"File header"
 argument_list|)
 expr_stmt|;
-block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -16481,6 +16101,10 @@ if|if
 condition|(
 name|file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|symbolic_header
 operator|.
 name|cbRfdOffset
@@ -16507,32 +16131,20 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"\twrite\tvp = "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\twrite\tvp = "
 name|HOST_PTR_PRINTF
+literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|orig_rfds
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", offset = %7lu, size = %7lu, %s\n"
 argument_list|,
 operator|(
 name|long
@@ -16546,7 +16158,6 @@ argument_list|,
 literal|"Relative file descriptors"
 argument_list|)
 expr_stmt|;
-block|}
 name|sys_write
 operator|=
 name|fwrite
@@ -16655,25 +16266,19 @@ name|page_t
 modifier|*
 name|read_seek
 parameter_list|(
-name|size
-parameter_list|,
-name|offset
-parameter_list|,
-name|str
-parameter_list|)
 name|Size_t
 name|size
-decl_stmt|;
+parameter_list|,
 comment|/* # bytes to read */
 name|off_t
 name|offset
-decl_stmt|;
+parameter_list|,
 comment|/* offset to read at */
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 comment|/* name for tracing */
 block|{
 name|page_t
@@ -16748,10 +16353,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|page_t
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 literal|1
@@ -16766,6 +16367,10 @@ if|if
 condition|(
 name|file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 condition|)
 block|{
@@ -16862,9 +16467,6 @@ name|sys_read
 operator|=
 name|fread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|ptr
 argument_list|,
 literal|1
@@ -16942,7 +16544,9 @@ begin_function
 name|STATIC
 name|void
 name|copy_object
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buffer
@@ -17026,9 +16630,6 @@ name|sys_read
 operator|=
 name|fread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|orig_file_header
 argument_list|,
@@ -17161,9 +16762,6 @@ name|sys_read
 operator|=
 name|fread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|orig_sym_hdr
 argument_list|,
@@ -17250,9 +16848,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|cbLine
@@ -17281,9 +16876,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|ipdMax
@@ -17317,9 +16909,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|isymMax
@@ -17353,9 +16942,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|iauxMax
@@ -17389,9 +16975,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|issMax
@@ -17420,9 +17003,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|issExtMax
@@ -17451,9 +17031,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|ifdMax
@@ -17487,9 +17064,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|crfd
@@ -17523,9 +17097,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|iextMax
@@ -17560,9 +17131,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|idnMax
@@ -17590,9 +17158,6 @@ operator|*
 operator|)
 name|orig_dense
 argument_list|,
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|idnMax
@@ -17616,9 +17181,6 @@ operator|*
 operator|)
 name|read_seek
 argument_list|(
-operator|(
-name|Size_t
-operator|)
 name|orig_sym_hdr
 operator|.
 name|ioptMax
@@ -17640,6 +17202,10 @@ if|if
 condition|(
 name|max_file_offset
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 name|stat_buf
 operator|.
 name|st_size
@@ -17734,10 +17300,6 @@ block|}
 comment|/* Create array to map original file numbers to the new file numbers      (in case there are duplicate filenames, we collapse them into one      file section, the MIPS assembler may or may not collapse them).  */
 name|remap_file_number
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 name|alloca
 argument_list|(
 sizeof|sizeof
@@ -17866,7 +17428,7 @@ name|orig_ext_syms
 operator|+
 name|es
 decl_stmt|;
-name|unsigned
+name|int
 name|ifd
 init|=
 name|eptr
@@ -18619,9 +18181,6 @@ name|sys_read
 operator|=
 name|fread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|buffer
 argument_list|,
 literal|1
@@ -18713,39 +18272,32 @@ begin_comment
 comment|/* Ye olde main program.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|iflag
@@ -18998,17 +18550,22 @@ condition|(
 operator|(
 name|option
 operator|=
-name|getopt
+name|getopt_long
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
 literal|"d:i:I:o:v"
+argument_list|,
+name|options
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -19075,7 +18632,7 @@ name|rename_output
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall through to 'i' case.  */
+comment|/* Fall through to 'i' case.  */
 case|case
 literal|'i'
 case|:
@@ -19128,10 +18685,55 @@ break|break;
 case|case
 literal|'v'
 case|:
+name|verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
 name|version
 operator|++
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|version
+condition|)
+block|{
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"mips-tfile (GCC) %s\n"
+argument_list|)
+argument_list|,
+name|version_string
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"Copyright (C) 2004 Free Software Foundation, Inc.\n"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|_
+argument_list|(
+literal|"This is free software; see the source for copying conditions.  There is NO\n\ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+argument_list|)
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -19212,6 +18814,51 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|optind
+operator|!=
+name|argc
+operator|-
+literal|1
+condition|)
+name|had_errors
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|||
+name|had_errors
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"mips-tfile (GCC) %s"
+argument_list|)
+argument_list|,
+name|version_string
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TARGET_VERSION
+name|TARGET_VERSION
+expr_stmt|;
+endif|#
+directive|endif
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|object_name
 operator|==
 operator|(
@@ -19221,12 +18868,6 @@ operator|)
 literal|0
 operator|||
 name|had_errors
-operator|||
-name|optind
-operator|!=
-name|argc
-operator|-
-literal|1
 condition|)
 block|{
 name|fprintf
@@ -19329,38 +18970,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-block|}
-if|if
-condition|(
-name|version
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"mips-tfile version %s"
-argument_list|)
-argument_list|,
-name|version_string
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TARGET_VERSION
-name|TARGET_VERSION
-expr_stmt|;
-endif|#
-directive|endif
-name|fputc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -19804,11 +19413,9 @@ name|STATIC
 name|void
 name|catch_signal
 parameter_list|(
-name|signum
-parameter_list|)
 name|int
 name|signum
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -19842,13 +19449,11 @@ begin_function
 name|void
 name|pfatal_with_name
 parameter_list|(
-name|msg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|save_errno
@@ -19930,31 +19535,23 @@ specifier|static
 name|int
 name|out_of_bounds
 parameter_list|(
-name|indx
-parameter_list|,
-name|max
-parameter_list|,
-name|str
-parameter_list|,
-name|prog_line
-parameter_list|)
 name|symint_t
 name|indx
-decl_stmt|;
+parameter_list|,
 comment|/* index that is out of bounds */
 name|symint_t
 name|max
-decl_stmt|;
+parameter_list|,
 comment|/* maximum index */
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 comment|/* string to print out */
 name|int
 name|prog_line
-decl_stmt|;
+parameter_list|)
 comment|/* line number within mips-tfile.c */
 block|{
 if|if
@@ -20025,20 +19622,14 @@ name|page_t
 modifier|*
 name|allocate_cluster
 parameter_list|(
-name|npages
-parameter_list|)
 name|Size_t
 name|npages
-decl_stmt|;
+parameter_list|)
 block|{
 name|page_t
 modifier|*
 name|value
 init|=
-operator|(
-name|page_t
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 name|npages
@@ -20084,11 +19675,9 @@ name|page_t
 modifier|*
 name|allocate_cluster
 parameter_list|(
-name|npages
-parameter_list|)
 name|Size_t
 name|npages
-decl_stmt|;
+parameter_list|)
 block|{
 name|page_t
 modifier|*
@@ -20199,40 +19788,27 @@ name|debug
 operator|>
 literal|3
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"\talloc\tnpages = %lu, value = "
+name|HOST_PTR_PRINTF
+literal|"\n"
 argument_list|,
 operator|(
 name|unsigned
 name|long
 operator|)
 name|npages
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
-name|fputs
-argument_list|(
-literal|"\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|ptr
 return|;
@@ -20286,11 +19862,9 @@ name|page_t
 modifier|*
 name|allocate_multiple_pages
 parameter_list|(
-name|npages
-parameter_list|)
 name|Size_t
 name|npages
-decl_stmt|;
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -20353,10 +19927,6 @@ else|#
 directive|else
 comment|/* MALLOC_CHECK */
 return|return
-operator|(
-name|page_t
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 name|npages
@@ -20379,17 +19949,13 @@ name|STATIC
 name|void
 name|free_multiple_pages
 parameter_list|(
-name|page_ptr
-parameter_list|,
-name|npages
-parameter_list|)
 name|page_t
 modifier|*
 name|page_ptr
-decl_stmt|;
+parameter_list|,
 name|Size_t
 name|npages
-decl_stmt|;
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -20437,10 +20003,6 @@ directive|else
 comment|/* MALLOC_CHECK */
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|page_ptr
 argument_list|)
 expr_stmt|;
@@ -20459,7 +20021,9 @@ name|STATIC
 name|page_t
 modifier|*
 name|allocate_page
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifndef|#
 directive|ifndef
@@ -20494,10 +20058,6 @@ else|#
 directive|else
 comment|/* MALLOC_CHECK */
 return|return
-operator|(
-name|page_t
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 literal|1
@@ -20523,7 +20083,9 @@ name|STATIC
 name|scope_t
 modifier|*
 name|allocate_scope
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|scope_t
 modifier|*
@@ -20676,10 +20238,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|scope_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -20721,12 +20279,10 @@ name|STATIC
 name|void
 name|free_scope
 parameter_list|(
-name|ptr
-parameter_list|)
 name|scope_t
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|alloc_counts
 index|[
@@ -20776,9 +20332,6 @@ else|#
 directive|else
 name|free
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -20799,7 +20352,9 @@ name|STATIC
 name|vlinks_t
 modifier|*
 name|allocate_vlinks
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|vlinks_t
 modifier|*
@@ -20909,10 +20464,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|vlinks_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -20957,7 +20508,9 @@ name|STATIC
 name|shash_t
 modifier|*
 name|allocate_shash
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|shash_t
 modifier|*
@@ -21067,10 +20620,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|shash_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -21115,7 +20664,9 @@ name|STATIC
 name|thash_t
 modifier|*
 name|allocate_thash
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thash_t
 modifier|*
@@ -21225,10 +20776,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|thash_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -21273,7 +20820,9 @@ name|STATIC
 name|tag_t
 modifier|*
 name|allocate_tag
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tag_t
 modifier|*
@@ -21426,10 +20975,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|tag_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -21471,12 +21016,10 @@ name|STATIC
 name|void
 name|free_tag
 parameter_list|(
-name|ptr
-parameter_list|)
 name|tag_t
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|alloc_counts
 index|[
@@ -21526,9 +21069,6 @@ else|#
 directive|else
 name|free
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -21549,7 +21089,9 @@ name|STATIC
 name|forward_t
 modifier|*
 name|allocate_forward
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|forward_t
 modifier|*
@@ -21702,10 +21244,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|forward_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -21747,12 +21285,10 @@ name|STATIC
 name|void
 name|free_forward
 parameter_list|(
-name|ptr
-parameter_list|)
 name|forward_t
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|alloc_counts
 index|[
@@ -21802,9 +21338,6 @@ else|#
 directive|else
 name|free
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -21825,7 +21358,9 @@ name|STATIC
 name|thead_t
 modifier|*
 name|allocate_thead
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|thead_t
 modifier|*
@@ -21978,10 +21513,6 @@ else|#
 directive|else
 name|ptr
 operator|=
-operator|(
-name|thead_t
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -22023,12 +21554,10 @@ name|STATIC
 name|void
 name|free_thead
 parameter_list|(
-name|ptr
-parameter_list|)
 name|thead_t
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|alloc_counts
 index|[
@@ -22082,9 +21611,6 @@ else|#
 directive|else
 name|free
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|ptr
 argument_list|)
 expr_stmt|;
@@ -22106,42 +21632,27 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Output an error message and exit */
+comment|/* Output an error message and exit.  */
 end_comment
 
-begin_comment
-comment|/*VARARGS*/
-end_comment
-
-begin_decl_stmt
+begin_function
 name|void
 name|fatal
-name|VPARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|format
-operator|,
-operator|...
-operator|)
-argument_list|)
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
-name|VA_OPEN
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
 name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-name|VA_FIXEDARG
-argument_list|(
-name|ap
-argument_list|,
-specifier|const
-name|char
-operator|*
 argument_list|,
 name|format
 argument_list|)
@@ -22184,7 +21695,7 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_CLOSE
+name|va_end
 argument_list|(
 name|ap
 argument_list|)
@@ -22220,40 +21731,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_comment
-comment|/*VARARGS*/
-end_comment
-
-begin_decl_stmt
+begin_function
 name|void
 name|error
-name|VPARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|format
-operator|,
-operator|...
-operator|)
-argument_list|)
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
-name|VA_OPEN
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
 name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-name|VA_FIXEDARG
-argument_list|(
-name|ap
-argument_list|,
-name|char
-operator|*
 argument_list|,
 name|format
 argument_list|)
@@ -22321,7 +21818,7 @@ expr_stmt|;
 name|had_errors
 operator|++
 expr_stmt|;
-name|VA_CLOSE
+name|va_end
 argument_list|(
 name|ap
 argument_list|)
@@ -22330,7 +21827,7 @@ name|saber_stop
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
@@ -22339,7 +21836,9 @@ end_comment
 begin_function
 name|void
 name|fancy_abort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fatal
 argument_list|(
@@ -22360,13 +21859,11 @@ begin_function
 name|void
 name|botch
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|fatal
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Get common system includes and various definitions and declarations based    on autoconf macros.    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Get common system includes and various definitions and declarations based    on autoconf macros.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,36 +16,14 @@ name|GCC_SYSTEM_H
 end_define
 
 begin_comment
-comment|/* We must include stdarg.h/varargs.h before stdio.h.  */
+comment|/* We must include stdarg.h before stdio.h.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -144,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The compiler is not a multi-threaded application and therefore we    do not have to use the locking functions.  In fact, using the locking    functions can cause the compiler to be significantly slower under    I/O bound conditions (such as -g -O0 on very large source files).     HAVE_DECL_PUTC_UNLOCKED actually indicates whether or not the stdio    code is multi-thread safe by default.  If it is set to 0, then do    not worry about using the _unlocked functions.        fputs_unlocked, fwrite_unlocked, and fprintf_unlocked are    extensions and need to be prototyped by hand (since we do not    define _GNU_SOURCE).  */
+comment|/* The compiler is not a multi-threaded application and therefore we    do not have to use the locking functions.  In fact, using the locking    functions can cause the compiler to be significantly slower under    I/O bound conditions (such as -g -O0 on very large source files).     HAVE_DECL_PUTC_UNLOCKED actually indicates whether or not the stdio    code is multi-thread safe by default.  If it is set to 0, then do    not worry about using the _unlocked functions.     fputs_unlocked, fwrite_unlocked, and fprintf_unlocked are    extensions and need to be prototyped by hand (since we do not    define _GNU_SOURCE).  */
 end_comment
 
 begin_if
@@ -250,23 +228,20 @@ operator|!
 name|HAVE_DECL_FPUTS_UNLOCKED
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|fputs_unlocked
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -318,26 +293,24 @@ operator|!
 name|HAVE_DECL_FWRITE_UNLOCKED
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|fwrite_unlocked
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-name|PTR
-operator|,
+name|void
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -384,25 +357,22 @@ operator|!
 name|HAVE_DECL_FPRINTF_UNLOCKED
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|fprintf_unlocked
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -418,6 +388,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ??? Glibc's fwrite/fread_unlocked macros cause    "warning: signed and unsigned type in conditional expression".  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|fread_unlocked
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|fwrite_unlocked
+end_undef
 
 begin_comment
 comment|/* There are an extraordinary number of issues with<ctype.h>.    The last straw is that it varies with the locale.  Use libiberty's    replacement instead.  */
@@ -470,6 +456,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Some of glibc's string inlines cause warnings.  Plus we'd rather    rely on (and therefore test) GCC's string builtins.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__NO_STRING_INLINES
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1238,20 +1234,17 @@ operator|!
 name|HAVE_DECL_ATOF
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|double
 name|atof
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1270,20 +1263,17 @@ operator|!
 name|HAVE_DECL_ATOL
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|atol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1302,18 +1292,16 @@ operator|!
 name|HAVE_DECL_FREE
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|free
-name|PARAMS
-argument_list|(
-operator|(
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1332,22 +1320,19 @@ operator|!
 name|HAVE_DECL_GETCWD
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|getcwd
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1366,21 +1351,18 @@ operator|!
 name|HAVE_DECL_GETENV
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|getenv
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1399,27 +1381,24 @@ operator|!
 name|HAVE_DECL_GETOPT
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|getopt
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 specifier|const
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1438,20 +1417,17 @@ operator|!
 name|HAVE_DECL_GETWD
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|getwd
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1470,18 +1446,16 @@ operator|!
 name|HAVE_DECL_SBRK
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|PTR
+name|void
+modifier|*
 name|sbrk
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1500,25 +1474,22 @@ operator|!
 name|HAVE_DECL_STRSTR
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|strstr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1554,18 +1525,16 @@ operator|!
 name|HAVE_DECL_MALLOC
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|PTR
+name|void
+modifier|*
 name|malloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1584,20 +1553,18 @@ operator|!
 name|HAVE_DECL_CALLOC
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|PTR
+name|void
+modifier|*
 name|calloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1616,20 +1583,19 @@ operator|!
 name|HAVE_DECL_REALLOC
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|PTR
+name|void
+modifier|*
 name|realloc
-name|PARAMS
-argument_list|(
-operator|(
-name|PTR
-operator|,
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1640,11 +1606,26 @@ begin_comment
 comment|/* If the system doesn't provide strsignal, we get it defined in    libiberty but no declaration is supplied.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_STRSIGNAL
-end_ifndef
+argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|HAVE_DECL_STRSIGNAL
+argument_list|)
+operator|&&
+operator|!
+name|HAVE_DECL_STRSIGNAL
+operator|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -1652,20 +1633,17 @@ directive|ifndef
 name|strsignal
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 specifier|const
 name|char
 modifier|*
 name|strsignal
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1701,39 +1679,25 @@ directive|ifndef
 name|getrlimit
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|rlimit
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|getrlimit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|rlimit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1774,40 +1738,26 @@ directive|ifndef
 name|setrlimit
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|rlimit
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|setrlimit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 specifier|const
-expr|struct
+name|struct
 name|rlimit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1818,43 +1768,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_VOLATILE only refers to the stage1 compiler.  We also check    __STDC__ and assume gcc sets it and has volatile in stage>=2.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_VOLATILE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-specifier|volatile
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|volatile
-end_define
 
 begin_endif
 endif|#
@@ -1873,18 +1786,51 @@ operator|!
 name|HAVE_DECL_ABORT
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|abort
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_SNPRINTF
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+operator|&&
+operator|!
+name|HAVE_DECL_SNPRINTF
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -2312,6 +2258,36 @@ name|HOST_PTR_PRINTF
 value|"%p"
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|SIZEOF_INT
+operator|==
+name|SIZEOF_VOID_P
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HOST_PTR_PRINTF
+value|"%x"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SIZEOF_LONG
+operator|==
+name|SIZEOF_VOID_P
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HOST_PTR_PRINTF
+value|"%lx"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2321,8 +2297,7 @@ begin_define
 define|#
 directive|define
 name|HOST_PTR_PRINTF
-define|\
-value|(sizeof (int) == sizeof (char *) ? "%x" \      : sizeof (long) == sizeof (char *) ? "%lx" : "%llx")
+value|"%llx"
 end_define
 
 begin_endif
@@ -2361,6 +2336,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Filename handling macros.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"filenames.h"
+end_include
+
+begin_comment
+comment|/* These should be phased out in favor of IS_DIR_SEPARATOR, where possible.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2374,64 +2363,6 @@ name|DIR_SEPARATOR
 value|'/'
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define IS_DIR_SEPARATOR.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DIR_SEPARATOR_2
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IS_DIR_SEPARATOR
-parameter_list|(
-name|CH
-parameter_list|)
-value|((CH) == DIR_SEPARATOR)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* DIR_SEPARATOR_2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IS_DIR_SEPARATOR
-parameter_list|(
-name|CH
-parameter_list|)
-define|\
-value|(((CH) == DIR_SEPARATOR) || ((CH) == DIR_SEPARATOR_2))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DIR_SEPARATOR_2 */
-end_comment
-
-begin_comment
-comment|/* Say how to test for an absolute pathname.  On Unix systems, this is if    it starts with a leading slash or a '$', the latter meaning the value of    an environment variable is to be used.  On machien with DOS-based    file systems, it is also absolute if it starts with a drive identifier.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2441,29 +2372,14 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|IS_ABSOLUTE_PATHNAME
-parameter_list|(
-name|STR
-parameter_list|)
-define|\
-value|(IS_DIR_SEPARATOR ((STR)[0]) || (STR)[0] == '$' \    || ((STR)[0] != '\0'&& (STR)[1] == ':'&& IS_DIR_SEPARATOR ((STR)[2])))
+name|DIR_SEPARATOR_2
+value|'\\'
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IS_ABSOLUTE_PATHNAME
-parameter_list|(
-name|STR
-parameter_list|)
-define|\
-value|(IS_DIR_SEPARATOR ((STR)[0]) || (STR)[0] == '$')
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2478,12 +2394,6 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"symcat.h"
 end_include
 
 begin_comment
@@ -2529,7 +2439,7 @@ name|ENUM_BITFIELD
 parameter_list|(
 name|TYPE
 parameter_list|)
-value|enum TYPE
+value|__extension__ enum TYPE
 end_define
 
 begin_else
@@ -2544,6 +2454,44 @@ name|ENUM_BITFIELD
 parameter_list|(
 name|TYPE
 parameter_list|)
+value|unsigned int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* We only use bool bitfields with gcc3.  Some supposedly C99    compilers don't handle them correctly.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BOOL_BITFIELD
+value|_Bool
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BOOL_BITFIELD
 value|unsigned int
 end_define
 
@@ -2568,39 +2516,6 @@ parameter_list|,
 name|MEMBER
 parameter_list|)
 value|((size_t)&((TYPE *) 0)->MEMBER)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Traditional C cannot initialize union members of structs.  Provide    a macro which expands appropriately to handle it.  This only works    if you intend to initialize the union member to zero since it relies    on default initialization to zero in the traditional C case.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|UNION_INIT_ZERO
-value|, {0}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|UNION_INIT_ZERO
 end_define
 
 begin_endif
@@ -2818,6 +2733,48 @@ end_define
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|FLEX_SCANNER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|YYBISON
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|YYBYACC
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Flex and bison use malloc and realloc.  Yuk.  Note that this means    really_call_* cannot be used in a .l or .y file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|malloc
+value|xmalloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|realloc
+value|xrealloc
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 operator|(
 name|GCC_VERSION
 operator|>=
@@ -2859,39 +2816,18 @@ end_pragma
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|FLEX_SCANNER
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|YYBISON
 argument_list|)
 end_if
-
-begin_comment
-comment|/* Flex and bison use malloc and realloc.  Yuk.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|malloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|realloc
-value|xrealloc
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_undef
 undef|#
@@ -2968,6 +2904,38 @@ name|STRIP_NAME_ENCODING
 name|ASM_GLOBALIZE_LABEL
 pragma|\
 name|ASM_OUTPUT_MI_THUNK
+name|CONST_COSTS
+name|RTX_COSTS
+name|DEFAULT_RTX_COSTS
+pragma|\
+name|ADDRESS_COST
+name|MACHINE_DEPENDENT_REORG
+name|ASM_FILE_START
+name|ASM_FILE_END
+pragma|\
+name|ASM_SIMPLIFY_DWARF_ADDR
+name|INIT_TARGET_OPTABS
+name|INIT_SUBTARGET_OPTABS
+pragma|\
+name|INIT_GOFAST_OPTABS
+name|MULSI3_LIBCALL
+name|MULDI3_LIBCALL
+name|DIVSI3_LIBCALL
+pragma|\
+name|DIVDI3_LIBCALL
+name|UDIVSI3_LIBCALL
+name|UDIVDI3_LIBCALL
+name|MODSI3_LIBCALL
+pragma|\
+name|MODDI3_LIBCALL
+name|UMODSI3_LIBCALL
+name|UMODDI3_LIBCALL
+name|BUILD_VA_LIST_TYPE
+pragma|\
+name|PRETEND_OUTGOING_VARARGS_NAMED
+name|STRUCT_VALUE_INCOMING_REGNUM
+pragma|\
+name|SPLIT_COMPLEX_ARGS
 end_pragma
 
 begin_comment
@@ -2981,9 +2949,11 @@ name|GCC
 name|poison
 name|INT_ASM_OP
 name|ASM_OUTPUT_EH_REGION_BEG
+name|CPP_PREDEFINES
 pragma|\
 name|ASM_OUTPUT_EH_REGION_END
 name|ASM_OUTPUT_LABELREF_AS_INT
+name|SMALL_STACK
 pragma|\
 name|DOESNT_NEED_UNWINDER
 name|EH_TABLE_LOOKUP
@@ -3024,6 +2994,53 @@ name|SCCS_DIRECTIVE
 name|SECTION_ASM_OP
 pragma|\
 name|ASM_OUTPUT_DEFINE_LABEL_DIFFERENCE_SYMBOL
+name|ASM_OUTPUT_INTERNAL_LABEL
+pragma|\
+name|OBJC_PROLOGUE
+name|ALLOCATE_TRAMPOLINE
+name|HANDLE_PRAGMA
+name|ROUND_TYPE_SIZE
+pragma|\
+name|ROUND_TYPE_SIZE_UNIT
+name|CONST_SECTION_ASM_OP
+name|CRT_GET_RFIB_TEXT
+pragma|\
+name|DBX_LBRAC_FIRST
+name|DBX_OUTPUT_ENUM
+name|DBX_OUTPUT_SOURCE_FILENAME
+pragma|\
+name|DBX_WORKING_DIRECTORY
+name|INSN_CACHE_DEPTH
+name|INSN_CACHE_SIZE
+pragma|\
+name|INSN_CACHE_LINE_WIDTH
+name|INIT_SECTION_PREAMBLE
+name|NEED_ATEXIT
+name|ON_EXIT
+pragma|\
+name|EXIT_BODY
+name|OBJECT_FORMAT_ROSE
+name|MULTIBYTE_CHARS
+name|MAP_CHARACTER
+pragma|\
+name|LIBGCC_NEEDS_DOUBLE
+name|FINAL_PRESCAN_LABEL
+name|DEFAULT_CALLER_SAVES
+pragma|\
+name|LOAD_ARGS_REVERSED
+name|MAX_INTEGER_COMPUTATION_MODE
+pragma|\
+name|CONVERT_HARD_REGISTER_TO_SSA_P
+name|ASM_OUTPUT_MAIN_SOURCE_FILENAME
+pragma|\
+name|FIRST_INSN_ADDRESS
+name|TEXT_SECTION
+name|SHARED_BSS_SECTION_ASM_OP
+pragma|\
+name|PROMOTED_MODE
+name|EXPAND_BUILTIN_VA_END
+pragma|\
+name|LINKER_DOES_NOT_WORK_WITH_DWARF2
 end_pragma
 
 begin_comment
@@ -3039,6 +3056,75 @@ name|LANG_HOOKS_FUNCTION_MARK
 name|LANG_HOOKS_FUNCTION_FREE
 pragma|\
 name|LANG_HOOKS_MARK_TREE
+name|LANG_HOOKS_INSERT_DEFAULT_ATTRIBUTES
+end_pragma
+
+begin_comment
+comment|/* Libiberty macros that are no longer used in GCC.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ANSI_PROTOTYPES
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PTR_CONST
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|LONG_DOUBLE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|VPARAMS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|VA_OPEN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|VA_FIXEDARG
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|VA_CLOSE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|VA_START
+end_undef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|poison
+name|ANSI_PROTOTYPES
+name|PTR_CONST
+name|LONG_DOUBLE
+name|VPARAMS
+name|VA_OPEN
+pragma|\
+name|VA_FIXEDARG
+name|VA_CLOSE
+name|VA_START
 end_pragma
 
 begin_endif

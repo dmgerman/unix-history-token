@@ -1,51 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for ARM with a.out    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rearnsha@armltd.co.uk).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for ARM with a.out    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rearnsha@armltd.co.uk).        This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ARM_OS_NAME
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ARM_OS_NAME
-value|"(generic)"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* The text to go at the start of the assembler file */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_FILE_START
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|STREAM
-parameter_list|)
-define|\
-value|{					    \   asm_fprintf (STREAM,"%Rrfp\t.req\t%Rr9\n"); \   asm_fprintf (STREAM,"%Rsl\t.req\t%Rr10\n"); \   asm_fprintf (STREAM,"%Rfp\t.req\t%Rr11\n"); \   asm_fprintf (STREAM,"%Rip\t.req\t%Rr12\n"); \   asm_fprintf (STREAM,"%Rsp\t.req\t%Rr13\n"); \   asm_fprintf (STREAM,"%Rlr\t.req\t%Rr14\n"); \   asm_fprintf (STREAM,"%Rpc\t.req\t%Rr15\n"); \ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -109,7 +65,7 @@ value|"\t.bss"
 end_define
 
 begin_comment
-comment|/* Note: If USER_LABEL_PREFIX or LOCAL_LABEL_PREFIX are changed,    make sure that this change is reflected in the function    coff_arm_is_local_label_name() in bfd/coff-arm.c  */
+comment|/* Note: If USER_LABEL_PREFIX or LOCAL_LABEL_PREFIX are changed,    make sure that this change is reflected in the function    coff_arm_is_local_label_name() in bfd/coff-arm.c.  */
 end_comment
 
 begin_ifndef
@@ -181,7 +137,7 @@ define|#
 directive|define
 name|REGISTER_NAMES
 define|\
-value|{				                   \   "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",  \   "r8", "r9", "sl", "fp", "ip", "sp", "lr", "pc",  \   "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",  \   "cc", "sfp", "afp"		   		   \ }
+value|{				                   \   "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",  \   "r8", "r9", "sl", "fp", "ip", "sp", "lr", "pc",  \   "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",  \   "cc", "sfp", "afp",		   		   \   "mv0",   "mv1",   "mv2",   "mv3",		   \   "mv4",   "mv5",   "mv6",   "mv7",		   \   "mv8",   "mv9",   "mv10",  "mv11",		   \   "mv12",  "mv13",  "mv14",  "mv15",		   \   "wcgr0", "wcgr1", "wcgr2", "wcgr3",		   \   "wr0",   "wr1",   "wr2",   "wr3",		   \   "wr4",   "wr5",   "wr6",   "wr7",		   \   "wr8",   "wr9",   "wr10",  "wr11",		   \   "wr12",  "wr13",  "wr14",  "wr15"		   \ }
 end_define
 
 begin_endif
@@ -212,9 +168,9 @@ value|\   {"r13", 13},
 comment|/* sp */
 value|\   {"r14", 14},
 comment|/* lr */
-value|\   {"r15", 15}
+value|\   {"r15", 15},
 comment|/* pc */
-value|\ }
+value|\   {"mvf0", 27},					\   {"mvf1", 28},					\   {"mvf2", 29},					\   {"mvf3", 30},					\   {"mvf4", 31},					\   {"mvf5", 32},					\   {"mvf6", 33},					\   {"mvf7", 34},					\   {"mvf8", 35},					\   {"mvf9", 36},					\   {"mvf10", 37},				\   {"mvf11", 38},				\   {"mvf12", 39},				\   {"mvf13", 40},				\   {"mvf14", 41},				\   {"mvf15", 42},				\   {"mvd0", 27},					\   {"mvd1", 28},					\   {"mvd2", 29},					\   {"mvd3", 30},					\   {"mvd4", 31},					\   {"mvd5", 32},					\   {"mvd6", 33},					\   {"mvd7", 34},					\   {"mvd8", 35},					\   {"mvd9", 36},					\   {"mvd10", 37},				\   {"mvd11", 38},				\   {"mvd12", 39},				\   {"mvd13", 40},				\   {"mvd14", 41},				\   {"mvd15", 42},				\   {"mvfx0", 27},				\   {"mvfx1", 28},				\   {"mvfx2", 29},				\   {"mvfx3", 30},				\   {"mvfx4", 31},				\   {"mvfx5", 32},				\   {"mvfx6", 33},				\   {"mvfx7", 34},				\   {"mvfx8", 35},				\   {"mvfx9", 36},				\   {"mvfx10", 37},				\   {"mvfx11", 38},				\   {"mvfx12", 39},				\   {"mvfx13", 40},				\   {"mvfx14", 41},				\   {"mvfx15", 42},				\   {"mvdx0", 27},				\   {"mvdx1", 28},				\   {"mvdx2", 29},				\   {"mvdx3", 30},				\   {"mvdx4", 31},				\   {"mvdx5", 32},				\   {"mvdx6", 33},				\   {"mvdx7", 34},				\   {"mvdx8", 35},				\   {"mvdx9", 36},				\   {"mvdx10", 37},				\   {"mvdx11", 38},				\   {"mvdx12", 39},				\   {"mvdx13", 40},				\   {"mvdx14", 41},				\   {"mvdx15", 42}				\ }
 end_define
 
 begin_endif
@@ -223,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Arm Assembler barfs on dollars */
+comment|/* Arm Assembler barfs on dollars.  */
 end_comment
 
 begin_define
@@ -252,7 +208,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Generate DBX debugging information.  riscix.h will undefine this because    the native assembler does not support stabs. */
+comment|/* Generate DBX debugging information.  riscix.h will undefine this because    the native assembler does not support stabs.  */
 end_comment
 
 begin_define
@@ -298,7 +254,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf (STREAM, ".stabs ");					\       output_quoted_string (STREAM, NAME);				\       fprintf (STREAM, ",%d,0,315,%s\n", N_SO,&ltext_label_name[1]);	\       text_section ();							\       ASM_OUTPUT_INTERNAL_LABEL (STREAM, "Ltext", 0);			\     }									\   while (0)
+value|do									\     {									\       fprintf (STREAM, ".stabs ");					\       output_quoted_string (STREAM, NAME);				\       fprintf (STREAM, ",%d,0,315,%s\n", N_SO,&ltext_label_name[1]);	\       text_section ();							\       (*targetm.asm_out.internal_label) (STREAM, "Ltext", 0);			\     }									\   while (0)
 end_define
 
 begin_comment
@@ -373,25 +329,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Construct a private name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_FORMAT_PRIVATE_NAME
-parameter_list|(
-name|OUTVAR
-parameter_list|,
-name|NAME
-parameter_list|,
-name|NUMBER
-parameter_list|)
-define|\
-value|((OUTVAR) = (char *) alloca (strlen (NAME) + 10),  \    sprintf (OUTVAR, "%s.%d", NAME, NUMBER))
-end_define
-
-begin_comment
 comment|/* Output an element of a dispatch table.  */
 end_comment
 
@@ -443,7 +380,7 @@ parameter_list|,
 name|LEN
 parameter_list|)
 define|\
-value|output_ascii_pseudo_op (STREAM, (const unsigned char *)(PTR), LEN)
+value|output_ascii_pseudo_op (STREAM, (const unsigned char *) (PTR), LEN)
 end_define
 
 begin_comment
@@ -466,7 +403,7 @@ parameter_list|,
 name|NBYTES
 parameter_list|)
 define|\
-value|fprintf (STREAM, "\t.space\t%d\n", NBYTES)
+value|fprintf (STREAM, "\t.space\t%d\n", (int) (NBYTES))
 end_define
 
 begin_comment
@@ -498,7 +435,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Output a common block */
+comment|/* Output a common block.  */
 end_comment
 
 begin_ifndef
@@ -521,7 +458,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|do							\     {							\       fprintf (STREAM, "\t.comm\t");			\       assemble_name (STREAM, NAME);			\       asm_fprintf (STREAM, ", %d\t%@ %d\n", 		\ 	           ROUNDED, SIZE);			\     }							\   while (0)
+value|do							\     {							\       fprintf (STREAM, "\t.comm\t");			\       assemble_name (STREAM, NAME);			\       asm_fprintf (STREAM, ", %d\t%@ %d\n", 		\ 	           (int)(ROUNDED), (int)(SIZE));	\     }							\   while (0)
 end_define
 
 begin_endif
@@ -553,7 +490,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do									\     {									\       bss_section ();							\       ASM_OUTPUT_ALIGN (STREAM, floor_log2 (ALIGN / BITS_PER_UNIT));	\       ASM_OUTPUT_LABEL (STREAM, NAME);					\       fprintf (STREAM, "\t.space\t%d\n", SIZE);				\     }									\   while (0)
+value|do									\     {									\       bss_section ();							\       ASM_OUTPUT_ALIGN (STREAM, floor_log2 (ALIGN / BITS_PER_UNIT));	\       ASM_OUTPUT_LABEL (STREAM, NAME);					\       fprintf (STREAM, "\t.space\t%d\n", (int)(SIZE));			\     }									\   while (0)
 end_define
 
 begin_endif
@@ -594,14 +531,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Output a source line for the debugger.  */
-end_comment
-
-begin_comment
-comment|/* #define ASM_OUTPUT_SOURCE_LINE(STREAM,LINE) */
-end_comment
 
 begin_comment
 comment|/* Output a #ident directive.  */

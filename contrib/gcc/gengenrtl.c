@@ -1,42 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to allocate RTL structures.    Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to allocate RTL structures.    Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|NO_GENRTL_H
-end_define
-
-begin_include
-include|#
-directive|include
-file|"rtl.h"
-end_include
-
-begin_undef
-undef|#
-directive|undef
-name|abort
-end_undef
-
-begin_include
-include|#
-directive|include
-file|"real.h"
 end_include
 
 begin_struct
@@ -61,6 +37,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* rtl.def needs CONST_DOUBLE_FORMAT, but we don't care what    CONST_DOUBLE_FORMAT is because we're not going to be generating    anything for CONST_DOUBLE anyway.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONST_DOUBLE_FORMAT
+value|""
+end_define
+
 begin_define
 define|#
 directive|define
@@ -74,7 +61,7 @@ name|FORMAT
 parameter_list|,
 name|CLASS
 parameter_list|)
-value|{ STRINGX(ENUM), NAME, FORMAT },
+value|{ #ENUM, NAME, FORMAT },
 end_define
 
 begin_decl_stmt
@@ -94,6 +81,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|NUM_RTX_CODE
+value|ARRAY_SIZE(defs)
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -106,171 +100,135 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|type_from_format
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|accessor_from_format
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|special_format
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|special_rtx
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|excluded_rtx
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|find_formats
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gendecl
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|genmacro
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gendef
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|genlegend
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|genheader
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gencode
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -286,11 +244,9 @@ name|char
 modifier|*
 name|type_from_format
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -370,11 +326,9 @@ name|char
 modifier|*
 name|accessor_from_format
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -449,13 +403,11 @@ specifier|static
 name|int
 name|special_format
 parameter_list|(
-name|fmt
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|fmt
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -508,11 +460,9 @@ specifier|static
 name|int
 name|special_rtx
 parameter_list|(
-name|idx
-parameter_list|)
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -599,11 +549,9 @@ specifier|static
 name|int
 name|excluded_rtx
 parameter_list|(
-name|idx
-parameter_list|)
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -633,8 +581,11 @@ begin_function
 specifier|static
 name|void
 name|find_formats
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -730,13 +681,11 @@ specifier|static
 name|void
 name|gendecl
 parameter_list|(
-name|format
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -750,7 +699,7 @@ name|pos
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"extern rtx gen_rtx_fmt_%s\tPARAMS ((RTX_CODE, "
+literal|"extern rtx gen_rtx_fmt_%s\t (RTX_CODE, "
 argument_list|,
 name|format
 argument_list|)
@@ -854,7 +803,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"));\n"
+literal|");\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -869,11 +818,9 @@ specifier|static
 name|void
 name|genmacro
 parameter_list|(
-name|idx
-parameter_list|)
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1026,13 +973,11 @@ specifier|static
 name|void
 name|gendef
 parameter_list|(
-name|format
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1047,7 +992,7 @@ decl_stmt|;
 comment|/* Start by writing the definition of the function name and the types      of the arguments.  */
 name|printf
 argument_list|(
-literal|"rtx\ngen_rtx_fmt_%s (code, mode"
+literal|"rtx\ngen_rtx_fmt_%s (RTX_CODE code, enum machine_mode mode"
 argument_list|,
 name|format
 argument_list|)
@@ -1079,45 +1024,7 @@ literal|'0'
 condition|)
 name|printf
 argument_list|(
-literal|", arg%d"
-argument_list|,
-name|i
-operator|++
-argument_list|)
-expr_stmt|;
-name|puts
-argument_list|(
-literal|")\n     RTX_CODE code;\n     enum machine_mode mode;"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|format
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-operator|*
-name|p
-operator|!=
-literal|0
-condition|;
-name|p
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|p
-operator|!=
-literal|'0'
-condition|)
-name|printf
-argument_list|(
-literal|"     %sarg%d;\n"
+literal|",\n\t%sarg%d"
 argument_list|,
 name|type_from_format
 argument_list|(
@@ -1127,6 +1034,11 @@ argument_list|)
 argument_list|,
 name|i
 operator|++
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|")"
 argument_list|)
 expr_stmt|;
 comment|/* Now write out the body of the function itself, which allocates      the memory and initializes it.  */
@@ -1140,22 +1052,14 @@ argument_list|(
 literal|"  rtx rt;"
 argument_list|)
 expr_stmt|;
-name|printf
+name|puts
 argument_list|(
-literal|"  rt = ggc_alloc_rtx (%d);\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|strlen
-argument_list|(
-name|format
-argument_list|)
+literal|"  rt = ggc_alloc_rtx (code);\n"
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"  memset (rt, 0, sizeof (struct rtx_def) - sizeof (rtunion));\n"
+literal|"  memset (rt, 0, RTX_HDR_SIZE);\n"
 argument_list|)
 expr_stmt|;
 name|puts
@@ -1236,7 +1140,9 @@ begin_function
 specifier|static
 name|void
 name|genlegend
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|puts
 argument_list|(
@@ -1254,8 +1160,11 @@ begin_function
 specifier|static
 name|void
 name|genheader
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -1345,7 +1254,9 @@ begin_function
 specifier|static
 name|void
 name|gencode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1365,6 +1276,16 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
+literal|"#include \"coretypes.h\""
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"#include \"tm.h\""
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
 literal|"#include \"obstack.h\""
 argument_list|)
 expr_stmt|;
@@ -1376,11 +1297,6 @@ expr_stmt|;
 name|puts
 argument_list|(
 literal|"#include \"ggc.h\"\n"
-argument_list|)
-expr_stmt|;
-name|puts
-argument_list|(
-literal|"extern struct obstack *rtl_obstack;\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1410,39 +1326,18 @@ begin_comment
 comment|/* This is the main program.  We accept only one argument, "-h", which    says we are writing the genrtl.h file.  Otherwise we are writing the    genrtl.c file.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|find_formats
 argument_list|()

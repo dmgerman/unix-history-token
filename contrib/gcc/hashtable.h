@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Hash tables.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Hash tables.    Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,19 @@ include|#
 directive|include
 file|"obstack.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|GTY
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_comment
 comment|/* This is what each hash table entry points to.  It may be embedded    deeply within another object.  */
@@ -83,16 +96,6 @@ parameter_list|)
 value|((NODE)->str)
 end_define
 
-begin_comment
-comment|/* We want code outside cpplib, such as the compiler front-ends, to be    able to include this header, and to be able to link with    cpphashtbl.o without pulling in any other parts of cpplib.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|cpp_reader
-struct_decl|;
-end_struct_decl
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -144,17 +147,15 @@ name|entries
 decl_stmt|;
 comment|/* Call back.  */
 name|hashnode
-argument_list|(
-argument|*alloc_node
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|alloc_node
+function_decl|)
+parameter_list|(
 name|hash_table
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|unsigned
 name|int
 name|nslots
@@ -184,83 +185,58 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|gcc_obstack_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|obstack
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Initialize the hashtable with 2 ^ order entries.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|hash_table
 modifier|*
 name|ht_create
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
 name|order
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Frees all memory associated with a hash table.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ht_destroy
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|hash_table
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|hashnode
 name|ht_lookup
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|hash_table
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|unsigned
 name|char
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|enum
 name|ht_lookup_option
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* For all nodes in TABLE, make a callback.  The callback takes    TABLE->PFILE, the node, and a PTR, and the callback sequence stops    if the callback returns zero.  */
@@ -269,80 +245,55 @@ end_comment
 begin_typedef
 typedef|typedef
 name|int
-argument_list|(
-argument|*ht_cb
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|ht_cb
+function_decl|)
+parameter_list|(
+name|struct
 name|cpp_reader
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|hashnode
-operator|,
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ht_forall
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|hash_table
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ht_cb
-operator|,
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Dump allocation statistics to stderr.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ht_dump_statistics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|hash_table
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Approximate positive square root of a host double.  This is for    statistical reports, not code generation.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|approx_sqrt
-name|PARAMS
-argument_list|(
-operator|(
-name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

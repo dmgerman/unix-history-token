@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -37,6 +37,28 @@ directive|define
 name|__GTHREADS
 value|1
 end_define
+
+begin_comment
+comment|/* Some implementations of<pthread.h> require this to be defined.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_REENTRANT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_REENTRANT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -156,11 +178,19 @@ name|weak
 name|pthread_mutex_unlock
 end_pragma
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_LIBOBJC
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_LIBOBJC_WEAK
+argument_list|)
+end_if
 
 begin_comment
 comment|/* Objective-C.  */
@@ -325,7 +355,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBOBJC */
+comment|/* _LIBOBJC || _LIBOBJC_WEAK */
 end_comment
 
 begin_function
@@ -1677,40 +1707,6 @@ name|key
 argument_list|,
 name|dtor
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|__gthread_key_dtor
-parameter_list|(
-name|__gthread_key_t
-name|key
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-comment|/* Just reset the key value to zero.  */
-if|if
-condition|(
-name|ptr
-condition|)
-return|return
-name|pthread_setspecific
-argument_list|(
-name|key
-argument_list|,
-literal|0
-argument_list|)
-return|;
-else|else
-return|return
-literal|0
 return|;
 block|}
 end_function

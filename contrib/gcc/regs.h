@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define per-register tables for data flow info and register allocation.    Copyright (C) 1987, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Define per-register tables for data flow info and register allocation.    Copyright (C) 1987, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -140,7 +140,7 @@ comment|/* # of basic blocks (REG n) is used in */
 name|char
 name|changes_mode
 decl_stmt|;
-comment|/* whether (SUBREG (REG n)) exists and  				   is illegal.  */
+comment|/* whether (SUBREG (REG n)) exists and 				   is illegal.  */
 block|}
 name|reg_info
 typedef|;
@@ -189,7 +189,7 @@ value|(VARRAY_REG (reg_n_info, N)->freq)
 end_define
 
 begin_comment
-comment|/* The weights for each insn varries from 0 to REG_FREQ_BASE.     This constant does not need to be high, as in infrequently executed    regions we want to count instructions equivalently to optimize for    size instead of speed.  */
+comment|/* The weights for each insn varries from 0 to REG_FREQ_BASE.    This constant does not need to be high, as in infrequently executed    regions we want to count instructions equivalently to optimize for    size instead of speed.  */
 end_comment
 
 begin_define
@@ -326,7 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Vector indexed by hardware reg    saying whether that reg is ever used.  */
+comment|/* Vector indexed by hardware reg saying whether that reg is ever used.  */
 end_comment
 
 begin_decl_stmt
@@ -340,15 +340,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Vector indexed by hardware reg giving its name.  */
+comment|/* Like regs_ever_live, but saying whether reg is set by asm statements.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|char
-modifier|*
-name|reg_names
+name|regs_asm_clobbered
 index|[
 name|FIRST_PSEUDO_REGISTER
 index|]
@@ -508,7 +506,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|choose_hard_reg_mode (REGNO, NREGS)
+value|choose_hard_reg_mode (REGNO, NREGS, false)
 end_define
 
 begin_endif
@@ -517,7 +515,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Registers that get partially clobbered by a call in a given mode.     These must not be call used registers.  */
+comment|/* Registers that get partially clobbered by a call in a given mode.    These must not be call used registers.  */
 end_comment
 
 begin_ifndef
@@ -547,22 +545,19 @@ begin_comment
 comment|/* Allocate reg_n_info tables */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|allocate_reg_info
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

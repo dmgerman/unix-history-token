@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RTEMS threads compatibily routines for libgcc2 and libobjc.    by: Rosimildo da Silva( rdasilva@connecttel.com ) */
+comment|/* RTEMS threads compatibility routines for libgcc2 and libobjc.    by: Rosimildo da Silva( rdasilva@connecttel.com ) */
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ define|#
 directive|define
 name|__GTHREAD_MUTEX_INIT_FUNCTION
 value|rtems_gxx_mutex_init
-comment|/* avoid depedency on rtems specific headers */
+comment|/* Avoid dependency on rtems specific headers.  */
 typedef|typedef
 name|void
 modifier|*
@@ -107,18 +107,6 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|rtems_gxx_key_dtor
-parameter_list|(
-name|__gthread_key_t
-name|key
-parameter_list|,
-name|void
-modifier|*
-name|ptr
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -256,28 +244,6 @@ argument_list|(
 name|key
 argument_list|,
 name|dtor
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|int
-name|__gthread_key_dtor
-parameter_list|(
-name|__gthread_key_t
-name|key
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-return|return
-name|rtems_gxx_key_dtor
-argument_list|(
-name|key
-argument_list|,
-name|ptr
 argument_list|)
 return|;
 block|}

@@ -80,5 +80,14 @@ directive|define
 name|NO_IMPLICIT_EXTERN_C
 end_define
 
+begin_define
+define|#
+directive|define
+name|HURD_TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {					\ 	builtin_define ("__gnu_hurd__");	\ 	builtin_define ("__GNU__");		\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("MACH");		\ 	builtin_assert ("system=gnu");		\ 	builtin_assert ("system=mach");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     } while (0)
+end_define
+
 end_unit
 

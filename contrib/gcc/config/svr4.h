@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a line like that in config.gcc:  	tm_file="$tm_file elfos.h svr4.h MACHINE/svr4.h"     where MACHINE is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file MACHINE/svr4.h, put any really    system-specific defines (or overrides of defines) which you find that    you need.  For example, CPP_PREDEFINES is defined here with only the    defined -Dunix and -DSVR4.  You should probably override that in your    target-specific MACHINE/svr4.h file with a set of defines that    includes these, but also contains an appropriate define for the type    of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1991, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a line like that in config.gcc:  	tm_file="$tm_file elfos.h svr4.h MACHINE/svr4.h"     where MACHINE is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file MACHINE/svr4.h, put any really    system-specific defines (or overrides of defines) which you find that    you need. */
 end_comment
 
 begin_comment
@@ -20,6 +20,12 @@ end_comment
 begin_comment
 comment|/* This defines which switch letters take arguments.  On svr4, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker).  Note however that there is no such    thing as a -T option for svr4.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SWITCH_TAKES_ARG
+end_undef
 
 begin_define
 define|#
@@ -48,17 +54,7 @@ value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)			\&& strcmp (STR, "Tdata")&& strcmp 
 end_define
 
 begin_comment
-comment|/* You should redefine CPP_PREDEFINES in any file which includes this one.    The definition should be appropriate for the type of target system    involved, and it should include any -A (assertion) options which are    appropriate for the given target system.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_comment
-comment|/* Provide an ASM_SPEC appropriate for svr4.  Here we try to support as    many of the specialized svr4 assembler options as seems reasonable,    given that there are certain options which we can't (or shouldn't)    support directly due to the fact that they conflict with other options    for other svr4 tools (e.g. ld) or with other options for GCC itself.    For example, we don't support the -o (output file) or -R (remove    input file) options because GCC already handles these things.  We    also don't support the -m (run m4) option for the assembler because    that conflicts with the -m (produce load map) option of the svr4    linker.  We do however allow passing arbitrary options to the svr4    assembler via the -Wa, option.     Note that gcc doesn't allow a space to follow -Y in a -Ym,* or -Yd,*    option. */
+comment|/* Provide an ASM_SPEC appropriate for svr4.  Here we try to support as    many of the specialized svr4 assembler options as seems reasonable,    given that there are certain options which we can't (or shouldn't)    support directly due to the fact that they conflict with other options    for other svr4 tools (e.g. ld) or with other options for GCC itself.    For example, we don't support the -o (output file) or -R (remove    input file) options because GCC already handles these things.  We    also don't support the -m (run m4) option for the assembler because    that conflicts with the -m (produce load map) option of the svr4    linker.  We do however allow passing arbitrary options to the svr4    assembler via the -Wa, option.     Note that gcc doesn't allow a space to follow -Y in a -Ym,* or -Yd,*    option.     The svr4 assembler wants '-' on the command line if it's expected to    read its stdin. */
 end_comment
 
 begin_undef
@@ -75,21 +71,10 @@ define|\
 value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*}"
 end_define
 
-begin_comment
-comment|/* svr4 assemblers need the `-' (indicating input from stdin) to come after    the -o option (and its argument) for some reason.  If we try to put it    before the -o option, the assembler will try to read the file named as    the output file in the -o option as an input file (after it has already    written some stuff to it) and the binary stuff contained therein will    cause totally confuse the assembler, resulting in many spurious error    messages.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FINAL_SPEC
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ASM_FINAL_SPEC
-value|"%|"
+name|AS_NEEDS_DASH_FOR_PIPED_INPUT
 end_define
 
 begin_comment
@@ -304,14 +289,6 @@ directive|define
 name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
-
-begin_comment
-comment|/* This causes trouble, because it requires the host machine    to support ANSI C.  */
-end_comment
-
-begin_comment
-comment|/* #define MULTIBYTE_CHARS */
-end_comment
 
 begin_define
 define|#

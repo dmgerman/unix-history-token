@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Timing variables for measuring compiler performance.    Copyright (C) 2000 Free Software Foundation, Inc.    Contributed by Alex Samuel<samuel@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Timing variables for measuring compiler performance.    Copyright (C) 2000, 2003 Free Software Foundation, Inc.    Contributed by Alex Samuel<samuel@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,18 +13,6 @@ begin_include
 include|#
 directive|include
 file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"intl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"rtl.h"
 end_include
 
 begin_ifdef
@@ -60,6 +48,36 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"intl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rtl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -104,96 +122,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-name|HAVE_DECL_GETRUSAGE
-operator|&&
-operator|!
-name|HAVE_DECL_GETRUSAGE
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|getrusage
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|rusage
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-name|HAVE_DECL_TIMES
-operator|&&
-operator|!
-name|HAVE_DECL_TIMES
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|clock_t
-name|times
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|tms
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-name|HAVE_DECL_CLOCK
-operator|&&
-operator|!
-name|HAVE_DECL_CLOCK
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|clock_t
-name|clock
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -327,6 +255,33 @@ directive|ifdef
 name|HAVE_TIMES
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+name|HAVE_DECL_TIMES
+operator|&&
+operator|!
+name|HAVE_DECL_TIMES
+end_if
+
+begin_function_decl
+specifier|extern
+name|clock_t
+name|times
+parameter_list|(
+name|struct
+name|tms
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -362,6 +317,35 @@ directive|ifdef
 name|HAVE_GETRUSAGE
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+name|HAVE_DECL_GETRUSAGE
+operator|&&
+operator|!
+name|HAVE_DECL_GETRUSAGE
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|getrusage
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|rusage
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -390,6 +374,31 @@ ifdef|#
 directive|ifdef
 name|HAVE_CLOCK
 end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+name|HAVE_DECL_CLOCK
+operator|&&
+operator|!
+name|HAVE_DECL_CLOCK
+end_if
+
+begin_function_decl
+specifier|extern
+name|clock_t
+name|clock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -430,7 +439,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|float
+name|double
 name|ticks_to_msec
 decl_stmt|;
 end_decl_stmt
@@ -439,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|TICKS_TO_MSEC
-value|(1 / (float)TICKS_PER_SECOND)
+value|(1 / (double)TICKS_PER_SECOND)
 end_define
 
 begin_endif
@@ -455,7 +464,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|float
+name|double
 name|clocks_to_msec
 decl_stmt|;
 end_decl_stmt
@@ -464,7 +473,7 @@ begin_define
 define|#
 directive|define
 name|CLOCKS_TO_MSEC
-value|(1 / (float)CLOCKS_PER_SEC)
+value|(1 / (double)CLOCKS_PER_SEC)
 end_define
 
 begin_endif
@@ -484,26 +493,16 @@ directive|include
 file|"timevar.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"toplev.h"
-end_include
+begin_decl_stmt
+specifier|static
+name|bool
+name|timevar_enable
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* See timevar.h for an explanation of timing variables.  */
 end_comment
-
-begin_comment
-comment|/* This macro evaluates to nonzero if timing variables are enabled.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMEVAR_ENABLE
-value|(time_report)
-end_define
 
 begin_comment
 comment|/* A timing variable.  */
@@ -529,13 +528,13 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Non-zero if this timing variable is running as a standalone      timer.  */
+comment|/* Nonzero if this timing variable is running as a standalone      timer.  */
 name|unsigned
 name|standalone
 range|:
 literal|1
 decl_stmt|;
-comment|/* Non-zero if this timing variable was ever started or pushed onto      the timing stack.  */
+comment|/* Nonzero if this timing variable was ever started or pushed onto      the timing stack.  */
 name|unsigned
 name|used
 range|:
@@ -622,43 +621,37 @@ name|start_time
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|get_time
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timevar_time_def
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|timevar_accumulate
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|timevar_time_def
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|timevar_time_def
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|timevar_time_def
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Fill the current times into TIME.  The definition of this function    also defines any or all of the HAVE_USER_TIME, HAVE_SYS_TIME, and    HAVE_WALL_TIME macros.  */
@@ -669,13 +662,11 @@ specifier|static
 name|void
 name|get_time
 parameter_list|(
-name|now
-parameter_list|)
 name|struct
 name|timevar_time_def
 modifier|*
 name|now
-decl_stmt|;
+parameter_list|)
 block|{
 name|now
 operator|->
@@ -698,7 +689,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TIMEVAR_ENABLE
+name|timevar_enable
 condition|)
 return|return;
 block|{
@@ -823,27 +814,21 @@ specifier|static
 name|void
 name|timevar_accumulate
 parameter_list|(
-name|timer
-parameter_list|,
-name|start_time
-parameter_list|,
-name|stop_time
-parameter_list|)
 name|struct
 name|timevar_time_def
 modifier|*
 name|timer
-decl_stmt|;
+parameter_list|,
 name|struct
 name|timevar_time_def
 modifier|*
 name|start_time
-decl_stmt|;
+parameter_list|,
 name|struct
 name|timevar_time_def
 modifier|*
 name|stop_time
-decl_stmt|;
+parameter_list|)
 block|{
 name|timer
 operator|->
@@ -890,22 +875,18 @@ end_comment
 
 begin_function
 name|void
-name|init_timevar
-parameter_list|()
+name|timevar_init
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|TIMEVAR_ENABLE
-condition|)
-return|return;
+name|timevar_enable
+operator|=
+name|true
+expr_stmt|;
 comment|/* Zero all elapsed times.  */
 name|memset
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|timevars
 argument_list|,
 literal|0
@@ -962,11 +943,9 @@ begin_function
 name|void
 name|timevar_push
 parameter_list|(
-name|timevar
-parameter_list|)
 name|timevar_id_t
 name|timevar
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timevar_def
@@ -991,7 +970,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TIMEVAR_ENABLE
+name|timevar_enable
 condition|)
 return|return;
 comment|/* Mark this timing variable as used.  */
@@ -1066,11 +1045,6 @@ block|}
 else|else
 name|context
 operator|=
-operator|(
-expr|struct
-name|timevar_stack_def
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -1108,11 +1082,9 @@ begin_function
 name|void
 name|timevar_pop
 parameter_list|(
-name|timevar
-parameter_list|)
 name|timevar_id_t
 name|timevar
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timevar_time_def
@@ -1128,7 +1100,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TIMEVAR_ENABLE
+name|timevar_enable
 condition|)
 return|return;
 if|if
@@ -1224,11 +1196,9 @@ begin_function
 name|void
 name|timevar_start
 parameter_list|(
-name|timevar
-parameter_list|)
 name|timevar_id_t
 name|timevar
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timevar_def
@@ -1244,7 +1214,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TIMEVAR_ENABLE
+name|timevar_enable
 condition|)
 return|return;
 comment|/* Mark this timing variable as used.  */
@@ -1289,11 +1259,9 @@ begin_function
 name|void
 name|timevar_stop
 parameter_list|(
-name|timevar
-parameter_list|)
 name|timevar_id_t
 name|timevar
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timevar_def
@@ -1313,7 +1281,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TIMEVAR_ENABLE
+name|timevar_enable
 condition|)
 return|return;
 comment|/* TIMEVAR must have been started via timevar_start.  */
@@ -1360,18 +1328,14 @@ begin_function
 name|void
 name|timevar_get
 parameter_list|(
-name|timevar
-parameter_list|,
-name|elapsed
-parameter_list|)
 name|timevar_id_t
 name|timevar
-decl_stmt|;
+parameter_list|,
 name|struct
 name|timevar_time_def
 modifier|*
 name|elapsed
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timevar_def
@@ -1463,12 +1427,10 @@ begin_function
 name|void
 name|timevar_print
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Only print stuff if we have some sort of time information.  */
 if|#
@@ -1512,7 +1474,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TIMEVAR_ENABLE
+name|timevar_enable
 condition|)
 return|return;
 comment|/* Update timing information in case we're calling this from GDB.  */
@@ -1602,7 +1564,7 @@ name|id
 index|]
 decl_stmt|;
 specifier|const
-name|float
+name|double
 name|tiny
 init|=
 literal|5e-3
@@ -1867,39 +1829,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns time (user + system) used so far by the compiler process,    in microseconds.  */
-end_comment
-
-begin_function
-name|long
-name|get_run_time
-parameter_list|()
-block|{
-name|struct
-name|timevar_time_def
-name|total_elapsed
-decl_stmt|;
-name|timevar_get
-argument_list|(
-name|TV_TOTAL
-argument_list|,
-operator|&
-name|total_elapsed
-argument_list|)
-expr_stmt|;
-return|return
-name|total_elapsed
-operator|.
-name|user
-operator|+
-name|total_elapsed
-operator|.
-name|sys
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Prints a message to stderr stating that time elapsed in STR is    TOTAL (given in microseconds).  */
 end_comment
 
@@ -1907,18 +1836,14 @@ begin_function
 name|void
 name|print_time
 parameter_list|(
-name|str
-parameter_list|,
-name|total
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|long
 name|total
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|all_time

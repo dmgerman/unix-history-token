@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output sdb-format symbol table information from GNU compiler.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output sdb-format symbol table information from GNU compiler.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -45,6 +57,36 @@ argument|()
 argument_list|)
 name|tree
 name|anonymous_types
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Counter for sdbout_source_line.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|int
+name|sdbout_source_line_counter
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Counter to generate unique "names" for nameless struct members.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|int
+name|unnamed_struct_number
 expr_stmt|;
 end_expr_stmt
 
@@ -112,6 +154,12 @@ begin_include
 include|#
 directive|include
 file|"langhooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"target.h"
 end_include
 
 begin_comment
@@ -195,19 +243,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Counter to generate unique "names" for nameless struct members.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|unnamed_struct_number
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|extern
 name|FILE
@@ -229,150 +264,123 @@ directive|include
 file|"sdbout.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_init
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_finish
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_start_source_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_end_source_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_begin_block
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_end_block
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_source_line
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_end_epilogue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_global_decl
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -380,193 +388,154 @@ directive|ifndef
 name|MIPS_DEBUGGING_INFO
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_begin_prologue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_end_prologue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_begin_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_end_function
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_toplevel_data
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_label
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|gen_fake_label
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|plain_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|template_name_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_record_type_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|plain_type_1
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_block
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_syms
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -574,131 +543,94 @@ directive|ifdef
 name|SDB_ALLOW_FORWARD_REFERENCES
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_queue_anonymous_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_dequeue_anonymous_types
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_field_types
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_one_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_parms
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_reg_parms
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sdbout_global_decl
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Random macros describing parts of SDB data.  */
 end_comment
-
-begin_comment
-comment|/* Put something here if lines get too long */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONTIN
-end_define
 
 begin_comment
 comment|/* Default value of delimiter is ";".  */
@@ -779,7 +711,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do {									\    fputs ("\t.val\t", asm_out_file);		       			\    fprintf (asm_out_file, HOST_WIDE_INT_PRINT_DEC, (HOST_WIDE_INT) (a)); \    fprintf (asm_out_file, "%s", SDB_DELIM);				\  } while (0)
+value|do {									\    fprintf (asm_out_file, "\t.val\t" HOST_WIDE_INT_PRINT_DEC "%s",	\ 	    (HOST_WIDE_INT) (a), SDB_DELIM);				\  } while (0)
 end_define
 
 begin_endif
@@ -823,7 +755,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do { fprintf (asm_out_file, "\t.def\t");	\      assemble_name (asm_out_file, a); 	\      fprintf (asm_out_file, SDB_DELIM); } while (0)
+value|do { fprintf (asm_out_file, "\t.def\t");	\      assemble_name (asm_out_file, a);	\      fprintf (asm_out_file, SDB_DELIM); } while (0)
 end_define
 
 begin_endif
@@ -905,7 +837,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do {									\    fputs ("\t.size\t", asm_out_file);					\    fprintf (asm_out_file, HOST_WIDE_INT_PRINT_DEC, (HOST_WIDE_INT) (a)); \    fprintf (asm_out_file, "%s", SDB_DELIM);				\  } while(0)
+value|do {									\    fprintf (asm_out_file, "\t.size\t" HOST_WIDE_INT_PRINT_DEC "%s",	\ 	    (HOST_WIDE_INT) (a), SDB_DELIM);				\  } while(0)
 end_define
 
 begin_endif
@@ -1135,7 +1067,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|TYPE_SYMTAB_POINTER (TYPE) = (NAME)
+value|TYPE_SYMTAB_POINTER (TYPE) = (char *)(NAME)
 end_define
 
 begin_comment
@@ -1248,9 +1180,6 @@ begin_comment
 comment|/* MIPS_DEBUGGING_INFO */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* The debug hooks structure.  */
 end_comment
@@ -1334,28 +1263,13 @@ name|debug_nothing_tree
 block|,
 comment|/* outlining_inline_function */
 name|sdbout_label
+block|,
+comment|/* label */
+name|debug_nothing_int
+comment|/* handle_pch */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* return the tag identifier for type  */
-end_comment
-
-begin_endif
-unit|char * tag_of_ru_type (type,link)      tree type,link; {   if (TYPE_SYMTAB_ADDRESS (type))     return TYPE_SYMTAB_ADDRESS (type);   if (link&& TREE_PURPOSE (link)&& IDENTIFIER_POINTER (TREE_PURPOSE (link)))     TYPE_SYMTAB_ADDRESS (type) = IDENTIFIER_POINTER (TREE_PURPOSE (link));   else     return (char *) TYPE_SYMTAB_ADDRESS (type); }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Return a unique string to name an anonymous type.  */
@@ -1366,7 +1280,9 @@ specifier|static
 name|char
 modifier|*
 name|gen_fake_label
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|label
@@ -1400,9 +1316,6 @@ name|labelstr
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* Return the number which describes TYPE for SDB.    For pointers, etc., this function is recursive.    Each record, union or enumeral type must already have had a    tag number output.  */
@@ -1475,11 +1388,9 @@ specifier|static
 name|int
 name|plain_type
 parameter_list|(
-name|type
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -1588,11 +1499,9 @@ specifier|static
 name|int
 name|template_name_p
 parameter_list|(
-name|name
-parameter_list|)
 name|tree
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1631,11 +1540,9 @@ specifier|static
 name|void
 name|sdbout_record_type_name
 parameter_list|(
-name|type
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1805,16 +1712,12 @@ specifier|static
 name|int
 name|plain_type_1
 parameter_list|(
-name|type
-parameter_list|,
-name|level
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 name|level
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2575,9 +2478,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Output the symbols defined in block number DO_BLOCK.     This function works by walking the tree structure of blocks,    counting blocks until it finds the desired block.  */
 end_comment
@@ -2596,11 +2496,9 @@ specifier|static
 name|void
 name|sdbout_block
 parameter_list|(
-name|block
-parameter_list|)
 name|tree
 name|block
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -2666,9 +2564,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Call sdbout_symbol on each decl in the chain SYMS.  */
 end_comment
@@ -2678,11 +2573,9 @@ specifier|static
 name|void
 name|sdbout_syms
 parameter_list|(
-name|syms
-parameter_list|)
 name|tree
 name|syms
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -2724,16 +2617,12 @@ begin_function
 name|void
 name|sdbout_symbol
 parameter_list|(
-name|decl
-parameter_list|,
-name|local
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|;
+parameter_list|,
 name|int
 name|local
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|type
@@ -2767,13 +2656,6 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* This loses when functions are marked to be ignored, 	 which happens in the C++ front end.  */
-block|if (DECL_IGNORED_P (decl))     return;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|TREE_CODE
@@ -3626,9 +3508,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Output SDB information for a top-level initialized variable    that has been delayed.  */
 end_comment
@@ -3638,11 +3517,9 @@ specifier|static
 name|void
 name|sdbout_toplevel_data
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|type
@@ -3749,9 +3626,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3767,11 +3641,9 @@ specifier|static
 name|void
 name|sdbout_queue_anonymous_type
 parameter_list|(
-name|type
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|anonymous_types
 operator|=
@@ -3791,7 +3663,9 @@ begin_function
 specifier|static
 name|void
 name|sdbout_dequeue_anonymous_types
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tree
 name|types
@@ -3863,9 +3737,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Given a chain of ..._TYPE nodes, all of which have names,    output definitions of those names, as typedefs.  */
 end_comment
@@ -3874,11 +3745,9 @@ begin_function
 name|void
 name|sdbout_types
 parameter_list|(
-name|types
-parameter_list|)
 name|tree
 name|types
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|link
@@ -3919,11 +3788,9 @@ specifier|static
 name|void
 name|sdbout_type
 parameter_list|(
-name|type
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3955,11 +3822,9 @@ specifier|static
 name|void
 name|sdbout_field_types
 parameter_list|(
-name|type
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|tail
@@ -4066,11 +3931,9 @@ specifier|static
 name|void
 name|sdbout_one_type
 parameter_list|(
-name|type
-parameter_list|)
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4145,17 +4008,8 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-literal|1
 comment|/* This is reputed to cause trouble with the following case, 	 but perhaps checking TYPE_SIZE above will fix it.  */
-comment|/* Here is a test case:  	struct foo { 	  struct badstr *bbb; 	} forwardref;  	typedef struct intermediate { 	  int aaaa; 	} intermediate_ref;  	typedef struct badstr { 	  int ccccc; 	} badtype;   */
-if|#
-directive|if
-literal|0
-block|TREE_ASM_BEING_WRITTEN (type) = 1;
-endif|#
-directive|endif
+comment|/* Here is a testcase:  	struct foo { 	  struct badstr *bbb; 	} forwardref;  	typedef struct intermediate { 	  int aaaa; 	} intermediate_ref;  	typedef struct badstr { 	  int ccccc; 	} badtype;   */
 comment|/* This change, which ought to make better output, 	 used to make the COFF assembler unhappy. 	 Changes involving KNOWN_TYPE_TAG may fix the problem.  */
 comment|/* Before really doing anything, output types we want to refer to.  */
 comment|/* Note that in version 1 the following two lines 	 are not used if forward references are in use.  */
@@ -4173,14 +4027,6 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|TREE_ASM_WRITTEN (type) = 1;
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* Output a structure type.  */
 block|{
 name|int
@@ -4445,8 +4291,6 @@ expr_stmt|;
 block|}
 else|else
 continue|continue;
-name|CONTIN
-expr_stmt|;
 name|PUT_SDB_DEF
 argument_list|(
 name|IDENTIFIER_POINTER
@@ -4485,7 +4329,7 @@ name|PUT_SDB_ENDEF
 expr_stmt|;
 block|}
 block|}
-comment|/* output the individual fields */
+comment|/* Output the individual fields.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -4632,8 +4476,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|CONTIN
-expr_stmt|;
 name|name
 operator|=
 name|IDENTIFIER_POINTER
@@ -4721,7 +4563,7 @@ block|}
 name|PUT_SDB_ENDEF
 expr_stmt|;
 block|}
-comment|/* output end of a structure,union, or enumeral definition */
+comment|/* Output end of a structure,union, or enumeral definition.  */
 name|PUT_SDB_PLAIN_DEF
 argument_list|(
 literal|"eos"
@@ -4760,9 +4602,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* The following two functions output definitions of function parameters.    Each parameter gets a definition locating it in the parameter list.    Each parameter that is a register variable gets a second definition    locating it in the register.     Printing or argument lists in gdb uses the definitions that    locate in the parameter list.  But reference to the variable in    expressions uses preferentially the definition as a register.  */
 end_comment
@@ -4776,11 +4615,9 @@ specifier|static
 name|void
 name|sdbout_parms
 parameter_list|(
-name|parms
-parameter_list|)
 name|tree
 name|parms
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -5358,11 +5195,9 @@ specifier|static
 name|void
 name|sdbout_reg_parms
 parameter_list|(
-name|parms
-parameter_list|)
 name|tree
 name|parms
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -5620,9 +5455,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Output debug information for a global DECL.  Called from toplev.c    after compilation proper has finished.  */
 end_comment
@@ -5632,11 +5464,9 @@ specifier|static
 name|void
 name|sdbout_global_decl
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5717,14 +5547,12 @@ specifier|static
 name|void
 name|sdbout_finish
 parameter_list|(
-name|main_filename
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|main_filename
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|decl
@@ -5752,10 +5580,6 @@ name|tree
 modifier|*
 name|vec
 init|=
-operator|(
-name|tree
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -5869,9 +5693,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Describe the beginning of an internal block within a function.    Also output descriptions of variables defined in this block.     N is the number of the block, by order of beginning, counting from 1,    and not counting the outermost (function top-level) block.    The blocks match the BLOCKs in DECL_INITIAL (current_function_decl),    if the count starts at 0 for the outermost one.  */
 end_comment
@@ -5881,18 +5702,14 @@ specifier|static
 name|void
 name|sdbout_begin_block
 parameter_list|(
+name|unsigned
+name|int
 name|line
 parameter_list|,
+name|unsigned
+name|int
 name|n
 parameter_list|)
-name|unsigned
-name|int
-name|line
-decl_stmt|;
-name|unsigned
-name|int
-name|n
-decl_stmt|;
 block|{
 name|tree
 name|decl
@@ -5991,19 +5808,15 @@ specifier|static
 name|void
 name|sdbout_end_block
 parameter_list|(
-name|line
-parameter_list|,
-name|n
-parameter_list|)
 name|unsigned
 name|int
 name|line
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|n
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|MAKE_LINE_SAFE
 argument_list|(
@@ -6032,25 +5845,25 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Output a line number symbol entry for source file FILENAME and line    number LINE.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|sdbout_source_line
 parameter_list|(
-name|line
-parameter_list|,
-name|filename
-parameter_list|)
 name|unsigned
 name|int
 name|line
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|filename
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* COFF relative line numbers must be positive.  */
 if|if
@@ -6066,11 +5879,17 @@ block|{
 ifdef|#
 directive|ifdef
 name|ASM_OUTPUT_SOURCE_LINE
+name|sdbout_source_line_counter
+operator|+=
+literal|1
+expr_stmt|;
 name|ASM_OUTPUT_SOURCE_LINE
 argument_list|(
 name|asm_out_file
 argument_list|,
 name|line
+argument_list|,
+name|sdbout_source_line_counter
 argument_list|)
 expr_stmt|;
 else|#
@@ -6112,12 +5931,10 @@ specifier|static
 name|void
 name|sdbout_begin_function
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|sdbout_symbol
 argument_list|(
@@ -6144,20 +5961,16 @@ specifier|static
 name|void
 name|sdbout_begin_prologue
 parameter_list|(
-name|line
-parameter_list|,
-name|file
-parameter_list|)
 name|unsigned
 name|int
 name|line
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|sdbout_end_prologue
 argument_list|(
@@ -6179,20 +5992,16 @@ specifier|static
 name|void
 name|sdbout_end_prologue
 parameter_list|(
-name|line
-parameter_list|,
-name|file
-parameter_list|)
 name|unsigned
 name|int
 name|line
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|sdb_begin_function_line
 operator|=
@@ -6233,12 +6042,10 @@ specifier|static
 name|void
 name|sdbout_end_function
 parameter_list|(
-name|line
-parameter_list|)
 name|unsigned
 name|int
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -6278,21 +6085,17 @@ specifier|static
 name|void
 name|sdbout_end_epilogue
 parameter_list|(
-name|line
-parameter_list|,
-name|file
-parameter_list|)
 name|unsigned
 name|int
 name|line
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -6360,11 +6163,9 @@ specifier|static
 name|void
 name|sdbout_label
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|PUT_SDB_DEF
 argument_list|(
@@ -6403,21 +6204,17 @@ specifier|static
 name|void
 name|sdbout_start_source_file
 parameter_list|(
-name|line
-parameter_list|,
-name|filename
-parameter_list|)
 name|unsigned
 name|int
 name|line
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|filename
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -6427,11 +6224,6 @@ name|sdb_file
 modifier|*
 name|n
 init|=
-operator|(
-expr|struct
-name|sdb_file
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -6474,13 +6266,11 @@ specifier|static
 name|void
 name|sdbout_end_source_file
 parameter_list|(
-name|line
-parameter_list|)
 name|unsigned
 name|int
 name|line
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -6526,25 +6316,18 @@ specifier|static
 name|void
 name|sdbout_init
 parameter_list|(
-name|input_file_name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|input_file_name
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
 name|MIPS_DEBUGGING_INFO
 name|current_file
 operator|=
-operator|(
-expr|struct
-name|sdb_file
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -6563,75 +6346,6 @@ operator|->
 name|name
 operator|=
 name|input_file_name
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|RMS_QUICK_HACK_1
-name|tree
-name|t
-decl_stmt|;
-for|for
-control|(
-name|t
-operator|=
-call|(
-modifier|*
-name|lang_hooks
-operator|.
-name|decls
-operator|.
-name|getdecls
-call|)
-argument_list|()
-init|;
-name|t
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|t
-argument_list|)
-control|)
-if|if
-condition|(
-name|DECL_NAME
-argument_list|(
-name|t
-argument_list|)
-operator|&&
-name|IDENTIFIER_POINTER
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|IDENTIFIER_POINTER
-argument_list|(
-name|DECL_NAME
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-argument_list|,
-literal|"__vtbl_ptr_type"
-argument_list|)
-condition|)
-name|sdbout_symbol
-argument_list|(
-name|t
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

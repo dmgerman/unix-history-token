@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by Jakub Jelinek<jakub@redhat.com>.     This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU CC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Jakub Jelinek<jakub@redhat.com>.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -45,23 +45,17 @@ directive|include
 file|"tconfig.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tsystem.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|inhibit_libc
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
 
 begin_include
 include|#
@@ -77,7 +71,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"tsystem.h"
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -166,6 +166,7 @@ end_if
 
 begin_function_decl
 specifier|static
+specifier|const
 name|fde
 modifier|*
 name|_Unwind_Find_registered_FDE
@@ -238,6 +239,7 @@ name|void
 modifier|*
 name|func
 decl_stmt|;
+specifier|const
 name|fde
 modifier|*
 name|ret
@@ -607,7 +609,7 @@ condition|(
 name|p_dynamic
 condition|)
 block|{
-comment|/* For dynamicly linked executables and shared libraries, 	 DT_PLTGOT is the gp value for that object.  */
+comment|/* For dynamically linked executables and shared libraries, 	 DT_PLTGOT is the gp value for that object.  */
 name|ElfW
 argument_list|(
 name|Dyn
@@ -676,14 +678,6 @@ directive|error
 error|What is DW_EH_PE_datarel base on this platform?
 endif|#
 directive|endif
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CRT_GET_RFIB_TEXT
-error|#
-directive|error
-error|What is DW_EH_PE_textrel base on this platform?
 endif|#
 directive|endif
 name|p
@@ -1215,6 +1209,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|fde
 modifier|*
 name|_Unwind_Find_FDE
@@ -1233,6 +1228,7 @@ name|struct
 name|unw_eh_callback_data
 name|data
 decl_stmt|;
+specifier|const
 name|fde
 modifier|*
 name|ret

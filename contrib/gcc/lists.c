@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* List management for the GNU C-Compiler expander.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* List management for the GCC expander.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -33,22 +45,19 @@ directive|include
 file|"ggc.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|free_list
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Functions for maintaining cache-able lists of EXPR_LIST and INSN_LISTs.  */
@@ -97,20 +106,14 @@ specifier|static
 name|void
 name|free_list
 parameter_list|(
-name|listp
-parameter_list|,
-name|unused_listp
-parameter_list|)
 name|rtx
 modifier|*
 name|listp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|rtx
+modifier|*
 name|unused_listp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|rtx
 name|link
@@ -172,7 +175,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* This call is used in place of a gen_rtx_INSN_LIST. If there is a cached    node available, we'll use it, otherwise a call to gen_rtx_INSN_LIST    is made.  */
@@ -182,15 +185,12 @@ begin_function
 name|rtx
 name|alloc_INSN_LIST
 parameter_list|(
-name|val
-parameter_list|,
-name|next
-parameter_list|)
 name|rtx
 name|val
-decl_stmt|,
+parameter_list|,
+name|rtx
 name|next
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|r
@@ -265,20 +265,15 @@ begin_function
 name|rtx
 name|alloc_EXPR_LIST
 parameter_list|(
-name|kind
-parameter_list|,
-name|val
-parameter_list|,
-name|next
-parameter_list|)
 name|int
 name|kind
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|val
-decl_stmt|,
+parameter_list|,
+name|rtx
 name|next
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|r
@@ -353,12 +348,10 @@ begin_function
 name|void
 name|free_EXPR_LIST_list
 parameter_list|(
-name|listp
-parameter_list|)
 name|rtx
 modifier|*
 name|listp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -387,12 +380,10 @@ begin_function
 name|void
 name|free_INSN_LIST_list
 parameter_list|(
-name|listp
-parameter_list|)
 name|rtx
 modifier|*
 name|listp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -421,11 +412,9 @@ begin_function
 name|void
 name|free_EXPR_LIST_node
 parameter_list|(
-name|ptr
-parameter_list|)
 name|rtx
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|XEXP
 argument_list|(
@@ -451,11 +440,9 @@ begin_function
 name|void
 name|free_INSN_LIST_node
 parameter_list|(
-name|ptr
-parameter_list|)
 name|rtx
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|XEXP
 argument_list|(

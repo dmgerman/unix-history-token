@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language-dependent hooks for Objective-C.    Copyright 2001, 2002 Free Software Foundation, Inc.    Contributed by Ziemowit Laski<zlaski@apple.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Language-dependent hooks for Objective-C.    Copyright 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Ziemowit Laski<zlaski@apple.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -58,15 +70,11 @@ file|"langhooks-def.h"
 end_include
 
 begin_decl_stmt
-specifier|static
-name|void
-name|objc_init_options
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+name|enum
+name|c_language_kind
+name|c_language
+init|=
+name|clk_objc
 decl_stmt|;
 end_decl_stmt
 
@@ -119,20 +127,46 @@ begin_define
 define|#
 directive|define
 name|LANG_HOOKS_INIT_OPTIONS
-value|objc_init_options
+value|c_common_init_options
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|LANG_HOOKS_DECODE_OPTION
+name|LANG_HOOKS_HANDLE_OPTION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|LANG_HOOKS_DECODE_OPTION
-value|c_common_decode_option
+name|LANG_HOOKS_HANDLE_OPTION
+value|c_common_handle_option
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_HANDLE_FILENAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_HANDLE_FILENAME
+value|c_common_handle_filename
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_MISSING_ARGUMENT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_MISSING_ARGUMENT
+value|c_common_missing_argument
 end_define
 
 begin_undef
@@ -229,19 +263,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|LANG_HOOKS_INSERT_DEFAULT_ATTRIBUTES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LANG_HOOKS_INSERT_DEFAULT_ATTRIBUTES
-value|c_insert_default_attributes
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|LANG_HOOKS_FINISH_INCOMPLETE_DECL
 end_undef
 
@@ -276,6 +297,32 @@ define|#
 directive|define
 name|LANG_HOOKS_STATICP
 value|c_staticp
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_SET_DECL_ASSEMBLER_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_SET_DECL_ASSEMBLER_NAME
+value|c_static_assembler_name
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_NO_BODY_BLOCKS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_NO_BODY_BLOCKS
+value|true
 end_define
 
 begin_undef
@@ -333,6 +380,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|LANG_HOOKS_DECL_UNINIT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_DECL_UNINIT
+value|c_decl_uninit
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|LANG_HOOKS_FUNCTION_ENTER_NESTED
 end_undef
 
@@ -354,6 +414,19 @@ define|#
 directive|define
 name|LANG_HOOKS_FUNCTION_LEAVE_NESTED
 value|c_pop_function_context
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_RTL_EXPAND_STMT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_RTL_EXPAND_STMT
+value|expand_stmt
 end_define
 
 begin_comment
@@ -449,6 +522,32 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|LANG_HOOKS_TREE_INLINING_ESTIMATE_NUM_INSNS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_TREE_INLINING_ESTIMATE_NUM_INSNS
+value|c_estimate_num_insns
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_CALLGRAPH_EXPAND_FUNCTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_CALLGRAPH_EXPAND_FUNCTION
+value|c_expand_body
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|LANG_HOOKS_TYPE_FOR_MODE
 end_undef
 
@@ -535,6 +634,19 @@ define|#
 directive|define
 name|LANG_HOOKS_TYPE_PROMOTES_TO
 value|c_type_promotes_to
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LANG_HOOKS_WRITE_GLOBALS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LANG_HOOKS_WRITE_GLOBALS
+value|c_write_global_declarations
 end_define
 
 begin_comment
@@ -707,24 +819,6 @@ undef|#
 directive|undef
 name|DEFTREECODE
 end_undef
-
-begin_function
-specifier|static
-name|void
-name|objc_init_options
-parameter_list|()
-block|{
-name|flag_objc
-operator|=
-literal|1
-expr_stmt|;
-name|c_common_init_options
-argument_list|(
-name|clk_c
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 

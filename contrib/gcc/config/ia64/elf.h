@@ -15,7 +15,7 @@ value|fprintf (stderr, " (IA-64) ELF");
 end_define
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    the assembler.  It can also specify how to translate options you give to GNU    CC into options for GNU CC to pass to the assembler.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    the assembler.  It can also specify how to translate options you give to GNU    CC into options for GCC to pass to the assembler.  */
 end_comment
 
 begin_if
@@ -81,7 +81,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    the linker.  It can also specify how to translate options you give to GNU CC    into options for GNU CC to pass to the linker.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    the linker.  It can also specify how to translate options you give to GCC    into options for GCC to pass to the linker.  */
 end_comment
 
 begin_comment

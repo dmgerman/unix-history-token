@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Perform optimizations on tree structure.    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Mark Michell (mark@codesourcery.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Perform optimizations on tree structure.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004    Free Software Foundation, Inc.    Written by Mark Michell (mark@codesourcery.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -66,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ggc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"params.h"
 end_include
 
@@ -97,56 +103,47 @@ begin_comment
 comment|/* Prototypes.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|tree
 name|calls_setjmp_r
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|update_cloned_parm
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dump_function
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|tree_dump_index
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Optimize the body of FN.  */
@@ -156,11 +153,9 @@ begin_function
 name|void
 name|optimize_function
 parameter_list|(
-name|fn
-parameter_list|)
 name|tree
 name|fn
-decl_stmt|;
+parameter_list|)
 block|{
 name|dump_function
 argument_list|(
@@ -168,10 +163,6 @@ name|TDI_original
 argument_list|,
 name|fn
 argument_list|)
-expr_stmt|;
-comment|/* While in this function, we may choose to go off and compile      another function.  For example, we might instantiate a function      in the hopes of inlining it.  Normally, that wouldn't trigger any      actual RTL code-generation -- but it will if the template is      actually needed.  (For example, if it's address is taken, or if      some other function already refers to the template.)  If      code-generation occurs, then garbage collection will occur, so we      must protect ourselves, just as we do while building up the body      of the function.  */
-operator|++
-name|function_depth
 expr_stmt|;
 if|if
 condition|(
@@ -198,10 +189,6 @@ name|fn
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Undo the call to ggc_push_context above.  */
-operator|--
-name|function_depth
-expr_stmt|;
 name|dump_function
 argument_list|(
 name|TDI_optimized
@@ -221,26 +208,20 @@ specifier|static
 name|tree
 name|calls_setjmp_r
 parameter_list|(
-name|tp
-parameter_list|,
-name|walk_subtrees
-parameter_list|,
-name|data
-parameter_list|)
 name|tree
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|walk_subtrees
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* We're only interested in FUNCTION_DECLS.  */
 if|if
@@ -276,14 +257,12 @@ comment|/* Returns nonzero if FN calls `setjmp' or some other function that    c
 end_comment
 
 begin_function
-name|int
+name|bool
 name|calls_setjmp_p
 parameter_list|(
-name|fn
-parameter_list|)
 name|tree
 name|fn
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|walk_tree_without_duplicates
@@ -313,16 +292,12 @@ specifier|static
 name|void
 name|update_cloned_parm
 parameter_list|(
+name|tree
 name|parm
 parameter_list|,
+name|tree
 name|cloned_parm
 parameter_list|)
-name|tree
-name|parm
-decl_stmt|;
-name|tree
-name|cloned_parm
-decl_stmt|;
 block|{
 name|DECL_ABSTRACT_ORIGIN
 argument_list|(
@@ -392,22 +367,15 @@ comment|/* FN is a function that has a complete body.  Clone the body as    nece
 end_comment
 
 begin_function
-name|int
+name|bool
 name|maybe_clone_body
 parameter_list|(
-name|fn
-parameter_list|)
 name|tree
 name|fn
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|clone
-decl_stmt|;
-name|int
-name|first
-init|=
-literal|1
 decl_stmt|;
 comment|/* We only clone constructors and destructors.  */
 if|if
@@ -461,10 +429,6 @@ name|TREE_CHAIN
 argument_list|(
 name|clone
 argument_list|)
-operator|,
-name|first
-operator|=
-literal|0
 control|)
 block|{
 name|tree
@@ -500,16 +464,6 @@ argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
-name|DID_INLINE_FUNC
-argument_list|(
-name|clone
-argument_list|)
-operator|=
-name|DID_INLINE_FUNC
-argument_list|(
-name|fn
-argument_list|)
-expr_stmt|;
 name|DECL_DECLARED_INLINE_P
 argument_list|(
 name|clone
@@ -606,6 +560,16 @@ name|clone
 argument_list|)
 operator|=
 name|TREE_PUBLIC
+argument_list|(
+name|fn
+argument_list|)
+expr_stmt|;
+name|DECL_VISIBILITY
+argument_list|(
+name|clone
+argument_list|)
+operator|=
+name|DECL_VISIBILITY
 argument_list|(
 name|fn
 argument_list|)
@@ -708,7 +672,6 @@ argument_list|(
 name|clone_parm
 argument_list|)
 control|)
-block|{
 comment|/* Update this parameter.  */
 name|update_cloned_parm
 argument_list|(
@@ -717,20 +680,6 @@ argument_list|,
 name|clone_parm
 argument_list|)
 expr_stmt|;
-comment|/* We should only give unused information for one clone.  */
-if|if
-condition|(
-operator|!
-name|first
-condition|)
-name|TREE_USED
-argument_list|(
-name|clone_parm
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* Start processing the function.  */
 name|push_to_top_level
 argument_list|()
@@ -945,17 +894,6 @@ argument_list|,
 name|decl_map
 argument_list|)
 expr_stmt|;
-comment|/* There are as many statements in the clone as in the 	 original.  */
-name|DECL_NUM_STMTS
-argument_list|(
-name|clone
-argument_list|)
-operator|=
-name|DECL_NUM_STMTS
-argument_list|(
-name|fn
-argument_list|)
-expr_stmt|;
 comment|/* Clean up.  */
 name|splay_tree_delete
 argument_list|(
@@ -992,7 +930,7 @@ argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
-name|expand_body
+name|expand_or_defer_fn
 argument_list|(
 name|clone
 argument_list|)
@@ -1017,17 +955,13 @@ specifier|static
 name|void
 name|dump_function
 parameter_list|(
-name|phase
-parameter_list|,
-name|fn
-parameter_list|)
 name|enum
 name|tree_dump_index
 name|phase
-decl_stmt|;
+parameter_list|,
 name|tree
 name|fn
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -1086,7 +1020,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|";; enabled by -%s\n"
+literal|";; enabled by -fdump-%s\n"
 argument_list|,
 name|dump_flag_name
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.     This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU CC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ file|<mmintrin.h>
 end_include
 
 begin_comment
-comment|/* The data type indended for user use.  */
+comment|/* The data type intended for user use.  */
 end_comment
 
 begin_typedef
@@ -67,7 +67,7 @@ typedef|)));
 end_typedef
 
 begin_comment
-comment|/* Internal data types for implementing the instrinsics.  */
+comment|/* Internal data types for implementing the intrinsics.  */
 end_comment
 
 begin_typedef
@@ -79,18 +79,6 @@ typedef|((
 name|__mode__
 typedef|(
 name|__V4SF__
-typedef|)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|__v4si
-name|__attribute__
-typedef|((
-name|__mode__
-typedef|(
-name|__V4SI__
 typedef|)));
 end_typedef
 
@@ -4007,73 +3995,36 @@ name|__inline
 name|__m128
 name|_mm_set_ps
 parameter_list|(
+specifier|const
 name|float
 name|__Z
 parameter_list|,
+specifier|const
 name|float
 name|__Y
 parameter_list|,
+specifier|const
 name|float
 name|__X
 parameter_list|,
+specifier|const
 name|float
 name|__W
 parameter_list|)
 block|{
-union|union
-block|{
-name|float
-name|__a
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|__m128
-name|__v
-decl_stmt|;
-block|}
-name|__u
-union|;
-name|__u
-operator|.
-name|__a
-index|[
-literal|0
-index|]
-operator|=
-name|__W
-expr_stmt|;
-name|__u
-operator|.
-name|__a
-index|[
-literal|1
-index|]
-operator|=
-name|__X
-expr_stmt|;
-name|__u
-operator|.
-name|__a
-index|[
-literal|2
-index|]
-operator|=
-name|__Y
-expr_stmt|;
-name|__u
-operator|.
-name|__a
-index|[
-literal|3
-index|]
-operator|=
-name|__Z
-expr_stmt|;
 return|return
-name|__u
-operator|.
-name|__v
+operator|(
+name|__v4sf
+operator|)
+block|{
+name|__W
+block|,
+name|__X
+block|,
+name|__Y
+block|,
+name|__Z
+block|}
 return|;
 block|}
 end_function
@@ -5255,7 +5206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Guarantees that every preceeding store is globally visible before    any subsequent store.  */
+comment|/* Guarantees that every preceding store is globally visible before    any subsequent store.  */
 end_comment
 
 begin_function

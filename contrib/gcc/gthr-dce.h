@@ -1448,32 +1448,6 @@ begin_decl_stmt
 specifier|static
 specifier|inline
 name|int
-name|__gthread_key_dtor
-argument_list|(
-name|UNUSED
-argument_list|(
-argument|__gthread_key_t key
-argument_list|)
-argument_list|,
-name|UNUSED
-argument_list|(
-name|void
-operator|*
-name|ptr
-argument_list|)
-argument_list|)
-block|{
-comment|/* Nothing needed.  */
-return|return
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
-name|int
 name|__gthread_key_delete
 argument_list|(
 name|UNUSED

@@ -1112,7 +1112,9 @@ begin_function
 specifier|static
 name|bool
 name|ffedata_advance_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffebld
 name|next
@@ -2866,9 +2868,6 @@ condition|)
 block|{
 name|cache
 operator|=
-operator|(
-name|ffedataConvertCache_
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -5739,7 +5738,9 @@ begin_function
 specifier|static
 name|void
 name|ffedata_pop_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffedataImpdo_
 name|victim
@@ -5784,7 +5785,9 @@ begin_function
 specifier|static
 name|void
 name|ffedata_push_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffedataImpdo_
 name|baby

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for SPARC running System V.4    Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000, 2002    Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for SPARC running System V.4    Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000, 2002    Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -114,24 +114,6 @@ comment|/* Has no equivalent.  See ASM_OUTPUT_DEF below.  */
 end_comment
 
 begin_comment
-comment|/* Provide a set of pre-definitions and pre-assertions appropriate for    the SPARC running svr4.  __svr4__ is our extension.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-define|\
-value|"-Dsparc -Dunix -D__svr4__ -Asystem=unix -Asystem=svr4"
-end_define
-
-begin_comment
 comment|/* The native assembler can't compute differences between symbols in different    sections when generating pic code, so we must put jump tables in the    text section.  */
 end_comment
 
@@ -161,7 +143,7 @@ define|#
 directive|define
 name|ASM_SPEC
 define|\
-value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \    %{fpic:-K PIC} %{fPIC:-K PIC} %(asm_cpu)"
+value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \    %{fpic|fPIC|fpie|fPIE:-K PIC} %(asm_cpu)"
 end_define
 
 begin_comment
@@ -245,7 +227,7 @@ parameter_list|,
 name|JUMPTABLE
 parameter_list|)
 define|\
-value|do { ASM_OUTPUT_ALIGN ((FILE), Pmode == SImode ? 2 : 3);		\      ASM_OUTPUT_INTERNAL_LABEL ((FILE), PREFIX, NUM);			\    } while (0)
+value|do { ASM_OUTPUT_ALIGN ((FILE), Pmode == SImode ? 2 : 3);		\      (*targetm.asm_out.internal_label) ((FILE), PREFIX, NUM);		\    } while (0)
 end_define
 
 begin_comment
@@ -373,10 +355,6 @@ directive|define
 name|TARGET_ASM_NAMED_SECTION
 value|sparc_elf_asm_named_section
 end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output to the stdio stream    FILE the assembler definition of uninitialized global DECL named    NAME whose size is SIZE bytes and alignment is ALIGN bytes.    Try to use asm_output_aligned_bss to implement this macro.  */
-end_comment
 
 begin_undef
 undef|#

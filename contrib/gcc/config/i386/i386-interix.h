@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Intel 80386 running Interix    Parts Copyright (C) 1991, 1999, 2000, 2002 Free Software Foundation, Inc.     Parts:      by Douglas B. Rupp (drupp@cs.washington.edu).      by Ron Guilmette (rfg@netcom.com).      by Donn Terry (donn@softway.com).      by Mumit Khan (khan@xraylith.wisc.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GCC for Intel 80386 running Interix    Parts Copyright (C) 1991, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.     Parts:      by Douglas B. Rupp (drupp@cs.washington.edu).      by Ron Guilmette (rfg@netcom.com).      by Donn Terry (donn@softway.com).      by Mumit Khan (khan@xraylith.wisc.edu).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ comment|/* until the link format can handle it */
 end_comment
 
 begin_comment
-comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387 and needs stack probes    We also align doubles to 64-bits for MSVC default compatibility */
+comment|/* By default, target has a 80387, uses IEEE compatible arithmetic,    and returns float values in the 387 and needs stack probes    We also align doubles to 64-bits for MSVC default compatibility    We do bitfields MSVC-compatibly by default, too.  */
 end_comment
 
 begin_undef
@@ -60,7 +60,7 @@ define|#
 directive|define
 name|TARGET_SUBTARGET_DEFAULT
 define|\
-value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_STACK_PROBE | \     MASK_ALIGN_DOUBLE)
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_STACK_PROBE | \     MASK_ALIGN_DOUBLE | MASK_MS_BITFIELD_LAYOUT)
 end_define
 
 begin_undef
@@ -127,7 +127,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do									\     {									\ 	builtin_define ("__INTERIX");					\ 	builtin_define ("__OPENNT");					\ 	builtin_define ("_M_IX86=300");					\ 	builtin_define ("_X86_=1");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=interix");				\ 	if (preprocessing_asm_p ())					\ 	  builtin_define_std ("LANGUAGE_ASSEMBLY");			\ 	else								\ 	  {								\ 	     builtin_define_std ("LANGUAGE_C");				\ 	     if (c_language == clk_cplusplus)				\ 	       builtin_define_std ("LANGUAGE_C_PLUS_PLUS");		\ 	     if (flag_objc)						\ 	       builtin_define_std ("LANGUAGE_OBJECTIVE_C");		\ 	  } 								\     }									\   while (0)
+value|do									\     {									\ 	builtin_define ("__INTERIX");					\ 	builtin_define ("__OPENNT");					\ 	builtin_define ("_M_IX86=300");					\ 	builtin_define ("_X86_=1");					\ 	builtin_define ("__stdcall=__attribute__((__stdcall__))");	\ 	builtin_define ("__cdecl=__attribute__((__cdecl__))");		\ 	builtin_define ("__declspec(x)=__attribute__((x))");		\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=interix");				\ 	if (preprocessing_asm_p ())					\ 	  builtin_define_std ("LANGUAGE_ASSEMBLY");			\ 	else								\ 	  {								\ 	     builtin_define_std ("LANGUAGE_C");				\ 	     if (c_dialect_cxx ())					\ 	       builtin_define_std ("LANGUAGE_C_PLUS_PLUS");		\ 	     if (c_dialect_objc ())					\ 	       builtin_define_std ("LANGUAGE_OBJECTIVE_C");		\ 	  } 								\     }									\   while (0)
 end_define
 
 begin_undef
@@ -158,32 +158,17 @@ begin_comment
 comment|/* The global __fltused is necessary to cause the printf/scanf routines    for outputting/inputting floating point numbers to be loaded.  Since this    is kind of hard to detect, we just do it all the time.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ASM_FILE_START
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
-name|ASM_FILE_START
+name|X86_FILE_START_FLTUSED
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {  fprintf (FILE, "\t.file\t");                            \         output_quoted_string (FILE, dump_base_name);            \         fprintf (FILE, "\n");                                   \         fprintf (FILE, ".global\t__fltused\n");                 \   } while (0)
+name|X86_FILE_START_FLTUSED
+value|1
 end_define
 
 begin_comment
@@ -217,7 +202,7 @@ value|"\t.string\t"
 end_define
 
 begin_comment
-comment|/* The routine used to output NUL terminated strings.  We use a special    version of this for most svr4 targets because doing so makes the    generated assembly code more compact (and thus faster to assemble)    as well as more readable, especially for targets like the i386    (where the only alternative is to output character sequences as    comma separated lists of numbers).   */
+comment|/* The routine used to output NUL terminated strings.  We use a special    version of this for most svr4 targets because doing so makes the    generated assembly code more compact (and thus faster to assemble)    as well as more readable, especially for targets like the i386    (where the only alternative is to output character sequences as    comma separated lists of numbers).  */
 end_comment
 
 begin_define
@@ -230,7 +215,7 @@ parameter_list|,
 name|STR
 parameter_list|)
 define|\
-value|do									\     {									\       register const unsigned char *_limited_str =			\         (const unsigned char *) (STR);					\       register unsigned ch;						\       fprintf ((FILE), "%s\"", STRING_ASM_OP);				\       for (; (ch = *_limited_str); _limited_str++)			\         {								\ 	  register int escape = ESCAPES[ch];				\ 	  switch (escape)						\ 	    {								\ 	    case 0:							\ 	      putc (ch, (FILE));					\ 	      break;							\ 	    case 1:							\ 	      fprintf ((FILE), "\\%03o", ch);				\ 	      break;							\ 	    default:							\ 	      putc ('\\', (FILE));					\ 	      putc (escape, (FILE));					\ 	      break;							\ 	    }								\         }								\       fprintf ((FILE), "\"\n");						\     }									\   while (0)
+value|do									\     {									\       const unsigned char *_limited_str =				\         (const unsigned char *) (STR);					\       unsigned ch;							\       fprintf ((FILE), "%s\"", STRING_ASM_OP);				\       for (; (ch = *_limited_str); _limited_str++)			\         {								\ 	  int escape = ESCAPES[ch];					\ 	  switch (escape)						\ 	    {								\ 	    case 0:							\ 	      putc (ch, (FILE));					\ 	      break;							\ 	    case 1:							\ 	      fprintf ((FILE), "\\%03o", ch);				\ 	      break;							\ 	    default:							\ 	      putc ('\\', (FILE));					\ 	      putc (escape, (FILE));					\ 	      break;							\ 	    }								\         }								\       fprintf ((FILE), "\"\n");						\     }									\   while (0)
 end_define
 
 begin_comment
@@ -255,7 +240,7 @@ parameter_list|,
 name|LENGTH
 parameter_list|)
 define|\
-value|do									\     {									\       register const unsigned char *_ascii_bytes =			\         (const unsigned char *) (STR);					\       register const unsigned char *limit = _ascii_bytes + (LENGTH);	\       register unsigned bytes_in_chunk = 0;				\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register const unsigned char *p;				\ 	  if (bytes_in_chunk>= 64)					\ 	    {								\ 	      fputc ('\n', (FILE));					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 	  if (p< limit&& (p - _ascii_bytes)<= (long) STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fputc ('\n', (FILE));					\ 		  bytes_in_chunk = 0;					\ 		}							\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "\t.byte\t");				\ 	      else							\ 		fputc (',', (FILE));					\ 	      fprintf ((FILE), "0x%02x", *_ascii_bytes);		\ 	      bytes_in_chunk += 5;					\ 	    }								\ 	}								\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\n");						\     }									\   while (0)
+value|do									\     {									\       const unsigned char *_ascii_bytes =				\         (const unsigned char *) (STR);					\       const unsigned char *limit = _ascii_bytes + (LENGTH);		\       unsigned bytes_in_chunk = 0;					\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  const unsigned char *p;					\ 	  if (bytes_in_chunk>= 64)					\ 	    {								\ 	      fputc ('\n', (FILE));					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 	  if (p< limit&& (p - _ascii_bytes)<= (long) STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fputc ('\n', (FILE));					\ 		  bytes_in_chunk = 0;					\ 		}							\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "\t.byte\t");				\ 	      else							\ 		fputc (',', (FILE));					\ 	      fprintf ((FILE), "0x%02x", *_ascii_bytes);		\ 	      bytes_in_chunk += 5;					\ 	    }								\ 	}								\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\n");						\     }									\   while (0)
 end_define
 
 begin_comment
@@ -312,6 +297,24 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
+
+begin_comment
+comment|/* Objective-C has its own packing rules...    Objc tries to parallel the code in stor-layout.c at runtime	    (see libobjc/encoding.c).  This (compile-time) packing info isn't     available at runtime, so it's hopeless to try.     And if the user tries to set the flag for objc, give an error    so he has some clue.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_OVERRIDE_OPTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OVERRIDE_OPTIONS
+define|\
+value|do {									\   if (strcmp (lang_hooks.name, "GNU Objective-C") == 0)			\     {									\       if ((target_flags& MASK_MS_BITFIELD_LAYOUT) != 0			\&& (target_flags_explicit& MASK_MS_BITFIELD_LAYOUT) != 0)	\ 	{								\ 	   error ("ms-bitfields not supported for objc");		\ 	}								\       target_flags&= ~MASK_MS_BITFIELD_LAYOUT;				\     }									\ } while (0)
+end_define
 
 begin_define
 define|#
@@ -405,20 +408,6 @@ define|#
 directive|define
 name|PCC_BITFIELD_TYPE_MATTERS
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCC_BITFIELD_TYPE_TEST
-value|TYPE_NATIVE(rec)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GROUP_BITFIELDS_BY_ALIGN
-value|TYPE_NATIVE(rec)
 end_define
 
 begin_comment
@@ -517,7 +506,7 @@ name|MULTIPLE_SYMBOL_SPACES
 end_define
 
 begin_define
-unit|extern void i386_pe_unique_section PARAMS ((tree, int));
+unit|extern void i386_pe_unique_section (tree, int);
 define|#
 directive|define
 name|TARGET_ASM_UNIQUE_SECTION
@@ -573,7 +562,7 @@ name|NO_IMPLICIT_EXTERN_C
 end_define
 
 begin_comment
-comment|/* MSVC returns structs of up to 8 bytes via registers. */
+comment|/* MSVC returns structs of up to 8 bytes via registers.  */
 end_comment
 
 begin_define

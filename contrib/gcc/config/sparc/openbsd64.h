@@ -48,20 +48,16 @@ value|CM_MEDMID
 end_define
 
 begin_comment
-comment|/* Run-time target specifications.  */
+comment|/* Target OS builtins.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__unix__ -D__sparc__ -D__sparc64__ -D__sparcv9__ -D__sparc_v9__ -D__arch64__ -D__ELF__ -D__OpenBSD__ -Asystem(unix) -Asystem(OpenBSD) -Acpu(sparc) -Amachine(sparc)"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define ("__unix__");		\ 	builtin_define ("__OpenBSD__");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=OpenBSD");	\ 	builtin_define ("__sparc64__");		\ 	builtin_define ("__sparcv9__");		\ 	builtin_define ("__sparc_v9__");	\ 	builtin_define ("__arch64__");		\     }						\   while (0)
 end_define
 
 begin_undef
@@ -99,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"\ %{v:-V} -s %{fpic:-K PIC} %{fPIC:-K PIC} \ %{mlittle-endian:-EL} \ %(asm_cpu) %(asm_arch) \ "
+value|"\ %{v:-V} -s %{fpic|fPIC|fpie|fPIE:-K PIC} \ %{mlittle-endian:-EL} \ %(asm_cpu) %(asm_arch) \ "
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for IBM S/390    Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Hartmut Penner (hpenner@de.ibm.com) and                   Ulrich Weigand (uweigand@de.ibm.com). This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for IBM S/390    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Hartmut Penner (hpenner@de.ibm.com) and                   Ulrich Weigand (uweigand@de.ibm.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -37,13 +37,139 @@ end_if
 begin_include
 include|#
 directive|include
-file|<s390/fixdfdi.h>
+file|<config/s390/fixdfdi.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Which processor to generate code or schedule for. The cpu attribute    defines a list that mirrors this list, so changes to s390.md must be    made at the same time.  */
+end_comment
+
+begin_enum
+enum|enum
+name|processor_type
+block|{
+name|PROCESSOR_9672_G5
+block|,
+name|PROCESSOR_9672_G6
+block|,
+name|PROCESSOR_2064_Z900
+block|,
+name|PROCESSOR_2084_Z990
+block|,
+name|PROCESSOR_max
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Optional architectural facilities supported by the processor.  */
+end_comment
+
+begin_enum
+enum|enum
+name|processor_flags
+block|{
+name|PF_IEEE_FLOAT
+init|=
+literal|1
+block|,
+name|PF_ZARCH
+init|=
+literal|2
+block|,
+name|PF_LONG_DISPLACEMENT
+init|=
+literal|4
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|processor_type
+name|s390_tune
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|processor_flags
+name|s390_tune_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|s390_tune_string
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|processor_type
+name|s390_arch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|processor_flags
+name|s390_arch_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|s390_arch_string
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TARGET_CPU_IEEE_FLOAT
+define|\
+value|(s390_arch_flags& PF_IEEE_FLOAT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_CPU_ZARCH
+define|\
+value|(s390_arch_flags& PF_ZARCH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_CPU_LONG_DISPLACEMENT
+define|\
+value|(s390_arch_flags& PF_LONG_DISPLACEMENT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_LONG_DISPLACEMENT
+define|\
+value|(TARGET_ZARCH&& TARGET_CPU_LONG_DISPLACEMENT)
+end_define
 
 begin_comment
 comment|/* Run-time target specification.  */
@@ -76,50 +202,141 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|MASK_HARD_FLOAT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_BACKCHAIN
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_SMALL_EXEC
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_DEBUG_ARG
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_64BIT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_ZARCH
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_MVCLE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_TPF
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_NO_FUSED_MADD
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_HARD_FLOAT
-value|(target_flags& 1)
+value|(target_flags& MASK_HARD_FLOAT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_SOFT_FLOAT
-value|(!(target_flags& 1))
+value|(!(target_flags& MASK_HARD_FLOAT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_BACKCHAIN
-value|(target_flags& 2)
+value|(target_flags& MASK_BACKCHAIN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_SMALL_EXEC
-value|(target_flags& 4)
+value|(target_flags& MASK_SMALL_EXEC)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_DEBUG_ARG
-value|(target_flags& 8)
+value|(target_flags& MASK_DEBUG_ARG)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_64BIT
-value|(target_flags& 16)
+value|(target_flags& MASK_64BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ZARCH
+value|(target_flags& MASK_ZARCH)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_MVCLE
-value|(target_flags& 32)
+value|(target_flags& MASK_MVCLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_TPF
+value|(target_flags& MASK_TPF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_NO_FUSED_MADD
+value|(target_flags& MASK_NO_FUSED_MADD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_FUSED_MADD
+value|(! TARGET_NO_FUSED_MADD)
 end_define
 
 begin_comment
@@ -150,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|0x13
+value|0x31
 end_define
 
 begin_else
@@ -162,7 +379,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|0x3
+value|0x1
 end_define
 
 begin_endif
@@ -175,8 +392,64 @@ define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{ { "hard-float",    1, N_("Use hardware fp")},         		       \   { "soft-float",   -1, N_("Don't use hardware fp")},	      	       \   { "backchain",     2, N_("Set backchain")},           		       \   { "no-backchain", -2, N_("Don't set backchain (faster, but debug harder")}, \   { "small-exec",    4, N_("Use bras for executable< 64k")},           \   { "no-small-exec",-4, N_("Don't use bras")},            	       \   { "debug",         8, N_("Additional debug prints")},        	       \   { "no-debug",     -8, N_("Don't print additional debug prints")},     \   { "64",           16, N_("64 bit mode")},         	               \   { "31",          -16, N_("31 bit mode")},                             \   { "mvcle",        32, N_("mvcle use")},         	               \   { "no-mvcle",    -32, N_("mvc&ex")},                                  \   { "", TARGET_DEFAULT, 0 } }
+value|{ { "hard-float",      1, N_("Use hardware fp")},                        \   { "soft-float",     -1, N_("Don't use hardware fp")},                  \   { "backchain",       2, N_("Set backchain")},                          \   { "no-backchain",   -2, N_("Don't set backchain (faster, but debug harder")},\   { "small-exec",      4, N_("Use bras for executable< 64k")},          \   { "no-small-exec",  -4, N_("Don't use bras")},                         \   { "debug",           8, N_("Additional debug prints")},                \   { "no-debug",       -8, N_("Don't print additional debug prints")},    \   { "64",             16, N_("64 bit ABI")},                             \   { "31",            -16, N_("31 bit ABI")},                             \   { "zarch",          32, N_("z/Architecture")},                         \   { "esa",           -32, N_("ESA/390 architecture")},                   \   { "mvcle",          64, N_("mvcle use")},                              \   { "no-mvcle",      -64, N_("mvc&ex")},                                 \   { "tpf",           128, N_("enable tpf OS code")},                     \   { "no-tpf",       -128, N_("disable tpf OS code")},                    \   { "no-fused-madd", 256, N_("disable fused multiply/add instructions")},\   { "fused-madd",   -256, N_("enable fused multiply/add instructions")}, \   { "", TARGET_DEFAULT, 0 } }
 end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_OPTIONS
+define|\
+value|{ { "tune=",&s390_tune_string,                      \     N_("Schedule code for given CPU"), 0},                      \   { "arch=",&s390_arch_string,                      \     N_("Generate code for given CPU"), 0},                      \ }
+end_define
+
+begin_comment
+comment|/* Support for configure-time defaults.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_DEFAULT_SPECS
+define|\
+value|{ "mode", "%{!mesa:%{!mzarch:-m%(VALUE)}}" },			\   { "arch", "%{!march=*:-march=%(VALUE)}" },			\   { "tune", "%{!mtune=*:-mtune=%(VALUE)}" }
+end_define
+
+begin_comment
+comment|/* Defaulting rules.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEFAULT_TARGET_64BIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!m31:%{!m64:-m64}}",					\   "%{!mesa:%{!mzarch:%{m31:-mesa}%{m64:-mzarch}}}",		\   "%{!march=*:%{mesa:-march=g5}%{mzarch:-march=z900}}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!m31:%{!m64:-m31}}",					\   "%{!mesa:%{!mzarch:%{m31:-mesa}%{m64:-mzarch}}}",		\   "%{!march=*:%{mesa:-march=g5}%{mzarch:-march=z900}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Target version string.  Overridden by the OS header.  */
@@ -504,7 +777,7 @@ parameter_list|(
 name|LEVEL
 parameter_list|)
 define|\
-value|(LEVEL == SAVE_FUNCTION ? VOIDmode    \   : LEVEL == SAVE_NONLOCAL ? (TARGET_64BIT ? TImode : DImode) : Pmode)
+value|(LEVEL == SAVE_FUNCTION ? VOIDmode    \   : LEVEL == SAVE_NONLOCAL ? (TARGET_64BIT ? OImode : TImode) : Pmode)
 end_define
 
 begin_comment
@@ -603,7 +876,7 @@ comment|/* Register usage.  */
 end_comment
 
 begin_comment
-comment|/* We have 16 general purpose registers (registers 0-15),    and 16 floating point registers (registers 16-31).    (On non-IEEE machines, we have only 4 fp registers.)      Amongst the general purpose registers, some are used    for specific purposes:    GPR 11: Hard frame pointer (if needed)    GPR 12: Global offset table pointer (if needed)    GPR 13: Literal pool base register    GPR 14: Return address register    GPR 15: Stack pointer      Registers 32-34 are 'fake' hard registers that do not    correspond to actual hardware:    Reg 32: Argument pointer    Reg 33: Condition code    Reg 34: Frame pointer  */
+comment|/* We have 16 general purpose registers (registers 0-15),    and 16 floating point registers (registers 16-31).    (On non-IEEE machines, we have only 4 fp registers.)     Amongst the general purpose registers, some are used    for specific purposes:    GPR 11: Hard frame pointer (if needed)    GPR 12: Global offset table pointer (if needed)    GPR 13: Literal pool base register    GPR 14: Return address register    GPR 15: Stack pointer     Registers 32-34 are 'fake' hard registers that do not    correspond to actual hardware:    Reg 32: Argument pointer    Reg 33: Condition code    Reg 34: Frame pointer  */
 end_comment
 
 begin_define
@@ -739,7 +1012,7 @@ value|33
 end_define
 
 begin_comment
-comment|/* Set up fixed registers and calling convention:     GPRs 0-5 are always call-clobbered,    GPRs 6-15 are always call-saved.    GPR 12 is fixed if used as GOT pointer.    GPR 13 is always fixed (as literal pool pointer).    GPR 14 is always fixed (as return address).    GPR 15 is always fixed (as stack pointer).    The 'fake' hard registers are call-clobbered and fixed.     On 31-bit, FPRs 18-19 are call-clobbered;    on 64-bit, FPRs 24-31 are call-clobbered.    The remaining FPRs are call-saved.  */
+comment|/* Set up fixed registers and calling convention:     GPRs 0-5 are always call-clobbered,    GPRs 6-15 are always call-saved.    GPR 12 is fixed if used as GOT pointer.    GPR 13 is always fixed (as literal pool pointer).    GPR 14 is always fixed on S/390 machines (as return address).    GPR 15 is always fixed (as stack pointer).    The 'fake' hard registers are call-clobbered and fixed.     On 31-bit, FPRs 18-19 are call-clobbered;    on 64-bit, FPRs 24-31 are call-clobbered.    The remaining FPRs are call-saved.  */
 end_comment
 
 begin_define
@@ -771,7 +1044,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|do								\   {								\     int i;							\ 								\     if (flag_pic)						\       {								\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\       }								\     if (TARGET_64BIT)						\       {								\         for (i = 24; i< 32; i++)				\ 	    call_used_regs[i] = call_really_used_regs[i] = 0;	\       }								\     else							\       {								\         for (i = 18; i< 20; i++)				\ 	    call_used_regs[i] = call_really_used_regs[i] = 0;	\       }								\  } while (0)
+value|do								\   {								\     int i;							\ 								\     if (flag_pic)						\       {								\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\       }								\     if (TARGET_CPU_ZARCH)					\       {								\ 	fixed_regs[RETURN_REGNUM] = 0;				\ 	call_used_regs[RETURN_REGNUM] = 0;			\       }								\     if (TARGET_64BIT)						\       {								\         for (i = 24; i< 32; i++)				\ 	    call_used_regs[i] = call_really_used_regs[i] = 0;	\       }								\     else							\       {								\         for (i = 18; i< 20; i++)				\ 	    call_used_regs[i] = call_really_used_regs[i] = 0;	\       }								\  } while (0)
 end_define
 
 begin_comment
@@ -783,7 +1056,7 @@ define|#
 directive|define
 name|REG_ALLOC_ORDER
 define|\
-value|{  1, 2, 3, 4, 5, 0, 14, 13, 12, 11, 10, 9, 8, 7, 6,            \    16, 17, 18, 19, 20, 21, 22, 23,                              \    24, 25, 26, 27, 28, 29, 30, 31,                              \    15, 32, 33, 34 }
+value|{  1, 2, 3, 4, 5, 0, 13, 12, 11, 10, 9, 8, 7, 6, 14,            \    16, 17, 18, 19, 20, 21, 22, 23,                              \    24, 25, 26, 27, 28, 29, 30, 31,                              \    15, 32, 33, 34 }
 end_define
 
 begin_comment
@@ -791,7 +1064,7 @@ comment|/* Fitting values into registers.  */
 end_comment
 
 begin_comment
-comment|/* Integer modes<= word size fit into any GPR.    Integer modes> word size fit into successive GPRs, starting with    an even-numbered register.    SImode and DImode fit into FPRs as well.      Floating point modes<= word size fit into any FPR or GPR.    Floating point modes> word size (i.e. DFmode on 32-bit) fit    into any FPR, or an even-odd GPR pair.      Complex floating point modes fit either into two FPRs, or into    successive GPRs (again starting with an even number).      Condition code modes fit only into the CC register.  */
+comment|/* Integer modes<= word size fit into any GPR.    Integer modes> word size fit into successive GPRs, starting with    an even-numbered register.    SImode and DImode fit into FPRs as well.     Floating point modes<= word size fit into any FPR or GPR.    Floating point modes> word size (i.e. DFmode on 32-bit) fit    into any FPR, or an even-odd GPR pair.     Complex floating point modes fit either into two FPRs, or into    successive GPRs (again starting with an even number).     Condition code modes fit only into the CC register.  */
 end_comment
 
 begin_define
@@ -874,7 +1147,7 @@ comment|/* Register classes.  */
 end_comment
 
 begin_comment
-comment|/* We use the following register classes:    GENERAL_REGS     All general purpose registers    ADDR_REGS        All general purpose registers except %r0                     (These registers can be used in address generation)    FP_REGS          All floating point registers      GENERAL_FP_REGS  Union of GENERAL_REGS and FP_REGS    ADDR_FP_REGS     Union of ADDR_REGS and FP_REGS      NO_REGS          No registers    ALL_REGS         All registers      Note that the 'fake' frame pointer and argument pointer registers    are included amongst the address registers here.  The condition    code register is only included in ALL_REGS.  */
+comment|/* We use the following register classes:    GENERAL_REGS     All general purpose registers    ADDR_REGS        All general purpose registers except %r0                     (These registers can be used in address generation)    FP_REGS          All floating point registers     GENERAL_FP_REGS  Union of GENERAL_REGS and FP_REGS    ADDR_FP_REGS     Union of ADDR_REGS and FP_REGS     NO_REGS          No registers    ALL_REGS         All registers     Note that the 'fake' frame pointer and argument pointer registers    are included amongst the address registers here.  The condition    code register is only included in ALL_REGS.  */
 end_comment
 
 begin_enum
@@ -1117,24 +1390,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONST_OK_FOR_LETTER_P
+name|CONST_OK_FOR_CONSTRAINT_P
 parameter_list|(
 name|VALUE
 parameter_list|,
 name|C
+parameter_list|,
+name|STR
 parameter_list|)
 define|\
-value|((C) == 'I' ? (unsigned long) (VALUE)< 256 :                         \    (C) == 'J' ? (unsigned long) (VALUE)< 4096 :                        \    (C) == 'K' ? (VALUE)>= -32768&& (VALUE)< 32768 :                  \    (C) == 'L' ? (unsigned long) (VALUE)< 65536 : 0)
+value|s390_const_ok_for_constraint_p ((VALUE), (C), (STR))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CONST_DOUBLE_OK_FOR_LETTER_P
+name|CONST_DOUBLE_OK_FOR_CONSTRAINT_P
 parameter_list|(
 name|VALUE
 parameter_list|,
 name|C
+parameter_list|,
+name|STR
 parameter_list|)
 value|1
 end_define
@@ -1142,14 +1419,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXTRA_CONSTRAINT
+name|EXTRA_CONSTRAINT_STR
 parameter_list|(
 name|OP
 parameter_list|,
 name|C
+parameter_list|,
+name|STR
 parameter_list|)
 define|\
-value|((C) == 'Q' ?  q_constraint (OP) : 			\       (C) == 'S' ?  larl_operand (OP, GET_MODE (OP)) : 0)
+value|s390_extra_constraint_str ((OP), (C), (STR))
 end_define
 
 begin_define
@@ -1158,8 +1437,37 @@ directive|define
 name|EXTRA_MEMORY_CONSTRAINT
 parameter_list|(
 name|C
+parameter_list|,
+name|STR
 parameter_list|)
-value|((C) == 'Q')
+define|\
+value|((C) == 'Q' || (C) == 'R' || (C) == 'S' || (C) == 'T')
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXTRA_ADDRESS_CONSTRAINT
+parameter_list|(
+name|C
+parameter_list|,
+name|STR
+parameter_list|)
+define|\
+value|((C) == 'U' || (C) == 'W' || (C) == 'Y')
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONSTRAINT_LEN
+parameter_list|(
+name|C
+parameter_list|,
+name|STR
+parameter_list|)
+define|\
+value|((C) == 'N' ? 5 : DEFAULT_CONSTRAINT_LEN ((C), (STR)))
 end_define
 
 begin_comment
@@ -1247,7 +1555,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* The return address of the current frame is retrieved     from the initial value of register RETURN_REGNUM.    For frames farther back, we use the stack slot where    the corresponding RETURN_REGNUM register was saved.  */
+comment|/* The return address of the current frame is retrieved    from the initial value of register RETURN_REGNUM.    For frames farther back, we use the stack slot where    the corresponding RETURN_REGNUM register was saved.  */
 end_comment
 
 begin_define
@@ -1333,7 +1641,7 @@ define|#
 directive|define
 name|EH_RETURN_HANDLER_RTX
 define|\
-value|gen_rtx_MEM (Pmode, plus_constant (arg_pointer_rtx, \                                      TARGET_64BIT? -48 : -40))
+value|gen_rtx_MEM (Pmode, plus_constant (arg_pointer_rtx, \                -STACK_POINTER_OFFSET + UNITS_PER_WORD*RETURN_REGNUM))
 end_define
 
 begin_comment
@@ -1386,7 +1694,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* The static chain must be call-clobbered, but not used for     function argument passing.  As register 1 is clobbered by     the trampoline code, we only have one option.  */
+comment|/* The static chain must be call-clobbered, but not used for    function argument passing.  As register 1 is clobbered by    the trampoline code, we only have one option.  */
 end_comment
 
 begin_define
@@ -1530,6 +1838,8 @@ parameter_list|,
 name|LIBNAME
 parameter_list|,
 name|NN
+parameter_list|,
+name|N_NAMED_ARGS
 parameter_list|)
 define|\
 value|((CUM).gprs=0, (CUM).fprs=0)
@@ -1620,10 +1930,6 @@ begin_comment
 comment|/* Scalar return values.  */
 end_comment
 
-begin_comment
-comment|/* We return scalars in general purpose register 2 for integral values,    and floating point register 0 for fp values.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1634,21 +1940,7 @@ parameter_list|,
 name|FUNC
 parameter_list|)
 define|\
-value|gen_rtx_REG ((INTEGRAL_TYPE_P (VALTYPE)			\&& TYPE_PRECISION (VALTYPE)< BITS_PER_WORD)	\ 	       || POINTER_TYPE_P (VALTYPE)			\ 	       ? word_mode : TYPE_MODE (VALTYPE),		\ 	       TREE_CODE (VALTYPE) == REAL_TYPE&& TARGET_HARD_FLOAT ? 16 : 2)
-end_define
-
-begin_comment
-comment|/* Define how to find the value returned by a library function assuming    the value has mode MODE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RET_REG
-parameter_list|(
-name|MODE
-parameter_list|)
-value|((GET_MODE_CLASS (MODE) == MODE_INT       \                        || TARGET_SOFT_FLOAT ) ? 2 : 16)
+value|s390_function_value ((VALTYPE), VOIDmode)
 end_define
 
 begin_define
@@ -1658,7 +1950,8 @@ name|LIBCALL_VALUE
 parameter_list|(
 name|MODE
 parameter_list|)
-value|gen_rtx (REG, MODE, RET_REG (MODE))
+define|\
+value|s390_function_value (NULL, (MODE))
 end_define
 
 begin_comment
@@ -1673,25 +1966,6 @@ parameter_list|(
 name|N
 parameter_list|)
 value|((N) == 2 || (N) == 16)
-end_define
-
-begin_comment
-comment|/* Aggregate return values.  */
-end_comment
-
-begin_comment
-comment|/* The definition of this macro implies that there are cases where    a scalar value cannot be returned in registers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RETURN_IN_MEMORY
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(TYPE_MODE (type) == BLKmode || 				\    GET_MODE_CLASS (TYPE_MODE (type)) == MODE_COMPLEX_INT  ||	\    GET_MODE_CLASS (TYPE_MODE (type)) == MODE_COMPLEX_FLOAT)
 end_define
 
 begin_comment
@@ -1747,17 +2021,6 @@ end_define
 begin_comment
 comment|/* Implementing the varargs macros.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BUILD_VA_LIST_TYPE
-parameter_list|(
-name|VALIST
-parameter_list|)
-define|\
-value|(VALIST) = s390_build_va_list ()
-end_define
 
 begin_define
 define|#
@@ -2138,63 +2401,6 @@ comment|/* Relative costs of operations.  */
 end_comment
 
 begin_comment
-comment|/* A part of a C `switch' statement that describes the relative costs    of constant RTL expressions.  It must contain `case' labels for    expression codes `const_int', `const', `symbol_ref', `label_ref'    and `const_double'.  Each case must ultimately reach a `return'    statement to return the relative cost of the use of that kind of    constant value in an expression.  The cost may depend on the    precise value of the constant, which is available for examination    in X, and the rtx code of the expression in which it is contained,    found in OUTER_CODE.     CODE is the expression code--redundant, since it can be obtained    with `GET_CODE (X)'.  */
-end_comment
-
-begin_comment
-comment|/* Force_const_mem does not work out of reload, because the saveable_obstack    is set to reload_obstack, which does not live long enough.     Because of this we cannot use force_const_mem in addsi3.    This leads to problems with gen_add2_insn with a constant greater    than a short. Because of that we give an addition of greater    constants a cost of 3 (reload1.c 10096).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_COSTS
-parameter_list|(
-name|RTX
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case CONST:                                                   \     if ((GET_CODE (XEXP (RTX, 0)) == MINUS)&&                  \ 	(GET_CODE (XEXP (XEXP (RTX, 0), 1)) != CONST_INT))      \      return 1000;                                               \   case CONST_INT:                                               \        if ((OUTER_CODE == PLUS)&&                              \ 	   ((INTVAL (RTX)> 32767) ||                           \ 	   (INTVAL (RTX)< -32768))) 	                        \          return COSTS_N_INSNS (3);                              \   case LABEL_REF:                                               \   case SYMBOL_REF:                                              \   case CONST_DOUBLE:                                            \     return 0;
-end_define
-
-begin_comment
-unit|\
-comment|/* Like `CONST_COSTS' but applies to nonconstant RTL expressions.    This can be used, for example, to indicate how costly a multiply    instruction is.  In writing this macro, you can use the construct    `COSTS_N_INSNS (N)' to specify a cost equal to N fast    instructions.  OUTER_CODE is the code of the expression in which X    is contained.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTX_COSTS
-parameter_list|(
-name|X
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case ASHIFT:                                                          \   case ASHIFTRT:                                                        \   case LSHIFTRT:                                                        \   case PLUS:                                                            \   case AND:                                                             \   case IOR:                                                             \   case XOR:                                                             \   case MINUS:                                                           \   case NEG:                                                             \   case NOT:                                                             \     return COSTS_N_INSNS (1);                                           \   case MULT:                                                            \     if (GET_MODE (XEXP (X, 0)) == DImode)                               \       return COSTS_N_INSNS (40);                                        \     else                                                                \       return COSTS_N_INSNS (7);                                         \   case DIV:                                                             \   case UDIV:                                                            \   case MOD:                                                             \   case UMOD:                                                            \     return COSTS_N_INSNS (33);
-end_define
-
-begin_comment
-comment|/* An expression giving the cost of an addressing mode that contains    ADDRESS.  If not defined, the cost is computed from the ADDRESS    expression and the `CONST_COSTS' values.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDRESS_COST
-parameter_list|(
-name|RTX
-parameter_list|)
-value|s390_address_cost ((RTX))
-end_define
-
-begin_comment
 comment|/* On s390, copy between fprs and gprs is expensive.  */
 end_comment
 
@@ -2488,43 +2694,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf ((FILE), "\t.set\t.,.+%u\n", (SIZE))
-end_define
-
-begin_comment
-comment|/* Output a reference to a user-level label named NAME.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|asm_fprintf ((FILE), "%U%s", (*targetm.strip_name_encoding) (NAME))
-end_define
-
-begin_comment
-comment|/* Store in OUTPUT a string (made with alloca) containing    an assembler-name for a local static variable named NAME.    LABELNO is an integer which is different for each call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_FORMAT_PRIVATE_NAME
-parameter_list|(
-name|OUTPUT
-parameter_list|,
-name|NAME
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|((OUTPUT) = (char *) alloca (strlen ((NAME)) + 10),	\    sprintf ((OUTPUT), "%s.%d", (NAME), (LABELNO)))
+value|fprintf ((FILE), "\t.set\t.,.+"HOST_WIDE_INT_PRINT_UNSIGNED"\n", (SIZE))
 end_define
 
 begin_comment
@@ -2539,21 +2709,6 @@ value|"."
 end_define
 
 begin_comment
-comment|/* Either simplify a location expression, or return the original.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_SIMPLIFY_DWARF_ADDR
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|s390_simplify_dwarf_addr (X)
-end_define
-
-begin_comment
 comment|/* How to refer to registers in assembler output.  This sequence is    indexed by compiler's hard-register-number (see above).  */
 end_comment
 
@@ -2564,6 +2719,36 @@ name|REGISTER_NAMES
 define|\
 value|{ "%r0",  "%r1",  "%r2",  "%r3",  "%r4",  "%r5",  "%r6",  "%r7",	\   "%r8",  "%r9", "%r10", "%r11", "%r12", "%r13", "%r14", "%r15",	\   "%f0",  "%f2",  "%f4",  "%f6",  "%f1",  "%f3",  "%f5",  "%f7",	\   "%f8",  "%f10", "%f12", "%f14", "%f9", "%f11", "%f13", "%f15",	\   "%ap",  "%cc",  "%fp"							\ }
 end_define
+
+begin_comment
+comment|/* Emit a dtp-relative reference to a TLS variable.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AS_TLS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DWARF_DTPREL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|X
+parameter_list|)
+define|\
+value|s390_output_dwarf_dtprel (FILE, SIZE, X)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Print operand X (an rtx) in assembler syntax to file FILE.  */
@@ -2634,64 +2819,6 @@ value|do {									\   char buf[32];								\   fputs (integer_asm_op (UNITS_PER
 end_define
 
 begin_comment
-comment|/* Constant Pool for all symbols operands which are changed with    force_const_mem during insn generation (expand_insn).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|s390_pool_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|s390_nr_constants
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_POOL_PROLOGUE
-parameter_list|(
-name|FILE
-parameter_list|,
-name|FUNNAME
-parameter_list|,
-name|fndecl
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|{								       	\   struct pool_constant *pool;					       	\ 								        \     if (s390_pool_count == -1)                                        	\      {							                \        s390_nr_constants = 0;				                \        for (pool = first_pool; pool; pool = pool->next)	                \ 	 if (pool->mark) s390_nr_constants++;		                \        return;                                      	                \      }                                                                  \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_SPECIAL_POOL_ENTRY
-parameter_list|(
-name|FILE
-parameter_list|,
-name|EXP
-parameter_list|,
-name|MODE
-parameter_list|,
-name|ALIGN
-parameter_list|,
-name|LABELNO
-parameter_list|,
-name|WIN
-parameter_list|)
-define|\
-value|{									    \   fprintf (FILE, ".LC%d:\n", LABELNO);					    \ 									    \
-comment|/* Output the value of the constant itself.  */
-value|\   switch (GET_MODE_CLASS (MODE))					    \     {									    \     case MODE_FLOAT:							    \       if (GET_CODE (EXP) != CONST_DOUBLE)				    \ 	abort ();							    \ 									    \       REAL_VALUE_FROM_CONST_DOUBLE (r, EXP);				    \       assemble_real (r, MODE, ALIGN);					    \       break;								    \ 									    \     case MODE_INT:							    \     case MODE_PARTIAL_INT:						    \       if (GET_CODE (EXP) == CONST					    \ 	  || GET_CODE (EXP) == SYMBOL_REF				    \ 	  || GET_CODE (EXP) == LABEL_REF)				    \         {								    \ 	  fputs (integer_asm_op (UNITS_PER_WORD, TRUE), FILE);		    \           s390_output_symbolic_const (FILE, EXP);			    \           fputc ('\n', (FILE));						    \ 	}								    \       else								    \ 	{								    \ 	  assemble_integer (EXP, GET_MODE_SIZE (MODE), ALIGN, 1);	    \ 	  if (GET_MODE_SIZE (MODE) == 1)				    \ 	    ASM_OUTPUT_SKIP ((FILE), 1);				    \ 	}								    \       break;								    \ 									    \     default:								    \       abort ();								    \     }									    \   goto WIN;								    \ }
-end_define
-
-begin_comment
 comment|/* Miscellaneous parameters.  */
 end_comment
 
@@ -2704,7 +2831,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"s_operand",       { SUBREG, MEM }},					\   {"s_imm_operand",   { CONST_INT, CONST_DOUBLE, SUBREG, MEM }},	\   {"bras_sym_operand",{ SYMBOL_REF, CONST }},				\   {"larl_operand",    { SYMBOL_REF, CONST, CONST_INT, CONST_DOUBLE }},	\   {"load_multiple_operation", {PARALLEL}},			        \   {"store_multiple_operation", {PARALLEL}},			        \   {"const0_operand",  { CONST_INT, CONST_DOUBLE }},			\   {"consttable_operand", { SYMBOL_REF, LABEL_REF, CONST, 		\ 			   CONST_INT, CONST_DOUBLE }},			\   {"s390_plus_operand", { PLUS }},
+value|{"s_operand",       { SUBREG, MEM }},					\   {"s_imm_operand",   { CONST_INT, CONST_DOUBLE, SUBREG, MEM }},	\   {"shift_count_operand", { REG, SUBREG, PLUS, CONST_INT }},		\   {"bras_sym_operand",{ SYMBOL_REF, CONST }},				\   {"larl_operand",    { SYMBOL_REF, CONST, CONST_INT, CONST_DOUBLE }},	\   {"load_multiple_operation", {PARALLEL}},			        \   {"store_multiple_operation", {PARALLEL}},			        \   {"const0_operand",  { CONST_INT, CONST_DOUBLE }},			\   {"consttable_operand", { SYMBOL_REF, LABEL_REF, CONST, 		\ 			   CONST_INT, CONST_DOUBLE }},			\   {"s390_plus_operand", { PLUS }},					\   {"s390_alc_comparison", { LTU, GTU, LEU, GEU }},			\   {"s390_slb_comparison", { LTU, GTU, LEU, GEU }},
 end_define
 
 begin_comment
@@ -2716,21 +2843,6 @@ define|#
 directive|define
 name|CASE_VECTOR_MODE
 value|(TARGET_64BIT ? DImode : SImode)
-end_define
-
-begin_comment
-comment|/* Load from integral MODE< SI from memory into register makes sign_extend    or zero_extend      In our case sign_extension happens for Halfwords, other no extension.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOAD_EXTEND_OP
-parameter_list|(
-name|MODE
-parameter_list|)
-define|\
-value|(TARGET_64BIT ? ((MODE) == QImode ? ZERO_EXTEND :               \                  (MODE) == HImode ? SIGN_EXTEND : NIL)          \               : ((MODE) == HImode ? SIGN_EXTEND : NIL))
 end_define
 
 begin_comment
@@ -2761,6 +2873,17 @@ value|((enum machine_mode) (TARGET_64BIT ? DImode : SImode))
 end_define
 
 begin_comment
+comment|/* This is -1 for "pointer mode" extend.  See ptr_extend in s390.md.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POINTERS_EXTEND_UNSIGNED
+value|-1
+end_define
+
+begin_comment
 comment|/* A function address in a call instruction is a byte address (for    indexing purposes) so give the MEM rtx a byte's mode.  */
 end_comment
 
@@ -2780,20 +2903,6 @@ define|#
 directive|define
 name|DEFAULT_MAIN_RETURN
 value|c_expand_return (integer_zero_node)
-end_define
-
-begin_comment
-comment|/* In rare cases, correct code generation requires extra machine dependent    processing between the second jump optimization pass and delayed branch    scheduling.  On those machines, define this macro as a C statement to act on    the code starting at INSN.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MACHINE_DEPENDENT_REORG
-parameter_list|(
-name|INSN
-parameter_list|)
-value|s390_machine_dependent_reorg (INSN)
 end_define
 
 begin_endif

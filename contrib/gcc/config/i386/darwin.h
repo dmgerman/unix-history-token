@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for x86 running Darwin.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by Apple Computer Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for x86 running Darwin.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by Apple Computer Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -51,6 +51,27 @@ define|#
 directive|define
 name|CC1_SPEC
 value|"%{!static:-fPIC}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"-arch i386 \   %{Zforce_cpusubtype_ALL:-force_cpusubtype_ALL} \   %{!Zforce_cpusubtype_ALL:%{mmmx:-force_cpusubtype_ALL}\ 			   %{msse:-force_cpusubtype_ALL}\ 			   %{msse2:-force_cpusubtype_ALL}}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "darwin_arch", "i386" },
 end_define
 
 begin_comment
@@ -122,6 +143,24 @@ define|#
 directive|define
 name|TARGET_DEEP_BRANCH_PREDICTION
 value|0
+end_define
+
+begin_comment
+comment|/* For now, disable dynamic-no-pic.  We'll need to go through i386.c    with a fine-tooth comb looking for refs to flag_pic!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_MACHO_DYNAMIC_NO_PIC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_DYNAMIC_NO_PIC
+value|(target_flags& MASK_MACHO_DYNAMIC_NO_PIC)
 end_define
 
 begin_comment
@@ -201,7 +240,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|( fputs (".comm ", (FILE)),			\   assemble_name ((FILE), (NAME)),		\   fprintf ((FILE), ",%u\n", (ROUNDED)))
+value|( fputs (".comm ", (FILE)),			\   assemble_name ((FILE), (NAME)),		\   fprintf ((FILE), ",%lu\n", (unsigned long)(ROUNDED)))
 end_define
 
 begin_comment
@@ -222,7 +261,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|( fputs (".lcomm ", (FILE)),			\   assemble_name ((FILE), (NAME)),		\   fprintf ((FILE), ",%u\n", (ROUNDED)))
+value|( fputs (".lcomm ", (FILE)),			\   assemble_name ((FILE), (NAME)),		\   fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED"\n", (ROUNDED)))
 end_define
 
 begin_comment

@@ -217,7 +217,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRANSFER_FROM_TRAMPOLINE
+name|ENABLE_EXECUTE_STACK
 value|NETBSD_ENABLE_EXECUTE_STACK
 end_define
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for ARM running Linux-based GNU systems using ELF    Copyright (C) 1993, 1994, 1997, 1998, 1999, 2000, 2001, 2002     Free Software Foundation, Inc.    Contributed by Philip Blundell<philb@gnu.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for ARM running Linux-based GNU systems using ELF    Copyright (C) 1993, 1994, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Philip Blundell<philb@gnu.org>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with this program; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -54,6 +54,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SUBTARGET_CPU_DEFAULT
+value|TARGET_CPU_arm6
+end_define
+
+begin_define
+define|#
+directive|define
 name|SUBTARGET_EXTRA_LINK_SPEC
 value|" -m armelf_linux -p"
 end_define
@@ -100,6 +107,12 @@ begin_comment
 comment|/* Now we define the strings used to build the spec file.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|LIB_SPEC
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -116,7 +129,7 @@ value|"%{msoft-float:-lfloat} -lgcc"
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'.  */
 end_comment
 
 begin_undef
@@ -169,8 +182,7 @@ define|#
 directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
-define|\
-value|do {					\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("linux");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_define ("__ELF__");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     } while (0)
+value|LINUX_TARGET_OS_CPP_BUILTINS()
 end_define
 
 begin_comment
@@ -199,14 +211,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FP_DEFAULT
+name|FPUTYPE_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FP_DEFAULT
-value|FP_SOFT3
+name|FPUTYPE_DEFAULT
+value|FPUTYPE_FPA_EMU3
 end_define
 
 begin_comment
@@ -230,6 +242,21 @@ name|LABELNO
 parameter_list|)
 define|\
 value|{									\   fprintf (STREAM, "\tbl\tmcount%s\n", NEED_PLT_RELOC ? "(PLT)" : "");	\ }
+end_define
+
+begin_comment
+comment|/* The linux profiler clobbers the link register.  Make sure the    prologue knows to save it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROFILE_HOOK
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|emit_insn (gen_rtx_CLOBBER (VOIDmode, gen_rtx_REG (SImode, LR_REGNUM)))
 end_define
 
 begin_undef

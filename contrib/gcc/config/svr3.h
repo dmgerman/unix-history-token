@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -24,61 +24,18 @@ name|SVR3_target
 end_define
 
 begin_comment
-comment|/* Cpp, assembler, linker, library, and startfile spec's.  */
-end_comment
-
-begin_comment
-comment|/* You should redefine CPP_PREDEFINES in any file which includes this one.    The definition should be appropriate for the type of target system    involved, and it should include any -A (assertion) options which are    appropriate for the given target system.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_comment
-comment|/* Output at beginning of assembler file.  */
+comment|/* Assembler, linker, library, and startfile spec's.  */
 end_comment
 
 begin_comment
 comment|/* The .file command should always begin the output.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do { output_file_directive ((FILE), main_input_filename);	\        if (optimize) { ASM_FILE_START_1 (FILE); }		\      } while (0)
-end_define
-
-begin_comment
-comment|/* By default, do nothing: a few machines support .optim, but not most.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START_1
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START_1
-parameter_list|(
-name|FILE
-parameter_list|)
+name|TARGET_ASM_FILE_START_FILE_DIRECTIVE
+value|true
 end_define
 
 begin_comment
@@ -109,7 +66,7 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|( fputs (".comm ", (FILE)),			\   assemble_name ((FILE), (NAME)),		\   fprintf ((FILE), ",%u\n", (SIZE)))
+value|( fputs (".comm ", (FILE)),			\   assemble_name ((FILE), (NAME)),		\   fprintf ((FILE), ",%lu\n", (unsigned long)(SIZE)))
 end_define
 
 begin_comment
@@ -140,76 +97,8 @@ parameter_list|,
 name|ROUNDED
 parameter_list|)
 define|\
-value|do {							\     int align = exact_log2 (ROUNDED);			\     if (align> 2) align = 2;				\     data_section ();					\     ASM_OUTPUT_ALIGN ((FILE), align == -1 ? 2 : align);	\     ASM_OUTPUT_LABEL ((FILE), (NAME));			\     fprintf ((FILE), "\t.set .,.+%u\n", (ROUNDED));	\   } while (0)
+value|do {							\     int align = exact_log2 (ROUNDED);			\     if (align> 2) align = 2;				\     data_section ();					\     ASM_OUTPUT_ALIGN ((FILE), align == -1 ? 2 : align);	\     ASM_OUTPUT_LABEL ((FILE), (NAME));			\     fprintf ((FILE), "\t.set .,.+%u\n", (int)(ROUNDED));	\   } while (0)
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* For now, let's leave these machine-specific.  */
-end_comment
-
-begin_comment
-comment|/* Use crt1.o as a startup file and crtn.o as a closing file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-define|\
-value|"%{pg:gcrt1.o%s}%{!pg:%{p:mcrt1.o%s}%{!p:crt1.o%s}}"
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CROSS_COMPILE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"-lc crtn.o%s"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{p:-L/usr/lib/libp}%{pg:-L/usr/lib/libp} -lc crtn.o%s"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Special flags for the linker.  I don't know what they do.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-value|"%{T*} %{z:-lm}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Output #ident as a .ident.  */
@@ -346,31 +235,6 @@ define|#
 directive|define
 name|USER_LABEL_PREFIX
 value|"_"
-end_define
-
-begin_comment
-comment|/* This is how to output an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.     For most svr3 systems, the convention is that any symbol which begins    with a period is not put into the linker symbol table by the assembler.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|asm_fprintf (FILE, "%0L%s%d:\n", PREFIX, NUM)
 end_define
 
 begin_comment

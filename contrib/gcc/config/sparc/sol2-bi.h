@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for bi-arch SPARC    running Solaris 2 using the system assembler and linker.  */
+comment|/* Definitions of target machine for GCC, for bi-arch SPARC    running Solaris 2 using the system assembler and linker.  */
 end_comment
 
 begin_comment
@@ -147,6 +147,58 @@ end_endif
 begin_if
 if|#
 directive|if
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_ultrasparc3
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_CPU64_DEFAULT_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU64_DEFAULT_SPEC
+value|""
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_CPU32_DEFAULT_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_CPU32_DEFAULT_SPEC
+value|"-xarch=v8plusb"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_CPU64_DEFAULT_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_CPU64_DEFAULT_SPEC
+value|AS_SPARC64_FLAG "b"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|DEFAULT_ARCH32_P
 end_if
 
@@ -210,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU_SPEC
-value|"\ %{mcypress:} \ %{msparclite|mf930|mf934:-D__sparclite__} \ %{mv8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{msupersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=sparclet|mcpu=tsc701:-D__sparclet__} \ %{mcpu=sparclite|mcpu-f930|mcpu=f934:-D__sparclite__} \ %{mcpu=v8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=supersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=v9|mcpu=ultrasparc:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} \ "
+value|"\ %{mcypress:} \ %{msparclite|mf930|mf934:-D__sparclite__} \ %{mv8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{msupersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=sparclet|mcpu=tsc701:-D__sparclet__} \ %{mcpu=sparclite|mcpu-f930|mcpu=f934:-D__sparclite__} \ %{mcpu=v8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=supersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=v9|mcpu=ultrasparc|mcpu=ultrasparc3:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} \ "
 end_define
 
 begin_undef
@@ -223,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|ASM_CPU_SPEC
-value|"\ %{mcpu=ultrasparc:" DEF_ARCH32_SPEC("-xarch=v8plusa") DEF_ARCH64_SPEC(AS_SPARC64_FLAG "a") "} \ %{mcpu=v9:" DEF_ARCH32_SPEC("-xarch=v8plus") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "} \ %{!mcpu=ultrasparc:%{!mcpu=v9:%{mcpu*:" DEF_ARCH32_SPEC("-xarch=v8") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "}}} \ %{!mcpu*:%(asm_cpu_default)} \ "
+value|"\ %{mcpu=v9:" DEF_ARCH32_SPEC("-xarch=v8plus") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "} \ %{mcpu=ultrasparc:" DEF_ARCH32_SPEC("-xarch=v8plusa") DEF_ARCH64_SPEC(AS_SPARC64_FLAG "a") "} \ %{mcpu=ultrasparc3:" DEF_ARCH32_SPEC("-xarch=v8plusb") DEF_ARCH64_SPEC(AS_SPARC64_FLAG "b") "} \ %{!mcpu=ultrasparc3:%{!mcpu=ultrasparc:%{!mcpu=v9:%{mcpu*:" DEF_ARCH32_SPEC("-xarch=v8") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "}}}} \ %{!mcpu*:%(asm_cpu_default)} \ "
 end_define
 
 begin_undef
@@ -324,7 +376,7 @@ begin_define
 define|#
 directive|define
 name|CPP_ARCH32_SPEC
-value|"\ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
+value|""
 end_define
 
 begin_undef
@@ -337,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|CPP_ARCH64_SPEC
-value|"\ -D__arch64__ -Acpu=sparc64 -Amachine=sparcv9 -D__sparcv9"
+value|"-D__arch64__ -D__sparcv9"
 end_define
 
 begin_undef
@@ -426,9 +478,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINK_ARCH64_SPEC
+name|LINK_ARCH64_SPEC_BASE
 define|\
-value|"%{mcmodel=medlow:-M /usr/lib/ld/sparcv9/map.below4G} \    %{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{p|pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/sparcv9}}} \      -R /usr/ucblib} \    %{!compat-bsd: \      %{!YP,*:%{p|pg:-Y P,/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/lib/sparcv9}}}}"
+value|"%{mcmodel=medlow:-M /usr/lib/ld/sparcv9/map.below4G} \    %{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{p|pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/sparcv9}}} \      -R /usr/ucblib/sparcv9} \    %{!compat-bsd: \      %{!YP,*:%{p|pg:-Y P,/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/lib/sparcv9}}}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH64_SPEC
+value|LINK_ARCH64_SPEC_BASE
 end_define
 
 begin_undef
@@ -437,12 +496,58 @@ directive|undef
 name|LINK_ARCH_SPEC
 end_undef
 
+begin_if
+if|#
+directive|if
+name|DISABLE_MULTILIB
+end_if
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH_SPEC
+value|"\ %{m32:%(link_arch32)} \ %{m64:%edoes not support multilib} \ %{!m32:%{!m64:%(link_arch_default)}} \ "
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LINK_ARCH_SPEC
+value|"\ %{m32:%edoes not support multilib} \ %{m64:%(link_arch64)} \ %{!m32:%{!m64:%(link_arch_default)}} \ "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LINK_ARCH_SPEC
 value|"\ %{m32:%(link_arch32)} \ %{m64:%(link_arch64)} \ %{!m32:%{!m64:%(link_arch_default)}} \ "
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -488,6 +593,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Support for a compile-time default CPU, et cetera.  The rules are:    --with-cpu is ignored if -mcpu is specified.    --with-tune is ignored if -mtune is specified.    --with-float is ignored if -mhard-float, -msoft-float, -mfpu, or -mno-fpu      are specified.    In the SPARC_BI_ARCH compiler we cannot pass %{!mcpu=*:-mcpu=%(VALUE)}    here, otherwise say -mcpu=v7 would be passed even when -m64.    CC1_SPEC above takes care of this instead.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|OPTION_DEFAULT_SPECS
+end_undef
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPTION_DEFAULT_SPECS
+define|\
+value|{"cpu", "%{!m64:%{!mcpu=*:-mcpu=%(VALUE)}}" }, \   {"tune", "%{!mtune=*:-mtune=%(VALUE)}" }, \   {"float", "%{!msoft-float:%{!mhard-float:%{!fpu:%{!no-fpu:-m%(VALUE)-float}}}}" }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPTION_DEFAULT_SPECS
+define|\
+value|{"cpu", "%{!m32:%{!mcpu=*:-mcpu=%(VALUE)}}" }, \   {"tune", "%{!mtune=*:-mtune=%(VALUE)}" }, \   {"float", "%{!msoft-float:%{!mhard-float:%{!fpu:%{!no-fpu:-m%(VALUE)-float}}}}" }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -518,10 +665,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* We use stabs-in-elf in 32-bit mode, because that is what the native    toolchain uses.  But gdb can't handle truncated 32-bit stabs so we    use dwarf2 in 64-bit mode.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -532,12 +675,8 @@ begin_define
 define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
-value|(TARGET_ARCH32 ? DBX_DEBUG : DWARF2_DEBUG)
+value|DWARF2_DEBUG
 end_define
-
-begin_comment
-comment|/* We can't use the above definition for the purposes of specs.  */
-end_comment
 
 begin_if
 if|#
@@ -553,35 +692,12 @@ name|HAVE_AS_GSTABS_DEBUG_FLAG
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|DEFAULT_ARCH32_P
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASM_DEBUG_SPEC
-value|"%{gdwarf-2*:--gdwarf2}%{!gdwarf-2*:%{g*:--gstabs}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|ASM_DEBUG_SPEC
 value|"%{gstabs*:--gstabs}%{!gstabs*:%{g*:--gdwarf2}}"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
