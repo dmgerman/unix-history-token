@@ -6431,7 +6431,7 @@ argument_list|(
 name|SIGHUP
 argument_list|)
 expr_stmt|;
-name|execvp
+name|execv
 argument_list|(
 name|SaveArgv
 index|[
