@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -1512,7 +1512,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		fullsmtp -- if set, obey strictest SMTP conventions. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
+comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		crlf -- if set, output Carriage Return/Line Feed on lines **			instead of newline. **		fullsmtp -- if set, obey strictest SMTP conventions. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
 begin_define
@@ -1533,6 +1533,8 @@ name|l
 argument_list|,
 name|fp
 argument_list|,
+name|crlf
+argument_list|,
 name|fullsmtp
 argument_list|)
 specifier|register
@@ -1546,6 +1548,12 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|crlf
 decl_stmt|;
 end_decl_stmt
 
@@ -1638,9 +1646,27 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|fputs
+name|fputc
 argument_list|(
-literal|"!\r\n"
+literal|'!'
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|crlf
+condition|)
+name|fputc
+argument_list|(
+literal|'\r'
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
 argument_list|,
 name|fp
 argument_list|)
@@ -1675,7 +1701,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fullsmtp
+name|crlf
 condition|)
 name|fputc
 argument_list|(

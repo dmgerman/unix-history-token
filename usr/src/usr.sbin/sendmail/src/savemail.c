@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -1155,7 +1155,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. **		xdot -- if set, use the SMTP hidden dot algorithm. **		e -- the envelope we are working in. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. **		xdot -- if set, use the SMTP hidden dot algorithm. **		e -- the envelope we are working in. **		crlf -- set if we want CRLF's at the end of lines. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_expr_stmt
@@ -1168,6 +1168,8 @@ operator|,
 name|xdot
 operator|,
 name|e
+operator|,
+name|crlf
 operator|)
 specifier|register
 name|FILE
@@ -1196,6 +1198,12 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|crlf
 decl_stmt|;
 end_decl_stmt
 
@@ -1326,6 +1334,8 @@ name|buf
 argument_list|,
 name|fp
 argument_list|,
+name|crlf
+argument_list|,
 name|fullsmtp
 argument_list|)
 expr_stmt|;
@@ -1395,6 +1405,8 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1415,6 +1427,8 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1444,6 +1458,8 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 block|}

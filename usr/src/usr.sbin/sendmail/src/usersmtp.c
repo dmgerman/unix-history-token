@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -799,13 +799,15 @@ argument_list|,
 name|m
 argument_list|,
 name|CurEnv
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|SmtpOut
 argument_list|,
-literal|"\n"
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 call|(
@@ -822,6 +824,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|CurEnv
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|smtpmessage

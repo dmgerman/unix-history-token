@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -1856,7 +1856,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		fp -- file to put it on. **		m -- mailer to use. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		fp -- file to put it on. **		m -- mailer to use. **		e -- envelope to use. **		crlf -- if set, output CRLF on the end of lines. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -1867,6 +1867,8 @@ argument_list|,
 name|m
 argument_list|,
 name|e
+argument_list|,
+name|crlf
 argument_list|)
 specifier|register
 name|FILE
@@ -2089,6 +2091,8 @@ argument_list|,
 name|oldstyle
 argument_list|,
 name|m
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 block|}
@@ -2120,6 +2124,8 @@ name|obuf
 argument_list|,
 name|fp
 argument_list|,
+name|crlf
+argument_list|,
 name|fullsmtp
 argument_list|)
 expr_stmt|;
@@ -2132,7 +2138,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		fp -- file to put it to. **		oldstyle -- TRUE if this is an old style header. **		m -- a pointer to the mailer descriptor.  If NULL, **			don't transform the name at all. **		crlf -- set if we want CRLF's on the end of lines. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_expr_stmt
@@ -2147,6 +2153,8 @@ argument_list|,
 name|oldstyle
 argument_list|,
 name|m
+argument_list|,
+name|crlf
 argument_list|)
 specifier|register
 name|HDR
@@ -2181,6 +2189,12 @@ specifier|register
 name|MAILER
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|crlf
 decl_stmt|;
 end_decl_stmt
 
@@ -2566,14 +2580,29 @@ operator|!
 name|firstone
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|fputc
 argument_list|(
-name|obp
+literal|','
 argument_list|,
-literal|",\n"
+name|obp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|crlf
+condition|)
+name|fputc
+argument_list|(
+literal|'\r'
+argument_list|,
+name|obp
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|obp
 argument_list|)
 expr_stmt|;
 name|putline
@@ -2581,6 +2610,8 @@ argument_list|(
 name|obuf
 argument_list|,
 name|fp
+argument_list|,
+name|crlf
 argument_list|,
 name|fullsmtp
 argument_list|)
@@ -2700,6 +2731,8 @@ argument_list|(
 name|obuf
 argument_list|,
 name|fp
+argument_list|,
+name|crlf
 argument_list|,
 name|fullsmtp
 argument_list|)

@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.137
+literal|3.138
 operator|%
 name|G
 operator|%
@@ -1418,6 +1418,8 @@ argument_list|,
 name|pv
 argument_list|,
 name|ctladdr
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Do final status disposal. 	**	We check for something in tobuf for the SMTP case. 	**	If we got a temporary failure, arrange to queue the 	**		addressees. 	*/
@@ -1599,7 +1601,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		e -- the envelope to mail. **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		ctladdr -- an address pointer controlling the **			user/groupid etc. of the mailer. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
+comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		e -- the envelope to mail. **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		ctladdr -- an address pointer controlling the **			user/groupid etc. of the mailer. **		crlf -- set if we want CRLF on the end of lines. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
@@ -1612,6 +1614,8 @@ argument_list|,
 name|pvp
 argument_list|,
 name|ctladdr
+argument_list|,
+name|crlf
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -1639,6 +1643,12 @@ begin_decl_stmt
 name|ADDRESS
 modifier|*
 name|ctladdr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|crlf
 decl_stmt|;
 end_decl_stmt
 
@@ -1709,6 +1719,8 @@ argument_list|(
 name|mfile
 argument_list|,
 name|m
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 call|(
@@ -1723,6 +1735,8 @@ argument_list|,
 name|m
 argument_list|,
 name|e
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1746,6 +1760,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|e
+argument_list|,
+name|crlf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3006,7 +3022,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	One of the ugliest hacks seen by human eyes is **	contained herein: UUCP wants those stupid **	"emote from<host>" lines.  Why oh why does a **	well-meaning programmer such as myself have to **	deal with this kind of antique garbage???? ** **	Parameters: **		fp -- the file to output to. **		m -- the mailer describing this entry. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
+comment|/* **  PUTFROMLINE -- output a UNIX-style from line (or whatever) ** **	then passes the rest of the message through.  If we have **	managed to extract a date already, use that; otherwise, **	use the current date/time. ** **	One of the ugliest hacks seen by human eyes is **	contained herein: UUCP wants those stupid **	"emote from<host>" lines.  Why oh why does a **	well-meaning programmer such as myself have to **	deal with this kind of antique garbage???? ** **	Parameters: **		fp -- the file to output to. **		m -- the mailer describing this entry. **		crlf -- set if we want a CRLF at the end of the line. ** **	Returns: **		none ** **	Side Effects: **		outputs some text to fp. */
 end_comment
 
 begin_expr_stmt
@@ -3015,6 +3031,8 @@ argument_list|(
 name|fp
 argument_list|,
 name|m
+argument_list|,
+name|crlf
 argument_list|)
 specifier|register
 name|FILE
@@ -3172,6 +3190,8 @@ name|buf
 argument_list|,
 name|fp
 argument_list|,
+name|crlf
+argument_list|,
 name|bitset
 argument_list|(
 name|M_FULLSMTP
@@ -3202,6 +3222,8 @@ argument_list|,
 argument|xdot
 argument_list|,
 argument|e
+argument_list|,
+argument|crlf
 argument_list|)
 end_macro
 
@@ -3312,6 +3334,8 @@ literal|"<<< No Message Collected>>>"
 argument_list|,
 name|fp
 argument_list|,
+name|crlf
+argument_list|,
 name|fullsmtp
 argument_list|)
 expr_stmt|;
@@ -3390,6 +3414,8 @@ literal|1
 index|]
 argument_list|,
 name|fp
+argument_list|,
+name|crlf
 argument_list|,
 name|fullsmtp
 argument_list|)
@@ -3731,6 +3757,8 @@ argument_list|(
 name|f
 argument_list|,
 name|ProgMailer
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 call|(
@@ -3745,6 +3773,8 @@ argument_list|,
 name|ProgMailer
 argument_list|,
 name|CurEnv
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|fputs
@@ -3768,6 +3798,8 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|CurEnv
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|fputs
