@@ -5064,6 +5064,10 @@ decl_stmt|;
 name|u_int8_t
 name|statack
 decl_stmt|;
+name|FXP_SPLVAR
+argument_list|(
+argument|s
+argument_list|)
 if|#
 directive|if
 name|defined
@@ -5075,8 +5079,8 @@ name|claimed
 init|=
 literal|0
 decl_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
 name|FXP_LOCK
 argument_list|(
 name|sc
@@ -5084,8 +5088,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 operator|!
