@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwcache.c	5.1 (Berkeley) %G%"
+literal|"@(#)pwcache.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,24 @@ end_define
 begin_comment
 comment|/* bits to store with */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pwopen
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|gropen
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|char
@@ -160,6 +178,22 @@ operator|->
 name|name
 condition|)
 block|{
+if|if
+condition|(
+name|pwopen
+operator|==
+literal|0
+condition|)
+block|{
+name|setpassent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|pwopen
+operator|++
+expr_stmt|;
+block|}
 comment|/* if can't find owner, use user id instead */
 if|if
 condition|(
@@ -309,6 +343,22 @@ operator|->
 name|name
 condition|)
 block|{
+if|if
+condition|(
+name|gropen
+operator|==
+literal|0
+condition|)
+block|{
+name|setgroupent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|gropen
+operator|++
+expr_stmt|;
+block|}
 comment|/* if can't find group, use group id instead */
 if|if
 condition|(
