@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.15 1997/11/22 03:34:39 brian Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: link.h,v 1.16 1997/11/28 19:05:11 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -127,34 +127,6 @@ decl_stmt|;
 name|u_long
 name|nz_size
 decl_stmt|;
-define|#
-directive|define
-name|nz_un
-value|nlist.n_un
-define|#
-directive|define
-name|nz_strx
-value|nlist.n_un.n_strx
-define|#
-directive|define
-name|nz_name
-value|nlist.n_un.n_name
-define|#
-directive|define
-name|nz_type
-value|nlist.n_type
-define|#
-directive|define
-name|nz_value
-value|nlist.n_value
-define|#
-directive|define
-name|nz_desc
-value|nlist.n_desc
-define|#
-directive|define
-name|nz_other
-value|nlist.n_other
 block|}
 struct|;
 end_struct
@@ -162,62 +134,50 @@ end_struct
 begin_define
 define|#
 directive|define
-name|N_AUX
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->n_other& 0xf)
+name|nz_un
+value|nlist.n_un
 end_define
 
 begin_define
 define|#
 directive|define
-name|N_BIND
-parameter_list|(
-name|p
-parameter_list|)
-value|(((unsigned int)(p)->n_other>> 4)& 0xf)
+name|nz_strx
+value|nlist.n_un.n_strx
 end_define
 
 begin_define
 define|#
 directive|define
-name|N_OTHER
-parameter_list|(
-name|r
-parameter_list|,
-name|v
-parameter_list|)
-value|(((unsigned int)(r)<< 4) | ((v)& 0xf))
+name|nz_name
+value|nlist.n_un.n_name
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUX_OBJECT
-value|1
+name|nz_type
+value|nlist.n_type
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUX_FUNC
-value|2
+name|nz_value
+value|nlist.n_value
 end_define
-
-begin_comment
-comment|/*#define BIND_LOCAL	0	not used */
-end_comment
-
-begin_comment
-comment|/*#define BIND_GLOBAL	1	not used */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|BIND_WEAK
-value|2
+name|nz_desc
+value|nlist.n_desc
+end_define
+
+begin_define
+define|#
+directive|define
+name|nz_other
+value|nlist.n_other
 end_define
 
 begin_comment
