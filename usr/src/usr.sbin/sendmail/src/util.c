@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.11	%G%"
+literal|"@(#)util.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1177,8 +1177,11 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|*
 name|p
+index|[
+operator|-
+literal|1
+index|]
 operator|==
 literal|'\r'
 condition|)
