@@ -74,6 +74,14 @@ comment|/* #undef C_GETLOADAVG */
 end_comment
 
 begin_comment
+comment|/* Define the default level of POSIX conformance. The value is of the form    YYYYMM, specifying the year and month the standard was adopted. If not    defined here, it defaults to the value of _POSIX2_VERSION in<unistd.h>.    Define to 199209 to default to POSIX 1003.2-1992, which makes standard    programs like `head', `tail', and `sort' accept obsolete options like `+10'    and `-10'. Define to 200112 to default to POSIX 1003.1-2001, which makes    these standard programs treat leading-`+' operands as file names and    require modern usages like `-n 10' instead of `-10'. Whether defined here    or not, the default can be overridden at run time via the _POSIX2_VERSION    environment variable. */
+end_comment
+
+begin_comment
+comment|/* #undef DEFAULT_POSIX2_VERSION */
+end_comment
+
+begin_comment
 comment|/* Define to 1 for DGUX with<sys/dg_sys_info.h>. */
 end_comment
 
@@ -215,7 +223,7 @@ value|gid_t
 end_define
 
 begin_comment
-comment|/* Define if the `getloadavg' function needs to be run setuid or setgid. */
+comment|/* Define to 1 if the `getloadavg' function needs to be run setuid or setgid.    */
 end_comment
 
 begin_comment
@@ -238,8 +246,24 @@ begin_define
 define|#
 directive|define
 name|GNU_PACKAGE
-value|"GNU textutils"
+value|"GNU coreutils"
 end_define
+
+begin_comment
+comment|/* Define if your system defines TIOCGWINSZ in sys/ioctl.h. */
+end_comment
+
+begin_comment
+comment|/* #undef GWINSZ_IN_SYS_IOCTL */
+end_comment
+
+begin_comment
+comment|/* Define if your system defines TIOCGWINSZ in sys/pty.h. */
+end_comment
+
+begin_comment
+comment|/* #undef GWINSZ_IN_SYS_PTY */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `acl' function. */
@@ -302,17 +326,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `bcopy' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_BCOPY
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<bp-sym.h> header file. */
 end_comment
 
@@ -332,23 +345,26 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `bzero' function. */
+comment|/* Define to 1 if your system has a working `chown' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_BZERO
+name|HAVE_CHOWN
 value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `canonicalize_file_name' function. */
+comment|/* Define to 1 if you have the `chroot' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CANONICALIZE_FILE_NAME */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CHROOT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `chsize' function. */
@@ -357,17 +373,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_CHSIZE */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `clearerr_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_CLEARERR_UNLOCKED
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `clock_gettime' function. */
@@ -392,15 +397,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if backslash-a works in C strings. */
+comment|/* FIXME */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_C_BACKSLASH_A
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_C_LINE */
+end_comment
 
 begin_comment
 comment|/* Define if the GNU dcgettext() function is already present or preinstalled.    */
@@ -430,6 +432,17 @@ define|#
 directive|define
 name|HAVE_DECL_DIRFD
 value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `euidaccess', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_EUIDACCESS
+value|0
 end_define
 
 begin_comment
@@ -543,13 +556,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the declaration of `getcontext', and to 0 if you    don't. */
+comment|/* Define to 1 if you have the declaration of `getcwd', and to 0 if you don't.    */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_DECL_GETCONTEXT
+name|HAVE_DECL_GETCWD
 value|1
 end_define
 
@@ -730,17 +743,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the declaration of `sigaltstack', and to 0 if you    don't. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_SIGALTSTACK
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the declaration of `stpcpy', and to 0 if you don't.    */
 end_comment
 
@@ -748,17 +750,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_STPCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the declaration of `strerror', and to 0 if you    don't. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_STRERROR
 value|1
 end_define
 
@@ -796,6 +787,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `strsignal', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_STRSIGNAL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `strstr', and to 0 if you don't.    */
 end_comment
 
@@ -818,26 +820,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the declaration of `strtol', and to 0 if you don't.    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_STRTOL
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the declaration of `strtoll', and to 0 if you    don't. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_STRTOLL
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_DECL_STRTOLL */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `strtoul', and to 0 if you    don't. */
@@ -873,6 +861,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `sys_siglist', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_SYS_SIGLIST
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `ttyname', and to 0 if you    don't. */
 end_comment
 
@@ -895,6 +894,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `_sys_siglist', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL__SYS_SIGLIST
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `__fpending', and to 0 if you    don't. */
 end_comment
 
@@ -902,6 +912,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL___FPENDING
+value|0
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `__sys_siglist', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL___SYS_SIGLIST
 value|0
 end_define
 
@@ -925,14 +946,6 @@ comment|/* #undef HAVE_DIRFD */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DOPRNT */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `dup2' function. */
 end_comment
 
@@ -942,6 +955,14 @@ directive|define
 name|HAVE_DUP2
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<dustat.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DUSTAT_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `endgrent' function. */
@@ -1015,57 +1036,11 @@ comment|/* #undef HAVE_FDATASYNC */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<fenv.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FENV_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `feof_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FEOF_UNLOCKED
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `ferror_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FERROR_UNLOCKED
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `fesetround' function. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_FESETROUND */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `fflush_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FFLUSH_UNLOCKED */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `fgets_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FGETS_UNLOCKED */
 end_comment
 
 begin_comment
@@ -1089,30 +1064,6 @@ directive|define
 name|HAVE_FLOOR
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `fputc_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FPUTC_UNLOCKED */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `fputs_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FPUTS_UNLOCKED */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `fread_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FREAD_UNLOCKED */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
@@ -1142,14 +1093,6 @@ comment|/* #undef HAVE_FS_STAT_DEV */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `ftime' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FTIME */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `ftruncate' function. */
 end_comment
 
@@ -1161,14 +1104,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `fwrite_unlocked' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_FWRITE_UNLOCKED */
-end_comment
-
-begin_comment
 comment|/* Define if struct statfs has the f_fstypename member. */
 end_comment
 
@@ -1176,28 +1111,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_F_FSTYPENAME_IN_STATFS
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getchar_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETCHAR_UNLOCKED
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getcontext' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETCONTEXT
 value|1
 end_define
 
@@ -1224,17 +1137,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `getc_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETC_UNLOCKED
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `getdelim' function. */
 end_comment
 
@@ -1243,7 +1145,7 @@ comment|/* #undef HAVE_GETDELIM */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `getgroups' function. */
+comment|/* Define to 1 if your system has a working `getgroups' function. */
 end_comment
 
 begin_define
@@ -1272,6 +1174,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETHOSTBYNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `gethostid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETHOSTID
 value|1
 end_define
 
@@ -1355,6 +1268,14 @@ comment|/* #undef HAVE_GETSPNAM */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `getsysinfo' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETSYSINFO */
+end_comment
+
+begin_comment
 comment|/* Define if the GNU gettext() function is already present or preinstalled. */
 end_comment
 
@@ -1431,13 +1352,46 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<inttypes.h> header file. */
+comment|/* Define to 1 if you have the `initgroups' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the 'intmax_t' type in<stdint.h> or<inttypes.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTMAX_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<inttypes.h> exists and doesn't clash with<sys/types.h>. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<inttypes.h> exists, doesn't clash with<sys/types.h>, and    declares uintmax_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTTYPES_H_WITH_UINTMAX
 value|1
 end_define
 
@@ -1516,14 +1470,6 @@ comment|/* #undef HAVE_LIBDGC */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<libintl.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBINTL_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `kstat' library (-lkstat). */
 end_comment
 
@@ -1537,6 +1483,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBLDGC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `os' library (-los). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBOS */
 end_comment
 
 begin_comment
@@ -1589,18 +1543,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `localtime_r' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOCALTIME_R
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if long double works and has more range or precision than    double. */
+comment|/* Define if you have the 'long double' type. */
 end_comment
 
 begin_define
@@ -1622,7 +1565,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the long long type. */
+comment|/* Define if you have the 'long long' type. */
 end_comment
 
 begin_define
@@ -1633,11 +1576,19 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if lstat has the bug that it succeeds when given the zero-length    file name argument. The lstat from SunOS4.1.4 and the Hurd as of    1998-11-01) do this. */
+comment|/* Define to 1 if `lstat' has the bug that it succeeds when given the    zero-length file name argument. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_LSTAT_EMPTY_STRING_BUG */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<machine/hal_sysinfo.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MACHINE_HAL_SYSINFO_H */
 end_comment
 
 begin_comment
@@ -1649,7 +1600,7 @@ comment|/* #undef HAVE_MACH_MACH_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if your system has a working `malloc' function, and to 0    otherwise. */
+comment|/* Define to 1 if your system has a GNU libc compatible `malloc' function, and    to 0 otherwise. */
 end_comment
 
 begin_define
@@ -1733,17 +1684,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMCHR
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `memcmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMCMP
 value|1
 end_define
 
@@ -1895,6 +1835,22 @@ comment|/* #undef HAVE_NEXT_DEV */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<nfs/nfs_clnt.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NFS_NFS_CLNT_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<nfs/vfs.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NFS_VFS_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<nlist.h> header file. */
 end_comment
 
@@ -1965,24 +1921,13 @@ comment|/* #undef HAVE_PSTAT_GETSTATIC */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `putchar_unlocked' function. */
+comment|/* Define to 1 if the system has the type `ptrdiff_t'. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_PUTCHAR_UNLOCKED
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `putc_unlocked' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTC_UNLOCKED
+name|HAVE_PTRDIFF_T
 value|1
 end_define
 
@@ -1998,7 +1943,29 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if your system has a working `realloc' function, and to 0    otherwise. */
+comment|/* Define to 1 if you have the `raise' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RAISE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `readlink' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_READLINK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if your system has a GNU libc compatible `realloc' function,    and to 0 otherwise. */
 end_comment
 
 begin_define
@@ -2058,6 +2025,17 @@ comment|/* #undef HAVE_RPMATCH */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have run the test for working tzset. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RUN_TZSET_TEST
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `sethostname' function. */
 end_comment
 
@@ -2080,6 +2058,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setregid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETREGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setreuid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETREUID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<shadow.h> header file. */
 end_comment
 
@@ -2096,13 +2096,13 @@ comment|/* #undef HAVE_SIG2STR */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `sigaltstack' function. */
+comment|/* Define to 1 if you have the `snprintf' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_SIGALTSTACK
+name|HAVE_SNPRINTF
 value|1
 end_define
 
@@ -2113,17 +2113,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SQRT */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if the system has the type `stack_t'. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STACK_T
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `statvfs' function. */
@@ -2137,7 +2126,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if stat has the bug that it succeeds when given the zero-length file    name argument. The stat from SunOS4.1.4 and the Hurd as of 1998-11-01) do    this. */
+comment|/* Define to 1 if `stat' has the bug that it succeeds when given the    zero-length file name argument. */
 end_comment
 
 begin_comment
@@ -2174,6 +2163,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDINT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if<stdint.h> exists, doesn't clash with<sys/types.h>, and declares    uintmax_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H_WITH_UINTMAX
 value|1
 end_define
 
@@ -2226,6 +2226,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRCHR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strcoll' function and it is properly defined.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCOLL
 value|1
 end_define
 
@@ -2384,9 +2395,12 @@ begin_comment
 comment|/* Define to 1 if you have the `strtoll' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRTOLL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOLL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strtoul' function. */
@@ -2403,9 +2417,12 @@ begin_comment
 comment|/* Define to 1 if you have the `strtoull' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRTOULL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOULL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `strtoumax' function. */
@@ -2608,6 +2625,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if `ut_exit' is member of `struct utmpx'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMPX_UT_EXIT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if `ut_exit.e_exit' is member of `struct utmpx'. */
 end_comment
 
@@ -2677,6 +2702,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_STRUCT_UTMPX_UT_USER */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if `ut_exit' is member of `struct utmp'. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRUCT_UTMP_UT_EXIT */
 end_comment
 
 begin_comment
@@ -2801,6 +2834,17 @@ comment|/* #undef HAVE_SYSINFO */
 end_comment
 
 begin_comment
+comment|/* FIXME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYSLOG
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<syslog.h> header file. */
 end_comment
 
@@ -2810,6 +2854,14 @@ directive|define
 name|HAVE_SYSLOG_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `sysmp' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYSMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/acl.h> header file. */
@@ -2983,6 +3035,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/sysinfo.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SYSINFO_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/sysmacros.h> header file. */
 end_comment
 
@@ -2991,11 +3051,35 @@ comment|/* #undef HAVE_SYS_SYSMACROS_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/sysmp.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SYSMP_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/systemcfg.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_SYSTEMCFG_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/systeminfo.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_SYS_SYSTEMINFO_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/table.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_TABLE_H */
 end_comment
 
 begin_comment
@@ -3035,12 +3119,9 @@ begin_comment
 comment|/* Define to 1 if you have the<sys/ucred.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_UCRED_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYS_UCRED_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/vfs.h> header file. */
@@ -3060,6 +3141,14 @@ directive|define
 name|HAVE_SYS_WAIT_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `table' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TABLE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<termios.h> header file. */
@@ -3114,13 +3203,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<ucontext.h> header file. */
+comment|/* Define if you have the 'uintmax_t' type in<stdint.h> or<inttypes.h>. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_UCONTEXT_H
+name|HAVE_UINTMAX_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `uname' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNAME
 value|1
 end_define
 
@@ -3136,7 +3236,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the unsigned long long type. */
+comment|/* Define if you have the 'unsigned long long' type. */
 end_comment
 
 begin_define
@@ -3145,14 +3245,6 @@ directive|define
 name|HAVE_UNSIGNED_LONG_LONG
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `utime' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UTIME */
-end_comment
 
 begin_comment
 comment|/* Define if utimes accepts a null argument */
@@ -3201,7 +3293,7 @@ comment|/* #undef HAVE_UTMPXNAME */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the<utmpx.h> header file. */
+comment|/* FIXME */
 end_comment
 
 begin_comment
@@ -3220,6 +3312,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* FIXME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UT_HOST
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<values.h> header file. */
 end_comment
 
@@ -3228,13 +3331,21 @@ comment|/* #undef HAVE_VALUES_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `vprintf' function. */
+comment|/* Define to 1 if you have the `vasnprintf' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VASNPRINTF */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `vasprintf' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_VPRINTF
+name|HAVE_VASPRINTF
 value|1
 end_define
 
@@ -3250,6 +3361,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the 'wchar_t' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCHAR_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `wcrtomb' function. */
 end_comment
 
@@ -3257,6 +3379,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCRTOMB
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `wcslen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCSLEN
 value|1
 end_define
 
@@ -3283,6 +3416,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the 'wint_t' type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WINT_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `wmempcpy' function. */
 end_comment
 
@@ -3291,11 +3435,44 @@ comment|/* #undef HAVE_WMEMPCPY */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if extending the stack slightly past the limit causes a    SIGSEGV, and an alternate stack can be established with sigaltstack, and    the signal handler is passed a context that specifies the run time stack.    This behavior is defined by POSIX 1003.1-2001 with the X/Open System    Interface (XSI) option and is a standardized way to implement a SEGV-based    stack overflow detection heuristic. */
+comment|/* Define if readdir is found to work properly in some unusual cases. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WORKING_READDIR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if utimes works properly. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WORKING_UTIMES
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `_Bool'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE__BOOL
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the external variable, _system_configuration with a    member named physmem. */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_XSI_STACK_OVERFLOW_HEURISTIC */
+comment|/* #undef HAVE__SYSTEM_CONFIGURATION */
 end_comment
 
 begin_comment
@@ -3329,12 +3506,9 @@ begin_comment
 comment|/* Define as const if the declaration of iconv() needs const. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ICONV_CONST
-value|const
-end_define
+begin_comment
+comment|/* #undef ICONV_CONST */
+end_comment
 
 begin_if
 if|#
@@ -3380,6 +3554,17 @@ begin_define
 define|#
 directive|define
 name|LINK_FOLLOWS_SYMLINKS
+value|1
+end_define
+
+begin_comment
+comment|/* FIXME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCALTIME_CACHE
 value|1
 end_define
 
@@ -3499,6 +3684,14 @@ comment|/* #undef NDEBUG */
 end_comment
 
 begin_comment
+comment|/* FIXME */
+end_comment
+
+begin_comment
+comment|/* #undef NICE_PRIORITY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if your `struct nlist' has an `n_un' member. Obsolete, depend    on `HAVE_STRUCT_NLIST_N_UN_N_NAME */
 end_comment
 
@@ -3514,7 +3707,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE
-value|"textutils"
+value|"coreutils"
 end_define
 
 begin_comment
@@ -3525,7 +3718,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|"bug-textutils@gnu.org"
+value|"bug-coreutils@gnu.org"
 end_define
 
 begin_comment
@@ -3536,7 +3729,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_NAME
-value|"GNU textutils"
+value|"GNU coreutils"
 end_define
 
 begin_comment
@@ -3547,7 +3740,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"GNU textutils 2.1"
+value|"GNU coreutils 5.2.1"
 end_define
 
 begin_comment
@@ -3558,7 +3751,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
-value|"textutils"
+value|"coreutils"
 end_define
 
 begin_comment
@@ -3569,7 +3762,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"2.1"
+value|"5.2.1"
 end_define
 
 begin_comment
@@ -3582,6 +3775,14 @@ directive|define
 name|PENDING_OUTPUT_N_BYTES
 value|fp->_p - fp->_bf._base
 end_define
+
+begin_comment
+comment|/* Define if<inttypes.h> exists and defines unusable PRI* macros. */
+end_comment
+
+begin_comment
+comment|/* #undef PRI_MACROS_BROKEN */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if the C compiler supports function prototypes. */
@@ -3633,11 +3834,19 @@ comment|/* #undef SETVBUF_REVERSED */
 end_comment
 
 begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.         STACK_DIRECTION> 0 => grows toward higher addresses         STACK_DIRECTION< 0 => grows toward lower addresses         STACK_DIRECTION = 0 => direction of growth unknown */
+comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time. 	STACK_DIRECTION> 0 => grows toward higher addresses 	STACK_DIRECTION< 0 => grows toward lower addresses 	STACK_DIRECTION = 0 => direction of growth unknown */
 end_comment
 
 begin_comment
 comment|/* #undef STACK_DIRECTION */
+end_comment
+
+begin_comment
+comment|/* Define if the block counts reported by statfs may be truncated to 2GB and    the correct values may be stored in the f_spare array. (SunOS 4.1.2, 4.1.3,    and 4.1.3_U1 are reported to have this problem. SunOS 4.1.1 seems not to be    affected.) */
+end_comment
+
+begin_comment
+comment|/* #undef STATFS_TRUNCATES_BLOCK_COUNTS */
 end_comment
 
 begin_comment
@@ -3743,6 +3952,14 @@ comment|/* #undef SVR4 */
 end_comment
 
 begin_comment
+comment|/* FIXME */
+end_comment
+
+begin_comment
+comment|/* #undef TERMIOS_NEEDS_XOPEN_SOURCE */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you can safely include both<sys/time.h> and<time.h>. */
 end_comment
 
@@ -3759,6 +3976,14 @@ end_comment
 
 begin_comment
 comment|/* #undef TM_IN_SYS_TIME */
+end_comment
+
+begin_comment
+comment|/* Define if tzset clobbers localtime's static buffer. */
+end_comment
+
+begin_comment
+comment|/* #undef TZSET_CLOBBERS_LOCALTIME_BUFFER */
 end_comment
 
 begin_comment
@@ -3785,8 +4010,16 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.1"
+value|"5.2.1"
 end_define
+
+begin_comment
+comment|/* Define if sys/ptem.h is required for struct winsize. */
+end_comment
+
+begin_comment
+comment|/* #undef WINSIZE_IN_PTEM */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
@@ -3886,6 +4119,28 @@ comment|/* #undef _POSIX_SOURCE */
 end_comment
 
 begin_comment
+comment|/* Enable extensions on Solaris.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__EXTENSIONS__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__EXTENSIONS__
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Define like PROTOTYPES; this can be used by system headers. */
 end_comment
 
@@ -3913,15 +4168,28 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define to rpl_fnmatch if the replacement function should be used. */
+comment|/* Define to a replacement function name for fnmatch(). */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|fnmatch
-value|rpl_fnmatch
-end_define
+begin_comment
+comment|/* #undef fnmatch */
+end_comment
+
+begin_comment
+comment|/* Define to rpl_free if the replacement function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef free */
+end_comment
+
+begin_comment
+comment|/* Define to rpl_getcwd if the wrapper function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef getcwd */
+end_comment
 
 begin_comment
 comment|/* Define as rpl_getgroups if getgroups doesn't work right. */
@@ -3929,6 +4197,14 @@ end_comment
 
 begin_comment
 comment|/* #undef getgroups */
+end_comment
+
+begin_comment
+comment|/* Define to a replacement function name for getline(). */
+end_comment
+
+begin_comment
+comment|/* #undef getline */
 end_comment
 
 begin_comment
@@ -3948,15 +4224,34 @@ comment|/* #undef gid_t */
 end_comment
 
 begin_comment
-comment|/* Define as `__inline' if that's what the C compiler calls it, or to nothing    if it is not supported. */
+comment|/* Define to rpl_gmtime if the replacement function should be used. */
 end_comment
+
+begin_comment
+comment|/* #undef gmtime */
+end_comment
+
+begin_comment
+comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_comment
 comment|/* #undef inline */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Define to `unsigned long' if<sys/types.h> does not define. */
+comment|/* Define to `unsigned long int' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
@@ -3964,7 +4259,7 @@ comment|/* #undef ino_t */
 end_comment
 
 begin_comment
-comment|/* Define to widest signed type if<inttypes.h> doesn't define. */
+comment|/* Define to long or long long if<stdint.h> and<inttypes.h> don't define. */
 end_comment
 
 begin_comment
@@ -4045,12 +4340,9 @@ begin_comment
 comment|/* Define to rpl_mktime if the replacement function should be used. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|mktime
-value|rpl_mktime
-end_define
+begin_comment
+comment|/* #undef mktime */
+end_comment
 
 begin_comment
 comment|/* Define to `int' if<sys/types.h> does not define. */
@@ -4099,12 +4391,9 @@ begin_comment
 comment|/* Define to rpl_putenv if the replacement function should be used. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|putenv
-value|rpl_putenv
-end_define
+begin_comment
+comment|/* #undef putenv */
+end_comment
 
 begin_comment
 comment|/* Define to rpl_realloc if the replacement function should be used. */
@@ -4112,6 +4401,33 @@ end_comment
 
 begin_comment
 comment|/* #undef realloc */
+end_comment
+
+begin_comment
+comment|/* Define to rpl_rename if the replacement function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef rename */
+end_comment
+
+begin_comment
+comment|/* Define to equivalent of C99 restrict keyword, or to nothing if this is not    supported. Do not define if restrict is supported directly. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|restrict
+value|__restrict
+end_define
+
+begin_comment
+comment|/* Define to empty if the C compiler doesn't support this keyword. */
+end_comment
+
+begin_comment
+comment|/* #undef signed */
 end_comment
 
 begin_comment
@@ -4123,11 +4439,38 @@ comment|/* #undef size_t */
 end_comment
 
 begin_comment
-comment|/* Define to `int' if<sys/types.h> does not define. */
+comment|/* Define as a signed type of the same size as size_t. */
 end_comment
 
 begin_comment
 comment|/* #undef ssize_t */
+end_comment
+
+begin_comment
+comment|/* Define to rpl_strnlen if the replacement function should be used. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|strnlen
+value|rpl_strnlen
+end_define
+
+begin_comment
+comment|/* Define to rpl_strtod if the replacement function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef strtod */
+end_comment
+
+begin_comment
+comment|/* Define to rpl_tzset if the wrapper function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef tzset */
 end_comment
 
 begin_comment
@@ -4139,11 +4482,27 @@ comment|/* #undef uid_t */
 end_comment
 
 begin_comment
-comment|/* Define to widest unsigned type if<inttypes.h> doesn't define. */
+comment|/* Define to unsigned long or unsigned long long if<stdint.h> and<inttypes.h> don't define. */
 end_comment
 
 begin_comment
 comment|/* #undef uintmax_t */
+end_comment
+
+begin_comment
+comment|/* Define to `size_t' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef uintptr_t */
+end_comment
+
+begin_comment
+comment|/* Define to rpl_utime if the replacement function should be used. */
+end_comment
+
+begin_comment
+comment|/* #undef utime */
 end_comment
 
 begin_comment
