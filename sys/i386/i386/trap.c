@@ -476,9 +476,9 @@ comment|/*  5 unused */
 literal|"arithmetic trap"
 block|,
 comment|/*  6 T_ARITHTRAP */
-literal|"system forced exception"
+literal|""
 block|,
-comment|/*  7 T_ASTFLT */
+comment|/*  7 unused */
 literal|""
 block|,
 comment|/*  8 unused */

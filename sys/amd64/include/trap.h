@@ -55,17 +55,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_ASTFLT
-value|7
-end_define
-
-begin_comment
-comment|/* system forced exception */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|T_PROTFLT
 value|9
 end_define
