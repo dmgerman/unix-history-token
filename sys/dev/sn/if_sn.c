@@ -387,33 +387,6 @@ directive|define
 name|SW_PAD
 end_define
 
-begin_comment
-comment|/* XXX KLUDGE XXX */
-end_comment
-
-begin_decl_stmt
-name|u_char
-name|sn_pccard_macaddr
-index|[
-literal|6
-index|]
-init|=
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x86
-block|,
-literal|0x10
-block|,
-literal|0x2b
-block|,
-literal|0xc0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -515,6 +488,9 @@ decl_stmt|;
 name|u_short
 name|address
 decl_stmt|;
+name|int
+name|j
+decl_stmt|;
 name|sn_activate
 argument_list|(
 name|dev
@@ -613,16 +589,6 @@ else|:
 literal|"UTP"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-literal|1
-condition|)
-block|{
-comment|/* XXX The pccard probe routine for megahearts needs to */
-comment|/* XXX snag this from your info 2 */
-name|int
-name|j
-decl_stmt|;
 for|for
 control|(
 name|j
@@ -645,7 +611,11 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|sn_pccard_macaddr
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|j
 operator|*
@@ -657,7 +627,11 @@ operator|(
 operator|(
 name|u_short
 operator|)
-name|sn_pccard_macaddr
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
 index|[
 name|j
 operator|*
@@ -683,7 +657,6 @@ argument_list|,
 name|w
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Read the station address from the chip. The MAC address is bank 1, 	 * regs 4 - 9 	 */
 name|SMC_SELECT_BANK
