@@ -168,10 +168,6 @@ name|ng_xxx_rcvdata
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* note these are both ng_rcvdata_t */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|ng_disconnect_t
