@@ -942,6 +942,8 @@ operator|!=
 name|NG_BPF_HOOKPROG_SIZE
 argument_list|(
 name|hp
+operator|->
+name|bpf_prog_len
 argument_list|)
 condition|)
 name|ERROUT
@@ -999,11 +1001,13 @@ case|case
 name|NGM_BPF_GET_PROGRAM
 case|:
 block|{
+name|struct
+name|ng_bpf_hookprog
+modifier|*
+name|hp
+decl_stmt|;
 name|hook_p
 name|hook
-decl_stmt|;
-name|hinfo_p
-name|hip
 decl_stmt|;
 comment|/* Sanity check */
 if|if
@@ -1059,13 +1063,20 @@ argument_list|(
 name|ENOENT
 argument_list|)
 expr_stmt|;
-name|hip
+comment|/* Build response */
+name|hp
 operator|=
+operator|(
+operator|(
+name|hinfo_p
+operator|)
 name|hook
 operator|->
 name|private
+operator|)
+operator|->
+name|prog
 expr_stmt|;
-comment|/* Build response */
 name|NG_MKRESPONSE
 argument_list|(
 name|resp
@@ -1074,9 +1085,9 @@ name|msg
 argument_list|,
 name|NG_BPF_HOOKPROG_SIZE
 argument_list|(
-name|hip
+name|hp
 operator|->
-name|prog
+name|bpf_prog_len
 argument_list|)
 argument_list|,
 name|M_NOWAIT
@@ -1095,9 +1106,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|hip
-operator|->
-name|prog
+name|hp
 argument_list|,
 name|resp
 operator|->
@@ -1105,9 +1114,9 @@ name|data
 argument_list|,
 name|NG_BPF_HOOKPROG_SIZE
 argument_list|(
-name|hip
+name|hp
 operator|->
-name|prog
+name|bpf_prog_len
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1875,6 +1884,8 @@ operator|=
 name|NG_BPF_HOOKPROG_SIZE
 argument_list|(
 name|hp0
+operator|->
+name|bpf_prog_len
 argument_list|)
 expr_stmt|;
 name|MALLOC

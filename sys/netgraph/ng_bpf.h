@@ -89,10 +89,10 @@ define|#
 directive|define
 name|NG_BPF_HOOKPROG_SIZE
 parameter_list|(
-name|hp
+name|numInsn
 parameter_list|)
 define|\
-value|(sizeof(*(hp)) + (hp)->bpf_prog_len * sizeof((hp)->bpf_prog[0]))
+value|(sizeof(struct ng_bpf_hookprog) + (numInsn) * sizeof(struct bpf_insn))
 end_define
 
 begin_comment
