@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -56,40 +62,6 @@ include|#
 directive|include
 file|<machine/instr.h>
 end_include
-
-begin_function_decl
-name|int
-name|unaligned_fixup
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|tf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|emulate_insn
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|tf
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Alpha-compatible sysctls to control the alignment fixup.  */
@@ -100,7 +72,7 @@ specifier|static
 name|int
 name|unaligned_print
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -198,9 +170,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
-specifier|static
 name|int
-name|fetch_reg
+name|emul_fetch_reg
 parameter_list|(
 name|struct
 name|trapframe
@@ -222,7 +193,7 @@ name|CTR1
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"fetch_reg: register %d"
+literal|"emul_fetch_reg: register %d"
 argument_list|,
 name|reg
 argument_list|)
@@ -333,9 +304,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|store_reg
+name|emul_store_reg
 parameter_list|(
 name|struct
 name|trapframe
@@ -356,7 +326,7 @@ name|CTR1
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"store_reg: register %d"
+literal|"emul_store_reg: register %d"
 argument_list|,
 name|reg
 argument_list|)
@@ -514,7 +484,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|fetch_reg
+name|emul_fetch_reg
 argument_list|(
 name|tf
 argument_list|,
@@ -610,7 +580,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|fetch_reg
+name|emul_fetch_reg
 argument_list|(
 name|tf
 argument_list|,
@@ -688,7 +658,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|fetch_reg
+name|emul_fetch_reg
 argument_list|(
 name|tf
 argument_list|,
@@ -873,7 +843,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|store_reg
+name|emul_store_reg
 argument_list|(
 name|tf
 argument_list|,
@@ -909,11 +879,6 @@ name|tf
 parameter_list|)
 block|{
 name|struct
-name|mmuframe
-modifier|*
-name|mf
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|p
@@ -931,17 +896,6 @@ operator|=
 name|td
 operator|->
 name|td_proc
-expr_stmt|;
-name|mf
-operator|=
-operator|(
-expr|struct
-name|mmuframe
-operator|*
-operator|)
-name|tf
-operator|->
-name|tf_arg
 expr_stmt|;
 if|if
 condition|(
@@ -1192,9 +1146,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|mf
+name|tf
 operator|->
-name|mf_sfar
+name|tf_sfar
 argument_list|,
 name|tf
 operator|->
@@ -1228,9 +1182,9 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|mf
+name|tf
 operator|->
-name|mf_sfar
+name|tf_sfar
 argument_list|,
 name|tf
 operator|->
@@ -1347,7 +1301,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|store_reg
+name|emul_store_reg
 argument_list|(
 name|tf
 argument_list|,
@@ -1380,7 +1334,7 @@ end_comment
 
 begin_function
 name|int
-name|emulate_insn
+name|emul_insn
 parameter_list|(
 name|struct
 name|thread
