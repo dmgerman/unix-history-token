@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.24 81/11/04 */
+comment|/* tcp_usrreq.c 1.25 81/11/04 */
 end_comment
 
 begin_include
@@ -173,6 +173,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -195,6 +196,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|tmp
+operator|++
+expr_stmt|;
+block|}
 name|tp
 operator|->
 name|t_xmt
