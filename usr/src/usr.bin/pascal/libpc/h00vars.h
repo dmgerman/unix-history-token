@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.10 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.11 %G%"; */
 end_comment
 
 begin_include
@@ -116,6 +116,12 @@ directive|ifdef
 name|ADDR32
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|tahoe
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -129,6 +135,32 @@ directive|define
 name|GLVL
 value|((struct iorec *)(0x7ffffff0))
 end_define
+
+begin_else
+else|#
+directive|else
+else|tahoe
+end_else
+
+begin_define
+define|#
+directive|define
+name|STDLVL
+value|((struct iorec *)(0xbffffff1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLVL
+value|((struct iorec *)(0xbffffff0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|tahoe
+end_endif
 
 begin_endif
 endif|#
