@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	1.7	87/02/21	*/
+comment|/*	cons.c	1.8	87/03/04	*/
 end_comment
 
 begin_comment
@@ -136,7 +136,7 @@ begin_decl_stmt
 name|struct
 name|tty
 modifier|*
-name|constty
+name|cntty
 index|[
 literal|3
 index|]
@@ -153,6 +153,20 @@ name|RLtty
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tty
+modifier|*
+name|constty
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual console */
+end_comment
 
 begin_struct
 struct|struct
@@ -368,7 +382,7 @@ operator|)
 return|;
 name|tp
 operator|=
-name|constty
+name|cntty
 index|[
 name|unit
 index|]
@@ -586,7 +600,7 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|constty
+name|cntty
 index|[
 name|minor
 argument_list|(
@@ -651,7 +665,7 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|constty
+name|cntty
 index|[
 name|minor
 argument_list|(
@@ -659,6 +673,21 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|constty
+operator|&&
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|CPCONS
+condition|)
+name|tp
+operator|=
+name|constty
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -716,7 +745,7 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|constty
+name|cntty
 index|[
 name|minor
 argument_list|(
@@ -884,7 +913,7 @@ name|cp_hdr
 expr_stmt|;
 name|tp
 operator|=
-name|constty
+name|cntty
 index|[
 name|unit
 index|]
@@ -961,7 +990,7 @@ name|tty
 modifier|*
 name|tp
 init|=
-name|constty
+name|cntty
 index|[
 name|minor
 argument_list|(
@@ -1120,7 +1149,7 @@ endif|#
 directive|endif
 name|tp
 operator|=
-name|constty
+name|cntty
 index|[
 name|unit
 index|]
