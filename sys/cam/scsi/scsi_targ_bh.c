@@ -1756,24 +1756,10 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ccb_pathinq
-modifier|*
-name|cpi
-decl_stmt|;
-name|struct
 name|targbh_softc
 modifier|*
 name|softc
 decl_stmt|;
-name|cpi
-operator|=
-operator|(
-expr|struct
-name|ccb_pathinq
-operator|*
-operator|)
-name|arg
-expr_stmt|;
 comment|/* Allocate our per-instance private storage */
 name|softc
 operator|=
@@ -1927,19 +1913,6 @@ operator|->
 name|init_level
 condition|)
 block|{
-default|default:
-comment|/* FALLTHROUGH */
-case|case
-literal|1
-case|:
-name|free
-argument_list|(
-name|softc
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 literal|0
 case|:
@@ -1949,6 +1922,19 @@ literal|"targdtor - impossible init level"
 argument_list|)
 expr_stmt|;
 empty_stmt|;
+case|case
+literal|1
+case|:
+comment|/* FALLTHROUGH */
+default|default:
+name|free
+argument_list|(
+name|softc
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
