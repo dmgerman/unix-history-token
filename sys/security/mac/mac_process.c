@@ -3800,6 +3800,13 @@ name|mpc_ops
 operator|=
 name|NULL
 expr_stmt|;
+name|mpc
+operator|->
+name|mpc_runtime_flags
+operator|&=
+operator|~
+name|MPC_RUNTIME_FLAG_REGISTERED
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Security policy unload: %s (%s)\n"
