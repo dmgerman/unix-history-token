@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/vm/vm_fault.c,v 1.2 1993/06/15 15:07:46 nate Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/vm/vm_fault.c,v 1.3 1993/07/12 16:13:57 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,6 +961,11 @@ expr_stmt|;
 comment|/* 			 *	If another map is truly sharing this 			 *	page with us, we have to flush all 			 *	uses of the original page, since we 			 *	can't distinguish those which want the 			 *	original from those which need the 			 *	new copy. 			 * 			 *	XXX If we know that only one map has 			 *	access to this page, then we could 			 *	avoid the pmap_page_protect() call. 			 */
 name|vm_page_lock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_activate
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|vm_page_deactivate
 argument_list|(
