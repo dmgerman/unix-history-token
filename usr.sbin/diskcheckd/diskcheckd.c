@@ -2050,9 +2050,8 @@ argument_list|,
 name|percent
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|ret
 operator|=
@@ -2146,9 +2145,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|ret
 operator|=

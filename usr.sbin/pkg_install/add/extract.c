@@ -694,9 +694,8 @@ expr_stmt|;
 if|if
 condition|(
 name|add_count
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 operator|||
 name|add_count
 operator|>
@@ -810,9 +809,8 @@ expr_stmt|;
 if|if
 condition|(
 name|add_count
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 operator|||
 name|add_count
 operator|>
@@ -863,9 +861,8 @@ expr_stmt|;
 if|if
 condition|(
 name|add_count
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 operator|||
 name|add_count
 operator|>

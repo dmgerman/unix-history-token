@@ -746,9 +746,8 @@ expr_stmt|;
 if|if
 condition|(
 name|l
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|l
 operator|=

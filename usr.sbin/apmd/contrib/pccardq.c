@@ -860,9 +860,8 @@ argument_list|,
 name|slot
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|warnc
