@@ -200,8 +200,14 @@ end_include
 begin_define
 define|#
 directive|define
-name|REGEXP
+name|REGEXEC
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|REGEXP
+end_undef
 
 begin_ifdef
 ifdef|#
@@ -212,7 +218,7 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
-name|REGEXP
+name|REGEXEC
 end_undef
 
 begin_include
