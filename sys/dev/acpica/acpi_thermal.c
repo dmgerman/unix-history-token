@@ -1142,7 +1142,7 @@ argument_list|,
 literal|"thermal zone flags"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_OPAQUE
 argument_list|(
 operator|&
 name|sc
@@ -1169,7 +1169,16 @@ name|tz_zone
 operator|.
 name|psv
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|tz_zone
+operator|.
+name|psv
+argument_list|)
+argument_list|,
+literal|"IK"
 argument_list|,
 literal|""
 argument_list|)
