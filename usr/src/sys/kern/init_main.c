@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.10	%G%	*/
+comment|/*	init_main.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -609,6 +609,10 @@ name|filsys
 modifier|*
 name|fp
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 operator|(
 operator|*
 name|bdevsw
@@ -712,6 +716,42 @@ expr_stmt|;
 name|fp
 operator|->
 name|s_nbehind
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|s_fsmnt
+index|[
+literal|0
+index|]
+operator|=
+literal|'/'
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|fp
+operator|->
+name|s_fsmnt
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|fp
+operator|->
+name|s_fsmnt
+index|[
+name|i
+index|]
 operator|=
 literal|0
 expr_stmt|;
