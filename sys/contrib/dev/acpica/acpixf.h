@@ -223,6 +223,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiGetFirmwareTable
+parameter_list|(
+name|ACPI_STRING
+name|Signature
+parameter_list|,
+name|UINT32
+name|Instance
+parameter_list|,
+name|UINT32
+name|Flags
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+name|TablePointer
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Namespace and name interfaces  */
 end_comment
