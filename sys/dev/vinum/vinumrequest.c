@@ -4771,7 +4771,6 @@ operator|=
 name|elements
 expr_stmt|;
 comment|/* number of requests in the group */
-block|}
 name|rqg
 operator|->
 name|lockbase
@@ -4780,6 +4779,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* no lock required yet */
+block|}
 return|return
 name|rqg
 return|;
