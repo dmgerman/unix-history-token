@@ -187,7 +187,7 @@ name|void
 modifier|*
 name|pipe_ptr
 decl_stmt|;
-comment|/* Pipe ptr in case of dummynet pipe */
+comment|/* flow_set ptr for dummynet pipe */
 name|void
 modifier|*
 name|next_rule_ptr
@@ -532,6 +532,17 @@ end_define
 
 begin_comment
 comment|/* This is a dummynet rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_QUEUE
+value|0x00000009
+end_define
+
+begin_comment
+comment|/* This is a dummynet queue */
 end_comment
 
 begin_define

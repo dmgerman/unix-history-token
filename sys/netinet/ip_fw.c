@@ -2378,6 +2378,26 @@ name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IP_FW_F_QUEUE
+case|:
+name|snprintf
+argument_list|(
+name|SNPARGS
+argument_list|(
+name|action2
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|"Queue %d"
+argument_list|,
+name|f
+operator|->
+name|fw_skipto_rule
+argument_list|)
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 ifdef|#
@@ -3745,7 +3765,7 @@ default|default:
 if|#
 directive|if
 literal|0
-comment|/* reset or some invalid combination */
+comment|/* 	     * reset or some invalid combination, but can also 	     * occur if we use keep-state the wrong way. 	     */
 block|if ( (q->state& ((TH_RST<< 8)|TH_RST)) == 0) 		printf("invalid state: 0x%x\n", q->state);
 endif|#
 directive|endif
@@ -4070,6 +4090,10 @@ name|ipfw_dyn_rule
 modifier|*
 name|q
 decl_stmt|;
+specifier|static
+name|int
+name|last_log
+decl_stmt|;
 name|u_long
 name|type
 init|=
@@ -4109,6 +4133,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|last_log
+operator|==
+name|time_second
+condition|)
+return|return ;
+name|last_log
+operator|=
+name|time_second
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" entry already present, done\n"
@@ -4138,6 +4173,17 @@ operator|>=
 name|dyn_max
 condition|)
 block|{
+if|if
+condition|(
+name|last_log
+operator|==
+name|time_second
+condition|)
+return|return ;
+name|last_log
+operator|=
+name|time_second
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" Too many dynamic rules, sorry\n"
@@ -6043,6 +6089,9 @@ name|DUMMYNET
 case|case
 name|IP_FW_F_PIPE
 case|:
+case|case
+name|IP_FW_F_QUEUE
+case|:
 return|return
 operator|(
 name|f
@@ -7664,11 +7713,7 @@ operator|==
 name|IP_FW_F_CHECK_S
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"check dynamic rules...\n"
-argument_list|)
-expr_stmt|;
+comment|/* check-state */
 return|return
 literal|0
 return|;
@@ -8194,6 +8239,10 @@ directive|ifdef
 name|DUMMYNET
 case|case
 name|IP_FW_F_PIPE
+case|:
+comment|/* piping through 0 is invalid */
+case|case
+name|IP_FW_F_QUEUE
 case|:
 comment|/* piping through 0 is invalid */
 endif|#
