@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.4	84/08/29	*/
+comment|/*	tcp_input.c	6.5	84/10/18	*/
 end_comment
 
 begin_include
@@ -1162,6 +1162,11 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|dropsocket
+operator|=
+literal|0
+expr_stmt|;
+comment|/* socket is already gone */
 name|inp
 operator|->
 name|inp_laddr
@@ -2185,12 +2190,6 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|t_rtt
-operator|=
-literal|1
-expr_stmt|;
-name|tp
-operator|->
 name|t_rxtshift
 operator|=
 literal|0
@@ -2343,6 +2342,7 @@ name|t_state
 operator|=
 name|TCPS_FIN_WAIT_2
 expr_stmt|;
+comment|/* 				 * This is contrary to the specification, 				 * but if we haven't gotten our FIN in  				 * 5 minutes, it's not forthcoming. 				 */
 block|}
 break|break;
 comment|/* 		 * In CLOSING STATE in addition to the processing for 		 * the ESTABLISHED state if the ACK acknowledges our FIN 		 * then enter the TIME-WAIT state, otherwise ignore 		 * the segment. 		 */
@@ -2552,7 +2552,9 @@ name|ti_urp
 operator|>
 name|tp
 operator|->
-name|t_maxseg
+name|rcv_wnd
+operator|+
+literal|1
 condition|)
 block|{
 comment|/* XXX */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	6.3	84/08/29	*/
+comment|/*	tcp_output.c	6.4	84/10/18	*/
 end_comment
 
 begin_include
@@ -1260,12 +1260,6 @@ name|TCPTV_MIN
 argument_list|,
 name|TCPTV_MAX
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_rtt
-operator|=
-literal|0
 expr_stmt|;
 name|tp
 operator|->
