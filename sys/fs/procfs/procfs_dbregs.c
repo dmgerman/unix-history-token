@@ -82,6 +82,19 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_lock
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"proc not held"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p_candebug
@@ -105,11 +118,6 @@ name|EPERM
 operator|)
 return|;
 block|}
-name|_PHOLD
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* XXXKSE: */
 name|error
 operator|=
@@ -199,11 +207,6 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
-name|_PRELE
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
