@@ -75,6 +75,23 @@ value|" -Dunix -D__ELF__ -D__FreeBSD__=4 -D__FreeBSD_cc_version=400002 -Asystem(
 end_define
 
 begin_comment
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.     (like the default, except no -lg, and no -p.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIB_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIB_SPEC
+value|"%{!shared:%{!pg:%{!pthread:%{!kthread:-lc}%{kthread:-lpthread -lc}}%{pthread:-lc_r}}%{pg:%{!pthread:%{!kthread:-lc_p}%{kthread:-lpthread_p -lc_p}}%{pthread:-lc_r_p}}}"
+end_define
+
+begin_comment
 comment|/* Code generation parameters.  */
 end_comment
 
