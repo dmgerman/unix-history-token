@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fikrRpLqImvhl:"
+literal|"acdDe:fhiIkl:LmopqrRsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,6 +321,22 @@ name|SHOW_MTREE
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|Flags
+operator||=
+name|SHOW_SIZE
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|Flags
+operator||=
+name|SHOW_ORIGIN
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 name|InfoPrefix
@@ -451,7 +467,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_info [-cdDikrRpLqImv] [-e package] [-l prefix]"
+literal|"usage: pkg_info [-cdDfiIkLmopqrRsv] [-e package] [-l prefix]"
 argument_list|,
 literal|"                pkg-name [pkg-name ...]"
 argument_list|,

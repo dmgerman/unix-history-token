@@ -334,6 +334,26 @@ name|suf
 operator|=
 literal|"tar"
 expr_stmt|;
+comment|/* Add the origin if asked, at the top */
+if|if
+condition|(
+name|Origin
+condition|)
+name|add_plist
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_COMMENT
+argument_list|,
+name|strconcat
+argument_list|(
+literal|"ORIGIN:"
+argument_list|,
+name|Origin
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Stick the dependencies, if any, at the top */
 if|if
 condition|(
@@ -373,7 +393,7 @@ operator|*
 name|cp
 condition|)
 block|{
-name|add_plist
+name|add_plist_top
 argument_list|(
 operator|&
 name|plist

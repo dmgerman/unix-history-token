@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:"
+literal|"YNOhvf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Pkgdeps
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Origin
 init|=
 name|NULL
 decl_stmt|;
@@ -435,6 +444,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+name|Origin
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -552,9 +569,9 @@ literal|"                  [-I piscript] [-k dscript] [-K pdscript] [-r rscript]
 argument_list|,
 literal|"                  [-t template] [-X excludefile] [-D displayfile] "
 argument_list|,
-literal|"                  [-m mtreefile] -c comment -d description -f packlist "
+literal|"                  [-m mtreefile] [-o origin] -c comment -d description "
 argument_list|,
-literal|"                  pkg-name"
+literal|"                  -f packlist pkg-name"
 argument_list|)
 expr_stmt|;
 name|exit
