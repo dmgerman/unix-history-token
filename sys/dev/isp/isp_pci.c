@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.26 1999/07/05 22:01:48 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.27 1999/07/05 22:04:08 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -1209,6 +1209,39 @@ name|isp_pcisoftc
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Figure out if we're supposed to skip this one. 	 */
+if|if
+condition|(
+name|getenv_int
+argument_list|(
+literal|"isp_disable"
+argument_list|,
+operator|&
+name|bitmap
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|bitmap
+operator|&
+operator|(
+literal|1
+operator|<<
+name|unit
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"isp%d: not configuring\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 comment|/* 	 * Figure out which we should try first - memory mapping or i/o mapping? 	 */
 if|#
 directive|if
