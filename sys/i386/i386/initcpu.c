@@ -1803,22 +1803,22 @@ name|SMP
 name|u_int64_t
 name|apicbase
 decl_stmt|;
-comment|/* 	 * Local APIC should be diabled in UP kernel. 	 */
+comment|/* 	 * Local APIC should be disabled in UP kernel. 	 */
 name|apicbase
 operator|=
 name|rdmsr
 argument_list|(
-literal|0x1b
+name|MSR_APICBASE
 argument_list|)
 expr_stmt|;
 name|apicbase
 operator|&=
 operator|~
-literal|0x800LL
+name|APICBASE_ENABLED
 expr_stmt|;
 name|wrmsr
 argument_list|(
-literal|0x1b
+name|MSR_APICBASE
 argument_list|,
 name|apicbase
 argument_list|)
@@ -1874,7 +1874,7 @@ name|bbl_cr_ctl3
 operator|=
 name|rdmsr
 argument_list|(
-literal|0x11e
+name|MSR_BBL_CR_CTL3
 argument_list|)
 expr_stmt|;
 comment|/* If the L2 cache is configured, do nothing. */
@@ -1924,7 +1924,7 @@ endif|#
 directive|endif
 name|wrmsr
 argument_list|(
-literal|0x11e
+name|MSR_BBL_CR_CTL3
 argument_list|,
 name|bbl_cr_ctl3
 argument_list|)
