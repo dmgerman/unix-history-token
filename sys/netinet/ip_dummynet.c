@@ -1640,16 +1640,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*      * If the delay line was empty call transmit_event(p) now.      * Otherwise, the scheduler will take care of it.      */
-if|if
-condition|(
-name|p_was_empty
-condition|)
-name|transmit_event
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/*      * If we have more packets queued, schedule next ready event      * (can only occur when bandwidth != 0, otherwise we would have      * flushed the whole queue in the previous loop).      * To this purpose compute how many ticks to go for the next      * event, accounting for packet size and residual credit. This means      * we compute the finish time of the packet.      */
 if|if
 condition|(
@@ -1728,6 +1718,16 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX should check errors on heap_insert, and drain the whole 	 * queue on error hoping next time we are luckier. 	 */
 block|}
+comment|/*      * If the delay line was empty call transmit_event(p) now.      * Otherwise, the scheduler will take care of it.      */
+if|if
+condition|(
+name|p_was_empty
+condition|)
+name|transmit_event
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
