@@ -149,6 +149,24 @@ directive|include
 file|<machine/tlb.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|nexus_bus_barrier
+parameter_list|(
+name|bus_space_tag_t
+parameter_list|,
+name|bus_space_handle_t
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* ASI's for bus access. */
 end_comment
@@ -2647,7 +2665,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fake up a bus tag, for use by console drivers in early boot when the regular  * means to allocate resources are not yet available.  * Note that these tags are not eligible for bus_space_barrier operations.  * Addr is the physical address of the desired start of the handle.  */
+comment|/*  * Fake up a bus tag, for use by console drivers in early boot when the regular  * means to allocate resources are not yet available.  * Addr is the physical address of the desired start of the handle.  */
 end_comment
 
 begin_function
@@ -2688,7 +2706,7 @@ name|ptag
 operator|->
 name|bst_bus_barrier
 operator|=
-name|NULL
+name|nexus_bus_barrier
 expr_stmt|;
 return|return
 operator|(
@@ -2701,24 +2719,6 @@ end_function
 begin_comment
 comment|/*  * Base bus space handlers.  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|nexus_bus_barrier
-parameter_list|(
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
