@@ -27,12 +27,6 @@ directive|include
 file|"opt_compat.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_ia32.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -53,7 +47,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IA32
+name|COMPAT_IA32
 end_ifndef
 
 begin_error
@@ -2235,7 +2229,7 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"rt_sendsig flags: 0x%x, sp: %p, ss: 0x%x, mask: 0x%x"
+literal|"rt_sendsig flags: 0x%x, sp: %p, ss: 0x%lx, mask: 0x%x"
 argument_list|)
 argument_list|,
 name|frame
@@ -3855,7 +3849,7 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"rt_sigret flags: 0x%x, sp: %p, ss: 0x%x, mask: 0x%x"
+literal|"rt_sigret flags: 0x%x, sp: %p, ss: 0x%lx, mask: 0x%x"
 argument_list|)
 argument_list|,
 name|ss
