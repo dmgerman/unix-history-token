@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988-1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-icmp.c,v 1.11 91/03/27 17:42:58 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-icmp.c,v 1.20 94/06/14 20:17:39 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_icmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -111,7 +117,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_icmp.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -130,43 +136,48 @@ begin_function
 name|void
 name|icmp_print
 parameter_list|(
-name|dp
-parameter_list|,
-name|ip
-parameter_list|)
 specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|bp
+parameter_list|,
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|bp2
+parameter_list|)
+block|{
+specifier|register
+specifier|const
 name|struct
 name|icmp
 modifier|*
 name|dp
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-block|{
-name|char
-name|buf
-index|[
-literal|256
-index|]
-decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|str
-init|=
-name|buf
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|ip
 modifier|*
 name|oip
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|udphdr
 modifier|*
@@ -175,10 +186,20 @@ decl_stmt|;
 specifier|register
 name|int
 name|hlen
+decl_stmt|,
+name|dport
 decl_stmt|;
+specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|ep
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|256
+index|]
 decl_stmt|;
 define|#
 directive|define
@@ -189,13 +210,31 @@ parameter_list|,
 name|l
 parameter_list|)
 value|if ((u_char *)&(var)> ep - l) goto trunc
+name|dp
+operator|=
+operator|(
+expr|struct
+name|icmp
+operator|*
+operator|)
+name|bp
+expr_stmt|;
+name|ip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|bp2
+expr_stmt|;
+name|str
+operator|=
+name|buf
+expr_stmt|;
 comment|/* 'ep' points to the end of avaible data. */
 name|ep
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|snapend
 expr_stmt|;
 operator|(
@@ -220,13 +259,6 @@ name|ip
 operator|->
 name|ip_dst
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|str
-argument_list|,
-literal|"[?]"
 argument_list|)
 expr_stmt|;
 name|TCHECK
@@ -437,7 +469,9 @@ operator|+
 name|hlen
 operator|)
 expr_stmt|;
-name|NTOHS
+name|dport
+operator|=
+name|ntohs
 argument_list|(
 name|ouh
 operator|->
@@ -473,9 +507,7 @@ argument_list|)
 argument_list|,
 name|tcpport_string
 argument_list|(
-name|ouh
-operator|->
-name|uh_dport
+name|dport
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -502,9 +534,7 @@ argument_list|)
 argument_list|,
 name|udpport_string
 argument_list|(
-name|ouh
-operator|->
-name|uh_dport
+name|dport
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -531,9 +561,7 @@ name|oip
 operator|->
 name|ip_p
 argument_list|,
-name|ouh
-operator|->
-name|uh_dport
+name|dport
 argument_list|)
 expr_stmt|;
 break|break;
@@ -930,9 +958,28 @@ name|buf
 argument_list|,
 literal|"address mask is 0x%08x"
 argument_list|,
+name|ntohl
+argument_list|(
 name|dp
 operator|->
 name|icmp_mask
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"type-#%d"
+argument_list|,
+name|dp
+operator|->
+name|icmp_type
 argument_list|)
 expr_stmt|;
 break|break;

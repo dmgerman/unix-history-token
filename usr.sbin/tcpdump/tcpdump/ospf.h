@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
+comment|/*  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
 begin_define
@@ -151,7 +151,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* 	*/
+comment|/*	*/
 end_comment
 
 begin_define
@@ -433,7 +433,7 @@ name|struct
 name|in_addr
 name|ls_router
 decl_stmt|;
-name|u_long
+name|u_int32
 name|ls_seq
 decl_stmt|;
 name|u_short
@@ -531,7 +531,7 @@ name|struct
 name|in_addr
 name|sla_mask
 decl_stmt|;
-name|u_long
+name|u_int32
 name|sla_tosmetric
 index|[
 literal|1
@@ -551,7 +551,7 @@ decl_stmt|;
 struct|struct
 name|aslametric
 block|{
-name|u_long
+name|u_int32
 name|asla_tosmetric
 decl_stmt|;
 name|struct
@@ -576,7 +576,7 @@ comment|/* Multicast group membership */
 struct|struct
 name|mcla
 block|{
-name|u_long
+name|u_int32
 name|mcla_vtype
 decl_stmt|;
 name|struct
@@ -679,7 +679,7 @@ decl_stmt|;
 name|u_char
 name|hello_priority
 decl_stmt|;
-name|u_long
+name|u_int32
 name|hello_deadint
 decl_stmt|;
 name|struct
@@ -716,7 +716,7 @@ decl_stmt|;
 name|u_char
 name|db_flags
 decl_stmt|;
-name|u_long
+name|u_int32
 name|db_seq
 decl_stmt|;
 name|struct
@@ -734,7 +734,7 @@ comment|/* Link State Request */
 struct|struct
 name|lsr
 block|{
-name|u_long
+name|u_int32
 name|ls_type
 decl_stmt|;
 name|struct
@@ -755,7 +755,7 @@ comment|/* may repeat	*/
 comment|/* Link State Update */
 struct|struct
 block|{
-name|u_long
+name|u_int32
 name|lsu_count
 decl_stmt|;
 name|struct

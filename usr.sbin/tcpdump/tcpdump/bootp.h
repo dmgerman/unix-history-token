@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: bootp.h,v 1.2 90/05/29 21:29:16 leres Exp $ (LBL) */
+comment|/* @(#) $Header: bootp.h,v 1.6 94/01/13 19:06:29 leres Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -31,8 +31,7 @@ name|char
 name|bp_hops
 decl_stmt|;
 comment|/* gateway hops */
-name|unsigned
-name|long
+name|u_int32
 name|bp_xid
 decl_stmt|;
 comment|/* transaction ID */
@@ -268,6 +267,45 @@ value|((unsigned char) 255)
 end_define
 
 begin_comment
+comment|/* RFC1497 tags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_DUMPPATH
+value|((unsigned char)  14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_DOMAINNAME
+value|((unsigned char)  15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_SWAP_SERVER
+value|((unsigned char)  16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_ROOTPATH
+value|((unsigned char)  17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_EXTPATH
+value|((unsigned char)  18)
+end_define
+
+begin_comment
 comment|/*  * "vendor" data permitted for CMU bootp clients.  */
 end_comment
 
@@ -283,8 +321,7 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* magic number */
-name|unsigned
-name|long
+name|u_int32
 name|v_flags
 decl_stmt|;
 comment|/* flags/opcodes, etc. */
@@ -323,7 +360,7 @@ name|unsigned
 name|char
 name|v_unused
 index|[
-literal|25
+literal|24
 index|]
 decl_stmt|;
 comment|/* currently unused */

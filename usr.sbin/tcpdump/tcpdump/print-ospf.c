@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
+comment|/*  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ospf.c,v 1.1 92/01/29 12:44:17 mccanne Exp $ (LBL)"
+literal|"@(#) $Header: print-ospf.c,v 1.12 94/06/14 20:18:46 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -75,7 +81,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ospf.h"
+file|<stdio.h>
 end_include
 
 begin_include
@@ -88,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ospf.h"
 end_include
 
 begin_ifndef
@@ -107,42 +119,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(__STDC__)&& !defined(const) */
-end_comment
-
 begin_struct
 struct|struct
 name|bits
 block|{
-name|u_long
+name|u_int32
 name|bit
 decl_stmt|;
 specifier|const
@@ -163,25 +144,29 @@ name|ospf_option_bits
 index|[]
 init|=
 block|{
+block|{
 name|OSPF_OPTION_T
 block|,
 literal|"T"
+block|}
 block|,
+block|{
 name|OSPF_OPTION_E
 block|,
 literal|"E"
+block|}
 block|,
+block|{
 name|OSPF_OPTION_MC
 block|,
 literal|"MC"
+block|}
 block|,
+block|{
 literal|0
 block|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -195,29 +180,35 @@ name|ospf_rla_flag_bits
 index|[]
 init|=
 block|{
+block|{
 name|RLA_FLAG_B
 block|,
 literal|"B"
+block|}
 block|,
+block|{
 name|RLA_FLAG_E
 block|,
 literal|"E"
+block|}
 block|,
+block|{
 name|RLA_FLAG_W1
 block|,
 literal|"W1"
+block|}
 block|,
+block|{
 name|RLA_FLAG_W2
 block|,
 literal|"W2"
+block|}
 block|,
+block|{
 literal|0
 block|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -258,18 +249,14 @@ specifier|inline
 name|void
 name|ospf_print_seqage
 parameter_list|(
+specifier|register
+name|u_int32
 name|seq
 parameter_list|,
-name|us
-parameter_list|)
-specifier|register
-name|u_long
-name|seq
-decl_stmt|;
 specifier|register
 name|time_t
 name|us
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|time_t
@@ -358,20 +345,17 @@ specifier|inline
 name|void
 name|ospf_print_bits
 parameter_list|(
-name|bp
-parameter_list|,
-name|options
-parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|bits
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|u_char
 name|options
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|sep
@@ -436,19 +420,17 @@ specifier|static
 name|int
 name|ospf_print_lshdr
 parameter_list|(
-name|lshp
-parameter_list|,
-name|end
-parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|lsa_hdr
 modifier|*
 name|lshp
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|caddr_t
 name|end
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -473,6 +455,7 @@ argument_list|(
 literal|" {"
 argument_list|)
 expr_stmt|;
+comment|/* } (ctags) */
 if|if
 condition|(
 operator|!
@@ -491,6 +474,7 @@ name|printf
 argument_list|(
 literal|" ??LS type %d?? }"
 argument_list|,
+comment|/* { (ctags) */
 name|lshp
 operator|->
 name|ls_type
@@ -550,50 +534,56 @@ specifier|static
 name|int
 name|ospf_print_lsa
 parameter_list|(
-name|lsap
-parameter_list|,
-name|end
-parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|lsa
 modifier|*
 name|lsap
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|caddr_t
 name|end
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
-name|caddr_t
+specifier|const
+name|char
+modifier|*
 name|ls_end
 decl_stmt|;
+specifier|const
 name|struct
 name|rlalink
 modifier|*
 name|rlp
 decl_stmt|;
+specifier|const
 name|struct
 name|tos_metric
 modifier|*
 name|tosp
 decl_stmt|;
+specifier|const
 name|struct
 name|in_addr
 modifier|*
 name|ap
 decl_stmt|;
+specifier|const
 name|struct
 name|aslametric
 modifier|*
 name|almp
 decl_stmt|;
+specifier|const
 name|struct
 name|mcla
 modifier|*
 name|mcp
 decl_stmt|;
-name|u_long
+specifier|const
+name|u_int32
 modifier|*
 name|lp
 decl_stmt|;
@@ -647,6 +637,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 return|return
 literal|1
 return|;
@@ -757,6 +748,7 @@ argument_list|(
 literal|" {"
 argument_list|)
 expr_stmt|;
+comment|/* } (ctags) */
 switch|switch
 condition|(
 name|rlp
@@ -853,6 +845,7 @@ name|printf
 argument_list|(
 literal|" ??RouterLinksType %d?? }"
 argument_list|,
+comment|/* { (ctags) */
 name|rlp
 operator|->
 name|link_type
@@ -939,6 +932,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 name|rlp
 operator|=
 name|rln
@@ -1055,7 +1049,7 @@ name|lp
 operator|++
 control|)
 block|{
-name|u_long
+name|u_int32
 name|ul
 init|=
 name|ntohl
@@ -1130,7 +1124,7 @@ name|almp
 operator|++
 control|)
 block|{
-name|u_long
+name|u_int32
 name|ul
 init|=
 name|ntohl
@@ -1312,6 +1306,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 return|return
 literal|0
 return|;
@@ -1322,39 +1317,39 @@ begin_function
 name|void
 name|ospf_print
 parameter_list|(
-name|dat
-parameter_list|,
-name|length
-parameter_list|,
-name|ip
-parameter_list|)
+specifier|register
+specifier|const
 name|u_char
 modifier|*
-name|dat
-decl_stmt|;
+name|bp
+parameter_list|,
+specifier|register
 name|int
 name|length
-decl_stmt|;
-name|struct
-name|ip
+parameter_list|,
+specifier|register
+specifier|const
+name|u_char
 modifier|*
-name|ip
-decl_stmt|;
+name|bp2
+parameter_list|)
 block|{
 specifier|register
+specifier|const
 name|struct
 name|ospfhdr
 modifier|*
 name|op
-init|=
-operator|(
-expr|struct
-name|ospfhdr
-operator|*
-operator|)
-name|dat
 decl_stmt|;
 specifier|register
+specifier|const
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+specifier|register
+specifier|const
 name|caddr_t
 name|end
 init|=
@@ -1364,12 +1359,14 @@ operator|)
 name|snapend
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|lsa
 modifier|*
 name|lsap
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|lsa_hdr
 modifier|*
@@ -1383,23 +1380,43 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|struct
 name|in_addr
 modifier|*
 name|ap
 decl_stmt|;
+specifier|const
 name|struct
 name|lsr
 modifier|*
 name|lsrp
 decl_stmt|;
+name|op
+operator|=
+operator|(
+expr|struct
+name|ospfhdr
+operator|*
+operator|)
+name|bp
+expr_stmt|;
+name|ip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|bp2
+expr_stmt|;
 comment|/* Print the source and destination address	*/
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %s> %s:"
+literal|"%s> %s:"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -2210,6 +2227,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 name|lshp
 operator|++
 expr_stmt|;
@@ -2247,7 +2265,7 @@ name|lsrp
 operator|++
 control|)
 block|{
-name|long
+name|int32
 name|type
 decl_stmt|;
 if|if
@@ -2271,6 +2289,7 @@ argument_list|(
 literal|" {"
 argument_list|)
 expr_stmt|;
+comment|/* } (ctags) */
 if|if
 condition|(
 operator|!
@@ -2291,6 +2310,7 @@ name|printf
 argument_list|(
 literal|" ??LinkStateType %d }"
 argument_list|,
+comment|/* { (ctags) */
 name|type
 argument_list|)
 expr_stmt|;
@@ -2299,6 +2319,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 break|break;
 block|}
 name|LS_PRINT
@@ -2313,6 +2334,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 block|}
 block|}
 break|break;
@@ -2415,6 +2437,7 @@ argument_list|(
 literal|" }"
 argument_list|)
 expr_stmt|;
+comment|/* { (ctags) */
 name|lshp
 operator|++
 expr_stmt|;
@@ -2444,7 +2467,7 @@ condition|(
 operator|(
 name|snapend
 operator|-
-name|dat
+name|bp
 operator|)
 operator|<
 name|length

@@ -1,18 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Lawrence Berkeley Laboratory,  * Berkeley, CA.  The name of the University may not be used to  * endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from Jeff Honig (jch@MITCHELL.CIT.CORNELL.EDU).  */
+comment|/*  * Copyright (c) 1991, 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Lawrence Berkeley Laboratory,  * Berkeley, CA.  The name of the University may not be used to  * endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Initial contribution from Jeff Honig (jch@MITCHELL.CIT.CORNELL.EDU).  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#) $Header: print-egp.c,v 1.14 94/06/20 19:44:38 leres Exp $ (LBL)"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -49,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -254,7 +281,7 @@ block|{
 name|u_short
 name|egpu_poll
 decl_stmt|;
-name|u_long
+name|u_int32
 name|egpu_sourcenet
 decl_stmt|;
 block|}
@@ -377,22 +404,20 @@ specifier|static
 name|void
 name|egpnrprint
 parameter_list|(
-name|egp
-parameter_list|,
-name|length
-parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|egp_packet
 modifier|*
 name|egp
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cp
@@ -408,11 +433,11 @@ name|n
 parameter_list|)
 value|if (cp> ep - n) goto trunc
 specifier|register
-name|u_long
+name|u_int32
 name|addr
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32
 name|net
 decl_stmt|;
 specifier|register
@@ -706,7 +731,7 @@ expr_stmt|;
 name|addr
 operator|=
 operator|(
-name|u_long
+name|u_int32
 operator|)
 operator|*
 name|cp
@@ -730,7 +755,7 @@ expr_stmt|;
 name|addr
 operator||=
 operator|(
-name|u_long
+name|u_int32
 operator|)
 operator|*
 name|cp
@@ -757,7 +782,7 @@ expr_stmt|;
 name|addr
 operator||=
 operator|(
-name|u_long
+name|u_int32
 operator|)
 operator|*
 name|cp
@@ -768,7 +793,7 @@ expr_stmt|;
 name|addr
 operator||=
 operator|(
-name|u_long
+name|u_int32
 operator|)
 operator|*
 name|cp
@@ -812,29 +837,37 @@ begin_function
 name|void
 name|egp_print
 parameter_list|(
-name|egp
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|bp
 parameter_list|,
+specifier|register
+name|int
 name|length
 parameter_list|,
-name|ip
-parameter_list|)
 specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|bp2
+parameter_list|)
+block|{
+specifier|register
+specifier|const
 name|struct
 name|egp_packet
 modifier|*
 name|egp
 decl_stmt|;
 specifier|register
-name|int
-name|length
-decl_stmt|;
-specifier|register
+specifier|const
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-block|{
 specifier|register
 name|int
 name|status
@@ -847,6 +880,24 @@ specifier|register
 name|int
 name|type
 decl_stmt|;
+name|egp
+operator|=
+operator|(
+expr|struct
+name|egp_packet
+operator|*
+operator|)
+name|bp
+expr_stmt|;
+name|ip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|bp2
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1073,7 +1124,9 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"[status %d], status"
+literal|"[status %d]"
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1133,14 +1186,18 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" [status %d], status"
+literal|" [status %d]"
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"[reach code %d], code"
+literal|"[reach code %d]"
+argument_list|,
+name|code
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1215,7 +1272,7 @@ name|EGPS_UNSOL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" unsolicitied"
+literal|" unsolicited"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1302,7 +1359,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" [status]"
+literal|" [status %d]"
 argument_list|,
 name|status
 argument_list|)
@@ -1336,7 +1393,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" [reason]"
+literal|" [reason %d]"
 argument_list|,
 name|ntohs
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988-1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print ntp packets.  *	By Jeffrey Mogul/DECWRL  *	loosely based on print-bootp.c  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print ntp packets.  *	By Jeffrey Mogul/DECWRL  *	loosely based on print-bootp.c  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ntp.c,v 1.7 92/01/04 01:45:16 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-ntp.c,v 1.14 94/06/14 20:18:46 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,13 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -69,13 +69,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -90,11 +96,65 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|MODEMASK
+end_undef
+
+begin_comment
+comment|/* Solaris sucks */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"ntp.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|p_sfix
+parameter_list|(
+specifier|const
+name|struct
+name|s_fixedpt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|p_ntp_time
+parameter_list|(
+specifier|const
+name|struct
+name|l_fixedpt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|p_ntp_delta
+parameter_list|(
+specifier|const
+name|struct
+name|l_fixedpt
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|l_fixedpt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Print ntp requests  */
@@ -104,20 +164,25 @@ begin_function
 name|void
 name|ntp_print
 parameter_list|(
-name|bp
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+name|cp
 parameter_list|,
+name|int
 name|length
 parameter_list|)
+block|{
 specifier|register
+specifier|const
 name|struct
 name|ntpdata
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-block|{
+specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|ep
@@ -145,6 +210,15 @@ parameter_list|,
 name|l
 parameter_list|)
 value|if ((u_char *)&(var)> ep - l) goto trunc
+name|bp
+operator|=
+operator|(
+expr|struct
+name|ntpdata
+operator|*
+operator|)
+name|cp
+expr_stmt|;
 comment|/* Note funny sized packets */
 if|if
 condition|(
@@ -169,10 +243,6 @@ expr_stmt|;
 comment|/* 'ep' points to the end of avaible data. */
 name|ep
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|snapend
 expr_stmt|;
 name|TCHECK
@@ -765,20 +835,18 @@ name|TCHECK
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|p_sfix
-argument_list|(
-name|sfp
-argument_list|)
+parameter_list|(
 specifier|register
-expr|struct
+specifier|const
+name|struct
 name|s_fixedpt
-operator|*
+modifier|*
 name|sfp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -834,7 +902,7 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -847,33 +915,29 @@ begin_comment
 comment|/* floating point rep. of MAXINT */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|p_ntp_time
-argument_list|(
-name|lfp
-argument_list|)
+parameter_list|(
 specifier|register
-expr|struct
+specifier|const
+name|struct
 name|l_fixedpt
-operator|*
+modifier|*
 name|lfp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
-name|long
+name|int32
 name|i
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|u_int32
 name|uf
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|u_int32
 name|f
 decl_stmt|;
 specifier|register
@@ -937,55 +1001,46 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Prints time difference between *lfp and *olfp */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|p_ntp_delta
-argument_list|(
-name|olfp
-argument_list|,
-name|lfp
-argument_list|)
+parameter_list|(
 specifier|register
-expr|struct
+specifier|const
+name|struct
 name|l_fixedpt
-operator|*
+modifier|*
 name|olfp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
 specifier|register
+specifier|const
 name|struct
 name|l_fixedpt
 modifier|*
 name|lfp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
-name|long
+name|int32
 name|i
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|u_int32
 name|uf
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|u_int32
 name|ouf
 decl_stmt|;
 specifier|register
-name|unsigned
-name|long
+name|u_int32
 name|f
 decl_stmt|;
 specifier|register
@@ -1184,7 +1239,7 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

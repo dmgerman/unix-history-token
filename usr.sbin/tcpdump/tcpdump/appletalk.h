@@ -1,6 +1,56 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * AppleTalk protocol formats (courtesy Bill Croft of Stanford/SUMEX).  *  * @(#) $Header: appletalk.h,v 1.6 90/10/03 22:14:26 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * AppleTalk protocol formats (courtesy Bill Croft of Stanford/SUMEX).  *  * @(#) $Header: appletalk.h,v 1.10 94/06/14 20:11:44 leres Exp $ (LBL)  */
+end_comment
+
+begin_struct
+struct|struct
+name|LAP
+block|{
+name|u_char
+name|dst
+decl_stmt|;
+name|u_char
+name|src
+decl_stmt|;
+name|u_char
+name|type
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|lapShortDDP
+value|1
+end_define
+
+begin_comment
+comment|/* short DDP type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lapDDP
+value|2
+end_define
+
+begin_comment
+comment|/* DDP type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lapKLAP
+value|'K'
+end_define
+
+begin_comment
+comment|/* Kinetics KLAP type */
 end_comment
 
 begin_comment
@@ -224,7 +274,7 @@ decl_stmt|;
 name|u_short
 name|transID
 decl_stmt|;
-name|long
+name|int32
 name|userData
 decl_stmt|;
 block|}
@@ -448,8 +498,19 @@ begin_define
 define|#
 directive|define
 name|nbpTupleSize
-value|5;
+value|5
 end_define
+
+begin_define
+define|#
+directive|define
+name|nbpSkt
+value|2
+end_define
+
+begin_comment
+comment|/* NIS */
+end_comment
 
 begin_comment
 comment|/* Routing Table Maint. Protocol */

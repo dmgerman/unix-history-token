@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988-1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1989, 1990, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /a/cvs/386BSD/src/contrib/tcpdump/tcpdump/print-rip.c,v 1.2 1994/02/10 09:17:57 davidg Exp $ (LBL)"
+literal|"@(#) $Header: print-rip.c,v 1.20 94/06/14 20:18:47 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -81,7 +87,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<protocols/routed.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -96,142 +114,18 @@ directive|include
 file|"addrtoname.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|RIPVERSION
-value|1
-end_define
-
-begin_struct
-struct|struct
-name|netinfo
-block|{
-name|struct
-name|osockaddr
-name|rip_dst
-decl_stmt|;
-comment|/* destination net/host */
-name|int
-name|rip_metric
-decl_stmt|;
-comment|/* cost of route */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|rip
-block|{
-name|u_char
-name|rip_cmd
-decl_stmt|;
-comment|/* request/response */
-name|u_char
-name|rip_vers
-decl_stmt|;
-comment|/* protocol version # */
-name|u_char
-name|rip_res1
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* pad to 32-bit boundary */
-union|union
-block|{
-name|struct
-name|netinfo
-name|ru_nets
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* variable length... */
-name|char
-name|ru_tracefile
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* ditto ... */
-block|}
-name|ripun
-union|;
-define|#
-directive|define
-name|rip_nets
-value|ripun.ru_nets
-define|#
-directive|define
-name|rip_tracefile
-value|ripun.ru_tracefile
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Packet types.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RIPCMD_REQUEST
-value|1
-end_define
-
-begin_comment
-comment|/* want info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RIPCMD_RESPONSE
-value|2
-end_define
-
-begin_comment
-comment|/* responding to request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RIPCMD_TRACEON
-value|3
-end_define
-
-begin_comment
-comment|/* turn tracing on */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RIPCMD_TRACEOFF
-value|4
-end_define
-
-begin_comment
-comment|/* turn it off */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|rip_entry_print
 parameter_list|(
-name|ni
-parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|netinfo
 modifier|*
 name|ni
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -382,19 +276,17 @@ begin_function
 name|void
 name|rip_print
 parameter_list|(
-name|dat
-parameter_list|,
-name|length
-parameter_list|)
+specifier|const
 name|u_char
 modifier|*
 name|dat
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
+specifier|const
 name|struct
 name|rip
 modifier|*
@@ -408,6 +300,7 @@ operator|)
 name|dat
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|netinfo
 modifier|*
@@ -417,10 +310,6 @@ specifier|register
 name|int
 name|amt
 init|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|snapend
 operator|-
 name|dat

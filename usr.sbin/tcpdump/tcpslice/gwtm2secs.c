@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: gwtm2secs.c,v 1.1 92/06/02 11:35:19 mccanne Exp $ (LBL)"
+literal|"@(#)$Header: gwtm2secs.c,v 1.2 93/11/18 13:11:30 vern Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
+file|"tcpslice.h"
 end_include
 
 begin_decl_stmt
@@ -96,13 +84,11 @@ begin_function
 name|time_t
 name|gwtm2secs
 parameter_list|(
-name|tm
-parameter_list|)
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i

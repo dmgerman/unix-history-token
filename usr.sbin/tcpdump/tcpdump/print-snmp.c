@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, by John Robert LoVerso.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by John Robert LoVerso.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * This implementaion has been influenced by the CMU SNMP release,  * by Steve Waldbusser.  However, this shares no code with that system.  * Additional ASN.1 insight gained from Marshall T. Rose's _The_Open_Book_.  * Earlier forms of this implemention were derived and/or inspired by an  * awk script originally written by C. Philip Wood of LANL (but later  * heavily modified by John Robert LoVerso).  The copyright notice for  * that work is preserved below, even though it may not rightly apply  * to this file.  *  * This started out as a very simple program, but the incremental decoding  * (into the BE structure) complicated things.  *  #			Los Alamos National Laboratory  #  #	Copyright, 1990.  The Regents of the University of California.  #	This software was produced under a U.S. Government contract  #	(W-7405-ENG-36) by Los Alamos National Laboratory, which is  #	operated by the	University of California for the U.S. Department  #	of Energy.  The U.S. Government is licensed to use, reproduce,  #	and distribute this software.  Permission is granted to the  #	public to copy and use this software without charge, provided  #	that this Notice and any statement of authorship are reproduced  #	on all copies.  Neither the Government nor the University makes  #	any warranty, express or implied, or assumes any liability or  #	responsibility for the use of this software.  #	@(#)snmp.awk.x	1.1 (LANL) 1/15/90  */
+comment|/*  * Copyright (c) 1990, 1991, 1993, 1994  *    John Robert LoVerso.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by John Robert LoVerso.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * This implementation has been influenced by the CMU SNMP release,  * by Steve Waldbusser.  However, this shares no code with that system.  * Additional ASN.1 insight gained from Marshall T. Rose's _The_Open_Book_.  * Earlier forms of this implementation were derived and/or inspired by an  * awk script originally written by C. Philip Wood of LANL (but later  * heavily modified by John Robert LoVerso).  The copyright notice for  * that work is preserved below, even though it may not rightly apply  * to this file.  *  * This started out as a very simple program, but the incremental decoding  * (into the BE structure) complicated things.  *  #			Los Alamos National Laboratory  #  #	Copyright, 1990.  The Regents of the University of California.  #	This software was produced under a U.S. Government contract  #	(W-7405-ENG-36) by Los Alamos National Laboratory, which is  #	operated by the	University of California for the U.S. Department  #	of Energy.  The U.S. Government is licensed to use, reproduce,  #	and distribute this software.  Permission is granted to the  #	public to copy and use this software without charge, provided  #	that this Notice and any statement of authorship are reproduced  #	on all copies.  Neither the Government nor the University makes  #	any warranty, express or implied, or assumes any liability or  #	responsibility for the use of this software.  #	@(#)snmp.awk.x	1.1 (LANL) 1/15/90  */
 end_comment
 
 begin_ifndef
@@ -33,6 +33,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -46,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -456,7 +468,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Include the compiled in SNMP MIB.  "mib.h" is produced by feeding  * RFC-1156 format files into "makemib".  "mib.h" MUST define at least  * a value for `mibroot'.  *  * In particluar, this is gross, as this is including initialized structures,  * and by right shouldn't be an "include" file.  */
+comment|/*  * Include the compiled in SNMP MIB.  "mib.h" is produced by feeding  * RFC-1156 format files into "makemib".  "mib.h" MUST define at least  * a value for `mibroot'.  *  * In particular, this is gross, as this is including initialized structures,  * and by right shouldn't be an "include" file.  */
 end_comment
 
 begin_include
@@ -466,7 +478,7 @@ file|"mib.h"
 end_include
 
 begin_comment
-comment|/*  * This defines a list of OIDs which will be abreviated on output.  * Currently, this includes the prefixes for the Internet MIB, the  * private enterprises tree, and the experimental tree.  */
+comment|/*  * This defines a list of OIDs which will be abbreviated on output.  * Currently, this includes the prefixes for the Internet MIB, the  * private enterprises tree, and the experimental tree.  */
 end_comment
 
 begin_struct
@@ -564,7 +576,7 @@ parameter_list|,
 name|suppressdot
 parameter_list|)
 define|\
-value|{ \ 	if (objp) { \ 		do { \ 			if ((o) == objp->oid) \ 				break; \ 		} while (objp = objp->next); \ 	} \ 	if (objp) { \ 		printf(suppressdot?"%s":".%s", objp->desc); \ 		objp = objp->child; \ 	} else \ 		printf(suppressdot?"%u":".%u", (o)); \ }
+value|{ \ 	if (objp) { \ 		do { \ 			if ((o) == objp->oid) \ 				break; \ 		} while ((objp = objp->next) != NULL); \ 	} \ 	if (objp) { \ 		printf(suppressdot?"%s":".%s", objp->desc); \ 		objp = objp->child; \ 	} else \ 		printf(suppressdot?"%u":".%u", (o)); \ }
 end_define
 
 begin_comment
@@ -575,8 +587,7 @@ begin_struct
 struct|struct
 name|be
 block|{
-name|unsigned
-name|long
+name|u_long
 name|asnlen
 decl_stmt|;
 union|union
@@ -587,20 +598,18 @@ decl_stmt|;
 name|long
 name|integer
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|uns
 decl_stmt|;
-name|unsigned
-name|char
+specifier|const
+name|u_char
 modifier|*
 name|str
 decl_stmt|;
 block|}
 name|data
 union|;
-name|unsigned
-name|char
+name|u_char
 name|form
 decl_stmt|,
 name|class
@@ -792,31 +801,26 @@ comment|/*  * This decodes the next ASN.1 object in the stream pointed to by "p"
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|asn1_parse
 parameter_list|(
-name|p
-parameter_list|,
-name|len
-parameter_list|,
-name|elem
-parameter_list|)
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|struct
 name|be
 modifier|*
 name|elem
-decl_stmt|;
+parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|form
 decl_stmt|,
 name|class
@@ -824,17 +828,9 @@ decl_stmt|,
 name|id
 decl_stmt|;
 name|int
-name|indent
-init|=
-literal|0
-decl_stmt|,
 name|i
 decl_stmt|,
 name|hdr
-decl_stmt|;
-name|char
-modifier|*
-name|classstr
 decl_stmt|;
 name|elem
 operator|->
@@ -1554,8 +1550,7 @@ name|TIMETICKS
 case|:
 block|{
 specifier|register
-name|unsigned
-name|long
+name|u_long
 name|data
 decl_stmt|;
 name|elem
@@ -1849,16 +1844,15 @@ comment|/*  * Display the ASN.1 object represented by the BE object.  * This use
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|asn1_print
 parameter_list|(
-name|elem
-parameter_list|)
 name|struct
 name|be
 modifier|*
 name|elem
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -1975,12 +1969,16 @@ block|{
 if|if
 condition|(
 operator|!
-name|memcmp
+name|bcmp
 argument_list|(
 name|a
 operator|->
 name|oid
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 argument_list|,
 name|strlen
@@ -2175,6 +2173,7 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+specifier|const
 name|u_char
 modifier|*
 name|p
@@ -2230,7 +2229,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printfn
+name|fn_print
 argument_list|(
 name|p
 argument_list|,
@@ -2408,20 +2407,17 @@ comment|/*  * This is a brute force ASN.1 printer: recurses to dump an entire st
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|asn1_decode
 parameter_list|(
-name|p
-parameter_list|,
-name|length
-parameter_list|)
 name|u_char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|be
@@ -2537,42 +2533,32 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * General SNMP header  *	SEQUENCE {  *		version INTEGER {version-1(0)},  *		community OCTET STRING,  *		data ANY 	-- PDUs  *	}  * PDUs for all but Trap: (see rfc1157 from page 15 on)  *	SEQUENCE {  *		request-id INTEGER,  *		error-status INTEGER,  *		error-index INTEGER,  *		varbindlist SEQUENCE OF  *			SEQUENCE {  *				name ObjectName,  *				value ObjectValue  *			}  *	}  * PDU for Trap:  *	SEQUENCE {  *		enterprise OBJECT IDENTIFIER,  *		agent-addr NetworkAddress,  *		generic-trap INTEGER,  *		specific-trap INTEGER,  *		time-stamp TimeTicks,  *		varbindlist SEQUENCE OF  *			SEQUENCE {  *				name ObjectName,  *				value ObjectValue  *			}  *	}  */
+comment|/*  * General SNMP header  *	SEQUENCE {  *		version INTEGER {version-1(0)},  *		community OCTET STRING,  *		data ANY	-- PDUs  *	}  * PDUs for all but Trap: (see rfc1157 from page 15 on)  *	SEQUENCE {  *		request-id INTEGER,  *		error-status INTEGER,  *		error-index INTEGER,  *		varbindlist SEQUENCE OF  *			SEQUENCE {  *				name ObjectName,  *				value ObjectValue  *			}  *	}  * PDU for Trap:  *	SEQUENCE {  *		enterprise OBJECT IDENTIFIER,  *		agent-addr NetworkAddress,  *		generic-trap INTEGER,  *		specific-trap INTEGER,  *		time-stamp TimeTicks,  *		varbindlist SEQUENCE OF  *			SEQUENCE {  *				name ObjectName,  *				value ObjectValue  *			}  *	}  */
 end_comment
 
 begin_comment
 comment|/*  * Decode SNMP varBind  */
 end_comment
 
-begin_decl_stmt
+begin_function
+specifier|static
 name|void
 name|varbind_print
-argument_list|(
-name|pduid
-argument_list|,
-name|np
-argument_list|,
-name|length
-argument_list|,
-name|error
-argument_list|)
+parameter_list|(
 name|u_char
 name|pduid
-decl_stmt|,
+parameter_list|,
+specifier|const
+name|u_char
 modifier|*
 name|np
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|length
-decl_stmt|,
+parameter_list|,
+name|int
 name|error
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|be
@@ -2583,7 +2569,7 @@ name|count
 init|=
 literal|0
 decl_stmt|,
-name|index
+name|ind
 decl_stmt|;
 comment|/* Sequence of varBind */
 if|if
@@ -2665,7 +2651,7 @@ name|raw
 expr_stmt|;
 for|for
 control|(
-name|index
+name|ind
 operator|=
 literal|1
 init|;
@@ -2673,10 +2659,11 @@ name|length
 operator|>
 literal|0
 condition|;
-name|index
+name|ind
 operator|++
 control|)
 block|{
+specifier|const
 name|u_char
 modifier|*
 name|vbend
@@ -2689,7 +2676,7 @@ condition|(
 operator|!
 name|error
 operator|||
-name|index
+name|ind
 operator|==
 name|error
 condition|)
@@ -2824,7 +2811,7 @@ condition|(
 operator|!
 name|error
 operator|||
-name|index
+name|ind
 operator|==
 name|error
 condition|)
@@ -2922,7 +2909,7 @@ if|if
 condition|(
 name|error
 operator|&&
-name|index
+name|ind
 operator|==
 name|error
 operator|&&
@@ -2944,7 +2931,7 @@ condition|(
 operator|!
 name|error
 operator|||
-name|index
+name|ind
 operator|==
 name|error
 condition|)
@@ -2964,37 +2951,28 @@ name|vbend
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Decode SNMP PDUs: GetRequest, GetNextRequest, GetResponse, and SetRequest  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|snmppdu_print
 parameter_list|(
-name|pduid
-parameter_list|,
-name|np
-parameter_list|,
-name|length
-parameter_list|)
 name|u_char
 name|pduid
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
 name|np
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|be
@@ -3364,27 +3342,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Decode SNMP Trap PDU  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|trap_print
 parameter_list|(
-name|np
-parameter_list|,
-name|length
-parameter_list|)
+specifier|const
 name|u_char
 modifier|*
 name|np
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|be
@@ -3781,17 +3757,14 @@ begin_function
 name|void
 name|snmp_print
 parameter_list|(
-name|np
-parameter_list|,
-name|length
-parameter_list|)
+specifier|const
 name|u_char
 modifier|*
 name|np
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|be
@@ -4038,6 +4011,10 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|elem
 operator|.
 name|data
@@ -4059,6 +4036,9 @@ name|printf
 argument_list|(
 literal|"C=%.*s "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|elem
 operator|.
 name|asnlen

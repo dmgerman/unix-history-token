@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: ntp.h,v 1.1 90/08/07 11:08:27 mogul Exp $ */
+comment|/* $Header: ntp.h,v 1.2 93/11/12 21:43:36 mccanne Exp $ */
 end_comment
 
 begin_comment
@@ -30,10 +30,10 @@ begin_struct
 struct|struct
 name|l_fixedpt
 block|{
-name|u_long
+name|u_int32
 name|int_part
 decl_stmt|;
-name|u_long
+name|u_int32
 name|fraction
 decl_stmt|;
 block|}
@@ -91,7 +91,7 @@ name|struct
 name|s_fixedpt
 name|dispersion
 decl_stmt|;
-name|u_long
+name|u_int32
 name|refid
 decl_stmt|;
 name|struct

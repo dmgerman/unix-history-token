@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-null.c,v 1.3 91/10/07 20:19:11 leres Exp $ (LBL)"
+literal|"@(#)$Header: print-null.c,v 1.14 94/06/10 17:01:35 mccanne Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,18 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -51,12 +39,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timeb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -64,12 +46,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -141,7 +117,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -156,6 +132,12 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pcap.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -168,24 +150,20 @@ specifier|static
 name|void
 name|null_print
 parameter_list|(
-name|p
-parameter_list|,
-name|ip
-parameter_list|,
-name|length
-parameter_list|)
+specifier|const
 name|u_char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int
 name|family
@@ -251,30 +229,37 @@ begin_function
 name|void
 name|null_if_print
 parameter_list|(
-name|p
+name|u_char
+modifier|*
+name|user
 parameter_list|,
-name|tvp
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+name|h
 parameter_list|,
-name|length
-parameter_list|,
-name|caplen
-parameter_list|)
+specifier|const
 name|u_char
 modifier|*
 name|p
-decl_stmt|;
-name|struct
-name|timeval
-modifier|*
-name|tvp
-decl_stmt|;
+parameter_list|)
+block|{
 name|int
 name|length
+init|=
+name|h
+operator|->
+name|len
 decl_stmt|;
 name|int
 name|caplen
+init|=
+name|h
+operator|->
+name|caplen
 decl_stmt|;
-block|{
+specifier|const
 name|struct
 name|ip
 modifier|*
@@ -282,24 +267,19 @@ name|ip
 decl_stmt|;
 name|ts_print
 argument_list|(
-name|tvp
+operator|&
+name|h
+operator|->
+name|ts
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Some printers want to get back at the link level addresses, 	 * and/or check that they're not walking off the end of the packet. 	 * Rather than pass them all the way down, we set these globals. 	 */
 name|packetp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 expr_stmt|;
 name|snapend
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 operator|+
 name|caplen
@@ -336,6 +316,11 @@ argument_list|)
 expr_stmt|;
 name|ip_print
 argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
 name|ip
 argument_list|,
 name|length
@@ -348,7 +333,8 @@ condition|)
 name|default_print
 argument_list|(
 operator|(
-name|u_short
+specifier|const
+name|u_char
 operator|*
 operator|)
 name|ip
