@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.1 (Berkeley) %G%"
+literal|"@(#)util.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,19 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|':'
+condition|)
+comment|/* Leading colon is part of file name. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 init|;
