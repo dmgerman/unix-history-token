@@ -3710,14 +3710,17 @@ directive|ifndef
 name|USE_SIMPLE_MACROS
 end_ifndef
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|seqbuf_dump
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* This function must be provided by programs */
