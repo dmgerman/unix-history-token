@@ -298,7 +298,7 @@ name|sprintf
 argument_list|(
 name|seed
 argument_list|,
-literal|"%s%04d"
+literal|"%s%04ld"
 argument_list|,
 name|buf
 argument_list|,
