@@ -326,46 +326,45 @@ name|cdevsw
 name|tdfx_cdev
 init|=
 block|{
+comment|/* open */
 name|tdfx_open
 block|,
-comment|/* open */
+comment|/* close */
 name|tdfx_close
 block|,
-comment|/* close */
+comment|/* read */
 name|noread
 block|,
-comment|/* read */
+comment|/* write */
 name|nowrite
 block|,
-comment|/* write */
+comment|/* ioctl */
 name|tdfx_ioctl
 block|,
-comment|/* ioctl */
+comment|/* poll */
 name|nopoll
 block|,
-comment|/* poll */
+comment|/* mmap */
 name|tdfx_mmap
 block|,
-comment|/* mmap */
+comment|/* strategy */
 name|nostrategy
 block|,
-comment|/* strategy */
+comment|/* name */
 literal|"tdfx"
 block|,
-comment|/* dev name */
+comment|/* maj */
 name|CDEV_MAJOR
 block|,
-comment|/* char major */
+comment|/* dump */
 name|nodump
 block|,
-comment|/* dump */
+comment|/* psize */
 name|nopsize
 block|,
-comment|/* size */
+comment|/* flags */
 literal|0
-block|,
-comment|/* flags (no set flags) */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
