@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -700,6 +700,9 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|==
+operator|(
+name|u_long
+operator|)
 name|INADDR_BROADCAST
 operator|&&
 operator|(
@@ -1192,6 +1195,19 @@ if|if
 condition|(
 name|inp
 operator|->
+name|inp_options
+condition|)
+name|m_free
+argument_list|(
+name|inp
+operator|->
+name|inp_options
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inp
+operator|->
 name|inp_route
 operator|.
 name|ro_rt
@@ -1425,7 +1441,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Pass some notification to all connections of a protocol  * associated with address dst.  Call the  * protocol specific routine to handle each connection.  */
+comment|/*  * Pass some notification to all connections of a protocol  * associated with address dst.  Call the protocol specific  * routine (if any) to handle each connection.  */
 end_comment
 
 begin_macro
@@ -1512,10 +1528,14 @@ operator|!=
 name|dst
 operator|->
 name|s_addr
+operator|||
+name|inp
+operator|->
+name|inp_socket
+operator|==
+literal|0
 condition|)
 block|{
-name|next
-label|:
 name|inp
 operator|=
 name|inp
@@ -1524,17 +1544,6 @@ name|inp_next
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|inp
-operator|->
-name|inp_socket
-operator|==
-literal|0
-condition|)
-goto|goto
-name|next
-goto|;
 if|if
 condition|(
 name|errno
@@ -1557,6 +1566,10 @@ name|inp
 operator|->
 name|inp_next
 expr_stmt|;
+if|if
+condition|(
+name|notify
+condition|)
 call|(
 modifier|*
 name|notify
@@ -1623,7 +1636,6 @@ literal|0
 expr_stmt|;
 comment|/* 		 * A new route can be allocated the next time 		 * output is attempted. 		 */
 block|}
-comment|/* SHOULD NOTIFY HIGHER-LEVEL PROTOCOLS */
 block|}
 end_block
 
