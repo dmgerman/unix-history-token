@@ -102,26 +102,6 @@ value|(curproc->p_intr_nesting_level>= 2)
 end_define
 
 begin_comment
-comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|need_resched
-parameter_list|()
-value|do { want_resched = 1; aston(); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|resched_wanted
-parameter_list|()
-value|want_resched
-end_define
-
-begin_comment
 comment|/*  * Give a profiling tick to the current process when the user profiling  * buffer pages are invalid.  On the hp300, request an ast to send us  * through trap, marking the proc as needing a profiling tick.  */
 end_comment
 
@@ -134,50 +114,6 @@ name|p
 parameter_list|)
 value|do {						\ 	mtx_lock_spin(&sched_lock);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston();							\ 	mtx_unlock_spin(&sched_lock);				\ } while (0)
 end_define
-
-begin_comment
-comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|signotify
-parameter_list|(
-name|p
-parameter_list|)
-value|aston()
-end_define
-
-begin_define
-define|#
-directive|define
-name|aston
-parameter_list|()
-value|PCPU_SET(astpending, 1)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|u_int32_t
-name|want_resched
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resched() was called */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */

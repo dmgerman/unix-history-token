@@ -235,12 +235,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|u_int32_t
-name|want_resched
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -363,7 +357,8 @@ name|pri_user
 expr_stmt|;
 if|if
 condition|(
-name|want_resched
+name|resched_wanted
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, a clock interrupt could 		 * change our priority without changing run queues 		 * (the running process is not kept on a run queue). 		 * If this happened after we setrunqueue ourselves but 		 * before we switch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
