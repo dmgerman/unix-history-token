@@ -56,7 +56,7 @@ block|{
 block|{
 literal|"1,_ACTFILE\n"
 block|,
-literal|"	popr	$0x2\n\ 	movl	12(r1),r0\n"
+literal|"	movl	(sp)+,r1\n\ 	movl	12(r1),r0\n"
 block|}
 block|,
 block|{
@@ -74,7 +74,7 @@ block|,
 block|{
 literal|"3,_blkcpy\n"
 block|,
-literal|"	popr	$0xb\n\ 	pushl	r0\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,(sp)\n\ 	movc3	r0,(r1),(r3)\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	jgtr	1b\n\ 	popr	$0x1\n\ 	movc3	r0,(r1),(r3)\n"
+literal|"	popr	$0xb\n\ 	pushl	r0\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,(sp)\n\ 	movc3	r0,(r1),(r3)\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	(sp),r0\n\ 	jgtr	1b\n\ 	movl	(sp)+,r0\n\ 	movc3	r0,(r1),(r3)\n"
 block|}
 block|,
 block|{
@@ -86,7 +86,7 @@ block|,
 block|{
 literal|"3,_LOCC\n"
 block|,
-literal|"	popr	$0x30\n\ 	popr	$0x2\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r5,r0\n\ 	jleq	1f\n\ 	subl2	r0,r5\n\ 	locc	r4,r0,(r1)\n\ 	jeql	1b\n\ 	addl2	r5,r0\n\ 	jbr	2f\n\ 1:\n\ 	locc	r4,r5,(r1)\n\ 2:\n"
+literal|"	popr	$0x30\n\ 	movl	(sp)+,r1\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r5,r0\n\ 	jleq	1f\n\ 	subl2	r0,r5\n\ 	locc	r4,r0,(r1)\n\ 	jeql	1b\n\ 	addl2	r5,r0\n\ 	jbr	2f\n\ 1:\n\ 	locc	r4,r5,(r1)\n\ 2:\n"
 block|}
 block|,
 block|{
@@ -104,55 +104,55 @@ block|,
 block|{
 literal|"2,_FCALL\n"
 block|,
-literal|"	movl	4(sp),r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,__disply+8,*(sp)+\n\ 	movl	(sp)+,r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,8(r0),__disply+8\n"
+literal|"	movl	4(sp),r0\n\ 	movc3	4(r0),__disply+8,*(sp)+\n\ 	movl	(sp)+,r0\n\ 	movc3	4(r0),8(r0),__disply+8\n"
 block|}
 block|,
 block|{
 literal|"2,_FRTN\n"
 block|,
-literal|"	movl	(sp)+,r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,*(sp)+,__disply+8\n"
+literal|"	movl	(sp)+,r0\n\ 	movc3	4(r0),*(sp)+,__disply+8\n"
 block|}
 block|,
 block|{
 literal|"3,_FSAV\n"
 block|,
-literal|"	movl	8(sp),r0\n\ 	movl	(sp)+,(r0)\n\ 	movl	(sp)+,4(r0)\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,__disply+8,8(r0)\n\ 	popr	$0x1\n"
+literal|"	movl	8(sp),r0\n\ 	movl	(sp)+,(r0)\n\ 	ashl	$3,(sp)+,4(r0)\n\ 	movc3	4(r0),__disply+8,8(r0)\n\ 	movl	(sp)+,r0\n"
 block|}
 block|,
 block|{
 literal|"3,_RELEQ\n"
 block|,
-literal|"	popr	$0x10\n\ 	popr	$0xa\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	3f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 2:\n\ 	clrl	r0\n\ 	jbr	4f\n\ 3:\n\ 	cmpc3	r4,(r1),(r3)\n\ 	jneq	2b\n\ 	incl	r0\n\ 4:\n"
+literal|"	popr	$0xb\n\ 	movl	r0,r4\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	3f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 2:\n\ 	clrl	r0\n\ 	jbr	4f\n\ 3:\n\ 	cmpc3	r4,(r1),(r3)\n\ 	jneq	2b\n\ 	incl	r0\n\ 4:\n"
 block|}
 block|,
 block|{
 literal|"3,_RELNE\n"
 block|,
-literal|"	popr	$0x10\n\ 	popr	$0xa\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	3f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 2:\n\ 	movl	$1,r0\n\ 	jbr	4f\n\ 3:\n\ 	cmpc3	r4,(r1),(r3)\n\ 	jneq	2b\n\ 4:\n"
+literal|"	popr	$0xb\n\ 	movl	r0,r4\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jleq	3f\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jeql	1b\n\ 2:\n\ 	movl	$1,r0\n\ 	jbr	4f\n\ 3:\n\ 	cmpc3	r4,(r1),(r3)\n\ 	jneq	2b\n\ 4:\n"
 block|}
 block|,
 block|{
 literal|"3,_RELSLT\n"
 block|,
-literal|"	popr	$0x10\n\ 	popr	$0xa\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jlss	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
+literal|"	popr	$0xb\n\ 	movl	r0,r4\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jlss	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
 literal|"3,_RELSLE\n"
 block|,
-literal|"	popr	$0x10\n\ 	popr	$0xa\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jleq	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
+literal|"	popr	$0xb\n\ 	movl	r0,r4\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jleq	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
 literal|"3,_RELSGT\n"
 block|,
-literal|"	popr	$0x10\n\ 	popr	$0xa\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jgtr	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
+literal|"	popr	$0xb\n\ 	movl	r0,r4\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jgtr	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
 literal|"3,_RELSGE\n"
 block|,
-literal|"	popr	$0x10\n\ 	popr	$0xa\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jgeq	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
+literal|"	popr	$0xb\n\ 	movl	r0,r4\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,r4\n\ 	cmpc3	r0,(r1),(r3)\n\ 	jneq	3f\n\ 2:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r4,r0\n\ 	jgtr	1b\n\ 	cmpc3	r4,(r1),(r3)\n\ 3:\n\ 	jgeq	4f\n\ 	clrl	r0\n\ 	jbr	5f\n\ 4:\n\ 	movl	$1,r0\n\ 5:\n"
 block|}
 block|,
 block|{
