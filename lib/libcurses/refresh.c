@@ -4036,13 +4036,13 @@ for|for
 control|(
 name|wp
 operator|=
-name|win
+name|curscr
 operator|->
 name|nextp
 init|;
 name|wp
 operator|!=
-name|win
+name|curscr
 condition|;
 name|wp
 operator|=
@@ -4052,7 +4052,9 @@ name|nextp
 control|)
 name|__set_subwin
 argument_list|(
-name|win
+name|wp
+operator|->
+name|orig
 argument_list|,
 name|wp
 argument_list|)
