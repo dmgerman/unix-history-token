@@ -1467,7 +1467,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"/mnt2/sbin/ldconfig -s /mnt2/usr/lib"
+literal|"/mnt2/rescue/ldconfig -s /mnt2/lib /mnt2/usr/lib"
 argument_list|)
 condition|)
 block|{
@@ -1482,7 +1482,7 @@ block|}
 comment|/* Yet more iggly hardcoded pathnames. */
 name|Mkdir
 argument_list|(
-literal|"/usr/libexec"
+literal|"/libexec"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1490,12 +1490,12 @@ condition|(
 operator|!
 name|file_readable
 argument_list|(
-literal|"/usr/libexec/ld.so"
+literal|"/libexec/ld.so"
 argument_list|)
 operator|&&
 name|file_readable
 argument_list|(
-literal|"/mnt2/usr/libexec/ld.so"
+literal|"/mnt2/libexec/ld.so"
 argument_list|)
 condition|)
 block|{
@@ -1503,9 +1503,9 @@ if|if
 condition|(
 name|symlink
 argument_list|(
-literal|"/mnt2/usr/libexec/ld.so"
+literal|"/mnt2/libexec/ld.so"
 argument_list|,
-literal|"/usr/libexec/ld.so"
+literal|"/libexec/ld.so"
 argument_list|)
 condition|)
 name|msgDebug
@@ -1519,7 +1519,7 @@ condition|(
 operator|!
 name|file_readable
 argument_list|(
-literal|"/usr/libexec/ld-elf.so.1"
+literal|"/libexec/ld-elf.so.1"
 argument_list|)
 condition|)
 block|{
@@ -1527,9 +1527,9 @@ if|if
 condition|(
 name|symlink
 argument_list|(
-literal|"/mnt2/usr/libexec/ld-elf.so.1"
+literal|"/mnt2/libexec/ld-elf.so.1"
 argument_list|,
-literal|"/usr/libexec/ld-elf.so.1"
+literal|"/libexec/ld-elf.so.1"
 argument_list|)
 condition|)
 block|{
