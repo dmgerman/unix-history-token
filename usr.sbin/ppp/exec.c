@@ -428,10 +428,8 @@ block|{
 specifier|static
 name|int
 name|child_status
-decl_stmt|,
-name|child_pid
 decl_stmt|;
-comment|/* These variables are abused */
+comment|/* This variable is abused ! */
 name|int
 name|stat
 decl_stmt|,
