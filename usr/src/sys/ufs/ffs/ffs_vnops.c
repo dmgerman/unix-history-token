@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_vnops.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_vnops.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -458,28 +458,202 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|fifo_lookup
+argument_list|()
+decl_stmt|,
+name|fifo_open
+argument_list|()
+decl_stmt|,
+name|ufsfifo_read
+argument_list|()
+decl_stmt|,
+name|ufsfifo_write
+argument_list|()
+decl_stmt|,
+name|fifo_bmap
+argument_list|()
+decl_stmt|,
+name|fifo_ioctl
+argument_list|()
+decl_stmt|,
+name|fifo_select
+argument_list|()
+decl_stmt|,
+name|ufsfifo_close
+argument_list|()
+decl_stmt|,
+name|fifo_print
+argument_list|()
+decl_stmt|,
+name|fifo_badop
+argument_list|()
+decl_stmt|,
+name|fifo_nullop
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|fifo_inodeops
+init|=
+block|{
+name|fifo_lookup
+block|,
+comment|/* lookup */
+name|fifo_badop
+block|,
+comment|/* create */
+name|fifo_badop
+block|,
+comment|/* mknod */
+name|fifo_open
+block|,
+comment|/* open */
+name|ufsfifo_close
+block|,
+comment|/* close */
+name|ufs_access
+block|,
+comment|/* access */
+name|ufs_getattr
+block|,
+comment|/* getattr */
+name|ufs_setattr
+block|,
+comment|/* setattr */
+name|ufsfifo_read
+block|,
+comment|/* read */
+name|ufsfifo_write
+block|,
+comment|/* write */
+name|fifo_ioctl
+block|,
+comment|/* ioctl */
+name|fifo_select
+block|,
+comment|/* select */
+name|fifo_badop
+block|,
+comment|/* mmap */
+name|fifo_nullop
+block|,
+comment|/* fsync */
+name|fifo_badop
+block|,
+comment|/* seek */
+name|fifo_badop
+block|,
+comment|/* remove */
+name|fifo_badop
+block|,
+comment|/* link */
+name|fifo_badop
+block|,
+comment|/* rename */
+name|fifo_badop
+block|,
+comment|/* mkdir */
+name|fifo_badop
+block|,
+comment|/* rmdir */
+name|fifo_badop
+block|,
+comment|/* symlink */
+name|fifo_badop
+block|,
+comment|/* readdir */
+name|fifo_badop
+block|,
+comment|/* readlink */
+name|fifo_badop
+block|,
+comment|/* abortop */
+name|ufs_inactive
+block|,
+comment|/* inactive */
+name|ufs_reclaim
+block|,
+comment|/* reclaim */
+name|ufs_lock
+block|,
+comment|/* lock */
+name|ufs_unlock
+block|,
+comment|/* unlock */
+name|fifo_bmap
+block|,
+comment|/* bmap */
+name|fifo_badop
+block|,
+comment|/* strategy */
+name|ufs_print
+block|,
+comment|/* print */
+name|ufs_islocked
+block|,
+comment|/* islocked */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FIFO */
+end_comment
+
 begin_decl_stmt
 name|enum
 name|vtype
 name|iftovt_tab
 index|[
-literal|8
+literal|16
 index|]
 init|=
 block|{
 name|VNON
 block|,
+name|VFIFO
+block|,
 name|VCHR
+block|,
+name|VNON
 block|,
 name|VDIR
 block|,
+name|VNON
+block|,
 name|VBLK
+block|,
+name|VNON
 block|,
 name|VREG
 block|,
+name|VNON
+block|,
 name|VLNK
 block|,
+name|VNON
+block|,
 name|VSOCK
+block|,
+name|VNON
+block|,
+name|VNON
 block|,
 name|VBAD
 block|, }
@@ -490,7 +664,7 @@ begin_decl_stmt
 name|int
 name|vttoif_tab
 index|[
-literal|8
+literal|9
 index|]
 init|=
 block|{
@@ -507,6 +681,8 @@ block|,
 name|IFLNK
 block|,
 name|IFSOCK
+block|,
+name|IFIFO
 block|,
 name|IFMT
 block|, }
@@ -684,18 +860,23 @@ operator|(
 name|error
 operator|)
 return|;
-name|vp
-operator|=
-name|ITOV
-argument_list|(
 name|ip
-argument_list|)
+operator|->
+name|i_flag
+operator||=
+name|IACC
+operator||
+name|IUPD
+operator||
+name|ICHG
 expr_stmt|;
 if|if
 condition|(
 name|vap
 operator|->
 name|va_rdev
+operator|!=
+name|VNOVAL
 condition|)
 block|{
 comment|/* 		 * Want to be able to use this to make badblock 		 * inodes, so don't truncate the dev number. 		 */
@@ -707,21 +888,18 @@ name|vap
 operator|->
 name|va_rdev
 expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IACC
-operator||
-name|IUPD
-operator||
-name|ICHG
-expr_stmt|;
 block|}
 comment|/* 	 * Remove inode so that it will be reloaded by iget and 	 * checked to see if it is an alias of an existing entry 	 * in the inode cache. 	 */
-name|iput
+name|vp
+operator|=
+name|ITOV
 argument_list|(
 name|ip
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|vp
@@ -3327,6 +3505,8 @@ argument|vp
 argument_list|,
 argument|which
 argument_list|,
+argument|fflags
+argument_list|,
 argument|cred
 argument_list|)
 end_macro
@@ -3342,6 +3522,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|which
+decl_stmt|,
+name|fflags
 decl_stmt|;
 end_decl_stmt
 
@@ -7031,6 +7213,268 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_comment
+comment|/*  * Read wrapper for fifo's  */
+end_comment
+
+begin_macro
+name|ufsfifo_read
+argument_list|(
+argument|vp
+argument_list|,
+argument|uio
+argument_list|,
+argument|ioflag
+argument_list|,
+argument|cred
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ioflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* 	 * Set access flag. 	 */
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|i_flag
+operator||=
+name|IACC
+expr_stmt|;
+return|return
+operator|(
+name|fifo_read
+argument_list|(
+name|vp
+argument_list|,
+name|uio
+argument_list|,
+name|ioflag
+argument_list|,
+name|cred
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Write wrapper for fifo's.  */
+end_comment
+
+begin_macro
+name|ufsfifo_write
+argument_list|(
+argument|vp
+argument_list|,
+argument|uio
+argument_list|,
+argument|ioflag
+argument_list|,
+argument|cred
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ioflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* 	 * Set update and change flags. 	 */
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|i_flag
+operator||=
+name|IUPD
+operator||
+name|ICHG
+expr_stmt|;
+return|return
+operator|(
+name|fifo_write
+argument_list|(
+name|vp
+argument_list|,
+name|uio
+argument_list|,
+name|ioflag
+argument_list|,
+name|cred
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Close wrapper for fifo's.  *  * Update the times on the inode then do device close.  */
+end_comment
+
+begin_macro
+name|ufsfifo_close
+argument_list|(
+argument|vp
+argument_list|,
+argument|fflag
+argument_list|,
+argument|cred
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|>
+literal|1
+operator|&&
+operator|!
+operator|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|ILOCKED
+operator|)
+condition|)
+name|ITIMES
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|fifo_close
+argument_list|(
+name|vp
+argument_list|,
+name|fflag
+argument_list|,
+name|cred
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FIFO */
+end_comment
 
 begin_comment
 comment|/*  * Make a new file.  */
