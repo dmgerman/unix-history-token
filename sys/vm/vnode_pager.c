@@ -2632,6 +2632,11 @@ argument_list|)
 return|;
 block|}
 comment|/* 	 * If we have a completely valid page available to us, we can 	 * clean up and return.  Otherwise we have to re-read the 	 * media. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2644,11 +2649,6 @@ operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2699,6 +2699,11 @@ operator|->
 name|valid
 operator|=
 literal|0
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 comment|/* 	 * here on direct device I/O 	 */
 name|firstaddr
