@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	4.4	%G%	*/
+comment|/*	srt0.c	4.5	%G%	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../h/mtpr.h"
+end_include
 
 begin_comment
 comment|/*  * Startup code for standalone system  * Non-relocating version -- for programs which are loaded by boot  */
@@ -17,21 +23,14 @@ name|_main
 operator|.
 name|globl
 name|__rtt
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
+operator|.
+name|globl
+name|_configure
 operator|.
 name|set
-name|PHYSUBA
+name|reloc
 operator|,
-literal|0x20006000
-operator|#
-name|uba
-literal|0
-endif|#
-directive|endif
+name|RELOC
 operator|.
 name|set
 name|HIGH
@@ -57,68 +56,16 @@ name|$_Scbbase
 operator|,
 name|$SCBB
 name|movl
-name|$RELOC
+name|$reloc
 operator|-
 literal|0x2400
 operator|,
 name|sp
-name|mtpr
-name|$RELOC
-operator|-
-literal|0x2000
-operator|,
-name|$ISP
-comment|/* space for interrupts 					/* (in case we are not using that 					/* stack already) 					*/
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-name|movl
-name|$1
-operator|,
-name|PHYSUBA
-operator|+
-literal|4
-operator|#
-name|init
-name|ubic
+name|start
 case|:
 end_case
 
 begin_decl_stmt
-name|movl
-modifier|*
-name|$PHYSUBA
-decl_stmt|,
-name|r0
-decl|# while
-argument_list|(
-operator|(
-name|up
-operator|->
-name|uba_cnfgr
-operator|&
-name|UBIC
-operator|)
-operator|==
-literal|0
-argument_list|)
-name|bitl
-name|$0x10000
-decl_stmt|,
-name|r0
-decl|# 	continue
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|jeql
-name|ubic
-endif|#
-directive|endif
-name|start
-range|:
 name|movab
 name|_edata
 decl_stmt|,
@@ -136,6 +83,10 @@ decl_stmt|,
 name|sp
 name|jlss
 name|clr
+name|calls
+name|$0
+decl_stmt|,
+name|_configure
 name|calls
 name|$0
 decl_stmt|,
