@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.17	81/04/02	*/
+comment|/*	kern_clock.c	4.18	81/04/03	*/
 end_comment
 
 begin_include
@@ -1457,7 +1457,7 @@ name|p3
 condition|)
 name|panic
 argument_list|(
-literal|"timeout"
+literal|"timeout table overflow"
 argument_list|)
 expr_stmt|;
 name|p2
