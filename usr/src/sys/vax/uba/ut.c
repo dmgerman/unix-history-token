@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.28	83/02/20	*/
+comment|/*	ut.c	4.29	83/03/06	*/
 end_comment
 
 begin_include
@@ -3772,17 +3772,6 @@ block|{
 case|case
 name|MTWEOF
 case|:
-name|callcount
-operator|=
-name|mtop
-operator|->
-name|mt_count
-expr_stmt|;
-name|fcount
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 case|case
 name|MTFSF
 case|:
@@ -3797,13 +3786,13 @@ name|MTBSR
 case|:
 name|callcount
 operator|=
-literal|1
-expr_stmt|;
-name|fcount
-operator|=
 name|mtop
 operator|->
 name|mt_count
+expr_stmt|;
+name|fcount
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3868,32 +3857,6 @@ argument_list|,
 name|fcount
 argument_list|)
 expr_stmt|;
-comment|/* note this depends on the mtop values */
-if|if
-condition|(
-operator|(
-name|mtop
-operator|->
-name|mt_op
-operator|>=
-name|MTFSF
-operator|&&
-name|mtop
-operator|->
-name|mt_op
-operator|<=
-name|MTBSR
-operator|)
-operator|&&
-name|bp
-operator|->
-name|b_resid
-condition|)
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
 if|if
 condition|(
 operator|(
