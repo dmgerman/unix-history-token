@@ -2017,6 +2017,7 @@ name|ic_flags
 operator||=
 name|IEEE80211_F_HASIBSS
 expr_stmt|;
+comment|/* 		 * version 0.8.3 and newer are the only ones that are known 		 * to currently work.  Earlier versions can be made to work, 		 * at least according to the Linux driver. 		 */
 if|if
 condition|(
 name|sc
