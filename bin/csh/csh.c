@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: csh.c,v 1.8 1997/02/22 14:01:41 peter Exp $"
+literal|"$Id: csh.c,v 1.9 1997/08/07 21:42:03 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3110,7 +3110,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Setup the new values of the state stuff saved above */
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
@@ -3287,7 +3287,7 @@ name|fbuf
 argument_list|)
 expr_stmt|;
 comment|/* Reset input arena */
-name|memcpy
+name|memmove
 argument_list|(
 operator|(
 name|char
