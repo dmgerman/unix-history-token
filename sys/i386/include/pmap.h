@@ -1082,10 +1082,6 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-name|vm_object_t
-name|pm_pteobj
-decl_stmt|;
-comment|/* Container for pte's */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
