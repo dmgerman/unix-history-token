@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -58,12 +59,10 @@ directive|include
 file|"fsck.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|pass3
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -234,7 +233,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

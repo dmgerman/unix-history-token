@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -55,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -64,12 +71,10 @@ directive|include
 file|"fsck.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|pass5
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|c
@@ -85,6 +90,8 @@ decl_stmt|,
 name|mapsize
 decl_stmt|,
 name|savednrpos
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
@@ -2181,7 +2188,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

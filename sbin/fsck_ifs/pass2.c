@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -61,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -93,12 +100,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|pass2
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -927,24 +932,19 @@ name|propagate
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|pass2check
-argument_list|(
-argument|idesc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|idesc
+parameter_list|)
 name|struct
 name|inodesc
 modifier|*
 name|idesc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2448,33 +2448,31 @@ name|ALTERED
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routine to sort disk blocks.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|blksort
-argument_list|(
-argument|inpp1
-argument_list|,
-argument|inpp2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inpp1
+parameter_list|,
+name|inpp2
+parameter_list|)
 name|struct
 name|inoinfo
 modifier|*
 modifier|*
 name|inpp1
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|inpp2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -104,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -126,25 +134,73 @@ file|"fsck.h"
 end_include
 
 begin_decl_stmt
-name|void
-name|catch
-argument_list|()
-decl_stmt|,
-name|catchquit
-argument_list|()
-decl_stmt|,
-name|voidquit
-argument_list|()
+specifier|static
+name|int
+name|argtoi
+name|__P
+argument_list|(
+operator|(
+name|int
+name|flag
+operator|,
+name|char
+operator|*
+name|req
+operator|,
+name|char
+operator|*
+name|str
+operator|,
+name|int
+name|base
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|returntosingle
+name|docheck
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+name|fsp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|checkfilesys
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|filesys
+operator|,
+name|char
+operator|*
+name|mntpt
+operator|,
+name|long
+name|auxdata
+operator|,
+name|int
+name|child
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -171,21 +227,9 @@ init|=
 literal|0
 decl_stmt|;
 specifier|extern
-name|int
-name|docheck
-argument_list|()
-decl_stmt|,
-name|checkfilesys
-argument_list|()
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
 name|optarg
-decl_stmt|,
-modifier|*
-name|blockcheck
-argument_list|()
 decl_stmt|;
 specifier|extern
 name|int
@@ -482,34 +526,29 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|argtoi
-argument_list|(
-argument|flag
-argument_list|,
-argument|req
-argument_list|,
-argument|str
-argument_list|,
-argument|base
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|flag
+parameter_list|,
+name|req
+parameter_list|,
+name|str
+parameter_list|,
+name|base
+parameter_list|)
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|req
 decl_stmt|,
-modifier|*
+decl|*
 name|str
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -571,20 +610,18 @@ begin_comment
 comment|/*  * Determine whether a filesystem should be checked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|docheck
-argument_list|(
+parameter_list|(
 name|fsp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fsp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -634,7 +671,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check the specified filesystem.  */
@@ -644,32 +681,36 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|checkfilesys
-argument_list|(
-argument|filesys
-argument_list|,
-argument|mntpt
-argument_list|,
-argument|auxdata
-argument_list|,
-argument|child
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|filesys
+parameter_list|,
+name|mntpt
+parameter_list|,
+name|auxdata
+parameter_list|,
+name|child
+parameter_list|)
 name|char
 modifier|*
 name|filesys
 decl_stmt|,
-modifier|*
+decl|*
 name|mntpt
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|long
 name|auxdata
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|child
 decl_stmt|;
 end_decl_stmt
 
@@ -977,7 +1018,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%ld frags, %ld blocks, %d.%d%% fragmentation)\n"
+literal|"(%ld frags, %ld blocks, %ld.%ld%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,

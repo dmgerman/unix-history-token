@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -77,12 +78,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|void
 name|pass4
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|ino_t
@@ -336,22 +335,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|pass4check
-argument_list|(
+parameter_list|(
 name|idesc
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inodesc
-operator|*
+modifier|*
 name|idesc
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -493,7 +490,7 @@ name|res
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
