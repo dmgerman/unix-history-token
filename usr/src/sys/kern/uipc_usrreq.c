@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.7 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3549,6 +3549,13 @@ name|closef
 argument_list|(
 operator|*
 name|fpp
+argument_list|,
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
