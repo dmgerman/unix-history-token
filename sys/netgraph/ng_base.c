@@ -8185,6 +8185,11 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|NG_FREE_ITEM
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 operator|(
