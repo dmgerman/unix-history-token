@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.20 1996/06/18 01:22:12 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.21 1996/09/06 23:07:09 phk Exp $  */
 end_comment
 
 begin_include
@@ -2894,14 +2894,6 @@ name|dma_num
 argument_list|)
 expr_stmt|;
 comment|/* --- disable interrupts on the controller (sub_24) --- */
-name|scu
-operator|->
-name|sbuf
-operator|.
-name|base
-operator|=
-name|NULL
-expr_stmt|;
 name|scu
 operator|->
 name|sbuf
