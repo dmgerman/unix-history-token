@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_UFS_UFS_INODE_H_
+name|_SYS_GNU_EXT2FS_INODE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_UFS_UFS_INODE_H_
+name|_SYS_GNU_EXT2FS_INODE_H_
 end_define
 
 begin_include
@@ -27,22 +27,34 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/dinode.h>
-end_include
+begin_define
+define|#
+directive|define
+name|ROOTINO
+value|((ino_t)2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDADDR
+value|12
+end_define
 
 begin_comment
-comment|/*  * The size of a logical block number.  */
+comment|/* Direct addresses in inode. */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|long
-name|ufs_lbn_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|NIADDR
+value|3
+end_define
+
+begin_comment
+comment|/* Indirect addresses in inode. */
+end_comment
 
 begin_comment
 comment|/*  * This must agree with the definition in<ufs/ufs/dir.h>.  */
@@ -56,7 +68,7 @@ value|int32_t
 end_define
 
 begin_comment
-comment|/*  * The inode is used to describe each active (or recently active) file in the  * UFS filesystem. It is composed of two types of information. The first part  * is the information that is needed only while the file is active (such as  * the identity of the file and linkage to speed its lookup). The second part  * is the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
+comment|/*  * The inode is used to describe each active (or recently active) file in the  * EXT2FS filesystem. It is composed of two types of information. The first  * part is the information that is needed only while the file is active (such  * as the identity of the file and linkage to speed its lookup). The second  * part is the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
 end_comment
 
 begin_struct
@@ -70,13 +82,6 @@ argument_list|)
 name|i_hash
 expr_stmt|;
 comment|/* Hash chain. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|inode
-argument_list|)
-name|i_nextsnap
-expr_stmt|;
-comment|/* snapshot file list */
 name|struct
 name|vnode
 modifier|*
@@ -101,45 +106,12 @@ name|ino_t
 name|i_number
 decl_stmt|;
 comment|/* The identity of the inode. */
-name|int
-name|i_effnlink
-decl_stmt|;
-comment|/* i_nlink when I/O completes */
-union|union
-block|{
-comment|/* Associated filesystem. */
-name|struct
-name|fs
-modifier|*
-name|fs
-decl_stmt|;
-comment|/* FFS */
 name|struct
 name|ext2_sb_info
 modifier|*
-name|e2fs
+name|i_e2fs
 decl_stmt|;
 comment|/* EXT2FS */
-block|}
-name|inode_u
-union|;
-define|#
-directive|define
-name|i_fs
-value|inode_u.fs
-define|#
-directive|define
-name|i_e2fs
-value|inode_u.e2fs
-name|struct
-name|dquot
-modifier|*
-name|i_dquot
-index|[
-name|MAXQUOTAS
-index|]
-decl_stmt|;
-comment|/* Dquot structures. */
 name|u_quad_t
 name|i_modrev
 decl_stmt|;
@@ -176,153 +148,292 @@ name|i_reclen
 decl_stmt|;
 comment|/* Size of found directory entry. */
 name|u_int32_t
-name|i_spare
+name|i_block_group
+decl_stmt|;
+name|u_int32_t
+name|i_next_alloc_block
+decl_stmt|;
+name|u_int32_t
+name|i_next_alloc_goal
+decl_stmt|;
+name|u_int32_t
+name|i_prealloc_block
+decl_stmt|;
+name|u_int32_t
+name|i_prealloc_count
+decl_stmt|;
+comment|/* Fields from struct dinode in UFS. */
+name|u_int16_t
+name|i_mode
+decl_stmt|;
+comment|/* IFMT, permissions; see below. */
+name|int16_t
+name|i_nlink
+decl_stmt|;
+comment|/* File link count. */
+name|u_int64_t
+name|i_size
+decl_stmt|;
+comment|/* File byte count. */
+name|int32_t
+name|i_atime
+decl_stmt|;
+comment|/* Last access time. */
+name|int32_t
+name|i_atimensec
+decl_stmt|;
+comment|/* Last access time. */
+name|int32_t
+name|i_mtime
+decl_stmt|;
+comment|/* Last modified time. */
+name|int32_t
+name|i_mtimensec
+decl_stmt|;
+comment|/* Last modified time. */
+name|int32_t
+name|i_ctime
+decl_stmt|;
+comment|/* Last inode change time. */
+name|int32_t
+name|i_ctimensec
+decl_stmt|;
+comment|/* Last inode change time. */
+name|daddr_t
+name|i_db
 index|[
-literal|3
+name|NDADDR
 index|]
 decl_stmt|;
-comment|/* XXX actually non-spare (for ext2fs). */
-name|struct
-name|dirhash
-modifier|*
-name|i_dirhash
+comment|/* Direct disk blocks. */
+name|daddr_t
+name|i_ib
+index|[
+name|NIADDR
+index|]
 decl_stmt|;
-comment|/* Hashing for large directories */
-comment|/* 	 * The on-disk dinode itself. 	 */
-name|struct
-name|dinode
-name|i_din
+comment|/* Indirect disk blocks. */
+name|u_int32_t
+name|i_flags
 decl_stmt|;
-comment|/* 128 bytes of the on-disk dinode. */
+comment|/* Status flags (chflags). */
+name|int32_t
+name|i_blocks
+decl_stmt|;
+comment|/* Blocks actually held. */
+name|int32_t
+name|i_gen
+decl_stmt|;
+comment|/* Generation number. */
+name|u_int32_t
+name|i_uid
+decl_stmt|;
+comment|/* File owner. */
+name|u_int32_t
+name|i_gid
+decl_stmt|;
+comment|/* File group. */
 block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|i_atime
-value|i_din.di_atime
-end_define
+begin_comment
+comment|/*  * The di_db fields may be overlaid with other information for  * file types that do not have associated disk storage. Block  * and character devices overlay the first data block with their  * dev_t value. Short symbolic links place their path in the  * di_db area.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|i_atimensec
-value|i_din.di_atimensec
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_blocks
-value|i_din.di_blocks
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_ctime
-value|i_din.di_ctime
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_ctimensec
-value|i_din.di_ctimensec
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_db
-value|i_din.di_db
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_flags
-value|i_din.di_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_gen
-value|i_din.di_gen
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_gid
-value|i_din.di_gid
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_ib
-value|i_din.di_ib
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_mode
-value|i_din.di_mode
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_mtime
-value|i_din.di_mtime
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_mtimensec
-value|i_din.di_mtimensec
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_nlink
-value|i_din.di_nlink
+name|i_shortlink
+value|i_db
 end_define
 
 begin_define
 define|#
 directive|define
 name|i_rdev
-value|i_din.di_rdev
+value|i_db[0]
 end_define
 
 begin_define
 define|#
 directive|define
-name|i_shortlink
-value|i_din.di_shortlink
+name|MAXSYMLINKLEN
+value|((NDADDR + NIADDR) * sizeof(daddr_t))
 end_define
+
+begin_comment
+comment|/* File permissions. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|i_size
-value|i_din.di_size
+name|IEXEC
+value|0000100
 end_define
+
+begin_comment
+comment|/* Executable. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|i_uid
-value|i_din.di_uid
+name|IWRITE
+value|0000200
 end_define
+
+begin_comment
+comment|/* Writeable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IREAD
+value|0000400
+end_define
+
+begin_comment
+comment|/* Readable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISVTX
+value|0001000
+end_define
+
+begin_comment
+comment|/* Sticky bit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISGID
+value|0002000
+end_define
+
+begin_comment
+comment|/* Set-gid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISUID
+value|0004000
+end_define
+
+begin_comment
+comment|/* Set-uid. */
+end_comment
+
+begin_comment
+comment|/* File types. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFMT
+value|0170000
+end_define
+
+begin_comment
+comment|/* Mask of file type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFIFO
+value|0010000
+end_define
+
+begin_comment
+comment|/* Named pipe (fifo). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCHR
+value|0020000
+end_define
+
+begin_comment
+comment|/* Character device. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFDIR
+value|0040000
+end_define
+
+begin_comment
+comment|/* Directory file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFBLK
+value|0060000
+end_define
+
+begin_comment
+comment|/* Block device. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFREG
+value|0100000
+end_define
+
+begin_comment
+comment|/* Regular file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFLNK
+value|0120000
+end_define
+
+begin_comment
+comment|/* Symbolic link. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFSOCK
+value|0140000
+end_define
+
+begin_comment
+comment|/* UNIX domain socket. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFWHT
+value|0160000
+end_define
+
+begin_comment
+comment|/* Whiteout. */
+end_comment
 
 begin_comment
 comment|/* These flags are kept in i_flag. */
@@ -430,7 +541,7 @@ begin_struct
 struct|struct
 name|indir
 block|{
-name|ufs_daddr_t
+name|daddr_t
 name|in_lbn
 decl_stmt|;
 comment|/* Logical block number. */
@@ -468,30 +579,6 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((ip)->i_vnode)
-end_define
-
-begin_comment
-comment|/* Determine if soft dependencies are being done */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOINGSOFTDEP
-parameter_list|(
-name|vp
-parameter_list|)
-value|((vp)->v_mount->mnt_flag& MNT_SOFTDEP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOINGASYNC
-parameter_list|(
-name|vp
-parameter_list|)
-value|((vp)->v_mount->mnt_flag& MNT_ASYNC)
 end_define
 
 begin_comment
@@ -537,7 +624,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_UFS_UFS_INODE_H_ */
+comment|/* !_SYS_GNU_EXT2FS_INODE_H_ */
 end_comment
 
 end_unit

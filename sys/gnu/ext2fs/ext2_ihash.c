@@ -54,30 +54,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
+file|<gnu/ext2fs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/ufs_extern.h>
+file|<gnu/ext2fs/ext2_extern.h>
 end_include
 
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
-name|M_UFSIHASH
+name|M_EXT2IHASH
 argument_list|,
-literal|"UFS ihash"
+literal|"EXT2 ihash"
 argument_list|,
-literal|"UFS Inode hash tables"
+literal|"EXT2 Inode hash tables"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -126,7 +120,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|mtx
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +130,7 @@ end_comment
 
 begin_function
 name|void
-name|ufs_ihashinit
+name|ext2_ihashinit
 parameter_list|()
 block|{
 name|ihashtbl
@@ -145,7 +139,7 @@ name|hashinit
 argument_list|(
 name|desiredvnodes
 argument_list|,
-name|M_UFSIHASH
+name|M_EXT2IHASH
 argument_list|,
 operator|&
 name|ihash
@@ -154,9 +148,9 @@ expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|,
-literal|"ufs ihash"
+literal|"ext2 ihash"
 argument_list|,
 name|NULL
 argument_list|,
@@ -174,7 +168,7 @@ begin_function
 name|struct
 name|vnode
 modifier|*
-name|ufs_ihashlookup
+name|ext2_ihashlookup
 parameter_list|(
 name|dev
 parameter_list|,
@@ -195,7 +189,7 @@ decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -224,7 +218,7 @@ break|break;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -253,7 +247,7 @@ end_comment
 
 begin_function
 name|int
-name|ufs_ihashget
+name|ext2_ihashget
 parameter_list|(
 name|dev
 parameter_list|,
@@ -310,7 +304,7 @@ label|:
 name|mtx_lock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -355,7 +349,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 name|error
@@ -404,7 +398,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -421,7 +415,7 @@ end_comment
 
 begin_function
 name|void
-name|ufs_ihashins
+name|ext2_ihashins
 parameter_list|(
 name|ip
 parameter_list|)
@@ -469,7 +463,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 name|ipp
@@ -503,7 +497,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -515,7 +509,7 @@ end_comment
 
 begin_function
 name|void
-name|ufs_ihashrem
+name|ext2_ihashrem
 parameter_list|(
 name|ip
 parameter_list|)
@@ -528,7 +522,7 @@ block|{
 name|mtx_lock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -558,7 +552,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|ufs_ihash_mtx
+name|ext2_ihash_mtx
 argument_list|)
 expr_stmt|;
 block|}
