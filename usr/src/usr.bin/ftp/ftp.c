@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.5 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,8 @@ name|hp
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|len
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -452,14 +454,28 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|myctladdr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|socketaddr
+name|getsockname
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|myctladdr
+argument_list|,
+operator|&
+name|len
 argument_list|)
 operator|<
 literal|0
@@ -467,7 +483,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ftp: socketaddr"
+literal|"ftp: getsockname"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2511,6 +2527,8 @@ name|a
 decl_stmt|;
 name|int
 name|result
+decl_stmt|,
+name|len
 decl_stmt|;
 name|data_addr
 operator|=
@@ -2613,14 +2631,28 @@ argument_list|(
 literal|"ftp: setsockopt (ignored)"
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|data_addr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|socketaddr
+name|getsockname
 argument_list|(
 name|data
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|data_addr
+argument_list|,
+operator|&
+name|len
 argument_list|)
 operator|<
 literal|0
@@ -2628,7 +2660,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ftp: socketaddr"
+literal|"ftp: getsockname"
 argument_list|)
 expr_stmt|;
 goto|goto
