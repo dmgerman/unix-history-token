@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	8.2 (Berkeley) %G%"
+literal|"@(#)query.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1223,7 +1223,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 operator|&
 name|sin

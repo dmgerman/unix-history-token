@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	8.2 (Berkeley) %G%"
+literal|"@(#)input.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -949,18 +949,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|from
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|badfrom
 argument_list|,
@@ -1266,18 +1258,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|from
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|badfrom2
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.10 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2557,7 +2557,7 @@ condition|(
 operator|!
 name|Nflag
 operator|&&
-name|bcmp
+name|memcmp
 argument_list|(
 name|pp
 argument_list|,

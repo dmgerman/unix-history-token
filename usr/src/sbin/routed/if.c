@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	8.1 (Berkeley) %G%"
+literal|"@(#)if.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ parameter_list|,
 name|a2
 parameter_list|)
 define|\
-value|(bcmp((caddr_t)((a1)->sa_data), (caddr_t)((a2)->sa_data), 14) == 0)
+value|(memcmp((a1)->sa_data, (a2)->sa_data, 14) == 0)
 for|for
 control|(
 name|ifp

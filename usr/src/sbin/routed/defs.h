@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ parameter_list|,
 name|a2
 parameter_list|)
 define|\
-value|(bcmp((caddr_t)(a1), (caddr_t)(a2), sizeof (struct sockaddr)) == 0)
+value|(memcmp((a1), (a2), sizeof (struct sockaddr)) == 0)
 end_define
 
 begin_decl_stmt

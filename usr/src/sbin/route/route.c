@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	8.5 (Berkeley) %G%"
+literal|"@(#)route.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4757,18 +4757,10 @@ return|;
 block|}
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ns_bh
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|work
 operator|.
 name|x_host
@@ -4787,18 +4779,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ns_nullh
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|work
 operator|.
 name|x_host
