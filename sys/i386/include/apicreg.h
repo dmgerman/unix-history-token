@@ -467,6 +467,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_FIELD
+value|0xff000000
+end_define
+
+begin_comment
+comment|/* cpu portion of the lock */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FREE_LOCK
 value|0xffffffff
 end_define

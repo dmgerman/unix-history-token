@@ -84,8 +84,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|_MPgetlock_edx
+value|MPgetlock_edx
+end_define
+
+begin_define
+define|#
+directive|define
 name|_MPrellock
 value|MPrellock
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MPrellock_edx
+value|MPrellock_edx
 end_define
 
 begin_define
