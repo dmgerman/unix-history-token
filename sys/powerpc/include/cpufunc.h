@@ -310,19 +310,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|powerpc_mb
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("eieio; sync" : : : "memory");
-block|}
-end_function
-
 begin_expr_stmt
 specifier|static
 name|__inline
