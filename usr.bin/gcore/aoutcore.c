@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.12 1998/10/22 04:02:37 jdp Exp $"
+literal|"$Id: gcore.c,v 1.13 1998/11/01 06:35:36 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1402,6 +1402,7 @@ argument_list|(
 name|buffer
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|cc
@@ -1427,6 +1428,7 @@ name|buffer
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|cc
 operator|=
