@@ -4099,6 +4099,15 @@ operator|&
 name|BGRND
 condition|)
 block|{
+name|warnx
+argument_list|(
+literal|"Cannot immediately mount %s:%s, backgrounding"
+argument_list|,
+name|hostp
+argument_list|,
+name|spec
+argument_list|)
+expr_stmt|;
 name|opflags
 operator|&=
 operator|~
