@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.1	83/07/29	*/
+comment|/*	param.h	6.2	83/09/24	*/
 end_comment
 
 begin_comment
@@ -57,11 +57,15 @@ begin_comment
 comment|/* number of mountable file systems */
 end_comment
 
+begin_comment
+comment|/* NMOUNT must be<= 15 unless c_mdev (cmap.h) is expanded */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MSWAPX
-value|15
+value|NMOUNT
 end_define
 
 begin_comment
