@@ -92,6 +92,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/acpi/acpi.h>
+end_include
+
+begin_comment
+comment|/* for softc */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<dev/acpi/aml/aml_amlmem.h>
 end_include
 
@@ -251,55 +261,6 @@ modifier|*
 name|acpi_rsdp
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* softc */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_softc
-block|{
-name|struct
-name|ACPIsdt
-modifier|*
-name|rsdt
-decl_stmt|;
-name|struct
-name|ACPIsdt
-modifier|*
-name|facp
-decl_stmt|;
-name|struct
-name|FACPbody
-modifier|*
-name|facp_body
-decl_stmt|;
-name|struct
-name|ACPIsdt
-modifier|*
-name|dsdt
-decl_stmt|;
-name|struct
-name|FACS
-modifier|*
-name|facs
-decl_stmt|;
-name|int
-name|system_state_initialized
-decl_stmt|;
-name|int
-name|broken_wakeuplogic
-decl_stmt|;
-name|struct
-name|acpi_system_state_package
-name|system_state_package
-decl_stmt|;
-block|}
-name|acpi_softc_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Character device stuff */
@@ -4106,6 +4067,14 @@ name|slp_typ_b
 decl_stmt|;
 comment|/* Prepare to sleep */
 name|acpi_execute_pts
+argument_list|(
+name|sc
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+comment|/* PowerResource manipulation */
+name|acpi_powerres_set_sleeping_state
 argument_list|(
 name|sc
 argument_list|,
