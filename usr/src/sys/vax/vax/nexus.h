@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.2	81/02/19	*/
+comment|/*	nexus.h	4.3	81/02/26	*/
 end_comment
 
 begin_comment
@@ -64,6 +64,46 @@ name|NEXSIZE
 value|0x2000
 end_define
 
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_define
+define|#
+directive|define
+name|NNEXUS
+value|16
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NNEXUS
+value|6
+end_define
+
+begin_comment
+comment|/* 4 mba slots + mem + uba */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_struct
 struct|struct
 name|nexus
@@ -97,6 +137,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -109,7 +154,7 @@ name|struct
 name|nexus
 name|nexus
 index|[
-literal|16
+name|NNEXUS
 index|]
 decl_stmt|;
 end_decl_stmt
