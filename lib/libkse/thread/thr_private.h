@@ -3845,6 +3845,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|_thr_finish_cancellation
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Aliases for _pthread functions. Should be called instead of  * originals if PLT replocation is unwanted at runtme.  */
 end_comment
