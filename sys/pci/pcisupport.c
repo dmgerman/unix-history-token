@@ -5519,6 +5519,14 @@ literal|"VIA 82C586 PCI-ISA bridge"
 operator|)
 return|;
 case|case
+literal|0x05961106
+case|:
+return|return
+operator|(
+literal|"VIA 82C596B PCI-ISA bridge"
+operator|)
+return|;
+case|case
 literal|0x06861106
 case|:
 return|return
