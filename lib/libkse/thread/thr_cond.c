@@ -551,34 +551,6 @@ case|case
 name|COND_TYPE_FAST
 case|:
 comment|/* Set the wakeup time: */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|_thread_run
-operator|->
-name|wakeup_time
-operator|.
-name|ts_sec
-operator|=
-name|abstime
-operator|->
-name|ts_sec
-expr_stmt|;
-name|_thread_run
-operator|->
-name|wakeup_time
-operator|.
-name|ts_nsec
-operator|=
-name|abstime
-operator|->
-name|ts_nsec
-expr_stmt|;
-else|#
-directive|else
 name|_thread_run
 operator|->
 name|wakeup_time
@@ -599,8 +571,6 @@ name|abstime
 operator|->
 name|tv_nsec
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Reset the timeout flag: */
 name|_thread_run
 operator|->
