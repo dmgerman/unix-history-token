@@ -3061,14 +3061,6 @@ operator|->
 name|inp_socket
 operator|==
 name|NULL
-operator|||
-name|inp
-operator|->
-name|inp_socket
-operator|->
-name|so_cred
-operator|==
-name|NULL
 condition|)
 block|{
 name|error
@@ -3090,8 +3082,6 @@ operator|->
 name|inp_socket
 operator|->
 name|so_cred
-operator|->
-name|pc_ucred
 argument_list|,
 sizeof|sizeof
 argument_list|(

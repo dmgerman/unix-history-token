@@ -3701,12 +3701,6 @@ operator|&&
 name|P
 operator|->
 name|inp_socket
-operator|&&
-name|P
-operator|->
-name|inp_socket
-operator|->
-name|so_cred
 condition|)
 block|{
 if|if
@@ -3726,7 +3720,7 @@ name|inp_socket
 operator|->
 name|so_cred
 operator|->
-name|p_ruid
+name|cr_uid
 operator|!=
 name|f
 operator|->
@@ -3749,8 +3743,6 @@ operator|->
 name|inp_socket
 operator|->
 name|so_cred
-operator|->
-name|pc_ucred
 argument_list|)
 condition|)
 continue|continue;
@@ -3870,12 +3862,6 @@ operator|&&
 name|P
 operator|->
 name|inp_socket
-operator|&&
-name|P
-operator|->
-name|inp_socket
-operator|->
-name|so_cred
 condition|)
 block|{
 if|if
@@ -3895,7 +3881,7 @@ name|inp_socket
 operator|->
 name|so_cred
 operator|->
-name|p_ruid
+name|cr_uid
 operator|!=
 name|f
 operator|->
@@ -3918,8 +3904,6 @@ operator|->
 name|inp_socket
 operator|->
 name|so_cred
-operator|->
-name|pc_ucred
 argument_list|)
 condition|)
 continue|continue;
