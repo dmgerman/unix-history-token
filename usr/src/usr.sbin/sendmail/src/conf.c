@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.88 (Berkeley) %G%"
+literal|"@(#)conf.c	8.89 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6071,6 +6071,10 @@ name|struct
 name|statvfs
 name|fs
 decl_stmt|;
+define|#
+directive|define
+name|FSBLOCKSIZE
+value|fs.f_bsize
 else|#
 directive|else
 name|struct
