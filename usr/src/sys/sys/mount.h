@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -320,7 +320,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 value|14
 end_define
 
@@ -368,7 +368,7 @@ comment|/* 12 MOUNT_PROCFS */
 value|\ 	"afs",
 comment|/* 13 MOUNT_AFS */
 value|\ 	"iso9660fs",
-comment|/* 14 MOUNT_ISOFS */
+comment|/* 14 MOUNT_CD9660 */
 value|\ 	0,
 comment|/* 15 MOUNT_SPARE */
 value|\ }
@@ -1457,7 +1457,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ISOFS
+name|CD9660
 end_ifdef
 
 begin_comment
@@ -1536,7 +1536,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISOFS */
+comment|/* CD9660 */
 end_comment
 
 begin_ifdef
