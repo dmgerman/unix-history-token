@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c 1.3 %G%"
+literal|"@(#)savenl.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,6 +22,16 @@ include|#
 directive|include
 file|"whoami.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ
+end_ifdef
+
+begin_comment
+comment|/* 	 *	and the rest of the file 	 */
+end_comment
 
 begin_include
 include|#
@@ -48,31 +58,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"../pdx/defs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"object.h"
+file|"../pdx/object.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"object/objsym.rep"
+file|"../pdx/object/objsym.rep"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mappings.h"
+file|"../pdx/mappings.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mappings/filetab.h"
+file|"../pdx/mappings/filetab.h"
 end_include
 
 begin_decl_stmt
@@ -1403,6 +1413,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+endif|OBJ
+end_endif
 
 end_unit
 
