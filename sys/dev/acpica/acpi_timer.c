@@ -137,7 +137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ] 20. ACPI Timer Errata  * ]  * ]   Problem: The power management timer may return improper result when  * ]   read. Although the timer value settles properly after incrementing,  * ]   while incrementing there is a 3nS window every 69.8nS where the  * ]   timer value is indeterminate (a 4.2% chance that the data will be  * ]   incorrect when read). As a result, the ACPI free running count up  * ]   timer specification is violated due to erroneous reads.  Implication:  * ]   System hangs due to the "inaccuracy" of the timer when used by  * ]   software for time critical events and delays.  * ]  * ] Workaround: Read the register twice and compare.  * ] Status: This will not be fixed in the PIIX4 or PIIX4E.  *  * The counter is in other words not latched to the PCI bus clock when  * read.  Notice the workaround isn't:  We need to read until we have  * three monotonic samples and then use the middle one, otherwise we are  * not protected against the fact that the bits can be wrong in two  * directions.  If we only cared about monosity two reads would be enough.  */
+comment|/*  * ] 20. ACPI Timer Errata  * ]  * ]   Problem: The power management timer may return improper result when  * ]   read. Although the timer value settles properly after incrementing,  * ]   while incrementing there is a 3nS window every 69.8nS where the  * ]   timer value is indeterminate (a 4.2% chance that the data will be  * ]   incorrect when read). As a result, the ACPI free running count up  * ]   timer specification is violated due to erroneous reads.  Implication:  * ]   System hangs due to the "inaccuracy" of the timer when used by  * ]   software for time critical events and delays.  * ]  * ] Workaround: Read the register twice and compare.  * ] Status: This will not be fixed in the PIIX4 or PIIX4E, it is fixed  * ] in the PIIX4M.  *  * The counter is in other words not latched to the PCI bus clock when  * read.  Notice the workaround isn't:  We need to read until we have  * three monotonic samples and then use the middle one, otherwise we are  * not protected against the fact that the bits can be wrong in two  * directions.  If we only cared about monosity two reads would be enough.  */
 end_comment
 
 begin_define
@@ -681,7 +681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look at PCI devices as they go past, and if we detect a PIIX4, set   * the PIIX_WAR flag.  *  * XXX do we know that other timecounters work?  Interesting question.  */
+comment|/*  * Look at PCI devices as they go past, and if we detect a PIIX4 older than  * the PIIX4M, set the PIIX_WAR flag.  *  * XXX do we know that other timecounters work?  Interesting question.  */
 end_comment
 
 begin_function
@@ -711,6 +711,15 @@ name|dev
 argument_list|)
 operator|==
 literal|0x7113
+operator|)
+operator|&&
+operator|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|0x03
 operator|)
 condition|)
 block|{
