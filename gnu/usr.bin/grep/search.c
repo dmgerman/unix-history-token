@@ -206,14 +206,6 @@ name|EGexecute
 block|}
 block|,
 block|{
-literal|"posix-egrep"
-block|,
-name|Ecompile
-block|,
-name|EGexecute
-block|}
-block|,
-block|{
 literal|"awk"
 block|,
 name|Ecompile
@@ -274,7 +266,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|re_pattern_buffer
-name|regex
+name|regexbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -602,6 +594,8 @@ operator||
 name|RE_HAT_LISTS_NOT_NEWLINE
 argument_list|,
 name|match_icase
+argument_list|,
+name|eolbyte
 argument_list|)
 expr_stmt|;
 if|if
@@ -616,7 +610,7 @@ argument_list|,
 name|size
 argument_list|,
 operator|&
-name|regex
+name|regexbuf
 argument_list|)
 operator|)
 operator|!=
@@ -637,7 +631,7 @@ operator|||
 name|match_lines
 condition|)
 block|{
-comment|/* In the whole-word case, we use the pattern: 	 (^|[^A-Za-z_])(userpattern)([^A-Za-z_]|$). 	 In the whole-line case, we use the pattern: 	 ^(userpattern)$. 	 BUG: Using [A-Za-z_] is locale-dependent!  */
+comment|/* In the whole-word case, we use the pattern: 	 (^|[^A-Za-z_])(userpattern)([^A-Za-z_]|$). 	 In the whole-line case, we use the pattern: 	 ^(userpattern)$. 	 BUG: Using [A-Za-z_] is locale-dependent! 	 So will use [:alnum:] */
 name|char
 modifier|*
 name|n
@@ -680,7 +674,7 @@ name|strcpy
 argument_list|(
 name|n
 argument_list|,
-literal|"\\(^\\|[^0-9A-Za-z_]\\)\\("
+literal|"\\(^\\|[^[:alnum:]_]\\)\\("
 argument_list|)
 expr_stmt|;
 name|i
@@ -715,7 +709,7 @@ name|n
 operator|+
 name|i
 argument_list|,
-literal|"\\)\\([^0-9A-Za-z_]\\|$\\)"
+literal|"\\)\\([^[:alnum:]_]\\|$\\)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -800,32 +794,6 @@ name|strcmp
 argument_list|(
 name|matcher
 argument_list|,
-literal|"posix-egrep"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|re_set_syntax
-argument_list|(
-name|RE_SYNTAX_POSIX_EGREP
-argument_list|)
-expr_stmt|;
-name|dfasyntax
-argument_list|(
-name|RE_SYNTAX_POSIX_EGREP
-argument_list|,
-name|match_icase
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|matcher
-argument_list|,
 literal|"awk"
 argument_list|)
 operator|==
@@ -842,6 +810,8 @@ argument_list|(
 name|RE_SYNTAX_AWK
 argument_list|,
 name|match_icase
+argument_list|,
+name|eolbyte
 argument_list|)
 expr_stmt|;
 block|}
@@ -849,14 +819,16 @@ else|else
 block|{
 name|re_set_syntax
 argument_list|(
-name|RE_SYNTAX_EGREP
+name|RE_SYNTAX_POSIX_EGREP
 argument_list|)
 expr_stmt|;
 name|dfasyntax
 argument_list|(
-name|RE_SYNTAX_EGREP
+name|RE_SYNTAX_POSIX_EGREP
 argument_list|,
 name|match_icase
+argument_list|,
+name|eolbyte
 argument_list|)
 expr_stmt|;
 block|}
@@ -872,7 +844,7 @@ argument_list|,
 name|size
 argument_list|,
 operator|&
-name|regex
+name|regexbuf
 argument_list|)
 operator|)
 operator|!=
@@ -893,7 +865,7 @@ operator|||
 name|match_lines
 condition|)
 block|{
-comment|/* In the whole-word case, we use the pattern: 	 (^|[^A-Za-z_])(userpattern)([^A-Za-z_]|$). 	 In the whole-line case, we use the pattern: 	 ^(userpattern)$. 	 BUG: Using [A-Za-z_] is locale-dependent!  */
+comment|/* In the whole-word case, we use the pattern: 	 (^|[^A-Za-z_])(userpattern)([^A-Za-z_]|$). 	 In the whole-line case, we use the pattern: 	 ^(userpattern)$. 	 BUG: Using [A-Za-z_] is locale-dependent! 	 so will use the char class */
 name|char
 modifier|*
 name|n
@@ -936,7 +908,7 @@ name|strcpy
 argument_list|(
 name|n
 argument_list|,
-literal|"(^|[^0-9A-Za-z_])("
+literal|"(^|[^[:alnum:]_])("
 argument_list|)
 expr_stmt|;
 name|i
@@ -971,7 +943,7 @@ name|n
 operator|+
 name|i
 argument_list|,
-literal|")([^0-9A-Za-z_]|$)"
+literal|")([^[:alnum:]_]|$)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1066,6 +1038,11 @@ name|end
 decl_stmt|,
 name|save
 decl_stmt|;
+name|char
+name|eol
+init|=
+name|eolbyte
+decl_stmt|;
 name|int
 name|backref
 decl_stmt|,
@@ -1145,7 +1122,7 @@ name|memchr
 argument_list|(
 name|beg
 argument_list|,
-literal|'\n'
+name|eol
 argument_list|,
 name|buflim
 operator|-
@@ -1173,7 +1150,7 @@ operator|-
 literal|1
 index|]
 operator|!=
-literal|'\n'
+name|eol
 condition|)
 operator|--
 name|beg
@@ -1292,7 +1269,7 @@ name|memchr
 argument_list|(
 name|beg
 argument_list|,
-literal|'\n'
+name|eol
 argument_list|,
 name|buflim
 operator|-
@@ -1320,7 +1297,7 @@ operator|-
 literal|1
 index|]
 operator|!=
-literal|'\n'
+name|eol
 condition|)
 operator|--
 name|beg
@@ -1336,7 +1313,7 @@ name|success
 goto|;
 block|}
 comment|/* If we've made it to this point, this means DFA has seen 	 a probable match, and we need to run it through Regex. */
-name|regex
+name|regexbuf
 operator|.
 name|not_eol
 operator|=
@@ -1350,7 +1327,7 @@ operator|=
 name|re_search
 argument_list|(
 operator|&
-name|regex
+name|regexbuf
 argument_list|,
 name|beg
 argument_list|,
@@ -1478,7 +1455,7 @@ comment|/* Try a shorter length anchored at the same place. */
 operator|--
 name|len
 expr_stmt|;
-name|regex
+name|regexbuf
 operator|.
 name|not_eol
 operator|=
@@ -1489,7 +1466,7 @@ operator|=
 name|re_match
 argument_list|(
 operator|&
-name|regex
+name|regexbuf
 argument_list|,
 name|beg
 argument_list|,
@@ -1524,7 +1501,7 @@ break|break;
 operator|++
 name|start
 expr_stmt|;
-name|regex
+name|regexbuf
 operator|.
 name|not_eol
 operator|=
@@ -1535,7 +1512,7 @@ operator|=
 name|re_search
 argument_list|(
 operator|&
-name|regex
+name|regexbuf
 argument_list|,
 name|beg
 argument_list|,
@@ -1767,6 +1744,11 @@ specifier|register
 name|size_t
 name|len
 decl_stmt|;
+name|char
+name|eol
+init|=
+name|eolbyte
+decl_stmt|;
 name|struct
 name|kwsmatch
 name|kwsmatch
@@ -1839,7 +1821,7 @@ operator|-
 literal|1
 index|]
 operator|!=
-literal|'\n'
+name|eol
 condition|)
 continue|continue;
 if|if
@@ -1857,7 +1839,7 @@ index|[
 name|len
 index|]
 operator|!=
-literal|'\n'
+name|eol
 condition|)
 continue|continue;
 goto|goto
@@ -1975,7 +1957,7 @@ name|beg
 operator|+
 name|len
 argument_list|,
-literal|'\n'
+name|eol
 argument_list|,
 operator|(
 name|buf

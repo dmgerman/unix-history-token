@@ -698,7 +698,7 @@ comment|/* Entry points. */
 end_comment
 
 begin_comment
-comment|/* dfasyntax() takes two arguments; the first sets the syntax bits described    earlier in this file, and the second sets the case-folding flag. */
+comment|/* dfasyntax() takes three arguments; the first sets the syntax bits described    earlier in this file, the second sets the case-folding flag, and the    third specifies the line terminator. */
 end_comment
 
 begin_decl_stmt
@@ -709,6 +709,8 @@ name|PARAMS
 argument_list|(
 operator|(
 name|reg_syntax_t
+operator|,
+name|int
 operator|,
 name|int
 operator|)
