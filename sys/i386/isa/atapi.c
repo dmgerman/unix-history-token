@@ -1770,6 +1770,52 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* check that DRQ isn't a fake */
+if|if
+condition|(
+name|inb
+argument_list|(
+name|port
+operator|+
+name|AR_STATUS
+argument_list|)
+operator|==
+literal|0xff
+condition|)
+block|{
+name|print
+argument_list|(
+operator|(
+literal|"atapiX.%d at 0x%x: no device\n"
+operator|,
+name|unit
+operator|,
+name|port
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|==
+literal|1
+condition|)
+comment|/* Select unit 0. */
+name|outb
+argument_list|(
+name|port
+operator|+
+name|AR_DRIVE
+argument_list|,
+name|ARD_DRIVE0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Obtain parameters. */
 name|insw
 argument_list|(
