@@ -21,7 +21,8 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do { if (level<= TWE_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args); } while(0)
+define|\
+value|do {										\ 	    if (level<= TWE_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);	\ 	} while(0)
 end_define
 
 begin_define
@@ -31,7 +32,8 @@ name|debug_called
 parameter_list|(
 name|level
 parameter_list|)
-value|do { if (level<= TWE_DEBUG) printf(__FUNCTION__ ": called\n"); } while(0)
+define|\
+value|do {								\ 	    if (level<= TWE_DEBUG) printf(__FUNCTION__ ": called\n");	\ 	} while(0)
 end_define
 
 begin_else
@@ -91,37 +93,13 @@ decl_stmt|;
 name|int
 name|td_unit
 decl_stmt|;
-comment|/* unit state */
-name|int
+comment|/* unit state and type */
+name|u_int8_t
 name|td_state
 decl_stmt|;
-define|#
-directive|define
-name|TWE_DRIVE_READY
-value|0
-define|#
-directive|define
-name|TWE_DRIVE_DEGRADED
-value|1
-define|#
-directive|define
-name|TWE_DRIVE_OFFLINE
-value|2
-name|int
-name|td_raidlevel
+name|u_int8_t
+name|td_type
 decl_stmt|;
-define|#
-directive|define
-name|TWE_DRIVE_RAID0
-value|0
-define|#
-directive|define
-name|TWE_DRIVE_RAID1
-value|1
-define|#
-directive|define
-name|TWE_DRIVE_UNKNOWN
-value|0xff
 comment|/* handle for attached driver */
 name|device_t
 name|td_disk
@@ -143,14 +121,6 @@ name|TWE_Command
 name|tr_command
 decl_stmt|;
 comment|/* command as submitted to controller */
-name|bus_dmamap_t
-name|tr_cmdmap
-decl_stmt|;
-comment|/* DMA map for command */
-name|u_int32_t
-name|tr_cmdphys
-decl_stmt|;
-comment|/* address of command in controller space */
 comment|/* command payload */
 name|void
 modifier|*
@@ -165,14 +135,6 @@ comment|/* copy of real data buffer pointer for alignment fixup */
 name|size_t
 name|tr_length
 decl_stmt|;
-name|bus_dmamap_t
-name|tr_dmamap
-decl_stmt|;
-comment|/* DMA map for data */
-name|u_int32_t
-name|tr_dataphys
-decl_stmt|;
-comment|/* data buffer base address in controller space */
 name|TAILQ_ENTRY
 argument_list|(
 argument|twe_request
@@ -226,6 +188,11 @@ directive|define
 name|TWE_CMD_ALIGNBUF
 value|(1<<2)
 comment|/* data in bio is misaligned, have to copy to/from private buffer */
+define|#
+directive|define
+name|TWE_CMD_SLEEPER
+value|(1<<3)
+comment|/* owner is sleeping on this command */
 name|void
 function_decl|(
 modifier|*
@@ -244,6 +211,8 @@ modifier|*
 name|tr_private
 decl_stmt|;
 comment|/* submitter-private data or wait channel */
+name|TWE_PLATFORM_REQUEST
+comment|/* platform-specific request elements */
 block|}
 struct|;
 end_struct
@@ -256,76 +225,52 @@ begin_struct
 struct|struct
 name|twe_softc
 block|{
-comment|/* bus connections */
-name|device_t
-name|twe_dev
-decl_stmt|;
-name|dev_t
-name|twe_dev_t
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|twe_io
-decl_stmt|;
-comment|/* register interface window */
-name|bus_space_handle_t
-name|twe_bhandle
-decl_stmt|;
-comment|/* bus space handle */
-name|bus_space_tag_t
-name|twe_btag
-decl_stmt|;
-comment|/* bus space tag */
-name|bus_dma_tag_t
-name|twe_parent_dmat
-decl_stmt|;
-comment|/* parent DMA tag */
-name|bus_dma_tag_t
-name|twe_buffer_dmat
-decl_stmt|;
-comment|/* data buffer DMA tag */
-name|struct
-name|resource
-modifier|*
-name|twe_irq
-decl_stmt|;
-comment|/* interrupt */
-name|void
-modifier|*
-name|twe_intr
-decl_stmt|;
-comment|/* interrupt handle */
 comment|/* controller queues and arrays */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|twe_request
 argument_list|)
-name|twe_freecmds
+name|twe_free
 expr_stmt|;
 comment|/* command structures available for reuse */
+name|twe_bioq
+name|twe_bioq
+decl_stmt|;
+comment|/* outstanding I/O operations */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|twe_request
 argument_list|)
-name|twe_work
+name|twe_ready
+expr_stmt|;
+comment|/* requests ready for the controller */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|twe_request
+argument_list|)
+name|twe_busy
+expr_stmt|;
+comment|/* requests busy in the controller */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|twe_request
+argument_list|)
+name|twe_complete
 expr_stmt|;
 comment|/* active commands (busy or waiting for completion) */
 name|struct
 name|twe_request
 modifier|*
-name|twe_cmdlookup
+name|twe_lookup
 index|[
 name|TWE_Q_LENGTH
 index|]
 decl_stmt|;
-comment|/* busy commands indexed by request ID */
-name|int
-name|twe_busycmds
-decl_stmt|;
-comment|/* count of busy commands */
+comment|/* commands indexed by request ID */
 name|struct
 name|twe_drive
 name|twe_drive
@@ -334,17 +279,7 @@ name|TWE_MAX_UNITS
 index|]
 decl_stmt|;
 comment|/* attached drives */
-name|struct
-name|bio_queue_head
-name|twe_bioq
-decl_stmt|;
-comment|/* outstanding I/O operations */
-name|struct
-name|twe_request
-modifier|*
-name|twe_deferred
-decl_stmt|;
-comment|/* request that the controller wouldn't take */
+comment|/* asynchronous event handling */
 name|u_int16_t
 name|twe_aen_queue
 index|[
@@ -358,6 +293,10 @@ decl_stmt|,
 name|twe_aen_tail
 decl_stmt|;
 comment|/* ringbuffer pointers for AEN queue */
+name|int
+name|twe_wait_aen
+decl_stmt|;
+comment|/* wait-for-aen notification */
 comment|/* controller status */
 name|int
 name|twe_state
@@ -382,80 +321,495 @@ directive|define
 name|TWE_STATE_SUSPEND
 value|(1<<3)
 comment|/* controller is suspended */
-comment|/* delayed configuration hook */
-name|struct
-name|intr_config_hook
-name|twe_ich
-decl_stmt|;
-comment|/* wait-for-aen notification */
 name|int
-name|twe_wait_aen
+name|twe_host_id
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TWE_PERFORMANCE_MONITOR
+name|struct
+name|twe_qstat
+name|twe_qstat
+index|[
+name|TWEQ_COUNT
+index|]
+decl_stmt|;
+comment|/* queue statistics */
+endif|#
+directive|endif
+name|TWE_PLATFORM_SOFTC
+comment|/* platform-specific softc elements */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Virtual disk driver.  */
-end_comment
-
-begin_struct
-struct|struct
-name|twed_softc
-block|{
-name|device_t
-name|twed_dev
-decl_stmt|;
-name|dev_t
-name|twed_dev_t
-decl_stmt|;
-name|struct
-name|twe_softc
-modifier|*
-name|twed_controller
-decl_stmt|;
-comment|/* parent device softc */
-name|struct
-name|twe_drive
-modifier|*
-name|twed_drive
-decl_stmt|;
-comment|/* drive data in parent softc */
-name|struct
-name|disk
-name|twed_disk
-decl_stmt|;
-comment|/* generic disk handle */
-name|struct
-name|devstat
-name|twed_stats
-decl_stmt|;
-comment|/* accounting */
-name|struct
-name|disklabel
-name|twed_label
-decl_stmt|;
-comment|/* synthetic label */
-name|int
-name|twed_flags
-decl_stmt|;
-define|#
-directive|define
-name|TWED_OPEN
-value|(1<<0)
-comment|/* drive is open (can't shut down) */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Interface betwen driver core and disk driver (should be using a bus?)  */
+comment|/*  * Interface betwen driver core and platform-dependant code.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|int
-name|twe_submit_buf
+name|twe_setup
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* do early driver/controller setup */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_init
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* init controller */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_deinit
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* stop controller */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_intr
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* hardware interrupt signalled */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|twe_submit_bio
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|twe_bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* pass bio to core */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|twe_ioctl
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|void
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* handle user request */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_describe_controller
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* print controller info */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_print_controller
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_enable_interrupts
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* enable controller interrupts */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_disable_interrupts
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* disable controller interrupts */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_attach_drive
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|twe_drive
+modifier|*
+name|dr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* attach drive when found in twe_init */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twed_intr
+parameter_list|(
+name|twe_bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* return bio from core */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|twe_request
+modifier|*
+name|twe_allocate_request
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* allocate request structure */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_free_request
+parameter_list|(
+name|struct
+name|twe_request
+modifier|*
+name|tr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* free request structure */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_map_request
+parameter_list|(
+name|struct
+name|twe_request
+modifier|*
+name|tr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* make request visible to controller, do s/g */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twe_unmap_request
+parameter_list|(
+name|struct
+name|twe_request
+modifier|*
+name|tr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* cleanup after transfer, unmap */
+end_comment
+
+begin_comment
+comment|/********************************************************************************  * Queue primitives  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TWE_PERFORMANCE_MONITOR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TWEQ_ADD
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+define|\
+value|do {							\ 	    struct twe_qstat *qs =&(sc)->twe_qstat[qname];	\ 								\ 	    qs->q_length++;					\ 	    if (qs->q_length> qs->q_max)			\ 		qs->q_max = qs->q_length;			\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWEQ_REMOVE
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+value|(sc)->twe_qstat[qname].q_length--
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWEQ_INIT
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+define|\
+value|do {					\ 	    sc->twe_qstat[qname].q_length = 0;	\ 	    sc->twe_qstat[qname].q_max = 0;	\ 	} while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TWEQ_ADD
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWEQ_REMOVE
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWEQ_INIT
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TWEQ_REQUEST_QUEUE
+parameter_list|(
+name|name
+parameter_list|,
+name|index
+parameter_list|)
+define|\
+value|static __inline void							\ twe_initq_ ## name (struct twe_softc *sc)				\ {									\     TAILQ_INIT(&sc->twe_ ## name);					\     TWEQ_INIT(sc, index);						\ }									\ static __inline void							\ twe_enqueue_ ## name (struct twe_request *tr)				\ {									\     int		s;							\ 									\     s = splbio();							\     TAILQ_INSERT_TAIL(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_ADD(tr->tr_sc, index);						\     splx(s);								\ }									\ static __inline void							\ twe_requeue_ ## name (struct twe_request *tr)				\ {									\     int		s;							\ 									\     s = splbio();							\     TAILQ_INSERT_HEAD(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_ADD(tr->tr_sc, index);						\     splx(s);								\ }									\ static __inline struct twe_request *					\ twe_dequeue_ ## name (struct twe_softc *sc)				\ {									\     struct twe_request	*tr;						\     int			s;						\ 									\     s = splbio();							\     if ((tr = TAILQ_FIRST(&sc->twe_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->twe_ ## name, tr, tr_link);			\ 	TWEQ_REMOVE(sc, index);						\     }									\     splx(s);								\     return(tr);								\ }									\ static __inline void							\ twe_remove_ ## name (struct twe_request *tr)				\ {									\     int			s;						\ 									\     s = splbio();							\     TAILQ_REMOVE(&tr->tr_sc->twe_ ## name, tr, tr_link);		\     TWEQ_REMOVE(tr->tr_sc, index);					\     splx(s);								\ }
+end_define
+
+begin_macro
+name|TWEQ_REQUEST_QUEUE
+argument_list|(
+argument|free
+argument_list|,
+argument|TWEQ_FREE
+argument_list|)
+end_macro
+
+begin_macro
+name|TWEQ_REQUEST_QUEUE
+argument_list|(
+argument|ready
+argument_list|,
+argument|TWEQ_READY
+argument_list|)
+end_macro
+
+begin_macro
+name|TWEQ_REQUEST_QUEUE
+argument_list|(
+argument|busy
+argument_list|,
+argument|TWEQ_BUSY
+argument_list|)
+end_macro
+
+begin_macro
+name|TWEQ_REQUEST_QUEUE
+argument_list|(
+argument|complete
+argument_list|,
+argument|TWEQ_COMPLETE
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*  * outstanding bio queue  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|twe_initq_bio
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|TWE_BIO_QINIT
+argument_list|(
+name|sc
+operator|->
+name|twe_bioq
+argument_list|)
+expr_stmt|;
+name|TWEQ_INIT
+argument_list|(
+name|sc
+argument_list|,
+name|TWEQ_BIO
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|twe_enqueue_bio
 parameter_list|(
 name|struct
 name|twe_softc
@@ -467,20 +821,110 @@ name|bio
 modifier|*
 name|bp
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+name|TWE_BIO_QINSERT
+argument_list|(
+name|sc
+operator|->
+name|twe_bioq
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|TWEQ_ADD
+argument_list|(
+name|sc
+argument_list|,
+name|TWEQ_BIO
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_function_decl
-specifier|extern
-name|void
-name|twed_intr
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|bio
+operator|*
+name|twe_dequeue_bio
+argument_list|(
+argument|struct twe_softc *sc
+argument_list|)
+block|{
+name|int
+name|s
+block|;     struct
+name|bio
+operator|*
+name|bp
+block|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+block|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|=
+name|TWE_BIO_QFIRST
+argument_list|(
+name|sc
+operator|->
+name|twe_bioq
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|TWE_BIO_QREMOVE
+argument_list|(
+name|sc
+operator|->
+name|twe_bioq
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|TWEQ_REMOVE
+argument_list|(
+name|sc
+argument_list|,
+name|TWEQ_BIO
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
+begin_return
+return|return
+operator|(
+name|bp
+operator|)
+return|;
+end_return
+
+unit|}
 end_unit
 
