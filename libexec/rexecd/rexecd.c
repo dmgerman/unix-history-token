@@ -574,11 +574,6 @@ else|#
 directive|else
 comment|/* OPIE */
 name|char
-name|user
-index|[
-literal|16
-index|]
-decl_stmt|,
 name|pass
 index|[
 literal|16
