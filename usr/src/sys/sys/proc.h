@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.37 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -199,6 +199,9 @@ name|p_stat
 decl_stmt|;
 name|char
 name|p_pad1
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|pid_t
 name|p_pid
@@ -249,7 +252,7 @@ name|pid_t
 name|p_oppid
 decl_stmt|;
 comment|/* save parent pid during ptrace XXX */
-name|short
+name|int
 name|p_dupfd
 decl_stmt|;
 comment|/* sideways return value from fdopen XXX */
@@ -325,7 +328,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* tmp spares to avoid shifting eproc */
+comment|/* pad to 256 and to avoid shifting eproc */
 comment|/* end area that is zeroed on creation */
 define|#
 directive|define
