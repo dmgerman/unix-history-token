@@ -886,6 +886,10 @@ operator|.
 name|sle
 argument_list|)
 expr_stmt|;
+name|curr_callout
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -902,11 +906,11 @@ operator|~
 name|CALLOUT_PENDING
 operator|)
 expr_stmt|;
-block|}
 name|curr_callout
 operator|=
 name|c
 expr_stmt|;
+block|}
 name|curr_cancelled
 operator|=
 literal|0
