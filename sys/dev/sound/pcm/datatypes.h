@@ -110,6 +110,8 @@ name|buf
 decl_stmt|;
 name|int
 name|bufsize
+decl_stmt|,
+name|maxsize
 decl_stmt|;
 specifier|volatile
 name|int
@@ -155,6 +157,11 @@ comment|/* dma channel */
 name|int
 name|fmt
 decl_stmt|,
+name|spd
+decl_stmt|,
+name|bps
+decl_stmt|;
+name|int
 name|blksz
 decl_stmt|,
 name|blkcnt
@@ -164,11 +171,14 @@ name|underflow
 decl_stmt|,
 name|overrun
 decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
 name|bus_dma_tag_t
-name|parent_dmat
+name|dmatag
 decl_stmt|;
 name|struct
 name|selinfo
@@ -177,6 +187,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SNDBUF_F_ISADMA
+value|0x00000001
+end_define
 
 begin_comment
 comment|/*****************************************************************************/

@@ -311,6 +311,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sound/pcm/buffer.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/pcm/feeder.h>
 end_include
 

@@ -956,9 +956,10 @@ name|SOUND_MIXER_STEREODEVS
 case|:
 name|v
 operator|=
+name|mix_getdevs
+argument_list|(
 name|m
-operator|->
-name|devs
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -966,9 +967,10 @@ name|SOUND_MIXER_RECMASK
 case|:
 name|v
 operator|=
+name|mix_getrecdevs
+argument_list|(
 name|m
-operator|->
-name|recdevs
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

@@ -1651,11 +1651,12 @@ name|p
 operator|->
 name|inputs
 operator|=
+name|mix_getdevs
+argument_list|(
 name|d
 operator|->
 name|mixer
-operator|->
-name|devs
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
