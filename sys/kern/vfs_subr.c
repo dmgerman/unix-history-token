@@ -2244,7 +2244,6 @@ argument_list|(
 name|p
 argument_list|)
 decl_stmt|;
-comment|/* XXXKSE */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6745,7 +6744,6 @@ argument_list|(
 name|updateproc
 argument_list|)
 decl_stmt|;
-comment|/* XXXKSE */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7084,7 +7082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Request the syncer daemon to speed up its work.  * We never push it to speed up more than half of its  * normal turn time, otherwise it could take over the cpu.  * XXXKSE  only one update?  */
+comment|/*  * Request the syncer daemon to speed up its work.  * We never push it to speed up more than half of its  * normal turn time, otherwise it could take over the cpu.  */
 end_comment
 
 begin_function
