@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.13	%G%	*/
+comment|/*	saio.h	4.14	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * header file for standalone package  */
+comment|/*  * Header file for standalone package  */
 end_comment
 
 begin_comment
-comment|/*  * io block: includes an  * inode, cells for the use of seek, etc,  * and a buffer.  */
+comment|/*  * Io block: includes an  * inode, cells for the use of seek, etc,  * and a buffer.  */
 end_comment
 
 begin_struct
@@ -18,53 +18,67 @@ block|{
 name|int
 name|i_flgs
 decl_stmt|;
+comment|/* see F_ below */
 name|struct
 name|inode
 name|i_ino
 decl_stmt|;
+comment|/* inode, if file */
 name|int
 name|i_unit
 decl_stmt|;
+comment|/* pseudo device unit */
 name|daddr_t
 name|i_boff
 decl_stmt|;
+comment|/* block offset on device */
 name|daddr_t
 name|i_cyloff
 decl_stmt|;
+comment|/* cylinder offset on device */
 name|off_t
 name|i_offset
 decl_stmt|;
+comment|/* seek offset in file */
 name|daddr_t
 name|i_bn
 decl_stmt|;
+comment|/* 1st block # of next read */
 name|char
 modifier|*
 name|i_ma
 decl_stmt|;
+comment|/* memory address of i/o buffer */
 name|int
 name|i_cc
 decl_stmt|;
+comment|/* character count of transfer */
 name|int
 name|i_error
 decl_stmt|;
+comment|/* error # return */
 name|int
 name|i_errcnt
 decl_stmt|;
+comment|/* error count for driver retries */
 name|int
 name|i_errblk
 decl_stmt|;
+comment|/* block # in error for error reporting */
 name|char
 name|i_buf
 index|[
 name|MAXBSIZE
 index|]
 decl_stmt|;
+comment|/* i/o buffer */
 union|union
 block|{
 name|struct
 name|fs
 name|ui_fs
 decl_stmt|;
+comment|/* file system super block info */
 name|char
 name|dummy
 index|[
@@ -236,7 +250,7 @@ value|0xff00
 end_define
 
 begin_comment
-comment|/*  * dev switch  */
+comment|/*  * Device switch.  */
 end_comment
 
 begin_struct
@@ -302,7 +316,7 @@ comment|/* # sectors/track */
 name|short
 name|ntrak
 decl_stmt|;
-comment|/* # tracks/surfaces/heads... */
+comment|/* # tracks/surfaces/heads */
 name|short
 name|nspc
 decl_stmt|;
@@ -321,7 +335,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * request codes. Must be the same a F_XXX above  */
+comment|/*  * Request codes. Must be the same a F_XXX above  */
 end_comment
 
 begin_define
@@ -382,34 +396,6 @@ name|NFILES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PHYSUBA0
-value|0x20006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSMBA0
-value|0x20010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSMBA1
-value|0x20012000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSUMEM
-value|0x2013e000
-end_define
 
 begin_decl_stmt
 specifier|extern
@@ -539,23 +525,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EHER
+name|EECC
 value|13
 end_define
 
 begin_comment
-comment|/* hard error */
+comment|/* uncorrectable ecc error */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EECC
+name|EHER
 value|14
 end_define
 
 begin_comment
-comment|/* uncorrectable ecc error */
+comment|/* hard error */
 end_comment
 
 begin_comment
@@ -681,6 +667,17 @@ end_define
 
 begin_comment
 comment|/* is device skip sector type? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIODEBUG
+value|(('d'<<8)|12)
+end_define
+
+begin_comment
+comment|/* enable/disable debugging */
 end_comment
 
 begin_comment
