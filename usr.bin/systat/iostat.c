@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dkstat.h>
 end_include
 
@@ -986,7 +980,7 @@ operator|++
 argument_list|,
 name|INSET
 argument_list|,
-literal|"/0   /5   /10  /15  /20  /25  /30  /35  /40  /45  /50"
+literal|"/0   /10  /20  /30  /40  /50  /60  /70  /80  /90  /100"
 argument_list|)
 expr_stmt|;
 name|linesperregion
@@ -1566,7 +1560,7 @@ name|mb_per_second
 argument_list|,
 literal|50
 argument_list|,
-literal|1.0
+literal|.5
 argument_list|)
 expr_stmt|;
 name|wmove
@@ -1585,7 +1579,7 @@ name|transfers_per_second
 argument_list|,
 literal|50
 argument_list|,
-literal|1.0
+literal|.5
 argument_list|)
 expr_stmt|;
 if|if
@@ -1609,7 +1603,7 @@ name|kb_per_transfer
 argument_list|,
 literal|50
 argument_list|,
-literal|1.0
+literal|.5
 argument_list|)
 expr_stmt|;
 block|}
