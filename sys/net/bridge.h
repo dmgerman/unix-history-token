@@ -248,7 +248,7 @@ end_ifdef
 begin_typedef
 typedef|typedef
 name|struct
-name|ifnet
+name|mbuf
 modifier|*
 name|bridge_in_t
 parameter_list|(
@@ -257,7 +257,7 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|struct
-name|ether_header
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
