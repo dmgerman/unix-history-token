@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.h	7.5 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Declaration of block device  * switch. Each entry (row) is  * the only link between the  * main unix code and the driver.  * The initialization of the  * device switches is in the  * file conf.c.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -29,13 +25,6 @@ name|int
 function_decl|(
 modifier|*
 name|d_strategy
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|d_ioctl
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -85,10 +74,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Character device switch.  */
-end_comment
 
 begin_struct
 struct|struct
@@ -202,18 +187,18 @@ index|[]
 decl_stmt|,
 name|devwait
 index|[]
+decl_stmt|,
+name|devin
+index|[]
+decl_stmt|,
+name|devout
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|char
-name|devin
-index|[]
-decl_stmt|,
-name|devout
-index|[]
-decl_stmt|,
 name|devioc
 index|[]
 decl_stmt|,
@@ -226,10 +211,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * tty line control switch.  */
-end_comment
 
 begin_struct
 struct|struct
@@ -327,10 +308,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Swap device information  */
-end_comment
 
 begin_struct
 struct|struct

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kernel.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Global variables for the kernel  */
+comment|/* Global variables for the kernel. */
 end_comment
 
 begin_function_decl
@@ -74,6 +74,10 @@ name|hz
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* clock frequency */
+end_comment
+
 begin_decl_stmt
 name|int
 name|phz
@@ -97,7 +101,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* awoken once a second */
+comment|/* once a second sleep address */
 end_comment
 
 begin_function_decl
@@ -162,32 +166,28 @@ name|GPROF
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|profiling
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|s_lowpc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 name|s_textsize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|int
+name|profiling
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_short
 modifier|*
 name|kcount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s_lowpc
 decl_stmt|;
 end_decl_stmt
 

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.13 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Ioctl definitions  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -20,7 +16,7 @@ name|_IOCTL_H_
 end_define
 
 begin_comment
-comment|/*  * Window/terminal size structure.  * This information is stored by the kernel  * in order to provide a consistent interface,  * but is not used by the kernel.  *  * Type must be "unsigned short" so that types.h not required.  */
+comment|/*  * Window/terminal size structure.  This information is stored by the kernel  * in order to provide a consistent interface, but is not used by the kernel.  */
 end_comment
 
 begin_struct
@@ -100,7 +96,7 @@ name|_IO
 end_ifndef
 
 begin_comment
-comment|/*  * Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 3 bits of the upper word are used  * to encode the in/out status of the parameter.  */
+comment|/*  * Ioctl's have the command encoded in the lower word, and the size of  * any in or out parameters in the upper word.  The high 3 bits of the  * upper word are used to encode the in/out status of the parameter.  */
 end_comment
 
 begin_define
@@ -295,14 +291,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * tty ioctl commands  */
-end_comment
-
-begin_comment
-comment|/* 0-2 compat */
-end_comment
 
 begin_define
 define|#

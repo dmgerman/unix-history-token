@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)exec.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_EXEC_H_
 end_define
 
 begin_comment
-comment|/*  * Header prepended to each a.out file.  */
+comment|/* Header prepended to each a.out file. */
 end_comment
 
 begin_struct
@@ -64,22 +64,22 @@ name|unsigned
 name|long
 name|a_text
 decl_stmt|;
-comment|/* size of text segment */
+comment|/* text segment size */
 name|unsigned
 name|long
 name|a_data
 decl_stmt|;
-comment|/* size of initialized data */
+comment|/* initialized data size */
 name|unsigned
 name|long
 name|a_bss
 decl_stmt|;
-comment|/* size of uninitialized data */
+comment|/* uninitialized data size */
 name|unsigned
 name|long
 name|a_syms
 decl_stmt|;
-comment|/* size of symbol table */
+comment|/* symbol table size */
 name|unsigned
 name|long
 name|a_entry
@@ -89,12 +89,12 @@ name|unsigned
 name|long
 name|a_trsize
 decl_stmt|;
-comment|/* size of text relocation */
+comment|/* text relocation size */
 name|unsigned
 name|long
 name|a_drsize
 decl_stmt|;
-comment|/* size of data relocation */
+comment|/* data relocation size */
 block|}
 struct|;
 end_struct
