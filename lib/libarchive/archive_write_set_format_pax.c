@@ -1639,6 +1639,11 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|const
+name|char
+modifier|*
+name|hardlink
+decl_stmt|;
+specifier|const
 name|wchar_t
 modifier|*
 name|wp
@@ -1723,14 +1728,19 @@ argument_list|(
 name|entry_original
 argument_list|)
 expr_stmt|;
-comment|/* Make sure this is a type of entry that we can handle here */
-if|if
-condition|(
-operator|!
+name|hardlink
+operator|=
 name|archive_entry_hardlink
 argument_list|(
 name|entry_original
 argument_list|)
+expr_stmt|;
+comment|/* Make sure this is a type of entry that we can handle here */
+if|if
+condition|(
+name|hardlink
+operator|==
+name|NULL
 condition|)
 block|{
 switch|switch
@@ -1946,10 +1956,7 @@ block|}
 comment|/* If link name is too long, add 'linkpath' to pax extended attrs. */
 name|linkname
 operator|=
-name|archive_entry_hardlink
-argument_list|(
-name|entry_main
-argument_list|)
+name|hardlink
 expr_stmt|;
 if|if
 condition|(
@@ -1994,10 +2001,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|archive_entry_hardlink
-argument_list|(
-name|entry_main
-argument_list|)
+name|hardlink
+operator|!=
+name|NULL
 condition|)
 name|archive_entry_set_hardlink
 argument_list|(
@@ -2736,10 +2742,7 @@ name|archive_format
 operator|!=
 name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
 operator|&&
-name|archive_entry_hardlink
-argument_list|(
-name|entry_main
-argument_list|)
+name|hardlink
 operator|!=
 name|NULL
 condition|)
@@ -2753,10 +2756,7 @@ expr_stmt|;
 comment|/* 	 * XXX Full pax interchange format does permit a hardlink 	 * entry to have data associated with it.  I'm not supporting 	 * that here because the client expects me to tell them whether 	 * or not this format expects data for hardlinks.  If I 	 * don't check here, then every pax archive will end up with 	 * duplicated data for hardlinks.  Someday, there may be 	 * need to select this behavior, in which case the following 	 * will need to be revisited. XXX 	 */
 if|if
 condition|(
-name|archive_entry_hardlink
-argument_list|(
-name|entry_main
-argument_list|)
+name|hardlink
 operator|!=
 name|NULL
 condition|)
