@@ -541,6 +541,10 @@ begin_comment
 comment|/* ZERO_COPY_SOCKETS */
 end_comment
 
+begin_comment
+comment|/*  * accept_mtx locks down per-socket fields relating to accept queues.  See  * socketvar.h for an annotation of the protected fields of struct socket.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|mtx
@@ -557,6 +561,33 @@ operator|&
 name|accept_mtx
 argument_list|,
 literal|"accept"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * so_global_mtx protects so_gencnt, numopensockets, and the per-socket  * so_gencnt field.  *  * XXXRW: These variables might be better manipulated using atomic operations  * for improved efficiency.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|so_global_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|so_global_mtx
+argument_list|,
+operator|&
+name|so_global_mtx
+argument_list|,
+literal|"so_glabel"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -668,14 +699,6 @@ argument_list|,
 literal|"so_rcv"
 argument_list|)
 expr_stmt|;
-comment|/* XXX race condition for reentrant kernel */
-name|so
-operator|->
-name|so_gencnt
-operator|=
-operator|++
-name|so_gencnt
-expr_stmt|;
 comment|/* sx_init(&so->so_sxlock, "socket sxlock"); */
 name|TAILQ_INIT
 argument_list|(
@@ -685,8 +708,27 @@ operator|->
 name|so_aiojobq
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|so_global_mtx
+argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_gencnt
+operator|=
+operator|++
+name|so_gencnt
+expr_stmt|;
 operator|++
 name|numopensockets
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|so_global_mtx
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -1068,12 +1110,24 @@ name|so_count
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|so_global_mtx
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_gencnt
 operator|=
 operator|++
 name|so_gencnt
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|so_global_mtx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1199,8 +1253,21 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXXRW: Seems like a shame to grab the mutex again down here, but 	 * we don't want to decrement the socket count until after we free 	 * the socket, and we can't increment the gencnt on the socket after 	 * we free, it so... 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|so_global_mtx
+argument_list|)
+expr_stmt|;
 operator|--
 name|numopensockets
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|so_global_mtx
+argument_list|)
 expr_stmt|;
 block|}
 end_function
