@@ -3039,7 +3039,6 @@ name|p_sflag
 operator|&
 name|PS_INMEM
 condition|)
-block|{
 name|kp
 operator|->
 name|ki_rssize
@@ -3085,7 +3084,6 @@ name|td0
 operator|->
 name|td_altkstack_pages
 expr_stmt|;
-block|}
 block|}
 name|kp
 operator|->
