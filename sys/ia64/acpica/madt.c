@@ -228,6 +228,10 @@ modifier|*
 name|override
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"\t\tBus=%d, Source=%d, Irq=0x%x\n"
@@ -258,10 +262,29 @@ modifier|*
 name|sapic
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"\t\tId=0x%x, Vector=0x%x, Address=0x%lx\n"
 argument_list|,
+name|sapic
+operator|->
+name|IoSapicId
+argument_list|,
+name|sapic
+operator|->
+name|Vector
+argument_list|,
+name|sapic
+operator|->
+name|IoSapicAddress
+argument_list|)
+expr_stmt|;
+name|sapic_create
+argument_list|(
 name|sapic
 operator|->
 name|IoSapicId
@@ -288,6 +311,10 @@ modifier|*
 name|sapic
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"\t\tProcessorId=0x%x, Id=0x%x, Eid=0x%x\n"
@@ -318,6 +345,10 @@ modifier|*
 name|source
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"\t\tPolarity=%d, TriggerMode=%d, Id=0x%x, "
@@ -413,6 +444,10 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"\t"
