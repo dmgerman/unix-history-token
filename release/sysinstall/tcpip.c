@@ -1040,9 +1040,6 @@ literal|"Do you want to try DHCP configuration of the interface?"
 argument_list|)
 condition|)
 block|{
-name|int
-name|k
-decl_stmt|;
 name|Mkdir
 argument_list|(
 literal|"/var/db"
