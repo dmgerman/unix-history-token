@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.8";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.9";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -465,7 +465,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|opnbof
+operator|!
+name|opneof
 condition|)
 block|{
 if|if
@@ -528,8 +529,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|opnbof
+name|opneof
 condition|)
 name|fseek
 argument_list|(
