@@ -66,6 +66,13 @@ name|PCI_DEVICE_ID_PCNet_PCI
 value|0x20001022
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCHome_PCI
+value|0x20011022
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -185,6 +192,15 @@ case|:
 return|return
 operator|(
 literal|"PCNet/PCI Ethernet adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_PCHome_PCI
+case|:
+return|return
+operator|(
+literal|"PCHome/PCI Ethernet adapter"
 operator|)
 return|;
 break|break;
