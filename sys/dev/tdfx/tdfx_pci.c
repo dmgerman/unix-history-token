@@ -393,7 +393,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * probe routine called on kernel boot to register supported devices. We get 	 * a device structure to work with, and we can test the VENDOR/DEVICE IDs to 	 * see if this PCI device is one that we support. Return 0 if yes, ENXIO if 	 * not. 	 */
+comment|/* 	 * probe routine called on kernel boot to register supported devices. We get 	 * a device structure to work with, and we can test the VENDOR/DEVICE IDs to 	 * see if this PCI device is one that we support. Return BUS_PRROBE_DEFAULT 	 * if yes, ENXIO if not. 	 */
 switch|switch
 condition|(
 name|pci_get_devid
@@ -413,7 +413,7 @@ literal|"ProMotion At3D 3D Accelerator"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 case|case
 name|PCI_DEVICE_3DFX_VOODOO2
@@ -426,9 +426,9 @@ literal|"3DFX Voodoo II 3D Accelerator"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
-comment|/*case PCI_DEVICE_3DFX_BANSHEE: 		device_set_desc(dev, "3DFX Voodoo Banshee 2D/3D Graphics Accelerator"); 		return 0; 	case PCI_DEVICE_3DFX_VOODOO3: 		device_set_desc(dev, "3DFX Voodoo3 2D/3D Graphics Accelerator"); 		return 0;*/
+comment|/*case PCI_DEVICE_3DFX_BANSHEE: 		device_set_desc(dev, "3DFX Voodoo Banshee 2D/3D Graphics Accelerator"); 		return BUS_PROBE_DEFAULT; 	case PCI_DEVICE_3DFX_VOODOO3: 		device_set_desc(dev, "3DFX Voodoo3 2D/3D Graphics Accelerator"); 		return BUS_PROBE_DEFAULT;*/
 case|case
 name|PCI_DEVICE_3DFX_VOODOO1
 case|:
@@ -440,9 +440,8 @@ literal|"3DFX Voodoo Graphics 3D Accelerator"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
-empty_stmt|;
 block|}
 empty_stmt|;
 return|return
@@ -1402,13 +1401,6 @@ comment|/* 		 * If, for some reason, we can't set the MTRR (N/A?) we may still c
 ifdef|#
 directive|ifdef
 name|DEBUG
-if|if
-condition|(
-name|retval
-operator|==
-literal|0
-condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1425,17 +1417,6 @@ operator|.
 name|mr_base
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Couldn't Set MTRR\n"
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
