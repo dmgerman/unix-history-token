@@ -3,6 +3,20 @@ begin_comment
 comment|/*  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Yost.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -25,36 +39,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)unifdef.c	8.1 (Berkeley) 6/6/93";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)unifdef.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,10 +60,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * unifdef - remove ifdef'ed lines  *  *  Warning: will not work correctly if input contains null characters.  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  */
@@ -157,7 +151,15 @@ name|Bool
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|Linetype
+typedef|;
+end_typedef
+
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -352,21 +354,35 @@ name|BSS
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|skipcomment
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|skipquote
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -472,6 +488,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|Linetype
+name|checkline
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -494,12 +523,10 @@ modifier|*
 modifier|*
 name|curarg
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp1
@@ -585,7 +612,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-specifier|register
 name|int
 name|symind
 decl_stmt|;
@@ -882,13 +908,6 @@ begin_comment
 comment|/* types of input lines: */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|Linetype
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -977,14 +996,6 @@ begin_comment
 comment|/* end of file */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|Linetype
-name|checkline
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|Reject_level
 name|reject
@@ -1040,6 +1051,7 @@ comment|/* start of current coment or quote */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|errs
@@ -1161,7 +1173,6 @@ name|prevreject
 parameter_list|,
 name|depth
 parameter_list|)
-specifier|register
 name|int
 name|thissym
 decl_stmt|;
@@ -1179,11 +1190,9 @@ name|depth
 decl_stmt|;
 comment|/* depth of ifdef's */
 block|{
-specifier|register
 name|Linetype
 name|lineval
 decl_stmt|;
-specifier|register
 name|Reject_level
 name|thisreject
 decl_stmt|;
@@ -1545,9 +1554,9 @@ name|LT_LEOF
 case|:
 block|{
 name|int
-name|err
+name|lerr
 decl_stmt|;
-name|err
+name|lerr
 operator|=
 name|incomment
 condition|?
@@ -1576,7 +1585,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|err
+name|lerr
 operator|!=
 name|NO_ERR
 condition|)
@@ -1585,7 +1594,7 @@ name|void
 operator|)
 name|error
 argument_list|(
-name|err
+name|lerr
 argument_list|,
 name|stqcline
 argument_list|,
@@ -1606,14 +1615,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|err
+name|lerr
 operator|!=
 name|NO_ERR
 condition|)
 return|return
 name|error
 argument_list|(
-name|err
+name|lerr
 argument_list|,
 name|stqcline
 argument_list|,
@@ -1669,12 +1678,10 @@ name|cursym
 decl_stmt|;
 comment|/* if LT_TRUE or LT_FALSE returned, set this to sym index */
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|symp
@@ -2087,7 +2094,6 @@ name|skipcomment
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2230,17 +2236,14 @@ name|cp
 parameter_list|,
 name|type
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|char
 name|qchar
 decl_stmt|;
@@ -2357,21 +2360,17 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|symp
 decl_stmt|;
-specifier|register
 name|int
 name|symind
 decl_stmt|;
-specifier|register
 name|char
 name|chr
 decl_stmt|;
@@ -2473,7 +2472,6 @@ name|inp
 parameter_list|,
 name|expandtabs
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|line
@@ -2492,11 +2490,9 @@ block|{
 name|int
 name|tmp
 decl_stmt|;
-specifier|register
 name|int
 name|num
 decl_stmt|;
-specifier|register
 name|int
 name|chr
 decl_stmt|;
@@ -2739,21 +2735,18 @@ operator|^
 name|complement
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|line
 init|=
 name|tline
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|out
 init|=
 name|stdout
 decl_stmt|;
-specifier|register
 name|char
 name|chr
 decl_stmt|;
@@ -2794,14 +2787,14 @@ begin_function
 name|int
 name|error
 parameter_list|(
-name|err
+name|lerr
 parameter_list|,
 name|line
 parameter_list|,
 name|depth
 parameter_list|)
 name|int
-name|err
+name|lerr
 decl_stmt|;
 comment|/* type of error& index into error string array */
 name|int
@@ -2815,12 +2808,12 @@ comment|/* how many ifdefs we are inside */
 block|{
 if|if
 condition|(
-name|err
+name|lerr
 operator|==
 name|END_ERR
 condition|)
 return|return
-name|err
+name|lerr
 return|;
 ifndef|#
 directive|ifndef
@@ -2835,7 +2828,7 @@ name|line
 argument_list|,
 name|errs
 index|[
-name|err
+name|lerr
 index|]
 argument_list|)
 expr_stmt|;
@@ -2852,7 +2845,7 @@ name|line
 argument_list|,
 name|errs
 index|[
-name|err
+name|lerr
 index|]
 argument_list|,
 name|depth
