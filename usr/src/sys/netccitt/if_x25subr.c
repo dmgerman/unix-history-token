@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -802,9 +802,7 @@ operator|->
 name|m_type
 condition|)
 block|{
-case|case
-name|MT_OOBDATA
-case|:
+default|default:
 if|if
 condition|(
 name|m
@@ -814,7 +812,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-default|default:
 return|return;
 case|case
 name|MT_DATA
@@ -994,6 +991,11 @@ name|lcp
 operator|->
 name|lcd_upnext
 decl_stmt|;
+name|int
+name|do_clear
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -1063,6 +1065,10 @@ expr_stmt|;
 comment|/* XXX start queued packets */
 return|return;
 default|default:
+name|do_clear
+operator|=
+literal|0
+expr_stmt|;
 name|refused
 label|:
 name|lcp
@@ -1077,6 +1083,10 @@ name|lx_lcd
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|do_clear
+condition|)
 name|pk_disconnect
 argument_list|(
 name|lcp
