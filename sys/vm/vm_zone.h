@@ -19,22 +19,33 @@ begin_define
 define|#
 directive|define
 name|ZONE_INTERRUPT
-value|1
+value|0x0001
 end_define
 
 begin_comment
-comment|/* Use this if you need to allocate at int time */
+comment|/* If you need to allocate at int time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZONE_PANICFAIL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* panic if the zalloc fails */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ZONE_BOOT
-value|16
+value|0x0010
 end_define
 
 begin_comment
-comment|/* This is an internal flag used by zbootinit */
+comment|/* Internal flag used by zbootinit */
 end_comment
 
 begin_include
