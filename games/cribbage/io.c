@@ -426,6 +426,8 @@ name|NULL
 condition|)
 name|addmsg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|mid
 argument_list|)
 expr_stmt|;
@@ -841,6 +843,8 @@ control|)
 block|{
 name|msg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
@@ -1573,6 +1577,8 @@ control|)
 block|{
 name|msg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
