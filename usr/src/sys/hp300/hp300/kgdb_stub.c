@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson and Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: kgdb_stub.c,v 1.13 91/03/23 13:55:57 mccanne Exp $"
+literal|"$Header: kgdb_stub.c,v 1.2 92/07/23 19:37:50 mccanne Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ name|PUTESC
 parameter_list|(
 name|c
 parameter_list|)
-value|{ \ 	if (c == FRAME_END) { \ 		PUTC(FRAME_ESCAPE); \ 		c = TRANS_FRAME_END; \ 	} else if (c == FRAME_ESCAPE) { \ 		PUTC(FRAME_ESCAPE); \ 		c = TRANS_FRAME_ESCAPE; \ 	} \ 	PUTC(c); \ }
+value|{ \ 	if (c == FRAME_END) { \ 		PUTC(FRAME_ESCAPE); \ 		c = TRANS_FRAME_END; \ 	} else if (c == FRAME_ESCAPE) { \ 		PUTC(FRAME_ESCAPE); \ 		c = TRANS_FRAME_ESCAPE; \ 	} else if (c == FRAME_START) { \ 		PUTC(FRAME_ESCAPE); \ 		c = TRANS_FRAME_START; \ 	} \ 	PUTC(c); \ }
 end_define
 
 begin_function_decl
@@ -311,14 +311,20 @@ name|bp
 operator|+
 name|len
 decl_stmt|;
+name|PUTC
+argument_list|(
+name|FRAME_START
+argument_list|)
+expr_stmt|;
+name|PUTESC
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|csum
 operator|=
 name|type
 expr_stmt|;
-name|PUTESC
-argument_list|(
-argument|type
-argument_list|)
 while|while
 condition|(
 name|bp
@@ -392,6 +398,8 @@ specifier|register
 name|int
 name|type
 decl_stmt|;
+name|restart
+label|:
 name|csum
 operator|=
 name|len
@@ -451,6 +459,24 @@ operator|=
 name|FRAME_END
 expr_stmt|;
 break|break;
+case|case
+name|TRANS_FRAME_START
+case|:
+if|if
+condition|(
+name|escape
+condition|)
+name|c
+operator|=
+name|FRAME_START
+expr_stmt|;
+break|break;
+case|case
+name|FRAME_START
+case|:
+goto|goto
+name|restart
+goto|;
 case|case
 name|FRAME_END
 case|:
@@ -529,7 +555,7 @@ condition|(
 operator|++
 name|len
 operator|>
-name|SL_BUFSIZE
+name|SL_RPCSIZE
 condition|)
 block|{
 while|while
@@ -920,7 +946,9 @@ specifier|static
 name|u_char
 name|inbuffer
 index|[
-name|SL_BUFSIZE
+name|SL_RPCSIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -930,7 +958,7 @@ specifier|static
 name|u_char
 name|outbuffer
 index|[
-name|SL_BUFSIZE
+name|SL_RPCSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1102,12 +1130,13 @@ if|if
 condition|(
 name|in
 operator|==
-name|FRAME_END
+name|FRAME_START
 condition|)
 name|in
 operator|=
 name|GETC
 expr_stmt|;
+comment|/* 		 * Check that this is a debugger exec message.  If so, 		 * slurp up the entire message then ack it, and fall 		 * through to the recv loop. 		 */
 if|if
 condition|(
 name|KGDB_CMD
@@ -1336,7 +1365,7 @@ name|outlen
 operator|+
 literal|5
 operator|>
-name|SL_MAXMSG
+name|SL_MAXDATA
 condition|)
 block|{
 name|out
@@ -1505,10 +1534,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|+
-literal|1
 operator|>
-name|SL_MAXMSG
+name|SL_MAXDATA
 condition|)
 block|{
 name|outlen
