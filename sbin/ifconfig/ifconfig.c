@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.5 1994/01/10 18:01:52 ats Exp $"
+literal|"$Id: ifconfig.c,v 1.6 1994/01/22 08:23:47 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 end_decl_stmt
@@ -3602,7 +3602,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|unsigned
-name|short
+name|int
 name|v
 decl_stmt|;
 end_decl_stmt
