@@ -11299,7 +11299,33 @@ name|tw
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Acknowlege the segment, then drop it. 	 */
+comment|/* 	 * Acknowledge the segment if it has data or is not a duplicate ACK. 	 */
+if|if
+condition|(
+name|thflags
+operator|!=
+name|TH_ACK
+operator|||
+name|tlen
+operator|!=
+literal|0
+operator|||
+name|th
+operator|->
+name|th_seq
+operator|!=
+name|tw
+operator|->
+name|rcv_nxt
+operator|||
+name|th
+operator|->
+name|th_ack
+operator|!=
+name|tw
+operator|->
+name|snd_nxt
+condition|)
 name|tcp_twrespond
 argument_list|(
 name|tw
