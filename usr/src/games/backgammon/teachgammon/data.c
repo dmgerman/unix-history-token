@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)data.c	5.1 (Berkeley) %G%"
+literal|"@(#)data.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -581,7 +584,6 @@ literal|4
 block|,
 literal|2
 block|,
-operator|&
 name|text0
 block|}
 block|,
@@ -673,7 +675,6 @@ literal|6
 block|,
 literal|6
 block|,
-operator|&
 name|text1
 block|}
 block|,
@@ -766,7 +767,6 @@ literal|1
 block|,
 literal|2
 block|,
-operator|&
 name|text2
 block|}
 block|,
@@ -860,7 +860,6 @@ literal|2
 block|,
 literal|5
 block|,
-operator|&
 name|text3
 block|}
 block|,
@@ -955,7 +954,6 @@ literal|4
 block|,
 literal|1
 block|,
-operator|&
 name|text4
 block|}
 block|,
@@ -1049,7 +1047,6 @@ literal|3
 block|,
 literal|3
 block|,
-operator|&
 name|text5
 block|}
 block|,
@@ -1143,7 +1140,6 @@ literal|5
 block|,
 literal|4
 block|,
-operator|&
 name|text6
 block|}
 block|,
@@ -1237,7 +1233,6 @@ literal|3
 block|,
 literal|6
 block|,
-operator|&
 name|text7
 block|}
 block|,
@@ -1331,7 +1326,6 @@ literal|5
 block|,
 literal|1
 block|,
-operator|&
 name|text8
 block|}
 block|,
@@ -1425,7 +1419,6 @@ literal|4
 block|,
 literal|6
 block|,
-operator|&
 name|text9
 block|}
 block|,
@@ -1519,7 +1512,6 @@ literal|1
 block|,
 literal|3
 block|,
-operator|&
 name|text10
 block|}
 block|,
@@ -1613,7 +1605,6 @@ literal|5
 block|,
 literal|3
 block|,
-operator|&
 name|text11
 block|}
 block|,
@@ -1707,7 +1698,6 @@ literal|4
 block|,
 literal|4
 block|,
-operator|&
 name|text12
 block|}
 block|,
@@ -1801,7 +1791,6 @@ literal|2
 block|,
 literal|1
 block|,
-operator|&
 name|text13
 block|}
 block|,
@@ -1893,7 +1882,6 @@ literal|6
 block|,
 literal|3
 block|,
-operator|&
 name|text14
 block|}
 block|,
@@ -1985,7 +1973,6 @@ literal|2
 block|,
 literal|5
 block|,
-operator|&
 name|text15
 block|}
 block|,
@@ -2078,7 +2065,6 @@ literal|6
 block|,
 literal|1
 block|,
-operator|&
 name|text16
 block|}
 block|,
@@ -2170,7 +2156,6 @@ literal|5
 block|,
 literal|2
 block|,
-operator|&
 name|text17
 block|}
 block|,
@@ -2262,7 +2247,6 @@ literal|1
 block|,
 literal|6
 block|,
-operator|&
 name|text18
 block|}
 block|,
@@ -2352,7 +2336,6 @@ literal|2
 block|,
 literal|3
 block|,
-operator|&
 name|text19
 block|}
 block|,
@@ -2442,7 +2425,6 @@ literal|1
 block|,
 literal|4
 block|,
-operator|&
 name|text20
 block|}
 block|,
@@ -2532,7 +2514,6 @@ literal|6
 block|,
 literal|2
 block|,
-operator|&
 name|text21
 block|}
 block|,
@@ -2622,7 +2603,6 @@ literal|4
 block|,
 literal|3
 block|,
-operator|&
 name|text22
 block|}
 block|,
@@ -2711,7 +2691,6 @@ literal|0
 block|,
 literal|0
 block|,
-operator|&
 name|text23
 block|}
 block|}
