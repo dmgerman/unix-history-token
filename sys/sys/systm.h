@@ -300,6 +300,96 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|isspace
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || ((c)>= '\t'&& (c)<= '\r'))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isascii
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)& ~0x7f) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isupper
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= 'A'&& (c)<= 'Z')
+end_define
+
+begin_define
+define|#
+directive|define
+name|islower
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= 'a'&& (c)<= 'z')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isalpha
+parameter_list|(
+name|c
+parameter_list|)
+value|(isupper(c) || islower(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= '0'&& (c)<= '9')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isxdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|(isdigit(c) \ 			  || ((c)>= 'A'&& (c)<= 'F') \ 			  || ((c)>= 'a'&& (c)<= 'f'))
+end_define
+
+begin_define
+define|#
+directive|define
+name|toupper
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) - 0x20 * (((c)>= 'a')&& ((c)<= 'z')))
+end_define
+
+begin_define
+define|#
+directive|define
+name|tolower
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) + 0x20 * (((c)>= 'A')&& ((c)<= 'Z')))
+end_define
+
 begin_comment
 comment|/*  * General function declarations.  */
 end_comment

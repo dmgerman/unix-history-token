@@ -714,20 +714,6 @@ name|FALSE
 value|0
 define|#
 directive|define
-name|toupper
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) - ' ' * (((c)>= 'a')&& ((c)<= 'z')))
-define|#
-directive|define
-name|isdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|(((c)>= '0')&& ((c)<= '9'))
-define|#
-directive|define
 name|dtoi
 parameter_list|(
 name|c

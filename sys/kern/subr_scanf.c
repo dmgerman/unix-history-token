@@ -248,66 +248,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|isspace
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) == ' ' || (c) == '\t' || \ 			 (c) == '\r' || (c) == '\n')
-end_define
-
-begin_define
-define|#
-directive|define
-name|isascii
-parameter_list|(
-name|c
-parameter_list|)
-value|(((c)& ~0x7f) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isupper
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>= 'A'&& (c)<= 'Z')
-end_define
-
-begin_define
-define|#
-directive|define
-name|islower
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>= 'a'&& (c)<= 'z')
-end_define
-
-begin_define
-define|#
-directive|define
-name|isalpha
-parameter_list|(
-name|c
-parameter_list|)
-value|(isupper(c) || (islower(c)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>= '0'&& (c)<= '9')
-end_define
-
 begin_function_decl
 specifier|static
 specifier|const

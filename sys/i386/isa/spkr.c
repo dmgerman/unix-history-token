@@ -569,26 +569,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|toupper
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) - ' ' * (((c)>= 'a')&& ((c)<= 'z')))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|(((c)>= '0')&& ((c)<= '9'))
-end_define
-
-begin_define
-define|#
-directive|define
 name|dtoi
 parameter_list|(
 name|c
