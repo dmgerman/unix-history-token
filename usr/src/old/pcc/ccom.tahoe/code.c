@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)code.c	1.4 (Berkeley) %G%"
+literal|"@(#)code.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,16 +43,6 @@ include|#
 directive|include
 file|<stab.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|putstr
-parameter_list|(
-name|s
-parameter_list|)
-value|fputs((s), stdout)
-end_define
 
 begin_decl_stmt
 name|int
@@ -120,6 +110,16 @@ name|labelno
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|putstr
+parameter_list|(
+name|s
+parameter_list|)
+value|fputs((s), stdout)
+end_define
+
 begin_macro
 name|branch
 argument_list|(
@@ -131,6 +131,11 @@ begin_block
 block|{
 comment|/* output a branch to label n */
 comment|/* exception is an ordinary function branching to retlab: then, return */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 if|if
 condition|(
 name|n
@@ -345,6 +350,15 @@ name|lastloc
 operator|=
 name|l
 expr_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return
+operator|(
+name|temp
+operator|)
+return|;
 switch|switch
 condition|(
 name|l
@@ -416,6 +430,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|deflab
+end_ifndef
+
 begin_macro
 name|deflab
 argument_list|(
@@ -435,6 +455,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -860,6 +885,14 @@ modifier|*
 name|rname
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
 name|locctr
 argument_list|(
 name|PROG
@@ -1054,6 +1087,9 @@ name|offset
 operator|=
 name|NOOFFSET
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|oalloc
 argument_list|(
 name|p
@@ -1232,6 +1268,9 @@ begin_if
 if|if
 condition|(
 name|gdebug
+operator|&&
+operator|!
+name|nerrors
 condition|)
 block|{
 ifdef|#
@@ -1304,6 +1343,7 @@ argument_list|,
 name|regvar
 argument_list|)
 block|; 	}
+comment|/*ARGSUSED*/
 name|ejobcode
 argument_list|(
 argument|flag
@@ -1312,11 +1352,21 @@ block|{
 comment|/* called just before final exit */
 comment|/* flag is 1 if errors, 0 if none */
 block|}
+ifndef|#
+directive|ifndef
+name|aobeg
 name|aobeg
 argument_list|()
 block|{
 comment|/* called before removing automatics from stab */
 block|}
+endif|#
+directive|endif
+endif|aobeg
+ifndef|#
+directive|ifndef
+name|aocode
+comment|/*ARGSUSED*/
 name|aocode
 argument_list|(
 argument|p
@@ -1334,6 +1384,18 @@ comment|/* called when automatic p removed from stab */
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+endif|aocode
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|aoend
+end_ifndef
+
 begin_macro
 name|aoend
 argument_list|()
@@ -1344,6 +1406,12 @@ block|{
 comment|/* called after removing all automatics from stab */
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|aoend
+end_endif
 
 begin_expr_stmt
 name|defnam
@@ -1443,6 +1511,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* put byte i+1 in a string */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|ASSTRINGS
@@ -1694,6 +1767,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|fldal
 argument_list|(
@@ -1723,6 +1800,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|fldty
 argument_list|(
@@ -1744,6 +1825,10 @@ comment|/* fix up type of field p */
 empty_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|where
@@ -1981,6 +2066,11 @@ name|dlab
 operator|,
 name|swlab
 expr_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|range
 operator|=
 name|p
@@ -2320,7 +2410,7 @@ name|q
 decl_stmt|;
 name|q
 operator|=
-name|select
+name|selectheap
 argument_list|(
 name|m
 argument_list|)
@@ -2381,7 +2471,7 @@ block|}
 end_block
 
 begin_macro
-name|select
+name|selectheap
 argument_list|(
 argument|m
 argument_list|)
