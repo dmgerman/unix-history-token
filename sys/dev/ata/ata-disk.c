@@ -3115,6 +3115,23 @@ name|ATA_BMSTAT_ERROR
 operator|)
 condition|)
 block|{
+name|adp
+operator|->
+name|controller
+operator|->
+name|error
+operator|=
+name|inb
+argument_list|(
+name|adp
+operator|->
+name|controller
+operator|->
+name|ioaddr
+operator|+
+name|ATA_ERROR
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ad%d: %s %s ERROR blk# %d"
