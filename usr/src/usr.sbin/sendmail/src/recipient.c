@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.19	%G%"
+literal|"@(#)recipient.c	3.20	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,10 +420,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|getctladdr
-argument_list|(
 name|a
-argument_list|)
+operator|->
+name|q_alias
 operator|==
 name|NULL
 operator|&&
@@ -587,10 +586,9 @@ name|QDONTSEND
 expr_stmt|;
 if|if
 condition|(
-name|getctladdr
-argument_list|(
 name|a
-argument_list|)
+operator|->
+name|q_alias
 operator|==
 name|NULL
 operator|&&
@@ -761,10 +759,9 @@ block|{
 comment|/* check if writable or creatable */
 if|if
 condition|(
-name|getctladdr
-argument_list|(
 name|a
-argument_list|)
+operator|->
+name|q_alias
 operator|==
 name|NULL
 operator|&&
@@ -1366,10 +1363,6 @@ name|oldto
 init|=
 name|To
 decl_stmt|;
-name|struct
-name|stat
-name|st
-decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1395,6 +1388,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|getctladdr
+argument_list|(
+name|ctladdr
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 if|if
 condition|(
 name|fstat
@@ -1439,6 +1446,7 @@ name|q_flags
 operator||=
 name|QGOODUID
 expr_stmt|;
+block|}
 comment|/* read the file -- each line is a comma-separated list. */
 while|while
 condition|(
