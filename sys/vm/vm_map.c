@@ -7375,6 +7375,11 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -7394,6 +7399,11 @@ name|PAGE_MASK
 argument_list|)
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
@@ -7866,6 +7876,11 @@ name|kmem_object
 operator|)
 condition|)
 block|{
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -7877,13 +7892,17 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-name|mtx_lock
+name|vm_object_lock
 argument_list|(
-operator|&
-name|Giant
+name|object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -8002,10 +8021,9 @@ name|offidxstart
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
+name|vm_object_unlock
 argument_list|(
-operator|&
-name|Giant
+name|object
 argument_list|)
 expr_stmt|;
 block|}
@@ -11102,6 +11120,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 comment|/* 				 * Remove unneeded old pages 				 */
+name|vm_object_lock
+argument_list|(
+name|first_object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|first_object
@@ -11111,6 +11134,11 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|first_object
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Invalidate swap space 				 */
