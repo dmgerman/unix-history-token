@@ -1897,7 +1897,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"cisco: unknown cisco packet type: 0x%x\n"
+literal|"cisco: unknown cisco packet type: 0x%lx\n"
 argument_list|,
 name|ntohl
 argument_list|(
