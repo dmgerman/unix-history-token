@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *  Sendmail  *  Copyright (c) 1983  Eric P. Allman  *  Berkeley, California  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -33,34 +36,39 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|SccsId
+name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	5.3 (Berkeley) %G%"
+literal|"@(#)mailstats.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"../src/sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../src/mailstats.h"
-end_include
-
 begin_comment
-comment|/* **  MAILSTATS -- print mail statistics. ** **	Flags: **		-Ffile		Name of statistics file. ** **	Exit Status: **		zero. */
+comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sendmail.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mailstats.h>
+end_include
 
 begin_function
 name|main
@@ -69,52 +77,130 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
 name|int
-name|fd
+name|optind
 decl_stmt|;
 name|struct
 name|statistics
 name|stat
 decl_stmt|;
-name|char
-modifier|*
-name|sfile
-init|=
-literal|"/usr/lib/sendmail.st"
-decl_stmt|;
 specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|extern
+name|int
+name|ch
+decl_stmt|,
+name|fd
+decl_stmt|;
 name|char
 modifier|*
+name|sfile
+decl_stmt|,
+modifier|*
 name|ctime
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
+name|sfile
+operator|=
+literal|"/usr/lib/sendmail.st"
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"f:"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+operator|(
+name|char
+operator|)
+name|ch
+condition|)
+block|{
+case|case
+literal|'f'
+case|:
+name|sfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|fputs
+argument_list|(
+literal|"usage: mailstats [-f file]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+if|if
+condition|(
+operator|(
 name|fd
 operator|=
 name|open
 argument_list|(
 name|sfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
+operator|)
 operator|<
 literal|0
 condition|)
 block|{
+name|fputs
+argument_list|(
+literal|"mailstats: "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 name|sfile
@@ -136,28 +222,31 @@ operator|&
 name|stat
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|stat
+argument_list|)
 argument_list|)
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|stat
+argument_list|)
 operator|||
 name|stat
 operator|.
 name|stat_size
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|stat
+argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|fputs
 argument_list|(
-name|stderr
+literal|"mailstats: file size changed.\n"
 argument_list|,
-literal|"File size change\n"
+name|stderr
 argument_list|)
 expr_stmt|;
 name|exit
@@ -197,7 +286,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|stat
@@ -206,29 +294,19 @@ name|stat_nf
 index|[
 name|i
 index|]
-operator|==
-literal|0
-operator|&&
+operator|||
 name|stat
 operator|.
 name|stat_nt
 index|[
 name|i
 index|]
-operator|==
-literal|0
 condition|)
-continue|continue;
 name|printf
 argument_list|(
-literal|"%2d "
+literal|"%2d %6ld %10ldK %6ld %10ldK\n"
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%6ld %10ldK "
 argument_list|,
 name|stat
 operator|.
@@ -243,11 +321,6 @@ name|stat_bf
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%6ld %10ldK\n"
 argument_list|,
 name|stat
 operator|.
@@ -264,7 +337,11 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
