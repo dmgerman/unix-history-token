@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.19 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -936,7 +936,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|CRAY
+comment|/* CRAY */
 case|case
 name|SLC_SYNCH
 case|:
@@ -2137,7 +2137,7 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|TIOCGWINSZ
+comment|/* TIOCGWINSZ */
 return|return
 literal|0
 return|;

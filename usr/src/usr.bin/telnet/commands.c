@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.19 (Berkeley) %G%"
+literal|"@(#)commands.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,8 +85,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|CRAY
 end_endif
+
+begin_comment
+comment|/* CRAY */
+end_comment
 
 begin_include
 include|#
@@ -154,15 +157,11 @@ directive|ifdef
 name|SRCRT
 end_ifdef
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CRAY
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -170,15 +169,11 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|sun
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -191,10 +186,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* sun */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* CRAY */
+end_comment
 
 begin_include
 include|#
@@ -206,6 +209,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SRCRT */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -3184,8 +3191,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|CRAY
 end_endif
+
+begin_comment
+comment|/* CRAY */
+end_comment
 
 begin_function
 specifier|static
