@@ -162,19 +162,20 @@ name|USB_KLD
 value|"usb"
 end_define
 
-begin_define
-define|#
-directive|define
-name|USB_OHCI
-value|"ohci/usb"
-end_define
+begin_comment
+comment|/* name of usb module */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_UHCI
-value|"uhci/usb"
+name|USB_UHUB
+value|"usb/uhub"
 end_define
+
+begin_comment
+comment|/* root hub */
+end_comment
 
 begin_define
 define|#
