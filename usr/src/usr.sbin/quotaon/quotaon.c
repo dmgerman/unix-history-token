@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotaon.c	5.7 (Berkeley) %G%"
+literal|"@(#)quotaon.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1144,7 +1144,7 @@ name|fsbuf
 operator|.
 name|f_flags
 operator|&
-name|M_RDONLY
+name|MNT_RDONLY
 condition|)
 block|{
 name|printf
