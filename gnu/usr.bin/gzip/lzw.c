@@ -3,11 +3,11 @@ begin_comment
 comment|/* lzw.c -- compress files in LZW format.  * This is a dummy version avoiding patent problems.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -87,17 +87,19 @@ argument_list|,
 literal|"output in compress .Z format not supported\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|in
-operator|++
-operator|,
+operator|!=
 name|out
-operator|++
-expr_stmt|;
+condition|)
+block|{
 comment|/* avoid warnings on unused variables */
 name|exit_code
 operator|=
 name|ERROR
 expr_stmt|;
+block|}
 return|return
 name|ERROR
 return|;
