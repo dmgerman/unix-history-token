@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	4.1 82/06/21"
+literal|"@(#)kgmon.c	4.2 82/12/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
