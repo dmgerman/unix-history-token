@@ -3091,6 +3091,12 @@ argument_list|)
 expr_stmt|;
 block|}
 name|neg
+operator|=
+name|sp
+operator|->
+name|neg
+expr_stmt|;
+name|neg
 operator|->
 name|service
 operator|.
