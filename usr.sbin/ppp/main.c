@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.142 1998/08/09 09:13:54 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.143 1998/09/17 00:45:27 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -304,6 +304,12 @@ begin_include
 include|#
 directive|include
 file|"datalink.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iface.h"
 end_include
 
 begin_ifndef
@@ -1416,9 +1422,9 @@ literal|"Using interface: %s\n"
 argument_list|,
 name|bundle
 operator|->
-name|ifp
-operator|.
-name|Name
+name|iface
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1431,6 +1437,18 @@ operator|->
 name|AliasEnabled
 operator|=
 name|alias
+expr_stmt|;
+if|if
+condition|(
+name|alias
+condition|)
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|opt
+operator||=
+name|OPT_IFACEALIAS
 expr_stmt|;
 if|if
 condition|(
