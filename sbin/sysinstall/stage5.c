@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage3.c,v 1.4 1994/10/21 02:14:52 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.2 1994/10/26 05:41:02 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -80,6 +80,15 @@ expr_stmt|;
 name|dialog_active
 operator|=
 literal|0
+expr_stmt|;
+name|setenv
+argument_list|(
+literal|"PATH"
+argument_list|,
+literal|"/stand"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(

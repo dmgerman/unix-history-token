@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: exec.c,v 1.2 1994/10/21 05:36:42 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: exec.c,v 1.4 1994/10/26 05:40:59 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -243,11 +243,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|open
+name|dup
 argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_RDONLY
+name|debug_fd
 argument_list|)
 expr_stmt|;
 name|close
@@ -255,11 +253,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|open
+name|dup
 argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_WRONLY
+name|debug_fd
 argument_list|)
 expr_stmt|;
 name|close
@@ -267,11 +263,14 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|open
+name|dup
 argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_WRONLY
+name|debug_fd
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|debug_fd
 argument_list|)
 expr_stmt|;
 break|break;
@@ -283,17 +282,25 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|open
+name|dup
 argument_list|(
-literal|"/dev/null"
-argument_list|,
-name|O_WRONLY
+name|debug_fd
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|debug_fd
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|2
 case|:
+name|close
+argument_list|(
+name|debug_fd
+argument_list|)
+expr_stmt|;
 default|default:
 break|break;
 block|}

@@ -240,10 +240,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return
-operator|-
+name|no_termcap
+operator|=
 literal|1
-return|;
+expr_stmt|;
 if|if
 condition|(
 name|ioctl

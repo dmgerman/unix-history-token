@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.7 1994/10/24 03:30:55 paul Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.8 1994/10/26 02:53:09 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -148,6 +148,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"sysinstall running as init\n\r"
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 literal|1
@@ -168,6 +173,15 @@ literal|"root"
 argument_list|)
 expr_stmt|;
 block|}
+name|debug_fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/ttyv1"
+argument_list|,
+name|O_WRONLY
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|set_termcap

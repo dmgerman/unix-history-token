@@ -214,7 +214,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|DIOCSDINFO
+name|DIOCWDINFO
 argument_list|,
 operator|&
 name|avail_disklabels
@@ -224,21 +224,16 @@ index|]
 argument_list|)
 operator|<
 literal|0
-operator|&&
-name|errno
-operator|!=
-name|ENODEV
-operator|&&
-name|errno
-operator|!=
-name|ENOTTY
 condition|)
 block|{
-name|sprintf
+name|Fatal
 argument_list|(
-name|errmsg
+literal|"Failed to write disklabel: %s\n"
 argument_list|,
-literal|"Failed to change in-core disklabel\n"
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -248,6 +243,11 @@ literal|1
 operator|)
 return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|lseek
@@ -319,7 +319,16 @@ name|sprintf
 argument_list|(
 name|errmsg
 argument_list|,
-literal|"Failed to write bootblocks\n"
+literal|"Failed to write bootblocks (%p) %d %s\n"
+argument_list|,
+name|bootblocks
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
