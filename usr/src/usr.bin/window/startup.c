@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.5 83/08/26"
+literal|"@(#)startup.c	3.6 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s/.windowrc"
+literal|"%s/.windrc"
 argument_list|,
 name|home
 argument_list|)
@@ -125,6 +125,12 @@ argument_list|,
 name|wwncol
 argument_list|,
 name|nbufline
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -155,6 +161,12 @@ argument_list|,
 name|wwncol
 argument_list|,
 name|nbufline
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -190,7 +202,7 @@ name|void
 operator|)
 name|wwputs
 argument_list|(
-literal|"\nCan't open default windows.  "
+literal|"Can't open default windows.  "
 argument_list|,
 name|cmdwin
 argument_list|)

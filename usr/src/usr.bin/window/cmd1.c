@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.12 83/09/15"
+literal|"@(#)cmd1.c	3.13 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,12 @@ operator|+
 literal|1
 argument_list|,
 name|nbufline
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -748,6 +754,8 @@ parameter_list|,
 name|ncol
 parameter_list|,
 name|nline
+parameter_list|,
+name|label
 parameter_list|)
 name|int
 name|id
@@ -759,6 +767,10 @@ decl_stmt|,
 name|row
 decl_stmt|,
 name|col
+decl_stmt|;
+name|char
+modifier|*
+name|label
 decl_stmt|;
 block|{
 specifier|register
@@ -891,6 +903,26 @@ operator|.
 name|c
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|label
+operator|!=
+literal|0
+operator|&&
+name|setlabel
+argument_list|(
+name|w
+argument_list|,
+name|label
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"No memory for label."
+argument_list|)
 expr_stmt|;
 name|wwcursor
 argument_list|(
