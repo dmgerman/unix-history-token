@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.3	(Berkeley)	83/10/22  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.4	(Berkeley)	83/11/30  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
@@ -1095,32 +1095,26 @@ comment|/* operand next word */
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
 name|outlist
 argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* process list of page numbers to be printed */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
 name|s
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+comment|/* process list of page numbers to be printed */
+specifier|register
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|n1
 decl_stmt|,
 name|n2
-decl_stmt|,
-name|i
 decl_stmt|;
 name|nolist
 operator|=
@@ -1688,6 +1682,18 @@ case|case
 literal|'g'
 case|:
 comment|/* gremlin curve */
+name|drawwig
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+name|fp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'~'
 case|:
@@ -1697,12 +1703,17 @@ argument_list|(
 name|buf
 operator|+
 literal|1
+argument_list|,
+name|fp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'t'
 case|:
+comment|/* line-thickness */
 name|sscanf
 argument_list|(
 name|buf
@@ -1724,6 +1735,7 @@ break|break;
 case|case
 literal|'s'
 case|:
+comment|/* line-style */
 name|sscanf
 argument_list|(
 name|buf
@@ -2024,11 +2036,14 @@ case|case
 literal|'x'
 case|:
 comment|/* device control */
+if|if
+condition|(
 name|devcntrl
 argument_list|(
 name|fp
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 break|break;
 default|default:
 name|error
@@ -2047,25 +2062,18 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|devcntrl
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|fp
+parameter_list|)
 comment|/* interpret device control functions */
-end_comment
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+comment|/* returns -1 upon "stop" command */
 block|{
 name|char
 name|str
@@ -2131,11 +2139,15 @@ case|case
 literal|'p'
 case|:
 comment|/* pause -- can restart */
+break|break;
 case|case
 literal|'s'
 case|:
 comment|/* stop */
-break|break;
+return|return
+operator|-
+literal|1
+return|;
 case|case
 literal|'r'
 case|:
@@ -2287,9 +2299,15 @@ name|c
 operator|==
 name|EOF
 condition|)
-break|break;
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|fileinit
@@ -3726,52 +3744,6 @@ expr_stmt|;
 name|putc
 argument_list|(
 name|AEOF
-argument_list|,
-name|tf
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|t_rule
-argument_list|(
-argument|w
-argument_list|,
-argument|h
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|hvflush
-argument_list|()
-expr_stmt|;
-name|putc
-argument_list|(
-name|ABRULE
-argument_list|,
-name|tf
-argument_list|)
-expr_stmt|;
-name|putint
-argument_list|(
-name|w
-argument_list|,
-name|tf
-argument_list|)
-expr_stmt|;
-name|putint
-argument_list|(
-name|h
-argument_list|,
-name|tf
-argument_list|)
-expr_stmt|;
-name|putint
-argument_list|(
-operator|-
-name|h
 argument_list|,
 name|tf
 argument_list|)
