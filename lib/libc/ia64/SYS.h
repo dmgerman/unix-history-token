@@ -42,9 +42,9 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|ENTRY(_ ## name,0);
+value|ENTRY(__sys_ ## name,0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(name, _ ## name);				\ 	CALLSYS_ERROR(name)
+value|\ 	WEAK_ALIAS(name, __sys_ ## name);			\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_ERROR(name)
 end_define
 
 begin_define
@@ -55,9 +55,9 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|ENTRY(name,0);
+value|ENTRY(__sys_ ## name,0);
 comment|/* XXX # of args? */
-value|\ 	CALLSYS_NOERROR(name)
+value|\ 	WEAK_ALIAS(name, __sys_ ## name);			\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_NOERROR(name)
 end_define
 
 begin_define
@@ -68,7 +68,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCALL(name);						\ 	br.ret.sptk.few rp;					\ END(_ ## name)
+value|SYSCALL(name);						\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name)
 end_define
 
 begin_define
@@ -79,7 +79,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCALL_NOERROR(name);					\ 	br.ret.sptk.few rp;					\ END(name)
+value|SYSCALL_NOERROR(name);					\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name)
 end_define
 
 begin_define
@@ -87,14 +87,12 @@ define|#
 directive|define
 name|PSEUDO
 parameter_list|(
-name|label
-parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|ENTRY(_ ## label,0);
+value|ENTRY(__sys_ ## name,0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(label, _ ## label);				\ 	CALLSYS_ERROR(name);					\ 	br.ret.sptk.few rp;					\ END(_ ## label);
+value|\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_ERROR(name);					\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name);
 end_define
 
 begin_define
@@ -102,98 +100,12 @@ define|#
 directive|define
 name|PSEUDO_NOERROR
 parameter_list|(
-name|label
-parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|ENTRY(label,0);
+value|ENTRY(__sys_ ## name,0);
 comment|/* XXX # of args? */
-value|\ 	CALLSYS_NOERROR(name);					\ 	br.ret.sptk.few rp;					\ END(label);
-end_define
-
-begin_comment
-comment|/*  * Design note:  *  * The macros PSYSCALL() and PRSYSCALL() are intended for use where a  * syscall needs to be renamed in the threaded library.  */
-end_comment
-
-begin_comment
-comment|/*  * For the thread_safe versions, we prepend __sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCALL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|CALL(__sys_ ## name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PENTRY
-parameter_list|(
-name|name
-parameter_list|,
-name|args
-parameter_list|)
-define|\
-value|ENTRY(__sys_ ## name,args)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEND
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|END(__sys_ ## name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSYSCALL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|PENTRY(name,0);
-comment|/* XXX # of args? */
-value|\ 	CALLSYS_ERROR(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRSYSCALL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|PENTRY(_sys_ ## name,0);
-comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(name, __sys_ ## name);			\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_ERROR(name)					\ 	br.ret.sptk.few rp;					\ PEND(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPSEUDO
-parameter_list|(
-name|label
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|PENTRY(label,0);
-comment|/* XXX # of args? */
-value|\ 	CALLSYS_ERROR(name);					\ 	br.ret.sptk.few rp;					\ PEND(label)
+value|\ 	WEAK_ALIAS(_ ## name, __sys_ ## name);			\ 	CALLSYS_NOERROR(name);					\ 	br.ret.sptk.few rp;					\ END(__sys_ ## name);
 end_define
 
 end_unit

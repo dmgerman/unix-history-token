@@ -64,9 +64,9 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|LEAF(__CONCAT(_,name),0);
+value|LEAF(__CONCAT(__sys_,name),0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(name, __CONCAT(_,name));			\ 	CALLSYS_ERROR(name)
+value|\ 	WEAK_ALIAS(name, __CONCAT(__sys_,name));		\ 	WEAK_ALIAS(__CONCAT(_,name), __CONCAT(__sys_,name));	\ 	CALLSYS_ERROR(name)
 end_define
 
 begin_define
@@ -77,9 +77,9 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|LEAF(name,0);
+value|LEAF(__CONCAT(__sys_,name),0);
 comment|/* XXX # of args? */
-value|\ 	CALLSYS_NOERROR(name)
+value|\ 	WEAK_ALIAS(name, __CONCAT(__sys_,name));		\ 	WEAK_ALIAS(__CONCAT(_,name), __CONCAT(__sys_,name));	\ 	CALLSYS_NOERROR(name)
 end_define
 
 begin_define
@@ -90,7 +90,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCALL(name);						\ 	RET;							\ END(__CONCAT(_,name))
+value|SYSCALL(name);						\ 	RET;							\ END(__CONCAT(__sys_,name))
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCALL_NOERROR(name);					\ 	RET;							\ END(name)
+value|SYSCALL_NOERROR(name);					\ 	RET;							\ END(__CONCAT(__sys_,name))
 end_define
 
 begin_define
@@ -109,123 +109,12 @@ define|#
 directive|define
 name|PSEUDO
 parameter_list|(
-name|label
-parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|LEAF(__CONCAT(_,label),0);
+value|LEAF(__CONCAT(__sys_,name),0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(label, __CONCAT(_,label));			\ 	CALLSYS_ERROR(name);					\ 	RET;							\ END(__CONCAT(_,label));
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSEUDO_NOERROR
-parameter_list|(
-name|label
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|LEAF(label,0);
-comment|/* XXX # of args? */
-value|\ 	CALLSYS_NOERROR(name);					\ 	RET;							\ END(label);
-end_define
-
-begin_comment
-comment|/*  * Design note:  *  * The macros PSYSCALL() and PRSYSCALL() are intended for use where a  * syscall needs to be renamed in the threaded library.  */
-end_comment
-
-begin_comment
-comment|/*  * For the thread_safe versions, we prepend __sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PNAME
-parameter_list|(
-name|name
-parameter_list|)
-value|__CONCAT(__sys_,name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCALL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|CALL(PNAME(name))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PLEAF
-parameter_list|(
-name|name
-parameter_list|,
-name|args
-parameter_list|)
-define|\
-value|LEAF(PNAME(name),args)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEND
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|END(PNAME(name))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSYSCALL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|PLEAF(name,0);
-comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(name, PNAME(name));				\ 	WEAK_ALIAS(__CONCAT(_,name), PNAME(name));		\ 	CALLSYS_ERROR(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRSYSCALL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|PLEAF(name,0);
-comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(name, PNAME(name));				\ 	WEAK_ALIAS(__CONCAT(_,name), PNAME(name));		\ 	CALLSYS_ERROR(name)					\ 	RET;							\ PEND(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPSEUDO
-parameter_list|(
-name|label
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|PLEAF(label,0);
-comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(label, PNAME(label));			\ 	WEAK_ALIAS(__CONCAT(_,label), PNAME(label));		\ 	CALLSYS_ERROR(name);					\ 	RET;							\ PEND(label)
+value|\ 	WEAK_ALIAS(__CONCAT(_,name), __CONCAT(__sys_, name));	\ 	CALLSYS_ERROR(name);					\ 	RET;							\ END(__CONCAT(__sys_,name))
 end_define
 
 end_unit
