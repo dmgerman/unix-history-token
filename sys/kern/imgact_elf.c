@@ -2344,6 +2344,12 @@ name|object
 operator|=
 name|NULL
 expr_stmt|;
+name|imgp
+operator|->
+name|execlabel
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|imgp
