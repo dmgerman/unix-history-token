@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local.c	1.7 (Berkeley) %G%"
+literal|"@(#)local.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1517,6 +1517,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|andable
 argument_list|(
@@ -1637,6 +1641,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|NODE
 modifier|*
@@ -1664,7 +1672,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* t, d, and s are the type, dimension offset, and sizeoffset */
-comment|/* in general they  are necessary for offcon, but not on H'well */
+comment|/* in general they  are necessary for offcon, but not on Tahoe */
 name|p
 operator|=
 name|bcon
@@ -1725,6 +1733,11 @@ comment|/* generate initialization code for assigning a constant c 		to a field 
 comment|/* we assume that the proper alignment has been obtained */
 comment|/* inoff is updated to have the proper final value */
 comment|/* we also assume sz< SZINT */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|inwd
 operator|+=
 name|sz
@@ -1839,6 +1852,11 @@ struct|;
 name|float
 name|f
 decl_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 if|if
 condition|(
 name|sz
@@ -2382,6 +2400,11 @@ decl_stmt|,
 name|tsize
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|q
 operator|=
 operator|&
