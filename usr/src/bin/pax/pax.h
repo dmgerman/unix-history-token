@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)pax.h	1.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)pax.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ comment|/* maximium path length for pax. MUST be */
 end_comment
 
 begin_comment
-comment|/* longer than the system max */
+comment|/* longer than the system MAXPATHLEN */
 end_comment
 
 begin_comment
@@ -208,7 +208,7 @@ comment|/* pipe/socket */
 end_comment
 
 begin_comment
-comment|/*  * Format Specific Routine Table  *  * The format specific routine table allows new archive formats to be quickly  * added. Overall pax operation is independent of the actual format used to  * form the archive. Only those routines which deal directly with the archive   * are tailored to the oddities of the specifc format. All other routines are  * independent of the archive format. Data flow in and out of the format  * dependnent routines pass pointers to ARCHD structure (described below).  */
+comment|/*  * Format Specific Routine Table  *  * The format specific routine table allows new archive formats to be quickly  * added. Overall pax operation is independent of the actual format used to  * form the archive. Only those routines which deal directly with the archive   * are tailored to the oddities of the specifc format. All other routines are  * independent of the archive format. Data flow in and out of the format  * dependent routines pass pointers to ARCHD structure (described below).  */
 end_comment
 
 begin_typedef
@@ -220,7 +220,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* name of format, this is the name the user */
-comment|/* gives to -x to select it. */
+comment|/* gives to -x option to select it. */
 name|int
 name|bsz
 decl_stmt|;
@@ -239,19 +239,19 @@ comment|/* get_arc() must be adjusted */
 name|int
 name|udev
 decl_stmt|;
-comment|/* does append require unique dev/ino. some */
+comment|/* does append require unique dev/ino? some */
 comment|/* formats use the device and inode fields */
 comment|/* to specify hard links. when members in */
 comment|/* the archive have the same inode/dev they */
 comment|/* are assumed to be hard links. During */
 comment|/* append we may have to generate unique ids */
-comment|/* to avoid creating incorrect links */
+comment|/* to avoid creating incorrect hard links */
 name|int
 name|hlk
 decl_stmt|;
 comment|/* does archive store hard links info? if */
-comment|/* not we do not bother to look for them */
-comment|/* during write operations */
+comment|/* not, we do not bother to look for them */
+comment|/* during archive write operations */
 name|int
 name|blkalgn
 decl_stmt|;
@@ -260,8 +260,8 @@ name|int
 name|inhead
 decl_stmt|;
 comment|/* is the trailer encoded in a valid header? */
-comment|/* if not, trailers are assumed to be */
-comment|/* invalid headers */
+comment|/* if not, trailers are assumed to be found */
+comment|/* in invalid headers (i.e like tar) */
 name|int
 function_decl|(
 modifier|*
@@ -280,7 +280,7 @@ parameter_list|()
 function_decl|;
 comment|/* initialize routine for read. so format */
 comment|/* can set up tables etc before it starts */
-comment|/* reading */
+comment|/* reading an archive */
 name|int
 function_decl|(
 modifier|*
@@ -291,12 +291,15 @@ function_decl|;
 comment|/* read header routine. passed a pointer to */
 comment|/* ARCHD. It must extract the info from the */
 comment|/* format and store it in the ARCHD struct. */
+comment|/* This routine is expected to fill all the */
+comment|/* fields in the ARCHD (including stat buf) */
 comment|/* 0 is returned when a valid header is */
 comment|/* found. -1 when not valid. This routine */
 comment|/* set the skip and pad fields so the format */
 comment|/* independent routines know the amount of */
-comment|/* padding and the number of bytes to get to */
-comment|/* the next file header */
+comment|/* padding and the number of bytes of data */
+comment|/* which follow the header. This info is */
+comment|/* used skip to the next file header */
 name|off_t
 function_decl|(
 modifier|*
@@ -304,10 +307,10 @@ name|end_rd
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* read is over. Allows format to clean up */
-comment|/* and MUST return the length of the trailer */
-comment|/* record (so append knows how many bytes */
-comment|/* to move back to rewrite the trailer */
+comment|/* read cleanup. Allows format to clean up */
+comment|/* and MUST RETURN THE LENGTH OF THE TRAILER */
+comment|/* RECORD (so append knows how many bytes */
+comment|/* to move back to rewrite the trailer) */
 name|int
 function_decl|(
 modifier|*
@@ -358,7 +361,7 @@ comment|/* it can never contain a valid header (skip */
 comment|/* this block, no point in looking at it)  */
 comment|/* CAUTION: parameters to this function are */
 comment|/* different for trailers inside or outside */
-comment|/* of headers. Se get_head() for details */
+comment|/* of headers. See get_head() for details */
 name|int
 function_decl|(
 modifier|*
@@ -366,7 +369,7 @@ name|rd_data
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* read/process file data on the archive */
+comment|/* read/process file data from the archive */
 name|int
 function_decl|(
 modifier|*
@@ -374,7 +377,7 @@ name|wr_data
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* read/process file data on the archive */
+comment|/* write/process file data to the archive */
 name|int
 function_decl|(
 modifier|*
@@ -382,7 +385,7 @@ name|options
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* process format options (-x) flags */
+comment|/* process format specific options (-o) */
 block|}
 name|FSUB
 typedef|;
@@ -432,7 +435,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * General Archive Structure (used internal to pax)  *  * This structure is used to pass information about archive members between  * the format independent routines and the format specific routines. When  * new archive formats are added, they must accept requests and supply info  * encoded in a structure of this type. The name fields are declared statically  * here. The cost of malloc() and free on every archive member was found to be  * excessive. Since there is only ONE of these flowting around, size is not a  * big consideration.  */
+comment|/*  * General Archive Structure (used internal to pax)  *  * This structure is used to pass information about archive members between  * the format independent routines and the format specific routines. When  * new archive formats are added, they must accept requests and supply info  * encoded in a structure of this type. The name fields are declared statically  * here, as there is only ONE of these floating around, size is not a major  * consideration. Eventually converting the name fields to a dynamic length  * may be required if and when the supporting operating system removes all  * restrictions on the length of pathnames it will resolve.  */
 end_comment
 
 begin_typedef
@@ -488,7 +491,9 @@ name|off_t
 name|skip
 decl_stmt|;
 comment|/* bytes of real data after header */
-comment|/* the st_size field may not apply */
+comment|/* IMPORTANT. The st_size field does */
+comment|/* not always indicate the amount of */
+comment|/* data following the header. */
 name|u_long
 name|crc
 decl_stmt|;
@@ -541,7 +546,7 @@ define|#
 directive|define
 name|PAX_HRG
 value|9
-comment|/* hard link (to a file if known) */
+comment|/* hard link to a regular file */
 define|#
 directive|define
 name|PAX_CTG
@@ -657,6 +662,13 @@ define|#
 directive|define
 name|OCT
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PAX_
+value|1
 end_define
 
 end_unit
