@@ -290,9 +290,9 @@ struct|struct
 block|{
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 name|unsigned
 name|int
 name|w_Termsig
@@ -319,9 +319,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|_BIG_ENDIAN
 name|unsigned
 name|int
 name|w_Filler
@@ -354,9 +354,9 @@ struct|struct
 block|{
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 name|unsigned
 name|int
 name|w_Stopval
@@ -378,9 +378,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|_BIG_ENDIAN
 name|unsigned
 name|int
 name|w_Filler
