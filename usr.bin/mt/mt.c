@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.16 1998/10/03 10:58:54 dfr Exp $"
+literal|"$Id: mt.c,v 1.17 1998/12/18 02:02:20 mjacob Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -945,11 +945,13 @@ operator|*
 name|argv
 argument_list|)
 operator|&&
+operator|(
 name|comp
 operator|->
 name|c_flags
 operator|&
 name|IS_DENSITY
+operator|)
 condition|)
 block|{
 specifier|const
@@ -1032,11 +1034,13 @@ operator|*
 name|argv
 argument_list|)
 operator|&&
+operator|(
 name|comp
 operator|->
 name|c_flags
 operator|&
 name|IS_COMP
+operator|)
 condition|)
 block|{
 name|mt_com
@@ -1114,6 +1118,7 @@ directive|endif
 comment|/* defined(__FreeBSD__) */
 if|if
 condition|(
+operator|(
 name|mt_com
 operator|.
 name|mt_count
@@ -1156,6 +1161,7 @@ literal|0
 endif|#
 directive|endif
 comment|/* defined (__FreeBSD__) */
+operator|)
 operator|||
 operator|*
 name|p
@@ -1197,6 +1203,10 @@ case|:
 case|case
 name|MTIOCRDSPOS
 case|:
+block|{
+name|u_int32_t
+name|block
+decl_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1207,10 +1217,11 @@ name|comp
 operator|->
 name|c_code
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
-name|mt_com
-operator|.
-name|mt_count
+name|block
 argument_list|)
 operator|<
 literal|0
@@ -1242,13 +1253,7 @@ literal|"hardware"
 else|:
 literal|"logical"
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-name|mt_com
-operator|.
-name|mt_count
+name|block
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1257,12 +1262,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
 case|case
 name|MTIOCSLOCATE
 case|:
 case|case
 name|MTIOCHLOCATE
 case|:
+block|{
+name|u_int32_t
+name|block
+init|=
+operator|(
+name|u_int32_t
+operator|)
+name|mt_com
+operator|.
+name|mt_count
+decl_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1273,10 +1290,11 @@ name|comp
 operator|->
 name|c_code
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
-name|mt_com
-operator|.
-name|mt_count
+name|block
 argument_list|)
 operator|<
 literal|0
@@ -1296,6 +1314,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
 default|default:
 break|break;
 block|}
