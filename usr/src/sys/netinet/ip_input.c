@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -448,6 +448,16 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * If no IP addresses have been set yet but the interfaces 	 * are receiving, can't do anything with incoming packets yet. 	 */
+if|if
+condition|(
+name|in_ifaddr
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|bad
+goto|;
 name|ipstat
 operator|.
 name|ips_total
