@@ -1018,6 +1018,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|packagesite
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 block|}
 comment|/* If no packages, yelp */
