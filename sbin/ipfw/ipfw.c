@@ -1264,6 +1264,23 @@ operator|->
 name|fw_prot
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_SME
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" from me"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|" from %s"
@@ -1457,6 +1474,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|chain
@@ -1552,6 +1570,23 @@ literal|","
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_DME
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" to me"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|" to %s"
@@ -1744,6 +1779,7 @@ name|fw_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4711,8 +4747,8 @@ literal|"      {allow|permit|accept|pass|deny|drop|reject|unreach code|\n"
 literal|"       reset|count|skipto num|divert port|tee port|fwd ip|\n"
 literal|"       pipe num} [log [logamount count]]\n"
 literal|"    proto: {ip|tcp|udp|icmp|<number>}\n"
-literal|"    src: from [not] {any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
-literal|"    dst: to [not] {any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
+literal|"    src: from [not] {me|any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
+literal|"    dst: to [not] {me|any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
 literal|"  extras:\n"
 literal|"    uid {user id}\n"
 literal|"    gid {group id}\n"
@@ -10935,6 +10971,41 @@ argument_list|(
 literal|"missing arguments"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"me"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_SME
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fill_ip
 argument_list|(
 operator|&
@@ -10954,6 +11025,7 @@ operator|&
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ac
@@ -11132,6 +11204,41 @@ argument_list|(
 literal|"missing arguments"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"me"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flg
+operator||=
+name|IP_FW_F_DME
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fill_ip
 argument_list|(
 operator|&
@@ -11151,6 +11258,7 @@ operator|&
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ac
