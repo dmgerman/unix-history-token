@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.16 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,9 @@ condition|(
 name|host
 condition|)
 block|{
+name|int
+name|overbose
+decl_stmt|;
 name|connected
 operator|=
 literal|1
@@ -426,10 +429,6 @@ if|if
 condition|(
 name|autologin
 condition|)
-block|{
-name|int
-name|overbose
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -619,7 +618,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* unix */
-block|}
 block|}
 block|}
 end_block
