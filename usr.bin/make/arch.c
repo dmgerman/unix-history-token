@@ -2038,6 +2038,7 @@ argument_list|,
 name|SEEK_CUR
 argument_list|)
 expr_stmt|;
+comment|/* XXX Multiple levels may be asked for, make this conditional 		 * on one, and use DEBUGF. 		 */
 if|if
 condition|(
 name|DEBUG
@@ -2051,8 +2052,10 @@ name|MAKE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"ArchStat: Extended format entry for %s\n"
 argument_list|,
 name|memName
@@ -2326,20 +2329,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|ARCH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Attempted to redefine an SVR4 name table\n"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|-
 literal|1
@@ -2379,20 +2375,13 @@ operator|!=
 literal|1
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|ARCH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Reading an SVR4 name table failed\n"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|-
 literal|1
@@ -2450,22 +2439,15 @@ break|break;
 default|default:
 break|break;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|ARCH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Found svr4 archive name table with %zu entries\n"
 argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -2531,22 +2513,15 @@ literal|1
 index|]
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|ARCH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Could not parse SVR4 name %s\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|2
 return|;
@@ -2560,16 +2535,10 @@ operator|->
 name|fnamesize
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|ARCH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"SVR4 entry offset %s is greater than %zu\n"
 argument_list|,
 name|name
@@ -2579,21 +2548,14 @@ operator|->
 name|fnamesize
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|2
 return|;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|ARCH
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Replaced %s with %s\n"
 argument_list|,
 name|name
@@ -2607,7 +2569,6 @@ name|entry
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -3081,6 +3042,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 		 * XXX choose one. 		 */
 if|if
 condition|(
 name|DEBUG
@@ -4031,6 +3993,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+comment|/* XXX choose one. */
 if|if
 condition|(
 name|DEBUG

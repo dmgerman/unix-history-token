@@ -1475,17 +1475,9 @@ operator|)
 name|v
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|VAR
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"%s:%s = %s\n"
 argument_list|,
@@ -1498,7 +1490,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1576,17 +1567,9 @@ block|{
 name|LstNode
 name|ln
 decl_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|VAR
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"%s:delete %s\n"
 argument_list|,
@@ -1597,7 +1580,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|ln
 operator|=
 name|Lst_Find
@@ -1784,17 +1766,9 @@ operator|)
 name|val
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|VAR
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"%s:%s = %s\n"
 argument_list|,
@@ -1807,7 +1781,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/*      * Any variables given on the command line are automatically exported      * to the environment (as per POSIX standard)      */
 if|if
@@ -1949,17 +1922,9 @@ operator|)
 name|val
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|VAR
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"%s:%s = %s\n"
 argument_list|,
@@ -1987,7 +1952,6 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|v
@@ -6592,17 +6556,9 @@ name|char
 name|termc
 decl_stmt|;
 comment|/* Character which terminated scan */
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|VAR
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"Applying :%c to \"%s\"\n"
 argument_list|,
@@ -6612,7 +6568,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 operator|*
@@ -8759,24 +8714,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|VAR
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"Result is \"%s\"\n"
 argument_list|,
 name|newStr
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*

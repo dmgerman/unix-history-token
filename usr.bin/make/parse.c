@@ -5436,19 +5436,9 @@ modifier|*
 name|oldFile
 decl_stmt|;
 comment|/* state associated with this file */
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|FOR
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"%s\n----\n"
 argument_list|,

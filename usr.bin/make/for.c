@@ -571,19 +571,9 @@ name|ptr
 operator|--
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|FOR
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"For: Iterator %s List %s\n"
 argument_list|,
@@ -695,19 +685,9 @@ index|]
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|FOR
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"For: end for %d\n"
 argument_list|,
@@ -764,19 +744,9 @@ block|{
 name|forLevel
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|FOR
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"For: new loop %d\n"
 argument_list|,
@@ -887,19 +857,9 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|FOR
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
 literal|"--- %s = %s\n"
 argument_list|,

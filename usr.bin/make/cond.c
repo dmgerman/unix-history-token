@@ -2192,16 +2192,10 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|COND
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"lhs = \"%s\", rhs = \"%s\", op = %.2s\n"
 argument_list|,
 name|lhs
@@ -2211,7 +2205,6 @@ argument_list|,
 name|op
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		     * Null-terminate rhs and perform the comparison. 		     * t is set to the result. 		     */
 if|if
 condition|(
@@ -2477,16 +2470,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|COND
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"left = %f, right = %f, op = %.2s\n"
 argument_list|,
 name|left
@@ -2496,7 +2483,6 @@ argument_list|,
 name|op
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|op

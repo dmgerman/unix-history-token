@@ -289,14 +289,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|DEBUG
-argument_list|(
-name|MAKE
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|gn
 operator|->
 name|mtime
@@ -304,8 +296,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|"modified %s..."
 argument_list|,
 name|Targ_FmtTime
@@ -319,12 +313,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|"non-existent..."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/*      * A target is remade in one of the following circumstances:      *	its modification time is smaller than that of its youngest child      *	    and it would actually be run (has commands or type OP_NOP)      *	it's the object of a force operator      *	it has no children, was on the lhs of an operator and doesn't exist      *	    already.      *      * Libraries are only considered out-of-date if the archive module says      * they are.      *      * These weird rules are brought to you by Backward-Compatability and      * the strange people who wrote 'Make'.      */
@@ -338,20 +333,13 @@ name|OP_USE
 condition|)
 block|{
 comment|/* 	 * If the node is a USE node it is *never* out of date 	 * no matter *what*. 	 */
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|".USE node..."
 argument_list|)
 expr_stmt|;
-block|}
 name|oodate
 operator|=
 name|FALSE
@@ -367,20 +355,13 @@ operator|&
 name|OP_LIB
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"library..."
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * always out of date if no children and :: target 	 */
 name|oodate
 operator|=
@@ -419,20 +400,13 @@ name|OP_JOIN
 condition|)
 block|{
 comment|/* 	 * A target with the .JOIN attribute is only considered 	 * out-of-date if any of its children was out-of-date. 	 */
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|".JOIN node..."
 argument_list|)
 expr_stmt|;
-block|}
 name|oodate
 operator|=
 name|gn
@@ -459,14 +433,6 @@ block|{
 comment|/* 	 * A node which is the object of the force (!) operator or which has 	 * the .EXEC attribute is always considered out-of-date. 	 */
 if|if
 condition|(
-name|DEBUG
-argument_list|(
-name|MAKE
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|gn
 operator|->
 name|type
@@ -474,8 +440,10 @@ operator|&
 name|OP_FORCE
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|"! operator..."
 argument_list|)
 expr_stmt|;
@@ -490,20 +458,23 @@ operator|&
 name|OP_PHONY
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|".PHONY node..."
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|".EXEC node..."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|oodate
 operator|=
@@ -555,14 +526,6 @@ block|{
 comment|/* 	 * A node whose modification time is less than that of its 	 * youngest child or that has no children (cmtime == 0) and 	 * either doesn't exist (mtime == 0) or was the object of a 	 * :: operator is out-of-date. Why? Because that's the way Make does 	 * it. 	 */
 if|if
 condition|(
-name|DEBUG
-argument_list|(
-name|MAKE
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|gn
 operator|->
 name|mtime
@@ -572,8 +535,10 @@ operator|->
 name|cmtime
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|"modified before source..."
 argument_list|)
 expr_stmt|;
@@ -588,20 +553,23 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|"non-existent and no sources..."
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|MAKE
+argument_list|,
 literal|":: operator and no sources..."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|oodate
 operator|=
@@ -614,7 +582,7 @@ if|#
 directive|if
 literal|0
 comment|/* WHY? */
-block|if (DEBUG(MAKE)) { 	    printf("source %smade...", gn->childMade ? "" : "not "); 	} 	oodate = gn->childMade;
+block|DEBUGF(MAKE, "source %smade...", gn->childMade ? "" : "not "); 	oodate = gn->childMade;
 else|#
 directive|else
 name|oodate
@@ -1123,16 +1091,10 @@ operator|=
 name|now
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"update time: %s\n"
 argument_list|,
 name|Targ_FmtTime
@@ -1143,7 +1105,6 @@ name|mtime
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -1868,16 +1829,10 @@ argument_list|(
 name|toBeMade
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Examining %s..."
 argument_list|,
 name|gn
@@ -1885,7 +1840,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Make sure any and all predecessors that are going to be made, 	 * have been. 	 */
 if|if
 condition|(
@@ -1950,16 +1904,10 @@ operator|==
 name|UNMADE
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"predecessor %s not made yet.\n"
 argument_list|,
 name|pgn
@@ -1967,7 +1915,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 block|}
@@ -1993,20 +1940,13 @@ name|gn
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"out-of-date\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|queryFlag
@@ -2031,20 +1971,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|MAKE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"up-to-date\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|gn
 operator|->
 name|made

@@ -1286,7 +1286,7 @@ name|PRINTDBIT
 parameter_list|(
 name|attr
 parameter_list|)
-value|case CONCAT(OP_,attr): if (DEBUG(TARG)) printf("." #attr " "); break
+value|case CONCAT(OP_,attr): DEBUGF(TARG, "." #attr " "); break
 name|type
 operator|&=
 operator|~
@@ -1379,15 +1379,10 @@ comment|/*XXX: MEMBER is defined, so CONCAT(OP_,MEMBER) gives OP_"%" */
 case|case
 name|OP_MEMBER
 case|:
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|TARG
-argument_list|)
-condition|)
-name|printf
-argument_list|(
+argument_list|,
 literal|".MEMBER "
 argument_list|)
 expr_stmt|;

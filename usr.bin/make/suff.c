@@ -1199,16 +1199,10 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"inserting %s(%d)..."
 argument_list|,
 name|s
@@ -1220,7 +1214,6 @@ operator|->
 name|sNum
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ln
@@ -1228,20 +1221,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"at end of list\n"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1290,16 +1276,10 @@ operator|->
 name|sNum
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"before %s(%d)\n"
 argument_list|,
 name|s2
@@ -1311,7 +1291,6 @@ operator|->
 name|sNum
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1350,17 +1329,12 @@ name|l
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|DEBUG
+else|else
+block|{
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"already there\n"
 argument_list|)
 expr_stmt|;
@@ -1864,16 +1838,10 @@ name|t
 argument_list|)
 expr_stmt|;
 comment|/*      * link the two together in the proper relationship and order      */
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"defining transformation from `%s' to `%s'\n"
 argument_list|,
 name|s
@@ -1885,7 +1853,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|SuffInsert
 argument_list|(
 name|t
@@ -1993,16 +1960,10 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"deleting transformation from `%s' to `%s'\n"
 argument_list|,
 name|s
@@ -2014,7 +1975,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Remove the source from the target's children list. We check for a 	 * NULL return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c and .o 	 * are only linked once... 	 */
 name|SuffRemove
 argument_list|(
@@ -2039,22 +1999,17 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|gn
 operator|->
 name|type
 operator|&
 name|OP_TRANSFORM
-operator|)
-operator|&&
-name|DEBUG
-argument_list|(
-name|SUFF
-argument_list|)
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|SUFF
+argument_list|,
 literal|"transformation %s complete\n"
 argument_list|,
 name|gn
@@ -3761,16 +3716,10 @@ argument_list|(
 name|srcs
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\ttrying %s..."
 argument_list|,
 name|s
@@ -3778,7 +3727,6 @@ operator|->
 name|file
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * A file is considered to exist if either a node exists in the 	 * graph for it or the file actually exists. 	 */
 if|if
 condition|(
@@ -3861,20 +3809,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"not there\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|SuffAddLevel
 argument_list|(
 name|srcs
@@ -3896,16 +3837,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|DEBUG
-argument_list|(
-name|SUFF
-argument_list|)
-operator|&&
 name|rs
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|SUFF
+argument_list|,
 literal|"got it\n"
 argument_list|)
 expr_stmt|;
@@ -4250,16 +4188,10 @@ operator|)
 name|ret
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\tusing existing source %s\n"
 argument_list|,
 name|s
@@ -4267,7 +4199,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ret
@@ -4393,16 +4324,10 @@ operator|)
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Expanding \"%s\"..."
 argument_list|,
 name|cgn
@@ -4410,7 +4335,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 operator|=
 name|Var_Subst
@@ -4733,16 +4657,10 @@ argument_list|(
 name|members
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s..."
 argument_list|,
 name|gn
@@ -4750,7 +4668,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|Lst_Member
@@ -4865,20 +4782,13 @@ argument_list|,
 name|ln
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -4928,16 +4838,10 @@ argument_list|,
 name|SuffSuffIsSuffixP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"Wildcard expanding \"%s\"..."
 argument_list|,
 name|cgn
@@ -4945,7 +4849,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ln
@@ -4966,16 +4869,10 @@ argument_list|(
 name|ln
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"suffix is \"%s\"..."
 argument_list|,
 name|s
@@ -4983,7 +4880,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|path
 operator|=
 name|s
@@ -5039,22 +4935,15 @@ argument_list|(
 name|exp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s..."
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 name|gn
 operator|=
 name|Targ_FindNode
@@ -5169,20 +5058,13 @@ argument_list|,
 name|ln
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -5471,16 +5353,10 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\tapplying %s -> %s to \"%s\"\n"
 argument_list|,
 name|s
@@ -5496,7 +5372,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*      * Record last child for expansion purposes      */
 name|ln
 operator|=
@@ -5834,20 +5709,13 @@ name|NULL
 condition|)
 block|{
 comment|/* 	 * Didn't know what it was -- use .NULL suffix if not in make mode 	 */
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"using null suffix\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|ms
 operator|=
 name|suffNull
@@ -5927,15 +5795,12 @@ argument_list|)
 argument_list|,
 name|ms
 argument_list|)
-operator|&&
-name|DEBUG
-argument_list|(
-name|SUFF
-argument_list|)
 condition|)
 block|{
-name|printf
+name|DEBUGF
 argument_list|(
+name|SUFF
+argument_list|,
 literal|"\tNo transformation from %s -> %s\n"
 argument_list|,
 name|ms
@@ -6314,16 +6179,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\tNo known suffix on %s. Using .NULL suffix\n"
 argument_list|,
 name|gn
@@ -6331,7 +6190,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|targ
 operator|=
 operator|(
@@ -6441,28 +6299,18 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-name|printf
-argument_list|(
+argument_list|,
 literal|"not "
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-name|printf
-argument_list|(
+argument_list|,
 literal|"adding suffix rules\n"
 argument_list|)
 expr_stmt|;
@@ -6622,16 +6470,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"\tNo valid suffix on %s\n"
 argument_list|,
 name|gn
@@ -6639,7 +6481,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|sfnd_abort
 label|:
 comment|/* 	 * Deal with finding the thing on the default search path if the 	 * node is only a source (not on the lhs of a dependency operator 	 * or [XXX] it has neither children or commands). 	 */
@@ -7447,16 +7288,10 @@ operator||=
 name|OP_DEPS_FOUND
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|DEBUG
+name|DEBUGF
 argument_list|(
 name|SUFF
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
+argument_list|,
 literal|"SuffFindDeps (%s)\n"
 argument_list|,
 name|gn
@@ -7464,7 +7299,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|gn
