@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ka630.c	7.2 (Berkeley) %G%  */
+comment|/*  *	@(#)ka630.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -87,6 +87,13 @@ specifier|extern
 name|struct
 name|ka630cpu
 name|ka630cpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|clkinit
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +208,10 @@ expr|struct
 name|ka630cpu
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|clkinit
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 	 * Clear restart and boot in progress flags in the CPMBX. This has 	 * nothing to do with the clock except that it the CPMBX reg. is a 	 * byte in the clock's ram. 	 */
 name|claddr
@@ -476,6 +487,13 @@ name|tmp2
 decl_stmt|,
 name|tmp4
 decl_stmt|;
+if|if
+condition|(
+name|clkinit
+operator|==
+literal|0
+condition|)
+return|return;
 name|claddr
 operator|->
 name|csr1
