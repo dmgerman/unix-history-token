@@ -393,11 +393,9 @@ value|10
 name|int
 name|nisodma
 decl_stmt|;
-name|u_int8_t
+name|struct
+name|fw_eui64
 name|eui
-index|[
-literal|8
-index|]
 decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
@@ -782,10 +780,16 @@ define|#
 directive|define
 name|FWXFERQ_BULK
 value|(1<< 11)
+if|#
+directive|if
+literal|0
+comment|/* BROKEN */
 define|#
 directive|define
 name|FWXFERQ_DV
 value|(1<< 12)
+endif|#
+directive|endif
 define|#
 directive|define
 name|FWXFERQ_MODEMASK
@@ -852,9 +856,6 @@ decl_stmt|;
 name|u_int
 name|packets
 decl_stmt|;
-name|u_int
-name|error
-decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -870,9 +871,6 @@ name|bnchunk
 decl_stmt|;
 name|u_int
 name|bnpacket
-decl_stmt|;
-name|u_int
-name|btpacket
 decl_stmt|;
 name|struct
 name|fw_bulkxfer
@@ -893,24 +891,21 @@ argument|fw_bulkxfer
 argument_list|)
 name|stfree
 expr_stmt|;
-name|struct
-name|fw_bulkxfer
-modifier|*
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|fw_bulkxfer
+argument_list|)
 name|stdma
-decl_stmt|;
-name|struct
-name|fw_bulkxfer
-modifier|*
-name|stdma2
-decl_stmt|;
+expr_stmt|;
 name|struct
 name|fw_bulkxfer
 modifier|*
 name|stproc
 decl_stmt|;
-name|u_int
-name|procptr
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FWXFERQ_DV
 name|int
 name|dvdbc
 decl_stmt|,
@@ -955,9 +950,8 @@ decl_stmt|;
 name|u_int
 name|dvpacket
 decl_stmt|;
-name|u_int
-name|need_wakeup
-decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|selinfo
 name|rsel
@@ -986,9 +980,6 @@ begin_struct
 struct|struct
 name|fw_bulkxfer
 block|{
-name|u_int32_t
-name|flag
-decl_stmt|;
 name|caddr_t
 name|buf
 decl_stmt|;

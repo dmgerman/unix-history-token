@@ -210,7 +210,13 @@ struct|struct
 block|{
 specifier|volatile
 name|u_int32_t
-name|cmd
+name|reqcount
+range|:
+literal|16
+decl_stmt|,
+name|control
+range|:
+literal|16
 decl_stmt|;
 specifier|volatile
 name|u_int32_t
@@ -246,131 +252,131 @@ union|;
 define|#
 directive|define
 name|OHCI_OUTPUT_MORE
-value|(0<< 28)
+value|(0<< 12)
 define|#
 directive|define
 name|OHCI_OUTPUT_LAST
-value|(1<< 28)
+value|(1<< 12)
 define|#
 directive|define
 name|OHCI_INPUT_MORE
-value|(2<< 28)
+value|(2<< 12)
 define|#
 directive|define
 name|OHCI_INPUT_LAST
-value|(3<< 28)
+value|(3<< 12)
 define|#
 directive|define
 name|OHCI_STORE_QUAD
-value|(4<< 28)
+value|(4<< 12)
 define|#
 directive|define
 name|OHCI_LOAD_QUAD
-value|(5<< 28)
+value|(5<< 12)
 define|#
 directive|define
 name|OHCI_NOP
-value|(6<< 28)
+value|(6<< 12)
 define|#
 directive|define
 name|OHCI_STOP
-value|(7<< 28)
+value|(7<< 12)
 define|#
 directive|define
 name|OHCI_STORE
-value|(8<< 28)
+value|(8<< 12)
 define|#
 directive|define
 name|OHCI_CMD_MASK
-value|(0xf<< 28)
+value|(0xf<< 12)
 define|#
 directive|define
 name|OHCI_UPDATE
-value|(1<< 27)
+value|(1<< 11)
 define|#
 directive|define
 name|OHCI_KEY_ST0
-value|(0<< 24)
+value|(0<< 8)
 define|#
 directive|define
 name|OHCI_KEY_ST1
-value|(1<< 24)
+value|(1<< 8)
 define|#
 directive|define
 name|OHCI_KEY_ST2
-value|(2<< 24)
+value|(2<< 8)
 define|#
 directive|define
 name|OHCI_KEY_ST3
-value|(3<< 24)
+value|(3<< 8)
 define|#
 directive|define
 name|OHCI_KEY_REGS
-value|(5<< 24)
+value|(5<< 8)
 define|#
 directive|define
 name|OHCI_KEY_SYS
-value|(6<< 24)
+value|(6<< 8)
 define|#
 directive|define
 name|OHCI_KEY_DEVICE
-value|(7<< 24)
+value|(7<< 8)
 define|#
 directive|define
 name|OHCI_KEY_MASK
-value|(7<< 24)
+value|(7<< 8)
 define|#
 directive|define
 name|OHCI_INTERRUPT_NEVER
-value|(0<< 20)
+value|(0<< 4)
 define|#
 directive|define
 name|OHCI_INTERRUPT_TRUE
-value|(1<< 20)
+value|(1<< 4)
 define|#
 directive|define
 name|OHCI_INTERRUPT_FALSE
-value|(2<< 20)
+value|(2<< 4)
 define|#
 directive|define
 name|OHCI_INTERRUPT_ALWAYS
-value|(3<< 20)
+value|(3<< 4)
 define|#
 directive|define
 name|OHCI_BRANCH_NEVER
-value|(0<< 18)
+value|(0<< 2)
 define|#
 directive|define
 name|OHCI_BRANCH_TRUE
-value|(1<< 18)
+value|(1<< 2)
 define|#
 directive|define
 name|OHCI_BRANCH_FALSE
-value|(2<< 18)
+value|(2<< 2)
 define|#
 directive|define
 name|OHCI_BRANCH_ALWAYS
-value|(3<< 18)
+value|(3<< 2)
 define|#
 directive|define
 name|OHCI_BRANCH_MASK
-value|(3<< 18)
+value|(3<< 2)
 define|#
 directive|define
 name|OHCI_WAIT_NEVER
-value|(0<< 16)
+value|(0)
 define|#
 directive|define
 name|OHCI_WAIT_TRUE
-value|(1<< 16)
+value|(1)
 define|#
 directive|define
 name|OHCI_WAIT_FALSE
-value|(2<< 16)
+value|(2)
 define|#
 directive|define
 name|OHCI_WAIT_ALWAYS
-value|(3<< 16)
+value|(3)
 block|}
 struct|;
 end_struct
