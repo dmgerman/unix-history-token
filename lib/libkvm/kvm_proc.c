@@ -1334,14 +1334,20 @@ literal|1
 operator|)
 return|;
 block|}
+if|#
+directive|if
+literal|0
+block|kp->ki_tdev = t_cdev.si_udev;
+else|#
+directive|else
 name|kp
 operator|->
 name|ki_tdev
 operator|=
-name|t_cdev
-operator|.
-name|si_udev
+name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
