@@ -1615,13 +1615,7 @@ block|}
 block|}
 else|else
 block|{
-name|refclock_report
-argument_list|(
-name|peer
-argument_list|,
-name|CEVNT_BADREPLY
-argument_list|)
-expr_stmt|;
+comment|/*refclock_report(peer, CEVNT_BADREPLY);*/
 name|label
 operator|=
 literal|"UNKNOWN"

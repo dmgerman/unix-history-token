@@ -280,6 +280,16 @@ name|CLOCK_IRIG
 end_undef
 
 begin_comment
+comment|/* JJY receiver */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CLOCK_JJY
+end_undef
+
+begin_comment
 comment|/* Rockwell Jupiter GPS clock */
 end_comment
 
@@ -1341,6 +1351,16 @@ begin_undef
 undef|#
 directive|undef
 name|DECL_HSTRERROR_0
+end_undef
+
+begin_comment
+comment|/* inet_ntoa()? */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DECL_INET_NTOA_0
 end_undef
 
 begin_comment

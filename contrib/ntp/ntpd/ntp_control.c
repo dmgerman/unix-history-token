@@ -2154,6 +2154,15 @@ comment|/* REFCLK_HOPF_SERIAL (38) */
 name|CTL_SST_TS_UHF
 block|,
 comment|/* REFCLK_HOPF_PCI (39) */
+name|CTL_SST_TS_LF
+block|,
+comment|/* REFCLK_JJY (40) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_TT560 (41) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_ZYFER (42) */
 block|}
 decl_stmt|;
 end_decl_stmt

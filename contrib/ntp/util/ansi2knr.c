@@ -4,7 +4,7 @@ comment|/* Copyright (C) 1989, 1997, 1998, 1999 Aladdin Enterprises.  All rights
 end_comment
 
 begin_comment
-comment|/*$Id: ansi2knr.c,v 1.2 1999/08/18 23:33:56 stenn Exp $*/
+comment|/*$Id$*/
 end_comment
 
 begin_comment

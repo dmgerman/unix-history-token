@@ -3299,6 +3299,11 @@ block|}
 if|if
 condition|(
 name|pps_device
+operator|&&
+name|pps_device
+index|[
+literal|0
+index|]
 condition|)
 block|{
 if|if

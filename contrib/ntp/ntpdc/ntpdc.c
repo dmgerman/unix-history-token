@@ -1601,6 +1601,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * These are used to help the magic with old and new versions of ntpd.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|req_pkt_size
+init|=
+name|REQ_LEN_NOMAC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * For commands typed on the command line (with the -c option)  */
 end_comment
 
@@ -2806,6 +2819,10 @@ name|havehost
 operator|=
 literal|1
 expr_stmt|;
+name|req_pkt_size
+operator|=
+name|REQ_LEN_NOMAC
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -3985,7 +4002,7 @@ operator|)
 operator|&
 name|qpkt
 argument_list|,
-name|REQ_LEN_NOMAC
+name|req_pkt_size
 argument_list|)
 return|;
 block|}
@@ -4006,6 +4023,37 @@ name|pass
 init|=
 literal|"\0"
 decl_stmt|;
+name|struct
+name|req_pkt_tail
+modifier|*
+name|qpktail
+decl_stmt|;
+name|qpktail
+operator|=
+operator|(
+expr|struct
+name|req_pkt_tail
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|qpkt
+operator|+
+name|req_pkt_size
+operator|+
+name|MAX_MAC_LEN
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|req_pkt_tail
+argument_list|)
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|info_auth_keyid
@@ -4127,8 +4175,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|qpkt
-operator|.
+name|qpktail
+operator|->
 name|keyid
 operator|=
 name|htonl
@@ -4157,8 +4205,8 @@ operator|&
 name|ts
 argument_list|,
 operator|&
-name|qpkt
-operator|.
+name|qpktail
+operator|->
 name|tstamp
 argument_list|)
 expr_stmt|;
@@ -4175,7 +4223,7 @@ operator|)
 operator|&
 name|qpkt
 argument_list|,
-name|REQ_LEN_NOMAC
+name|req_pkt_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -4215,7 +4263,7 @@ call|(
 name|int
 call|)
 argument_list|(
-name|REQ_LEN_NOMAC
+name|req_pkt_size
 operator|+
 name|maclen
 argument_list|)
@@ -4309,6 +4357,8 @@ literal|1
 return|;
 block|}
 comment|/* 	 * Poll the socket and clear out any pending data 	 */
+name|again
+label|:
 do|do
 block|{
 name|tvzero
@@ -4457,6 +4507,54 @@ argument_list|,
 name|rdata
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Try to be compatible with older implementations of ntpd. 	 */
+if|if
+condition|(
+name|res
+operator|==
+name|INFO_ERR_FMT
+operator|&&
+name|req_pkt_size
+operator|!=
+literal|48
+condition|)
+block|{
+name|int
+name|oldsize
+decl_stmt|;
+name|oldsize
+operator|=
+name|req_pkt_size
+expr_stmt|;
+switch|switch
+condition|(
+name|req_pkt_size
+condition|)
+block|{
+case|case
+name|REQ_LEN_NOMAC
+case|:
+name|req_pkt_size
+operator|=
+literal|48
+expr_stmt|;
+break|break;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"***Warning changing the request packet size from %d to %d\n"
+argument_list|,
+name|oldsize
+argument_list|,
+name|req_pkt_size
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 comment|/* log error message if not told to be quiet */
 if|if
 condition|(

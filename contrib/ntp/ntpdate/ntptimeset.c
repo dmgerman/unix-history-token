@@ -23,6 +23,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ntp_machine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -127,11 +133,33 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SIGNAL_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/signal.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

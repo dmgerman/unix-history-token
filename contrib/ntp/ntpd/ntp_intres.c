@@ -27,6 +27,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ntp_machine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntpd.h"
 end_include
 
@@ -1879,6 +1885,10 @@ literal|1
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|emalloc
 argument_list|(
 name|s

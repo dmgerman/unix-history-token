@@ -40,6 +40,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ntp_machine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntpd.h"
 end_include
 
@@ -78,6 +84,24 @@ include|#
 directive|include
 file|"ntp_cmdargs.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GETTIMEOFDAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GETTIMEOFDAY
+value|gettimeofday
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -123,6 +147,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"l_stdlib.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -533,12 +563,6 @@ end_decl_stmt
 begin_comment
 comment|/* 1 => respond to manycast client pkts */
 end_comment
-
-begin_decl_stmt
-name|u_long
-name|client_limit_period
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -2662,7 +2686,7 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|gettimeofday
+name|GETTIMEOFDAY
 argument_list|(
 operator|&
 name|tv
@@ -3261,7 +3285,7 @@ operator|!
 name|memorex
 condition|)
 block|{
-name|srandom
+name|SRANDOM
 argument_list|(
 operator|(
 name|u_int
@@ -3328,8 +3352,7 @@ condition|)
 block|{
 name|temp
 operator|=
-name|random
-argument_list|()
+name|RANDOM
 operator|&
 literal|0xff
 expr_stmt|;
@@ -3484,8 +3507,7 @@ control|)
 block|{
 name|temp
 operator|=
-name|random
-argument_list|()
+name|RANDOM
 expr_stmt|;
 name|R_RandomUpdate
 argument_list|(
@@ -3850,8 +3872,7 @@ control|)
 block|{
 name|temp
 operator|=
-name|random
-argument_list|()
+name|RANDOM
 expr_stmt|;
 name|R_RandomUpdate
 argument_list|(

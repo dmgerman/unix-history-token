@@ -367,6 +367,22 @@ literal|"HOPF_P"
 block|}
 block|,
 block|{
+name|REFCLK_JJY
+block|,
+literal|"JJY receiver (40)"
+block|,
+literal|"JJY"
+block|}
+block|,
+block|{
+name|REFCLK_ZYFER
+block|,
+literal|"Zyfer GPStarplus receiver (41)"
+block|,
+literal|"GPS_ZYFER"
+block|}
+block|,
+block|{
 operator|-
 literal|1
 block|,

@@ -3752,6 +3752,17 @@ return|;
 block|}
 end_block
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|refclock_palisade_bs
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

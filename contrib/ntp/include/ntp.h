@@ -2236,8 +2236,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|REFCLK_JJY
+value|40
+end_define
+
+begin_comment
+comment|/* JJY receiver  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_ZYFER
+value|41
+end_define
+
+begin_comment
+comment|/* Zyfer GPStarplus receiver  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REFCLK_MAX
-value|39
+value|41
 end_define
 
 begin_comment

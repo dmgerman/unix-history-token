@@ -132,6 +132,33 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SIGACTION
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * If sigaction() is used for signal handling and a signal is  * pending then the kernel blocks the signal before it calls  * the signal handler.  *  * The variable below is used to take care that the SIGIO signal  * is not unintentionally unblocked inside the sigio_handler()  * if the handler executes a piece of code that is normally  * bracketed by BLOCKIO()/UNBLOCKIO() calls.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sigio_handler_active
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -1111,6 +1138,31 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SIGACTION
+argument_list|)
+name|sigio_handler_active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|sigio_handler_active
+operator|!=
+literal|1
+condition|)
+comment|/* This should never happen! */
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sigio_handler: sigio_handler_active != 1"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1120,6 +1172,31 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SIGACTION
+argument_list|)
+name|sigio_handler_active
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigio_handler_active
+operator|!=
+literal|0
+condition|)
+comment|/* This should never happen! */
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sigio_handler: sigio_handler_active != 0"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 name|saved_errno
@@ -1298,6 +1375,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sigio_handler_active
+operator|==
+literal|0
+condition|)
+comment|/* not called from within signal handler */
+block|{
 name|sigset_t
 name|set
 decl_stmt|;
@@ -1414,6 +1499,7 @@ argument_list|,
 literal|"block_sigio: sigprocmask() failed: %m"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1538,6 +1624,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|sigio_handler_active
+operator|==
+literal|0
+condition|)
+comment|/* not called from within signal handler */
+block|{
 name|sigset_t
 name|unset
 decl_stmt|;
@@ -1654,6 +1748,7 @@ argument_list|,
 literal|"unblock_sigio: sigprocmask() failed: %m"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

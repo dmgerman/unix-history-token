@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /cvs/ntp/ntpd/jupiter.h,v 1.1.1.1 1999/05/26 00:48:19 stenn Exp $ (LBL) */
+comment|/* @(#) $Header$ (LBL) */
 end_comment
 
 begin_comment
