@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.19 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -195,7 +201,7 @@ name|char
 modifier|*
 name|fcore
 init|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 decl_stmt|;
 end_decl_stmt
 
@@ -204,7 +210,7 @@ name|char
 modifier|*
 name|fmem
 init|=
-literal|"/dev/mem"
+name|_PATH_MEM
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +219,7 @@ name|char
 modifier|*
 name|fnlist
 init|=
-literal|"/vmunix"
+name|_PATH_UNIX
 decl_stmt|;
 end_decl_stmt
 
@@ -761,7 +767,7 @@ name|fcore
 operator|=
 name|fmem
 operator|=
-literal|"/vmcore"
+name|_PATH_CORE
 expr_stmt|;
 break|break;
 case|case
