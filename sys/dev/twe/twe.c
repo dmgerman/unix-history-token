@@ -2082,7 +2082,7 @@ argument_list|)
 condition|)
 name|tsleep
 argument_list|(
-name|NULL
+name|sc
 argument_list|,
 name|PPAUSE
 argument_list|,
@@ -4022,7 +4022,7 @@ decl_stmt|;
 comment|/*      * Sleep for a short period to allow AENs to be signalled.      */
 name|tsleep
 argument_list|(
-name|NULL
+name|sc
 argument_list|,
 name|PRIBIO
 argument_list|,
