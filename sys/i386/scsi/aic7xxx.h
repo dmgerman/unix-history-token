@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.12 1995/08/05 17:32:55 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.13 1995/09/05 23:52:03 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -96,6 +96,11 @@ name|AHC_NONE
 init|=
 literal|0x000
 block|,
+name|AHC_ULTRA
+init|=
+literal|0x001
+block|,
+comment|/* Supports 20MHz Transfers */
 name|AHC_WIDE
 init|=
 literal|0x002
@@ -118,6 +123,10 @@ name|AHC_AIC7870
 init|=
 literal|0x040
 block|,
+name|AHC_AIC7880
+init|=
+literal|0x041
+block|,
 name|AHC_AIC78X0
 init|=
 literal|0x060
@@ -138,10 +147,21 @@ init|=
 literal|0x440
 block|,
 comment|/* PCI Based Controller */
+name|AHC_294U
+init|=
+literal|0x441
+block|,
+comment|/* ULTRA PCI Based Controller */
 name|AHC_394
 init|=
 literal|0x840
+block|,
 comment|/* Twin Channel PCI Controller */
+name|AHC_394U
+init|=
+literal|0x841
+block|,
+comment|/* Twin, ULTRA Channel PCI Controller */
 block|}
 name|ahc_type
 typedef|;
@@ -438,14 +458,6 @@ name|struct
 name|scb
 modifier|*
 name|free_scb
-decl_stmt|;
-name|struct
-name|scb
-modifier|*
-name|timedout_scb
-decl_stmt|;
-name|int
-name|in_timeout
 decl_stmt|;
 name|int
 name|our_id
