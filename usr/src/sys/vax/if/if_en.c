@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.47	82/03/31	*/
+comment|/*	if_en.c	4.48	82/04/01	*/
 end_comment
 
 begin_include
@@ -666,11 +666,6 @@ literal|0
 comment|/* here's one for you john baby.... */
 name|enlhinit
 argument_list|(
-operator|&
-name|es
-operator|->
-name|es_if
-argument_list|,
 operator|(
 name|ui
 operator|->
