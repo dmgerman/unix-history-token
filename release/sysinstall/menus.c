@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.22 1997/02/18 04:39:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.23 1997/02/27 12:56:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -788,6 +788,16 @@ name|distSetXUser
 block|}
 block|,
 block|{
+literal|"Distributions, Adding"
+block|,
+literal|"Installing additional distribution sets"
+block|,
+name|NULL
+block|,
+name|distExtractAll
+block|}
+block|,
+block|{
 literal|"Distributions, XFree86"
 block|,
 literal|"XFree86 distribution menu."
@@ -900,16 +910,6 @@ block|,
 name|NULL
 block|,
 name|installFixitHoloShell
-block|}
-block|,
-block|{
-literal|"Extract"
-block|,
-literal|"Extract selected distributions from media."
-block|,
-name|NULL
-block|,
-name|distExtractAll
 block|}
 block|,
 block|{
@@ -3543,17 +3543,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"7 All"
-block|,
-literal|"All sources, binaries and XFree86 binaries"
-block|,
-name|checkDistEverything
-block|,
-name|distSetEverything
-block|}
-block|,
-block|{
-literal|"8 Custom"
+literal|"7 Custom"
 block|,
 literal|"Specify your own distribution set"
 block|,
@@ -3571,6 +3561,16 @@ block|,
 literal|'>'
 block|,
 literal|'>'
+block|}
+block|,
+block|{
+literal|"8 All"
+block|,
+literal|"All sources, binaries and XFree86 binaries"
+block|,
+name|checkDistEverything
+block|,
+name|distSetEverything
 block|}
 block|,
 block|{
@@ -3912,6 +3912,29 @@ block|,
 name|srcFlagCheck
 block|,
 name|distSetSrc
+block|}
+block|,
+block|{
+literal|"ports"
+block|,
+literal|"The FreeBSD Ports collection"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_PORTS
 block|}
 block|,
 block|{
@@ -6302,16 +6325,6 @@ name|installCustomCommit
 block|}
 block|,
 block|{
-literal|"7 Extract"
-block|,
-literal|"Just do distribution extract step"
-block|,
-name|NULL
-block|,
-name|distExtractAll
-block|}
-block|,
-block|{
 literal|"0 Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
@@ -6355,9 +6368,9 @@ literal|"one, select \"standard\".  If you would prefer your Master Boot\n"
 literal|"Record to remain untouched then select \"None\".\n\n"
 literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
 block|,
-literal|"Press F1 to read the installation guide"
+literal|"Press F1 to read about drive setup"
 block|,
-literal|"install"
+literal|"drives"
 block|,
 block|{
 block|{
@@ -6596,6 +6609,16 @@ block|,
 name|NULL
 block|,
 name|configXFree86
+block|}
+block|,
+block|{
+literal|"D Distributions"
+block|,
+literal|"Install additional distribution sets"
+block|,
+name|NULL
+block|,
+name|distExtractAll
 block|}
 block|,
 block|{
