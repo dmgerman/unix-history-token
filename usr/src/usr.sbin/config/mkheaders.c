@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkheaders.c	1.1	81/02/24  * Make header files for EVERYTHING  */
+comment|/*  * mkheaders.c	1.2	81/02/24  * Make header files for EVERYTHING  */
 end_comment
 
 begin_include
