@@ -7481,7 +7481,7 @@ end_comment
 
 begin_function
 name|int
-name|kern_setsockopt
+name|so_setsockopt
 parameter_list|(
 name|struct
 name|socket

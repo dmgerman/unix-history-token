@@ -735,7 +735,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|kern_setsockopt
+name|so_setsockopt
 argument_list|(
 name|so
 argument_list|,
@@ -755,7 +755,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|kern_setsockopt
+name|so_setsockopt
 argument_list|(
 name|so
 argument_list|,
