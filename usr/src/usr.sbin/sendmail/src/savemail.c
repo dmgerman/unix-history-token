@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.72 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -990,7 +990,7 @@ name|ESM_MAIL
 expr_stmt|;
 break|break;
 block|}
-comment|/* we have a home directory; open dead.letter */
+comment|/* we have a home directory; write dead.letter */
 name|define
 argument_list|(
 literal|'z'
@@ -1028,9 +1028,53 @@ name|e_to
 operator|=
 name|buf
 expr_stmt|;
-goto|goto
-name|writefile
-goto|;
+if|if
+condition|(
+name|mailfile
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|,
+name|sfflags
+argument_list|,
+name|e
+argument_list|)
+operator|==
+name|EX_OK
+condition|)
+block|{
+name|bool
+name|oldverb
+init|=
+name|Verbose
+decl_stmt|;
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+literal|"Saved message in %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|Verbose
+operator|=
+name|oldverb
+expr_stmt|;
+name|state
+operator|=
+name|ESM_DONE
+expr_stmt|;
+break|break;
+block|}
+name|state
+operator|=
+name|ESM_MAIL
+expr_stmt|;
+break|break;
 case|case
 name|ESM_USRTMP
 case|:
@@ -1092,8 +1136,6 @@ name|SFF_CREAT
 operator||
 name|SFF_REGONLY
 expr_stmt|;
-name|writefile
-label|:
 if|if
 condition|(
 operator|!
@@ -1101,7 +1143,7 @@ name|writable
 argument_list|(
 name|buf
 argument_list|,
-name|q
+name|NULL
 argument_list|,
 name|sfflags
 argument_list|)
@@ -1128,20 +1170,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|state
-operator|==
-name|ESM_USRTMP
-condition|)
 name|state
 operator|=
 name|ESM_PANIC
-expr_stmt|;
-else|else
-name|state
-operator|=
-name|ESM_MAIL
 expr_stmt|;
 break|break;
 block|}
@@ -1273,21 +1304,9 @@ operator|=
 name|ESM_DONE
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|state
-operator|==
-name|ESM_USRTMP
-condition|)
 name|state
 operator|=
 name|ESM_PANIC
-expr_stmt|;
-else|else
-name|state
-operator|=
-name|ESM_MAIL
 expr_stmt|;
 operator|(
 name|void
