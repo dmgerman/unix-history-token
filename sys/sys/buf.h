@@ -660,12 +660,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00080000
+name|B_KEEPGIANT
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Do not drop Giant in strategy() */
 end_comment
 
 begin_define
