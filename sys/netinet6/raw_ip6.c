@@ -1556,12 +1556,12 @@ argument_list|)
 expr_stmt|;
 name|oifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|pi
 operator|->
 name|ipi6_ifindex
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1736,8 +1736,8 @@ name|ro_rt
 condition|)
 name|oifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|in6p
 operator|->
 name|in6p_route
@@ -1747,7 +1747,7 @@ operator|->
 name|rt_ifp
 operator|->
 name|if_index
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 name|ip6

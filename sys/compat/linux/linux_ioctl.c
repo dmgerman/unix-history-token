@@ -7958,12 +7958,10 @@ control|)
 block|{
 name|ifp
 operator|=
-name|ifnet_addrs
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ifn
-index|]
-operator|->
-name|ifa_ifp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

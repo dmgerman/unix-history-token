@@ -747,12 +747,12 @@ name|ND
 operator|.
 name|linkmtu
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ifp
 operator|->
 name|if_index
-index|]
+argument_list|)
 operator|->
 name|if_mtu
 expr_stmt|;

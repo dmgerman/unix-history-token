@@ -4780,14 +4780,12 @@ name|areq
 expr_stmt|;
 name|ifa
 operator|=
-name|ifnet_addrs
-index|[
+name|ifaddr_byindex
+argument_list|(
 name|ifp
 operator|->
 name|if_index
-operator|-
-literal|1
-index|]
+argument_list|)
 expr_stmt|;
 name|sdl
 operator|=

@@ -2094,12 +2094,12 @@ name|ENXIO
 return|;
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|mifcp
 operator|->
 name|mif6c_pifi
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

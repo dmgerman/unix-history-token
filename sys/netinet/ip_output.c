@@ -6448,10 +6448,10 @@ name|NULL
 return|;
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ifindex
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

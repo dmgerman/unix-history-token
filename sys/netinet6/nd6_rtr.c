@@ -8116,10 +8116,10 @@ literal|0
 condition|)
 name|nd6_defifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|nd6_defifindex
-index|]
+argument_list|)
 expr_stmt|;
 else|else
 name|nd6_defifp

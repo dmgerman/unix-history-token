@@ -320,12 +320,12 @@ name|ia6
 operator|=
 name|in6_ifawithscope
 argument_list|(
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|pi
 operator|->
 name|ipi6_ifindex
-index|]
+argument_list|)
 argument_list|,
 name|dst
 argument_list|)
@@ -415,12 +415,12 @@ name|ia6
 operator|=
 name|in6_ifawithscope
 argument_list|(
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|dstsock
 operator|->
 name|sin6_scope_id
-index|]
+argument_list|)
 argument_list|,
 name|dst
 argument_list|)
@@ -1553,12 +1553,12 @@ condition|)
 block|{
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|pi
 operator|->
 name|ipi6_ifindex
-index|]
+argument_list|)
 expr_stmt|;
 name|in6
 operator|->
@@ -1642,10 +1642,10 @@ return|;
 comment|/* XXX EINVAL? */
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|scopeid
-index|]
+argument_list|)
 expr_stmt|;
 comment|/*XXX assignment to 16bit from 32bit variable */
 name|in6

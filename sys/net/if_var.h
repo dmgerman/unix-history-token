@@ -125,6 +125,16 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/event.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
@@ -238,6 +248,11 @@ name|ifaddrhead
 name|if_addrhead
 decl_stmt|;
 comment|/* linked list of addresses per if */
+name|struct
+name|klist
+name|if_klist
+decl_stmt|;
+comment|/* events attached to this if */
 name|int
 name|if_pcount
 decl_stmt|;
@@ -1331,6 +1346,57 @@ define|\
 value|do { \ 		if ((ifa)->ifa_refcnt<= 0) \ 			ifafree(ifa); \ 		else \ 			(ifa)->ifa_refcnt--; \ 	} while (0)
 end_define
 
+begin_struct
+struct|struct
+name|ifindex_entry
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ife_ifnet
+decl_stmt|;
+name|struct
+name|ifaddr
+modifier|*
+name|ife_ifnet_addr
+decl_stmt|;
+name|dev_t
+name|ife_dev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ifnet_byindex
+parameter_list|(
+name|idx
+parameter_list|)
+value|ifindex_table[(idx)].ife_ifnet
+end_define
+
+begin_define
+define|#
+directive|define
+name|ifaddr_byindex
+parameter_list|(
+name|idx
+parameter_list|)
+value|ifindex_table[(idx)].ife_ifnet_addr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ifdev_byindex
+parameter_list|(
+name|idx
+parameter_list|)
+value|ifindex_table[(idx)].ife_dev
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1342,10 +1408,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ifnet
+name|ifindex_entry
 modifier|*
-modifier|*
-name|ifindex2ifnet
+name|ifindex_table
 decl_stmt|;
 end_decl_stmt
 
@@ -1373,16 +1438,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|if_index
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ifaddr
-modifier|*
-modifier|*
-name|ifnet_addrs
 decl_stmt|;
 end_decl_stmt
 

@@ -2331,14 +2331,14 @@ name|ipi6_ifindex
 condition|)
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|opt
 operator|->
 name|ip6po_pktinfo
 operator|->
 name|ipi6_ifindex
-index|]
+argument_list|)
 expr_stmt|;
 comment|/* 		 * If the destination is a node-local scope multicast, 		 * the packet should be loop-backed only. 		 */
 if|if
@@ -2959,8 +2959,8 @@ argument_list|)
 condition|)
 name|origifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ntohs
 argument_list|(
 name|ip6
@@ -2972,7 +2972,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-index|]
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -2987,8 +2987,8 @@ argument_list|)
 condition|)
 name|origifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ntohs
 argument_list|(
 name|ip6
@@ -3000,7 +3000,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-index|]
+argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX: origifp can be NULL even in those two cases above. 		 * For example, if we remove the (only) link-local address 		 * from the loopback interface, and try to send a link-local 		 * address without link-id information.  Then the source 		 * address is ::1, and the destination address is the 		 * link-local address with its s6_addr16[1] being zero. 		 * What is worse, if the packet goes to the loopback interface 		 * by a default rejected route, the null pointer would be 		 * passed to looutput, and the kernel would hang. 		 * The following last resort would prevent such disaster. 		 */
 if|if
@@ -7755,10 +7755,10 @@ break|break;
 block|}
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ifindex
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8181,12 +8181,12 @@ block|}
 else|else
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|mreq
 operator|->
 name|ipv6mr_interface
-index|]
+argument_list|)
 expr_stmt|;
 comment|/* 		 * See if we found an interface, and confirm that it 		 * supports multicast 		 */
 if|if
@@ -8486,12 +8486,12 @@ break|break;
 block|}
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|mreq
 operator|->
 name|ipv6mr_interface
-index|]
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Put interface index into the multicast address, 		 * if the address has link-local scope. 		 */
 if|if

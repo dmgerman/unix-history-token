@@ -953,10 +953,10 @@ literal|1
 return|;
 name|ifp
 operator|=
-name|ifindex2ifnet
-index|[
+name|ifnet_byindex
+argument_list|(
 name|idx
-index|]
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(

@@ -351,6 +351,11 @@ init|=
 literal|0x2800001
 block|,
 comment|/* start soft interrupt thread */
+name|SI_SUB_INIT_IF
+init|=
+literal|0x3000000
+block|,
+comment|/* prep for net interfaces */
 name|SI_SUB_DRIVERS
 init|=
 literal|0x3100000
