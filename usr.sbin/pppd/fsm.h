@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * fsm.h - {Link, IP} Control Protocol Finite State Machine definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.2 1994/04/11 07:18:35 paulus Exp $  */
+comment|/*  * fsm.h - {Link, IP} Control Protocol Finite State Machine definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.2 1994/09/25 02:31:58 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ value|(sizeof (u_char) + sizeof (u_char) + sizeof (u_short))
 end_define
 
 begin_comment
-comment|/*  *  CP (LCP, IPCP, etc.) codes.  */
+comment|/*  *  CP (LCP, PPP_IPCP, etc.) codes.  */
 end_comment
 
 begin_define
@@ -255,6 +255,10 @@ name|u_char
 name|reqid
 decl_stmt|;
 comment|/* Current request id */
+name|u_char
+name|seen_ack
+decl_stmt|;
+comment|/* Have received valid Ack/Nak/Rej to Req */
 name|int
 name|timeouttime
 decl_stmt|;
@@ -481,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|DEFMAXNAKLOOPS
-value|10
+value|5
 end_define
 
 begin_comment
@@ -495,7 +499,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|fsm_init
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -508,7 +512,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_lowerup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -521,7 +525,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_lowerdown
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -534,7 +538,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_open
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -547,7 +551,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_close
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -560,7 +564,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_input
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -578,7 +582,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_protreject
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -591,7 +595,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|fsm_sdata
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm

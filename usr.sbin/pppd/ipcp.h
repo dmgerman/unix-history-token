@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.2 1994/09/25 02:32:00 wollman Exp $  */
+comment|/*  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.3 1995/05/30 03:51:11 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -35,6 +35,50 @@ directive|define
 name|CI_ADDR
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|CI_DNS1
+value|129
+end_define
+
+begin_comment
+comment|/* Primary DNS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_NBNS1
+value|130
+end_define
+
+begin_comment
+comment|/* Primary NBNS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_DNS2
+value|131
+end_define
+
+begin_comment
+comment|/* Secondary DNS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CI_NBNS2
+value|132
+end_define
+
+begin_comment
+comment|/* Secondary NBNS */
+end_comment
 
 begin_define
 define|#
@@ -233,7 +277,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_init
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -245,7 +289,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_open
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -257,7 +301,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_close
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -269,7 +313,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_lowerup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -281,7 +325,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_lowerdown
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -293,7 +337,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_input
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -310,7 +354,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ipcp_protrej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -322,7 +366,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ipcp_printpkt
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|u_char

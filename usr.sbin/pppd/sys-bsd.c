@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.4 1995/10/03 10:50:42 joerg Exp $"
+literal|"$Id: sys-bsd.c,v 1.3.4.1 1995/10/06 11:28:59 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,55 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -61,7 +109,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -587,7 +635,7 @@ name|buf
 argument_list|,
 name|MTU
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 operator|)
 operator|<
@@ -1205,6 +1253,28 @@ end_function
 begin_comment
 comment|/*  * sifup - Config the interface up and enable IP packets to pass.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_ENABLE_IP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SC_ENABLE_IP
+value|0x100
+end_define
+
+begin_comment
+comment|/* compat for old versions of kernel code */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int

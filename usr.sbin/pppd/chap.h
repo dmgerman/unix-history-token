@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * chap.h - Cryptographic Handshake Authentication Protocol definitions.  *  * Copyright (c) 1991 Gregory M. Christy  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the author.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.2 1994/04/11 07:13:44 paulus Exp $  */
+comment|/*  * chap.h - Cryptographic Handshake Authentication Protocol definitions.  *  * Copyright (c) 1991 Gregory M. Christy  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the author.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.2 1994/09/25 02:31:55 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -389,7 +389,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapInit
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -401,7 +401,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapAuthWithPeer
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -418,7 +418,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapAuthPeer
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -435,7 +435,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapLowerUp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -447,7 +447,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapLowerDown
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -459,7 +459,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapInput
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -476,7 +476,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|ChapProtocolReject
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -488,7 +488,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ChapPrintPkt
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|u_char
@@ -500,7 +500,7 @@ name|void
 argument_list|(
 argument|*
 argument_list|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: upap.c,v 1.2 1994/09/25 02:32:16 wollman Exp $"
+literal|"$Id: upap.c,v 1.3 1995/05/30 03:51:17 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,20 +74,20 @@ begin_decl_stmt
 name|upap_state
 name|upap
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* UPAP state; one for each unit */
+comment|/* PPP_PAP state; one for each unit */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|void
 name|upap_timeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -100,7 +100,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_rauthreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -121,7 +121,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_rauthack
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -142,7 +142,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_rauthnak
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -163,7 +163,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_sauthreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -177,7 +177,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_sresp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -197,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * upap_init - Initialize a UPAP unit.  */
+comment|/*  * upap_init - Initialize a PPP_PAP unit.  */
 end_comment
 
 begin_function
@@ -513,7 +513,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 return|return;
@@ -717,7 +717,7 @@ name|auth_withpeer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -741,7 +741,7 @@ name|auth_peer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -754,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * upap_input - Input UPAP packet.  */
+comment|/*  * upap_input - Input PPP_PAP packet.  */
 end_comment
 
 begin_function
@@ -1232,7 +1232,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1250,7 +1250,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1398,7 +1398,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1552,7 +1552,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1608,7 +1608,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 name|PUTCHAR
@@ -1698,7 +1698,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|UPAPDEBUG
@@ -1804,7 +1804,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 name|PUTCHAR
@@ -1854,7 +1854,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|UPAPDEBUG
@@ -1919,7 +1919,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fsm.c,v 1.2 1994/09/25 02:31:57 wollman Exp $"
+literal|"$Id: fsm.c,v 1.3 1995/05/30 03:51:07 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -77,7 +83,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_timeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -90,7 +96,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_rconfreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -111,7 +117,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_rconfack
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -132,7 +138,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_rconfnakrej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -155,7 +161,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_rtermreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -171,7 +177,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_rtermack
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -185,7 +191,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_rcoderej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -204,7 +210,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|fsm_sconfreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -230,7 +236,7 @@ begin_decl_stmt
 name|int
 name|peer_mru
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1798,6 +1804,10 @@ operator|!=
 name|f
 operator|->
 name|reqid
+operator|||
+name|f
+operator|->
+name|seen_ack
 condition|)
 comment|/* Expected id? */
 return|return;
@@ -1857,9 +1867,8 @@ return|return;
 block|}
 name|f
 operator|->
-name|reqid
+name|seen_ack
 operator|=
-operator|-
 literal|1
 expr_stmt|;
 switch|switch
@@ -1910,7 +1919,18 @@ break|break;
 case|case
 name|ACKRCVD
 case|:
-comment|/* Huh? an extra Ack? oh well... */
+comment|/* Huh? an extra valid Ack? oh well... */
+name|UNTIMEOUT
+argument_list|(
+name|fsm_timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|f
+argument_list|)
+expr_stmt|;
+comment|/* Cancel timeout */
 name|fsm_sconfreq
 argument_list|(
 name|f
@@ -2085,6 +2105,10 @@ operator|!=
 name|f
 operator|->
 name|reqid
+operator|||
+name|f
+operator|->
+name|seen_ack
 condition|)
 comment|/* Expected id? */
 return|return;
@@ -2156,9 +2180,8 @@ return|return;
 block|}
 name|f
 operator|->
-name|reqid
+name|seen_ack
 operator|=
-operator|-
 literal|1
 expr_stmt|;
 switch|switch
@@ -2219,6 +2242,17 @@ case|case
 name|ACKRCVD
 case|:
 comment|/* Got a Nak/reject when we had already had an Ack?? oh well... */
+name|UNTIMEOUT
+argument_list|(
+name|fsm_timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|f
+argument_list|)
+expr_stmt|;
+comment|/* Cancel timeout */
 name|fsm_sconfreq
 argument_list|(
 name|f
@@ -2455,6 +2489,16 @@ block|{
 case|case
 name|CLOSING
 case|:
+name|UNTIMEOUT
+argument_list|(
+name|fsm_timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|f
+argument_list|)
+expr_stmt|;
 name|f
 operator|->
 name|state
@@ -2485,6 +2529,16 @@ break|break;
 case|case
 name|STOPPING
 case|:
+name|UNTIMEOUT
+argument_list|(
+name|fsm_timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|f
+argument_list|)
+expr_stmt|;
 name|f
 operator|->
 name|state
@@ -2995,12 +3049,18 @@ operator|->
 name|id
 expr_stmt|;
 block|}
+name|f
+operator|->
+name|seen_ack
+operator|=
+literal|0
+expr_stmt|;
 comment|/*      * Make up the request packet      */
 name|outp
 operator|=
 name|outpacket_buf
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 operator|+
 name|HEADERLEN
 expr_stmt|;
@@ -3224,7 +3284,7 @@ name|data
 operator|!=
 name|outp
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 operator|+
 name|HEADERLEN
 condition|)
@@ -3234,7 +3294,7 @@ name|data
 argument_list|,
 name|outp
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 operator|+
 name|HEADERLEN
 argument_list|,
@@ -3287,7 +3347,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|FSMDEBUG

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.3 1995/04/29 13:55:34 ache Exp $"
+literal|"$Id: main.c,v 1.4 1995/05/30 03:51:13 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -46,12 +52,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -88,12 +88,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
 end_include
 
 begin_comment
@@ -191,6 +185,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -479,7 +479,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|devname
+name|devnam
 index|[
 name|MAXPATHLEN
 index|]
@@ -608,7 +608,7 @@ name|outpacket_buf
 index|[
 name|MTU
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -624,7 +624,7 @@ name|inpacket_buf
 index|[
 name|MTU
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -769,6 +769,30 @@ comment|/* netmask to use on ppp interface */
 end_comment
 
 begin_decl_stmt
+name|u_long
+name|dns1
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* primary DNS */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|dns2
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* secondary DNS */
+end_comment
+
+begin_decl_stmt
 name|int
 name|crtscts
 init|=
@@ -896,20 +920,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|hup
-name|__ARGS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|intr
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -922,7 +933,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|term
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -935,7 +946,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|alrm
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -948,7 +959,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|io
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -961,7 +972,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|chld
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -974,7 +985,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|incdebug
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -987,7 +998,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|nodebug
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -999,7 +1010,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|establish_ppp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -1011,7 +1022,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|reap_kids
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -1023,7 +1034,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|cleanup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -1037,7 +1048,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|die
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -1049,7 +1060,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|novm
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1062,7 +1073,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|log_packet
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|u_char
@@ -1080,7 +1091,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|format_packet
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|u_char
@@ -1112,7 +1123,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|pr_log
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -1191,7 +1202,7 @@ literal|"LCP"
 block|}
 block|,
 block|{
-name|IPCP
+name|PPP_IPCP
 block|,
 name|ipcp_init
 block|,
@@ -1201,11 +1212,11 @@ name|ipcp_protrej
 block|,
 name|ipcp_printpkt
 block|,
-literal|"IPCP"
+literal|"PPP_IPCP"
 block|}
 block|,
 block|{
-name|UPAP
+name|PPP_PAP
 block|,
 name|upap_init
 block|,
@@ -1219,7 +1230,7 @@ literal|"PAP"
 block|}
 block|,
 block|{
-name|CHAP
+name|PPP_CHAP
 block|,
 name|ChapInit
 block|,
@@ -1298,7 +1309,7 @@ name|p
 condition|)
 name|strcpy
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 name|p
 argument_list|)
@@ -1721,7 +1732,7 @@ if|if
 condition|(
 name|lock
 argument_list|(
-name|devname
+name|devnam
 argument_list|)
 operator|<
 literal|0
@@ -1831,7 +1842,7 @@ name|s
 parameter_list|,
 name|handler
 parameter_list|)
-value|{ \ 	sa.sa_handler = handler; \ 	if (sigaction(s,&sa, NULL)< 0) { \ 	    syslog(LOG_ERR, "sigaction(%d): %m", s); \ 	    die(1); \ 	} \     }
+value|{ \ 	sa.sa_handler = handler; \ 	if (sigaction(s,&sa, NULL)< 0) { \ 	    syslog(LOG_ERR, "Couldn't establish signal handler (%d): %m", s); \ 	    die(1); \ 	} \     }
 name|sa
 operator|.
 name|sa_mask
@@ -1856,7 +1867,7 @@ name|SIGNAL
 argument_list|(
 name|SIGINT
 argument_list|,
-name|intr
+name|term
 argument_list|)
 expr_stmt|;
 comment|/* Interrupt */
@@ -1967,7 +1978,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 name|O_RDWR
 comment|/*| O_NDELAY*/
@@ -1983,7 +1994,7 @@ name|LOG_ERR
 argument_list|,
 literal|"open(%s): %m"
 argument_list|,
-name|devname
+name|devnam
 argument_list|)
 expr_stmt|;
 name|die
@@ -2409,7 +2420,7 @@ literal|"Connect: %s<--> %s"
 argument_list|,
 name|ifname
 argument_list|,
-name|devname
+name|devnam
 argument_list|)
 expr_stmt|;
 name|sigprocmask
@@ -4474,46 +4485,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * intr - Catch SIGINT signal (DEL/^C).  *  * Indicates that we should initiate a graceful disconnect and exit.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|intr
-parameter_list|(
-name|sig
-parameter_list|)
-name|int
-name|sig
-decl_stmt|;
-block|{
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"Interrupt received: terminating link"
-argument_list|)
-expr_stmt|;
-name|persist
-operator|=
-literal|0
-expr_stmt|;
-comment|/* don't try to restart */
-name|adjtimeout
-argument_list|()
-expr_stmt|;
-comment|/* Adjust timeouts */
-name|lcp_close
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Close connection */
-block|}
-end_function
-
-begin_comment
 comment|/*  * alrm - Catch SIGALRM signal.  *  * Indicates a timeout.  */
 end_comment
 
@@ -4887,7 +4858,7 @@ if|if
 condition|(
 name|len
 operator|<
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 condition|)
 block|{
 name|MAINDEBUG
@@ -4915,7 +4886,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|-=
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 expr_stmt|;
 comment|/* 	 * Toss all non-LCP packets unless LCP is OPEN. 	 */
 if|if
@@ -5030,11 +5001,11 @@ literal|0
 argument_list|,
 name|p
 operator|-
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|,
 name|len
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -5764,7 +5735,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -5803,7 +5774,7 @@ if|if
 condition|(
 name|len
 operator|>=
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 operator|&&
 name|p
 index|[
@@ -5833,7 +5804,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|-=
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 expr_stmt|;
 for|for
 control|(
@@ -6225,7 +6196,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

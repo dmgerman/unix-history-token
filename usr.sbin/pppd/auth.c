@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.4 1995/08/28 21:30:51 mpp Exp $"
+literal|"$Id: auth.c,v 1.3.4.1 1995/09/02 14:40:06 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,18 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -237,7 +249,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|devname
+name|devnam
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -296,7 +308,7 @@ specifier|static
 name|int
 name|auth_pending
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -315,7 +327,7 @@ name|wordlist
 modifier|*
 name|addresses
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -359,7 +371,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|check_access
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|FILE
@@ -376,7 +388,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|login
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -400,7 +412,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|logout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -413,7 +425,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|null_login
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -426,7 +438,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|get_upap_passwd
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -439,7 +451,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|have_upap_secret
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -452,7 +464,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|have_chap_secret
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -469,7 +481,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|scan_authfile
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|FILE
@@ -500,29 +512,11 @@ begin_decl_stmt
 specifier|static
 name|void
 name|free_wordlist
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 expr|struct
 name|wordlist
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|crypt
-name|__ARGS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
 operator|*
 operator|)
 argument_list|)
@@ -561,6 +555,13 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|phase
+operator|==
+name|PHASE_DEAD
+condition|)
+return|return;
+if|if
+condition|(
 name|logged_in
 condition|)
 name|logout
@@ -594,6 +595,11 @@ name|int
 name|unit
 decl_stmt|;
 block|{
+name|ipcp_close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|phase
 operator|=
 name|PHASE_TERMINATE
@@ -875,7 +881,7 @@ name|protocol
 condition|)
 block|{
 case|case
-name|CHAP
+name|PPP_CHAP
 case|:
 name|bit
 operator|=
@@ -883,7 +889,7 @@ name|CHAP_PEER
 expr_stmt|;
 break|break;
 case|case
-name|UPAP
+name|PPP_PAP
 case|:
 name|bit
 operator|=
@@ -980,7 +986,7 @@ name|protocol
 condition|)
 block|{
 case|case
-name|CHAP
+name|PPP_CHAP
 case|:
 name|bit
 operator|=
@@ -988,7 +994,7 @@ name|CHAP_WITHPEER
 expr_stmt|;
 break|break;
 case|case
-name|UPAP
+name|PPP_PAP
 case|:
 name|bit
 operator|=
@@ -1577,7 +1583,7 @@ literal|"%d LOGIN FAILURES ON %s, %s"
 argument_list|,
 name|attempts
 argument_list|,
-name|devname
+name|devnam
 argument_list|,
 name|user
 argument_list|)
@@ -1815,26 +1821,24 @@ expr_stmt|;
 comment|/*      * Write a wtmp entry for this user.      */
 name|tty
 operator|=
-name|strrchr
-argument_list|(
-name|devname
-argument_list|,
-literal|'/'
-argument_list|)
+name|devnam
 expr_stmt|;
 if|if
 condition|(
+name|strncmp
+argument_list|(
 name|tty
+argument_list|,
+literal|"/dev/"
+argument_list|,
+literal|5
+argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|tty
-operator|=
-name|devname
-expr_stmt|;
-else|else
-name|tty
-operator|++
+operator|+=
+literal|5
 expr_stmt|;
 name|logwtmp
 argument_list|(
@@ -1876,7 +1880,7 @@ name|tty
 operator|=
 name|strrchr
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 literal|'/'
 argument_list|)
@@ -1889,7 +1893,7 @@ name|NULL
 condition|)
 name|tty
 operator|=
-name|devname
+name|devnam
 expr_stmt|;
 else|else
 name|tty

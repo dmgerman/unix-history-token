@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.5 1995/09/06 16:33:40 pst Exp $"
+literal|"$Id: options.c,v 1.4.4.1 1995/10/06 11:28:58 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,8 +51,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|devname
-value|STDLIB_devname
+name|devnam
+value|STDLIB_devnam
 end_define
 
 begin_include
@@ -64,7 +64,7 @@ end_include
 begin_undef
 undef|#
 directive|undef
-name|devname
+name|devnam
 end_undef
 
 begin_include
@@ -193,7 +193,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|strdup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -234,7 +234,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setdebug
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -247,7 +247,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setkdebug
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -262,7 +262,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setpassive
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -275,7 +275,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setsilent
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -288,7 +288,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|noopt
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -301,7 +301,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setnovj
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -314,7 +314,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setnovjccomp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -327,7 +327,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setvjslots
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -342,7 +342,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|reqpap
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -355,7 +355,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nopap
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -368,7 +368,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setupapfile
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -383,7 +383,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nochap
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -396,7 +396,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|reqchap
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -409,7 +409,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setspeed
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -423,7 +423,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|noaccomp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -436,7 +436,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|noasyncmap
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -449,7 +449,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|noipaddr
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -462,7 +462,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nomagicnumber
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -475,7 +475,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setasyncmap
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -490,7 +490,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setescape
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -505,7 +505,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setmru
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -520,7 +520,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setmtu
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -535,7 +535,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nomru
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -548,7 +548,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nopcomp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -561,7 +561,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setconnector
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -576,7 +576,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setdisconnector
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -591,7 +591,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setdomain
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -606,7 +606,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setnetmask
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -621,7 +621,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setcrtscts
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -634,7 +634,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setxonxoff
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -647,7 +647,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setnodetach
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -660,7 +660,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setmodem
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -673,7 +673,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlocal
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -686,7 +686,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlock
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -699,7 +699,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setname
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -714,7 +714,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setuser
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -729,7 +729,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setremote
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -744,7 +744,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setauth
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -757,7 +757,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|readfile
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -772,7 +772,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setdefaultroute
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -785,7 +785,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setproxyarp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -798,7 +798,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setpersist
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -811,7 +811,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setdologin
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -824,7 +824,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setusehostname
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -837,7 +837,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setnoipdflt
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -850,7 +850,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlcptimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -865,7 +865,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlcpterm
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -880,7 +880,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlcpconf
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -895,7 +895,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlcpfails
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -910,7 +910,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setipcptimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -925,7 +925,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setipcpterm
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -940,7 +940,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setipcpconf
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -955,7 +955,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setipcpfails
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -970,7 +970,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setpaptimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -985,7 +985,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setpapreqs
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1000,7 +1000,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setchaptimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1015,7 +1015,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setchapchal
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1030,7 +1030,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setchapintv
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1045,7 +1045,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setipcpaccl
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -1058,7 +1058,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setipcpaccr
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -1071,7 +1071,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlcpechointv
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1086,7 +1086,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setlcpechofails
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1101,7 +1101,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|number_option
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|char
@@ -1120,11 +1120,41 @@ begin_decl_stmt
 specifier|static
 name|int
 name|readable
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
 name|fd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|setdns1
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|setdns2
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1210,7 +1240,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|devname
+name|devnam
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1226,6 +1256,20 @@ begin_decl_stmt
 specifier|extern
 name|u_long
 name|netmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|dns1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|dns2
 decl_stmt|;
 end_decl_stmt
 
@@ -1475,7 +1519,7 @@ block|,
 name|nopap
 block|}
 block|,
-comment|/* Don't allow UPAP authentication with peer */
+comment|/* Don't allow PPP_PAP authentication with peer */
 block|{
 literal|"+chap"
 block|,
@@ -1639,6 +1683,24 @@ block|}
 block|,
 comment|/* set netmask */
 block|{
+literal|"dns1"
+block|,
+literal|1
+block|,
+name|setdns1
+block|}
+block|,
+comment|/* set Primary Domain Name Server */
+block|{
+literal|"dns2"
+block|,
+literal|1
+block|,
+name|setdns2
+block|}
+block|,
+comment|/* set Secondary Domain Name Server */
+block|{
 literal|"passive"
 block|,
 literal|0
@@ -1772,7 +1834,7 @@ block|,
 name|setdologin
 block|}
 block|,
-comment|/* Use system password database for UPAP */
+comment|/* Use system password database for PPP_PAP */
 block|{
 literal|"noipdefault"
 block|,
@@ -1844,7 +1906,7 @@ block|,
 name|setipcptimeout
 block|}
 block|,
-comment|/* Set timeout for IPCP */
+comment|/* Set timeout for PPP_IPCP */
 block|{
 literal|"ipcp-max-terminate"
 block|,
@@ -1871,7 +1933,7 @@ block|,
 name|setipcpfails
 block|}
 block|,
-comment|/* Set max #conf-naks for IPCP */
+comment|/* Set max #conf-naks for PPP_IPCP */
 block|{
 literal|"pap-restart"
 block|,
@@ -1880,7 +1942,7 @@ block|,
 name|setpaptimeout
 block|}
 block|,
-comment|/* Set timeout for UPAP */
+comment|/* Set timeout for PPP_PAP */
 block|{
 literal|"pap-max-authreq"
 block|,
@@ -2121,7 +2183,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|setdevname
+name|setdevnam
 argument_list|(
 name|arg
 argument_list|)
@@ -2496,7 +2558,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|setdevname
+name|setdevnam
 argument_list|(
 name|cmd
 argument_list|)
@@ -2724,7 +2786,7 @@ name|dev
 operator|=
 name|strrchr
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 literal|'/'
 argument_list|)
@@ -2737,7 +2799,7 @@ name|NULL
 condition|)
 name|dev
 operator|=
-name|devname
+name|devnam
 expr_stmt|;
 else|else
 operator|++
@@ -4174,7 +4236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setupapfile - specifies UPAP info for authenticating with peer.  */
+comment|/*  * setupapfile - specifies PPP_PAP info for authenticating with peer.  */
 end_comment
 
 begin_function
@@ -5024,12 +5086,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setdevname - Set the device name.  */
+comment|/*  * setdevnam - Set the device name.  */
 end_comment
 
 begin_function
 name|int
-name|setdevname
+name|setdevnam
 parameter_list|(
 name|cp
 parameter_list|)
@@ -5142,14 +5204,14 @@ name|void
 operator|)
 name|strncpy
 argument_list|(
-name|devname
+name|devnam
 argument_list|,
 name|cp
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-name|devname
+name|devnam
 index|[
 name|MAXPATHLEN
 operator|-
@@ -5740,6 +5802,140 @@ operator|)
 return|;
 block|}
 name|netmask
+operator|=
+name|mask
+operator|.
+name|s_addr
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * setdns1 - set the primary dns.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|setdns1
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+name|struct
+name|in_addr
+name|mask
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|inet_aton
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+operator|&
+name|mask
+argument_list|)
+operator|<
+literal|0
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Invalid dns1 %s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|dns1
+operator|=
+name|mask
+operator|.
+name|s_addr
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * setdns2 - set the secondary dns.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|setdns2
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+name|struct
+name|in_addr
+name|mask
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|inet_aton
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+operator|&
+name|mask
+argument_list|)
+operator|<
+literal|0
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Invalid dns2 %s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|dns2
 operator|=
 name|mask
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipcp.c,v 1.2 1994/09/25 02:31:59 wollman Exp $"
+literal|"$Id: ipcp.c,v 1.3 1995/05/30 03:51:08 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pppd.h"
 end_include
 
@@ -96,7 +102,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_wantoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -109,7 +115,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_gotoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -122,7 +128,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_allowoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -135,7 +141,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_hisoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -155,7 +161,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|devname
+name|devnam
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -164,6 +170,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|baud_rate
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|dns1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|dns2
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +196,7 @@ specifier|static
 name|int
 name|cis_received
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -193,7 +213,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_resetci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -211,7 +231,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_cilen
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -229,7 +249,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_addci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -253,7 +273,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_ackci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -276,7 +296,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_nakci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -299,7 +319,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_rejci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -322,7 +342,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_reqci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -348,7 +368,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_up
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -366,7 +386,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_down
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -384,7 +404,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_script
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -405,13 +425,13 @@ begin_decl_stmt
 name|fsm
 name|ipcp_fsm
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* IPCP fsm structure */
+comment|/* PPP_IPCP fsm structure */
 end_comment
 
 begin_decl_stmt
@@ -420,7 +440,7 @@ name|fsm_callbacks
 name|ipcp_callbacks
 init|=
 block|{
-comment|/* IPCP callback routines */
+comment|/* PPP_IPCP callback routines */
 name|ipcp_resetci
 block|,
 comment|/* Reset our Configuration Information */
@@ -463,7 +483,7 @@ comment|/* Retransmission is necessary */
 name|NULL
 block|,
 comment|/* Called to handle protocol-specific codes */
-literal|"IPCP"
+literal|"PPP_IPCP"
 comment|/* String name of protocol */
 block|}
 decl_stmt|;
@@ -611,7 +631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_init - Initialize IPCP.  */
+comment|/*  * ipcp_init - Initialize PPP_IPCP.  */
 end_comment
 
 begin_function
@@ -664,7 +684,7 @@ name|f
 operator|->
 name|protocol
 operator|=
-name|IPCP
+name|PPP_IPCP
 expr_stmt|;
 name|f
 operator|->
@@ -772,7 +792,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_open - IPCP is allowed to come up.  */
+comment|/*  * ipcp_open - PPP_IPCP is allowed to come up.  */
 end_comment
 
 begin_function
@@ -798,7 +818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_close - Take IPCP down.  */
+comment|/*  * ipcp_close - Take PPP_IPCP down.  */
 end_comment
 
 begin_function
@@ -876,7 +896,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_input - Input IPCP packet.  */
+comment|/*  * ipcp_input - Input PPP_IPCP packet.  */
 end_comment
 
 begin_function
@@ -917,7 +937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_protrej - A Protocol-Reject was received for IPCP.  *  * Pretend the lower layer went down, so we shut up.  */
+comment|/*  * ipcp_protrej - A Protocol-Reject was received for PPP_IPCP.  *  * Pretend the lower layer went down, so we shut up.  */
 end_comment
 
 begin_function
@@ -1562,7 +1582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_nakci - Peer has sent a NAK for some of our CIs.  * This should not modify any state if the Nak is bad  * or if IPCP is in the OPENED state.  *  * Returns:  *	0 - Nak was bad.  *	1 - Nak was good.  */
+comment|/*  * ipcp_nakci - Peer has sent a NAK for some of our CIs.  * This should not modify any state if the Nak is bad  * or if PPP_IPCP is in the OPENED state.  *  * Returns:  *	0 - Nak was bad.  *	1 - Nak was good.  */
 end_comment
 
 begin_function
@@ -2473,6 +2493,144 @@ condition|)
 block|{
 comment|/* Check CI type */
 case|case
+name|CI_DNS1
+case|:
+case|case
+name|CI_DNS2
+case|:
+if|if
+condition|(
+operator|(
+name|citype
+operator|==
+name|CI_DNS1
+operator|&&
+operator|!
+name|dns1
+operator|)
+operator|||
+operator|(
+name|citype
+operator|==
+name|CI_DNS2
+operator|&&
+operator|!
+name|dns2
+operator|)
+condition|)
+block|{
+name|orc
+operator|=
+name|CONFREJ
+expr_stmt|;
+comment|/* Reject DNS */
+break|break;
+block|}
+name|IPCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"ipcp: received DNS[12] "
+operator|)
+argument_list|)
+expr_stmt|;
+name|GETLONG
+argument_list|(
+name|tl
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* Parse his idea */
+name|ciaddr1
+operator|=
+name|htonl
+argument_list|(
+name|tl
+argument_list|)
+expr_stmt|;
+name|IPCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"(%s:"
+operator|,
+name|ip_ntoa
+argument_list|(
+name|ciaddr1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|citype
+operator|==
+name|CI_DNS1
+operator|&&
+name|ciaddr1
+operator|!=
+name|dns1
+operator|)
+operator|||
+operator|(
+name|citype
+operator|==
+name|CI_DNS2
+operator|&&
+name|ciaddr1
+operator|!=
+name|dns2
+operator|)
+condition|)
+block|{
+name|orc
+operator|=
+name|CONFNAK
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|reject_if_disagree
+condition|)
+block|{
+name|DECPTR
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|tl
+operator|=
+name|ntohl
+argument_list|(
+name|citype
+operator|==
+name|CI_DNS1
+condition|?
+name|dns1
+else|:
+name|dns2
+argument_list|)
+expr_stmt|;
+name|PUTLONG
+argument_list|(
+name|tl
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
 name|CI_ADDRS
 case|:
 name|IPCPDEBUG
@@ -3320,7 +3478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_up - IPCP has come UP.  *  * Configure the IP network interface appropriately and bring it up.  */
+comment|/*  * ipcp_up - PPP_IPCP has come UP.  *  * Configure the IP network interface appropriately and bring it up.  */
 end_comment
 
 begin_function
@@ -3694,7 +3852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_down - IPCP has gone DOWN.  *  * Take the IP network interface down, clear its addresses  * and delete routes through it.  */
+comment|/*  * ipcp_down - PPP_IPCP has gone DOWN.  *  * Take the IP network interface down, clear its addresses  * and delete routes through it.  */
 end_comment
 
 begin_function
@@ -3921,7 +4079,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|devname
+name|devnam
 expr_stmt|;
 name|argv
 index|[
@@ -3964,7 +4122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ipcp_printpkt - print the contents of an IPCP packet.  */
+comment|/*  * ipcp_printpkt - print the contents of an PPP_IPCP packet.  */
 end_comment
 
 begin_decl_stmt
@@ -4391,6 +4549,158 @@ argument_list|(
 name|arg
 argument_list|,
 literal|"addr %s"
+argument_list|,
+name|ip_ntoa
+argument_list|(
+name|htonl
+argument_list|(
+name|cilong
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|CI_DNS1
+case|:
+if|if
+condition|(
+name|olen
+operator|==
+name|CILEN_ADDR
+condition|)
+block|{
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|GETLONG
+argument_list|(
+name|cilong
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|printer
+argument_list|(
+name|arg
+argument_list|,
+literal|"dns1 %s"
+argument_list|,
+name|ip_ntoa
+argument_list|(
+name|htonl
+argument_list|(
+name|cilong
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|CI_DNS2
+case|:
+if|if
+condition|(
+name|olen
+operator|==
+name|CILEN_ADDR
+condition|)
+block|{
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|GETLONG
+argument_list|(
+name|cilong
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|printer
+argument_list|(
+name|arg
+argument_list|,
+literal|"dns2 %s"
+argument_list|,
+name|ip_ntoa
+argument_list|(
+name|htonl
+argument_list|(
+name|cilong
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|CI_NBNS1
+case|:
+if|if
+condition|(
+name|olen
+operator|==
+name|CILEN_ADDR
+condition|)
+block|{
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|GETLONG
+argument_list|(
+name|cilong
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|printer
+argument_list|(
+name|arg
+argument_list|,
+literal|"nbns1 %s"
+argument_list|,
+name|ip_ntoa
+argument_list|(
+name|htonl
+argument_list|(
+name|cilong
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|CI_NBNS2
+case|:
+if|if
+condition|(
+name|olen
+operator|==
+name|CILEN_ADDR
+condition|)
+block|{
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|GETLONG
+argument_list|(
+name|cilong
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|printer
+argument_list|(
+name|arg
+argument_list|,
+literal|"nbns2 %s"
 argument_list|,
 name|ip_ntoa
 argument_list|(

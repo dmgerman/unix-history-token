@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: magic.c,v 1.1 1993/11/11 03:54:25 paulus Exp $"
+literal|"$Id: magic.c,v 1.2 1994/09/25 02:32:05 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ begin_decl_stmt
 specifier|extern
 name|u_long
 name|gethostid
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -76,7 +76,7 @@ begin_decl_stmt
 specifier|extern
 name|long
 name|random
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -89,7 +89,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|srandom
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int

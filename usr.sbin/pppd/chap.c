@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap.c,v 1.2 1994/09/25 02:31:54 wollman Exp $"
+literal|"$Id: chap.c,v 1.3 1995/05/30 03:51:05 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -55,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ppp.h"
 end_include
 
@@ -70,17 +82,11 @@ directive|include
 file|"chap.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"md5.h"
-end_include
-
 begin_decl_stmt
 name|chap_state
 name|chap
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -93,7 +99,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapChallengeTimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -106,7 +112,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapResponseTimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -119,7 +125,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveChallenge
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -140,7 +146,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveResponse
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -161,7 +167,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveSuccess
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -182,7 +188,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveFailure
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -203,7 +209,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapSendStatus
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -219,7 +225,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapSendChallenge
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -233,7 +239,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapSendResponse
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -247,7 +253,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapGenChallenge
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -261,7 +267,7 @@ begin_decl_stmt
 specifier|extern
 name|double
 name|drand48
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -274,7 +280,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|srand48
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|long
@@ -608,7 +614,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 return|return;
@@ -988,7 +994,7 @@ name|auth_peer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1009,7 +1015,7 @@ name|auth_withpeer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 name|ChapLowerDown
@@ -1291,6 +1297,13 @@ decl_stmt|;
 name|MD5_CTX
 name|mdContext
 decl_stmt|;
+name|unsigned
+name|char
+name|digest
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|CHAPDEBUG
 argument_list|(
 operator|(
@@ -1565,14 +1578,14 @@ argument_list|)
 expr_stmt|;
 name|MD5Final
 argument_list|(
+name|digest
+argument_list|,
 operator|&
 name|mdContext
 argument_list|)
 expr_stmt|;
 name|BCOPY
 argument_list|(
-name|mdContext
-operator|.
 name|digest
 argument_list|,
 name|cstate
@@ -1673,6 +1686,13 @@ index|]
 decl_stmt|;
 name|MD5_CTX
 name|mdContext
+decl_stmt|;
+name|unsigned
+name|char
+name|digest
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|u_char
 name|msg
@@ -2000,6 +2020,8 @@ argument_list|)
 expr_stmt|;
 name|MD5Final
 argument_list|(
+name|digest
+argument_list|,
 operator|&
 name|mdContext
 argument_list|)
@@ -2007,10 +2029,8 @@ expr_stmt|;
 comment|/* compare local and remote MDs and send the appropriate status */
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-name|mdContext
-operator|.
 name|digest
 argument_list|,
 name|remmd
@@ -2081,7 +2101,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2129,7 +2149,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2250,7 +2270,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2368,7 +2388,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2438,7 +2458,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 comment|/* paste in a CHAP header */
@@ -2513,7 +2533,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|CHAPDEBUG
@@ -2631,7 +2651,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 comment|/* paste in a header */
@@ -2677,7 +2697,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|CHAPDEBUG
@@ -2869,7 +2889,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 name|PUTCHAR
@@ -2948,7 +2968,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|cstate
@@ -3027,7 +3047,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * upap.h - User/Password Authentication Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: upap.h,v 1.2 1994/04/11 07:13:44 paulus Exp $  */
+comment|/*  * upap.h - User/Password Authentication Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: upap.h,v 1.2 1994/09/25 02:32:18 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ value|(sizeof (u_char) + sizeof (u_char) + sizeof (u_short))
 end_define
 
 begin_comment
-comment|/*  * UPAP codes.  */
+comment|/*  * PPP_PAP codes.  */
 end_comment
 
 begin_define
@@ -277,7 +277,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_init
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -289,7 +289,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_authwithpeer
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -307,7 +307,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_authpeer
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -319,7 +319,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_lowerup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -331,7 +331,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_lowerdown
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -343,7 +343,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_input
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -360,7 +360,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_protrej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -372,7 +372,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|upap_printpkt
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|u_char
@@ -384,7 +384,7 @@ name|void
 argument_list|(
 argument|*
 argument_list|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

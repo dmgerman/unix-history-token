@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcp.c,v 1.2 1994/09/25 02:32:01 wollman Exp $"
+literal|"$Id: lcp.c,v 1.3 1995/05/30 03:51:12 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ begin_decl_stmt
 name|fsm
 name|lcp_fsm
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -172,7 +172,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_wantoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -185,7 +185,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_gotoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -198,7 +198,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_allowoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -211,7 +211,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_hisoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -224,7 +224,7 @@ begin_decl_stmt
 name|u_long
 name|xmit_accm
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 index|[
 literal|8
@@ -299,7 +299,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_resetci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -317,7 +317,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lcp_cilen
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -335,7 +335,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_addci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -359,7 +359,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lcp_ackci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -382,7 +382,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lcp_nakci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -405,7 +405,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lcp_rejci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -428,7 +428,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lcp_reqci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -454,7 +454,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_up
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -472,7 +472,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_down
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -490,7 +490,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_starting
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -508,7 +508,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_finished
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -526,7 +526,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lcp_extcode
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -549,7 +549,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_rprotrej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -572,7 +572,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_echo_lowerup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -585,7 +585,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_echo_lowerdown
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -598,7 +598,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|LcpEchoTimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -611,7 +611,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|lcp_received_echo_reply
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -632,7 +632,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|LcpSendEchoRequest
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -646,7 +646,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|LcpLinkFailure
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -1836,7 +1836,7 @@ parameter_list|(
 name|neg
 parameter_list|)
 value|(neg ? CILEN_LQR: 0)
-comment|/*      * NB: we only ask for one of CHAP and UPAP, even if we will      * accept either.      */
+comment|/*      * NB: we only ask for one of CHAP and PPP_PAP, even if we will      * accept either.      */
 return|return
 operator|(
 name|LENCISHORT
@@ -2044,7 +2044,7 @@ name|go
 operator|->
 name|neg_chap
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|,
 name|go
 operator|->
@@ -2064,7 +2064,7 @@ name|go
 operator|->
 name|neg_upap
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 name|ADDCILQR
@@ -2280,7 +2280,7 @@ name|go
 operator|->
 name|neg_chap
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|,
 name|go
 operator|->
@@ -2300,7 +2300,7 @@ name|go
 operator|->
 name|neg_upap
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 name|ACKCILQR
@@ -2570,7 +2570,7 @@ literal|0
 argument|;
 argument_list|)
 empty_stmt|;
-comment|/*      * Peer shouldn't send Nak for UPAP, protocol compression or      * address/control compression requests; they should send      * a Reject instead.  If they send a Nak, treat it as a Reject.      */
+comment|/*      * Peer shouldn't send Nak for PPP_PAP, protocol compression or      * address/control compression requests; they should send      * a Reject instead.  If they send a Nak, treat it as a Reject.      */
 if|if
 condition|(
 operator|!
@@ -3078,7 +3078,7 @@ name|CI_AUTHTYPE
 argument_list|,
 name|neg_chap
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|,
 name|go
 operator|->
@@ -3099,7 +3099,7 @@ name|CI_AUTHTYPE
 argument_list|,
 name|neg_upap
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -3714,12 +3714,12 @@ name|cishort
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Authtype must be UPAP or CHAP. 	     * 	     * Note: if both ao->neg_upap and ao->neg_chap are set, 	     * and the peer sends a Configure-Request with two 	     * authenticate-protocol requests, one for CHAP and one 	     * for UPAP, then we will reject the second request. 	     * Whether we end up doing CHAP or UPAP depends then on 	     * the ordering of the CIs in the peer's Configure-Request. 	     */
+comment|/* 	     * Authtype must be PPP_PAP or CHAP. 	     * 	     * Note: if both ao->neg_upap and ao->neg_chap are set, 	     * and the peer sends a Configure-Request with two 	     * authenticate-protocol requests, one for CHAP and one 	     * for PPP_PAP, then we will reject the second request. 	     * Whether we end up doing CHAP or PPP_PAP depends then on 	     * the ordering of the CIs in the peer's Configure-Request. 	     */
 if|if
 condition|(
 name|cishort
 operator|==
-name|UPAP
+name|PPP_PAP
 condition|)
 block|{
 if|if
@@ -3767,7 +3767,7 @@ if|if
 condition|(
 name|cishort
 operator|==
-name|CHAP
+name|PPP_CHAP
 condition|)
 block|{
 if|if
@@ -3782,7 +3782,7 @@ name|ho
 operator|->
 name|neg_upap
 operator|||
-comment|/* or we've already accepted UPAP */
+comment|/* or we've already accepted PPP_PAP */
 name|cilen
 operator|!=
 name|CILEN_CHAP
@@ -4309,7 +4309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_up - LCP has come UP.  *  * Start UPAP, IPCP, etc.  */
+comment|/*  * lcp_up - LCP has come UP.  *  * Start PPP_PAP, PPP_IPCP, etc.  */
 end_comment
 
 begin_function
@@ -4524,7 +4524,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* Enable UPAP */
+comment|/* Enable PPP_PAP */
 name|ipcp_lowerup
 argument_list|(
 name|f
@@ -4532,7 +4532,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* Enable IPCP */
+comment|/* Enable PPP_IPCP */
 name|lcp_echo_lowerup
 argument_list|(
 name|f
@@ -4765,7 +4765,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -5090,7 +5090,7 @@ name|cishort
 condition|)
 block|{
 case|case
-name|UPAP
+name|PPP_PAP
 case|:
 name|printer
 argument_list|(
@@ -5101,7 +5101,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CHAP
+name|PPP_CHAP
 case|:
 name|printer
 argument_list|(
