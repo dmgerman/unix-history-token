@@ -1925,6 +1925,31 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|csa_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|csa_detach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|csa_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|struct
 name|resource
 modifier|*
@@ -4125,7 +4150,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|csa_resume
 argument_list|)
 block|,
 comment|/* Bus interface */
