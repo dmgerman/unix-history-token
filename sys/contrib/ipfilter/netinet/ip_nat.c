@@ -864,23 +864,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|(
-name|SOLARIS
-operator|||
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_MUTEX
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -13954,11 +13942,17 @@ operator|->
 name|fin_p
 operator|)
 operator|)
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|(
 name|np
 operator|->
 name|in_flags
+operator|&
+name|IPN_RF
+operator|)
 operator|&&
 operator|!
 operator|(
@@ -13967,7 +13961,6 @@ operator|&
 name|np
 operator|->
 name|in_flags
-operator|)
 operator|)
 condition|)
 continue|continue;
