@@ -1269,10 +1269,6 @@ name|u_int
 name|sp_wopeners
 decl_stmt|;
 comment|/* # procs waiting DCD */
-name|u_char
-name|sp_hotchar
-decl_stmt|;
-comment|/* ldisc specific ASAP char */
 comment|/* Initial state. */
 name|struct
 name|termios

@@ -2428,10 +2428,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|pp
-operator|->
-name|sp_hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -3921,10 +3917,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|pp
-operator|->
-name|sp_hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp

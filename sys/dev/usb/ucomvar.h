@@ -654,9 +654,6 @@ name|int
 name|sc_poll
 decl_stmt|;
 name|u_char
-name|hotchar
-decl_stmt|;
-name|u_char
 name|sc_lsr
 decl_stmt|;
 name|u_char

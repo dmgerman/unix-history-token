@@ -315,10 +315,6 @@ name|u_int
 name|rc_dcdwaits
 decl_stmt|;
 comment|/* how many waits DCD in open */
-name|u_char
-name|rc_hotchar
-decl_stmt|;
-comment|/* end packed optimize */
 name|struct
 name|tty
 name|rc_tp
@@ -2687,7 +2683,9 @@ name|val
 operator|==
 name|rc
 operator|->
-name|rc_hotchar
+name|rc_tp
+operator|.
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -2888,7 +2886,9 @@ name|val
 operator|==
 name|rc
 operator|->
-name|rc_hotchar
+name|rc_tp
+operator|.
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -5332,10 +5332,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|rc
-operator|->
-name|rc_hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -5491,10 +5487,6 @@ argument_list|,
 name|flag
 argument_list|)
 expr_stmt|;
-name|rc
-operator|->
-name|rc_hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -6614,10 +6606,6 @@ operator||
 name|CCR_CORCHG3
 argument_list|)
 expr_stmt|;
-name|rc
-operator|->
-name|rc_hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -6970,10 +6958,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|rc
-operator|->
-name|rc_hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp

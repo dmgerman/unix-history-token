@@ -38,10 +38,6 @@ name|u_int
 name|sp_wopeners
 decl_stmt|;
 comment|/* Processes waiting for DCD.         */
-name|u_char
-name|sp_hotchar
-decl_stmt|;
-comment|/* ldisc specific ASAP char */
 name|struct
 name|termios
 name|sp_iin

@@ -872,10 +872,6 @@ name|prev_modem_status
 decl_stmt|;
 comment|/* last MSR handled by high level */
 name|u_char
-name|hotchar
-decl_stmt|;
-comment|/* ldisc-specific char to be handled ASAP */
-name|u_char
 modifier|*
 name|ibuf
 decl_stmt|;
@@ -6281,10 +6277,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-name|com
-operator|->
-name|hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -6474,10 +6466,6 @@ argument_list|,
 name|flag
 argument_list|)
 expr_stmt|;
-name|com
-operator|->
-name|hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -8533,7 +8521,9 @@ if|if
 condition|(
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 operator|&&
@@ -8541,7 +8531,9 @@ name|recv_data
 operator|==
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -9795,10 +9787,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|com
-operator|->
-name|hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -10917,10 +10905,6 @@ name|cfcr
 argument_list|)
 expr_stmt|;
 comment|/* XXX shouldn't call functions while intrs are disabled. */
-name|com
-operator|->
-name|hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp

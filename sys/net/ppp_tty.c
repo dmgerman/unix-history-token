@@ -783,6 +783,12 @@ name|caddr_t
 operator|)
 name|sc
 expr_stmt|;
+name|tp
+operator|->
+name|t_hotchar
+operator|=
+name|PPP_FLAG
+expr_stmt|;
 name|ttyflush
 argument_list|(
 name|tp

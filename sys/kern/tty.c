@@ -14496,7 +14496,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|ttyldoptim
 parameter_list|(
 name|struct
@@ -14632,13 +14632,6 @@ operator|&=
 operator|~
 name|TS_CAN_BYPASS_L_RINT
 expr_stmt|;
-return|return
-operator|(
-name|tp
-operator|->
-name|t_hotchar
-operator|)
-return|;
 block|}
 end_function
 

@@ -990,10 +990,6 @@ name|prev_modem_status
 decl_stmt|;
 comment|/* last MSR handled by high level */
 name|u_char
-name|hotchar
-decl_stmt|;
-comment|/* ldisc-specific char to be handled ASAP */
-name|u_char
 modifier|*
 name|ibuf
 decl_stmt|;
@@ -4742,7 +4738,9 @@ name|CD1400_RDSR_SPECIAL
 operator|&&
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 condition|)
@@ -4903,7 +4901,9 @@ if|if
 condition|(
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 operator|&&
@@ -4911,7 +4911,9 @@ name|recv_data
 operator|==
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -5145,7 +5147,9 @@ if|if
 condition|(
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 operator|&&
@@ -5153,7 +5157,9 @@ name|recv_data
 operator|==
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -5222,7 +5228,9 @@ if|if
 condition|(
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 operator|&&
@@ -5230,7 +5238,9 @@ name|recv_data
 operator|==
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -5341,7 +5351,9 @@ if|if
 condition|(
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 operator|&&
@@ -5349,7 +5361,9 @@ name|recv_data
 operator|==
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 condition|)
 name|swi_sched
 argument_list|(
@@ -11051,10 +11065,6 @@ name|opt
 decl_stmt|;
 endif|#
 directive|endif
-name|com
-operator|->
-name|hotchar
-operator|=
 name|ttyldoptim
 argument_list|(
 name|tp
@@ -11079,7 +11089,9 @@ if|if
 condition|(
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 operator|!=
 literal|0
 condition|)
@@ -11092,7 +11104,9 @@ name|CD1400_SCHR3
 argument_list|,
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 argument_list|)
 expr_stmt|;
 name|cd_setreg
@@ -11103,7 +11117,9 @@ name|CD1400_SCHR4
 argument_list|,
 name|com
 operator|->
-name|hotchar
+name|tp
+operator|->
+name|t_hotchar
 argument_list|)
 expr_stmt|;
 name|opt
