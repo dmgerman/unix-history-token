@@ -35,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)su.c	8.3 (Berkeley) 4/2/94"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)su.c	8.3 (Berkeley) 4/2/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -46,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.19 1997/03/29 04:32:40 imp Exp $"
+literal|"$Id: su.c,v 1.20 1997/05/10 19:01:32 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,6 +331,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -569,22 +590,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: su [%s] [login]\n"
-argument_list|,
-name|ARGSTR
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -2019,6 +2026,29 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|shell
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: su [%s] [login [args]]\n"
+argument_list|,
+name|ARGSTR
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
