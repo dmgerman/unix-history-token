@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.1 (Berkeley) %G%"
+literal|"@(#)move.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1696,6 +1696,9 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|str
@@ -1791,6 +1794,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|str

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shield.c	5.1 (Berkeley) %G%"
+literal|"@(#)shield.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,6 +297,9 @@ condition|(
 operator|*
 name|stat
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s
@@ -311,6 +314,9 @@ name|dev3
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|s

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpar.c	4.4 (Berkeley) %G%"
+literal|"@(#)getpar.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -718,6 +718,9 @@ name|t
 operator|=
 literal|" \t\n;"
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|format
