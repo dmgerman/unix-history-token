@@ -473,5 +473,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|void
+name|uhci_shutdown
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|v
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|uhci_power
+name|__P
+argument_list|(
+operator|(
+name|int
+name|state
+operator|,
+name|void
+operator|*
+name|priv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
