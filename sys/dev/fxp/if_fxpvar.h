@@ -689,6 +689,17 @@ begin_comment
 comment|/* extended RFDs for csum offload */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_SAVE_BAD
+value|0x0800
+end_define
+
+begin_comment
+comment|/* save bad pkts: bad size, CRC, etc */
+end_comment
+
 begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment
