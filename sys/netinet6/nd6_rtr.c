@@ -335,12 +335,10 @@ operator|(
 expr|struct
 name|nd_prefix
 operator|*
-name|ndpr
 operator|,
 expr|struct
 name|in6_addrlifetime
 operator|*
-name|lt6
 operator|)
 argument_list|)
 decl_stmt|;
@@ -491,12 +489,6 @@ name|ip6
 operator|->
 name|ip6_src
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct in6_addr daddr6 = ip6->ip6_dst;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|lladdr
@@ -1675,7 +1667,9 @@ condition|)
 block|{
 name|u_int32_t
 name|mtu
-init|=
+decl_stmt|;
+name|mtu
+operator|=
 name|ntohl
 argument_list|(
 name|ndopts
@@ -1684,7 +1678,7 @@ name|nd_opts_mtu
 operator|->
 name|nd_opt_mtu_mtu
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* lower bound */
 if|if
 condition|(
@@ -2764,8 +2758,7 @@ name|ip6_forwarding
 operator|&&
 name|ip6_accept_rtadv
 condition|)
-block|{
-comment|/* above is a good condition? */
+comment|/* XXX: better condition? */
 name|rt6_flush
 argument_list|(
 operator|&
@@ -2778,7 +2771,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dr
@@ -3657,7 +3649,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|bzero
 argument_list|(
@@ -3687,7 +3681,7 @@ name|newp
 operator|=
 name|new
 expr_stmt|;
-comment|/* initilization */
+comment|/* initialization */
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -3828,7 +3822,6 @@ if|if
 condition|(
 name|dr
 condition|)
-block|{
 name|pfxrtr_add
 argument_list|(
 name|new
@@ -3836,7 +3829,6 @@ argument_list|,
 name|dr
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -4125,22 +4117,22 @@ argument_list|)
 name|auth
 operator|=
 operator|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_AUTHIPHDR
+operator|)
 operator|&&
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_AUTHIPDGM
 operator|)
-condition|?
-literal|1
-else|:
-literal|0
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -4440,7 +4432,7 @@ name|end
 goto|;
 comment|/* we should just give up in this case. */
 block|}
-comment|/* 		 * XXX: from the ND point of view, we can ignore a prefix 		 * with the on-link bit being zero.  However, we need a 		 * prefix structure for references from autoconfigured 		 * addresses.  Thus, we explicitly make suret that the prefix 		 * itself expires now. 		 */
+comment|/* 		 * XXX: from the ND point of view, we can ignore a prefix 		 * with the on-link bit being zero.  However, we need a 		 * prefix structure for references from autoconfigured 		 * addresses.  Thus, we explicitly make sure that the prefix 		 * itself expires now. 		 */
 if|if
 condition|(
 name|newpr
@@ -4865,13 +4857,6 @@ name|ia6_ndpr
 operator|=
 name|pr
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXXYYY Don't do this, according to Jinmei. */
-block|pr->ndpr_addr = new->ndpr_addr;
-endif|#
-directive|endif
 comment|/* 			 * RFC 3041 3.3 (2). 			 * When a new public address is created as described 			 * in RFC2462, also create a new temporary address. 			 * 			 * RFC 3041 3.5. 			 * When an interface connects to a new link, a new 			 * randomized interface identifier should be generated 			 * immediately together with a new set of temporary 			 * addresses.  Thus, we specifiy 1 as the 2nd arg of 			 * in6_tmpifadd(). 			 */
 if|if
 condition|(
@@ -5462,6 +5447,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
 operator|(
 name|ifa
 operator|->
@@ -5469,8 +5455,6 @@ name|ia6_flags
 operator|&
 name|IN6_IFF_AUTOCONF
 operator|)
-operator|==
-literal|0
 condition|)
 continue|continue;
 if|if
@@ -5753,7 +5737,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * We prefer link-local addresses as the associated interface address.  	 */
+comment|/* 	 * We prefer link-local addresses as the associated interface address. 	 */
 comment|/* search for a link-local addr */
 name|ifa
 operator|=
@@ -6482,11 +6466,13 @@ name|rt
 operator|!=
 name|NULL
 condition|)
+block|{
 name|RTFREE
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -6568,7 +6554,7 @@ argument_list|,
 name|prefixlen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * find a link-local address (will be interface ID). 	 * Is it really mandatory? Theoretically, a global or a site-local 	 * address can be configured without a link-local address, if we 	 * have a unique interface identifier... 	 * 	 * it is not mandatory to have a link-local address, we can generate 	 * interface identifier on the fly.  we do this because: 	 * (1) it should be the easiest way to find interface identifier. 	 * (2) RFC2462 5.4 suggesting the use of the same interface identifier 	 * for multiple addresses on a single interface, and possible shortcut 	 * of DAD.  we omitted DAD for this reason in the past. 	 * (3) a user can prevent autoconfiguration of global address  	 * by removing link-local address by hand (this is partly because we 	 * don't have other way to control the use of IPv6 on an interface. 	 * this has been our design choice - cf. NRL's "ifconfig auto"). 	 * (4) it is easier to manage when an interface has addresses 	 * with the same interface identifier, than to have multiple addresses 	 * with different interface identifiers. 	 * 	 * Mobile IPv6 addition: allow for caller to specify a wished interface 	 * ID. This is to not break connections when moving addresses between 	 * interfaces. 	 */
+comment|/* 	 * find a link-local address (will be interface ID). 	 * Is it really mandatory? Theoretically, a global or a site-local 	 * address can be configured without a link-local address, if we 	 * have a unique interface identifier... 	 * 	 * it is not mandatory to have a link-local address, we can generate 	 * interface identifier on the fly.  we do this because: 	 * (1) it should be the easiest way to find interface identifier. 	 * (2) RFC2462 5.4 suggesting the use of the same interface identifier 	 * for multiple addresses on a single interface, and possible shortcut 	 * of DAD.  we omitted DAD for this reason in the past. 	 * (3) a user can prevent autoconfiguration of global address 	 * by removing link-local address by hand (this is partly because we 	 * don't have other way to control the use of IPv6 on an interface. 	 * this has been our design choice - cf. NRL's "ifconfig auto"). 	 * (4) it is easier to manage when an interface has addresses 	 * with the same interface identifier, than to have multiple addresses 	 * with different interface identifiers. 	 * 	 * Mobile IPv6 addition: allow for caller to specify a wished interface 	 * ID. This is to not break connections when moving addresses between 	 * interfaces. 	 */
 name|ifa
 operator|=
 operator|(
@@ -6983,7 +6969,7 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * lifetime. 	 * XXX: in6_init_address_ltimes would override these values later. 	 * We should reconsider this logic.  	 */
+comment|/* 	 * lifetime. 	 * XXX: in6_init_address_ltimes would override these values later. 	 * We should reconsider this logic. 	 */
 name|ifra
 operator|.
 name|ifra_lifetime
@@ -7102,7 +7088,7 @@ operator|(
 name|ia
 operator|)
 return|;
-comment|/* this must NOT be NULL. */
+comment|/* this is always non-NULL */
 block|}
 end_function
 
@@ -8016,11 +8002,13 @@ operator|->
 name|sin6_addr
 argument_list|)
 condition|)
+block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * Do not delete a static route. 	 * XXX: this seems to be a bit ad-hoc. Should we consider the 	 * 'cloned' bit instead? 	 */
 if|if
 condition|(

@@ -1266,6 +1266,11 @@ endif|#
 directive|endif
 block|{
 name|struct
+name|mbuf
+modifier|*
+name|control
+decl_stmt|;
+name|struct
 name|socket
 modifier|*
 name|so
@@ -1274,11 +1279,6 @@ name|struct
 name|sockaddr_in6
 modifier|*
 name|dstsock
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|control
 decl_stmt|;
 name|struct
 name|in6_addr
@@ -1731,7 +1731,7 @@ operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 block|}
 block|}
 comment|/* 	 * Source address selection. 	 */

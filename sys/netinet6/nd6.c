@@ -11,10 +11,6 @@ begin_comment
 comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_comment
-comment|/*  * XXX  * KAME 970409 note:  * BSD/OS version heavily modifies this code, related to llinfo.  * Since we don't have BSD/OS version of net/route.c in our hand,  * I left the code mostly as it was in 970310.  -- itojun  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2331,7 +2327,7 @@ name|regen
 init|=
 literal|0
 decl_stmt|;
-comment|/* 			 * If the expiring address is temporary, try 			 * regenerating a new one.  This would be useful when 			 * we suspended a laptop PC, then turned it on after a 			 * period that could invalidate all temporary 			 * addresses.  Although we may have to restart the 			 * loop (see below), it must be after purging the 			 * address.  Otherwise, we'd see an infinite loop of 			 * regeneration.  			 */
+comment|/* 			 * If the expiring address is temporary, try 			 * regenerating a new one.  This would be useful when 			 * we suspended a laptop PC, then turned it on after a 			 * period that could invalidate all temporary 			 * addresses.  Although we may have to restart the 			 * loop (see below), it must be after purging the 			 * address.  Otherwise, we'd see an infinite loop of 			 * regeneration. 			 */
 if|if
 condition|(
 name|ip6_use_tempaddr
@@ -2433,7 +2429,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * A new temporary address is 					 * generated. 					 * XXX: this means the address chain 					 * has changed while we are still in 					 * the loop.  Although the change 					 * would not cause disaster (because 					 * it's not a deletion, but an 					 * addition,) we'd rather restart the 					 * loop just for safety.  Or does this  					 * significantly reduce performance?? 					 */
+comment|/* 					 * A new temporary address is 					 * generated. 					 * XXX: this means the address chain 					 * has changed while we are still in 					 * the loop.  Although the change 					 * would not cause disaster (because 					 * it's not a deletion, but an 					 * addition,) we'd rather restart the 					 * loop just for safety.  Or does this 					 * significantly reduce performance?? 					 */
 goto|goto
 name|addrloop
 goto|;
@@ -3267,6 +3263,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_ERR
@@ -3282,6 +3279,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rt
@@ -3334,7 +3332,7 @@ operator|->
 name|rt_refcnt
 operator|--
 expr_stmt|;
-comment|/* 	 * Validation for the entry. 	 * Note that the check for rt_llinfo is necessary because a cloned 	 * route from a parent route that has the L flag (e.g. the default 	 * route to a p2p interface) may have the flag, too, while the 	 * destination is not actually a neighbor. 	 * XXX: we can't use rt->rt_ifp to check for the interface, since 	 *      it might be the loopback interface if the entry is for our 	 *      own address on a non-loopback interface. Instead, we should 	 *      use rt->rt_ifa->ifa_ifp, which would specify the REAL 	 *      interface. 	 */
+comment|/* 	 * Validation for the entry. 	 * Note that the check for rt_llinfo is necessary because a cloned 	 * route from a parent route that has the L flag (e.g. the default 	 * route to a p2p interface) may have the flag, too, while the 	 * destination is not actually a neighbor. 	 * XXX: we can't use rt->rt_ifp to check for the interface, since 	 *      it might be the loopback interface if the entry is for our 	 *      own address on a non-loopback interface. Instead, we should 	 *      use rt->rt_ifa->ifa_ifp, which would specify the REAL 	 *	interface. 	 */
 if|if
 condition|(
 operator|(
@@ -3693,7 +3691,7 @@ name|nd_defrouter
 modifier|*
 name|dr
 decl_stmt|;
-comment|/* 	 * we used to have pfctlinput(PRC_HOSTDEAD) here.  	 * even though it is not harmful, it was not really necessary. 	 */
+comment|/* 	 * we used to have pfctlinput(PRC_HOSTDEAD) here. 	 * even though it is not harmful, it was not really necessary. 	 */
 if|if
 condition|(
 operator|!
@@ -4136,6 +4134,8 @@ name|rt_flags
 operator|&
 name|RTF_GATEWAY
 operator|)
+operator|!=
+literal|0
 condition|)
 return|return;
 if|if
@@ -4283,9 +4283,6 @@ name|ln_expire
 operator|=
 name|time_second
 expr_stmt|;
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|ln
@@ -4298,12 +4295,6 @@ literal|0
 condition|)
 block|{
 comment|/* kludge for desktops */
-if|#
-directive|if
-literal|0
-block|printf("nd6_rtequest: time.tv_sec is zero; " 				       "treat it as 1\n");
-endif|#
-directive|endif
 name|ln
 operator|->
 name|ln_expire
@@ -4311,8 +4302,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -4322,6 +4311,8 @@ name|rt_flags
 operator|&
 name|RTF_CLONING
 operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 block|}
@@ -6423,7 +6414,6 @@ name|ifindex
 argument_list|)
 operator|)
 return|;
-break|break;
 block|}
 return|return
 operator|(
@@ -6434,7 +6424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create neighbor cache entry and cache link-layer address,  * on reception of inbound ND6 packets. (RS/RA/NS/redirect)  */
+comment|/*  * Create neighbor cache entry and cache link-layer address,  * on reception of inbound ND6 packets.  (RS/RA/NS/redirect)  */
 end_comment
 
 begin_function
@@ -6795,8 +6785,8 @@ name|olladdr
 operator|&&
 name|lladdr
 operator|)
-comment|/* (3) */
 operator|||
+comment|/* (3) */
 operator|(
 name|olladdr
 operator|&&
@@ -6961,7 +6951,7 @@ break|break;
 case|case
 name|ND_REDIRECT
 case|:
-comment|/* 		 * If the icmp is a redirect to a better router, always set the 		 * is_router flag. Otherwise, if the entry is newly created, 		 * clear the flag. [RFC 2461, sec 8.3] 		 */
+comment|/* 		 * If the icmp is a redirect to a better router, always set the 		 * is_router flag.  Otherwise, if the entry is newly created, 		 * clear the flag.  [RFC 2461, sec 8.3] 		 */
 if|if
 condition|(
 name|code
@@ -7014,8 +7004,8 @@ operator|||
 name|lladdr
 operator|)
 operator|)
-comment|/* (2-5) */
 operator|||
+comment|/* (2-5) */
 operator|(
 name|is_newentry
 operator|&&
@@ -8573,7 +8563,9 @@ condition|)
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -9010,7 +9002,9 @@ condition|)
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

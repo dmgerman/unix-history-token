@@ -630,8 +630,8 @@ literal|0
 index|]
 operator|==
 name|IPV6_ADDR_INT16_MLL
-comment|/* don't check ifindex portion */
 operator|&&
+comment|/* don't check ifindex portion */
 name|daddr6
 operator|.
 name|s6_addr32
@@ -1827,15 +1827,6 @@ operator|!
 name|dad
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* KAME way, exact address scope match */
-comment|/* 		 * Select a source whose scope is the same as that of the dest. 		 * Typically, the dest is link-local solicitation multicast 		 * (i.e. neighbor discovery) or link-local/global unicast 		 * (i.e. neighbor un-reachability detection). 		 */
-block|ia = in6_ifawithifp(ifp,&ip6->ip6_dst); 		if (ia == NULL) { 			m_freem(m); 			return; 		} 		ip6->ip6_src = ia->ia_addr.sin6_addr;
-else|#
-directive|else
-comment|/* spec-wise correct */
 comment|/* 		 * RFC2461 7.2.2: 		 * "If the source address of the packet prompting the 		 * solicitation is the same as one of the addresses assigned 		 * to the outgoing interface, that address SHOULD be placed 		 * in the IP Source Address of the outgoing solicitation. 		 * Otherwise, any one of the addresses assigned to the 		 * interface should be used." 		 * 		 * We use the source address for the prompting packet 		 * (saddr6), if: 		 * - saddr6 is given from the caller (by giving "ln"), and 		 * - saddr6 belongs to the outgoing interface. 		 * Otherwise, we perform a scope-wise match. 		 */
 name|struct
 name|ip6_hdr
@@ -1969,8 +1960,6 @@ operator|.
 name|sin6_addr
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -2314,12 +2303,6 @@ name|nd_neighbor_advert
 modifier|*
 name|nd_na
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct in6_addr saddr6 = ip6->ip6_src;
-endif|#
-directive|endif
 name|struct
 name|in6_addr
 name|daddr6
@@ -2806,7 +2789,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * If no neighbor cache entry is found, NA SHOULD silently be discarded. 	 */
+comment|/* 	 * If no neighbor cache entry is found, NA SHOULD silently be 	 * discarded. 	 */
 name|rt
 operator|=
 name|nd6_lookup
@@ -2930,6 +2913,7 @@ name|ln
 operator|->
 name|ln_expire
 condition|)
+block|{
 name|ln
 operator|->
 name|ln_expire
@@ -2947,6 +2931,7 @@ index|]
 operator|.
 name|reachable
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3245,7 +3230,7 @@ operator|)
 operator|->
 name|sin6_addr
 expr_stmt|;
-comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety.   			 */
+comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety. 			 */
 name|s
 operator|=
 name|splnet
@@ -3355,7 +3340,7 @@ name|ln
 operator|->
 name|ln_hold
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|freeit
@@ -4234,7 +4219,6 @@ literal|1
 argument_list|)
 operator|)
 return|;
-break|break;
 default|default:
 return|return
 name|NULL
@@ -4606,7 +4590,9 @@ operator|&
 name|IFF_UP
 operator|)
 condition|)
+block|{
 return|return;
+block|}
 if|if
 condition|(
 name|nd6_dad_find
@@ -5258,7 +5244,7 @@ directive|if
 literal|0
 comment|/* heuristics */
 comment|/* 			 * if 			 * - we have sent many(?) DAD NS, and 			 * - the number of NS we sent equals to the 			 *   number of NS we've got, and 			 * - we've got no NA 			 * we may have a faulty network card/driver which 			 * loops back multicasts to myself. 			 */
-block|if (3< dp->dad_count&& dp->dad_ns_icount == dp->dad_count&& dp->dad_na_icount == 0) { 				log(LOG_INFO, "DAD questionable for %s(%s): " 					"network card loops back multicast?\n", 					ip6_sprintf(&ia->ia_addr.sin6_addr), 					if_name(ifa->ifa_ifp));
+block|if (3< dp->dad_count&& dp->dad_ns_icount == dp->dad_count&& dp->dad_na_icount == 0) { 				log(LOG_INFO, "DAD questionable for %s(%s): " 				    "network card loops back multicast?\n", 				    ip6_sprintf(&ia->ia_addr.sin6_addr), 				    if_name(ifa->ifa_ifp));
 comment|/* XXX consider it a duplicate or not? */
 comment|/* duplicate++; */
 block|} else {

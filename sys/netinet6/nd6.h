@@ -1148,7 +1148,9 @@ name|nd6log
 parameter_list|(
 name|x
 parameter_list|)
-value|do { if (nd6_debug) log x; } while (0)
+value|do { if (nd6_debug) log x; } while (
+comment|/*CONSTCOND*/
+value|0)
 end_define
 
 begin_decl_stmt
@@ -2164,7 +2166,6 @@ operator|(
 expr|struct
 name|nd_prefix
 operator|*
-name|ndpr
 operator|)
 argument_list|)
 decl_stmt|;
