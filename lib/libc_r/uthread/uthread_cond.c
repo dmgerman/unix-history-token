@@ -368,6 +368,16 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
+comment|/* Wait forever: */
+name|_thread_run
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 			 * Queue the running thread for the condition 			 * variable: 			 */
 name|_thread_queue_enq
 argument_list|(
@@ -383,21 +393,47 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex: */
+if|if
+condition|(
+operator|(
+name|rval
+operator|=
 name|pthread_mutex_unlock
 argument_list|(
 name|mutex
 argument_list|)
-expr_stmt|;
-comment|/* Wait forever: */
-name|_thread_run
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 				 * Cannot unlock the mutex, so remove the 				 * running thread from the condition 				 * variable queue:  				 */
+name|_thread_queue_deq
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
 operator|->
-name|wakeup_time
-operator|.
-name|tv_sec
-operator|=
-operator|-
-literal|1
+name|c_queue
+argument_list|)
 expr_stmt|;
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Unlock the condition variable structure: */
 name|_SPINUNLOCK
 argument_list|(
@@ -420,18 +456,6 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-comment|/* Lock the condition variable structure: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 comment|/* Lock the mutex: */
 name|rval
 operator|=
@@ -440,16 +464,10 @@ argument_list|(
 name|mutex
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
-comment|/* Return an invalid argument error: */
-name|rval
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-block|}
 comment|/* Unlock the condition variable structure: */
 name|_SPINUNLOCK
 argument_list|(
@@ -462,6 +480,13 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* Return an invalid argument error: */
+name|rval
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return
@@ -628,6 +653,18 @@ operator|->
 name|c_queue
 argument_list|)
 expr_stmt|;
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|cond
+operator|)
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -651,18 +688,6 @@ argument_list|,
 name|__FILE__
 argument_list|,
 name|__LINE__
-argument_list|)
-expr_stmt|;
-comment|/* Lock the condition variable structure: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|cond
-operator|)
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex: */
@@ -699,13 +724,6 @@ block|}
 break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
-comment|/* Return an invalid argument error: */
-name|rval
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-block|}
 comment|/* Unlock the condition variable structure: */
 name|_SPINUNLOCK
 argument_list|(
@@ -718,6 +736,13 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+comment|/* Return an invalid argument error: */
+name|rval
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* Return the completion status: */
 return|return
