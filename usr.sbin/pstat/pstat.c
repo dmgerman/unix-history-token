@@ -4609,9 +4609,21 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%7d "
+literal|"   %2d,%-2d"
 argument_list|,
-name|line
+name|major
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
