@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.5	%H%	*/
+comment|/*	kern_proc.c	3.6	%H%	*/
 end_comment
 
 begin_include
@@ -1924,21 +1924,13 @@ name|SIG_HOLD
 case|:
 continue|continue;
 default|default:
-comment|/* 			 * Normal or deferring catch. 			 * If deferred, now hold it, else 			 * revert to default. 			 */
-if|if
-condition|(
-name|SIGISDEFER
-argument_list|(
-operator|*
-name|rp
-argument_list|)
-condition|)
-operator|*
-name|rp
-operator|=
-name|SIG_HOLD
+comment|/* 			 * Normal or deferring catch; revert to default. 			 */
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
 expr_stmt|;
-else|else
 operator|*
 name|rp
 operator|=
@@ -1999,6 +1991,12 @@ name|p_siga1
 operator|&=
 operator|~
 name|sigmask
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
@@ -2277,7 +2275,7 @@ expr_stmt|;
 else|else
 name|p
 operator|->
-name|p_siga0
+name|p_siga1
 operator|=
 literal|0
 expr_stmt|;
@@ -3199,24 +3197,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|u
-operator|.
-name|u_qsav
-argument_list|)
-condition|)
-block|{
-name|u
-operator|.
-name|u_eosys
-operator|=
-name|RESTARTSYS
-expr_stmt|;
-return|return;
-block|}
+comment|/* 	if (setjmp(u.u_qsav)) { 		u.u_eosys = RESTARTSYS; 		return; 	} */
 name|sleep
 argument_list|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.6	%H%	*/
+comment|/*	machdep.c	3.7	%H%	*/
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.6) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.7) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,9 +809,6 @@ name|int
 name|ipcreg
 index|[]
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -976,6 +973,8 @@ name|sp
 operator|+=
 literal|4
 operator|+
+literal|4
+operator|*
 operator|(
 name|fuword
 argument_list|(
@@ -984,8 +983,6 @@ argument_list|)
 operator|&
 literal|0xff
 operator|)
-operator|<<
-literal|2
 expr_stmt|;
 comment|/* phew, now the rei */
 name|u
