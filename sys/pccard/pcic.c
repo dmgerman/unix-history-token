@@ -175,6 +175,17 @@ operator|(
 literal|"TI 1130 PCMCIA/CardBus Bridge"
 operator|)
 return|;
+if|if
+condition|(
+name|type
+operator|==
+literal|0xac15104cUL
+condition|)
+return|return
+operator|(
+literal|"TI 1131 PCI to PCMCIA/CardBus bridge"
+operator|)
+return|;
 return|return
 operator|(
 name|NULL
