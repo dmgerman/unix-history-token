@@ -219,7 +219,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unable to open contents file '%s' for input"
+name|__FUNCTION__
+literal|": unable to open contents file '%s' for input"
 argument_list|,
 name|Contents
 argument_list|)
@@ -920,7 +921,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"can't open file %s for writing"
+name|__FUNCTION__
+literal|": can't open file %s for writing"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -951,7 +953,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"error while closing %s"
+name|__FUNCTION__
+literal|": error while closing %s"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -1128,7 +1131,7 @@ name|tball
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|suffix
 argument_list|,
@@ -1235,7 +1238,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"cannot create pipe"
+name|__FUNCTION__
+literal|": cannot create pipe"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1261,7 +1265,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"cannot fork process for tar"
+name|__FUNCTION__
+literal|": cannot fork process for tar"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1315,7 +1320,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"failed to execute tar command"
+name|__FUNCTION__
+literal|": failed to execute tar command"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1356,7 +1362,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"fdopen failed"
+name|__FUNCTION__
+literal|": fdopen failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1582,7 +1589,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"tar command failed with code %d"
+name|__FUNCTION__
+literal|": tar command failed with code %d"
 argument_list|,
 name|ret
 argument_list|)
@@ -1612,7 +1620,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"required package comment string is missing (-c comment)"
+name|__FUNCTION__
+literal|": required package comment string is missing (-c comment)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1631,7 +1640,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"required package description string is missing (-d desc)"
+name|__FUNCTION__
+literal|": required package description string is missing (-d desc)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1650,7 +1660,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"required package contents list is missing (-f [-]file)"
+name|__FUNCTION__
+literal|": required package contents list is missing (-f [-]file)"
 argument_list|)
 expr_stmt|;
 block|}

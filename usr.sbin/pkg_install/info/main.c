@@ -414,7 +414,7 @@ condition|(
 operator|(
 name|pkgs_split
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|argv

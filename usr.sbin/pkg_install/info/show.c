@@ -686,7 +686,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unknown command type %d (%s)"
+name|__FUNCTION__
+literal|": unknown command type %d (%s)"
 argument_list|,
 name|p
 operator|->

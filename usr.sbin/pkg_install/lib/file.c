@@ -1170,7 +1170,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"can't stat '%s'"
+name|__FUNCTION__
+literal|": can't stat '%s'"
 argument_list|,
 name|fname
 argument_list|)
@@ -1218,7 +1219,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unable to open '%s' for reading"
+name|__FUNCTION__
+literal|": unable to open '%s' for reading"
 argument_list|,
 name|fname
 argument_list|)
@@ -1251,7 +1253,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"short read on '%s' - did not get %qd bytes"
+name|__FUNCTION__
+literal|": short read on '%s' - did not get %qd bytes"
 argument_list|,
 name|fname
 argument_list|,
@@ -1542,7 +1545,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"cannot fopen '%s' for writing"
+name|__FUNCTION__
+literal|": cannot fopen '%s' for writing"
 argument_list|,
 name|name
 argument_list|)
@@ -1580,7 +1584,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"short fwrite on '%s', tried to write %d bytes"
+name|__FUNCTION__
+literal|": short fwrite on '%s', tried to write %d bytes"
 argument_list|,
 name|name
 argument_list|,
@@ -1605,7 +1610,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"failure to fclose '%s'"
+name|__FUNCTION__
+literal|": failure to fclose '%s'"
 argument_list|,
 name|name
 argument_list|)
@@ -1692,7 +1698,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"could not perform '%s'"
+name|__FUNCTION__
+literal|": could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -1779,7 +1786,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"could not perform '%s'"
+name|__FUNCTION__
+literal|": could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -1895,7 +1903,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"copy_file: could not perform '%s'"
+name|__FUNCTION__
+literal|": could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -1955,7 +1964,7 @@ condition|)
 block|{
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|pkg
 argument_list|,
@@ -1978,14 +1987,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|suffix
 argument_list|,
 literal|'z'
 argument_list|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|suffix
 argument_list|,

@@ -320,7 +320,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unable to get current working directory!"
+name|__FUNCTION__
+literal|": unable to get current working directory!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -742,7 +743,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unable to return to working directory %s!"
+name|__FUNCTION__
+literal|": unable to return to working directory %s!"
 argument_list|,
 name|home
 argument_list|)
@@ -876,7 +878,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"unable to return to working directory %s!"
+name|__FUNCTION__
+literal|": unable to return to working directory %s!"
 argument_list|,
 name|home
 argument_list|)
@@ -1009,7 +1012,8 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"installed package %s has no %s file!"
+name|__FUNCTION__
+literal|": installed package %s has no %s file!"
 argument_list|,
 name|pkg
 argument_list|,
