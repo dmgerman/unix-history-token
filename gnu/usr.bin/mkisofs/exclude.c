@@ -133,6 +133,10 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|strlen
