@@ -5256,6 +5256,15 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+name|HITACHI_Am79C970
+case|:
+comment|/* 			     * PCI cards that should be attached in 			     * ISA mode should return this value. -- tvf 			     */
+return|return
+operator|(
+name|PCnet_PCI
+operator|)
+return|;
 default|default:
 break|break;
 block|}
@@ -5904,8 +5913,10 @@ expr|*
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 		 * ne2100_probe sets sc->nic.ic to PCnet_PCI for PCI 		 * cards that work in ISA emulation mode. The first 		 * clause this code avoids attaching such a card at 		 * this time to allow it to be picked up as an ISA 		 * card later. -- tvf 		 */
 if|if
 condition|(
+operator|(
 operator|(
 name|ne2100_probe
 argument_list|(
@@ -5915,6 +5926,15 @@ name|iobase
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|||
+name|sc
+operator|->
+name|nic
+operator|.
+name|ic
+operator|==
+name|PCnet_PCI
 operator|)
 operator|||
 operator|(
