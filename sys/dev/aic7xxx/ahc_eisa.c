@@ -756,6 +756,13 @@ argument_list|,
 name|aic7770_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|ahc_detach
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
@@ -775,9 +782,11 @@ literal|"ahc"
 block|,
 name|ahc_eisa_methods
 block|,
-literal|1
-block|,
-comment|/* unused */
+expr|sizeof
+operator|(
+expr|struct
+name|ahc_softc
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt

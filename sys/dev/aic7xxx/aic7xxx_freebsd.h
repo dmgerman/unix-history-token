@@ -60,6 +60,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -573,6 +579,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|ih
+decl_stmt|;
+name|eventhandler_tag
+name|eh
 decl_stmt|;
 block|}
 struct|;
@@ -2164,7 +2173,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/***************************** Initialization *********************************/
+comment|/************************* Initialization/Teardown ****************************/
 end_comment
 
 begin_function_decl
@@ -2222,6 +2231,57 @@ name|rahc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/****************************** Interrupts ************************************/
+end_comment
+
+begin_function_decl
+name|void
+name|ahc_platform_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|ahc_platform_flushwork
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ahc_platform_flushwork
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+block|{ }
+end_function
 
 begin_comment
 comment|/************************ Misc Function Declarations **************************/
