@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.7 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.7.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -698,8 +698,12 @@ block|{
 if|if
 condition|(
 name|op
-operator|>=
+operator|==
 name|COPY
+operator|||
+name|op
+operator|==
+name|COPYVERIFY
 condition|)
 block|{
 if|if
@@ -874,8 +878,12 @@ expr_stmt|;
 if|if
 condition|(
 name|op
-operator|>=
+operator|==
 name|COPY
+operator|||
+name|op
+operator|==
+name|COPYVERIFY
 condition|)
 block|{
 name|writeop
