@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\ -D__alpha__ -D__alpha -Acpu(alpha) -Amachine(alpha) " \ FBSD_CPP_PREDEFINES \ SUB_CPP_PREDEFINES
+value|"\ -D__alpha__ -D__alpha -Acpu(alpha) -Amachine(alpha) " \ CPP_FBSD_PREDEFINES \ SUB_CPP_PREDEFINES
 end_define
 
 begin_comment
