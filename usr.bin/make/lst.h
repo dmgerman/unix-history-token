@@ -407,7 +407,7 @@ comment|/* Concatenate two lists */
 end_comment
 
 begin_function_decl
-name|ReturnStatus
+name|void
 name|Lst_Concat
 parameter_list|(
 name|Lst
