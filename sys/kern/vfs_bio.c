@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.170 1998/08/24 08:39:38 dfr Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.171 1998/08/24 17:47:25 phk Exp $  */
 end_comment
 
 begin_comment
@@ -11162,9 +11162,9 @@ operator|->
 name|b_flags
 argument_list|,
 literal|"\20\40bounce\37cluster\36vmio\35ram\34ordered"
-literal|"\33paging\32xxx\31writeinprog\30wanted\27relbuf\26tape"
+literal|"\33paging\32xxx\31writeinprog\30wanted\27relbuf\26avail3"
 literal|"\25read\24raw\23phys\22clusterok\21malloc\20nocache"
-literal|"\17locked\16inval\15gathered\14error\13eintr\12done\11dirty"
+literal|"\17locked\16inval\15avail2\14error\13eintr\12done\11avail1"
 literal|"\10delwri\7call\6cache\5busy\4bad\3async\2needcommit\1age"
 argument_list|)
 expr_stmt|;
