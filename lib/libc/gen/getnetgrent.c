@@ -2067,7 +2067,7 @@ name|line
 index|[
 name|LINSIZ
 operator|+
-literal|1
+literal|2
 index|]
 decl_stmt|;
 ifdef|#
@@ -2166,9 +2166,11 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+name|LINSIZ
 argument_list|,
 literal|"%s %s"
 argument_list|,

@@ -2855,6 +2855,9 @@ modifier|*
 name|res
 parameter_list|,
 name|int
+name|resultlen
+parameter_list|,
+name|int
 name|master
 parameter_list|)
 block|{
@@ -2902,8 +2905,15 @@ name|resbuf
 argument_list|,
 name|res
 argument_list|,
-name|YPMAXRECORD
+name|resultlen
 argument_list|)
+expr_stmt|;
+name|resbuf
+index|[
+name|resultlen
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|result
 operator|=
@@ -3647,6 +3657,8 @@ name|pw
 argument_list|,
 name|result
 argument_list|,
+name|resultlen
+argument_list|,
 name|_gotmaster
 argument_list|)
 expr_stmt|;
@@ -3904,6 +3916,8 @@ argument_list|(
 name|pw
 argument_list|,
 name|result
+argument_list|,
+name|resultlen
 argument_list|,
 name|_gotmaster
 argument_list|)
