@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -33,7 +33,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Bind function calls lazily */
+comment|/* Bind function calls lazily. */
 end_comment
 
 begin_define
@@ -44,7 +44,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Bind function calls immediately */
+comment|/* Bind function calls immediately. */
 end_comment
 
 begin_define
@@ -62,7 +62,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* Make symbols globally available */
+comment|/* Make symbols globally available. */
 end_comment
 
 begin_define
@@ -73,7 +73,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Opposite of RTLD_GLOBAL, and the default */
+comment|/* Opposite of RTLD_GLOBAL, and the default. */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* Trace loaded objects and exit */
+comment|/* Trace loaded objects and exit. */
 end_comment
 
 begin_comment
@@ -99,7 +99,7 @@ value|((void *) -1)
 end_define
 
 begin_comment
-comment|/* Search subsequent objects */
+comment|/* Search subsequent objects. */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ value|((void *) -2)
 end_define
 
 begin_comment
-comment|/* Use default search algorithm */
+comment|/* Use default search algorithm. */
 end_comment
 
 begin_comment
@@ -127,30 +127,30 @@ name|char
 modifier|*
 name|dli_fname
 decl_stmt|;
-comment|/* Pathname of shared object */
+comment|/* Pathname of shared object. */
 name|void
 modifier|*
 name|dli_fbase
 decl_stmt|;
-comment|/* Base address of shared object */
+comment|/* Base address of shared object. */
 specifier|const
 name|char
 modifier|*
 name|dli_sname
 decl_stmt|;
-comment|/* Name of nearest symbol */
+comment|/* Name of nearest symbol. */
 name|void
 modifier|*
 name|dli_saddr
 decl_stmt|;
-comment|/* Address of nearest symbol */
+comment|/* Address of nearest symbol. */
 block|}
 name|Dl_info
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The actual type declared by this typedef is immaterial, provided that  * it is a function pointer.  Its purpose is to provide a return type for  * dlfunc() which can be cast to a function pointer type without depending  * on behavior undefined by the C standard, which might trigger a compiler  * diagnostic.  We intentionally declare a unique type signature to force  * a diagnostic should the application not cast the return value of dlfunc()  * appropriately.  */
+comment|/*-  * The actual type declared by this typedef is immaterial, provided that  * it is a function pointer.  Its purpose is to provide a return type for  * dlfunc() which can be cast to a function pointer type without depending  * on behavior undefined by the C standard, which might trigger a compiler  * diagnostic.  We intentionally declare a unique type signature to force  * a diagnostic should the application not cast the return value of dlfunc()  * appropriately.  */
 end_comment
 
 begin_struct
@@ -180,7 +180,7 @@ end_typedef
 
 begin_function_decl
 name|__BEGIN_DECLS
-comment|/* XSI functions first */
+comment|/* XSI functions first. */
 name|int
 name|dlclose
 parameter_list|(
