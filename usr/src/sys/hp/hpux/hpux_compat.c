@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)hpux_compat.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)hpux_compat.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1330,7 +1330,7 @@ name|uap
 operator|->
 name|mode
 operator||=
-name|FCREAT
+name|O_CREAT
 expr_stmt|;
 block|}
 if|if
@@ -1343,7 +1343,7 @@ name|uap
 operator|->
 name|mode
 operator||=
-name|FTRUNC
+name|O_TRUNC
 expr_stmt|;
 if|if
 condition|(
@@ -1355,7 +1355,7 @@ name|uap
 operator|->
 name|mode
 operator||=
-name|FEXCL
+name|O_EXCL
 expr_stmt|;
 return|return
 operator|(
@@ -1530,7 +1530,7 @@ name|uap
 operator|->
 name|arg
 operator|&
-name|FNDELAY
+name|FNONBLOCK
 condition|)
 operator|*
 name|fp
@@ -1556,7 +1556,7 @@ name|uap
 operator|->
 name|arg
 operator||=
-name|FNDELAY
+name|FNONBLOCK
 expr_stmt|;
 block|}
 name|uap
@@ -1627,11 +1627,11 @@ name|retval
 operator|&=
 operator|~
 operator|(
-name|FCREAT
+name|O_CREAT
 operator||
-name|FTRUNC
+name|O_TRUNC
 operator||
-name|FEXCL
+name|O_EXCL
 operator||
 name|FUSECACHE
 operator|)
@@ -1641,7 +1641,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-name|FNDELAY
+name|FNONBLOCK
 operator|)
 operator|&&
 operator|(
@@ -1657,13 +1657,13 @@ operator|*
 name|retval
 operator|&=
 operator|~
-name|FNDELAY
+name|FNONBLOCK
 expr_stmt|;
 if|if
 condition|(
 name|mode
 operator|&
-name|FCREAT
+name|O_CREAT
 condition|)
 operator|*
 name|retval
@@ -1674,7 +1674,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|FTRUNC
+name|O_TRUNC
 condition|)
 operator|*
 name|retval
@@ -1685,7 +1685,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|FEXCL
+name|O_EXCL
 condition|)
 operator|*
 name|retval
@@ -1702,7 +1702,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Read and write should return a 0 count when an operation  * on a VNODE would block, not an error.  *  * In 6.2 and 6.5 sockets appear to return EWOULDBLOCK.  * In 7.0 the behavior for sockets depends on whether FNDELAY is in effect.  */
+comment|/*  * Read and write should return a 0 count when an operation  * on a VNODE would block, not an error.  *  * In 6.2 and 6.5 sockets appear to return EWOULDBLOCK.  * In 7.0 the behavior for sockets depends on whether FNONBLOCK is in effect.  */
 end_comment
 
 begin_macro
@@ -5071,7 +5071,7 @@ operator|&=
 operator|~
 name|UF_FIONBIO_ON
 expr_stmt|;
-comment|/* 		 * Only set/clear if FNDELAY not in effect 		 */
+comment|/* 		 * Only set/clear if FNONBLOCK not in effect 		 */
 if|if
 condition|(
 operator|(
@@ -5084,31 +5084,13 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
 name|tmp
 operator|=
-operator|(
 name|fp
 operator|->
 name|f_flag
 operator|&
-name|FNDELAY
-operator|)
-condition|)
-name|fp
-operator|->
-name|f_flag
-operator||=
-name|FNDELAY
-expr_stmt|;
-else|else
-name|fp
-operator|->
-name|f_flag
-operator|&=
-operator|~
-name|FNDELAY
+name|FNONBLOCK
 expr_stmt|;
 name|error
 operator|=
