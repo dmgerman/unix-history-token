@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CAM request queue management functions.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id$  */
+comment|/*  * CAM request queue management functions.  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_queue.c,v 1.1 1998/09/15 06:33:23 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -490,71 +490,6 @@ operator|(
 name|CAM_REQ_CMP
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * camq_regen: Given an array of cam_pinfo* elements with the  * Heap(0, num_elements) property, perform the second half of  * a heap sort, and assign new generation numbers to all entries.  * It is assumed that the starting generation number plus the  * number of entries in the queue is smaller than the wrap point  * of the generation number.  */
-end_comment
-
-begin_function
-name|void
-name|camq_regen
-parameter_list|(
-name|struct
-name|camq
-modifier|*
-name|queue
-parameter_list|)
-block|{
-name|int
-name|index
-decl_stmt|;
-for|for
-control|(
-name|index
-operator|=
-literal|0
-init|;
-name|index
-operator|<
-name|queue
-operator|->
-name|entries
-condition|;
-name|index
-operator|++
-control|)
-block|{
-name|heap_down
-argument_list|(
-name|queue
-operator|->
-name|queue_array
-argument_list|,
-name|index
-argument_list|,
-name|queue
-operator|->
-name|entries
-argument_list|)
-expr_stmt|;
-name|queue
-operator|->
-name|queue_array
-index|[
-name|index
-index|]
-operator|->
-name|generation
-operator|=
-name|queue
-operator|->
-name|generation
-operator|++
-expr_stmt|;
-block|}
-comment|/* A sorted array is still a heap, so we are done */
 block|}
 end_function
 
@@ -1428,73 +1363,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|cam_ccbq_regen
-parameter_list|(
-name|struct
-name|cam_ccbq
-modifier|*
-name|ccbq
-parameter_list|)
-block|{
-name|struct
-name|ccb_hdr
-modifier|*
-name|ccbh
-decl_stmt|;
-comment|/* First get all of the guys down at a device */
-name|ccbh
-operator|=
-name|ccbq
-operator|->
-name|active_ccbs
-operator|.
-name|tqh_first
-expr_stmt|;
-while|while
-condition|(
-name|ccbh
-operator|!=
-name|NULL
-condition|)
-block|{
-name|ccbh
-operator|->
-name|pinfo
-operator|.
-name|generation
-operator|=
-name|ccbq
-operator|->
-name|queue
-operator|.
-name|generation
-operator|++
-expr_stmt|;
-name|ccbh
-operator|=
-name|ccbh
-operator|->
-name|xpt_links
-operator|.
-name|tqe
-operator|.
-name|tqe_next
-expr_stmt|;
-block|}
-comment|/* Now get everyone in our CAM queue */
-name|camq_regen
-argument_list|(
-operator|&
-name|ccbq
-operator|->
-name|queue
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Heap routines for manipulating CAM queues.  */
 end_comment
@@ -1683,7 +1551,11 @@ condition|)
 block|{
 name|parent
 operator|=
+operator|(
 name|child
+operator|-
+literal|1
+operator|)
 operator|>>
 literal|1
 expr_stmt|;
@@ -1719,7 +1591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * heap_down:  Given an array of cam_pinfo* elements with the  * Heap(1, num_entries - 1) property with index 0 containing an unsorted  * entry, output Heap(0, num_entries - 1).  */
+comment|/*  * heap_down:  Given an array of cam_pinfo* elements with the  * Heap(index + 1, num_entries - 1) property with index containing  * an unsorted entry, output Heap(0, num_entries - 1).  */
 end_comment
 
 begin_function
@@ -1751,14 +1623,12 @@ name|index
 expr_stmt|;
 name|child
 operator|=
-name|parent
-operator|==
-literal|0
-condition|?
-literal|1
-else|:
+operator|(
 name|parent
 operator|<<
+literal|1
+operator|)
+operator|+
 literal|1
 expr_stmt|;
 for|for
@@ -1770,8 +1640,12 @@ name|num_entries
 condition|;
 name|child
 operator|=
+operator|(
 name|parent
 operator|<<
+literal|1
+operator|)
+operator|+
 literal|1
 control|)
 block|{
