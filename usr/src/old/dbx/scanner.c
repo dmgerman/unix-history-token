@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c 1.7 %G%"
+literal|"@(#)scanner.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,7 +470,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"> "
+literal|"(%s) "
+argument_list|,
+name|cmdname
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -2368,6 +2370,11 @@ block|{
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+name|clearerr
+argument_list|(
+name|in
 argument_list|)
 expr_stmt|;
 name|b
