@@ -190,6 +190,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<strings.h>
 end_include
 
@@ -1049,8 +1055,6 @@ name|int
 name|mntflags
 decl_stmt|,
 name|altflags
-decl_stmt|,
-name|nfssvc_flag
 decl_stmt|,
 name|num
 decl_stmt|;
@@ -3199,10 +3203,16 @@ name|clp
 argument_list|,
 name|NFSPROC_NULL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 name|NULL
@@ -3391,10 +3401,16 @@ name|clp
 argument_list|,
 name|RPCMNT_MOUNT
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_dir
 argument_list|,
 name|spec
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_fh
 argument_list|,
 operator|&
