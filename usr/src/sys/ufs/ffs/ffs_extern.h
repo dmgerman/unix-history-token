@@ -833,7 +833,7 @@ begin_define
 define|#
 directive|define
 name|FFS_FIFOOPS
-value|&ffs_fifoops
+value|ffs_fifoop_p
 end_define
 
 begin_else

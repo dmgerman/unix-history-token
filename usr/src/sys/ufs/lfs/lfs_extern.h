@@ -723,7 +723,7 @@ begin_define
 define|#
 directive|define
 name|LFS_FIFOOPS
-value|&lfs_fifoops
+value|lfs_fifoop_p
 end_define
 
 begin_else
