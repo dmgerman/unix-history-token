@@ -1135,7 +1135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routine to change operational state of a print queue.  The operational  *Êstate is indicated by the access bits on the lock file for the queue.  * At present, this is only called from various routines in lpc/cmds.c.  *  *  XXX - Note that this works by changing access-bits on the  *	file, and you can only do that if you are the owner of  *	the file, or root.  Thus, this won't really work for  *	userids in the "LPR_OPER" group, unless lpc is running  *	setuid to root (or maybe setuid to daemon).  *	Generally lpc is installed setgid to daemon, but does  *	not run setuid.  */
+comment|/*  * Routine to change operational state of a print queue.  The operational  * state is indicated by the access bits on the lock file for the queue.  * At present, this is only called from various routines in lpc/cmds.c.  *  *  XXX - Note that this works by changing access-bits on the  *	file, and you can only do that if you are the owner of  *	the file, or root.  Thus, this won't really work for  *	userids in the "LPR_OPER" group, unless lpc is running  *	setuid to root (or maybe setuid to daemon).  *	Generally lpc is installed setgid to daemon, but does  *	not run setuid.  */
 end_comment
 
 begin_function
