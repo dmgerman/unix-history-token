@@ -655,6 +655,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"kue"
+block|,
+literal|"Kawasaki LSI USB ethernet adapter"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"le"
 block|,
 literal|"DEC EtherWorks 2 or 3 ethernet card"
