@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.45 1994/08/18 22:34:52 wollman Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.46 1994/08/22 08:21:51 davidg Exp $  */
 end_comment
 
 begin_include
@@ -8,18 +8,6 @@ include|#
 directive|include
 file|"ed.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NED
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/* bpfilter included here in case it is needed in future net includes */
-end_comment
 
 begin_include
 include|#
@@ -267,6 +255,9 @@ name|u_char
 name|wd_laar_proto
 decl_stmt|;
 name|u_char
+name|cr_proto
+decl_stmt|;
+name|u_char
 name|isa16bit
 decl_stmt|;
 comment|/* width of access to card 0=8 or 1=16 */
@@ -433,23 +424,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
-
 begin_function_decl
 name|void
 name|ds_getmcaf
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1791,52 +1771,12 @@ name|isa16bit
 operator|=
 name|isa16bit
 expr_stmt|;
-comment|/* XXX - I'm not sure if PIO mode is even possible on WD/SMC boards */
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* 	 * The following allows the WD/SMC boards to be used in Programmed I/O 	 * mode - without mapping the NIC memory shared. ...Not the prefered 	 * way, but it might be the only way. 	 */
-if|if
-condition|(
-name|isa_dev
-operator|->
-name|id_flags
-operator|&
-name|ED_FLAGS_FORCE_PIO
-condition|)
-block|{
-name|sc
-operator|->
-name|mem_shared
-operator|=
-literal|0
-expr_stmt|;
-name|isa_dev
-operator|->
-name|id_maddr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
 name|sc
 operator|->
 name|mem_shared
 operator|=
 literal|1
 expr_stmt|;
-block|}
-else|#
-directive|else
-name|sc
-operator|->
-name|mem_shared
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 name|isa_dev
 operator|->
 name|id_msize
@@ -1996,14 +1936,7 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|mem_shared
-condition|)
-block|{
-comment|/* 		 * Set upper address bits and 8/16 bit access to shared memory 		 */
+comment|/* 	 * Set upper address bits and 8/16 bit access to shared memory 	 */
 if|if
 condition|(
 name|isa16bit
@@ -2160,7 +2093,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Set address and enable interface shared memory. 		 */
+comment|/* 	 * Set address and enable interface shared memory. 	 */
 if|if
 condition|(
 operator|!
@@ -2269,6 +2202,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|cr_proto
+operator|=
+name|ED_CR_RD2
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2380,8 +2319,14 @@ literal|0x80
 operator|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|cr_proto
+operator|=
+literal|0
+expr_stmt|;
 block|}
-comment|/* 		 * Now zero memory and verify that it is clear 		 */
+comment|/* 	 * Now zero memory and verify that it is clear 	 */
 name|bzero
 argument_list|(
 name|sc
@@ -2404,6 +2349,7 @@ condition|;
 operator|++
 name|i
 control|)
+block|{
 if|if
 condition|(
 name|sc
@@ -2432,7 +2378,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Disable 16 bit access to shared memory 				 */
+comment|/* 			 * Disable 16 bit access to shared memory 			 */
 if|if
 condition|(
 name|isa16bit
@@ -2482,7 +2428,8 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Disable 16bit access to shared memory - we leave it 		 * disabled so that 1) machines reboot properly when the board 		 * is set 16 bit mode and there are conflicting 8bit 		 * devices/ROMS in the same 128k address space as this boards 		 * shared memory. and 2) so that other 8 bit devices with 		 * shared memory can be used in this 128k region, too. 		 */
+block|}
+comment|/* 	 * Disable 16bit access to shared memory - we leave it 	 * disabled so that 1) machines reboot properly when the board 	 * is set 16 bit mode and there are conflicting 8bit 	 * devices/ROMS in the same 128k address space as this boards 	 * shared memory. and 2) so that other 8 bit devices with 	 * shared memory can be used in this 128k region, too. 	 */
 if|if
 condition|(
 name|isa16bit
@@ -2525,7 +2472,6 @@ name|ED_WD_LAAR_M16EN
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -2906,6 +2852,12 @@ operator|->
 name|mem_shared
 operator|=
 literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|cr_proto
+operator|=
+name|ED_CR_RD2
 expr_stmt|;
 comment|/* 	 * Hmmm...a 16bit 3Com board has 16k of memory, but only an 8k window 	 * to it. 	 */
 name|memsize
@@ -3604,6 +3556,12 @@ operator|->
 name|mem_shared
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|cr_proto
+operator|=
+name|ED_CR_RD2
 expr_stmt|;
 name|isa_dev
 operator|->
@@ -4603,6 +4561,8 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 operator||
+name|IFF_MULTICAST
+operator||
 name|IFF_ALTPHYS
 operator|)
 expr_stmt|;
@@ -4617,19 +4577,10 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
+operator||
+name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_MULTICAST
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Attach the interface 	 */
 name|if_attach
 argument_list|(
@@ -4836,13 +4787,6 @@ init|=
 literal|5000
 decl_stmt|;
 comment|/* 	 * Stop everything on the interface, and select page 0 registers. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -4851,26 +4795,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 */
 while|while
 condition|(
@@ -5062,13 +4993,6 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* 	 * Set interface for page 0, Remote DMA complete, Stopped 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -5077,26 +5001,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -5290,13 +5201,6 @@ name|ED_IMR_OVWE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Program Command Register for page 1 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -5305,30 +5209,15 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_PAGE_1
-operator||
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_PAGE_1
+name|cr_proto
 operator||
-name|ED_CR_RD2
+name|ED_CR_PAGE_1
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Copy out our station address 	 */
 for|for
 control|(
@@ -5521,13 +5410,6 @@ name|txb_next_tx
 index|]
 expr_stmt|;
 comment|/* 	 * Set NIC for page 0 register access 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -5536,26 +5418,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Set TX buffer start page 	 */
 name|outb
 argument_list|(
@@ -5602,13 +5471,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set page 0, Remote DMA complete, Transmit Packet, and *Start* 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -5617,30 +5479,15 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_TXP
-operator||
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_TXP
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|xmit_busy
@@ -6391,13 +6238,6 @@ modifier|*
 name|packet_ptr
 decl_stmt|;
 comment|/* 	 * Set NIC to page 1 registers to get 'current' pointer 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -6406,30 +6246,15 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_PAGE_1
-operator||
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_PAGE_1
+name|cr_proto
 operator||
-name|ED_CR_RD2
+name|ED_CR_PAGE_1
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * 'sc->next_packet' is the logical beginning of the ring-buffer - 	 * i.e. it points to where new data has been buffered. The 'CURR' 	 * (current) register points to the logical end of the ring-buffer - 	 * i.e. it points to where additional new data will be added. We loop 	 * here until the logical beginning equals the logical end (or in 	 * other words, until the ring-buffer is empty). 	 */
 while|while
 condition|(
@@ -6627,13 +6452,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 		 * Set NIC to page 0 registers to update boundry register 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -6642,26 +6460,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 name|outb
 argument_list|(
 name|sc
@@ -6674,13 +6479,6 @@ name|boundry
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Set NIC to page 1 registers before looping to top (prepare 		 * to get 'CURR' current pointer) 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -6689,30 +6487,15 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_PAGE_1
-operator||
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_PAGE_1
+name|cr_proto
 operator||
-name|ED_CR_RD2
+name|ED_CR_PAGE_1
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -6746,13 +6529,6 @@ name|u_char
 name|isr
 decl_stmt|;
 comment|/* 	 * Set NIC to page 0 registers 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -6761,26 +6537,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * loop until there are no more new interrupts 	 */
 while|while
 condition|(
@@ -7206,13 +6969,6 @@ name|ac_if
 argument_list|)
 expr_stmt|;
 comment|/* 		 * return NIC CR to standard state: page 0, remote DMA 		 * complete, start (toggling the TXP bit off, even if was just 		 * set in the transmit routine, is *okay* - it is 'edge' 		 * triggered from low to high) 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -7221,26 +6977,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STA
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STA
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * If the Network Talley Counters overflow, read them to reset 		 * them. It appears that old 8390's won't clear the ISR flag 		 * otherwise - resulting in an infinite loop. 		 */
 if|if
 condition|(
@@ -7731,9 +7474,6 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -7790,8 +7530,6 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 case|case
 name|SIOCSIFMTU
 case|:
@@ -9601,13 +9339,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* set page 1 registers */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -9616,30 +9347,15 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_PAGE_1
-operator||
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_PAGE_1
+name|cr_proto
 operator||
-name|ED_CR_RD2
+name|ED_CR_PAGE_1
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ifp
@@ -9678,13 +9394,6 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * And turn on promiscuous mode. Also enable reception of 		 * runts and packets with CRC& alignment errors. 		 */
 comment|/* Set page 0 registers */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -9693,26 +9402,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 name|outb
 argument_list|(
 name|sc
@@ -9735,85 +9431,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|MULTICAST
-comment|/* 		 * Initialize multicast address hashing registers to not 		 * accept multicasts. 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-operator|++
-name|i
-control|)
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P1_MAR0
-operator|+
-name|i
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/* Set page 0 registers */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
-operator||
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_RCR
-argument_list|,
-name|ED_RCR_AB
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* set up multicast addresses and filter modes */
 if|if
 condition|(
@@ -9899,13 +9516,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Set page 0 registers */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -9914,26 +9524,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 name|outb
 argument_list|(
 name|sc
@@ -9978,13 +9575,6 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* Set page 0 registers */
-if|if
-condition|(
-name|sc
-operator|->
-name|is790
-condition|)
-block|{
 name|outb
 argument_list|(
 name|sc
@@ -9993,26 +9583,13 @@ name|nic_addr
 operator|+
 name|ED_P0_CR
 argument_list|,
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
+name|cr_proto
 operator||
 name|ED_CR_STP
 argument_list|)
 expr_stmt|;
-block|}
 name|outb
 argument_list|(
 name|sc
@@ -10025,18 +9602,9 @@ name|ED_RCR_AB
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* MULTICAST */
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTICAST
-end_ifdef
 
 begin_comment
 comment|/*  * Compute crc for ethernet address  */
@@ -10315,16 +9883,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
