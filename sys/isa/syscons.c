@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.228 1997/07/26 07:58:29 phk Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.229 1997/08/08 22:52:30 sos Exp $  */
 end_comment
 
 begin_include
@@ -5752,30 +5752,6 @@ name|MOUSE_TTY
 operator|)
 expr_stmt|;
 block|}
-name|cur_console
-operator|->
-name|mouse_xpos
-operator|+=
-name|mouse
-operator|->
-name|u
-operator|.
-name|data
-operator|.
-name|x
-expr_stmt|;
-name|cur_console
-operator|->
-name|mouse_ypos
-operator|+=
-name|mouse
-operator|->
-name|u
-operator|.
-name|data
-operator|.
-name|y
-expr_stmt|;
 if|if
 condition|(
 name|cur_console
@@ -5953,11 +5929,37 @@ name|y
 operator|!=
 literal|0
 condition|)
+block|{
+name|cur_console
+operator|->
+name|mouse_xpos
+operator|+=
+name|mouse
+operator|->
+name|u
+operator|.
+name|data
+operator|.
+name|x
+expr_stmt|;
+name|cur_console
+operator|->
+name|mouse_ypos
+operator|+=
+name|mouse
+operator|->
+name|u
+operator|.
+name|data
+operator|.
+name|y
+expr_stmt|;
 name|set_mouse_pos
 argument_list|(
 name|cur_console
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 return|return
@@ -21878,7 +21880,6 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/*       * the margins imposed here are not ideal, we loose      * a couble of pixels on the borders..      */
 if|if
 condition|(
 name|scp
@@ -21925,6 +21926,8 @@ operator|>
 name|scp
 operator|->
 name|xpixel
+operator|-
+literal|1
 condition|)
 name|scp
 operator|->
@@ -21945,6 +21948,8 @@ operator|>
 name|scp
 operator|->
 name|ypixel
+operator|-
+literal|1
 condition|)
 name|scp
 operator|->
@@ -21972,7 +21977,7 @@ operator|*
 literal|8
 operator|)
 operator|-
-literal|2
+literal|1
 condition|)
 name|scp
 operator|->
@@ -21986,7 +21991,7 @@ operator|*
 literal|8
 operator|)
 operator|-
-literal|2
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -22004,7 +22009,7 @@ operator|->
 name|font_size
 operator|)
 operator|-
-literal|2
+literal|1
 condition|)
 name|scp
 operator|->
@@ -22020,7 +22025,7 @@ operator|->
 name|font_size
 operator|)
 operator|-
-literal|2
+literal|1
 expr_stmt|;
 if|if
 condition|(
