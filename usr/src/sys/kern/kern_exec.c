@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exec.c	6.10	85/03/12	*/
+comment|/*	kern_exec.c	6.11	85/05/27	*/
 end_comment
 
 begin_include
@@ -1874,11 +1874,14 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|size_t
 name|ts
 decl_stmt|,
 name|ds
+decl_stmt|,
+name|ids
+decl_stmt|,
+name|uds
 decl_stmt|,
 name|ss
 decl_stmt|;
@@ -2013,7 +2016,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* 	 * Compute text and data sizes and make sure not too large. 	 */
+comment|/* 	 * Compute text and data sizes and make sure not too large. 	 * NB - Check data and bss separately as they may overflow  	 * when summed together. 	 */
 name|ts
 operator|=
 name|clrnd
@@ -2023,6 +2026,30 @@ argument_list|(
 name|ep
 operator|->
 name|a_text
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ids
+operator|=
+name|clrnd
+argument_list|(
+name|btoc
+argument_list|(
+name|ep
+operator|->
+name|a_data
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|uds
+operator|=
+name|clrnd
+argument_list|(
+name|btoc
+argument_list|(
+name|ep
+operator|->
+name|a_bss
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2066,7 +2093,12 @@ argument_list|,
 operator|(
 name|unsigned
 operator|)
-name|ds
+name|ids
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|uds
 argument_list|,
 operator|(
 name|unsigned
