@@ -296,6 +296,10 @@ name|_POSIX_
 value|fdlibm_posix
 end_define
 
+begin_comment
+comment|/* We have a problem when using C++ since `exception' is a reserved    name in C++.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
