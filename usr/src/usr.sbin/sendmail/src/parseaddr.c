@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.10 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4352,6 +4352,13 @@ name|char
 name|pvpbuf
 index|[
 name|PSBUFSIZE
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|nullpvp
+index|[
+literal|1
 index|]
 decl_stmt|;
 name|bool
