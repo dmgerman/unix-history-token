@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.97 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.98 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9178,6 +9178,12 @@ name|bp
 operator|-
 name|buf
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\r'
+condition|)
 operator|*
 name|pbp
 operator|++
@@ -9401,15 +9407,15 @@ expr_stmt|;
 name|pos
 operator|++
 expr_stmt|;
-if|if
-condition|(
+name|ostate
+operator|=
 name|c
 operator|==
 literal|'\n'
-condition|)
-name|ostate
-operator|=
+condition|?
 name|OS_HEAD
+else|:
+name|OS_INLINE
 expr_stmt|;
 break|break;
 block|}
