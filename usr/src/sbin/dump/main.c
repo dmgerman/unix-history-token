@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.2 (Berkeley) %G%"
+literal|"@(#)main.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1058,6 +1058,11 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|rindex
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|dp
