@@ -21,6 +21,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/timespec.h>
+end_include
+
 begin_comment
 comment|/*  * Structure returned by gettimeofday(2) system call,  * and used in other calls.  */
 end_comment
@@ -40,65 +46,6 @@ comment|/* and microseconds */
 block|}
 struct|;
 end_struct
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TIMESPEC_DECLARED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_TIMESPEC_DECLARED
-end_define
-
-begin_struct
-struct|struct
-name|timespec
-block|{
-name|time_t
-name|tv_sec
-decl_stmt|;
-comment|/* seconds */
-name|long
-name|tv_nsec
-decl_stmt|;
-comment|/* and nanoseconds */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|TIMEVAL_TO_TIMESPEC
-parameter_list|(
-name|tv
-parameter_list|,
-name|ts
-parameter_list|)
-define|\
-value|do {								\ 		(ts)->tv_sec = (tv)->tv_sec;				\ 		(ts)->tv_nsec = (tv)->tv_usec * 1000;			\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMESPEC_TO_TIMEVAL
-parameter_list|(
-name|tv
-parameter_list|,
-name|ts
-parameter_list|)
-define|\
-value|do {								\ 		(tv)->tv_sec = (ts)->tv_sec;				\ 		(tv)->tv_usec = (ts)->tv_nsec / 1000;			\ 	} while (0)
-end_define
 
 begin_struct
 struct|struct
@@ -192,6 +139,12 @@ end_define
 begin_comment
 comment|/* Canada */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_struct
 struct|struct
@@ -560,6 +513,15 @@ literal|18446744073709LL
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_ifdef
 ifdef|#
