@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -249,6 +249,7 @@ name|__P
 argument_list|(
 operator|(
 name|int
+name|level
 operator|)
 argument_list|)
 decl_stmt|;
@@ -262,12 +263,15 @@ name|__P
 argument_list|(
 operator|(
 name|int
+name|ch
 operator|,
 name|int
+name|flags
 operator|,
 expr|struct
 name|tty
 operator|*
+name|tp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -283,14 +287,17 @@ operator|(
 specifier|const
 name|char
 operator|*
+name|fmt
 operator|,
 name|int
+name|flags
 operator|,
 expr|struct
 name|tty
 operator|*
+name|tp
 operator|,
-operator|...
+name|va_list
 operator|)
 argument_list|)
 decl_stmt|;
@@ -304,8 +311,18 @@ name|__P
 argument_list|(
 operator|(
 name|u_long
+name|num
 operator|,
 name|int
+name|base
+operator|,
+name|int
+name|flags
+operator|,
+expr|struct
+name|tty
+operator|*
+name|tp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1219,11 +1236,12 @@ name|fmt
 parameter_list|,
 name|flags
 parameter_list|,
-name|ttyp
+name|tp
 parameter_list|,
 name|ap
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1234,7 +1252,7 @@ decl_stmt|;
 name|struct
 name|tty
 modifier|*
-name|ttyp
+name|tp
 decl_stmt|;
 name|va_list
 name|ap
@@ -1292,7 +1310,7 @@ name|ch
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1350,6 +1368,10 @@ argument_list|,
 operator|*
 name|p
 operator|++
+argument_list|,
+name|flags
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1397,7 +1419,7 @@ literal|'<'
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 for|for
@@ -1421,7 +1443,7 @@ name|n
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 name|set
@@ -1453,7 +1475,7 @@ literal|'>'
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1471,7 +1493,7 @@ argument_list|)
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1494,7 +1516,7 @@ name|p
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|,
 name|va_arg
 argument_list|(
@@ -1532,7 +1554,7 @@ name|ch
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1581,7 +1603,7 @@ literal|'-'
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 name|ul
@@ -1598,6 +1620,10 @@ argument_list|(
 name|ul
 argument_list|,
 literal|10
+argument_list|,
+name|flags
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1635,6 +1661,10 @@ argument_list|(
 name|ul
 argument_list|,
 literal|8
+argument_list|,
+name|flags
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1672,6 +1702,10 @@ argument_list|(
 name|ul
 argument_list|,
 literal|10
+argument_list|,
+name|flags
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1709,6 +1743,10 @@ argument_list|(
 name|ul
 argument_list|,
 literal|16
+argument_list|,
+name|flags
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1719,7 +1757,7 @@ literal|'%'
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1732,7 +1770,7 @@ literal|'l'
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -1741,7 +1779,7 @@ name|ch
 argument_list|,
 name|flags
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1762,12 +1800,23 @@ parameter_list|(
 name|ul
 parameter_list|,
 name|base
+parameter_list|,
+name|flags
+parameter_list|,
+name|tp
 parameter_list|)
 name|u_long
 name|ul
 decl_stmt|;
 name|int
 name|base
+decl_stmt|,
+name|flags
+decl_stmt|;
+name|struct
+name|tty
+modifier|*
+name|tp
 decl_stmt|;
 block|{
 comment|/* hold a long in base 8 */
@@ -1823,6 +1872,10 @@ argument_list|(
 operator|*
 operator|--
 name|p
+argument_list|,
+name|flags
+argument_list|,
+name|tp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1849,7 +1902,7 @@ name|c
 parameter_list|,
 name|flags
 parameter_list|,
-name|ttyp
+name|tp
 parameter_list|)
 specifier|register
 name|int
@@ -1861,7 +1914,7 @@ decl_stmt|;
 name|struct
 name|tty
 modifier|*
-name|ttyp
+name|tp
 decl_stmt|;
 block|{
 specifier|extern
@@ -1890,14 +1943,14 @@ operator|&
 name|TOCONS
 operator|)
 operator|&&
-name|ttyp
+name|tp
 operator|==
 name|NULL
 operator|&&
 name|constty
 condition|)
 block|{
-name|ttyp
+name|tp
 operator|=
 name|constty
 expr_stmt|;
@@ -1942,13 +1995,13 @@ operator|&
 name|TOTTY
 operator|)
 operator|&&
-name|ttyp
+name|tp
 operator|&&
 name|tputchar
 argument_list|(
 name|c
 argument_list|,
-name|ttyp
+name|tp
 argument_list|)
 operator|<
 literal|0
@@ -1959,7 +2012,7 @@ operator|&
 name|TOCONS
 operator|)
 operator|&&
-name|ttyp
+name|tp
 operator|==
 name|constty
 condition|)
