@@ -231,10 +231,10 @@ decl_stmt|;
 name|int
 name|desiredvnodes
 decl_stmt|;
-name|int
+name|long
 name|numvnodes
 decl_stmt|;
-name|int
+name|long
 name|freevnodes
 decl_stmt|;
 name|long
