@@ -408,6 +408,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
+name|long
+name|tl_unit_count
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|tl_probe
@@ -5746,7 +5756,7 @@ name|tl_attach_phy
 argument_list|(
 name|csr
 argument_list|,
-name|phys
+name|tl_unit_count
 argument_list|,
 name|eaddr
 argument_list|,
@@ -5769,6 +5779,9 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|tl_unit_count
+operator|++
+expr_stmt|;
 name|phys
 operator|++
 expr_stmt|;
