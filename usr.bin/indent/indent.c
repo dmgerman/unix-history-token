@@ -3418,7 +3418,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* check for preceeding unbalanced 					 * parens */
+comment|/* check for preceding unbalanced 					 * parens */
 name|diag
 argument_list|(
 literal|1
