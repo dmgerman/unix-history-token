@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.7	%H%	*/
+comment|/*	dz.c	3.8	%H%	*/
 end_comment
 
 begin_comment
@@ -2838,7 +2838,25 @@ operator|)
 condition|)
 block|{
 comment|/* carrier lost */
-comment|/* 				if (tp->t_state&ISOPEN&& 				    (tp->t_local&LNOHANG) == 0) {  */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|ISOPEN
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_local
+operator|&
+name|LNOHANG
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|gsignal
 argument_list|(
 name|tp
@@ -2846,6 +2864,15 @@ operator|->
 name|t_pgrp
 argument_list|,
 name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|gsignal
+argument_list|(
+name|tp
+operator|->
+name|t_pgrp
+argument_list|,
+name|SIGCONT
 argument_list|)
 expr_stmt|;
 name|dzaddr
@@ -2860,7 +2887,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* 				}  */
+block|}
 name|tp
 operator|->
 name|t_state
