@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.14 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1519,6 +1519,16 @@ condition|(
 name|dadded
 condition|)
 return|return;
+if|if
+condition|(
+name|filesize
+operator|>
+name|size
+condition|)
+name|filesize
+operator|=
+name|size
+expr_stmt|;
 name|bread
 argument_list|(
 name|fsbtodb
@@ -1530,18 +1540,8 @@ argument_list|)
 argument_list|,
 name|dblk
 argument_list|,
-name|size
+name|filesize
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|filesize
-operator|>
-name|size
-condition|)
-name|filesize
-operator|=
-name|size
 expr_stmt|;
 for|for
 control|(
@@ -1810,7 +1810,7 @@ argument|da
 argument_list|,
 argument|ba
 argument_list|,
-argument|c
+argument|cnt
 argument_list|)
 end_macro
 
@@ -1829,18 +1829,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|c
+name|cnt
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+name|int
 name|n
-expr_stmt|;
-specifier|register
-name|regc
-expr_stmt|;
+decl_stmt|;
+name|loop
+label|:
 if|if
 condition|(
 name|lseek
@@ -1868,11 +1867,6 @@ literal|"bread: lseek fails\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|regc
-operator|=
-name|c
-expr_stmt|;
-comment|/* put c someplace safe; it gets clobbered */
 name|n
 operator|=
 name|read
@@ -1881,48 +1875,58 @@ name|fi
 argument_list|,
 name|ba
 argument_list|,
-name|c
+name|cnt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|n
-operator|!=
-name|c
-operator|||
-name|regc
-operator|!=
-name|c
+operator|==
+name|cnt
+condition|)
+return|return;
+if|if
+condition|(
+name|da
+operator|+
+operator|(
+name|cnt
+operator|/
+name|DEV_BSIZE
+operator|)
+operator|>
+name|fsbtodb
+argument_list|(
+name|sblock
+argument_list|,
+name|sblock
+operator|->
+name|fs_size
+argument_list|)
 condition|)
 block|{
+comment|/* 		 * Trying to read the final fragment. 		 * 		 * NB - dump only works in TP_BSIZE blocks, hence 		 * rounds DEV_BSIZE fragments up to TP_BSIZE pieces. 		 * It should be smarter about not actually trying to 		 * read more than it can get, but for the time being 		 * we punt and scale back the read only when it gets 		 * us into trouble. (mkm 9/25/83) 		 */
+name|cnt
+operator|-=
+name|DEV_BSIZE
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
 name|msg
 argument_list|(
-literal|"(This should not happen)bread from %s [block %d]: c=0x%x, regc=0x%x,&c=0x%x, n=0x%x\n"
+literal|"(This should not happen)bread from %s [block %d]: count=%d, got=%d\n"
 argument_list|,
 name|disk
 argument_list|,
 name|da
 argument_list|,
-name|c
-argument_list|,
-name|regc
-argument_list|,
-operator|&
-name|c
+name|cnt
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ERNIE
-name|msg
-argument_list|(
-literal|"Notify Robert Henry of this error.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|++
@@ -1969,7 +1973,6 @@ name|breaderrors
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
