@@ -447,10 +447,6 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|struct
-name|iso88025_header
-modifier|*
-parameter_list|,
-name|struct
 name|mbuf
 modifier|*
 parameter_list|)
