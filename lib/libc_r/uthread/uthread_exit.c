@@ -243,53 +243,24 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* Prepare an error message string: */
-name|strcpy
+name|snprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"Fatal error '"
-argument_list|)
-expr_stmt|;
-name|strcat
+sizeof|sizeof
 argument_list|(
 name|s
+argument_list|)
+argument_list|,
+literal|"Fatal error '%s' at line %d in file %s (errno = %d)\n"
 argument_list|,
 name|string
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|s
 argument_list|,
-literal|"' at line ? "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|s
-argument_list|,
-literal|"in file "
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|s
+name|lineno
 argument_list|,
 name|fname
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|s
 argument_list|,
-literal|" (errno = ?"
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|s
-argument_list|,
-literal|")\n"
+name|errno
 argument_list|)
 expr_stmt|;
 comment|/* Write the string to the standard error file descriptor: */
@@ -350,12 +321,6 @@ decl_stmt|;
 comment|/* 	 * POSIX states that cancellation/termination of a thread should 	 * not release any visible resources (such as mutexes) and that 	 * it is the applications responsibility.  Resources that are 	 * internal to the threads library, including file and fd locks, 	 * are not visible to the application and need to be released. 	 */
 comment|/* Unlock all owned fd locks: */
 name|_thread_fd_unlock_owned
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-comment|/* Unlock all owned file locks: */
-name|_funlock_owned
 argument_list|(
 name|curthread
 argument_list|)
