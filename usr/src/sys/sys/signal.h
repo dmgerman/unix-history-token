@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -781,6 +781,47 @@ end_endif
 begin_comment
 comment|/* !_ANSI_SOURCE */
 end_comment
+
+begin_comment
+comment|/*  * For historical reasons; programs expect signal's return value to be  * defined by<sys/signal.h>.  */
+end_comment
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|void
+argument_list|(
+operator|*
+name|signal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|void
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+operator|)
+argument_list|)
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
