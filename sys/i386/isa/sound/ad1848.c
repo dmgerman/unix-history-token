@@ -2146,6 +2146,7 @@ name|__FreeBSD__
 argument_list|)
 name|NEEDS_RESTART
 block|,
+comment|/* disable automode for now until we get this working right */
 else|#
 directive|else
 name|DMA_AUTOMODE
@@ -5216,7 +5217,7 @@ name|__FreeBSD__
 argument_list|)
 name|printk
 argument_list|(
-literal|"gus0:<%s>\n"
+literal|"\ngus0:<%s>"
 argument_list|,
 name|ad1848_pcm_operations
 index|[

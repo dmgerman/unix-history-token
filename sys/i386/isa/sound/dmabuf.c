@@ -3116,7 +3116,8 @@ argument_list|)
 name|isa_dmastart
 argument_list|(
 name|B_RAW
-operator|+
+operator||
+operator|(
 operator|(
 name|dma_mode
 operator|==
@@ -3126,6 +3127,7 @@ condition|?
 name|B_READ
 else|:
 name|B_WRITE
+operator|)
 argument_list|,
 operator|(
 name|caddr_t
@@ -3829,11 +3831,21 @@ literal|1
 operator|)
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* ignore console message. */
 name|printk
 argument_list|(
 literal|"Sound: Recording overrun\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|dmap
 operator|->
 name|underrun_count

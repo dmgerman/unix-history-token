@@ -263,11 +263,9 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|GUSMAX
-argument_list|)
+name|NGUS
+operator|==
+literal|0
 operator|&&
 operator|!
 name|defined
