@@ -4,7 +4,7 @@ comment|/* vinuminterrupt.c: bottom half of the driver */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.13 1999/08/08 18:42:39 phk Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.6 1999/06/18 00:50:53 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -32,30 +32,6 @@ parameter_list|(
 name|struct
 name|rqelement
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|freerq
-parameter_list|(
-name|struct
-name|request
-modifier|*
-name|rq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_rqg
-parameter_list|(
-name|struct
-name|rqgroup
-modifier|*
-name|rqg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -652,47 +628,6 @@ index|[
 name|count
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
-if|if
-condition|(
-name|debug
-operator|&
-name|DEBUG_RESID
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|rqg
-operator|->
-name|active
-operator|==
-literal|0
-operator|)
-comment|/* XXXX finished this group */
-operator|&&
-operator|(
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-name|data
-operator|!=
-literal|'<'
-operator|)
-condition|)
-comment|/* and not what we expected */
-name|Debugger
-argument_list|(
-literal|"complete_request checksum"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * In a normal read, we will normally read directly 	 * into the user buffer.  This doesn't work if 	 * we're also doing a recovery, so we have to 	 * copy it  	 */
 if|if
 condition|(
@@ -846,107 +781,6 @@ argument_list|(
 literal|"resid"
 argument_list|)
 expr_stmt|;
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ubp
-operator|->
-name|b_bcount
-condition|;
-name|i
-operator|+=
-literal|512
-control|)
-comment|/* XXX debug */
-if|if
-condition|(
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|ubp
-operator|->
-name|b_data
-operator|)
-index|[
-name|i
-index|]
-operator|!=
-literal|'<'
-condition|)
-block|{
-comment|/* and not what we expected */
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"At 0x%x (offset 0x%x): '%c' (0x%x)\n"
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-operator|&
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|ubp
-operator|->
-name|b_data
-operator|)
-index|[
-name|i
-index|]
-argument_list|)
-argument_list|,
-name|i
-argument_list|,
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|ubp
-operator|->
-name|b_data
-operator|)
-index|[
-name|i
-index|]
-argument_list|,
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|ubp
-operator|->
-name|b_data
-operator|)
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|Debugger
-argument_list|(
-literal|"complete_request checksum"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 endif|#
 directive|endif
@@ -1091,6 +925,19 @@ name|nrqg
 control|)
 block|{
 comment|/* through the whole request chain */
+if|if
+condition|(
+name|rqg
+operator|->
+name|lock
+condition|)
+comment|/* got a lock? */
+name|unlockrange
+argument_list|(
+name|rqg
+argument_list|)
+expr_stmt|;
+comment|/* yes, free it */
 for|for
 control|(
 name|rqno
@@ -1172,60 +1019,6 @@ comment|/* free the request itself */
 block|}
 end_function
 
-begin_function
-name|void
-name|free_rqg
-parameter_list|(
-name|struct
-name|rqgroup
-modifier|*
-name|rqg
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|rqg
-operator|->
-name|flags
-operator|&
-name|XFR_GROUPOP
-operator|)
-comment|/* RAID 5 request */
-operator|&&
-operator|(
-name|rqg
-operator|->
-name|rqe
-operator|)
-comment|/* got a buffer structure */
-operator|&&
-operator|(
-name|rqg
-operator|->
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_data
-operator|)
-condition|)
-comment|/* and it has a buffer allocated */
-name|Free
-argument_list|(
-name|rqg
-operator|->
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_data
-argument_list|)
-expr_stmt|;
-comment|/* free it */
-block|}
-end_function
-
 begin_comment
 comment|/* I/O on subdisk completed */
 end_comment
@@ -1283,6 +1076,8 @@ operator|.
 name|b_error
 expr_stmt|;
 block|}
+name|sbp
+operator|->
 name|bp
 operator|->
 name|b_resid
@@ -1293,6 +1088,7 @@ name|b
 operator|.
 name|b_resid
 expr_stmt|;
+comment|/* copy the resid field */
 name|biodone
 argument_list|(
 name|sbp
@@ -1419,10 +1215,6 @@ end_function
 
 begin_comment
 comment|/* Start the second phase of a RAID5 group write operation. */
-end_comment
-
-begin_comment
-comment|/*  * XXX This could be improved on.  It's quite CPU intensive,  * and doing it at the end tends to lump it all together.  * We should do this a transfer at a time   */
 end_comment
 
 begin_function
@@ -1638,7 +1430,6 @@ operator|)
 expr_stmt|;
 comment|/* and count involved */
 comment|/* 	     * add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block.   	     */
-comment|/* XXX do this in assembler */
 for|for
 control|(
 name|count
@@ -1841,7 +1632,6 @@ operator|)
 expr_stmt|;
 comment|/* and count involved */
 comment|/* 		 * "remove" the old data block 		 * from the parity block  		 */
-comment|/* XXX do this in assembler */
 if|if
 condition|(
 operator|(
@@ -1932,12 +1722,11 @@ operator|)
 operator|)
 operator|)
 condition|)
-name|Debugger
+name|panic
 argument_list|(
-literal|"Bounds overflow"
+literal|"complete_raid5_write: bounds overflow"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 for|for
 control|(
 name|count
@@ -2023,12 +1812,11 @@ operator|)
 operator|)
 operator|)
 condition|)
-name|Debugger
+name|panic
 argument_list|(
-literal|"Bounds overflow"
+literal|"complete_raid5_write: bounds overflow"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 for|for
 control|(
 name|count
@@ -2082,12 +1870,11 @@ name|XFR_MALLOCED
 expr_stmt|;
 block|}
 else|else
-name|Debugger
+name|panic
 argument_list|(
-literal|"not malloced"
+literal|"complete_raid5_write: malloc conflict"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 operator|(
@@ -2324,7 +2111,6 @@ operator|.
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|debug
@@ -2593,7 +2379,6 @@ operator|.
 name|b_bcount
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|debug
