@@ -1257,6 +1257,20 @@ begin_comment
 comment|/*   * Find a hook that has a service string that matches that  * we are seeking. for now use a simple string.  * In the future we may need something like regexp().  * for testing allow a null string to match 1st found and a null service  * to match all requests. Also make '*' do the same.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_MATCH_EXACT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_MATCH_ANY
+value|2
+end_define
+
 begin_function
 specifier|static
 name|hook_p
@@ -1271,6 +1285,9 @@ name|svc_name
 parameter_list|,
 name|int
 name|svc_len
+parameter_list|,
+name|int
+name|match
 parameter_list|)
 block|{
 name|sessp
@@ -1289,6 +1306,11 @@ init|=
 name|node
 operator|->
 name|private
+decl_stmt|;
+name|hook_p
+name|allhook
+init|=
+name|NULL
 decl_stmt|;
 name|hook_p
 name|hook
@@ -1354,37 +1376,19 @@ name|sp
 operator|->
 name|neg
 expr_stmt|;
-comment|/* XXX check validity of this */
-comment|/* special case, NULL request. match 1st found. */
-if|if
-condition|(
-name|svc_len
-operator|==
-literal|0
-condition|)
-break|break;
-comment|/* XXX check validity of this */
 comment|/* Special case for a blank or "*" service name (wildcard) */
 if|if
 condition|(
-operator|(
-name|neg
-operator|->
-name|service_len
+name|match
 operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-operator|(
+name|NG_MATCH_ANY
+operator|&&
 name|neg
 operator|->
 name|service_len
 operator|==
 literal|1
-operator|)
 operator|&&
-operator|(
 name|neg
 operator|->
 name|service
@@ -1395,11 +1399,13 @@ literal|0
 index|]
 operator|==
 literal|'*'
-operator|)
-operator|)
 condition|)
 block|{
-break|break;
+name|allhook
+operator|=
+name|hook
+expr_stmt|;
+continue|continue;
 block|}
 comment|/* If the lengths don't match, that aint it. */
 if|if
@@ -1412,6 +1418,13 @@ name|svc_len
 condition|)
 continue|continue;
 comment|/* An exact match? */
+if|if
+condition|(
+name|svc_len
+operator|==
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|strncmp
@@ -1434,6 +1447,10 @@ block|}
 return|return
 operator|(
 name|hook
+condition|?
+name|hook
+else|:
+name|allhook
 operator|)
 return|;
 block|}
@@ -2261,6 +2278,45 @@ name|hook
 operator|->
 name|private
 expr_stmt|;
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+operator|==
+name|NGM_PPPOE_LISTEN
+condition|)
+block|{
+comment|/* 				 * Ensure we aren't already listening for this 				 * service. 				 */
+if|if
+condition|(
+name|pppoe_match_svc
+argument_list|(
+name|node
+argument_list|,
+name|ourmsg
+operator|->
+name|data
+argument_list|,
+name|ourmsg
+operator|->
+name|data_len
+argument_list|,
+name|NG_MATCH_EXACT
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|LEAVE
+argument_list|(
+name|EEXIST
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 			 * PPPOE_SERVICE advertisments are set up 			 * on sessions that are in PRIMED state. 			 */
 if|if
 condition|(
@@ -3547,6 +3603,8 @@ name|tag
 operator|->
 name|tag_len
 argument_list|)
+argument_list|,
+name|NG_MATCH_ANY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3568,11 +3626,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"no such service\n"
-argument_list|)
-expr_stmt|;
 name|LEAVE
 argument_list|(
 name|ENETUNREACH
