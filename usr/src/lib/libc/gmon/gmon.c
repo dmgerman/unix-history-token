@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.11 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|char
 modifier|*
 name|sbuf
 decl_stmt|;
@@ -136,6 +136,17 @@ name|int
 name|s_scale
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* see profil(2) where this is describe (incorrectly) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCALE_1_TO_1
+value|0x10000L
+end_define
 
 begin_define
 define|#
@@ -443,11 +454,6 @@ argument_list|,
 name|monsize
 argument_list|,
 name|tolimit
-argument_list|)
-expr_stmt|;
-name|moncontrol
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1163,10 +1169,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 modifier|*
 name|buf
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* declared ``short buffer[]'' in monitor(3) */
+end_comment
+
+begin_decl_stmt
+name|int
 name|bufsiz
 decl_stmt|;
 end_decl_stmt
@@ -1250,34 +1264,13 @@ name|ncnt
 operator|=
 name|ssiz
 expr_stmt|;
-name|o
-operator|=
+name|bufsiz
+operator|-=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|phdr
 argument_list|)
-expr_stmt|;
-name|buf
-operator|=
-operator|(
-name|int
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|int
-operator|)
-name|buf
-operator|)
-operator|+
-name|o
-operator|)
-expr_stmt|;
-name|bufsiz
-operator|-=
-name|o
 expr_stmt|;
 if|if
 condition|(
@@ -1288,21 +1281,9 @@ condition|)
 return|return;
 name|o
 operator|=
-operator|(
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|highpc
 operator|-
-operator|(
-name|char
-operator|*
-operator|)
 name|lowpc
-operator|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1310,7 +1291,7 @@ name|bufsiz
 operator|<
 name|o
 condition|)
-name|o
+name|s_scale
 operator|=
 operator|(
 operator|(
@@ -1321,16 +1302,12 @@ operator|/
 name|o
 operator|)
 operator|*
-literal|65536
+name|SCALE_1_TO_1
 expr_stmt|;
 else|else
-name|o
-operator|=
-literal|65536
-expr_stmt|;
 name|s_scale
 operator|=
-name|o
+name|SCALE_1_TO_1
 expr_stmt|;
 name|moncontrol
 argument_list|(
