@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/swapgeneric.c	7.8 (Berkeley) 10/11/92  *  *	@(#)swapgeneric.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/swapgeneric.c	7.8 (Berkeley) 10/11/92  *  *	@(#)swapgeneric.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -540,21 +540,7 @@ name|gc
 operator|->
 name|gc_root
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"using root device: %s%d%c\n"
-argument_list|,
-name|gc
-operator|->
-name|gc_name
-argument_list|,
-name|unit
-argument_list|,
-literal|'a'
-operator|+
-name|part
-argument_list|)
-expr_stmt|;
+comment|/* 	printf("using root device: %s%d%c\n", gc->gc_name, unit, 'a' + part);  */
 name|doswap
 label|:
 name|swdevt
@@ -588,33 +574,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"using swap device: %s%d%c\n"
-argument_list|,
-name|gc
-operator|->
-name|gc_name
-argument_list|,
-name|unit
-argument_list|,
-literal|'a'
-operator|+
-operator|(
-name|minor
-argument_list|(
-name|swdevt
-index|[
-literal|0
-index|]
-operator|.
-name|sw_dev
-argument_list|)
-operator|&
-literal|0x7
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	printf("using swap device: %s%d%c\n", 	       gc->gc_name, unit, 'a' + (minor(swdevt[0].sw_dev)& 0x7));  */
 comment|/* swap size and dumplo set during autoconfigure */
 if|if
 condition|(
