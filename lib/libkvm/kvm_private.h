@@ -75,6 +75,11 @@ name|int
 name|argc
 decl_stmt|;
 comment|/* length of above (not actual # present) */
+name|char
+modifier|*
+name|argbuf
+decl_stmt|;
+comment|/* (dynamic) temporary storage */
 comment|/* 	 * Kernel virtual address translation state.  This only gets filled 	 * in for dead kernels; otherwise, the running kernel (i.e. kmem) 	 * will do the translations for us.  It could be big, so we 	 * only allocate it if necessary. 	 */
 name|struct
 name|vmstate
