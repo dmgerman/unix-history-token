@@ -123,6 +123,8 @@ operator|=
 operator|*
 name|src
 operator|++
+operator|&
+literal|0xff
 expr_stmt|;
 operator|*
 name|dest
