@@ -7513,7 +7513,8 @@ name|len
 decl_stmt|,
 name|mask
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|lbound
 decl_stmt|,
 name|wch

@@ -846,7 +846,8 @@ name|wchar_t
 modifier|*
 name|wp
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|wc
 decl_stmt|;
 name|char
@@ -880,16 +881,6 @@ operator|*
 name|wp
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|wc
-operator|<=
-literal|0
-condition|)
-block|{
-comment|/* Ignore negative values. */
-block|}
-elseif|else
 if|if
 condition|(
 name|wc
@@ -943,11 +934,18 @@ name|utf8len
 operator|+=
 literal|5
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|wc
+operator|<=
+literal|0x7fffffff
+condition|)
 name|utf8len
 operator|+=
 literal|6
 expr_stmt|;
+comment|/* Ignore larger values; UTF-8 can't encode them. */
 block|}
 name|utf8_value
 operator|=
@@ -982,16 +980,6 @@ operator|*
 name|wp
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|wc
-operator|<=
-literal|0
-condition|)
-block|{
-comment|/* Ignore negative values. */
-block|}
-elseif|else
 if|if
 condition|(
 name|wc
@@ -1394,6 +1382,7 @@ operator|+=
 literal|6
 expr_stmt|;
 block|}
+comment|/* Ignore larger values; UTF-8 can't encode them. */
 block|}
 operator|*
 name|p
