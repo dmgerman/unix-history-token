@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  *  *	@(#)sys.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  *  *	@(#)sys.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -197,11 +197,29 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|REGEXP
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|SUNOS
 end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|REGEXP
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
 
 begin_typedef
 typedef|typedef

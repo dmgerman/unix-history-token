@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)search.c	5.2 (Berkeley) %G%"
+literal|"@(#)search.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,11 +54,11 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|sun
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGEXP
+end_ifdef
 
 begin_include
 include|#
@@ -202,11 +202,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|sun
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGEXP
+end_ifdef
 
 begin_comment
 comment|/* regerror():  *	Handle regular expression errors  */
@@ -257,9 +257,9 @@ modifier|*
 name|pat
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|sun
+ifndef|#
+directive|ifndef
+name|REGEXP
 specifier|extern
 name|char
 modifier|*
@@ -310,9 +310,9 @@ condition|)
 return|return
 literal|1
 return|;
-ifdef|#
-directive|ifdef
-name|sun
+ifndef|#
+directive|ifndef
+name|REGEXP
 if|if
 condition|(
 name|re_comp
