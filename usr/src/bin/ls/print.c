@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.15 (Berkeley) %G%"
+literal|"@(#)print.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,7 +320,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3d,%4d "
+literal|"%3d, %3d "
 argument_list|,
 name|major
 argument_list|(
@@ -1753,6 +1753,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
