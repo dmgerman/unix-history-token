@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.10 (Berkeley) %G%"
+literal|"@(#)tty.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -744,34 +744,6 @@ name|_IOLBF
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|__echoit
-operator|=
-name|__orig_termios
-operator|.
-name|c_lflag
-operator|&
-name|ECHO
-expr_stmt|;
-name|__rawmode
-operator|=
-name|__orig_termios
-operator|.
-name|c_lflag
-operator|&
-name|ICANON
-expr_stmt|;
-name|__pfast
-operator|=
-name|__orig_termios
-operator|.
-name|c_iflag
-operator|&
-name|ICRNL
-condition|?
-name|__rawmode
-else|:
-literal|1
 expr_stmt|;
 return|return
 operator|(
