@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timer.c	5.3 (Berkeley) %G%"
+literal|"@(#)timer.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,8 +261,6 @@ argument_list|(
 name|RIPCMD_RESPONSE
 argument_list|)
 expr_stmt|;
-name|xnnet
-argument_list|(
 name|msg
 operator|->
 name|rip_nets
@@ -271,20 +269,17 @@ literal|0
 index|]
 operator|.
 name|rip_dst
-index|[
-literal|0
-index|]
-argument_list|)
 operator|=
-name|ns_netof
-argument_list|(
+operator|(
 name|satons_addr
 argument_list|(
 name|rt
 operator|->
 name|rt_dst
 argument_list|)
-argument_list|)
+operator|)
+operator|.
+name|x_net
 expr_stmt|;
 name|msg
 operator|->

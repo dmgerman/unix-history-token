@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.4 (Berkeley) %G%"
+literal|"@(#)output.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -349,7 +349,8 @@ name|size
 decl_stmt|,
 name|metric
 decl_stmt|;
-name|long
+name|union
+name|ns_net
 name|net
 decl_stmt|;
 name|msg
@@ -514,12 +515,11 @@ argument_list|)
 expr_stmt|;
 name|net
 operator|=
-name|ns_netof
-argument_list|(
 name|sns
 operator|->
 name|sns_addr
-argument_list|)
+operator|.
+name|x_net
 expr_stmt|;
 comment|/* 		 * Make sure that we don't put out a two net entries 		 * for a pt to pt link (one for the G route, one for the if) 		 * This is a kludge, and won't work if there are lots of nets. 		 */
 for|for
@@ -540,16 +540,13 @@ control|)
 block|{
 if|if
 condition|(
-name|net
-operator|==
-name|xnnet
+name|ns_neteqnn
 argument_list|(
+name|net
+argument_list|,
 name|nn
 operator|->
 name|rip_dst
-index|[
-literal|0
-index|]
 argument_list|)
 condition|)
 block|{
@@ -578,15 +575,9 @@ name|next
 goto|;
 block|}
 block|}
-name|xnnet
-argument_list|(
 name|n
 operator|->
 name|rip_dst
-index|[
-literal|0
-index|]
-argument_list|)
 operator|=
 name|net
 expr_stmt|;

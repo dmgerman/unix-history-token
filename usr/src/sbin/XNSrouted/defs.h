@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.4 (Berkeley) %G%";  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.5 (Berkeley) %G%";  */
 end_comment
 
 begin_include
@@ -33,15 +33,49 @@ directive|include
 file|<netns/idp.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|pdp11
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|xnnet
 parameter_list|(
-name|p
+name|x
 parameter_list|)
-value|(*(long *)&(p))
+value|((u_long) (x)->rip_dst[1]<< 16 | (u_long) (x)->rip_dst[0] )
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|xnnet
+parameter_list|(
+name|x
+parameter_list|)
+value|((u_long) (x)->rip_dst[0]<< 16 | (u_long) (x)->rip_dst[1] )
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -100,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|CHECK_INTERVAL
-value|(1*60)
+value|(5*60)
 end_define
 
 begin_define

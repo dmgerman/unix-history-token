@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)protocol.h	5.3 (Berkeley) %G%";  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)protocol.h	5.4 (Berkeley) %G%";  *  * Includes material written at Cornell University by Bill Nesheim,  * by permission of the author.  */
 end_comment
 
 begin_comment
@@ -11,11 +11,9 @@ begin_struct
 struct|struct
 name|netinfo
 block|{
-name|u_short
+name|union
+name|ns_net
 name|rip_dst
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* destination net */
 name|u_short
@@ -140,6 +138,22 @@ end_define
 begin_comment
 comment|/* max broadcast size */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|ns_net
+name|ns_anynet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|union
+name|ns_net
+name|ns_zeronet
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Timer values used in managing the routing table.  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.4 (Berkeley) %G%"
+literal|"@(#)startup.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|gateway
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|externalinterfaces
 init|=
 literal|0
@@ -93,18 +101,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* # of remote and local interfaces */
-end_comment
-
-begin_decl_stmt
-name|int
-name|gateway
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 if we are a gateway to parts beyond */
 end_comment
 
 begin_decl_stmt
@@ -392,13 +388,6 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* already known to us? */
-comment|/* We can have more than one point to point link 		   with the same local address. 		   It is not clear what this was guarding against 		   anyway. 		if (if_ifwithaddr(ifr->ifr_addr)) 			continue; 		   */
-endif|#
-directive|endif
 if|if
 condition|(
 name|ifs
@@ -502,16 +491,62 @@ operator|.
 name|ifr_broadaddr
 expr_stmt|;
 block|}
+comment|/*  		 * already known to us?  		 * what makes a POINTOPOINT if unique is its dst addr, 		 * NOT its source address  		 */
+if|if
+condition|(
+operator|(
+operator|(
+name|ifs
+operator|.
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|&&
+name|if_ifwithdstaddr
+argument_list|(
+operator|&
+name|ifs
+operator|.
+name|int_dstaddr
+argument_list|)
+operator|)
+operator|||
+operator|(
+operator|(
+operator|(
+name|ifs
+operator|.
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+name|if_ifwithaddr
+argument_list|(
+operator|&
+name|ifs
+operator|.
+name|int_addr
+argument_list|)
+operator|)
+condition|)
+continue|continue;
 comment|/* no one cares about software loopback interfaces */
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|ifr
 operator|->
 name|ifr_name
 argument_list|,
-literal|"lo0"
+literal|"lo"
+argument_list|,
+literal|2
 argument_list|)
 operator|==
 literal|0
@@ -579,6 +614,25 @@ literal|0
 condition|)
 name|externalinterfaces
 operator|++
+expr_stmt|;
+comment|/* 		 * If we have a point-to-point link, we want to act 		 * as a supplier even if it's our only interface, 		 * as that's the only way our peer on the other end 		 * can tell that the link is up. 		 */
+if|if
+condition|(
+operator|(
+name|ifs
+operator|.
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|&&
+name|supplier
+operator|<
+literal|0
+condition|)
+name|supplier
+operator|=
+literal|1
 expr_stmt|;
 name|ifp
 operator|->
@@ -903,6 +957,41 @@ condition|)
 name|rtdelete
 argument_list|(
 name|rt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tracing
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Adding route to interface %s\n"
+argument_list|,
+name|ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_transitions
+operator|++
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"re-installing interface %s"
+argument_list|,
+name|ifp
+operator|->
+name|int_name
 argument_list|)
 expr_stmt|;
 name|rtadd

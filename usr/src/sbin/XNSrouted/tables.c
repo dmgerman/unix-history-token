@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.4 (Berkeley) %G%"
+literal|"@(#)tables.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -932,6 +932,19 @@ name|rt_metric
 operator|=
 name|metric
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+operator|)
+operator|&&
+name|metric
+condition|)
+block|{
 name|rt
 operator|->
 name|rt_state
@@ -939,14 +952,36 @@ operator|&=
 operator|~
 name|RTS_INTERFACE
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"changing route from interface %s (timed out)"
+argument_list|,
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|metric
 condition|)
 name|rt
 operator|->
-name|rt_state
+name|rt_flags
 operator||=
+name|RTF_GATEWAY
+expr_stmt|;
+else|else
+name|rt
+operator|->
+name|rt_flags
+operator|&=
+operator|~
 name|RTF_GATEWAY
 expr_stmt|;
 name|rt
@@ -1047,6 +1082,29 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"deleting route to interface %s (timed out)"
+argument_list|,
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
+block|}
 name|TRACE_ACTION
 argument_list|(
 name|DELETE
@@ -1057,8 +1115,6 @@ expr_stmt|;
 if|if
 condition|(
 name|install
-operator|&&
-name|delete
 operator|&&
 name|ioctl
 argument_list|(
@@ -1076,11 +1132,9 @@ operator|->
 name|rt_rt
 argument_list|)
 condition|)
-name|syslog
+name|perror
 argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"SIOCDELR %m"
+literal|"SIOCDELRT"
 argument_list|)
 expr_stmt|;
 name|remque

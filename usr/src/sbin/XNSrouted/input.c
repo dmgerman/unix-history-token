@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.5 (Berkeley) %G%"
+literal|"@(#)input.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,8 +43,8 @@ name|xns_nettosa
 parameter_list|(
 name|net
 parameter_list|)
-name|u_short
-modifier|*
+name|union
+name|ns_net
 name|net
 decl_stmt|;
 block|{
@@ -78,22 +78,13 @@ name|sns_family
 operator|=
 name|AF_NS
 expr_stmt|;
-name|xnnet
-argument_list|(
 name|sxn
 operator|.
 name|sns_addr
 operator|.
 name|x_net
-argument_list|)
 operator|=
-name|xnnet
-argument_list|(
 name|net
-index|[
-literal|0
-index|]
-argument_list|)
 expr_stmt|;
 name|sxn
 operator|.
@@ -267,20 +258,14 @@ expr_stmt|;
 comment|/*  			 * A single entry with rip_dst == DSTNETS_ALL and 			 * metric ``infinity'' means ``all routes''. 			 */
 if|if
 condition|(
-name|ntohl
-argument_list|(
-name|xnnet
+name|ns_neteqnn
 argument_list|(
 name|n
 operator|->
 name|rip_dst
-index|[
-literal|0
-index|]
+argument_list|,
+name|ns_anynet
 argument_list|)
-argument_list|)
-operator|==
-name|DSTNETS_ALL
 operator|&&
 name|ntohs
 argument_list|(
@@ -336,19 +321,13 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"specific request for %d"
+literal|"specific request for %s"
 argument_list|,
-name|ntohl
-argument_list|(
-name|xnnet
+name|xns_nettoa
 argument_list|(
 name|n
 operator|->
 name|rip_dst
-index|[
-literal|0
-index|]
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -356,7 +335,7 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"yields route %x"
+literal|" yields route %x\n"
 argument_list|,
 name|rt
 argument_list|)
@@ -388,7 +367,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|++
-operator|,
+expr_stmt|;
 name|newsize
 operator|+=
 sizeof|sizeof
@@ -436,14 +415,21 @@ argument_list|,
 name|newsize
 argument_list|)
 expr_stmt|;
-operator|(
 name|ifp
 operator|=
 name|if_ifwithnet
 argument_list|(
 name|from
 argument_list|)
-operator|)
+expr_stmt|;
+name|TRACE_OUTPUT
+argument_list|(
+name|ifp
+argument_list|,
+name|from
+argument_list|,
+name|newsize
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -454,9 +440,11 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|", request arriving on interface %x\n"
+literal|"request arrived on interface %s\n"
 argument_list|,
 name|ifp
+operator|->
+name|int_name
 argument_list|)
 expr_stmt|;
 block|}
