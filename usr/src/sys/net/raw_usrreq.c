@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	6.6	85/05/27	*/
+comment|/*	raw_usrreq.c	6.6	85/05/30	*/
 end_comment
 
 begin_include
@@ -492,7 +492,6 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|m_copy
@@ -508,13 +507,8 @@ name|int
 operator|)
 name|M_COPYALL
 argument_list|)
-operator|)
-operator|==
-literal|0
 condition|)
-goto|goto
-name|nospace
-goto|;
+block|{
 if|if
 condition|(
 name|sbappendaddr
@@ -541,25 +535,20 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* should notify about lost packet */
 name|m_freem
 argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-goto|goto
-name|nospace
-goto|;
-block|}
+else|else
 name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
 block|}
-name|nospace
-label|:
+block|}
 name|last
 operator|=
 name|rp
@@ -572,14 +561,6 @@ condition|(
 name|last
 condition|)
 block|{
-name|m
-operator|=
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* header */
 if|if
 condition|(
 name|sbappendaddr
@@ -595,6 +576,8 @@ operator|->
 name|raw_src
 argument_list|,
 name|m
+operator|->
+name|m_next
 argument_list|,
 operator|(
 expr|struct
@@ -606,20 +589,30 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|drop
-goto|;
+name|m_freem
+argument_list|(
+name|m
+operator|->
+name|m_next
+argument_list|)
+expr_stmt|;
+else|else
 name|sorwakeup
 argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next
-goto|;
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* header */
 block|}
-name|drop
-label|:
+else|else
 name|m_freem
 argument_list|(
 name|m
