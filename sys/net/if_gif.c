@@ -1647,6 +1647,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|struct
 name|gif_softc
 modifier|*
@@ -2256,14 +2259,24 @@ name|ifp
 operator|->
 name|if_flags
 operator||=
-name|IFF_UP
+name|IFF_RUNNING
+expr_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|if_up
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* send up RTM_IFINFO */
+comment|/* mark interface UP and send up RTM_IFINFO */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
