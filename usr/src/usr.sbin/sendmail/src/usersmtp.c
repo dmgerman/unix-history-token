@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -409,7 +409,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|==
+name|LocalMailer
+operator|||
+operator|!
+name|bitset
+argument_list|(
+name|M_FULLSMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
 name|smtpmessage
 argument_list|(
 literal|"MAIL From:<%s>"
@@ -422,7 +443,36 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+else|else
+block|{
+name|smtpmessage
+argument_list|(
+literal|"MAIL From:<@%s%c%s>"
+argument_list|,
+name|HostName
+argument_list|,
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'@'
+condition|?
+literal|','
+else|:
+literal|':'
+argument_list|,
+name|canonname
+argument_list|(
+name|buf
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_expr_stmt
 name|r
