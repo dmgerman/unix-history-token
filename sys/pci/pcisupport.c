@@ -5003,14 +5003,6 @@ operator|(
 literal|"IBM 82351 PCI-PCI bridge"
 operator|)
 return|;
-case|case
-literal|0x00011011
-case|:
-return|return
-operator|(
-literal|"DEC 21050 PCI-PCI bridge"
-operator|)
-return|;
 comment|/* UMC United Microelectronics 0x1060 */
 case|case
 literal|0x88811060
@@ -6780,6 +6772,15 @@ case|:
 return|return
 operator|(
 literal|"NeoMagic MagicMedia 256ZX Audio controller"
+operator|)
+return|;
+comment|/* Toshiba -- vendor 0x1179 */
+case|case
+literal|0x07011179
+case|:
+return|return
+operator|(
+literal|"Toshiba Fast Infra Red controller"
 operator|)
 return|;
 comment|/* NEC -- vendor 0x1033 */
