@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sccs.c	5.1 (Berkeley) %G%"
+literal|"@(#)sccs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3453,7 +3453,7 @@ decl_stmt|;
 specifier|register
 name|DIR
 modifier|*
-name|dirfd
+name|dirp
 decl_stmt|;
 specifier|register
 name|char
@@ -3736,7 +3736,7 @@ name|buf
 argument_list|)
 index|]
 expr_stmt|;
-name|dirfd
+name|dirp
 operator|=
 name|opendir
 argument_list|(
@@ -3745,7 +3745,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dirfd
+name|dirp
 operator|==
 name|NULL
 condition|)
@@ -3774,7 +3774,7 @@ name|dir
 operator|=
 name|readdir
 argument_list|(
-name|dirfd
+name|dirp
 argument_list|)
 condition|)
 block|{
@@ -3991,7 +3991,7 @@ block|}
 comment|/* cleanup& report results */
 name|closedir
 argument_list|(
-name|dirfd
+name|dirp
 argument_list|)
 expr_stmt|;
 if|if
