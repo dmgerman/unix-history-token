@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,12 +248,6 @@ name|editor
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|TAGS
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -276,11 +270,6 @@ name|int
 name|tagoption
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  */
@@ -1299,9 +1288,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Select the first file to examine. 	 */
-if|#
-directive|if
-name|TAGS
 if|if
 condition|(
 name|tagoption
@@ -1357,8 +1343,6 @@ argument_list|()
 expr_stmt|;
 block|}
 elseif|else
-endif|#
-directive|endif
 if|if
 condition|(
 name|ac

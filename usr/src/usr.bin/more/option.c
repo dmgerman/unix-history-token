@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.1 (Berkeley) %G%"
+literal|"@(#)option.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,12 +384,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|TAGS
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -414,11 +408,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -929,9 +918,6 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return;
-if|#
-directive|if
-name|TAGS
 case|case
 literal|'t'
 case|:
@@ -976,8 +962,6 @@ argument_list|()
 expr_stmt|;
 block|}
 return|return;
-endif|#
-directive|endif
 if|#
 directive|if
 name|LOGFILE
@@ -1489,9 +1473,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
-name|TAGS
 if|if
 condition|(
 name|c
@@ -1503,8 +1484,6 @@ operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|LOGFILE
@@ -1840,9 +1819,6 @@ name|next
 goto|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|TAGS
 case|case
 literal|'t'
 case|:
@@ -1877,8 +1853,6 @@ goto|goto
 name|next
 goto|;
 block|}
-endif|#
-directive|endif
 case|case
 literal|'P'
 case|:

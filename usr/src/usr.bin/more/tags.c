@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tags.c	5.1 (Berkeley) %G%"
+literal|"@(#)tags.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ name|c
 parameter_list|)
 value|((c)==' ' || (c)=='\t')
 end_define
-
-begin_if
-if|#
-directive|if
-name|TAGS
-end_if
 
 begin_decl_stmt
 name|public
@@ -522,11 +516,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
