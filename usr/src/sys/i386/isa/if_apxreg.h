@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apxreg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apxreg.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,6 +59,24 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Common addressing element rife through chip  */
+end_comment
+
+begin_struct
+struct|struct
+name|sgae
+block|{
+name|u_short
+name|f_hi
+decl_stmt|;
+name|u_short
+name|lo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Common format for tx/rx descriptors  */
 end_comment
 
@@ -66,16 +84,22 @@ begin_struct
 struct|struct
 name|sgdx
 block|{
-name|u_short
+name|struct
+name|sgae
+name|sgdx_ae
+decl_stmt|;
+define|#
+directive|define
 name|sgdx_flags
-decl_stmt|;
-name|u_short
+value|sgdx_ae.f_hi
+define|#
+directive|define
 name|sgdx_addr
-decl_stmt|;
+value|sgdx_ae.lo
 name|short
 name|sgdx_bcnt
 decl_stmt|;
-name|u_short
+name|short
 name|sgdx_mcnt
 decl_stmt|;
 block|}
@@ -210,17 +234,13 @@ name|struct
 name|sgop
 name|apc_sgop
 decl_stmt|;
-name|u_short
-name|apc_rlen
+name|struct
+name|sgae
+name|apc_rxdd
 decl_stmt|;
-name|u_short
-name|apc_rdra
-decl_stmt|;
-name|u_short
-name|apc_tlen
-decl_stmt|;
-name|u_short
-name|apc_tdra
+name|struct
+name|sgae
+name|apc_txdd
 decl_stmt|;
 name|struct
 name|sgdx
@@ -230,11 +250,9 @@ name|struct
 name|sgdx
 name|apc_rxtid
 decl_stmt|;
-name|u_short
-name|apc_stathi
-decl_stmt|;
-name|u_short
-name|apc_statlo
+name|struct
+name|sgae
+name|apc_stdd
 decl_stmt|;
 name|struct
 name|sger
