@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.11 %G%"
+literal|"@(#)ascode.c 4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,11 +1121,15 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|xp
 operator|->
 name|e_xtype
 operator|&
-name|XXTRN
+name|XTYPE
+operator|)
+operator|==
+name|XUNDEF
 condition|)
 name|yywarning
 argument_list|(
@@ -1190,11 +1194,15 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|xp
 operator|->
 name|e_xtype
 operator|&
-name|XXTRN
+name|XTYPE
+operator|)
+operator|==
+name|XUNDEF
 condition|)
 name|yywarning
 argument_list|(
