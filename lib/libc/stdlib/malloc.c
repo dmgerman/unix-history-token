@@ -1264,7 +1264,7 @@ name|void
 modifier|*
 name|map_pages
 parameter_list|(
-name|int
+name|size_t
 name|pages
 parameter_list|)
 block|{
@@ -1384,7 +1384,7 @@ modifier|*
 modifier|*
 name|old
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|,
 name|oldlen
@@ -1960,7 +1960,7 @@ name|delay_free
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|struct
@@ -3363,7 +3363,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|u_long
 name|index
 parameter_list|,
 name|struct
@@ -3372,7 +3372,7 @@ modifier|*
 name|info
 parameter_list|)
 block|{
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|struct
@@ -3966,7 +3966,7 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|u_long
 name|index
 parameter_list|,
 name|struct
@@ -4286,7 +4286,7 @@ name|pginfo
 modifier|*
 name|info
 decl_stmt|;
-name|int
+name|u_long
 name|index
 decl_stmt|;
 comment|/* This is legal */
