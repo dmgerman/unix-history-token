@@ -1817,6 +1817,11 @@ name|p
 operator|=
 name|curproc
 expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|p
 operator|->
 name|p_priority
@@ -1824,11 +1829,6 @@ operator|=
 name|p
 operator|->
 name|p_usrpri
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
 expr_stmt|;
 name|setrunqueue
 argument_list|(
