@@ -3533,21 +3533,6 @@ literal|"=ftp://ftp.it.freebsd.org"
 block|}
 block|,
 block|{
-literal|" Italy #2"
-block|,
-literal|"ftp2.it.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-literal|"=ftp://ftp2.it.freebsd.org"
-block|}
-block|,
-block|{
 literal|"Japan"
 block|,
 literal|"ftp.jp.freebsd.org"
