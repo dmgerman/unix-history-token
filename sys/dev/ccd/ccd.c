@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.36 1998/08/19 10:50:32 sos Exp $ */
+comment|/* $Id: ccd.c,v 1.37 1998/09/15 08:15:26 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -2126,6 +2126,8 @@ argument_list|,
 name|DEVSTAT_TYPE_ASC0
 operator||
 name|DEVSTAT_TYPE_IF_OTHER
+argument_list|,
+name|DEVSTAT_PRIORITY_CCD
 argument_list|)
 expr_stmt|;
 name|cs

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devicestat.h,v 1.2 1998/09/20 00:10:58 ken Exp $  */
+comment|/*  * Copyright (c) 1997, 1998, 1999 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devicestat.h,v 1.3 1998/11/14 21:58:41 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|DEVSTAT_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -114,6 +114,66 @@ init|=
 literal|0x03
 block|}
 name|devstat_tag_type
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|DEVSTAT_PRIORITY_MIN
+init|=
+literal|0x000
+block|,
+name|DEVSTAT_PRIORITY_OTHER
+init|=
+literal|0x020
+block|,
+name|DEVSTAT_PRIORITY_PASS
+init|=
+literal|0x030
+block|,
+name|DEVSTAT_PRIORITY_FD
+init|=
+literal|0x040
+block|,
+name|DEVSTAT_PRIORITY_WFD
+init|=
+literal|0x050
+block|,
+name|DEVSTAT_PRIORITY_SA
+init|=
+literal|0x060
+block|,
+name|DEVSTAT_PRIORITY_OCD
+init|=
+literal|0x070
+block|,
+name|DEVSTAT_PRIORITY_WCD
+init|=
+literal|0x080
+block|,
+name|DEVSTAT_PRIORITY_CD
+init|=
+literal|0x090
+block|,
+name|DEVSTAT_PRIORITY_WD
+init|=
+literal|0x100
+block|,
+name|DEVSTAT_PRIORITY_DA
+init|=
+literal|0x110
+block|,
+name|DEVSTAT_PRIORITY_CCD
+init|=
+literal|0x120
+block|,
+name|DEVSTAT_PRIORITY_MAX
+init|=
+literal|0xfff
+block|}
+name|devstat_priority
 typedef|;
 end_typedef
 
@@ -299,6 +359,10 @@ name|devstat_type_flags
 name|device_type
 decl_stmt|;
 comment|/* Device type */
+name|devstat_priority
+name|priority
+decl_stmt|;
+comment|/* Controls list pos. */
 block|}
 struct|;
 end_struct
@@ -334,6 +398,9 @@ name|flags
 parameter_list|,
 name|devstat_type_flags
 name|device_type
+parameter_list|,
+name|devstat_priority
+name|priority
 parameter_list|)
 function_decl|;
 end_function_decl
