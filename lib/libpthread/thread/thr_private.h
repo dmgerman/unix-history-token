@@ -1368,15 +1368,6 @@ decl_stmt|;
 name|sigset_t
 name|sigpend
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|_NO_UNDISPATCH
-comment|/* Non-zero if there are undispatched signals for this thread. */
-name|int
-name|undispatched_signals
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* Thread state: */
 name|enum
 name|pthread_state

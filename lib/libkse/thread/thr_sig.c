@@ -1921,44 +1921,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_NO_UNDISPATCH
-if|if
-condition|(
-name|_thread_run
-operator|!=
-name|pthread
-condition|)
-block|{
-comment|/* 				 * Make a note to call the signal handler once 				 * the signaled thread is running.  This is 				 * necessary in order to make sure that the 				 * signal is delivered on the correct stack. 				 */
-name|pthread
-operator|->
-name|undispatched_signals
-operator|++
-expr_stmt|;
 block|}
-else|else
-block|{
-endif|#
-directive|endif
-comment|/* Call the installed signal handler. */
-name|_thread_sig_deliver
-argument_list|(
-name|pthread
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|_NO_UNDISPATCH
-block|}
-endif|#
-directive|endif
-block|}
-else|else
-block|{
 comment|/* Increment the pending signal count. */
 name|sigaddset
 argument_list|(
@@ -1970,7 +1933,6 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
