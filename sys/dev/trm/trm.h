@@ -543,6 +543,18 @@ name|_ACB
 modifier|*
 name|pNextACB
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|iores
+decl_stmt|,
+modifier|*
+name|irq
+decl_stmt|;
+name|void
+modifier|*
+name|ih
+decl_stmt|;
 comment|/*      *	          CAM SIM/XPT      */
 name|struct
 name|cam_sim
