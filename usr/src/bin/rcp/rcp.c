@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.3 82/05/09"
+literal|"@(#)rcp.c	4.4 82/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,18 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -53,7 +41,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
