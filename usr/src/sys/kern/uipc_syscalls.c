@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.24	82/08/22	*/
+comment|/*	uipc_syscalls.c	4.25	82/09/04	*/
 end_comment
 
 begin_include
@@ -100,169 +100,126 @@ file|"../h/uio.h"
 end_include
 
 begin_macro
-name|ssocreate
+name|socket
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###21 [lint] ssocreate defined( sys_socket.c(21) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssobind
+name|bind
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###26 [lint] ssobind defined( sys_socket.c(26) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssolisten
+name|listen
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###31 [lint] ssolisten defined( sys_socket.c(31) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssoaccept
+name|accept
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###36 [lint] ssoaccept defined( sys_socket.c(36) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssoconnect
+name|connect
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###41 [lint] ssoconnect defined( sys_socket.c(41) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssocreatepair
+name|socketpair
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###46 [lint] ssocreatepair defined( sys_socket.c(46) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssosendto
+name|spipe
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###51 [lint] ssosendto defined( sys_socket.c(51) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssosend
+name|sendto
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###56 [lint] ssosend defined( sys_socket.c(56) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssorecvfrom
+name|send
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###61 [lint] ssorecvfrom defined( sys_socket.c(61) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssorecv
+name|recvfrom
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###66 [lint] ssorecv defined( sys_socket.c(66) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssosendm
+name|recv
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###71 [lint] ssosendm defined( sys_socket.c(71) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssorecvm
+name|sendmsg
 argument_list|()
 end_macro
-
-begin_comment
-comment|/*###76 [lint] ssorecvm defined( sys_socket.c(76) ), but never used%%%*/
-end_comment
 
 begin_block
 block|{  }
 end_block
 
 begin_macro
-name|ssoshutdown
+name|recvmsg
 argument_list|()
 end_macro
 
-begin_comment
-comment|/*###81 [lint] ssoshutdown defined( sys_socket.c(81) ), but never used%%%*/
-end_comment
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|shutdown
+argument_list|()
+end_macro
 
 begin_block
 block|{  }
@@ -291,7 +248,7 @@ comment|/*  * Pipe system call interface.  */
 end_comment
 
 begin_macro
-name|spipe
+name|opipe
 argument_list|()
 end_macro
 
@@ -560,7 +517,7 @@ comment|/*  * Socket system call interface.  Copy sa arguments  * set up file de
 end_comment
 
 begin_macro
-name|ssocket
+name|osocket
 argument_list|()
 end_macro
 
@@ -788,7 +745,7 @@ comment|/*  * Accept system call interface.  */
 end_comment
 
 begin_macro
-name|saccept
+name|oaccept
 argument_list|()
 end_macro
 
@@ -1237,7 +1194,7 @@ comment|/*  * Connect socket to foreign peer; system call  * interface.  Copy sa
 end_comment
 
 begin_macro
-name|sconnect
+name|oconnect
 argument_list|()
 end_macro
 
@@ -1472,7 +1429,7 @@ comment|/*  * Send data on socket.  */
 end_comment
 
 begin_macro
-name|ssend
+name|osend
 argument_list|()
 end_macro
 
@@ -1706,7 +1663,7 @@ comment|/*  * Receive data on socket.  */
 end_comment
 
 begin_macro
-name|sreceive
+name|oreceive
 argument_list|()
 end_macro
 
