@@ -61,6 +61,17 @@ value|EXTATTR_NAMESPACE_SYSTEM
 end_define
 
 begin_comment
+comment|/*  * MAC framework-related constants and limits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_MAX_POLICY_NAME
+value|32
+end_define
+
+begin_comment
 comment|/*  * XXXMAC: Per-policy structures will be moved from mac.h to per-policy  * include files once the revised user interface is available.  */
 end_comment
 
@@ -460,7 +471,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_policy
+name|mac_syscall
 parameter_list|(
 specifier|const
 name|char

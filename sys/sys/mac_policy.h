@@ -58,6 +58,26 @@ modifier|*
 name|mpc
 parameter_list|)
 function_decl|;
+comment|/* 	 * General policy-directed security system call so that policies 	 * may implement new services without reserving explicit 	 * system call numbers. 	 */
+name|int
+function_decl|(
+modifier|*
+name|mpo_syscall
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|call
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
 comment|/* 	 * Label operations. 	 */
 name|void
 function_decl|(
@@ -2746,6 +2766,8 @@ block|,
 name|MAC_DESTROY
 block|,
 name|MAC_INIT
+block|,
+name|MAC_SYSCALL
 block|,
 name|MAC_INIT_BPFDESC
 block|,
