@@ -3776,6 +3776,15 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|f_msgcount
+operator|==
+literal|0
+condition|)
+return|return;
 name|fp
 operator|->
 name|f_msgcount
