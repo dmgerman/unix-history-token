@@ -120,12 +120,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|LOGIN_CAP
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_CHPASS
 value|"/usr/bin/passwd"
 end_define

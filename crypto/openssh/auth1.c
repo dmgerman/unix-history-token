@@ -83,6 +83,12 @@ directive|include
 file|"session.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
