@@ -482,8 +482,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|__GNU_OBJC_LIST_H
 end_endif
+
+begin_comment
+comment|/* not __GNU_OBJC_LIST_H */
+end_comment
 
 end_unit
 

@@ -122,8 +122,11 @@ end_macro
 begin_endif
 endif|#
 directive|endif
-endif|__Protocol_INCLUDE_GNU
 end_endif
+
+begin_comment
+comment|/* not __Protocol_INCLUDE_GNU */
+end_comment
 
 end_unit
 
