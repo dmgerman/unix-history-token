@@ -588,6 +588,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FW_VMACCESS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -602,6 +608,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -9865,6 +9876,14 @@ name|int
 name|i
 decl_stmt|;
 name|struct
+name|csrdir
+modifier|*
+name|csrd
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FW_VMACCESS
+name|struct
 name|fw_xfer
 modifier|*
 name|xfer
@@ -9874,11 +9893,8 @@ name|fw_bind
 modifier|*
 name|fwb
 decl_stmt|;
-name|struct
-name|csrdir
-modifier|*
-name|csrd
-decl_stmt|;
+endif|#
+directive|endif
 name|fc
 operator|->
 name|max_asyretry
@@ -10487,6 +10503,9 @@ comment|/* # input channel = 1 */
 block|CSRARC(fc, iPCR) = 0x803f0000; 	for(i = 4 ; i< 0x7c/4 ; i+=4){ 		CSRARC(fc, i + iPCR) = 0x0;  	}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|FW_VMACCESS
 name|xfer
 operator|=
 name|fw_xfer_alloc
@@ -10589,6 +10608,8 @@ argument_list|,
 name|fwb
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -19123,6 +19144,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FW_VMACCESS
+end_ifdef
+
 begin_comment
 comment|/*  * Software implementation for physical memory block access.  * XXX:Too slow, usef for debug purpose only.  */
 end_comment
@@ -19823,6 +19850,11 @@ comment|/**/
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * CRC16 check-sum for IEEE1394 register blocks.  */
