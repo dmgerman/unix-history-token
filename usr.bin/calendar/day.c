@@ -891,13 +891,17 @@ begin_function
 name|time_t
 name|Mktime
 parameter_list|(
-name|date
+name|dp
 parameter_list|)
+name|char
+modifier|*
+name|dp
+decl_stmt|;
+block|{
 name|char
 modifier|*
 name|date
 decl_stmt|;
-block|{
 name|time_t
 name|t
 decl_stmt|;
@@ -908,6 +912,33 @@ name|struct
 name|tm
 name|tm
 decl_stmt|;
+name|date
+operator|=
+name|strdup
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|date
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"calendar: strdup failed in Mktime\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1097,6 +1128,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|free
+argument_list|(
+name|date
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|mktime
@@ -1482,6 +1518,7 @@ name|v2
 expr_stmt|;
 comment|/* set to yesterday */
 else|else
+block|{
 name|day
 operator|=
 name|tp
@@ -1490,6 +1527,18 @@ name|tm_mday
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|day
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 comment|/* first, second ... +1 ... +5 */
 else|else
@@ -1555,6 +1604,7 @@ name|v2
 expr_stmt|;
 comment|/* set to yesterday */
 else|else
+block|{
 name|day
 operator|=
 name|tp
@@ -1563,6 +1613,18 @@ name|tm_mday
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|day
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 block|}
 comment|/* wired */
