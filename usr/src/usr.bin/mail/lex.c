@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.18 (Berkeley) %G%"
+literal|"@(#)lex.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1969,12 +1969,8 @@ end_macro
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|old_action
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -1982,7 +1978,7 @@ name|s
 argument_list|,
 name|SIG_DFL
 argument_list|)
-function_decl|;
+decl_stmt|;
 name|sigsetmask
 argument_list|(
 name|sigblock

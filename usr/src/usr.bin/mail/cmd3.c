@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.21 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,12 +58,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigint
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -71,7 +67,7 @@ name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
-function_decl|;
+decl_stmt|;
 name|char
 modifier|*
 name|shell
@@ -188,12 +184,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigint
-function_decl|)
-parameter_list|()
 init|=
 name|signal
 argument_list|(
@@ -201,7 +193,7 @@ name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
-function_decl|;
+decl_stmt|;
 name|char
 modifier|*
 name|shell

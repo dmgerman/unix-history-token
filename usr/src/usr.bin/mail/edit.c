@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.12 (Berkeley) %G%"
+literal|"@(#)edit.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,13 +174,9 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|sigint
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 if|if
 condition|(
 name|i

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.24 (Berkeley) %G%"
+literal|"@(#)main.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,13 +120,10 @@ literal|0
 decl_stmt|;
 name|int
 name|hdrstop
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
+parameter_list|()
+function_decl|;
+name|sig_t
 name|prevint
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|int
 name|sigchild
