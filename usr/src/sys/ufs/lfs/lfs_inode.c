@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.54 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.55 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -678,7 +678,8 @@ begin_define
 define|#
 directive|define
 name|UPDATE_SEGUSE
-value|{ \ 	LFS_SEGENTRY(sup, fs, lastseg, bp); \ 	sup->su_nbytes -= fs->lfs_bsize * num; \ 	LFS_UBWRITE(bp); \ 	blocksreleased += num; \ }
+define|\
+value|if (lastseg != -1) { \ 		LFS_SEGENTRY(sup, fs, lastseg, sup_bp); \ 		sup->su_nbytes -= fs->lfs_bsize * num; \ 		LFS_UBWRITE(sup_bp); \ 		blocksreleased += num; \ 	}
 end_define
 
 begin_define
@@ -736,6 +737,9 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|sup_bp
 decl_stmt|;
 name|struct
 name|inode
@@ -1420,13 +1424,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|lastseg
-operator|!=
-operator|-
-literal|1
-condition|)
 name|UPDATE_SEGUSE
 expr_stmt|;
 name|ip
