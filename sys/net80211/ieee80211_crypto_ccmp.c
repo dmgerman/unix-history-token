@@ -2906,7 +2906,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|wlan_wep
+name|wlan_ccmp
 argument_list|,
 name|wlan
 argument_list|,
