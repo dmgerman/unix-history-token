@@ -905,7 +905,7 @@ operator|.
 name|tv_usec
 argument_list|)
 expr_stmt|;
-comment|/* (3) The elapsed time the commmand ran (and its starting time) */
+comment|/* (3) The elapsed time the command ran (and its starting time) */
 name|acct
 operator|.
 name|ac_btime
