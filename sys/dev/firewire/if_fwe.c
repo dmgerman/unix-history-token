@@ -137,13 +137,6 @@ name|TX_MAX_QUEUE
 value|(FWMAXQUEUE - 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|RX_MAX_QUEUE
-value|FWMAXQUEUE
-end_define
-
 begin_comment
 comment|/* network interface */
 end_comment
@@ -272,6 +265,15 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|rx_queue_len
+init|=
+name|FWMAXQUEUE
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -326,7 +328,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|"Ethernet Emulation Subsystem"
+literal|"Ethernet emulation subsystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -368,7 +370,61 @@ name|tx_speed
 argument_list|,
 literal|0
 argument_list|,
-literal|"Transmission Speed"
+literal|"Transmission speed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire_fwe
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rx_queue_len
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|rx_queue_len
+argument_list|,
+literal|0
+argument_list|,
+literal|"Length of the receive queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwe.stream_ch"
+argument_list|,
+operator|&
+name|stream_ch
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwe.tx_speed"
+argument_list|,
+operator|&
+name|tx_speed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwe.rx_queue_len"
+argument_list|,
+operator|&
+name|rx_queue_len
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1616,7 +1672,7 @@ name|xferq
 operator|->
 name|bnchunk
 operator|=
-name|RX_MAX_QUEUE
+name|rx_queue_len
 expr_stmt|;
 name|xferq
 operator|->
