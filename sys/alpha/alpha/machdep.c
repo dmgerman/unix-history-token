@@ -4119,13 +4119,6 @@ operator||
 name|MTX_COLD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable interrupts on first release (in switch_trampoline). 	 */
-name|sched_lock
-operator|.
-name|mtx_saveipl
-operator|=
-name|ALPHA_PSL_IPL_0
-expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 ifdef|#
 directive|ifdef
