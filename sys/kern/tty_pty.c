@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty_pty.c	7.21 (Berkeley) 5/30/91  *	$Id: tty_pty.c,v 1.10 1994/03/02 20:28:50 guido Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty_pty.c	7.21 (Berkeley) 5/30/91  *	$Id: tty_pty.c,v 1.11 1994/04/03 19:40:01 ache Exp $  */
 end_comment
 
 begin_comment
@@ -321,6 +321,8 @@ name|tp
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -512,15 +514,19 @@ name|TTIPRI
 operator||
 name|PCATCH
 argument_list|,
-name|ttopen
+literal|"ptsopn"
 argument_list|,
 literal|0
 argument_list|)
 condition|)
-goto|goto
-name|ret
-goto|;
+break|break;
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 operator|(
@@ -542,6 +548,13 @@ operator|,
 name|flag
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 name|ptcwakeup
 argument_list|(
 name|tp
@@ -563,8 +576,8 @@ name|pt_flags
 operator||=
 name|PF_SOPEN
 expr_stmt|;
-name|ret
-label|:
+block|}
+else|else
 name|tp
 operator|->
 name|t_state
@@ -622,6 +635,15 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
+name|ptcwakeup
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|linesw
@@ -644,15 +666,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|ptcwakeup
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|pt_ioctl
 index|[
 name|minor
@@ -665,13 +678,6 @@ name|pt_flags
 operator|&=
 operator|~
 name|PF_SOPEN
-expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_ISOPEN
 expr_stmt|;
 if|if
 condition|(
@@ -883,7 +889,7 @@ name|TTIPRI
 operator||
 name|PCATCH
 argument_list|,
-name|ttybg
+literal|"ptsbg"
 argument_list|,
 literal|0
 argument_list|)
@@ -936,7 +942,7 @@ name|TTIPRI
 operator||
 name|PCATCH
 argument_list|,
-name|ttyin
+literal|"ptsin"
 argument_list|,
 literal|0
 argument_list|)
