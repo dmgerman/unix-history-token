@@ -46,5 +46,16 @@ begin_comment
 comment|/* Function to feed InitControl() */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|astosc
+name|astosc
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
