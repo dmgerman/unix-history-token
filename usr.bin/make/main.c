@@ -1069,6 +1069,14 @@ name|DEBUG_JOB
 expr_stmt|;
 break|break;
 case|case
+literal|'l'
+case|:
+name|debug
+operator||=
+name|DEBUG_LOUD
+expr_stmt|;
+break|break;
+case|case
 literal|'m'
 case|:
 name|debug

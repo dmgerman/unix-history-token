@@ -1173,6 +1173,13 @@ name|DEBUG_FOR
 value|0x0400
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEBUG_LOUD
+value|0x0800
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
