@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.1 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,13 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|KEEPOPEN
+value|(RES_USEVC|RES_STAYOPEN)
+end_define
+
 begin_macro
 name|res_send
 argument_list|(
@@ -130,8 +137,6 @@ name|int
 name|n
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|retry
 decl_stmt|,
 name|v_circuit
@@ -139,6 +144,13 @@ decl_stmt|,
 name|resplen
 decl_stmt|,
 name|ns
+decl_stmt|;
+specifier|static
+name|int
+name|s
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|u_short
 name|id
@@ -229,11 +241,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|s
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|v_circuit
 operator|=
 operator|(
@@ -335,6 +342,7 @@ name|s
 operator|<
 literal|0
 condition|)
+block|{
 name|s
 operator|=
 name|socket
@@ -407,6 +415,7 @@ operator|-
 literal|1
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* 			 * Send length& message 			 */
 name|len
@@ -1015,6 +1024,32 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* 		 * We are going to assume that the first server is preferred 		 * over the rest (i.e. it is on the local machine) and only 		 * keep that one open. 		 */
+if|if
+condition|(
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|KEEPOPEN
+operator|)
+operator|==
+name|KEEPOPEN
+operator|&&
+name|ns
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|resplen
+operator|)
+return|;
+block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -1023,11 +1058,17 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|resplen
 operator|)
 return|;
+block|}
 block|}
 block|}
 operator|(
