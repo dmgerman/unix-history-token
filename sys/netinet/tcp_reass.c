@@ -5702,9 +5702,26 @@ operator|.
 name|tcps_pawsdrop
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tlen
+condition|)
+block|{
 goto|goto
 name|dropafterack
 goto|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"PAWS ack-on-ack loop avoided\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|drop
+goto|;
+block|}
 block|}
 block|}
 comment|/* 	 * T/TCP mechanism 	 *   If T/TCP was negotiated and the segment doesn't have CC, 	 *   or if its CC is wrong then drop the segment. 	 *   RST segments do not have to comply with this. 	 */
