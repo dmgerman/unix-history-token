@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.55	82/04/11	*/
+comment|/*	if_en.c	4.56	82/04/11	*/
 end_comment
 
 begin_include
@@ -2124,7 +2124,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|pupdst
+name|pupsrc
 argument_list|,
 operator|(
 expr|struct
@@ -2132,7 +2132,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|pupsrc
+name|pupdst
 argument_list|)
 expr_stmt|;
 goto|goto

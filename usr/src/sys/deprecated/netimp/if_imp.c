@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.24	82/04/10	*/
+comment|/*	if_imp.c	4.25	82/04/11	*/
 end_comment
 
 begin_include
@@ -1327,7 +1327,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|impdst
+name|impsrc
 argument_list|,
 operator|(
 expr|struct
@@ -1335,7 +1335,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|impsrc
+name|impdst
 argument_list|)
 expr_stmt|;
 return|return;
