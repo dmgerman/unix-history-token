@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.11 (Berkeley) %G%"
+literal|"@(#)proc.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|"sh.proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -4246,12 +4252,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|omask
 operator|=
 name|sigmask
@@ -4390,19 +4390,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s: %s\n"
 argument_list|,
 name|cp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|err
@@ -4477,19 +4472,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d: "
+literal|"%d: %s\n"
 argument_list|,
 name|pid
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s\n"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|err
@@ -5568,6 +5558,26 @@ block|}
 if|if
 condition|(
 name|wanttty
+operator|>=
+literal|0
+operator|&&
+name|tpgrp
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+name|pgrp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wanttty
 operator|>
 literal|0
 condition|)
@@ -5585,26 +5595,6 @@ name|char
 operator|*
 operator|)
 operator|&
-name|pgrp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|wanttty
-operator|>=
-literal|0
-operator|&&
-name|tpgrp
-operator|>=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|setpgrp
-argument_list|(
-literal|0
-argument_list|,
 name|pgrp
 argument_list|)
 expr_stmt|;
