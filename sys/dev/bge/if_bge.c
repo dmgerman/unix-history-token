@@ -9818,6 +9818,8 @@ operator|=
 name|cur_rx
 operator|->
 name|bge_len
+operator|-
+name|ETHER_CRC_LEN
 expr_stmt|;
 name|m
 operator|->
