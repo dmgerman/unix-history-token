@@ -13,17 +13,6 @@ name|lint
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Id: ip_nat.c,v 2.37.2.32 2001/01/10 06:19:11 darrenr Exp $"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*static const char rcsid[] = "@(#)$Id: ip_nat.c,v 2.37.2.16 2000/07/18 13:57:40 darrenr Exp $";*/
 end_comment
