@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.8 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.9 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_ifndef
@@ -1297,6 +1297,8 @@ decl_stmt|,
 name|dusize
 decl_stmt|,
 name|addlopt
+decl_stmt|,
+name|version
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2074,20 +2076,55 @@ case|case
 name|TPP_vers
 case|:
 comment|/* not in class 0; 1 octet; in CR_TPDU only */
+comment|/* Iso says if version wrong, use default version????? */
 name|CHECK
 argument_list|(
-argument|(vbval(P, u_char) != TP_VERSION )
+operator|(
+name|vbval
+argument_list|(
+name|P
 argument_list|,
-argument|E_TP_INV_PVAL
-argument_list|,
-argument|ts_inv_pval
-argument_list|,
-argument|respond
-argument_list|,
-argument|(
-literal|1
-argument|+ (caddr_t)&vbptr(P)->tpv_val - P)
+name|u_char
 argument_list|)
+operator|!=
+name|TP_VERSION
+operator|)
+argument_list|,
+name|E_TP_INV_PVAL
+argument_list|,
+name|ts_inv_pval
+argument_list|,
+name|setversion
+argument_list|,
+operator|(
+literal|1
+operator|+
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|vbptr
+argument_list|(
+name|P
+argument_list|)
+operator|->
+name|tpv_val
+operator|-
+name|P
+operator|)
+argument_list|)
+expr_stmt|;
+name|setversion
+label|:
+name|version
+operator|=
+name|vbval
+argument_list|(
+name|P
+argument_list|,
+name|u_char
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|TPP_acktime
@@ -2670,6 +2707,12 @@ name|TPAO_NO_CSUM
 operator|)
 operator|==
 literal|0
+expr_stmt|;
+name|tpp
+operator|.
+name|p_version
+operator|=
+name|version
 expr_stmt|;
 ifdef|#
 directive|ifdef
