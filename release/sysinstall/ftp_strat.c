@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp_strat.c,v 1.7.2.14 1995/10/19 18:37:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp_strat.c,v 1.7.2.15 1995/10/20 07:02:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -75,7 +75,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|Boolean
+name|int
 name|get_new_host
 parameter_list|(
 name|Device
@@ -94,6 +94,12 @@ name|MenuMediaFTP
 operator|.
 name|title
 decl_stmt|;
+specifier|static
+name|int
+name|failCnt
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|dev
@@ -103,8 +109,36 @@ operator|&
 name|OPT_EXPLORATORY_GET
 condition|)
 return|return
-name|FALSE
+name|RET_DONE
 return|;
+if|if
+condition|(
+operator|++
+name|failCnt
+operator|>
+literal|4
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"This doesn't seem to be working.  Your network card may be\n"
+literal|"misconfigured, the information you entered in the network setup\n"
+literal|"screen may be wrong or your network connection may just simply be\n"
+literal|"having a bad day.  Would you like to end this travesty?"
+argument_list|)
+condition|)
+return|return
+name|RET_DONE
+return|;
+else|else
+name|failCnt
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|MenuMediaFTP
 operator|.
 name|title
@@ -183,6 +217,10 @@ argument_list|)
 expr_stmt|;
 return|return
 name|i
+condition|?
+name|RET_SUCCESS
+else|:
+name|RET_FAIL
 return|;
 block|}
 end_function
@@ -604,8 +642,6 @@ expr_stmt|;
 block|}
 name|retries
 operator|=
-name|i
-operator|=
 literal|0
 expr_stmt|;
 name|retry
@@ -619,9 +655,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|i
-operator|=
 name|FtpOpen
 argument_list|(
 name|ftp
@@ -632,7 +665,6 @@ name|login_name
 argument_list|,
 name|password
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
@@ -661,33 +693,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|++
-name|retries
-operator|>
-name|max_retries
-condition|)
-block|{
-if|if
-condition|(
 name|optionIsSet
 argument_list|(
 name|OPT_FTP_ABORT
 argument_list|)
 operator|||
-operator|!
 name|get_new_host
 argument_list|(
 name|dev
 argument_list|)
+operator|!=
+name|RET_SUCCESS
 condition|)
 return|return
 name|FALSE
 return|;
-name|retries
-operator|=
-literal|0
-expr_stmt|;
-block|}
 goto|goto
 name|retry
 goto|;
@@ -725,23 +745,19 @@ condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"CD to distribution in ~ftp/%s"
+literal|"Attempt to chdir to distribution in %s.."
 argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|i
-operator|=
 name|FtpChdir
 argument_list|(
 name|ftp
 argument_list|,
 name|dir
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
@@ -752,10 +768,7 @@ operator|++
 name|retries
 operator|>
 name|max_retries
-condition|)
-block|{
-if|if
-condition|(
+operator|||
 name|optionIsSet
 argument_list|(
 name|OPT_FTP_ABORT
@@ -775,24 +788,33 @@ return|return
 name|FALSE
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
+name|i
+operator|=
 name|get_new_host
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|RET_DONE
 condition|)
 return|return
 name|FALSE
 return|;
-else|else
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+name|RET_SUCCESS
+condition|)
 name|retries
 operator|=
 literal|0
 expr_stmt|;
-block|}
 goto|goto
 name|retry
 goto|;
@@ -811,7 +833,7 @@ argument_list|)
 expr_stmt|;
 name|msgDebug
 argument_list|(
-literal|"mediaInitFTP was successful\n"
+literal|"mediaInitFTP was successful (logged in and chdir'd)\n"
 argument_list|)
 expr_stmt|;
 name|ftpInitted
