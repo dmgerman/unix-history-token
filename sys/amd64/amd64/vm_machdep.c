@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -447,6 +453,28 @@ name|tf_rdx
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * If the parent process has the trap bit set (i.e. a debugger had 	 * single stepped the process to the system call), we need to clear 	 * the trap flag from the new frame unless the debugger had set PF_FORK 	 * on the parent.  Otherwise, the child will receive a (likely 	 * unexpected) SIGTRAP when it executes the first instruction after 	 * returning  to userland. 	 */
+if|if
+condition|(
+operator|(
+name|p1
+operator|->
+name|p_pfsflags
+operator|&
+name|PF_FORK
+operator|)
+operator|==
+literal|0
+condition|)
+name|td2
+operator|->
+name|td_frame
+operator|->
+name|tf_rflags
+operator|&=
+operator|~
+name|PSL_T
+expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
 name|pcb2
 operator|->
@@ -761,7 +789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Pu t enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
