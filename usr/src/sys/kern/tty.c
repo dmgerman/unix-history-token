@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.42 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.43 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2136,6 +2136,8 @@ name|l_close
 operator|)
 operator|(
 name|tp
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 name|error
@@ -3849,21 +3851,47 @@ begin_comment
 comment|/*  * "close" a line discipline  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ttylclose
 argument_list|(
-name|tp
+argument|tp
+argument_list|,
+argument|flag
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|flag
+operator|&
+name|IO_NDELAY
+condition|)
+name|ttyflush
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|)
+expr_stmt|;
+else|else
 name|ttywflush
 argument_list|(
 name|tp
