@@ -4092,7 +4092,7 @@ begin_define
 define|#
 directive|define
 name|TI_JRAWLEN
-value|(TI_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
+value|(TI_JUMBO_FRAMELEN + ETHER_ALIGN)
 end_define
 
 begin_define
@@ -4122,17 +4122,6 @@ directive|define
 name|TI_JMEM
 value|((TI_JLEN * TI_JSLOTS) + TI_RESID)
 end_define
-
-begin_struct
-struct|struct
-name|ti_jslot
-block|{
-name|caddr_t
-name|ti_buf
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Ring structures. Most of these reside in host memory and we tell  * the NIC where they are via the ring control blocks. The exceptions  * are the tx and command rings, which live in NIC memory and which  * we access via the shared memory window.  */
@@ -4276,8 +4265,7 @@ name|TI_MINI_RX_RING_CNT
 index|]
 decl_stmt|;
 comment|/* Stick the jumbo mem management stuff here too. */
-name|struct
-name|ti_jslot
+name|caddr_t
 name|ti_jslots
 index|[
 name|TI_JSLOTS

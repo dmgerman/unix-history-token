@@ -2747,7 +2747,7 @@ operator|->
 name|ti_jinuse_listhead
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now divide it up into 9K pieces and save the addresses 	 * in an array. Note that we play an evil trick here by using 	 * the first few bytes in the buffer to hold the the address 	 * of the softc structure for this interface. This is because 	 * ti_jfree() needs it, but it is called by the mbuf management 	 * code which will not pass it to us explicitly. 	 */
+comment|/* 	 * Now divide it up into 9K pieces and save the addresses 	 * in an array. 	 */
 name|ptr
 operator|=
 name|sc
@@ -2770,38 +2770,6 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int64_t
-modifier|*
-modifier|*
-name|aptr
-decl_stmt|;
-name|aptr
-operator|=
-operator|(
-name|u_int64_t
-operator|*
-operator|*
-operator|)
-name|ptr
-expr_stmt|;
-name|aptr
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|u_int64_t
-operator|*
-operator|)
-name|sc
-expr_stmt|;
-name|ptr
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_int64_t
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|ti_cdata
@@ -2810,21 +2778,12 @@ name|ti_jslots
 index|[
 name|i
 index|]
-operator|.
-name|ti_buf
 operator|=
 name|ptr
 expr_stmt|;
 name|ptr
 operator|+=
-operator|(
 name|TI_JLEN
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_int64_t
-argument_list|)
-operator|)
 expr_stmt|;
 name|entry
 operator|=
@@ -3001,8 +2960,6 @@ name|entry
 operator|->
 name|slot
 index|]
-operator|.
-name|ti_buf
 operator|)
 return|;
 block|}
@@ -3034,11 +2991,6 @@ name|ti_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int64_t
-modifier|*
-modifier|*
-name|aptr
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3048,22 +3000,6 @@ modifier|*
 name|entry
 decl_stmt|;
 comment|/* Extract the softc struct pointer. */
-name|aptr
-operator|=
-operator|(
-name|u_int64_t
-operator|*
-operator|*
-operator|)
-operator|(
-name|buf
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_int64_t
-argument_list|)
-operator|)
-expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -3071,12 +3007,7 @@ expr|struct
 name|ti_softc
 operator|*
 operator|)
-operator|(
-name|aptr
-index|[
-literal|0
-index|]
-operator|)
+name|args
 expr_stmt|;
 if|if
 condition|(
@@ -3086,7 +3017,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ti_jfree: can't find softc pointer!"
+literal|"ti_jfree: didn't get softc pointer!"
 argument_list|)
 expr_stmt|;
 comment|/* calculate the slot this buffer belongs to */
@@ -3096,7 +3027,7 @@ operator|(
 operator|(
 name|vm_offset_t
 operator|)
-name|aptr
+name|buf
 operator|-
 operator|(
 name|vm_offset_t
@@ -3818,7 +3749,12 @@ name|TI_JUMBO_FRAMELEN
 argument_list|,
 name|ti_jfree
 argument_list|,
-name|NULL
+operator|(
+expr|struct
+name|ti_softc
+operator|*
+operator|)
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
