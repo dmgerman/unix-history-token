@@ -776,6 +776,13 @@ argument_list|(
 name|mask
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|waiter
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 name|EIO
 return|;
