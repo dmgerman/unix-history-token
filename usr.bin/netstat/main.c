@@ -655,6 +655,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|protox
@@ -723,6 +729,11 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -831,8 +842,13 @@ name|protox
 block|,
 name|ipxprotox
 block|,
+ifdef|#
+directive|ifdef
+name|NS
 name|nsprotox
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -1074,6 +1090,9 @@ break|break;
 case|case
 literal|'f'
 case|:
+ifdef|#
+directive|ifdef
+name|NS
 if|if
 condition|(
 name|strcmp
@@ -1090,6 +1109,8 @@ operator|=
 name|AF_NS
 expr_stmt|;
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|strcmp
@@ -1867,6 +1888,9 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NS
 if|if
 condition|(
 name|af
@@ -1899,6 +1923,8 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO

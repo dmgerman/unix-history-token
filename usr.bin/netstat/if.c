@@ -82,6 +82,12 @@ directive|include
 file|<netipx/ipx_if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -93,6 +99,11 @@ include|#
 directive|include
 file|<netns/ns_if.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -232,10 +243,15 @@ name|struct
 name|ipx_ifaddr
 name|ipx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NS
 name|struct
 name|ns_ifaddr
 name|ns
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -844,6 +860,9 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -925,6 +944,8 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|AF_LINK
 case|:

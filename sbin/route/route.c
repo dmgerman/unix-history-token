@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.4 1996/01/20 12:56:57 mpp Exp $"
+literal|"$Id: route.c,v 1.5 1996/02/06 20:36:10 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,11 +119,22 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netns/ns.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -272,10 +283,15 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NS
 name|struct
 name|sockaddr_ns
 name|sns
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -963,6 +979,9 @@ operator|=
 name|AF_INET
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|K_XNS
 case|:
@@ -971,6 +990,8 @@ operator|=
 name|AF_NS
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|K_LINK
 case|:
@@ -1457,11 +1478,16 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NS
 name|char
 modifier|*
 name|ns_print
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|first
@@ -1732,6 +1758,9 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -1748,6 +1777,8 @@ name|sa
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 name|AF_LINK
 case|:
@@ -1925,11 +1956,16 @@ decl_stmt|;
 name|int
 name|subnetshift
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NS
 name|char
 modifier|*
 name|ns_print
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|sa
@@ -2282,6 +2318,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -2299,6 +2338,8 @@ argument_list|)
 operator|)
 return|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|AF_LINK
 case|:
@@ -2803,6 +2844,9 @@ name|sockunion
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|K_XNS
 case|:
@@ -2819,6 +2863,8 @@ name|sockaddr_ns
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|K_IFACE
 case|:
@@ -3842,11 +3888,16 @@ specifier|register
 name|sup
 name|su
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NS
 name|struct
 name|ns_addr
 name|ns_addr
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -4064,6 +4115,9 @@ condition|(
 name|af
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -4163,6 +4217,8 @@ name|sns_addr
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -4666,6 +4722,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_decl_stmt
 name|short
 name|ns_nullh
@@ -5028,6 +5090,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -5804,9 +5871,14 @@ operator|.
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
+endif|#
+directive|endif
 case|case
 name|AF_INET
 case|:
@@ -7399,6 +7471,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|NS
 case|case
 name|AF_NS
 case|:
@@ -7422,6 +7497,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 operator|(
 name|void

@@ -153,6 +153,12 @@ directive|include
 file|<netipx/ipx_if.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -170,6 +176,11 @@ include|#
 directive|include
 file|<netns/ns_if.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -341,6 +352,12 @@ name|mtu
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISO
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|nsellength
@@ -348,6 +365,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -799,6 +821,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|xns_status
@@ -808,6 +836,11 @@ name|xns_getaddr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -938,6 +971,9 @@ argument|addreq
 argument_list|)
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|NS
 block|{
 literal|"ns"
 block|,
@@ -962,6 +998,8 @@ argument|addreq
 argument_list|)
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -2231,6 +2269,9 @@ literal|"Encapsulation Routing"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NS
 if|if
 condition|(
 name|setipdst
@@ -2292,6 +2333,8 @@ literal|"Encapsulation Routing"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|clearaddr
@@ -3891,6 +3934,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_macro
 name|xns_status
 argument_list|(
@@ -4069,6 +4118,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -4942,6 +4996,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -5060,6 +5120,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
