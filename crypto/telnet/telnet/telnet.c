@@ -421,6 +421,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* hack around breakage in sra.c :-( !! */
+end_comment
+
+begin_decl_stmt
 name|cc_t
 name|escape
 decl_stmt|;
