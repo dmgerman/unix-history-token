@@ -2443,6 +2443,9 @@ name|struct
 name|mtx
 name|ste_mtx
 decl_stmt|;
+name|u_int8_t
+name|ste_one_phy
+decl_stmt|;
 block|}
 struct|;
 end_struct
