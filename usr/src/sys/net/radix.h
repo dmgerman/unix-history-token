@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -121,13 +121,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MAXKEYLEN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
 name|rn_dupedkey
 value|rn_u.rn_leaf.rn_Dupedkey
 end_define
@@ -219,23 +212,48 @@ value|{\ 	if (rn_mkfreelist) {\ 		m = rn_mkfreelist; \ 		rn_mkfreelist = (m)->rm
 end_define
 
 begin_struct
-specifier|extern
 struct|struct
 name|radix_node_head
 block|{
-name|struct
-name|radix_node_head
-modifier|*
-name|rnh_next
-decl_stmt|;
 name|struct
 name|radix_node
 modifier|*
 name|rnh_treetop
 decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+function_decl|(
+modifier|*
+name|rnh_add
+function_decl|)
+parameter_list|()
+function_decl|;
+name|struct
+name|radix_node
+modifier|*
+function_decl|(
+modifier|*
+name|rnh_delete
+function_decl|)
+parameter_list|()
+function_decl|;
+name|struct
+name|radix_node
+modifier|*
+function_decl|(
+modifier|*
+name|rnh_match
+function_decl|)
+parameter_list|()
+function_decl|;
 name|int
-name|rnh_af
-decl_stmt|;
+function_decl|(
+modifier|*
+name|rnh_walk
+function_decl|)
+parameter_list|()
+function_decl|;
 name|struct
 name|radix_node
 name|rnh_nodes
@@ -244,8 +262,6 @@ literal|3
 index|]
 decl_stmt|;
 block|}
-modifier|*
-name|radix_node_head
 struct|;
 end_struct
 
