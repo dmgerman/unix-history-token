@@ -488,6 +488,14 @@ name|dinfo
 operator|=
 name|tmp_dinfo
 expr_stmt|;
+name|last
+operator|.
+name|snap_time
+operator|=
+name|cur
+operator|.
+name|snap_time
+expr_stmt|;
 comment|/* 	 * Here what we want to do is refresh our device stats. 	 * getdevs() returns 1 when the device list has changed. 	 * If the device list has changed, we want to go through 	 * the selection process again, in case a device that we 	 * were previously displaying has gone away. 	 */
 switch|switch
 condition|(
