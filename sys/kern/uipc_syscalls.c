@@ -3529,6 +3529,13 @@ name|so_options
 operator|&
 name|SO_NOSIGPIPE
 operator|)
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|MSG_NOSIGNAL
+operator|)
 condition|)
 block|{
 name|PROC_LOCK
