@@ -562,6 +562,11 @@ condition|(
 name|rhost
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|rhost
+operator|!=
+literal|'\0'
 condition|)
 comment|/* note: does not need to be NUL-terminated */
 name|strncpy
@@ -664,6 +669,11 @@ condition|(
 name|rhost
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|rhost
+operator|!=
+literal|'\0'
 condition|)
 name|strncpy
 argument_list|(

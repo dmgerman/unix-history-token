@@ -1040,6 +1040,9 @@ comment|/* 	 * From here on, we must leave retval untouched (unless we 	 * know 
 if|if
 condition|(
 name|rhost
+operator|&&
+operator|*
+name|rhost
 condition|)
 block|{
 name|memset

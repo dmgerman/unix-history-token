@@ -230,6 +230,11 @@ condition|(
 name|rhost
 operator|==
 name|NULL
+operator|||
+operator|*
+name|rhost
+operator|==
+literal|'\0'
 condition|)
 name|rhost
 operator|=
