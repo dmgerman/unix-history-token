@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.42 1997/03/22 02:59:40 jdp Exp $  */
+comment|/*  *	$Id: ld.c,v 1.43 1997/04/11 17:08:56 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2105,6 +2105,16 @@ condition|(
 operator|!
 name|number_of_files
 condition|)
+block|{
+if|if
+condition|(
+name|flag_list_files
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -2112,6 +2122,7 @@ argument_list|,
 literal|"No input files specified"
 argument_list|)
 expr_stmt|;
+block|}
 name|p
 operator|=
 name|file_table
