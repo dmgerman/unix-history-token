@@ -1,30 +1,65 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Cp copies source files to target files.  *   * The global path_t structures "to" and "from" always contain paths to the  * current source and target files, respectively.  Since cp does not  * change directories, these paths can be either absolute or  * dot-realative.  *   * The basic algorithm is to initialize "to" and "from", and then call the  * recursive copy() function to do the actual work.  If "from" is a file,  * copy copies the data.  If "from" is a directory, copy creates the  * corresponding "to" directory, and calls itself recursively on all of  * the entries in the "from" directory.  *   * Instead of handling directory entires in the order they appear one disk,  * copy() does non-directory files before directory files.  *   * There are two reasons to do directories last. The first is efficiency.  * Files tend to be in the same cylinder group as their parent, whereas  * directories tend not to be. Copying files all at once reduces seeking.  *   * Second, deeply nested tree's could use up all the file descriptors if we  * didn't close one directory before recursivly starting on the next.  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David Hitz of Auspex Systems Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1988 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)cp.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * cp copies source files to target files.  *   * The global path_t structures "to" and "from" always contain paths to the  * current source and target files, respectively.  Since cp does not change  * directories, these paths can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and "from", and then call the  * recursive copy() function to do the actual work.  If "from" is a file,  * copy copies the data.  If "from" is a directory, copy creates the  * corresponding "to" directory, and calls itself recursively on all of  * the entries in the "from" directory.  *   * Instead of handling directory entries in the order they appear on disk,  * copy() does non-directory files before directory files.  *   * There are two reasons to do directories last.  The first is efficiency.  * Files tend to be in the same cylinder group as their parent, whereas  * directories tend not to be. Copying files all at once reduces seeking.  *   * Second, deeply nested tree's could use up all the file descriptors if we  * didn't close one directory before recursivly starting on the next.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -54,22 +89,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(1)
-end_define
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|FALSE
-value|(0)
-end_define
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
 
 begin_typedef
 typedef|typedef
@@ -90,28 +123,17 @@ name|path_t
 typedef|;
 end_typedef
 
-begin_function_decl
-name|int
-name|path_set
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|path_append
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
+argument_list|()
+decl_stmt|,
 modifier|*
 name|path_basename
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -123,11 +145,7 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|exit_val
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|my_umask
 decl_stmt|;
 end_decl_stmt
@@ -150,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* I/O buffer -- malloc for best alignment. */
+comment|/* I/O; malloc for best alignment. */
 end_comment
 
 begin_decl_stmt
@@ -200,31 +218,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|usage
-argument_list|()
-end_macro
-
-begin_block
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: cp [-irp] f1 f2; or: cp [-irp] f1 ... fn d\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_function
 name|main
 parameter_list|(
@@ -244,34 +237,27 @@ block|{
 specifier|extern
 name|int
 name|optind
-decl_stmt|;
-specifier|extern
-name|int
-name|opterr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
+decl_stmt|,
+name|errno
 decl_stmt|;
 name|struct
 name|stat
 name|to_stat
 decl_stmt|;
+specifier|register
+name|int
+name|c
+decl_stmt|,
+name|r
+decl_stmt|;
 name|char
 modifier|*
 name|old_to
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
 decl_stmt|;
-name|int
-name|c
-decl_stmt|;
-name|int
-name|r
-decl_stmt|;
-name|opterr
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -329,10 +315,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'R'
+literal|'r'
 case|:
 case|case
-literal|'r'
+literal|'R'
 case|:
 name|recursive_flag
 operator|=
@@ -365,11 +351,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 name|my_umask
 operator|=
 name|umask
@@ -406,7 +390,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: Can't allocate memory for I/O buffer.\n"
+literal|"cp: out of space.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -415,7 +399,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Consume last argument first.      */
+comment|/* Consume last argument first. */
 if|if
 condition|(
 operator|!
@@ -436,7 +420,7 @@ argument_list|(
 name|exit_val
 argument_list|)
 expr_stmt|;
-comment|/*      * Cp has two distinct cases:      *       * Case (1)	  $ cp [-rip] source target      *       * Case (2)	  $ cp [-rip] source1 ... directory      *       * In both cases, source can be either a file or a directory.      *       * In (1), the target becomes a copy of the source. That is, if the      * source is a file, the target will be a file, and likewise for      * directories.      *       * In (2), the real target is not directory, but "directory/source".      */
+comment|/* 	 * Cp has two distinct cases: 	 * 	 * Case (1)	  $ cp [-rip] source target 	 * 	 * Case (2)	  $ cp [-rip] source1 ... directory 	 * 	 * In both cases, source can be either a file or a directory. 	 * 	 * In (1), the target becomes a copy of the source. That is, if the 	 * source is a file, the target will be a file, and likewise for 	 * directories. 	 * 	 * In (2), the real target is not directory, but "directory/source". 	 */
 name|r
 operator|=
 name|stat
@@ -492,7 +476,7 @@ operator|!=
 name|S_IFDIR
 condition|)
 block|{
-comment|/* 	  * Case (1).  Target is not a directory. 	  */
+comment|/* 		 * Case (1).  Target is not a directory. 		 */
 if|if
 condition|(
 name|argc
@@ -532,7 +516,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Case (2).  Target is a directory. 	 */
+comment|/* 		 * Case (2).  Target is a directory. 		 */
 for|for
 control|(
 init|;
@@ -616,9 +600,7 @@ block|{
 name|struct
 name|stat
 name|from_stat
-decl_stmt|;
-name|struct
-name|stat
+decl_stmt|,
 name|to_stat
 decl_stmt|;
 name|int
@@ -651,6 +633,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * This is not an error, but we need to remember that it happened. 	 */
 if|if
 condition|(
 name|stat
@@ -666,8 +649,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-comment|/* 	 * This is not an error, but we need to remember that it happened. 	 */
 name|to_stat
 operator|.
 name|st_ino
@@ -675,9 +656,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|to_stat
@@ -717,7 +696,6 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
-block|}
 block|}
 if|if
 condition|(
@@ -807,7 +785,7 @@ return|return;
 block|}
 name|new_target_dir
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -844,7 +822,7 @@ name|copy_dir
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*      * Preserve old times/modes if necessary.      */
+comment|/* Preserve old times/modes if necessary. */
 if|if
 condition|(
 name|preserve_flag
@@ -939,7 +917,6 @@ argument_list|,
 name|tv
 argument_list|)
 condition|)
-block|{
 name|error
 argument_list|(
 name|to
@@ -947,7 +924,6 @@ operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
@@ -973,17 +949,13 @@ begin_block
 block|{
 name|int
 name|from_fd
-decl_stmt|;
-name|int
+decl_stmt|,
 name|to_fd
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rcount
-decl_stmt|;
-name|int
+decl_stmt|,
 name|wcount
-decl_stmt|;
-name|int
+decl_stmt|,
 name|r
 decl_stmt|;
 name|char
@@ -1026,10 +998,12 @@ name|from_fd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-comment|/*      * In the interactive case, use O_EXCL to notice existing files. If      * the file exists, verify with the user.      */
+comment|/* 	 * In the interactive case, use O_EXCL to notice existing files. If 	 * the file exists, verify with the user. 	 */
 name|to_fd
 operator|=
 name|open
@@ -1104,7 +1078,9 @@ operator|!=
 literal|'y'
 condition|)
 return|return
-name|FALSE
+operator|(
+literal|0
+operator|)
 return|;
 comment|/* Try again. */
 name|to_fd
@@ -1149,7 +1125,9 @@ name|from_fd
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 while|while
@@ -1220,7 +1198,9 @@ name|to_fd
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+operator|(
+literal|1
+operator|)
 return|;
 block|}
 end_block
@@ -1239,8 +1219,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|old_from
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|old_to
 decl_stmt|;
@@ -1248,17 +1227,14 @@ name|struct
 name|direct
 modifier|*
 name|dp
-decl_stmt|;
-name|struct
-name|direct
+decl_stmt|,
 modifier|*
 modifier|*
 name|dir_list
 decl_stmt|;
 name|int
 name|dir_cnt
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|;
 name|dir_cnt
@@ -1304,7 +1280,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * Copy files first.      */
+comment|/* Copy files first. */
 for|for
 control|(
 name|i
@@ -1364,6 +1340,9 @@ literal|'.'
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -1414,6 +1393,9 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -1502,6 +1484,9 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -1531,6 +1516,9 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -1550,7 +1538,7 @@ name|old_from
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Then copy directories.      */
+comment|/* Then copy directories. */
 for|for
 control|(
 name|i
@@ -1603,6 +1591,9 @@ operator|!
 name|old_from
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -1639,6 +1630,9 @@ operator|!
 name|old_to
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -1715,6 +1709,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|exit_val
 operator|=
 literal|1
@@ -1726,12 +1724,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"cp: %s: %s\n"
+argument_list|,
 name|s
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1742,7 +1742,7 @@ comment|/********************************************************************  *
 end_comment
 
 begin_comment
-comment|/*  * These functions manipulate paths in "path_t" structures.  *   * They eliminate multiple slashes in paths when they notice them, and keep  * the path non-slash terminated.  *  * Both path_set() and path_append() return FALSE if the requested name  * would be too long.  */
+comment|/*  * These functions manipulate paths in "path_t" structures.  *   * They eliminate multiple slashes in paths when they notice them, and keep  * the path non-slash terminated.  *  * Both path_set() and path_append() return 0 if the requested name  * would be too long.  */
 end_comment
 
 begin_define
@@ -1752,29 +1752,26 @@ name|STRIP_TRAILING_SLASH
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|while ((p)->p_end> (p)->p_path&& (p)->p_end[-1] == '/') \ 	{ *--(p)->p_end = 0; };
+value|{ \ 	while ((p)->p_end> (p)->p_path&& (p)->p_end[-1] == '/') \ 		*--(p)->p_end = 0; \ 	}
 end_define
 
 begin_comment
 comment|/*  * Move specified string into path.  Convert "" to "." to handle BSD  * semantics for a null path.  Strip trailing slashes.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|path_set
 argument_list|(
-argument|p
-argument_list|,
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|path_t
-modifier|*
 name|p
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|string
+argument_list|)
+specifier|register
+name|path_t
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -1785,9 +1782,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|len
-decl_stmt|;
 if|if
 condition|(
 name|strlen
@@ -1812,7 +1806,9 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 operator|(
@@ -1875,7 +1871,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+operator|(
+literal|1
+operator|)
 return|;
 block|}
 end_block
@@ -1895,6 +1893,7 @@ name|name
 parameter_list|,
 name|len
 parameter_list|)
+specifier|register
 name|path_t
 modifier|*
 name|p
@@ -1931,7 +1930,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*      * The final "+ 1" accounts for the '/' between old path and name.      */
+comment|/* 	 * The final "+ 1" accounts for the '/' between old path and name. 	 */
 if|if
 condition|(
 operator|(
@@ -1969,10 +1968,12 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+literal|0
+operator|)
 return|;
 block|}
-comment|/*      * This code should always be executed, since paths shouldn't      * end in '/'.      */
+comment|/* 	 * This code should always be executed, since paths shouldn't 	 * end in '/'. 	 */
 if|if
 condition|(
 name|p
@@ -2035,7 +2036,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|old
+operator|)
 return|;
 block|}
 end_function
@@ -2120,10 +2123,37 @@ operator|->
 name|p_path
 expr_stmt|;
 return|return
+operator|(
 name|basename
+operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: cp [-ip] f1 f2; or: cp [-irp] f1 ... fn directory\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
