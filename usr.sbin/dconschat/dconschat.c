@@ -151,6 +151,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|DCONS_POLL_OFFLINE
+value|2
+end_define
+
+begin_comment
+comment|/* sec */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RETRY
 value|3
 end_define
@@ -198,6 +209,14 @@ name|int
 name|tc_set
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|poll_hz
+init|=
+name|DCONS_POLL_HZ
 decl_stmt|;
 end_decl_stmt
 
@@ -1866,13 +1885,11 @@ argument|;  	while (
 literal|1
 argument|) { 		if ((dc->flags& F_READY) ==
 literal|0
-argument|&& (++counter %
-literal|200
-argument|) ==
+argument|&& 			(++counter % (poll_hz * DCONS_POLL_OFFLINE)) ==
 literal|0
 argument|) 			dconschat_fetch_header(dc); 		if ((dc->flags& F_READY) !=
 literal|0
-argument|) 			 dconschat_proc_dcons(dc); 		dconschat_proc_socket(dc); 	} 	return (
+argument|) 			dconschat_proc_dcons(dc); 		dconschat_proc_socket(dc); 	} 	return (
 literal|0
 argument|); }  static void usage(void) { 	fprintf(stderr,
 literal|"usage: dconschat [-brvwRT1] [-h hz] [-C port] [-G port]\n"
@@ -1912,8 +1929,7 @@ literal|0
 argument_list|,
 argument|wildcard=
 literal|0
-argument_list|,
-argument|poll_hz = DCONS_POLL_HZ; 	int port[DCONS_NPORT]; 	u_int64_t target =
+argument|; 	int port[DCONS_NPORT]; 	u_int64_t target =
 literal|0
 argument|;  	bzero(&sc, sizeof(sc)); 	dc =&sc; 	dc->flags |= USE_CROM ? F_USE_CROM :
 literal|0
