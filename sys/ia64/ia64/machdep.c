@@ -4120,19 +4120,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|grow_stack
-argument_list|(
-name|p
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|sfp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -4168,11 +4155,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+literal|0
+comment|/* save the floating-point state, if necessary, then copy it. */
+block|ia64_fpstate_save(td, 1); 	sf.sf_uc.uc_mcontext.mc_ownedfp = td->td_md.md_flags& MDP_FPUSED; 	bcopy(&td->td_pcb->pcb_fp, 	      (struct fpreg *)sf.sf_uc.uc_mcontext.mc_fpregs, 	      sizeof(struct fpreg)); 	sf.sf_uc.uc_mcontext.mc_fp_control = td->td_pcb.pcb_fp_control;
+endif|#
+directive|endif
+comment|/* 	 * copy the frame out to userland. 	 */
 if|if
 condition|(
-operator|!
-name|useracc
+name|copyout
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sf
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -4182,9 +4182,9 @@ sizeof|sizeof
 argument_list|(
 name|sf
 argument_list|)
-argument_list|,
-name|VM_PROT_WRITE
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -4206,7 +4206,7 @@ name|sigpid
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig(%d): useracc failed on sig %d\n"
+literal|"sendsig(%d): copyout failed on sig %d\n"
 argument_list|,
 name|p
 operator|->
@@ -4268,36 +4268,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* save the floating-point state, if necessary, then copy it. */
-block|ia64_fpstate_save(td, 1); 	sf.sf_uc.uc_mcontext.mc_ownedfp = td->td_md.md_flags& MDP_FPUSED; 	bcopy(&td->td_pcb->pcb_fp, 	      (struct fpreg *)sf.sf_uc.uc_mcontext.mc_fpregs, 	      sizeof(struct fpreg)); 	sf.sf_uc.uc_mcontext.mc_fp_control = td->td_pcb.pcb_fp_control;
-endif|#
-directive|endif
-comment|/* 	 * copy the frame out to userland. 	 */
-operator|(
-name|void
-operator|)
-name|copyout
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|sf
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|sfp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sf
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
