@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.18	82/06/12	*/
+comment|/*	uipc_syscalls.c	4.19	82/06/14	*/
 end_comment
 
 begin_include
@@ -320,7 +320,7 @@ name|u
 operator|.
 name|u_r
 operator|.
-name|r_val1
+name|r_val2
 index|]
 operator|=
 literal|0
