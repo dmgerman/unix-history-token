@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.59	82/12/17	*/
+comment|/*	uba.c	4.60	82/12/22	*/
 end_comment
 
 begin_include
@@ -2296,11 +2296,19 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"ik.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NIK
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Map a virtual address into users address space. Actually all we  * do is turn on the user mode write protection bits for the particular  * page of memory involved.  */
