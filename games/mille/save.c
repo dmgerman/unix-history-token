@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -80,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unctrl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|"mille.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unctrl.h>
 end_include
 
 begin_ifdef
