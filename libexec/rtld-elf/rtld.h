@@ -191,7 +191,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Shared object descriptor.  *  * Items marked with "(%)" are dynamically allocated, and must be freed  * when the structure is destroyed.  */
+comment|/*  * Shared object descriptor.  *  * Items marked with "(%)" are dynamically allocated, and must be freed  * when the structure is destroyed.  *  * CAUTION: It appears that the JDK port peeks into these structures.  * It looks at "next" and "mapbase" at least.  Don't add new members  * near the front, until this can be straightened out.  */
 end_comment
 
 begin_typedef
@@ -213,32 +213,11 @@ name|Struct_Obj_Entry
 modifier|*
 name|next
 decl_stmt|;
-name|Objlist
-name|dldags
-decl_stmt|;
-comment|/* Object belongs to these dlopened DAGs (%) */
-name|Objlist
-name|dagmembers
-decl_stmt|;
-comment|/* DAG has these members (%) */
 name|char
 modifier|*
 name|path
 decl_stmt|;
 comment|/* Pathname of underlying file (%) */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* Object's filesystem's device */
-name|ino_t
-name|ino
-decl_stmt|;
-comment|/* Object's inode number */
-name|unsigned
-name|long
-name|mark
-decl_stmt|;
-comment|/* Set to "curmark" to avoid repeat visits */
 name|int
 name|refcount
 decl_stmt|;
@@ -438,6 +417,27 @@ name|link_map
 name|linkmap
 decl_stmt|;
 comment|/* for GDB */
+name|Objlist
+name|dldags
+decl_stmt|;
+comment|/* Object belongs to these dlopened DAGs (%) */
+name|Objlist
+name|dagmembers
+decl_stmt|;
+comment|/* DAG has these members (%) */
+name|dev_t
+name|dev
+decl_stmt|;
+comment|/* Object's filesystem's device */
+name|ino_t
+name|ino
+decl_stmt|;
+comment|/* Object's inode number */
+name|unsigned
+name|long
+name|mark
+decl_stmt|;
+comment|/* Set to "curmark" to avoid repeat visits */
 block|}
 name|Obj_Entry
 typedef|;
