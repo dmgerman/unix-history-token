@@ -334,6 +334,10 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 comment|/* XXX perhaps this should be in bfd_section_vma (), but it wouldn't      even compile there, since a bfd pointer isn't actually passed in      all invocations of bfd_section_vma ().  */
+if|if
+condition|(
+name|kernel_debugging
+condition|)
 name|section
 operator|.
 name|addr
