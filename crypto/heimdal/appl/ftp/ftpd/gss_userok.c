@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gss_userok.c,v 1.8 2001/08/05 06:38:57 assar Exp $"
+literal|"$Id: gss_userok.c,v 1.10 2003/03/18 13:56:35 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -289,9 +289,6 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
 if|if
 condition|(
 name|k_hasafs
@@ -310,8 +307,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|esetenv
 argument_list|(
 literal|"KRB5CCNAME"

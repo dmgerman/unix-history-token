@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c,v 1.51.4.1 2002/10/21 14:28:31 joda Exp $"
+literal|"$Id: kerberos5.c,v 1.53 2002/09/20 14:37:46 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

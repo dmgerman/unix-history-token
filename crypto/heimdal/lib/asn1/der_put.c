@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: der_put.c,v 1.27 2001/09/25 23:37:25 assar Exp $"
+literal|"$Id: der_put.c,v 1.28 2003/04/17 07:12:24 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1639,13 +1639,22 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
+literal|15
+expr_stmt|;
 name|s
 operator|->
 name|data
 operator|=
 name|malloc
 argument_list|(
-literal|16
+name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1663,7 +1672,7 @@ name|s
 operator|->
 name|length
 operator|=
-literal|15
+name|len
 expr_stmt|;
 name|tm
 operator|=
@@ -1673,11 +1682,15 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
 operator|->
 name|data
+argument_list|,
+name|len
+operator|+
+literal|1
 argument_list|,
 literal|"%04d%02d%02d%02d%02d%02dZ"
 argument_list|,

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: socket.c,v 1.7 2001/09/03 12:04:23 joda Exp $"
+literal|"$Id: socket.c,v 1.8 2003/04/15 03:26:51 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -993,6 +993,12 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+condition|)
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINVAL
 condition|)
 name|warn
 argument_list|(

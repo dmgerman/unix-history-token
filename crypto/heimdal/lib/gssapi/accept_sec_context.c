@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: accept_sec_context.c,v 1.30 2001/08/29 02:21:09 assar Exp $"
+literal|"$Id: accept_sec_context.c,v 1.33 2003/03/16 17:41:12 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -27,6 +27,7 @@ begin_function
 name|OM_uint32
 name|gsskrb5_register_acceptor_identity
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|identity
@@ -172,6 +173,8 @@ name|kret
 decl_stmt|;
 name|OM_uint32
 name|ret
+init|=
+name|GSS_S_COMPLETE
 decl_stmt|;
 name|krb5_data
 name|indata
@@ -199,11 +202,7 @@ decl_stmt|;
 name|OM_uint32
 name|minor
 decl_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-name|gssapi_krb5_init
+name|GSSAPI_KRB5_INIT
 argument_list|()
 expr_stmt|;
 name|krb5_data_zero
@@ -223,6 +222,26 @@ operator|->
 name|value
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|src_name
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|src_name
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|mech_type
+condition|)
+operator|*
+name|mech_type
+operator|=
+name|GSS_KRB5_MECHANISM
 expr_stmt|;
 if|if
 condition|(
@@ -317,16 +336,14 @@ name|ticket
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|src_name
-operator|!=
-name|NULL
-condition|)
+operator|(
 operator|*
-name|src_name
+name|context_handle
+operator|)
+operator|->
+name|lifetime
 operator|=
-name|NULL
+name|GSS_C_INDEFINITE
 expr_stmt|;
 name|kret
 operator|=
@@ -391,7 +408,7 @@ name|local_port
 argument_list|)
 condition|)
 block|{
-comment|/* Port numbers are expected to be in application_data.value,       * initator's port first */
+comment|/* Port numbers are expected to be in application_data.value, 	 * initator's port first */
 name|krb5_address
 name|initiator_addr
 decl_stmt|,
@@ -610,7 +627,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|free(input_chan_bindings->application_data.value);      input_chan_bindings->application_data.value = NULL;      input_chan_bindings->application_data.length = 0;
+block|free(input_chan_bindings->application_data.value); 	input_chan_bindings->application_data.value = NULL; 	input_chan_bindings->application_data.length = 0;
 endif|#
 directive|endif
 if|if
@@ -870,6 +887,23 @@ goto|goto
 name|failure
 goto|;
 block|}
+name|ret
+operator|=
+name|_gss_DES3_get_mic_compat
+argument_list|(
+name|minor_status
+argument_list|,
+operator|*
+name|context_handle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|failure
+goto|;
 if|if
 condition|(
 name|src_name
@@ -1333,6 +1367,19 @@ operator|*
 name|context_handle
 operator|)
 operator|->
+name|lifetime
+operator|=
+name|ticket
+operator|->
+name|ticket
+operator|.
+name|endtime
+expr_stmt|;
+operator|(
+operator|*
+name|context_handle
+operator|)
+operator|->
 name|flags
 operator|=
 name|flags
@@ -1362,7 +1409,12 @@ condition|)
 operator|*
 name|time_rec
 operator|=
-name|GSS_C_INDEFINITE
+operator|(
+operator|*
+name|context_handle
+operator|)
+operator|->
+name|lifetime
 expr_stmt|;
 if|if
 condition|(
@@ -1448,6 +1500,12 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
+name|output_token
+operator|->
+name|value
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 operator|(
 operator|*
@@ -1468,6 +1526,11 @@ literal|0
 block|krb5_free_ticket (context, ticket);
 endif|#
 directive|endif
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|GSS_S_COMPLETE
 return|;

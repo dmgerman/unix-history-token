@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: config.c,v 1.43 2002/08/29 01:51:07 assar Exp $"
+literal|"$Id: config.c,v 1.46 2003/03/18 00:22:23 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -223,15 +223,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|enable_524
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|enable_kaserver
 init|=
 operator|-
@@ -243,6 +234,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|enable_524
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enable_v4_cross_realm
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -328,22 +337,6 @@ block|,
 literal|"turn on HTTP support"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|KRB4
-block|{
-literal|"kerberos4"
-block|,
-literal|0
-block|,
-name|arg_negative_flag
-block|,
-operator|&
-name|enable_v4
-block|,
-literal|"don't respond to kerberos 4 requests"
-block|}
-block|,
 block|{
 literal|"524"
 block|,
@@ -355,6 +348,35 @@ operator|&
 name|enable_524
 block|,
 literal|"don't respond to 524 requests"
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|KRB4
+block|{
+literal|"kaserver"
+block|,
+literal|'K'
+block|,
+name|arg_flag
+block|,
+operator|&
+name|enable_kaserver
+block|,
+literal|"enable kaserver support"
+block|}
+block|,
+block|{
+literal|"kerberos4"
+block|,
+literal|0
+block|,
+name|arg_flag
+block|,
+operator|&
+name|enable_v4
+block|,
+literal|"respond to kerberos 4 requests"
 block|}
 block|,
 block|{
@@ -370,21 +392,21 @@ block|,
 literal|"realm to serve v4-requests for"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
-literal|"kaserver"
+literal|"kerberos4-cross-realm"
 block|,
-literal|'K'
+literal|0
 block|,
 name|arg_flag
 block|,
 operator|&
-name|enable_kaserver
+name|enable_v4_cross_realm
 block|,
-literal|"enable kaserver support"
+literal|"respond to kerberos 4 requests from foreign realms"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"ports"
 block|,
@@ -1546,11 +1568,43 @@ name|context
 argument_list|,
 name|NULL
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|,
 literal|"kdc"
 argument_list|,
 literal|"enable-kerberos4"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+define|#
+directive|define
+name|enable_v4
+value|0
+endif|#
+directive|endif
+if|if
+condition|(
+name|enable_v4_cross_realm
+operator|==
+operator|-
+literal|1
+condition|)
+name|enable_v4_cross_realm
+operator|=
+name|krb5_config_get_bool_default
+argument_list|(
+name|context
+argument_list|,
+name|NULL
+argument_list|,
+name|FALSE
+argument_list|,
+literal|"kdc"
+argument_list|,
+literal|"enable-kerberos4-cross-realm"
 argument_list|,
 name|NULL
 argument_list|)
@@ -1579,8 +1633,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|enable_http
@@ -1680,7 +1732,10 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
 condition|)
+block|{
 name|v4_realm
 operator|=
 name|strdup
@@ -1688,6 +1743,22 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|v4_realm
+operator|==
+name|NULL
+condition|)
+name|krb5_errx
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1828,6 +1899,21 @@ literal|40
 argument_list|)
 expr_stmt|;
 comment|/* REALM_SZ */
+if|if
+condition|(
+name|v4_realm
+operator|==
+name|NULL
+condition|)
+name|krb5_errx
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
 name|krb_get_lrealm
 argument_list|(
 name|v4_realm

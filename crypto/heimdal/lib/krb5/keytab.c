@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab.c,v 1.53 2002/03/10 23:14:12 assar Exp $"
+literal|"$Id: keytab.c,v 1.55 2003/03/27 03:45:01 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -39,6 +39,31 @@ name|krb5_keytab_data
 modifier|*
 name|tmp
 decl_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|ops
+operator|->
+name|prefix
+argument_list|)
+operator|>
+name|KRB5_KT_PREFIX_MAX_LEN
+operator|-
+literal|1
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"krb5_kt_register; prefix too long"
+argument_list|)
+expr_stmt|;
+return|return
+name|KRB5_KT_NAME_TOOLONG
+return|;
+block|}
 name|tmp
 operator|=
 name|realloc
@@ -735,6 +760,45 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return the type of the `keytab' in the string `prefix of length  * `prefixsize'.  */
+end_comment
+
+begin_function
+name|krb5_error_code
+name|krb5_kt_get_type
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_keytab
+name|keytab
+parameter_list|,
+name|char
+modifier|*
+name|prefix
+parameter_list|,
+name|size_t
+name|prefixsize
+parameter_list|)
+block|{
+name|strlcpy
+argument_list|(
+name|prefix
+argument_list|,
+name|keytab
+operator|->
+name|prefix
+argument_list|,
+name|prefixsize
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Retrieve the name of the keytab `keytab' into `name', `namesize'  * Return 0 or an error.  */
 end_comment
 
@@ -1171,6 +1235,11 @@ name|kt_name
 index|[
 literal|256
 index|]
+decl_stmt|,
+name|kvno_str
+index|[
+literal|25
+index|]
 decl_stmt|;
 name|krb5_unparse_name_fixed
 argument_list|(
@@ -1200,27 +1269,41 @@ name|kt_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kvno
+condition|)
+name|snprintf
+argument_list|(
+name|kvno_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|kvno_str
+argument_list|)
+argument_list|,
+literal|"(kvno %d)"
+argument_list|,
+name|kvno
+argument_list|)
+expr_stmt|;
+else|else
+name|kvno_str
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|krb5_set_error_string
 argument_list|(
 name|context
 argument_list|,
-literal|"failed to find %s%s%d%s in keytab %s"
+literal|"failed to find %s%s in keytab %s"
 argument_list|,
 name|princ
 argument_list|,
-name|kvno
-condition|?
-literal|"("
-else|:
-literal|""
-argument_list|,
-name|kvno
-argument_list|,
-name|kvno
-condition|?
-literal|")"
-else|:
-literal|""
+name|kvno_str
 argument_list|,
 name|kt_name
 argument_list|)

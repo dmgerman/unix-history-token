@@ -70,6 +70,8 @@ begin_decl_stmt
 name|int
 name|usebroken
 decl_stmt|,
+name|usekrb4
+decl_stmt|,
 name|usekrb5
 decl_stmt|,
 name|forwardtkt
@@ -233,6 +235,19 @@ name|args
 index|[]
 init|=
 block|{
+block|{
+name|NULL
+block|,
+literal|'4'
+block|,
+name|arg_flag
+block|,
+operator|&
+name|usekrb4
+block|,
+literal|"use Kerberos 4 authentication"
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -4231,6 +4246,18 @@ operator|++
 index|]
 operator|=
 name|RSH_PROGRAM
+expr_stmt|;
+if|if
+condition|(
+name|usekrb4
+condition|)
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-4"
 expr_stmt|;
 if|if
 condition|(

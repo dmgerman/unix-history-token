@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt.c,v 1.106 2002/09/04 16:26:04 joda Exp $"
+literal|"$Id: get_in_tkt.c,v 1.107 2003/02/16 06:41:25 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2639,6 +2639,8 @@ operator|.
 name|saltvalue
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|add_padata
 argument_list|(
 name|context
@@ -2677,6 +2679,13 @@ argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 block|}
 block|}

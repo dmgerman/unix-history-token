@@ -43,7 +43,7 @@ directive|define
 name|RTLD_GLOBAL
 value|0x100
 comment|/* allow symbols to be global */
-comment|/*  * To be able to intialize, a library may provide a dl_info structure  * that contains functions to be called to initialize and terminate.  */
+comment|/*  * To be able to initialize, a library may provide a dl_info structure  * that contains functions to be called to initialize and terminate.  */
 struct|struct
 name|dl_info
 block|{

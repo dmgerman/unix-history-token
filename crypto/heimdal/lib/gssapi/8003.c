@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: 8003.c,v 1.11 2002/03/10 23:47:39 assar Exp $"
+literal|"$Id: 8003.c,v 1.12 2002/10/31 14:38:49 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -417,7 +417,7 @@ name|u_char
 modifier|*
 name|p
 decl_stmt|;
-comment|/*     * see rfc1964 (section 1.1.1 (Initial Token), and the checksum value     * field's format) */
+comment|/*       * see rfc1964 (section 1.1.1 (Initial Token), and the checksum value       * field's format) */
 name|result
 operator|->
 name|cksumtype
@@ -575,7 +575,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|u_char *tmp;       result->checksum.length = 28 + fwd_data->length;      tmp = realloc(result->checksum.data, result->checksum.length);      if (tmp == NULL)         return ENOMEM;      result->checksum.data = tmp;       p = (u_char*)result->checksum.data + 24;
+block|u_char *tmp;  	result->checksum.length = 28 + fwd_data->length; 	tmp = realloc(result->checksum.data, result->checksum.length); 	if (tmp == NULL) 	    return ENOMEM; 	result->checksum.data = tmp;  	p = (u_char*)result->checksum.data + 24;
 endif|#
 directive|endif
 operator|*
@@ -731,6 +731,14 @@ operator|->
 name|cksumtype
 operator|!=
 literal|0x8003
+operator|||
+name|cksum
+operator|->
+name|checksum
+operator|.
+name|length
+operator|<
+literal|24
 condition|)
 block|{
 operator|*
@@ -864,6 +872,10 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|p
+operator|+=
+literal|4
+expr_stmt|;
 if|if
 condition|(
 name|cksum
@@ -882,10 +894,26 @@ name|GSS_C_DELEG_FLAG
 operator|)
 condition|)
 block|{
-name|p
-operator|+=
-literal|4
+if|if
+condition|(
+name|cksum
+operator|->
+name|checksum
+operator|.
+name|length
+operator|<
+literal|28
+condition|)
+block|{
+operator|*
+name|minor_status
+operator|=
+literal|0
 expr_stmt|;
+return|return
+name|GSS_S_BAD_BINDINGS
+return|;
+block|}
 name|DlgOpt
 operator|=
 operator|(
@@ -906,6 +934,10 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|DlgOpt
@@ -922,10 +954,6 @@ return|return
 name|GSS_S_BAD_BINDINGS
 return|;
 block|}
-name|p
-operator|+=
-literal|2
-expr_stmt|;
 name|fwd_data
 operator|->
 name|length
@@ -948,6 +976,34 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|cksum
+operator|->
+name|checksum
+operator|.
+name|length
+operator|<
+literal|28
+operator|+
+name|fwd_data
+operator|->
+name|length
+condition|)
+block|{
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|GSS_S_BAD_BINDINGS
+return|;
+block|}
 name|fwd_data
 operator|->
 name|data
@@ -977,10 +1033,6 @@ return|return
 name|GSS_S_FAILURE
 return|;
 block|}
-name|p
-operator|+=
-literal|2
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|fwd_data

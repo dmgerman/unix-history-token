@@ -33,7 +33,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getcap.c,v 1.7 1999/11/17 21:11:58 assar Exp $"
+literal|"$Id: getcap.c,v 1.8 2003/04/16 16:23:36 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1015,6 +1015,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|size_t
+name|len
+init|=
+name|topreclen
+operator|+
+name|BFRAG
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1022,9 +1029,7 @@ name|record
 operator|=
 name|malloc
 argument_list|(
-name|topreclen
-operator|+
-name|BFRAG
+name|len
 argument_list|)
 operator|)
 operator|==
@@ -1045,14 +1050,15 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|record
 argument_list|,
 name|toprec
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
-comment|/* XXX: strcpy is safe */
 name|db_p
 operator|=
 name|db_array

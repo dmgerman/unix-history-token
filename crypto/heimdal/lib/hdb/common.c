@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: common.c,v 1.11 2002/09/04 16:32:30 joda Exp $"
+literal|"$Id: common.c,v 1.12 2003/01/14 06:54:32 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -242,8 +242,6 @@ name|value
 decl_stmt|;
 name|int
 name|code
-init|=
-literal|0
 decl_stmt|;
 name|hdb_principal2key
 argument_list|(
@@ -286,6 +284,8 @@ condition|)
 return|return
 name|code
 return|;
+name|code
+operator|=
 name|hdb_value2entry
 argument_list|(
 name|context
@@ -296,6 +296,19 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+name|krb5_data_free
+argument_list|(
+operator|&
+name|value
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|code
+condition|)
+return|return
+name|code
+return|;
 if|if
 condition|(
 name|db
@@ -332,12 +345,6 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
-name|krb5_data_free
-argument_list|(
-operator|&
-name|value
-argument_list|)
-expr_stmt|;
 return|return
 name|code
 return|;

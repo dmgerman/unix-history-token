@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen.c,v 1.49 2002/09/04 15:06:18 joda Exp $"
+literal|"$Id: gen.c,v 1.50 2003/04/17 07:09:18 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,20 +49,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|header
-index|[
-literal|1024
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|headerbase
-index|[
-literal|1024
-index|]
 init|=
 name|STEM
 decl_stmt|;
@@ -182,15 +178,19 @@ if|if
 condition|(
 name|base
 condition|)
-name|strcpy
+name|asprintf
 argument_list|(
+operator|&
 name|headerbase
+argument_list|,
+literal|"%s"
 argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|header
 argument_list|,
 literal|"%s.h"

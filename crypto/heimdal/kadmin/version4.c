@@ -62,7 +62,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: version4.c,v 1.26.2.1 2002/10/21 14:52:59 joda Exp $"
+literal|"$Id: version4.c,v 1.29 2002/10/29 10:33:23 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -88,7 +88,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|make_you_loose_packet
+name|make_you_lose_packet
 parameter_list|(
 name|int
 name|code
@@ -3695,6 +3695,8 @@ operator|.
 name|length
 operator|<
 name|KADM_VERSIZE
+operator|+
+literal|4
 operator|||
 name|strncmp
 argument_list|(
@@ -3708,7 +3710,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_BAD_VER
 argument_list|,
@@ -3764,10 +3766,20 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
+name|rlen
+operator|>
+name|message
+operator|.
+name|length
+operator|-
+name|KADM_VERSIZE
+operator|-
+literal|4
+operator|||
 name|authent
 operator|.
 name|length
-operator|>=
+operator|>
 name|MAX_KTXT_LEN
 condition|)
 block|{
@@ -3784,7 +3796,7 @@ operator|)
 name|rlen
 argument_list|)
 expr_stmt|;
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_LENGTH_ERROR
 argument_list|,
@@ -3858,7 +3870,7 @@ argument_list|,
 literal|"krb5_make_principal"
 argument_list|)
 expr_stmt|;
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NOMEM
 argument_list|,
@@ -3904,7 +3916,7 @@ argument_list|,
 name|principal
 argument_list|)
 expr_stmt|;
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NO_AUTH
 argument_list|,
@@ -3954,7 +3966,7 @@ name|ret
 operator|==
 name|KRB5_KT_NOTFOUND
 condition|)
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NO_AUTH
 argument_list|,
@@ -3963,7 +3975,7 @@ argument_list|)
 expr_stmt|;
 else|else
 comment|/* XXX */
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NO_AUTH
 argument_list|,
@@ -4055,7 +4067,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|ERROR_TABLE_BASE_krb
 operator|+
@@ -4111,7 +4123,7 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NOMEM
 argument_list|,
@@ -4166,7 +4178,7 @@ argument_list|,
 literal|"kadm5_init_with_password_ctx"
 argument_list|)
 expr_stmt|;
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NOMEM
 argument_list|,
@@ -4219,7 +4231,7 @@ argument_list|,
 literal|"decode_packet: bad checksum"
 argument_list|)
 expr_stmt|;
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_BAD_CHK
 argument_list|,
@@ -4270,7 +4282,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|ERROR_TABLE_BASE_krb
 operator|+
@@ -4388,7 +4400,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|make_you_loose_packet
+name|make_you_lose_packet
 argument_list|(
 name|KADM_NO_ENCRYPT
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kinit.c,v 1.90 2002/09/09 22:17:53 joda Exp $"
+literal|"$Id: kinit.c,v 1.90.4.1 2003/05/08 18:58:37 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -168,6 +168,15 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|do_afslog
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -177,15 +186,6 @@ end_ifdef
 begin_decl_stmt
 name|int
 name|get_v4_tgt
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|do_afslog
 init|=
 operator|-
 literal|1
@@ -246,6 +246,8 @@ block|,
 literal|"only convert ticket to version 4"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"afslog"
 block|,
@@ -259,8 +261,6 @@ block|,
 literal|"obtain afs tokens"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"cache"
 block|,
@@ -1726,9 +1726,6 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
 if|if
 condition|(
 name|ret
@@ -1740,6 +1737,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KRB4
 comment|/* only do this if it's a general renew-my-tgt request */
 if|if
 condition|(
@@ -1756,6 +1756,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|do_afslog
@@ -1775,8 +1777,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|krb5_free_creds
 argument_list|(
 name|context
@@ -3160,6 +3160,8 @@ operator|&
 name|get_v4_tgt
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|do_afslog
@@ -3188,8 +3190,6 @@ operator|&
 name|do_afslog
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3367,6 +3367,8 @@ argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|do_afslog
@@ -3385,8 +3387,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|argc
@@ -3419,6 +3419,8 @@ name|KRB4
 name|dest_tkt
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|k_hasafs
@@ -3427,8 +3429,6 @@ condition|)
 name|k_unlog
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|krb5_cc_close

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999, 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: string2key.c,v 1.19 2002/04/18 10:18:07 joda Exp $"
+literal|"$Id: string2key.c,v 1.20 2003/03/25 12:28:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -68,7 +68,7 @@ name|char
 modifier|*
 name|keytype_str
 init|=
-literal|"des-cbc-md5"
+literal|"des3-cbc-sha1"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,10 @@ decl_stmt|;
 name|krb5_keyblock
 name|key
 decl_stmt|;
+name|char
+modifier|*
+name|e
+decl_stmt|;
 name|krb5_string_to_key_salt
 argument_list|(
 name|context
@@ -309,11 +313,26 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
+name|krb5_enctype_to_string
+argument_list|(
+name|context
+argument_list|,
+name|enctype
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: "
-argument_list|,
 name|label
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|": "
 argument_list|)
 expr_stmt|;
 for|for
@@ -494,12 +513,33 @@ operator|&
 name|etype
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if(ret) { 	krb5_keytype keytype; 	ret = krb5_string_to_keytype(context, keytype_str,&keytype); 	ret = krb5_keytype_to_enctype(context, keytype,&etype);     }
-endif|#
-directive|endif
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|krb5_keytype
+name|keytype
+decl_stmt|;
+name|int
+modifier|*
+name|etypes
+decl_stmt|;
+name|unsigned
+name|num
+decl_stmt|;
+name|ret
+operator|=
+name|krb5_string_to_keytype
+argument_list|(
+name|context
+argument_list|,
+name|keytype_str
+argument_list|,
+operator|&
+name|keytype
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -517,6 +557,88 @@ argument_list|,
 name|keytype_str
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|krb5_keytype_to_enctypes
+argument_list|(
+name|context
+argument_list|,
+name|keytype
+argument_list|,
+operator|&
+name|num
+argument_list|,
+operator|&
+name|etypes
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|krb5_err
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+name|ret
+argument_list|,
+literal|"%s"
+argument_list|,
+name|keytype_str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|==
+literal|0
+condition|)
+name|krb5_errx
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"there are no encryption types for that keytype"
+argument_list|)
+expr_stmt|;
+name|etype
+operator|=
+name|etypes
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|krb5_enctype_to_string
+argument_list|(
+name|context
+argument_list|,
+name|etype
+argument_list|,
+operator|&
+name|keytype_str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|>
+literal|1
+operator|&&
+name|version5
+condition|)
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"ambiguous keytype, using %s"
+argument_list|,
+name|keytype_str
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -539,6 +661,20 @@ operator|||
 name|version4
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|version5
+condition|)
+block|{
+name|etype
+operator|=
+name|ETYPE_DES_CBC_CRC
+expr_stmt|;
+block|}
+else|else
+block|{
 name|krb5_errx
 argument_list|(
 name|context
@@ -548,6 +684,8 @@ argument_list|,
 literal|"DES is the only valid keytype for AFS and Kerberos 4"
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|version5
@@ -762,7 +900,7 @@ name|password
 argument_list|,
 name|salt
 argument_list|,
-literal|"Kerberos v5 key"
+literal|"Kerberos 5 (%s)"
 argument_list|)
 expr_stmt|;
 name|krb5_free_salt
@@ -810,7 +948,7 @@ name|password
 argument_list|,
 name|salt
 argument_list|,
-literal|"Kerberos v4 key"
+literal|"Kerberos 4"
 argument_list|)
 expr_stmt|;
 block|}
@@ -854,7 +992,7 @@ name|password
 argument_list|,
 name|salt
 argument_list|,
-literal|"AFS key"
+literal|"AFS"
 argument_list|)
 expr_stmt|;
 block|}

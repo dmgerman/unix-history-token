@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: context.c,v 1.81.2.1 2002/10/21 14:33:34 joda Exp $"
+literal|"$Id: context.c,v 1.83 2003/03/10 00:24:13 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -762,6 +762,12 @@ argument_list|,
 literal|"dns_lookup_kdc"
 argument_list|)
 expr_stmt|;
+name|context
+operator|->
+name|default_cc_name
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -979,6 +985,19 @@ name|krb5_context
 name|context
 parameter_list|)
 block|{
+if|if
+condition|(
+name|context
+operator|->
+name|default_cc_name
+condition|)
+name|free
+argument_list|(
+name|context
+operator|->
+name|default_cc_name
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|context

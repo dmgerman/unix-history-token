@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strlwr.c,v 1.4 1999/12/02 16:58:53 joda Exp $"
+literal|"$Id: strlwr.c,v 1.5 2003/04/14 11:44:34 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -83,6 +83,10 @@ name|s
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: warn.c,v 1.13 2001/05/07 21:04:34 assar Exp $"
+literal|"$Id: warn.c,v 1.14 2003/04/16 16:13:08 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -143,22 +143,32 @@ condition|(
 name|fmt
 condition|)
 block|{
-name|strcat
+name|strlcat
 argument_list|(
 name|xfmt
 argument_list|,
 literal|"%s"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xfmt
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|do_errtext
 condition|)
-name|strcat
+name|strlcat
 argument_list|(
 name|xfmt
 argument_list|,
 literal|": "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xfmt
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vasprintf
@@ -199,11 +209,16 @@ name|char
 modifier|*
 name|err_msg
 decl_stmt|;
-name|strcat
+name|strlcat
 argument_list|(
 name|xfmt
 argument_list|,
 literal|"%s"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|xfmt
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|err_str

@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.32 2002/08/23 19:11:03 assar Exp $"
+literal|"$Id: main.c,v 1.33 2002/10/29 09:47:51 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,6 +111,21 @@ operator|&
 name|lineedit
 block|,
 literal|"Turn off line editing"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|'n'
+block|,
+name|arg_negative_flag
+block|,
+operator|&
+name|autologin
+block|,
+literal|"Turn off auto-login"
 block|,
 name|NULL
 block|}

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadmin.c,v 1.41 2001/08/10 08:06:13 joda Exp $"
+literal|"$Id: kadmin.c,v 1.42 2003/03/31 10:20:19 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -132,7 +132,7 @@ block|,
 operator|&
 name|keytab
 block|,
-literal|"keytab for authentication pricipal"
+literal|"keytab for authentication principal"
 block|}
 block|,
 block|{

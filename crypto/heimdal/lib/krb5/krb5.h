@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: krb5.h,v 1.205 2002/09/03 17:31:47 joda Exp $ */
+comment|/* $Id: krb5.h,v 1.209 2003/03/16 18:30:02 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -274,7 +274,7 @@ block|,
 name|ENCTYPE_DES_PCBC_NONE
 init|=
 name|ETYPE_DES_PCBC_NONE
-block|, }
+block|}
 enum|;
 end_enum
 
@@ -568,6 +568,14 @@ block|,
 name|KEYTYPE_DES3
 init|=
 literal|7
+block|,
+name|KEYTYPE_AES128
+init|=
+literal|17
+block|,
+name|KEYTYPE_AES256
+init|=
+literal|18
 block|,
 name|KEYTYPE_ARCFOUR
 init|=
@@ -1403,6 +1411,10 @@ name|krb5_addresses
 modifier|*
 name|ignore_addresses
 decl_stmt|;
+name|char
+modifier|*
+name|default_cc_name
+decl_stmt|;
 block|}
 name|krb5_context_data
 typedef|;
@@ -1599,6 +1611,13 @@ modifier|*
 name|krb5_keytab
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|KRB5_KT_PREFIX_MAX_LEN
+value|30
+end_define
 
 begin_struct
 struct|struct

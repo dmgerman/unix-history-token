@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: copy.c,v 1.8 2002/08/12 15:09:12 joda Exp $"
+literal|"$Id: copy.c,v 1.9 2003/01/16 18:59:03 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -609,17 +609,6 @@ name|value
 operator|=
 operator|&
 name|help_flag
-expr_stmt|;
-name|args
-index|[
-name|i
-operator|++
-index|]
-operator|.
-name|value
-operator|=
-operator|&
-name|verbose_flag
 expr_stmt|;
 if|if
 condition|(

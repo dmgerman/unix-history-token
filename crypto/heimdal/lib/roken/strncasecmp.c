@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strncasecmp.c,v 1.2 1999/12/02 16:58:53 joda Exp $"
+literal|"$Id: strncasecmp.c,v 1.3 2003/04/14 11:46:04 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -78,12 +78,20 @@ literal|0
 operator|&&
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s1
 argument_list|)
 operator|==
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s2
 argument_list|)
@@ -121,12 +129,20 @@ return|;
 return|return
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s1
 argument_list|)
 operator|-
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s2
 argument_list|)

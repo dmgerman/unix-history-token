@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: ftpd_locl.h,v 1.12 2000/09/19 13:16:44 assar Exp $ */
+comment|/* $Id: ftpd_locl.h,v 1.13 2003/03/18 13:37:13 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -599,6 +599,25 @@ include|#
 directive|include
 file|<krb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+end_if
 
 begin_include
 include|#

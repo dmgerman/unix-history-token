@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_file.c,v 1.11.4.1 2002/10/21 14:35:47 joda Exp $"
+literal|"$Id: keytab_file.c,v 1.12 2002/09/24 16:43:30 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

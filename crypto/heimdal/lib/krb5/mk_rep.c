@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_rep.c,v 1.20 2002/09/04 16:26:05 joda Exp $"
+literal|"$Id: mk_rep.c,v 1.21 2002/12/19 13:30:36 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -298,20 +298,18 @@ argument_list|,
 name|crypto
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-block|{
 name|free
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
 return|return
 name|ret
 return|;
-block|}
 name|ASN1_MALLOC_ENCODE
 argument_list|(
 name|AP_REP

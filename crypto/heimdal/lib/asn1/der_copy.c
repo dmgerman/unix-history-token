@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: der_copy.c,v 1.9 2001/09/25 13:39:25 assar Exp $"
+literal|"$Id: der_copy.c,v 1.10 2003/04/17 07:13:08 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -34,15 +34,10 @@ block|{
 operator|*
 name|to
 operator|=
-name|malloc
-argument_list|(
-name|strlen
+name|strdup
 argument_list|(
 operator|*
 name|from
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -55,15 +50,6 @@ condition|)
 return|return
 name|ENOMEM
 return|;
-name|strcpy
-argument_list|(
-operator|*
-name|to
-argument_list|,
-operator|*
-name|from
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;

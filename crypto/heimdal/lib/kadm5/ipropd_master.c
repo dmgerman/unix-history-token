@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ipropd_master.c,v 1.28 2002/08/16 18:27:53 joda Exp $"
+literal|"$Id: ipropd_master.c,v 1.29 2003/03/19 11:56:38 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,6 +28,16 @@ specifier|static
 name|krb5_log_facility
 modifier|*
 name|log_facility
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|slave_stats_file
+init|=
+name|KADM5_SLAVE_STATS
 decl_stmt|;
 end_decl_stmt
 
@@ -526,6 +536,30 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+if|if
+condition|(
+name|s
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|s
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|s
 operator|->
 name|flags
@@ -2046,7 +2080,7 @@ block|{
 name|char
 name|str
 index|[
-literal|30
+literal|100
 index|]
 decl_stmt|;
 name|rtbl_t
@@ -2068,7 +2102,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|KADM5_SLAVE_STATS
+name|slave_stats_file
 argument_list|,
 literal|"w"
 argument_list|)
@@ -2347,6 +2381,8 @@ argument_list|,
 literal|"Up"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|strftime
 argument_list|(
 name|str
@@ -2356,7 +2392,7 @@ argument_list|(
 name|str
 argument_list|)
 argument_list|,
-literal|"%Y-%m-%d %H:%M:%S"
+literal|"%Y-%m-%d %H:%M:%S %Z"
 argument_list|,
 name|localtime
 argument_list|(
@@ -2364,6 +2400,20 @@ operator|&
 name|slaves
 operator|->
 name|seen
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|strlcpy
+argument_list|(
+name|str
+argument_list|,
+literal|"Unknown time"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2488,6 +2538,19 @@ operator|&
 name|database
 block|,
 literal|"database"
+block|,
+literal|"file"
+block|}
+block|,
+block|{
+literal|"slave-stats-file"
+block|,
+literal|0
+block|,
+name|arg_string
+block|,
+operator|&
+name|slave_stats_file
 block|,
 literal|"file"
 block|}
@@ -2960,6 +3023,15 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|SLAVE_F_DEAD
+condition|)
+continue|continue;
 name|FD_SET
 argument_list|(
 name|p
@@ -3069,6 +3141,16 @@ name|p
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|SLAVE_F_DEAD
+condition|)
+continue|continue;
 name|send_diffs
 argument_list|(
 name|context
@@ -3082,6 +3164,7 @@ argument_list|,
 name|current_version
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3217,6 +3300,16 @@ name|p
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|SLAVE_F_DEAD
+condition|)
+continue|continue;
 if|if
 condition|(
 name|FD_ISSET
@@ -3253,6 +3346,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

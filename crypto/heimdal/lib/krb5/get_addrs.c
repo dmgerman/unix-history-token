@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_addrs.c,v 1.44 2002/08/16 20:50:15 joda Exp $"
+literal|"$Id: get_addrs.c,v 1.45 2003/01/25 15:19:49 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -579,6 +579,15 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
 name|memcmp
 argument_list|(
 name|ifa
@@ -755,6 +764,15 @@ name|IFF_UP
 operator|)
 operator|==
 literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|==
+name|NULL
 condition|)
 continue|continue;
 if|if

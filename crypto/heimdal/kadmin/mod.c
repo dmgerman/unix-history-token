@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mod.c,v 1.10 2000/07/11 14:34:56 joda Exp $"
+literal|"$Id: mod.c,v 1.11 2002/12/03 14:12:30 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -584,6 +584,8 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
 name|edit_entry
 argument_list|(
 operator|&
@@ -596,7 +598,10 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|out
+goto|;
 block|}
 else|else
 block|{
@@ -632,6 +637,8 @@ argument_list|,
 literal|"kadm5_modify_principal"
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|kadm5_free_principal_ent
 argument_list|(
 name|kadm_handle

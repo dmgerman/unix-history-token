@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.67.2.1 2002/10/21 14:31:27 joda Exp $"
+literal|"$Id: klist.c,v 1.68.2.1 2003/05/08 18:59:56 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2312,6 +2312,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KRB4 */
+end_comment
+
 begin_comment
 comment|/*  * Print a list of all AFS tokens  */
 end_comment
@@ -2477,9 +2486,19 @@ condition|)
 continue|continue;
 name|t
 index|[
+name|min
+argument_list|(
 name|parms
 operator|.
 name|out_size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+operator|-
+literal|1
+argument_list|)
 index|]
 operator|=
 literal|0
@@ -2721,15 +2740,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KRB4 */
-end_comment
 
 begin_comment
 comment|/*  * display the ccache in `cred_cache'  */
@@ -3038,6 +3048,11 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -3046,11 +3061,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3156,6 +3166,8 @@ block|,
 name|NULL
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"tokens"
 block|,
@@ -3171,8 +3183,6 @@ block|,
 name|NULL
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"v5"
 block|,
@@ -3419,15 +3429,15 @@ argument_list|,
 name|do_flags
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
 if|if
 condition|(
 operator|!
 name|do_test
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KRB4
 if|if
 condition|(
 name|do_v4
@@ -3448,6 +3458,8 @@ name|do_verbose
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|do_tokens
@@ -3458,8 +3470,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|do_v4
-operator|||
 name|do_v5
 condition|)
 name|printf
@@ -3467,6 +3477,21 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KRB4
+elseif|else
+if|if
+condition|(
+name|do_v4
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|display_tokens
 argument_list|(
 name|do_verbose
@@ -3474,8 +3499,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 return|return
 name|exit_status
 return|;

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krbhst.c,v 1.41 2002/08/16 18:48:19 nectar Exp $"
+literal|"$Id: krbhst.c,v 1.43.2.1 2003/04/22 15:00:38 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -389,6 +389,20 @@ name|krb5_krbhst_info
 modifier|*
 name|hi
 decl_stmt|;
+name|size_t
+name|len
+init|=
+name|strlen
+argument_list|(
+name|rr
+operator|->
+name|u
+operator|.
+name|srv
+operator|->
+name|target
+argument_list|)
+decl_stmt|;
 name|hi
 operator|=
 name|calloc
@@ -401,16 +415,7 @@ operator|*
 name|hi
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
-name|rr
-operator|->
-name|u
-operator|.
-name|srv
-operator|->
-name|target
-argument_list|)
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -501,7 +506,7 @@ name|srv
 operator|->
 name|port
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|hi
 operator|->
@@ -514,6 +519,10 @@ operator|.
 name|srv
 operator|->
 name|target
+argument_list|,
+name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_time.c,v 1.5 1999/12/02 16:58:51 joda Exp $"
+literal|"$Id: parse_time.c,v 1.6 2003/03/07 15:51:06 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|units
 name|time_units
 index|[]
