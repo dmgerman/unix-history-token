@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3092,6 +3092,34 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uhp
+operator|->
+name|uh_map
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"no mem for unibus map"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|uhp
+operator|->
+name|uh_map
+argument_list|,
+name|UNAMSIZ
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|map
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ubainitmaps
