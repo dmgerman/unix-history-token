@@ -302,7 +302,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.16 2002/06/06 10:48:35 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.17 2002/06/27 14:29:17 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1946,8 +1946,6 @@ decl_stmt|;
 block|{
 name|int
 name|flag
-decl_stmt|,
-name|err
 decl_stmt|;
 name|flag
 operator|=
@@ -2102,8 +2100,6 @@ operator|-
 literal|2
 operator|&&
 operator|(
-name|err
-operator|=
 name|ioctl
 argument_list|(
 name|fd
@@ -2113,6 +2109,8 @@ argument_list|,
 operator|&
 name|flag
 argument_list|)
+operator|!=
+literal|0
 operator|)
 condition|)
 name|perror

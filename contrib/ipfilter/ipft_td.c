@@ -234,7 +234,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_td.c,v 2.2.2.2 2002/02/22 15:32:54 darrenr Exp $"
+literal|"@(#)$Id: ipft_td.c,v 2.2.2.3 2002/06/27 14:29:17 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,8 +570,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|,
-name|dots
-decl_stmt|,
 name|slen
 decl_stmt|,
 name|extra
@@ -743,14 +741,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|dots
-operator|=
 name|count_dots
 argument_list|(
 name|dst
 argument_list|)
-operator|)
 operator|==
 literal|4
 condition|)

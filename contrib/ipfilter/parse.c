@@ -5240,11 +5240,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
-name|secflag
-init|=
-literal|0
-decl_stmt|;
 name|s
 operator|=
 literal|" opt "
@@ -5337,11 +5332,6 @@ operator|=
 literal|","
 expr_stmt|;
 block|}
-else|else
-name|secflag
-operator|=
-literal|1
-expr_stmt|;
 block|}
 if|if
 condition|(
