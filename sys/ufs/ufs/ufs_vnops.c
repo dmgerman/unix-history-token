@@ -2004,6 +2004,7 @@ operator|(
 name|EROFS
 operator|)
 return|;
+comment|/* 		 * Privileged processes in jail() are permitted to modify 		 * arbitrary user flags on files, but are not permitted 		 * to modify system flags. 		 */
 if|if
 condition|(
 name|cred
