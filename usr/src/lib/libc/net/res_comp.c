@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.4 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,6 +586,8 @@ name|cp
 operator|++
 operator|=
 name|l
+operator|%
+literal|256
 expr_stmt|;
 return|return
 operator|(
@@ -926,6 +928,8 @@ control|(
 name|cpp
 operator|=
 name|dnptrs
+operator|+
+literal|1
 init|;
 name|cpp
 operator|<
