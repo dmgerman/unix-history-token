@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.72 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.73 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.72 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.73 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -6147,9 +6147,6 @@ literal|0
 decl_stmt|;
 name|long
 name|dfsize
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|int
 name|flags
@@ -6213,6 +6210,41 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+name|w
+operator|->
+name|w_name
+index|[
+literal|0
+index|]
+operator|=
+literal|'d'
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|w
+operator|->
+name|w_name
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|dfsize
+operator|=
+name|st
+operator|.
+name|st_size
+expr_stmt|;
+else|else
+name|dfsize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|w
@@ -6623,33 +6655,6 @@ index|[
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'D'
-case|:
-comment|/* data file name */
-if|if
-condition|(
-name|stat
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|1
-index|]
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|>=
-literal|0
-condition|)
-name|dfsize
-operator|=
-name|st
-operator|.
-name|st_size
 expr_stmt|;
 break|break;
 case|case
