@@ -3310,11 +3310,6 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|mtx
-modifier|*
-name|inter_lkp
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
