@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
 end_comment
 
 begin_comment
@@ -25,6 +25,16 @@ directive|define
 name|OBJECT_FORMAT_ELF
 end_define
 
+begin_comment
+comment|/* ??? Move all SDB stuff from alpha.h to osf.h.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SDB_DEBUGGING_INFO
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -47,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
+value|DWARF2_DEBUG
 end_define
 
 begin_undef
@@ -79,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{G*} %{relax:-relax} %{gdwarf*:-no-mdebug}"
+value|"%{G*} %{relax:-relax} %{!gstabs*:-no-mdebug}%{gstabs*:-mdebug}"
 end_define
 
 begin_undef
@@ -113,20 +123,8 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {								\   if (write_symbols != DWARF2_DEBUG)				\     {								\       alpha_write_verstamp (FILE);				\       output_file_directive (FILE, main_input_filename);	\     }								\   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.set noreorder\n");				\   if (TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)	\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (alpha_cpu == PROCESSOR_EV6 ? "ev6"		\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\ } while (0)
+value|do {								\   if (write_symbols == DBX_DEBUG)				\     {								\       alpha_write_verstamp (FILE);				\       output_file_directive (FILE, main_input_filename);	\     }								\   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.set noreorder\n");				\   if (TARGET_EXPLICIT_RELOCS)					\     fprintf (FILE, "\t.set nomacro\n");				\   if (TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)	\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (TARGET_CPU_EV6 ? "ev6"				\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\ } while (0)
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|output_file_directive
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Attach a special .ident directive to the end of the file to identify    the version of GCC which compiled this code.  The format of the    .ident string is patterned after the ones produced by native svr4    C compilers.  */
-end_comment
 
 begin_undef
 undef|#
@@ -138,65 +136,8 @@ begin_define
 define|#
 directive|define
 name|IDENT_ASM_OP
-value|".ident"
+value|"\t.ident\t"
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IDENTIFY_WITH_IDENT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_GCC
-parameter_list|(
-name|FILE
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_IDENTIFY_LANGUAGE
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|fprintf(FILE, "\t%s \"GCC (%s) %s\"\n", IDENT_ASM_OP,	\ 	 lang_identify(), version_string)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_END
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_END
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {				 				\      if (!flag_no_ident)					\ 	fprintf ((FILE), "\t%s\t\"GCC: (GNU) %s\"\n",		\ 		 IDENT_ASM_OP, version_string);			\    } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Allow #sccs in preprocessor.  */
@@ -228,7 +169,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|fprintf (FILE, "\t%s\t\"%s\"\n", IDENT_ASM_OP, NAME);
+value|fprintf (FILE, "%s\"%s\"\n", IDENT_ASM_OP, NAME);
 end_define
 
 begin_comment
@@ -245,7 +186,7 @@ begin_define
 define|#
 directive|define
 name|SKIP_ASM_OP
-value|".zero"
+value|"\t.zero\t"
 end_define
 
 begin_undef
@@ -264,7 +205,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf (FILE, "\t%s\t%u\n", SKIP_ASM_OP, (SIZE))
+value|fprintf (FILE, "%s%u\n", SKIP_ASM_OP, (SIZE))
 end_define
 
 begin_comment
@@ -281,7 +222,7 @@ begin_define
 define|#
 directive|define
 name|ALIGN_ASM_OP
-value|".align"
+value|"\t.align\t"
 end_define
 
 begin_ifndef
@@ -372,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|COMMON_ASM_OP
-value|".comm"
+value|"\t.comm\t"
 end_define
 
 begin_undef
@@ -395,7 +336,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "\t%s\t", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
+value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
 end_define
 
 begin_comment
@@ -422,23 +363,18 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\   assemble_name (FILE, NAME);						\   putc (',', FILE);							\   fprintf (FILE, TYPE_OPERAND_FMT, "object");				\   putc ('\n', FILE);							\   if (!flag_inhibit_size_directive)					\     {									\       fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, ",%d\n", (SIZE));					\     }									\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE));					\ } while (0)
-end_define
-
-begin_comment
-comment|/* This is the pseudo-op used to generate a 64-bit word of data with a    specific value in some section.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INT_ASM_OP
-value|".quad"
+value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   fprintf (FILE, "%s", TYPE_ASM_OP);					\   assemble_name (FILE, NAME);						\   putc (',', FILE);							\   fprintf (FILE, TYPE_OPERAND_FMT, "object");				\   putc ('\n', FILE);							\   if (!flag_inhibit_size_directive)					\     {									\       fprintf (FILE, "%s", SIZE_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, ",%d\n", (SIZE));					\     }									\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE));					\ } while (0)
 end_define
 
 begin_comment
 comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.      This value is really 2^63.  Since gcc figures the alignment in bits,    we could only potentially get to 2^60 on suitible hosts.  Due to other    considerations in varasm, we must restrict this to what fits in an int.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MAX_OFILE_ALIGNMENT
+end_undef
 
 begin_define
 define|#
@@ -462,7 +398,7 @@ begin_define
 define|#
 directive|define
 name|ASCII_DATA_ASM_OP
-value|".ascii"
+value|"\t.ascii\t"
 end_define
 
 begin_comment
@@ -492,62 +428,46 @@ begin_define
 define|#
 directive|define
 name|CONST_SECTION_ASM_OP
-value|".section\t.rodata"
-end_define
-
-begin_comment
-comment|/* Define the pseudo-ops used to switch to the .ctors and .dtors sections.     Note that we want to give these sections the SHF_WRITE attribute    because these sections will actually contain data (i.e. tables of    addresses of functions in the current root executable or shared library    file) and, in the case of a shared library, the relocatable addresses    will have to be properly resolved/relocated (and then written into) by    the dynamic linker when it actually attaches the given shared library    to the executing process.  (Note that on SVR4, you may wish to use the    `-z text' option to the ELF linker, when building a shared library, as    an additional check that you are doing everything right.  But if you do    use the `-z text' option when building a shared library, you will get    errors unless the .ctors and .dtors sections are marked as writable    via the SHF_WRITE attribute.)  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CTORS_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CTORS_SECTION_ASM_OP
-value|".section\t.ctors,\"aw\""
+value|"\t.section\t.rodata"
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|DTORS_SECTION_ASM_OP
+name|BSS_SECTION_ASM_OP
 end_undef
-
-begin_define
-define|#
-directive|define
-name|DTORS_SECTION_ASM_OP
-value|".section\t.dtors,\"aw\""
-end_define
-
-begin_comment
-comment|/* Handle the small data sections.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|BSS_SECTION_ASM_OP
-value|".section\t.bss"
+value|"\t.section\t.bss"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SBSS_SECTION_ASM_OP
+end_undef
 
 begin_define
 define|#
 directive|define
 name|SBSS_SECTION_ASM_OP
-value|".section\t.sbss,\"aw\""
+value|"\t.section\t.sbss,\"aw\""
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SDATA_SECTION_ASM_OP
+end_undef
 
 begin_define
 define|#
 directive|define
 name|SDATA_SECTION_ASM_OP
-value|".section\t.sdata,\"aw\""
+value|"\t.section\t.sdata,\"aw\""
 end_define
 
 begin_comment
@@ -564,7 +484,7 @@ begin_define
 define|#
 directive|define
 name|INIT_SECTION_ASM_OP
-value|".section\t.init"
+value|"\t.section\t.init"
 end_define
 
 begin_undef
@@ -577,8 +497,41 @@ begin_define
 define|#
 directive|define
 name|FINI_SECTION_ASM_OP
-value|".section\t.fini"
+value|"\t.section\t.fini"
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_SUBSECTION_ORDERING
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_SECTION_START_OP
+value|"\t.subsection\t-1"
+end_define
+
+begin_comment
+comment|/* Output assembly directive to move to the beginning of current section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_SECTION_START
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|fprintf ((FILE), "%s\n", ASM_SECTION_START_OP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* A default list of other sections which we might be "in" at any given    time.  For targets that use additional sections (e.g. .tdesc) you    should override this definition in the target-specific file which    includes this file.  */
@@ -594,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_ctors, in_dtors, in_sbss, in_sdata
+value|in_const, in_sbss, in_sdata
 end_define
 
 begin_comment
@@ -612,8 +565,34 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION						\   SECTION_FUNCTION_TEMPLATE(ctors_section, in_ctors, CTORS_SECTION_ASM_OP) \   SECTION_FUNCTION_TEMPLATE(dtors_section, in_dtors, DTORS_SECTION_ASM_OP) \   SECTION_FUNCTION_TEMPLATE(sbss_section, in_sbss, SBSS_SECTION_ASM_OP)	\   SECTION_FUNCTION_TEMPLATE(sdata_section, in_sdata, SDATA_SECTION_ASM_OP)
+value|CONST_SECTION_FUNCTION						\   SECTION_FUNCTION_TEMPLATE(sbss_section, in_sbss, SBSS_SECTION_ASM_OP)	\   SECTION_FUNCTION_TEMPLATE(sdata_section, in_sdata, SDATA_SECTION_ASM_OP)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sbss_section
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sdata_section
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_undef
 undef|#
@@ -629,21 +608,25 @@ parameter_list|()
 value|const_section ()
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|text_section
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_undef
+undef|#
+directive|undef
+name|CONST_SECTION_FUNCTION
+end_undef
 
 begin_define
 define|#
 directive|define
 name|CONST_SECTION_FUNCTION
 define|\
-value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
+value|void								\ const_section ()						\ {								\   if (!USE_CONST_SECTION)					\     text_section();						\   else if (in_section != in_const)				\     {								\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);	\       in_section = in_const;					\     }								\ }
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SECTION_FUNCTION_TEMPLATE
+end_undef
 
 begin_define
 define|#
@@ -657,79 +640,52 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|void FN ()								\ {									\   if (in_section != ENUM)						\     {									\       fprintf (asm_out_file, "%s\n", OP);				\       in_section = ENUM;						\     }									\ }
+value|void FN ()					\ {						\   if (in_section != ENUM)			\     {						\       fprintf (asm_out_file, "%s\n", OP);	\       in_section = ENUM;			\     }						\ }
 end_define
 
 begin_comment
-comment|/* Switch into a generic section.    This is currently only used to support section attributes.     We make the section read-only and executable for a function decl,    read-only for a const data decl, and writable for a non-const data decl.  */
+comment|/* Switch into a generic section.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_SECTION_NAME
+name|TARGET_ASM_NAMED_SECTION
+value|default_elf_asm_named_section
+end_define
+
+begin_comment
+comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.     Set SECNUM to: 	0	.text 	1	.rodata 	2	.data 	3	.sdata 	4	.bss 	5	.sbss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DO_SELECT_SECTION
 parameter_list|(
-name|FILE
+name|SECNUM
 parameter_list|,
 name|DECL
-parameter_list|,
-name|NAME
 parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|fprintf (FILE, ".section\t%s,\"%s\",@progbits\n", NAME, \ 	   (DECL)&& TREE_CODE (DECL) == FUNCTION_DECL ? "ax" : \ 	   (DECL)&& DECL_READONLY_SECTION (DECL, RELOC) ? "a" : "aw")
+value|do								\      {								\        HOST_WIDE_INT size;					\        SECNUM = 1;						\        if (TREE_CODE (DECL) == FUNCTION_DECL)			\ 	 {							\ 	   SECNUM = 0;						\ 	   break;						\ 	 }							\        else if (TREE_CODE (DECL) == STRING_CST)			\ 	 {							\ 	   if (flag_writable_strings)				\ 	     SECNUM = 2;					\ 	   else							\ 	     SECNUM = 0x101;					\ 	   break;						\ 	 }							\        else if (TREE_CODE (DECL) == VAR_DECL)			\ 	 {							\ 	   if (DECL_INITIAL (DECL) == NULL			\ 	       || DECL_INITIAL (DECL) == error_mark_node)	\ 	     SECNUM = 4;					\ 	   else if ((flag_pic&& RELOC)				\ 		    || ! TREE_READONLY (DECL)			\ 		    || TREE_SIDE_EFFECTS (DECL)			\ 		    || ! TREE_CONSTANT (DECL_INITIAL (DECL)))	\ 	     SECNUM = 2;					\ 	  else if (flag_merge_constants>= 2)			\ 	    {							\
+comment|/* C and C++ don't allow different variables to	\ 		 share the same location.  -fmerge-all-constants\ 		 allows even that (at the expense of not	\ 		 conforming).  */
+value|\ 	      if (TREE_CODE (DECL_INITIAL (DECL)) == STRING_CST)\ 		SECNUM = 0x201;					\ 	      else						\ 		SECNUM = 0x301;					\ 	    }							\ 	 }							\        else if (TREE_CODE (DECL) == CONSTRUCTOR)		\ 	 {							\ 	   if ((flag_pic&& RELOC)				\ 	       || TREE_SIDE_EFFECTS (DECL)			\ 	       || ! TREE_CONSTANT (DECL))			\ 	     SECNUM = 2;					\ 	 }							\ 								\
+comment|/* Select small data sections based on size.  */
+value|\        size = int_size_in_bytes (TREE_TYPE (DECL));		\        if (size>= 0&& size<= g_switch_value)			\ 	 {							\ 	   if ((SECNUM& 0xff)>= 2)				\ 	     SECNUM += 1;					\
+comment|/* Move readonly data to .sdata only if -msmall-data.  */
+value|\
+comment|/* ??? Consider .sdata.{lit4,lit8} as		\ 	      SHF_MERGE|SHF_ALPHA_GPREL.  */
+value|\ 	   else if (TARGET_SMALL_DATA)				\ 	     SECNUM = 3;					\ 	 }							\      }								\    while (0)
 end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global constructors.  */
-end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
+name|SELECT_SECTION
 end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     ctors_section ();							\     fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);						\     fprintf (FILE, "\n");						\   } while (0)
-end_define
-
-begin_comment
-comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\     dtors_section ();                   				\     fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\     assemble_name (FILE, NAME);              				\     fprintf (FILE, "\n");						\   } while (0)
-end_define
-
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.  */
-end_comment
 
 begin_define
 define|#
@@ -739,9 +695,40 @@ parameter_list|(
 name|DECL
 parameter_list|,
 name|RELOC
+parameter_list|,
+name|ALIGN
 parameter_list|)
 define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((flag_pic&& RELOC)						\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	{								\ 	  int size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  if (size>= 0&& size<= g_switch_value)			\ 	    sdata_section ();						\ 	  else								\ 	    data_section ();						\ 	}								\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
+value|do							\     {							\       typedef void (*sec_fn) PARAMS ((void));		\       static sec_fn const sec_functions[6] =		\       {							\ 	text_section,					\ 	const_section,					\ 	data_section,					\ 	sdata_section,					\ 	bss_section,					\ 	sbss_section					\       };						\ 							\       int sec;						\ 							\       DO_SELECT_SECTION (sec, DECL, RELOC);		\ 							\       switch (sec)					\ 	{						\ 	case 0x101:					\ 	  mergeable_string_section (DECL, ALIGN, 0);	\ 	  break;					\ 	case 0x201:					\ 	  mergeable_string_section (DECL_INITIAL (DECL),\ 				    ALIGN, 0);		\ 	  break;					\ 	case 0x301:					\ 	  mergeable_constant_section (DECL_MODE (DECL),	\ 				      ALIGN, 0);	\ 	  break;					\ 	default:					\ 	  (*sec_functions[sec]) ();			\ 	  break;					\ 	}						\     }							\   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_DECL_ONE_ONLY
+parameter_list|(
+name|DECL
+parameter_list|)
+value|(DECL_WEAK (DECL) = 1)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|UNIQUE_SECTION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|UNIQUE_SECTION
+parameter_list|(
+name|DECL
+parameter_list|,
+name|RELOC
+parameter_list|)
+define|\
+value|do									\     {									\       static const char * const prefixes[6][2] =			\       {									\ 	{ ".text.",   ".gnu.linkonce.t." },				\ 	{ ".rodata.", ".gnu.linkonce.r." },				\ 	{ ".data.",   ".gnu.linkonce.d." },				\ 	{ ".sdata.",  ".gnu.linkonce.s." },				\ 	{ ".bss.",    ".gnu.linkonce.b." },				\ 	{ ".sbss.",   ".gnu.linkonce.sb." }				\       };								\ 									\       int nlen, plen, sec;						\       const char *name, *prefix;					\       char *string;							\ 									\       DO_SELECT_SECTION (sec, DECL, RELOC);				\ 									\       name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));		\       STRIP_NAME_ENCODING (name, name);					\       nlen = strlen (name);						\ 									\       prefix = prefixes[sec& 0xff][DECL_ONE_ONLY(DECL)];		\       plen = strlen (prefix);						\ 									\       string = alloca (nlen + plen + 1);				\ 									\       memcpy (string, prefix, plen);					\       memcpy (string + plen, name, nlen + 1);				\ 									\       DECL_SECTION_NAME (DECL) = build_string (nlen + plen, string);	\     }									\   while (0)
 end_define
 
 begin_comment
@@ -762,8 +749,13 @@ parameter_list|(
 name|MODE
 parameter_list|,
 name|RTX
+parameter_list|,
+name|ALIGN
 parameter_list|)
-value|const_section()
+define|\
+value|do {									\   if (TARGET_SMALL_DATA&& GET_MODE_SIZE (MODE)<= g_switch_value)	\
+comment|/* ??? Consider .sdata.{lit4,lit8} as SHF_MERGE|SHF_ALPHA_GPREL.  */
+value|\     sdata_section ();							\   else									\     mergeable_constant_section((MODE), (ALIGN), 0);			\ } while (0)
 end_define
 
 begin_comment
@@ -780,7 +772,7 @@ begin_define
 define|#
 directive|define
 name|TYPE_ASM_OP
-value|".type"
+value|"\t.type\t"
 end_define
 
 begin_undef
@@ -793,7 +785,7 @@ begin_define
 define|#
 directive|define
 name|SIZE_ASM_OP
-value|".size"
+value|"\t.size\t"
 end_define
 
 begin_comment
@@ -823,6 +815,12 @@ begin_comment
 comment|/* This is how we tell the assembler that two symbols have the same value.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_DEF
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -841,6 +839,12 @@ end_define
 begin_comment
 comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TYPE_OPERAND_FMT
+end_undef
 
 begin_define
 define|#
@@ -901,7 +905,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do {								\     HOST_WIDE_INT size;						\     fprintf (FILE, "%s", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);					\     putc (',', FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "object");			\     putc ('\n', FILE);						\     size_directive_output = 0;					\     if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& (size = int_size_in_bytes (TREE_TYPE (DECL)))> 0)	\       {								\ 	size_directive_output = 1;				\ 	fprintf (FILE, "%s", SIZE_ASM_OP);			\ 	assemble_name (FILE, NAME);				\ 	fputc (',', FILE);					\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, size);		\ 	fputc ('\n', FILE);					\       }								\     ASM_OUTPUT_LABEL(FILE, NAME);				\   } while (0)
 end_define
 
 begin_comment
@@ -928,12 +932,18 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									\   char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);			\   if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)			\&& ! AT_END&& TOP_LEVEL						\&& DECL_INITIAL (DECL) == error_mark_node				\&& !size_directive_output)					\     {									\       size_directive_output = 1;					\       fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\       assemble_name (FILE, name);					\       putc (',', FILE);							\       fprintf (FILE, HOST_WIDE_INT_PRINT_DEC,				\ 	       int_size_in_bytes (TREE_TYPE (DECL)));			\       putc ('\n', FILE);						\     }									\ } while (0)
+value|do {									\     const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		\     HOST_WIDE_INT size;							\     if (!flag_inhibit_size_directive					\&& DECL_SIZE (DECL)						\&& ! AT_END&& TOP_LEVEL					\&& DECL_INITIAL (DECL) == error_mark_node			\&& !size_directive_output					\&& (size = int_size_in_bytes (TREE_TYPE (DECL)))> 0)		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, name);					\ 	fputc (',', FILE);						\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, size);			\ 	fputc ('\n', FILE);						\       }									\   } while (0)
 end_define
 
 begin_comment
 comment|/* A table of bytes codes used by the ASM_OUTPUT_ASCII and    ASM_OUTPUT_LIMITED_STRING macros.  Each byte in the table    corresponds to a particular byte value [0..255].  For any    given byte value, if the value in the corresponding table    position is zero, the given character can be output directly.    If the table value is 1, the byte must be output as a \ooo    octal escape.  If the tables value is anything else, then the    byte value should be output as a \ followed by the value    in the table.  Note that we can use standard UN*X escape    sequences for many control characters, but we don't use    \a to represent BEL because some svr4 assemblers (e.g. on    the i386) don't know about that.  Also, we don't use \v    since some versions of gas, such as 2.2 did not accept it.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ESCAPES
+end_undef
 
 begin_define
 define|#
@@ -946,6 +956,12 @@ end_define
 begin_comment
 comment|/* Some svr4 assemblers have a limit on the number of characters which    can appear in the operand of a .string directive.  If your assembler    has such a limitation, you should define STRING_LIMIT to reflect that    limit.  Note that at least some svr4 assemblers have a limit on the    actual number of bytes in the double-quoted string, and that they    count each character in an escape sequence as one byte.  Thus, an    escape sequence like \377 would count as four bytes.     If your target assembler doesn't support the .string directive, you    should define this to zero.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STRING_LIMIT
+end_undef
 
 begin_define
 define|#
@@ -964,7 +980,7 @@ begin_define
 define|#
 directive|define
 name|STRING_ASM_OP
-value|".string"
+value|"\t.string\t"
 end_define
 
 begin_comment
@@ -985,7 +1001,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed before    entering `main'.      Don't bother seeing crtstuff.c -- there is absolutely no hope of    getting that file to understand multiple GPs.  GNU Libc provides a    hand-coded version that is used on Linux; it could be copied here    if there is ever a need. */
+comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed    before entering `main'.      Don't bother seeing crtstuff.c -- there is absolutely no hope    of getting that file to understand multiple GPs.  We provide a    hand-coded assembly version.  */
 end_comment
 
 begin_undef
@@ -999,7 +1015,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s crtbegin.o%s"
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{shared:crtbeginS.o%s}%{!shared:crtbegin.o%s}"
 end_define
 
 begin_comment
@@ -1017,7 +1033,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"crtend.o%s crtn.o%s"
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    %{shared:crtendS.o%s}%{!shared:crtend.o%s} crtn.o%s"
 end_define
 
 begin_comment
@@ -1031,26 +1047,96 @@ name|HANDLE_SYSV_PRAGMA
 end_define
 
 begin_comment
-comment|/* Undo the auto-alignment stuff from alpha.h.  ELF has unaligned data    pseudos natively.  */
+comment|/* Select a format to encode pointers in exception handling data.  CODE    is 0 for data, 1 for code labels, 2 for function pointers.  GLOBAL is    true if the symbol may be affected by dynamic relocations.     Since application size is already constrained to<2GB by the form of    the ldgp relocation, we can use a 32-bit pc-relative relocation to    static data.  Dynamic data is accessed indirectly to allow for read    only EH sections.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|UNALIGNED_SHORT_ASM_OP
-end_undef
+begin_define
+define|#
+directive|define
+name|ASM_PREFERRED_EH_DATA_FORMAT
+parameter_list|(
+name|CODE
+parameter_list|,
+name|GLOBAL
+parameter_list|)
+define|\
+value|(((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel | DW_EH_PE_sdata4)
+end_define
 
-begin_undef
-undef|#
-directive|undef
-name|UNALIGNED_INT_ASM_OP
-end_undef
+begin_comment
+comment|/* If defined, a C statement to be executed just prior to the output of    assembler code for INSN.  */
+end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|UNALIGNED_DOUBLE_INT_ASM_OP
-end_undef
+begin_define
+define|#
+directive|define
+name|FINAL_PRESCAN_INSN
+parameter_list|(
+name|INSN
+parameter_list|,
+name|OPVEC
+parameter_list|,
+name|NOPERANDS
+parameter_list|)
+define|\
+value|(alpha_this_literal_sequence_number = 0,		\   alpha_this_gpdisp_sequence_number = 0)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|alpha_this_literal_sequence_number
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|alpha_this_gpdisp_sequence_number
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Since the bits of the _init and _fini function is spread across    many object files, each potentially with its own GP, we must assume    we need to load our GP.  Further, the .init/.fini section can    easily be more than 4MB away from the function to call so we can't    use bsr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRT_CALL_STATIC_FUNCTION
+parameter_list|(
+name|SECTION_OP
+parameter_list|,
+name|FUNC
+parameter_list|)
+define|\
+value|asm (SECTION_OP "\n"					\ "	br $29,1f\n"					\ "1:	ldgp $29,0($29)\n"				\ "	unop\n"						\ "	jsr $26," USER_LABEL_PREFIX #FUNC "\n"		\ "	.align 3\n"					\ "	.previous");
+end_define
+
+begin_comment
+comment|/* If we have the capability create headers for efficient EH lookup.    As of Jan 2002, only glibc 2.2.4 can actually make use of this, but    I imagine that other systems will catch up.  In the meantime, it    doesn't harm to make sure that the data exists to be used later.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_LD_EH_FRAME_HDR
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LINK_EH_SPEC
+value|"%{!static:--eh-frame-hdr} "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
