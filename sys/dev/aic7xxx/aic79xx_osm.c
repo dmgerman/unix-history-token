@@ -9148,10 +9148,10 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%04jx (M)%x: \t"
+literal|"%04lx (M)%x: \t"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|addr
 argument_list|,
@@ -9388,10 +9388,10 @@ break|break;
 block|}
 name|db_printf
 argument_list|(
-literal|"%04jx (M)%x: \t0x%jx\t=\t0x%jx"
+literal|"%04lx (M)%x: \t0x%lx\t=\t0x%lx"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|addr
 argument_list|,
@@ -9403,12 +9403,12 @@ name|MODE_PTR
 argument_list|)
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|old_value
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_long
 operator|)
 name|new_value
 argument_list|)
