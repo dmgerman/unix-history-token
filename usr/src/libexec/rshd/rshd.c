@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.33 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,6 +1341,12 @@ name|hp
 condition|)
 block|{
 comment|/* 		 * If name returned by gethostbyaddr is in our domain, 		 * attempt to verify that we haven't been fooled by someone 		 * in a remote net; look up the name and check that this 		 * address corresponds to the name. 		 */
+name|hostname
+operator|=
+name|hp
+operator|->
+name|h_name
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
