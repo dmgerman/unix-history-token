@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.8.1.1 %G%"
+literal|"@(#)pccaseop.c 1.8.1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,12 +84,43 @@ begin_comment
 comment|/*      *	the P2FORCE operator puts its operand into a register.      *	these to keep from thinking of it as r0 all over.      */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|FORCENAME
 value|"r0"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mc68000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FORCENAME
+value|"d0"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|mc68000
+end_endif
 
 begin_comment
 comment|/*      *	given a tree for a case statement, generate code for it.      *	this computes the expression into a register,      *	puts down the code for each of the cases,      *	and then decides how to do the case switching.      *	tcase	[0]	T_CASE      *		[1]	lineof "case"      *		[2]	expression      *		[3]	list of cased statements:      *			cstat	[0]	T_CSTAT      *				[1]	lineof ":"      *				[2]	list of constant labels      *				[3]	statement      */
@@ -1069,6 +1100,9 @@ decl_stmt|;
 name|long
 name|j
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	casel	%s,$%d,$%d"
@@ -1099,6 +1133,102 @@ operator|.
 name|cconst
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+comment|/* 	     *	subl	to make d0 a 0-origin byte offset. 	     *	cmpl	check against upper limit. 	     *	bhi	error if out of bounds. 	     *	addw	to make d0 a 0-origin word offset. 	     *	movw	pick up a jump-table entry 	     *	jmp	and indirect through it. 	     */
+name|putprintf
+argument_list|(
+literal|"	subl	#%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	cmpl	#%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|ctab
+index|[
+name|count
+index|]
+operator|.
+name|cconst
+operator|-
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	bhi	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+literal|0
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	addw	%s,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|FORCENAME
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	movw	pc@(6,%s:w),%s"
+argument_list|,
+literal|0
+argument_list|,
+name|FORCENAME
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jmp	pc@(2,%s:w)"
+argument_list|,
+literal|0
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 name|putlab
 argument_list|(
 name|fromlabel
@@ -1229,6 +1359,10 @@ name|j
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* 	     *	execution continues here if value not in range of case. 	     */
 name|putjbr
 argument_list|(
 name|ctab
@@ -1239,6 +1373,9 @@ operator|.
 name|clabel
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
 block|}
 end_block
 
@@ -1336,12 +1473,8 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|putprintf
+name|putjbr
 argument_list|(
-literal|"	jbr	L%d"
-argument_list|,
-literal|0
-argument_list|,
 name|deflabel
 argument_list|)
 expr_stmt|;
@@ -1355,6 +1488,9 @@ operator|==
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	cmpl	%s,$%d"
@@ -1373,9 +1509,11 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	jeql	L%d"
+literal|"	jeql	%s%d"
 argument_list|,
 literal|0
+argument_list|,
+name|LABELPREFIX
 argument_list|,
 name|ctab
 index|[
@@ -1385,15 +1523,57 @@ operator|.
 name|clabel
 argument_list|)
 expr_stmt|;
-name|putprintf
+name|putjbr
 argument_list|(
-literal|"	jbr	L%d"
-argument_list|,
-literal|0
-argument_list|,
 name|deflabel
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+name|putprintf
+argument_list|(
+literal|"	cmpl	#%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jeq	L%d"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+literal|1
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+name|putjbr
+argument_list|(
+name|deflabel
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 return|return;
 block|}
 else|else
@@ -1415,6 +1595,9 @@ init|=
 name|getlab
 argument_list|()
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	cmpl	%s,$%d"
@@ -1433,18 +1616,22 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	jgtr	L%d"
+literal|"	jgtr	%s%d"
 argument_list|,
 literal|0
+argument_list|,
+name|LABELPREFIX
 argument_list|,
 name|gtrlabel
 argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	jeql	L%d"
+literal|"	jeql	%s%d"
 argument_list|,
 literal|0
+argument_list|,
+name|LABELPREFIX
 argument_list|,
 name|ctab
 index|[
@@ -1454,6 +1641,58 @@ operator|.
 name|clabel
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+name|putprintf
+argument_list|(
+literal|"	cmpl	#%d,%s"
+argument_list|,
+literal|0
+argument_list|,
+name|ctab
+index|[
+name|half
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jgt	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|gtrlabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jeq	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+name|half
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 name|bsrecur
 argument_list|(
 name|deflabel
@@ -1469,12 +1708,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|putprintf
+name|putlab
 argument_list|(
-literal|"L%d:"
-argument_list|,
-literal|0
-argument_list|,
 name|gtrlabel
 argument_list|)
 expr_stmt|;
@@ -1540,6 +1775,9 @@ name|i
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	cmpl	%s,$%d"
@@ -1558,9 +1796,11 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	jeql	L%d"
+literal|"	jeql	%s%d"
 argument_list|,
 literal|0
+argument_list|,
+name|LABELPREFIX
 argument_list|,
 name|ctab
 index|[
@@ -1570,13 +1810,50 @@ operator|.
 name|clabel
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
 name|putprintf
 argument_list|(
-literal|"	jbr	L%d"
+literal|"	cmpl	#%d,%s"
 argument_list|,
 literal|0
 argument_list|,
+name|ctab
+index|[
+name|i
+index|]
+operator|.
+name|cconst
+argument_list|,
+name|FORCENAME
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	jeq	%s%d"
+argument_list|,
+literal|0
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|ctab
+index|[
+name|i
+index|]
+operator|.
+name|clabel
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
+block|}
+name|putjbr
+argument_list|(
 name|ctab
 index|[
 literal|0
