@@ -6489,6 +6489,12 @@ directive|else
 literal|"-lgcc_s%M"
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_LIBUNWIND_EXCEPTIONS
+literal|" -lunwind"
+endif|#
+directive|endif
 argument_list|,
 literal|"-lgcc"
 argument_list|,
