@@ -1902,7 +1902,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-empty_stmt|;
 name|d_thread_t
 modifier|*
 name|td
