@@ -2750,13 +2750,22 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 name|u_long
 name|sp
 decl_stmt|;
 comment|/* XXX no cpu_exec */
+name|p
+operator|=
 name|td
 operator|->
 name|td_proc
+expr_stmt|;
+name|p
 operator|->
 name|p_md
 operator|.
@@ -2769,9 +2778,7 @@ condition|(
 operator|(
 name|ut
 operator|=
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_md
 operator|.
@@ -2801,9 +2808,7 @@ argument_list|,
 name|M_SUBPROC
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_md
 operator|.
