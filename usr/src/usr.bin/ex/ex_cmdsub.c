@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	7.4	%G%"
+literal|"@(#)ex_cmdsub.c	7.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2070,29 +2070,14 @@ name|sbuf
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|STDIO
-comment|/* mjm: was VMUNIX */
-comment|/* 	 * We have lots of room so we bring in stdio and do 	 * a binary search on the tags file. 	 */
-undef|#
-directive|undef
-name|EOF
-include|#
-directive|include
-file|<stdio.h>
-undef|#
-directive|undef
-name|getchar
-undef|#
-directive|undef
-name|putchar
-name|FILE
-modifier|*
+name|FASTTAG
+name|int
 name|iof
 decl_stmt|;
 name|char
 name|iofbuf
 index|[
-name|BUFSIZ
+name|MAXBSIZE
 index|]
 decl_stmt|;
 name|long
@@ -2297,40 +2282,30 @@ expr_stmt|;
 comment|/* null terminate filename */
 ifdef|#
 directive|ifdef
-name|STDIO
-comment|/* mjm: was VMUNIX */
+name|FASTTAG
 name|iof
 operator|=
-name|fopen
+name|topen
 argument_list|(
 name|fn
 argument_list|,
-literal|"r"
+name|iofbuf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|iof
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 continue|continue;
 name|tfcount
 operator|++
 expr_stmt|;
-name|setbuf
-argument_list|(
-name|iof
-argument_list|,
-name|iofbuf
-argument_list|)
-expr_stmt|;
 name|fstat
 argument_list|(
-name|fileno
-argument_list|(
 name|iof
-argument_list|)
 argument_list|,
 operator|&
 name|sbuf
@@ -2347,10 +2322,6 @@ condition|(
 name|top
 operator|==
 literal|0L
-operator|||
-name|iof
-operator|==
-name|NULL
 condition|)
 name|top
 operator|=
@@ -2456,8 +2427,7 @@ name|oglobp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|STDIO
-comment|/* mjm: was VMUNIX */
+name|FASTTAG
 name|mid
 operator|=
 operator|(
@@ -2468,13 +2438,11 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|fseek
+name|tseek
 argument_list|(
 name|iof
 argument_list|,
 name|mid
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2487,7 +2455,7 @@ comment|/* to get first tag in file to work */
 comment|/* scan to next \n */
 if|if
 condition|(
-name|fgets
+name|tgets
 argument_list|(
 name|linebuf
 argument_list|,
@@ -2505,7 +2473,7 @@ goto|;
 comment|/* get the line itself */
 if|if
 condition|(
-name|fgets
+name|tgets
 argument_list|(
 name|linebuf
 argument_list|,
@@ -2520,19 +2488,24 @@ condition|)
 goto|goto
 name|goleft
 goto|;
-name|linebuf
-index|[
-name|strlen
+ifdef|#
+directive|ifdef
+name|TDEBUG
+name|printf
 argument_list|(
+literal|"tag: %o %o %o %s\n"
+argument_list|,
+name|bot
+argument_list|,
+name|mid
+argument_list|,
+name|top
+argument_list|,
 name|linebuf
 argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
-comment|/* was '\n' */
+endif|#
+directive|endif
 endif|#
 directive|endif
 while|while
@@ -2587,8 +2560,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|STDIO
-comment|/* mjm: was VMUNIX */
+name|FASTTAG
 if|if
 condition|(
 operator|*
@@ -2620,9 +2592,8 @@ block|}
 comment|/* 			 * We found the tag.  Decode the line in the file. 			 */
 ifdef|#
 directive|ifdef
-name|STDIO
-comment|/* mjm: was VMUNIX */
-name|fclose
+name|FASTTAG
+name|tclose
 argument_list|(
 name|iof
 argument_list|)
@@ -2967,9 +2938,8 @@ comment|/* end of "for each tag in file" */
 comment|/* 		 * No such tag in this file.  Close it and try the next. 		 */
 ifdef|#
 directive|ifdef
-name|STDIO
-comment|/* mjm: was VMUNIX */
-name|fclose
+name|FASTTAG
+name|tclose
 argument_list|(
 name|iof
 argument_list|)
