@@ -444,7 +444,7 @@ begin_define
 define|#
 directive|define
 name|BUF1_SM_DOFF
-value|((BUF1_SM_HOFF + SIZEOF_Buf_handle) - BUF1_SM_HDR)
+value|(SIZEOF_Buf_handle)
 end_define
 
 begin_define
