@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.13 (Berkeley) %G%"
+literal|"@(#)err.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,15 +954,25 @@ name|HoldErrs
 argument_list|)
 expr_stmt|;
 comment|/* signal the error */
-if|if
-condition|(
-operator|!
-name|HoldErrs
-condition|)
-block|{
 name|Errors
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|msgcode
+operator|==
+literal|'6'
+condition|)
+block|{
+comment|/* notify the postmaster */
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_PM_NOTIFY
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|msgcode
@@ -978,26 +988,13 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+comment|/* mark long-term fatal errors */
 name|CurEnv
 operator|->
 name|e_flags
 operator||=
 name|EF_FATALERRS
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|msgcode
-operator|==
-literal|'6'
-condition|)
-block|{
-comment|/* notify the postmaster */
-name|CurEnv
-operator|->
-name|e_flags
-operator||=
-name|EF_PM_NOTIFY
 expr_stmt|;
 block|}
 block|}
