@@ -2794,7 +2794,7 @@ argument_list|,
 name|PCI_MAP_REG_START
 argument_list|,
 operator|(
-name|u_long
+name|vm_offset_t
 operator|*
 operator|)
 operator|&
