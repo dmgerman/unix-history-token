@@ -323,10 +323,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ut
 argument_list|,
