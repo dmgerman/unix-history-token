@@ -3528,7 +3528,12 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"crunchgen_objs:\n\t@make -f %s $(BUILDOPTS) $(%s_OPTS)"
+literal|"crunchgen_objs:\n"
+literal|"\t@cd %s&& make -f %s $(BUILDOPTS) $(%s_OPTS)"
+argument_list|,
+name|p
+operator|->
+name|srcdir
 argument_list|,
 name|tempfname
 argument_list|,
