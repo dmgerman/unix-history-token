@@ -71,7 +71,9 @@ end_comment
 begin_function
 name|void
 name|getline
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|long
 name|saveftell
@@ -284,12 +286,10 @@ begin_function
 name|void
 name|put_entries
 parameter_list|(
-name|node
-parameter_list|)
 name|NODE
 modifier|*
 name|node
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

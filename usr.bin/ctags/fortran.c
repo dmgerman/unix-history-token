@@ -469,13 +469,11 @@ begin_function
 name|int
 name|cicmp
 parameter_list|(
-name|cp
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -550,7 +548,9 @@ begin_function
 specifier|static
 name|void
 name|takeprec
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 for|for
 control|(

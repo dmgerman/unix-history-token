@@ -111,7 +111,9 @@ end_comment
 begin_function
 name|void
 name|c_entries
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
@@ -677,7 +679,9 @@ begin_function
 specifier|static
 name|int
 name|func_entry
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
@@ -893,7 +897,9 @@ begin_function
 specifier|static
 name|void
 name|hash_entry
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
@@ -1175,12 +1181,10 @@ specifier|static
 name|int
 name|str_entry
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
-comment|/* current character */
+parameter_list|)
+comment|/* c is current character */
 block|{
 name|int
 name|curline
@@ -1385,12 +1389,10 @@ begin_function
 name|void
 name|skip_comment
 parameter_list|(
-name|t
-parameter_list|)
 name|int
 name|t
-decl_stmt|;
-comment|/* comment character */
+parameter_list|)
+comment|/* t is comment character */
 block|{
 name|int
 name|c
@@ -1472,11 +1474,9 @@ begin_function
 name|void
 name|skip_string
 parameter_list|(
-name|key
-parameter_list|)
 name|int
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -1546,11 +1546,9 @@ begin_function
 name|int
 name|skip_key
 parameter_list|(
-name|key
-parameter_list|)
 name|int
 name|key
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
