@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.11 1997/02/22 16:13:34 peter Exp $"
+literal|"$Id: slstat.c,v 1.12 1997/10/20 12:41:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,12 +102,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|INET
-end_define
 
 begin_include
 include|#
