@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.13 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2412,11 +2412,6 @@ decl_stmt|,
 name|escape
 decl_stmt|,
 name|eof
-decl_stmt|;
-name|int
-name|netfd
-decl_stmt|,
-name|filefd
 decl_stmt|,
 name|cnt
 decl_stmt|;
@@ -2437,20 +2432,6 @@ case|:
 case|case
 name|TYPE_L
 case|:
-name|netfd
-operator|=
-name|fileno
-argument_list|(
-name|instr
-argument_list|)
-expr_stmt|;
-name|netfd
-operator|=
-name|fileno
-argument_list|(
-name|outstr
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2458,7 +2439,10 @@ name|cnt
 operator|=
 name|read
 argument_list|(
-name|netfd
+name|fileno
+argument_list|(
+name|instr
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -2473,7 +2457,10 @@ if|if
 condition|(
 name|write
 argument_list|(
-name|filefd
+name|fileno
+argument_list|(
+name|outstr
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
