@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmp.c	4.3 (Berkeley) %G%"
+literal|"@(#)cmp.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,7 +1011,7 @@ argument_list|()
 block|{
 name|fputs
 argument_list|(
-literal|"usage: cmp [-ls] file1 file2 [skip1] [skip2]"
+literal|"usage: cmp [-ls] file1 file2 [skip1] [skip2]\n"
 argument_list|,
 name|stderr
 argument_list|)
