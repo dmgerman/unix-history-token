@@ -2041,6 +2041,19 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ciss_flags
+operator|&
+name|CISS_FLAG_CONTROL_OPEN
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 comment|/* flush adapter cache */
 name|ciss_flush_adapter
 argument_list|(
