@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.28.4.5 1996/10/16 02:16:05 jkh Exp $  **/
+comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.68 1996/11/12 20:00:24 bde Exp $  **/
 end_comment
 
 begin_comment
@@ -8,8 +8,14 @@ comment|/**  ** USERCONFIG  **  ** Kernel boot-time configuration manipulation t
 end_comment
 
 begin_comment
-comment|/**  ** USERCONFIG, visual mode.  **  **   msmith@atrad.adelaide.edu.au  **  ** Look for "EDIT THIS LIST" to add to the list of known devices  **   **  ** There are a number of assumptions made in this code.  **   ** - That the console supports a minimal set of ANSI escape sequences  **   (See the screen manipulation section for a summary)  **   and has at least 24 rows.  ** - That values less than or equal to zero for any of the device  **   parameters indicate that the driver does not use the parameter.  ** - That the only tunable parameter for PCI devices are their flags.  ** - That flags are _always_ editable.  **  ** Devices marked as disabled are imported as such.  It is possible to move  ** a PCI device onto the inactive list, but it is not possible to actually  ** prevent the device from being probed.  The ability to move is considered  ** desirable in that people will complain otherwise 8)  **   ** For this tool to be useful, the list of devices below _MUST_ be updated   ** when a new driver is brought into the kernel.  It is not possible to   ** extract this information from the drivers in the kernel, as the devconf  ** structure for the device is not registered until the device is probed,  ** which is too late.  **  ** XXX - TODO:  **   ** - FIX OPERATION WITH PCVT!  **   ** - Display _what_ a device conflicts with.  ** - Implement page up/down (as what?)  ** - Wizard mode (no restrictions)  ** - Find out how to put syscons back into low-intensity mode so that the  **   !b escape is useful on the console.  ** - The min and max values used for editing parameters are probably   **   very bogus - fix?  **  ** - Only display headings with devices under them. (difficult)  **/
+comment|/**  ** USERCONFIG, visual mode.  **  **   msmith@atrad.adelaide.edu.au  **  ** Look for "EDIT THIS LIST" to add to the list of known devices  **   **  ** There are a number of assumptions made in this code.  **   ** - That the console supports a minimal set of ANSI escape sequences  **   (See the screen manipulation section for a summary)  **   and has at least 24 rows.  ** - That values less than or equal to zero for any of the device  **   parameters indicate that the driver does not use the parameter.  ** - That the only tunable parameter for PCI devices are their flags.  ** - That flags are _always_ editable.  **  ** Devices marked as disabled are imported as such.  PCI devices are   ** listed under a seperate heading for informational purposes only.  ** To date, there is no means for changing the behaviour of PCI drivers  ** from UserConfig.  **  ** Note that some EISA devices probably fall into this category as well,  ** and in fact the actual bus supported by some drivers is less than clear.  ** A longer-term goal might be to list drivers by instance rather than  ** per bus-presence.  **   ** For this tool to be useful, the list of devices below _MUST_ be updated   ** when a new driver is brought into the kernel.  It is not possible to   ** extract this information from the drivers in the kernel.  **  ** XXX - TODO:  **   ** - Display _what_ a device conflicts with.  ** - Implement page up/down (as what?)  ** - Wizard mode (no restrictions)  ** - Find out how to put syscons back into low-intensity mode so that the  **   !b escape is useful on the console.  **  ** - Only display headings with devices under them. (difficult)  **/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"pci.h"
+end_include
 
 begin_include
 include|#
@@ -26,7 +32,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cons.h>
 end_include
 
 begin_include
@@ -38,25 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/i386/cons.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -70,30 +70,7 @@ specifier|static
 name|struct
 name|isa_device
 modifier|*
-name|devtabs
-index|[]
-init|=
-block|{
-name|isa_devtab_bio
-block|,
-name|isa_devtab_tty
-block|,
-name|isa_devtab_net
-block|,
-name|isa_devtab_null
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|isa_device
-modifier|*
 name|isa_devlist
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +207,34 @@ name|x
 parameter_list|)
 value|cnputc(x)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VISUAL_USERCONFIG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_device
+modifier|*
+name|devtabs
+index|[]
+init|=
+block|{
+name|isa_devtab_bio
+block|,
+name|isa_devtab_tty
+block|,
+name|isa_devtab_net
+block|,
+name|isa_devtab_null
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -436,6 +441,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CLS_PCI
+value|254
+end_define
+
+begin_comment
+comment|/* PCI devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CLS_MISC
 value|255
 end_define
@@ -500,6 +516,12 @@ name|CLS_MMEDIA
 block|}
 block|,
 block|{
+literal|"PCI :            "
+block|,
+name|CLS_PCI
+block|}
+block|,
+block|{
 literal|"Miscellaneous :  "
 block|,
 name|CLS_MISC
@@ -519,7 +541,7 @@ comment|/********************* EDIT THIS LIST **********************/
 end_comment
 
 begin_comment
-comment|/** Notes :  **   ** - PCI devices should be marked FLG_FIXED, not FLG_IMMUTABLE.  Whilst  **   it's impossible to disable them, it should be possible to move them  **   from one list to another for peace of mind.  ** - Devices that shouldn't be seen or removed should be marked FLG_INVISIBLE.  ** - XXX The list below should be reviewed by the driver authors to verify  **   that the correct flags have been set for each driver, and that the  **   descriptions are accurate.  **/
+comment|/** Notes :  **   ** - PCI devices should be marked FLG_IMMUTABLE.  They should not be movable  **   or editable, and have no attributes.  This is handled in getdevs() and  **   devinfo(), so drivers that have a presence on busses other than PCI  **   should have appropriate flags set below.  ** - Devices that shouldn't be seen or removed should be marked FLG_INVISIBLE.  ** - XXX The list below should be reviewed by the driver authors to verify  **   that the correct flags have been set for each driver, and that the  **   descriptions are accurate.  **/
 end_comment
 
 begin_decl_stmt
@@ -741,6 +763,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"fxp"
+block|,
+literal|"Intel EtherExpress Pro/100B Ethernet adapter"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"ie"
 block|,
 literal|"AT&T Starlan 10 and EN100, 3C507, NI5210 Ethernet adapters"
@@ -774,6 +806,16 @@ block|{
 literal|"lnc"
 block|,
 literal|"Isolan, Novell NE2100/NE32-VL Ethernet adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
+literal|"vx"
+block|,
+literal|"3COM 3C590/3C595 Ethernet adapters"
 block|,
 literal|0
 block|,
@@ -861,29 +903,59 @@ name|CLS_COMMS
 block|}
 block|,
 block|{
+literal|"cyy"
+block|,
+literal|"Cyclades Ye/PCI multiport async adapter"
+block|,
+name|FLG_INVISIBLE
+block|,
+name|CLS_COMMS
+block|}
+block|,
+block|{
+literal|"dgb"
+block|,
+literal|"Digiboard PC/Xe, PC/Xi async adapter"
+block|,
+literal|0
+block|,
+name|CLS_COMMS
+block|}
+block|,
+block|{
+literal|"si"
+block|,
+literal|"Specialix SI/XIO async adapter"
+block|,
+literal|0
+block|,
+name|CLS_COMMS
+block|}
+block|,
+block|{
+literal|"stl"
+block|,
+literal|"Stallion EasyIO/Easy Connection 8/32 async adapter"
+block|,
+literal|0
+block|,
+name|CLS_COMMS
+block|}
+block|,
+block|{
+literal|"stli"
+block|,
+literal|"Stallion intelligent async adapter"
+block|,
+literal|0
+block|,
+name|CLS_COMMS
+block|}
+block|,
+block|{
 literal|"lpt"
 block|,
 literal|"Parallel printer port"
-block|,
-literal|0
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"nic"
-block|,
-literal|"ISDN driver"
-block|,
-literal|0
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"nnic"
-block|,
-literal|"ISDN driver"
 block|,
 literal|0
 block|,
@@ -1091,9 +1163,39 @@ name|CLS_MMEDIA
 block|}
 block|,
 block|{
+literal|"scc"
+block|,
+literal|"IBM Smart Capture Card"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
+block|}
+block|,
+block|{
 literal|"gsc"
 block|,
 literal|"Genius GS-4500 hand scanner"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
+block|}
+block|,
+block|{
+literal|"asc"
+block|,
+literal|"AmiScan scanner"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
+block|}
+block|,
+block|{
+literal|"qcam"
+block|,
+literal|"QuickCam parallel port camera"
 block|,
 literal|0
 block|,
@@ -1154,6 +1256,16 @@ block|{
 literal|"chip"
 block|,
 literal|"PCI chipset support"
+block|,
+name|FLG_INVISIBLE
+block|,
+name|CLS_MISC
+block|}
+block|,
+block|{
+literal|"piix"
+block|,
+literal|"Intel 82371 Bus-master IDE controller"
 block|,
 name|FLG_INVISIBLE
 block|,
@@ -1420,6 +1532,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|visuserconfig
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|DEV_LIST
@@ -1519,10 +1641,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|dev
 operator|->
-name|device
+name|iobase
+operator|==
+operator|-
+literal|2
 condition|)
 comment|/* PCI device */
 return|return;
@@ -1891,6 +2015,7 @@ if|if
 condition|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|pci_device
 operator|*
@@ -1914,6 +2039,7 @@ name|dev
 argument_list|,
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|pci_device
 operator|*
@@ -2019,6 +2145,7 @@ operator|&
 name|scratch
 argument_list|)
 condition|)
+comment|/* look up name, set class and flags */
 name|insdev
 argument_list|(
 operator|&
@@ -2038,7 +2165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  ** Devinfo  **  ** Fill in (dev->name), (dev->attrib) and (dev->type) from the device_info array.  ** If the device is unknown, put it in the CLS_MISC class, with no flags.  **  ** If the device is marked "invisible", return nonzero; the caller should  ** not insert any such device into either list.  **/
+comment|/**  ** Devinfo  **  ** Fill in (dev->name), (dev->attrib) and (dev->type) from the device_info array.  ** If the device is unknown, put it in the CLS_MISC class, with no flags.  **  ** If the device is marked "invisible", return nonzero; the caller should  ** not insert any such device into either list.  **  ** PCI devices are always inserted into CLS_PCI, regardless of the class associated  ** with the driver type.  **/
 end_comment
 
 begin_function
@@ -2100,6 +2227,7 @@ name|attrib
 operator|&
 name|FLG_INVISIBLE
 condition|)
+comment|/* forget we ever saw this one */
 return|return
 operator|(
 literal|1
@@ -2119,6 +2247,34 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* get the name */
+if|if
+condition|(
+name|dev
+operator|->
+name|iobase
+operator|==
+operator|-
+literal|2
+condition|)
+block|{
+comment|/* is this a PCI device? */
+name|dev
+operator|->
+name|attrib
+operator|=
+name|FLG_IMMUTABLE
+expr_stmt|;
+comment|/* dark green ones up the back... */
+name|dev
+operator|->
+name|class
+operator|=
+name|CLS_PCI
+expr_stmt|;
+block|}
+else|else
+block|{
 name|dev
 operator|->
 name|attrib
@@ -2130,6 +2286,7 @@ index|]
 operator|.
 name|attrib
 expr_stmt|;
+comment|/* light green ones up the front */
 name|dev
 operator|->
 name|class
@@ -2141,6 +2298,7 @@ index|]
 operator|.
 name|class
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2327,7 +2485,21 @@ block|{
 name|DEV_LIST
 modifier|*
 name|ap
+init|=
+name|NULL
 decl_stmt|;
+comment|/* search for a previous instance of the same device */
+if|if
+condition|(
+name|dev
+operator|->
+name|iobase
+operator|!=
+operator|-
+literal|2
+condition|)
+comment|/* avoid PCI devices grouping with non-PCI devices */
+block|{
 for|for
 control|(
 name|ap
@@ -2439,12 +2611,15 @@ break|break;
 block|}
 block|}
 block|}
+block|}
 if|if
 condition|(
 operator|!
 name|ap
 condition|)
+comment|/* not sure yet */
 block|{
+comment|/* search for a class that the device might belong to */
 for|for
 control|(
 name|ap
@@ -2922,11 +3097,34 @@ operator|==
 name|DEV_DEVICE
 operator|)
 operator|&&
+comment|/* is a device */
+operator|(
 name|list
 operator|->
 name|changed
+operator|)
+operator|&&
+comment|/* has been changed */
+operator|(
+name|list
+operator|->
+name|iobase
+operator|!=
+operator|-
+literal|2
+operator|)
+operator|&&
+comment|/* is not a PCI device */
+operator|(
+name|list
+operator|->
+name|device
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
+comment|/* has an isa_device structure */
 name|setdev
 argument_list|(
 name|list
@@ -3353,9 +3551,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* number of conflicts found */
-name|int
-name|ic
-decl_stmt|;
 name|DEV_LIST
 modifier|*
 name|dp
@@ -3389,6 +3584,17 @@ name|DEV_DEVICE
 condition|)
 comment|/* comments don't usually conflict */
 continue|continue;
+if|if
+condition|(
+name|dp
+operator|->
+name|iobase
+operator|==
+operator|-
+literal|2
+condition|)
+comment|/* it's a PCI device, not interested */
+continue|continue;
 name|dp
 operator|->
 name|conflicts
@@ -3421,6 +3627,17 @@ operator|!=
 name|DEV_DEVICE
 condition|)
 comment|/* likewise */
+continue|continue;
+if|if
+condition|(
+name|dp
+operator|->
+name|iobase
+operator|==
+operator|-
+literal|2
+condition|)
+comment|/* it's a PCI device, not interested */
 continue|continue;
 if|if
 condition|(
@@ -5095,6 +5312,10 @@ argument_list|()
 condition|)
 block|{
 case|case
+operator|-
+literal|1
+case|:
+case|case
 literal|'n'
 case|:
 case|case
@@ -5205,6 +5426,24 @@ argument_list|,
 literal|18
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|dev
+operator|->
+name|iobase
+operator|==
+operator|-
+literal|2
+condition|)
+comment|/* a PCI device */
+name|putmsg
+argument_list|(
+literal|" PCI devices are automatically configured."
 argument_list|)
 expr_stmt|;
 block|}
@@ -5434,12 +5673,18 @@ comment|/* work with copy of the value */
 name|char
 name|buf
 index|[
-literal|10
+literal|2
+operator|+
+literal|11
+operator|+
+literal|1
 index|]
 decl_stmt|,
 name|tc
 index|[
-literal|8
+literal|11
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* display buffer, text copy */
@@ -5602,6 +5847,10 @@ condition|(
 name|c
 operator|==
 literal|'['
+operator|||
+name|c
+operator|==
+literal|'O'
 condition|)
 comment|/* second character in sequence */
 block|{
@@ -5703,6 +5952,10 @@ expr_stmt|;
 comment|/* verify and maybe return */
 break|break;
 case|case
+operator|-
+literal|1
+case|:
+case|case
 literal|'q'
 case|:
 case|case
@@ -5756,13 +6009,15 @@ comment|/* still something left to delete */
 block|{
 name|i
 operator|=
-name|i
-operator|/
 operator|(
 name|hex
 condition|?
-literal|0x10
+name|i
+operator|/
+literal|0x10u
 else|:
+name|i
+operator|/
 literal|10
 operator|)
 expr_stmt|;
@@ -5783,6 +6038,12 @@ name|KEY_UP
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'\r'
+case|:
+case|case
+literal|'\n'
+case|:
 case|case
 literal|596
 case|:
@@ -6276,13 +6537,13 @@ literal|18
 argument_list|,
 literal|20
 argument_list|,
-literal|5
+literal|8
 argument_list|,
 literal|1
 argument_list|,
-literal|0x0
+name|INT_MIN
 argument_list|,
-literal|0xffff
+name|INT_MAX
 argument_list|,
 operator|&
 operator|(
@@ -7102,6 +7363,10 @@ case|case
 literal|'['
 case|:
 comment|/* cheat : always preceeds cursor move */
+case|case
+literal|'O'
+case|:
+comment|/* ANSI application key mode */
 if|if
 condition|(
 name|extended
@@ -7234,6 +7499,7 @@ comment|/**  ** visuserconfig  **   ** Do the fullscreen config thang  **/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|visuserconfig
 parameter_list|(
@@ -7538,6 +7804,17 @@ name|DEV_DEVICE
 condition|)
 comment|/* can't edit comments, zoom? */
 block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|iobase
+operator|!=
+operator|-
+literal|2
+condition|)
+comment|/* can't edit PCI devices */
+block|{
 name|masterhelp
 argument_list|(
 literal|"  [!bTAB!n]   Change fields           [!bQ!n]   Save device parameters"
@@ -7570,6 +7847,7 @@ name|active
 argument_list|)
 expr_stmt|;
 comment|/* update conflict tags */
+block|}
 block|}
 else|else
 block|{
@@ -7897,7 +8175,7 @@ name|i
 operator|=
 name|yesnocancel
 argument_list|(
-literal|" Save these parameters and exit? (Yes/No/Cancel) "
+literal|" Save these parameters before exiting? (Yes/No/Cancel) "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -7963,20 +8241,29 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.28.4.5 1996/10/16 02:16:05 jkh Exp $  */
+comment|/* VISUAL_USERCONFIG */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.68 1996/11/12 20:00:24 bde Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<scsi/scsiconf.h>
+file|"scbus.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scbus.h"
+file|<scsi/scsiconf.h>
 end_include
 
 begin_define
@@ -8101,7 +8388,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|lsdevtab
 parameter_list|(
 name|struct
@@ -8185,6 +8472,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|unsigned
 name|long
 name|strtoul
@@ -8627,6 +8915,9 @@ block|,
 comment|/* scsi */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|VISUAL_USERCONFIG
 block|{
 literal|"v"
 block|,
@@ -8639,6 +8930,8 @@ name|NULL
 block|}
 block|,
 comment|/* visual mode */
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -8658,12 +8951,6 @@ name|void
 parameter_list|)
 block|{
 name|char
-name|command
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|char
 name|input
 index|[
 literal|80
@@ -8672,11 +8959,6 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
-name|struct
-name|isa_device
-modifier|*
-name|dt
-decl_stmt|;
 name|Cmd
 modifier|*
 name|cmd
@@ -8684,9 +8966,16 @@ decl_stmt|;
 name|printf
 argument_list|(
 literal|"\nFreeBSD Kernel Configuration Utility - Version 1.1\n"
-literal|" Type \"help\" for help or \"visual\" to go to the visual\n"
+literal|" Type \"help\" for help"
+ifdef|#
+directive|ifdef
+name|VISUAL_USERCONFIG
+literal|" or \"visual\" to go to the visual\n"
 literal|" configuration interface (requires MGA/VGA display or\n"
-literal|" serial terminal capable of displaying ANSI graphics).\n"
+literal|" serial terminal capable of displaying ANSI graphics)"
+endif|#
+directive|endif
+literal|".\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -9218,6 +9507,8 @@ name|lineno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|lsdevtab
 argument_list|(
 operator|&
@@ -9226,7 +9517,12 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|lsdevtab
 argument_list|(
 operator|&
@@ -9235,7 +9531,12 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|lsdevtab
 argument_list|(
 operator|&
@@ -9244,7 +9545,12 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|lsdevtab
 argument_list|(
 operator|&
@@ -9253,7 +9559,10 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 return|return
 literal|0
 return|;
@@ -9703,6 +10012,123 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|quitfunc
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|helpfunc
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"Command\t\t\tDescription\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"-------\t\t\t-----------\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ls\t\t\tList currently configured devices\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"port<devname><addr>\tSet device port (i/o address)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"irq<devname><number>\tSet device irq\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"drq<devname><number>\tSet device drq\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"iomem<devname><addr>\tSet device maddr (memory address)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"iosize<devname><size>\tSet device memory size\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"flags<devname><mask>\tSet device flags\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"enable<devname>\tEnable device\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"disable<devname>\tDisable device (will not be probed)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"quit\t\t\tExit this configuration utility\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"reset\t\t\tReset CPU\n"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VISUAL_USERCONFIG
+name|printf
+argument_list|(
+literal|"visual\t\t\tGo to fullscreen mode.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"help\t\t\tThis message\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Commands may be abbreviated to a unique prefix\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
@@ -10099,6 +10525,10 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+operator|-
+literal|1
+case|:
+case|case
 literal|'Q'
 case|:
 case|case
@@ -10176,118 +10606,6 @@ end_endif
 begin_function
 specifier|static
 name|int
-name|quitfunc
-parameter_list|(
-name|CmdParm
-modifier|*
-name|parms
-parameter_list|)
-block|{
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|helpfunc
-parameter_list|(
-name|CmdParm
-modifier|*
-name|parms
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Command\t\t\tDescription\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"-------\t\t\t-----------\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ls\t\t\tList currently configured devices\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"port<devname><addr>\tSet device port (i/o address)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"irq<devname><number>\tSet device irq\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"drq<devname><number>\tSet device drq\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"iomem<devname><addr>\tSet device maddr (memory address)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"iosize<devname><size>\tSet device memory size\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"flags<devname><mask>\tSet device flags\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"enable<devname>\tEnable device\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"disable<devname>\tDisable device (will not be probed)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"quit\t\t\tExit this configuration utility\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"reset\t\t\tReset CPU\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"visual\t\t\tGo to fullscreen mode.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"help\t\t\tThis message\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Commands may be abbreviated to a unique prefix\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|lsdevtab
 parameter_list|(
 name|struct
@@ -10330,12 +10648,25 @@ argument_list|(
 literal|"<More> "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|cngetc
+if|if
+condition|(
+name|getchar
 argument_list|()
+operator|==
+literal|'q'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"quit\n"
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -10547,6 +10878,11 @@ operator|++
 name|lineno
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -10740,6 +11076,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cngets
 parameter_list|(
@@ -10765,7 +11102,7 @@ condition|)
 block|{
 name|c
 operator|=
-name|cngetc
+name|getchar
 argument_list|()
 expr_stmt|;
 comment|/* Treat ^H or ^? as backspace */
@@ -10868,6 +11205,13 @@ name|c
 operator|==
 literal|'\r'
 operator|)
+operator|||
+operator|(
+name|c
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 operator|*
@@ -10958,6 +11302,7 @@ comment|/*  * Convert a string to an unsigned long integer.  *  * Ignores `local
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|strtoul
