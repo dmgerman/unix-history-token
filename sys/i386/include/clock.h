@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.28 1997/12/26 20:42:01 phk Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.29 1997/12/28 13:36:06 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,28 +15,6 @@ directive|define
 name|_MACHINE_CLOCK_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -48,28 +26,6 @@ name|ntime
 parameter_list|)
 value|cpu_clockupdate((otime), (ntime))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPU_CLOCKUPDATE
-parameter_list|(
-name|otime
-parameter_list|,
-name|ntime
-parameter_list|)
-value|(*(otime) = *(ntime))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -154,26 +110,6 @@ name|timer0_prescaler_count
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -188,11 +124,6 @@ name|tsc_comultiplier
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -200,28 +131,12 @@ name|tsc_freq
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|u_int
 name|tsc_multiplier
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -494,28 +409,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I686_CPU
-argument_list|)
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-end_if
-
 begin_comment
 comment|/*  * When we update `time', on we also update `tsc_bias'  * atomically.  `tsc_bias' is the best available approximation to  * the value of the TSC (mod 2^32) at the time of the i8254  * counter transition that caused the clock interrupt that caused the  * update.  clock_latency() gives the time between the transition and  * the update to within a few usec provided another such transition  * hasn't occurred.  We don't bother checking for counter overflow as  * in microtime(), since if it occurs then we're close to losing clock  * interrupts.  */
 end_comment
@@ -606,15 +499,6 @@ name|ntime
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* I586_CPU || I686_CPU */
-end_comment
 
 begin_endif
 endif|#
