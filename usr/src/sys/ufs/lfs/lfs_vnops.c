@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.74 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.75 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1075,7 +1075,6 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-comment|/* LFS */
 name|struct
 name|buf
 modifier|*
@@ -1083,8 +1082,6 @@ name|bp
 decl_stmt|;
 name|daddr_t
 name|lbn
-decl_stmt|,
-name|bn
 decl_stmt|;
 name|u_long
 name|osize
@@ -1095,6 +1092,8 @@ decl_stmt|,
 name|on
 decl_stmt|,
 name|flags
+decl_stmt|,
+name|newblock
 decl_stmt|;
 name|int
 name|size
@@ -1132,7 +1131,7 @@ name|UIO_WRITE
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_write mode"
+literal|"lfs_write mode"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1169,6 +1168,7 @@ break|break;
 case|case
 name|VDIR
 case|:
+comment|/* XXX This may not be correct for LFS. */
 if|if
 condition|(
 operator|(
@@ -1181,14 +1181,14 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_write nonsync dir write"
+literal|"lfs_write nonsync dir write"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ufs_write type"
+literal|"lfs_write type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1344,49 +1344,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<
-name|fs
-operator|->
-name|lfs_bsize
-condition|)
-name|flags
-operator||=
-name|B_CLRBUF
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|B_CLRBUF
-expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
-name|bread
+name|lfs_balloc
 argument_list|(
 name|vp
 argument_list|,
+name|n
+argument_list|,
 name|lbn
-argument_list|,
-name|fs
-operator|->
-name|lfs_bsize
-argument_list|,
-name|NOCRED
 argument_list|,
 operator|&
 name|bp
 argument_list|)
 condition|)
 break|break;
-name|bn
-operator|=
-name|bp
-operator|->
-name|b_blkno
-expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -1516,16 +1488,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* 		 * XXX 		 * This doesn't handle ioflag& IO_SYNC. 		 */
-name|lfs_bwrite
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_flag
@@ -1534,6 +1496,16 @@ name|IUPD
 operator||
 name|ICHG
 expr_stmt|;
+else|#
+directive|else
+comment|/* XXX This doesn't handle IO_SYNC. */
+name|LFS_UBWRITE
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cred
