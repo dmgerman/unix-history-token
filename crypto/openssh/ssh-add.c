@@ -490,7 +490,7 @@ name|strlcpy
 argument_list|(
 name|msg
 argument_list|,
-literal|"Bad passphrase, try again "
+literal|"Bad passphrase, try again: "
 argument_list|,
 sizeof|sizeof
 name|msg
