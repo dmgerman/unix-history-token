@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.3 1995/09/16 09:28:13 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -1259,10 +1259,17 @@ argument_list|,
 literal|"a"
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|q
+init|=
+literal|"malloc() warning: Couldn't dump stats.\n"
+decl_stmt|;
 if|if
 condition|(
 name|fd
 condition|)
+block|{
 name|malloc_dump
 argument_list|(
 name|fd
@@ -1271,6 +1278,20 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|q
+argument_list|,
+name|strlen
+argument_list|(
+name|q
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1377,20 +1398,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|update
-operator|&&
-name|last_index
-operator|>=
-name|malloc_ninfo
-operator|&&
 operator|!
+name|update
+operator|||
+name|last_index
+operator|<
+name|malloc_ninfo
+operator|||
 name|extend_page_directory
 argument_list|(
 name|last_index
 argument_list|)
 condition|)
-empty_stmt|;
-else|else
 return|return
 name|result
 return|;
