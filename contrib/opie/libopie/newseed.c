@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* newseed.c: The opienewseed() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.31. Added time.h. 	Created by cmetz for OPIE 2.22. */
+comment|/* newseed.c: The opienewseed() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.32. Added syslog.h if DEBUG. 	Modified by cmetz for OPIE 2.31. Added time.h. 	Created by cmetz for OPIE 2.22.  $FreeBSD$ */
 end_comment
 
 begin_include
@@ -104,6 +104,27 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|DEBUG
+end_if
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_include
 include|#
@@ -346,11 +367,24 @@ condition|)
 block|{
 if|#
 directive|if
-literal|0
-block|perror("uname");
+name|DEBUG
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"uname: %s(%d)"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* 0 */
+comment|/* DEBUG */
 name|utsname
 operator|.
 name|nodename

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* generator.c: The opiegenerator() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.31. Renamed "init" to "init-hex". 	      Removed active attack protection support. Fixed fairly               bug in how init response was computed (i.e., dead wrong). 	Modified by cmetz for OPIE 2.3. Use _opieparsechallenge(). ifdef 	      around string.h. Output hex responses by default, output 	      OTP re-init extended responses (same secret) if sequence 	      number falls below 10. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.               Bug fixes. 	Created at NRL for OPIE 2.2. */
+comment|/* generator.c: The opiegenerator() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.32. If secret=NULL, always return 		as if opieauto returned "get the secret". Renamed 		_opieparsechallenge() to __opieparsechallenge(). Check 		challenge for extended response support and don't send 		an init-hex response if extended response support isn't 		indicated in the challenge. 	Modified by cmetz for OPIE 2.31. Renamed "init" to "init-hex". 		Removed active attack protection support. Fixed fairly 		bug in how init response was computed (i.e., dead wrong). 	Modified by cmetz for OPIE 2.3. Use _opieparsechallenge(). ifdef 		around string.h. Output hex responses by default, output 		OTP re-init extended responses (same secret) if sequence 		number falls below 10. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al. 		Bug fixes. 	Created at NRL for OPIE 2.2.  $FreeBSD$ */
 end_comment
 
 begin_include
@@ -104,6 +104,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|exts
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -127,7 +130,7 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
-name|_opieparsechallenge
+name|__opieparsechallenge
 argument_list|(
 name|buffer
 argument_list|,
@@ -139,6 +142,9 @@ name|sequence
 argument_list|,
 operator|&
 name|seed
+argument_list|,
+operator|&
+name|exts
 argument_list|)
 condition|)
 return|return
@@ -160,6 +166,17 @@ operator|)
 condition|)
 return|return
 literal|1
+return|;
+if|if
+condition|(
+operator|!
+name|secret
+index|[
+literal|0
+index|]
+condition|)
+return|return
+literal|2
 return|;
 if|if
 condition|(
@@ -196,6 +213,19 @@ name|sequence
 operator|<
 literal|10
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|exts
+operator|&
+literal|1
+operator|)
+condition|)
+return|return
+literal|1
+return|;
 block|{
 name|char
 name|newseed
@@ -346,6 +376,8 @@ name|newkey
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+empty_stmt|;
 block|}
 else|else
 block|{

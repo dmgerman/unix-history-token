@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* passwd.c: The opiepasswd() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.31. Removed active attack protection 		support. 	Modified by cmetz for OPIE 2.3. Split most of the function off 		and turned this into a front-end for the new __opiewriterec(). 		Added code to compute the key from the secret. Use the opie_ 		prefix. Use new opieatob8() and opiebtoa8() return values. 	Created by cmetz for OPIE 2.22. */
+comment|/* passwd.c: The opiepasswd() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.32. Renamed mode to flags. Made flag 		values symbolic constants. Added a flag for insecure override 		support. 	Modified by cmetz for OPIE 2.31. Removed active attack protection 		support. 	Modified by cmetz for OPIE 2.3. Split most of the function off 		and turned this into a front-end for the new __opiewriterec(). 		Added code to compute the key from the secret. Use the opie_ 		prefix. Use new opieatob8() and opiebtoa8() return values. 	Created by cmetz for OPIE 2.22. */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ argument_list|(
 operator|(
 name|old
 operator|,
-name|mode
+name|flags
 operator|,
 name|principal
 operator|,
@@ -40,7 +40,7 @@ operator|*
 name|old
 name|AND
 name|int
-name|mode
+name|flags
 name|AND
 name|char
 operator|*
@@ -68,14 +68,29 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|mode
+name|flags
 operator|&
-literal|1
+name|OPIEPASSWD_CONSOLE
 operator|)
 operator|&&
 name|opieinsecure
 argument_list|()
 condition|)
+if|#
+directive|if
+name|INSECURE_OVERRIDE
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|OPIEPASSWD_FORCE
+operator|)
+condition|)
+endif|#
+directive|endif
+comment|/* INSECURE_OVERRIDE */
 return|return
 operator|-
 literal|1
@@ -147,9 +162,9 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|mode
+name|flags
 operator|&
-literal|1
+name|OPIEPASSWD_CONSOLE
 condition|)
 block|{
 if|if

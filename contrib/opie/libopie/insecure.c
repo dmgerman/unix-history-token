@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* insecure.c: The opieinsecure() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.31. Fixed a logic bug. Call endut[x]ent(). 	Modified by cmetz for OPIE 2.3. Added result caching. Use 	     __opiegetutmpentry(). Ifdef around ut_host check. Eliminate 	     unused variable. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Allow IP loopback. DISPLAY and ut_host must match exactly,              not just the part before the colon. Added work-around for               Sun CDE dtterm bug. Leave the environment as it was              found. Use uname().         Created at NRL for OPIE 2.2 from opiesubr.c. Fixed pointer              assignment that should have been a comparison. */
+comment|/* insecure.c: The opieinsecure() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.31. Fixed a logic bug. Call endut[x]ent(). 	Modified by cmetz for OPIE 2.3. Added result caching. Use 	     __opiegetutmpentry(). Ifdef around ut_host check. Eliminate 	     unused variable. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Allow IP loopback. DISPLAY and ut_host must match exactly,              not just the part before the colon. Added work-around for               Sun CDE dtterm bug. Leave the environment as it was              found. Use uname().         Created at NRL for OPIE 2.2 from opiesubr.c. Fixed pointer              assignment that should have been a comparison. */
 end_comment
 
 begin_include
@@ -466,6 +466,14 @@ empty_stmt|;
 if|#
 directive|if
 name|HAVE_UT_HOST
+if|if
+condition|(
+name|isatty
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
 name|memset
 argument_list|(
 operator|&
@@ -637,6 +645,8 @@ comment|/* SOLARIS */
 block|}
 block|}
 block|}
+block|}
+empty_stmt|;
 block|}
 empty_stmt|;
 endif|#
