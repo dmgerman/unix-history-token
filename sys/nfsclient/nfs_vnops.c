@@ -4346,6 +4346,12 @@ name|error
 operator|)
 return|;
 block|}
+name|vhold
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
 name|newvp
 operator|=
 operator|*
@@ -4565,6 +4571,11 @@ name|cn_flags
 operator||=
 name|SAVENAME
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|newvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4606,6 +4617,11 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|vdrop
+argument_list|(
+name|newvp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vn_lock
