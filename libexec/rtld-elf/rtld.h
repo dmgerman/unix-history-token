@@ -198,6 +198,41 @@ name|true
 value|1
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|tls_last_offset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|tls_last_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|tls_static_space
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tls_dtv_generation
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tls_max_index
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|stat
@@ -494,6 +529,32 @@ modifier|*
 name|interp
 decl_stmt|;
 comment|/* Pathname of the interpreter, if any */
+comment|/* TLS information */
+name|int
+name|tlsindex
+decl_stmt|;
+comment|/* Index in DTV for this module */
+name|void
+modifier|*
+name|tlsinit
+decl_stmt|;
+comment|/* Base address of TLS init block */
+name|size_t
+name|tlsinitsize
+decl_stmt|;
+comment|/* Size of TLS init block for this module */
+name|size_t
+name|tlssize
+decl_stmt|;
+comment|/* Size of TLS block for this module */
+name|size_t
+name|tlsoffset
+decl_stmt|;
+comment|/* Offset of static TLS block for this module */
+name|size_t
+name|tlsalign
+decl_stmt|;
+comment|/* Alignment of static TLS block */
 comment|/* Items from the dynamic section. */
 name|Elf_Addr
 modifier|*
@@ -634,6 +695,10 @@ name|bool
 name|init_done
 decl_stmt|;
 comment|/* Already have added object to init list */
+name|bool
+name|tls_done
+decl_stmt|;
+comment|/* Already allocated offset for static TLS */
 name|struct
 name|link_map
 name|linkmap
@@ -677,6 +742,13 @@ define|#
 directive|define
 name|RTLD_VERSION
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_STATIC_TLS_EXTRA
+value|64
 end_define
 
 begin_comment
@@ -959,6 +1031,79 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+modifier|*
+name|tls_get_addr_common
+parameter_list|(
+name|Elf_Addr
+modifier|*
+modifier|*
+name|dtvp
+parameter_list|,
+name|int
+name|index
+parameter_list|,
+name|size_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|allocate_tls
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_tls
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|allocate_module_tls
+parameter_list|(
+name|int
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|allocate_tls_offset
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * MD function declarations.  */
 end_comment
@@ -999,6 +1144,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|reloc_jmpslots
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|allocate_initial_tls
 parameter_list|(
 name|Obj_Entry
 modifier|*
