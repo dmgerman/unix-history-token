@@ -1013,6 +1013,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
@@ -1102,6 +1103,7 @@ operator|)
 return|;
 comment|/* NOTREACHED */
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 return|return
@@ -1590,6 +1592,7 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 return|return
@@ -2287,6 +2290,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
+empty_stmt|;
 comment|/* NOTREACHED */
 block|}
 comment|/* Repeat processing loop with next character. */
