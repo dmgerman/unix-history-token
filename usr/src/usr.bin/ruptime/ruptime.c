@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.1 82/04/02"
+literal|"@(#)ruptime.c	4.2 82/04/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -585,7 +585,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%-8.8s%s,  %4d user%s  load %4.2f, %4.2f, %4.2f\n"
+literal|"%-8.8s%s,  %4d user%s  load %5.2f, %5.2f, %5.2f\n"
 argument_list|,
 name|hsp
 operator|->
