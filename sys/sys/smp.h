@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.6 1997/05/05 22:56:37 fsmp Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.7 1997/05/06 21:29:57 fsmp Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -20,12 +20,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_smp.h"
-end_include
 
 begin_if
 if|#
@@ -183,41 +177,6 @@ end_decl_stmt
 begin_comment
 comment|/* global data in mp_machdep.c */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|SMPcurproc
-index|[
-name|NCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcb
-modifier|*
-name|SMPcurpcb
-index|[
-name|NCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|timeval
-name|SMPruntime
-index|[
-name|NCPU
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
