@@ -732,6 +732,20 @@ value|(TARGET_64BIT ? dbx64_register_map[n]	\ 				: (write_symbols == DWARF2_DEB
 end_define
 
 begin_comment
+comment|/* The same functions are used to creating the DWARF2 debug info and C++    unwind info (except.c).  Regardless of the debug format requested, the    register numbers used in exception unwinding sections still have to be    DWARF compatible.  IMO the GCC folks may be abusing the DBX_REGISTER_NUMBER    macro to mean too much.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF_FRAME_REGNUM
+parameter_list|(
+name|n
+parameter_list|)
+value|(TARGET_64BIT ? dbx64_register_map[n]	\ 				: svr4_dbx_register_map[(n)])
+end_define
+
+begin_comment
 comment|/* tag end of file in elf mode */
 end_comment
 
