@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
+comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init	Initialize the module.  *  *	Dir_HasWildcards Returns TRUE if the name given it needs to  *			be wildcard-expanded.  *  *	Dir_Expand	Given a pattern and a path, return a Lst of names  *			which match the pattern on the search path.  *  *	Dir_FindFile	Searches for a file on a given search path.  *			If it exists, the entire path is returned.  *			Otherwise NULL is returned.  *  *	Dir_MTime	Return the modification time of a node. The file  *			is searched for along the default search path.  *			The path and mtime fields of the node are filled in.  *  *	Dir_AddDir	Add a directory to a search path.  *  *	Dir_MakeFlags	Given a search path and a command flag, create  *			a string with each of the directories in the path  *			preceded by the command flag and all of them  *			separated by a space.  *  *	Dir_Destroy	Destroy an element of a search path. Frees up all  *			things that can be freed for the element as long  *			as the element is no longer referenced by any other  *			search path.  *  *	Dir_ClearPath	Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
 end_comment
 
 begin_include
@@ -146,11 +146,11 @@ comment|/* Name of directory */
 name|int
 name|refCount
 decl_stmt|;
-comment|/* Number of paths with this directory */
+comment|/* No. of paths with this directory */
 name|int
 name|hits
 decl_stmt|;
-comment|/* Number of times a file in this dirextory has 				 * been found  */
+comment|/* No. of times a file has been found here */
 name|Hash_Table
 name|files
 decl_stmt|;
@@ -464,7 +464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * DirMatchFiles --  * 	Given a pattern and a Dir structure, see if any files  *	match the pattern and add their names to the 'expansions' list if  *	any do. This is incomplete -- it doesn't take care of patterns like  *	src / *src / *.c properly (just *.c on any of the directories), but it  *	will do for now.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	File names are added to the expansions lst. The directory will be  *	fully hashed when this is done.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * DirMatchFiles --  *	Given a pattern and a Dir structure, see if any files  *	match the pattern and add their names to the 'expansions' list if  *	any do. This is incomplete -- it doesn't take care of patterns like  *	src / *src / *.c properly (just *.c on any of the directories), but it  *	will do for now.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	File names are added to the expansions lst. The directory will be  *	fully hashed when this is done.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
