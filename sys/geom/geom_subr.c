@@ -566,6 +566,17 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|g_cancel_event
+argument_list|(
+name|NULL
+argument_list|,
+name|gp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|gp
@@ -791,6 +802,17 @@ argument_list|,
 operator|(
 literal|"g_destroy_consumer with ace"
 operator|)
+argument_list|)
+expr_stmt|;
+name|g_cancel_event
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -1127,6 +1149,17 @@ argument_list|,
 operator|(
 literal|"g_destroy_provider with ace"
 operator|)
+argument_list|)
+expr_stmt|;
+name|g_cancel_event
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|pp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|g_nproviders
