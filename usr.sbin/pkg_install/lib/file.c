@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.28 1997/07/01 06:13:50 jkh Exp $"
+literal|"$Id: file.c,v 1.29 1997/10/08 07:47:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1262,7 +1262,7 @@ name|cp
 operator|=
 name|strrchr
 argument_list|(
-name|fname
+name|tmp
 argument_list|,
 literal|'/'
 argument_list|)
@@ -1282,7 +1282,7 @@ name|cp
 operator|=
 name|strrchr
 argument_list|(
-name|fname
+name|tmp
 argument_list|,
 literal|'/'
 argument_list|)
@@ -1314,6 +1314,13 @@ argument_list|(
 name|cp
 argument_list|,
 name|fname
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|cp
+argument_list|,
+literal|".tgz"
 argument_list|)
 expr_stmt|;
 if|if
