@@ -4579,9 +4579,8 @@ argument_list|(
 literal|" 16550A fifo disabled"
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
 name|com
 operator|->
 name|hasfifo
@@ -4596,11 +4595,16 @@ name|flags
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|" ST16650A"
+argument_list|)
+expr_stmt|;
 name|com
 operator|->
 name|st16650a
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|com
 operator|->
@@ -4608,13 +4612,8 @@ name|tx_fifo_size
 operator|=
 literal|32
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" ST16650A"
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
-elseif|else
 if|if
 condition|(
 name|COM_TI16754
@@ -4623,36 +4622,24 @@ name|flags
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|" TI16754"
+argument_list|)
+expr_stmt|;
 name|com
 operator|->
 name|tx_fifo_size
 operator|=
 literal|64
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" TI16754"
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
-else|else
-block|{
-name|com
-operator|->
-name|tx_fifo_size
-operator|=
-name|COM_FIFOSIZE
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|" 16550A"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 ifdef|#
 directive|ifdef
 name|COM_ESP
@@ -4689,28 +4676,33 @@ literal|1024
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
-operator|!
 name|com
 operator|->
-name|st16650a
-operator|&&
-operator|!
-name|COM_TI16754
-argument_list|(
-name|flags
-argument_list|)
+name|esp
+operator|!=
+name|NULL
 condition|)
-block|{
-if|if
-condition|(
-operator|!
+break|break;
+endif|#
+directive|endif
 name|com
 operator|->
 name|tx_fifo_size
+operator|=
+name|COM_FIFOSIZE
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|com
+operator|->
+name|tx_fifo_size
+operator|==
+literal|0
 condition|)
 name|com
 operator|->
@@ -4721,14 +4713,13 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" lookalike with %d bytes FIFO"
+literal|" lookalike with %u bytes FIFO"
 argument_list|,
 name|com
 operator|->
 name|tx_fifo_size
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 ifdef|#
@@ -4739,6 +4730,8 @@ condition|(
 name|com
 operator|->
 name|esp
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Set 16550 compatibility mode. 		 * We don't use the ESP_MODE_SCALE bit to increase the 		 * fifo trigger levels because we can't handle large 		 * bursts of input. 		 * XXX flow control should be set in comparam(), not here. 		 */
