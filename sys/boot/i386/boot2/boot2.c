@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.7 1998/10/15 20:04:21 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.8 1998/10/17 09:01:13 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -1004,6 +1004,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|cmd
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|PATH_CONFIG
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|parse
 argument_list|(
 name|cmd
@@ -1013,9 +1028,11 @@ name|autoboot
 operator|=
 literal|0
 expr_stmt|;
-elseif|else
+block|}
 if|if
 condition|(
+name|autoboot
+operator|&&
 operator|!
 operator|*
 name|kname
