@@ -60,21 +60,21 @@ end_include
 begin_define
 define|#
 directive|define
-name|ACPI_SNC_GET_BRIGHTNESS
+name|ACPI_SONY_GET_BRIGHTNESS
 value|"GBRT"
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_SNC_SET_BRIGHTNESS
+name|ACPI_SONY_SET_BRIGHTNESS
 value|"SBRT"
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_SNC_GET_PID
+name|ACPI_SONY_GET_PID
 value|"GPID"
 end_define
 
@@ -84,7 +84,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|acpi_snc_softc
+name|acpi_sony_softc
 block|{
 name|int
 name|pid
@@ -96,7 +96,7 @@ end_struct
 begin_struct
 specifier|static
 struct|struct
-name|acpi_snc_name_list
+name|acpi_sony_name_list
 block|{
 name|char
 modifier|*
@@ -115,7 +115,7 @@ modifier|*
 name|comment
 decl_stmt|;
 block|}
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[]
 init|=
 block|{
@@ -190,7 +190,7 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
-name|acpi_snc_probe
+name|acpi_sony_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -201,7 +201,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|acpi_snc_attach
+name|acpi_sony_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -212,7 +212,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|acpi_snc_detach
+name|acpi_sony_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -223,7 +223,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|sysctl_acpi_snc_gen_handler
+name|sysctl_acpi_sony_gen_handler
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -233,7 +233,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|acpi_snc_methods
+name|acpi_sony_methods
 index|[]
 init|=
 block|{
@@ -242,21 +242,21 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|acpi_snc_probe
+name|acpi_sony_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|acpi_snc_attach
+name|acpi_sony_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|acpi_snc_detach
+name|acpi_sony_detach
 argument_list|)
 block|,
 block|{
@@ -271,17 +271,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|acpi_snc_driver
+name|acpi_sony_driver
 init|=
 block|{
-literal|"acpi_snc"
+literal|"acpi_sony"
 block|,
-name|acpi_snc_methods
+name|acpi_sony_methods
 block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|acpi_snc_softc
+name|acpi_sony_softc
 argument_list|)
 block|, }
 decl_stmt|;
@@ -290,20 +290,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|acpi_snc_devclass
+name|acpi_sony_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|acpi_snc
+name|acpi_sony
 argument_list|,
 name|acpi
 argument_list|,
-name|acpi_snc_driver
+name|acpi_sony_driver
 argument_list|,
-name|acpi_snc_devclass
+name|acpi_sony_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -315,7 +315,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|acpi_snc
+name|acpi_sony
 argument_list|,
 name|acpi
 argument_list|,
@@ -346,14 +346,14 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|acpi_snc_probe
+name|acpi_sony_probe
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|acpi_snc_softc
+name|acpi_sony_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -407,14 +407,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|acpi_snc_attach
+name|acpi_sony_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|acpi_snc_softc
+name|acpi_sony_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -435,7 +435,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|ACPI_SNC_GET_PID
+name|ACPI_SONY_GET_PID
 argument_list|,
 operator|&
 name|sc
@@ -460,7 +460,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|i
 index|]
@@ -490,7 +490,7 @@ argument_list|)
 argument_list|,
 name|i
 argument_list|,
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|i
 index|]
@@ -501,7 +501,7 @@ name|CTLTYPE_INT
 operator||
 operator|(
 operator|(
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|i
 index|]
@@ -518,11 +518,11 @@ name|dev
 argument_list|,
 name|i
 argument_list|,
-name|sysctl_acpi_snc_gen_handler
+name|sysctl_acpi_sony_gen_handler
 argument_list|,
 literal|"I"
 argument_list|,
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|i
 index|]
@@ -542,7 +542,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|acpi_snc_detach
+name|acpi_sony_detach
 parameter_list|(
 name|device_t
 name|dev
@@ -563,7 +563,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int acpi_snc_suspend(device_t dev) { 	struct acpi_snc_softc *sc = device_get_softc(dev); 	return (0); }  static int acpi_snc_resume(device_t dev) { 	return (0); }
+unit|static int acpi_sony_suspend(device_t dev) { 	struct acpi_sony_softc *sc = device_get_softc(dev); 	return (0); }  static int acpi_sony_resume(device_t dev) { 	return (0); }
 endif|#
 directive|endif
 end_endif
@@ -571,7 +571,7 @@ end_endif
 begin_function
 specifier|static
 name|int
-name|sysctl_acpi_snc_gen_handler
+name|sysctl_acpi_sony_gen_handler
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -602,7 +602,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|function
 index|]
@@ -637,7 +637,7 @@ operator|->
 name|newptr
 operator|||
 operator|!
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|function
 index|]
@@ -656,7 +656,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|acpi_snc_oids
+name|acpi_sony_oids
 index|[
 name|function
 index|]
