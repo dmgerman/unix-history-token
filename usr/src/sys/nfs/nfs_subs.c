@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.49 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,145 +10,151 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"filedesc.h"
+file|<sys/filedesc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ufs/ufs/quota.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ufs/ufs/inode.h"
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ufs/ufs/ufsmount.h"
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rpcv2.h"
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|<nfs/rpcv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsnode.h"
+file|<nfs/nfsv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfs.h"
+file|<nfs/nfsnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xdr_subs.h"
+file|<nfs/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsm_subs.h"
+file|<nfs/xdr_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsmount.h"
+file|<nfs/nfsm_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nqnfs.h"
+file|<nfs/nfsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsrtt.h"
+file|<nfs/nqnfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfsrtt.h>
 end_include
 
 begin_define
@@ -3954,6 +3960,9 @@ name|vnode_pager_setsize
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|n_size
@@ -4375,6 +4384,9 @@ name|vnode_pager_setsize
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|n_size

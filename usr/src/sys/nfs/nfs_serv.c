@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,65 +10,61 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dirent.h"
+file|<sys/dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ufs/ufs/quota.h"
+file|<vm/vm.h>
 end_include
-
-begin_comment
-comment|/* XXX - for ufid */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|"ufs/ufs/inode.h"
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_comment
@@ -78,37 +74,47 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|<ufs/ufs/inode.h>
+end_include
+
+begin_comment
+comment|/* XXX - for ufid */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfsv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rpcv2.h"
+file|<nfs/rpcv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfs.h"
+file|<nfs/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xdr_subs.h"
+file|<nfs/xdr_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsm_subs.h"
+file|<nfs/nfsm_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nqnfs.h"
+file|<nfs/nqnfs.h>
 end_include
 
 begin_comment

@@ -1,96 +1,102 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"trace.h"
+file|<sys/trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/endian.h"
+file|<machine/endian.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsnode.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rpcv2.h"
+file|<nfs/nfsnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|<nfs/rpcv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfs.h"
+file|<nfs/nfsv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsmount.h"
+file|<nfs/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nqnfs.h"
+file|<nfs/nfsmount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nqnfs.h>
 end_include
 
 begin_comment
@@ -1952,6 +1958,9 @@ name|vnode_pager_setsize
 argument_list|(
 name|vp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|->
 name|n_size
