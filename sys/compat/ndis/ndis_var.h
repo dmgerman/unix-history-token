@@ -3721,12 +3721,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|uint8_t
-name|np_proto_rsvd
-index|[
-literal|1
-index|]
-decl_stmt|;
 comment|/* 	 * This next part is probably wrong, but we need some place 	 * to put the out of band data structure... 	 */
 name|ndis_packet_oob
 name|np_oob
@@ -3736,6 +3730,21 @@ name|np_ext
 decl_stmt|;
 name|ndis_sc_list
 name|np_sclist
+decl_stmt|;
+comment|/* BSD-specific stuff which should be invisible to drivers. */
+name|uint32_t
+name|np_refcnt
+decl_stmt|;
+name|void
+modifier|*
+name|np_softc
+decl_stmt|;
+name|void
+modifier|*
+name|np_m0
+decl_stmt|;
+name|int
+name|np_txidx
 decl_stmt|;
 block|}
 struct|;
