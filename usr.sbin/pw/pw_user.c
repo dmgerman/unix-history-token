@@ -1305,6 +1305,7 @@ operator|==
 operator|-
 literal|1
 operator|||
+operator|!
 name|S_ISDIR
 argument_list|(
 name|st
