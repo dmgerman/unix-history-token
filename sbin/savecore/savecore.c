@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)savecore.c	8.3 (Berkeley) 1/2/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)savecore.c	8.3 (Berkeley) 1/2/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
