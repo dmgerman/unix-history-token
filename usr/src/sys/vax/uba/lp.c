@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.32	83/01/03	*/
+comment|/*	lp.c	4.33	83/06/13	*/
 end_comment
 
 begin_include
@@ -807,6 +807,9 @@ name|min
 argument_list|(
 literal|512
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|uio
 operator|->
 name|uio_resid
@@ -829,6 +832,9 @@ name|uiomove
 argument_list|(
 name|cp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|n
 argument_list|,
 name|UIO_WRITE
@@ -1849,6 +1855,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

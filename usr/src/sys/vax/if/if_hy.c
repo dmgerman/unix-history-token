@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hy.c	4.7	83/06/13	*/
+comment|/*	if_hy.c	4.8	83/06/13	*/
 end_comment
 
 begin_include
@@ -1151,7 +1151,7 @@ operator|)
 operator|&
 name|is
 operator|->
-name|is_if
+name|hy_if
 operator|.
 name|if_addr
 expr_stmt|;
@@ -1233,7 +1233,7 @@ return|return;
 block|}
 name|is
 operator|->
-name|is_hy
+name|hy_if
 operator|.
 name|if_flags
 operator||=
@@ -2334,7 +2334,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  */
+comment|/*  * Encapsulate a packet of type family for the local net.  */
 end_comment
 
 begin_macro
@@ -5341,6 +5341,7 @@ name|actloop
 goto|;
 name|endintr
 label|:
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5366,7 +5367,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Called from device interrupt when recieving data.  * Examine packet to determine type.  Decapsulate packet  * based on type and pass to type specific higher-level  * input routine.  */
+comment|/*  * Called from device interrupt when receiving data.  * Examine packet to determine type.  Decapsulate packet  * based on type and pass to type specific higher-level  * input routine.  */
 end_comment
 
 begin_macro
@@ -5374,7 +5375,7 @@ name|hyrecvdata
 argument_list|(
 argument|ui
 argument_list|,
-argument|hyh0
+argument|hyh
 argument_list|,
 argument|len
 argument_list|)
@@ -5389,10 +5390,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|hy_hdr
 modifier|*
-name|hyh0
+name|hyh
 decl_stmt|;
 end_decl_stmt
 
@@ -5417,14 +5419,6 @@ name|ui
 operator|->
 name|ui_unit
 index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|hy_hdr
-modifier|*
-name|hyh
-init|=
-name|hyh0
 decl_stmt|;
 name|struct
 name|mbuf
@@ -6216,11 +6210,7 @@ end_macro
 begin_decl_stmt
 name|int
 name|code
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|len
 decl_stmt|;
 end_decl_stmt
@@ -6446,6 +6436,9 @@ name|len
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ptr
 argument_list|,
 operator|(
@@ -6521,6 +6514,18 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|sin
+decl_stmt|;
+name|struct
+name|ifreq
+modifier|*
+name|ifr
+init|=
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|data
 decl_stmt|;
 name|int
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.11	83/06/12	*/
+comment|/*	uipc_usrreq.c	1.12	83/06/13	*/
 end_comment
 
 begin_include
@@ -2212,7 +2212,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|getf
@@ -2258,6 +2257,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|fp
 operator|=
 name|getf
@@ -2838,8 +2838,6 @@ expr_stmt|;
 name|closef
 argument_list|(
 name|fp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

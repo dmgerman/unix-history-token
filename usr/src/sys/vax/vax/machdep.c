@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.80	83/06/09	*/
+comment|/*	machdep.c	4.81	83/06/13	*/
 end_comment
 
 begin_include
@@ -1499,7 +1499,6 @@ literal|0
 expr_stmt|;
 operator|*
 name|usp
-operator|++
 operator|=
 call|(
 name|int
@@ -1509,6 +1508,9 @@ name|usp
 operator|+
 literal|2
 argument_list|)
+expr_stmt|;
+name|usp
+operator|++
 expr_stmt|;
 operator|*
 name|usp

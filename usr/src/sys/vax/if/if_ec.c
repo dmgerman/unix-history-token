@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.36	83/06/13	*/
+comment|/*	if_ec.c	4.37	83/06/13	*/
 end_comment
 
 begin_include
@@ -1080,9 +1080,6 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|sin
-decl_stmt|,
-modifier|*
-name|sinb
 decl_stmt|;
 name|int
 name|i

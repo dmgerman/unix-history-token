@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rl.c	4.3	83/05/18	*/
+comment|/*	rl.c	4.4	83/06/13	*/
 end_comment
 
 begin_include
@@ -18,8 +18,14 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * UNIBUS RL02 disk driver  * (not yet converted to 4.1c)  */
+comment|/*  * UNIBUS RL02 disk driver  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -36,19 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/nexus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/dk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/dkbad.h"
 end_include
 
 begin_include
@@ -84,31 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubareg.h"
 end_include
 
 begin_include
@@ -120,7 +96,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/rlreg.h"
+file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/nexus.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/rlreg.h"
 end_include
 
 begin_comment
@@ -152,7 +164,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * this struct is used to keep the state of the controller for the last  * transfer done.  Since only one transfer can be done at a time per  * controller, only allocate one for each controller.  */
+comment|/*   * State of controller from last transfer.  * Since only one transfer can be done at a time per  * controller, only allocate one for each controller.  */
 end_comment
 
 begin_struct
@@ -194,6 +206,10 @@ begin_comment
 comment|/* THIS SHOULD BE READ OFF THE PACK, PER DRIVE */
 end_comment
 
+begin_comment
+comment|/* Last cylinder not used. Saved for Bad Sector File */
+end_comment
+
 begin_struct
 struct|struct
 name|size
@@ -211,41 +227,37 @@ literal|8
 index|]
 init|=
 block|{
-literal|14440
+literal|15884
 block|,
 literal|0
 block|,
-comment|/* A=cyl   0 thru 360 */
-literal|6040
+comment|/* A=cyl   0 thru 397 */
+literal|4520
 block|,
-literal|361
+literal|398
 block|,
-comment|/* B=cyl 361 thru 511 */
-literal|20480
+comment|/* B=cyl 398 thru 510 */
+operator|-
+literal|1
 block|,
 literal|0
 block|,
 comment|/* C=cyl   0 thru 511 */
-literal|0
+literal|4520
 block|,
-literal|0
+literal|398
 block|,
-comment|/* D= Not Defined     */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* E= Not Defined     */
+comment|/* D=cyl 398 thru 510 */
 literal|0
 block|,
 literal|0
 block|,
 comment|/* F= Not Defined     */
-literal|0
+literal|20440
 block|,
 literal|0
 block|,
-comment|/* G= Not Defined     */
+comment|/* G=cyl   0 thru 510 */
 literal|0
 block|,
 literal|0
@@ -519,6 +531,11 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
+name|rlintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 operator|(
@@ -536,13 +553,11 @@ name|RL_IE
 operator||
 name|RL_NOOP
 expr_stmt|;
-comment|/* Enable intrpt */
 name|DELAY
 argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Ensure interrupt takes place (10 microsec ) */
 operator|(
 operator|(
 expr|struct
@@ -557,7 +572,6 @@ operator|&=
 operator|~
 name|RL_IE
 expr_stmt|;
-comment|/* Disable intrpt */
 return|return
 operator|(
 sizeof|sizeof
@@ -569,10 +583,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* Check that drive exists and is functional*/
-end_comment
 
 begin_macro
 name|rlslave
@@ -690,7 +700,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Error return */
 if|if
 condition|(
 operator|(
@@ -706,10 +715,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* NO RL01'S */
 name|printf
 argument_list|(
-literal|"rl01 drives not supported (drive %d)\n"
+literal|"rl%d: rl01's not supported\n"
 argument_list|,
 name|ui
 operator|->
@@ -729,10 +737,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* Initialize controller */
-end_comment
 
 begin_expr_stmt
 name|rlattach
@@ -774,7 +778,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* Watch for lost intr */
 name|rlwstart
 operator|++
 expr_stmt|;
@@ -822,7 +825,6 @@ operator|.
 name|rl_ndrive
 operator|++
 expr_stmt|;
-comment|/* increment device/ctrl */
 name|rladdr
 operator|=
 operator|(
@@ -864,7 +866,7 @@ argument_list|(
 name|rladdr
 argument_list|)
 expr_stmt|;
-comment|/* Determine disk posistion */
+comment|/* determine disk posistion */
 name|rladdr
 operator|->
 name|rlcs
@@ -956,7 +958,7 @@ specifier|register
 name|struct
 name|uba_device
 modifier|*
-name|mi
+name|ui
 decl_stmt|;
 if|if
 condition|(
@@ -1036,6 +1038,8 @@ name|b_dev
 argument_list|)
 operator|&
 literal|07
+decl_stmt|,
+name|s
 decl_stmt|;
 name|long
 name|bn
@@ -1054,7 +1058,6 @@ operator|)
 operator|>>
 literal|9
 expr_stmt|;
-comment|/* Blocks to transfer */
 name|drive
 operator|=
 name|dkunit
@@ -1062,7 +1065,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* Drive number */
 if|if
 condition|(
 name|drive
@@ -1079,7 +1081,6 @@ index|[
 name|drive
 index|]
 expr_stmt|;
-comment|/* Controller uba_device */
 if|if
 condition|(
 name|ui
@@ -1146,9 +1147,8 @@ index|]
 operator|.
 name|cyloff
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1178,9 +1178,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|rlustart
 argument_list|(
 name|ui
@@ -1207,9 +1204,6 @@ name|b_active
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|rlstart
 argument_list|(
 name|ui
@@ -1218,11 +1212,10 @@ name|ui_mi
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return;
 name|bad
@@ -1286,10 +1279,6 @@ name|daddr_t
 name|bn
 decl_stmt|;
 name|short
-name|cyl
-decl_stmt|,
-name|sn
-decl_stmt|,
 name|hd
 decl_stmt|,
 name|diff
@@ -1300,11 +1289,7 @@ name|ui
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|um
 operator|=
 name|ui
@@ -1322,7 +1307,6 @@ operator|->
 name|ui_dk
 operator|)
 expr_stmt|;
-comment|/* Kernel define, drives busy */
 name|dp
 operator|=
 operator|&
@@ -1345,9 +1329,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 comment|/* 	 * If the controller is active, just remember 	 * that this device has to be positioned... 	 */
 if|if
 condition|(
@@ -1373,11 +1355,7 @@ name|ui
 operator|->
 name|ui_slave
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 comment|/* 	 * If we have already positioned this drive, 	 * then just put it on the ready queue. 	 */
 if|if
@@ -1395,7 +1373,7 @@ name|b_active
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Posistioning drive */
+comment|/* positioning drive */
 name|rladdr
 operator|=
 operator|(
@@ -1416,20 +1394,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* Block # desired */
-comment|/* 	 * these next two look funky... but we need to map 	 * 512 byte logical disk blocks to 256 byte sectors. 	 * (rl02's are stupid). 	 */
-name|sn
-operator|=
-operator|(
-name|bn
-operator|%
-name|rl02
-operator|.
-name|nbpt
-operator|)
-operator|<<
-literal|1
-expr_stmt|;
-comment|/* Sector # desired */
+comment|/* 	 * Map 512 byte logical disk blocks 	 * to 256 byte sectors (rl02's are stupid). 	 */
 name|hd
 operator|=
 operator|(
@@ -1497,8 +1462,6 @@ goto|goto
 name|done
 goto|;
 comment|/* on cylinder and head */
-name|search
-label|:
 comment|/* 	 * Not at correct position. 	 */
 name|rl_stat
 index|[
@@ -1610,7 +1573,6 @@ argument_list|(
 name|rladdr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * fall through since we are now at the correct cylinder 	 */
 name|done
 label|:
 comment|/* 	 * Device is ready to go. 	 * Put it on the ready queue for the controller 	 * (unless its already there.) 	 */
@@ -1674,13 +1636,6 @@ literal|2
 expr_stmt|;
 comment|/* Request on ready queue */
 block|}
-name|out
-label|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -1750,7 +1705,6 @@ name|cmd
 decl_stmt|;
 name|loop
 label|:
-comment|/* 	 * Pull a request off the controller queue 	 */
 if|if
 condition|(
 operator|(
@@ -1791,11 +1745,7 @@ name|rl_bpart
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1824,7 +1774,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-comment|/* 	 * Mark controller busy, and 	 * determine destinationst. 	 */
+comment|/* 	 * Mark controller busy, and 	 * determine destination. 	 */
 name|um
 operator|->
 name|um_tab
@@ -1897,13 +1847,11 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-comment|/* 	 * Check that controller is ready 	 */
 name|rlwait
 argument_list|(
 name|rladdr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup for the transfer, and get in the 	 * UNIBUS adaptor queue. 	 */
 name|rladdr
 operator|->
 name|rlda
@@ -1953,8 +1901,7 @@ operator|*
 name|NRLBPSC
 operator|)
 expr_stmt|;
-comment|/* RL02 must seek between cylinders and between tracks */
-comment|/* Determine maximum data transfer at this time */
+comment|/* 	 * RL02 must seek between cylinders and between tracks, 	 * determine maximum data transfer at this time. 	 */
 if|if
 condition|(
 name|st
@@ -2039,17 +1986,8 @@ argument_list|(
 name|ui
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Now all ready to go, stuff the registers.  */
-end_comment
 
 begin_expr_stmt
 name|rldgo
@@ -2081,8 +2019,6 @@ name|um
 operator|->
 name|um_addr
 decl_stmt|;
-comment|/* Place in unibus address for transfer (lower 18 bits of um_ubinfo) */
-comment|/* Then execute instruction */
 name|rladdr
 operator|->
 name|rlba
@@ -2206,13 +2142,6 @@ init|=
 name|rl
 operator|->
 name|rl_softas
-decl_stmt|;
-name|int
-name|needie
-init|=
-literal|1
-decl_stmt|,
-name|waitdry
 decl_stmt|,
 name|status
 decl_stmt|;
@@ -2228,7 +2157,6 @@ name|rl_softas
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_device for the drive. 	 */
 name|dp
 operator|=
 name|um
@@ -2264,7 +2192,6 @@ operator|->
 name|ui_dk
 operator|)
 expr_stmt|;
-comment|/* Clear busy bit */
 comment|/* 	 * Check for and process errors on 	 * either the drive or the controller. 	 */
 if|if
 condition|(
@@ -2434,7 +2361,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* force retry */
-comment|/* Determine disk posistion */
+comment|/* determine disk position */
 name|rladdr
 operator|->
 name|rlcs
@@ -2454,7 +2381,7 @@ argument_list|(
 name|rladdr
 argument_list|)
 expr_stmt|;
-comment|/* save disk drive posistion */
+comment|/* save disk drive position */
 name|st
 operator|->
 name|rl_cyl
@@ -2500,7 +2427,10 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|st
 operator|->
 name|rl_bleft
@@ -2508,12 +2438,12 @@ operator|-=
 name|st
 operator|->
 name|rl_bpart
-operator|)
+argument_list|)
 operator|>
 literal|0
 condition|)
 block|{
-comment|/* 			 * the following code was modeled from the rk07 			 * driver when an ECC error occured.  It has to 			 * fix the bits then restart the transfer which is 			 * what we have to do (restart transfer). 			 */
+comment|/* 			 * The following code was modeled from the rk07 			 * driver when an ECC error occured.  It has to 			 * fix the bits then restart the transfer which is 			 * what we have to do (restart transfer). 			 */
 name|int
 name|reg
 decl_stmt|,
@@ -2863,8 +2793,6 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-name|retry
-label|:
 name|st
 operator|->
 name|rl_dn
@@ -2894,16 +2822,10 @@ name|dp
 operator|->
 name|b_actf
 condition|)
-if|if
-condition|(
 name|rlustart
 argument_list|(
 name|ui
 argument_list|)
-condition|)
-name|needie
-operator|=
-literal|0
 expr_stmt|;
 name|as
 operator|&=
@@ -2928,7 +2850,6 @@ operator|->
 name|ui_slave
 operator|)
 expr_stmt|;
-comment|/* 	 * Release unibus resources and flush data paths. 	 */
 name|ubadone
 argument_list|(
 name|um
@@ -2956,8 +2877,6 @@ name|rl_bleft
 operator|=
 literal|0
 expr_stmt|;
-name|doattn
-label|:
 comment|/* 	 * Process other units which need attention. 	 * For each unit which needs attention, call 	 * the unit start routine to place the slave 	 * on the controller device queue. 	 */
 while|while
 condition|(
@@ -2982,9 +2901,6 @@ operator|<<
 name|unit
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|rlustart
 argument_list|(
 name|rlip
@@ -3014,9 +2930,6 @@ name|b_active
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|rlstart
 argument_list|(
 name|um
@@ -3052,8 +2965,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-continue|continue;
-comment|/* Wait */
+empty_stmt|;
 block|}
 end_block
 
@@ -3292,7 +3204,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|" Reset hl%d"
+literal|" hl%d"
 argument_list|,
 name|rl21
 argument_list|)
@@ -3505,18 +3417,12 @@ name|b_active
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|rlustart
 argument_list|(
 name|ui
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|rlstart
 argument_list|(
 name|um
@@ -3702,6 +3608,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|rldump
 argument_list|(
@@ -3718,95 +3628,6 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* don't think there is room on swap for it anyway. */
-block|}
-end_block
-
-begin_macro
-name|rlsize
-argument_list|(
-argument|dev
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|>>
-literal|3
-decl_stmt|;
-name|struct
-name|uba_device
-modifier|*
-name|ui
-decl_stmt|;
-name|struct
-name|rlst
-modifier|*
-name|st
-decl_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NRL
-operator|||
-operator|(
-name|ui
-operator|=
-name|rldinfo
-index|[
-name|unit
-index|]
-operator|)
-operator|==
-literal|0
-operator|||
-name|ui
-operator|->
-name|ui_alive
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-name|st
-operator|=
-operator|&
-name|rl02
-expr_stmt|;
-return|return
-operator|(
-name|st
-operator|->
-name|sizes
-index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-literal|07
-index|]
-operator|.
-name|nblocks
-operator|)
-return|;
 block|}
 end_block
 

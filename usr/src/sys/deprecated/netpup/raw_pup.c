@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.17	83/05/30	*/
+comment|/*	raw_pup.c	4.18	83/06/13	*/
 end_comment
 
 begin_include
@@ -283,6 +283,9 @@ name|pup_length
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -326,7 +329,10 @@ operator|=
 name|if_ifonnetof
 argument_list|(
 operator|(
-name|u_int
+name|int
+operator|)
+operator|(
+name|unsigned
 operator|)
 name|pup
 operator|->

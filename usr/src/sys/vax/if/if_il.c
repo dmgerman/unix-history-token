@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.23	83/06/13	*/
+comment|/*	if_il.c	4.24	83/06/13	*/
 end_comment
 
 begin_include
@@ -3462,17 +3462,13 @@ name|ifp
 argument_list|,
 name|sin
 argument_list|)
+specifier|register
+expr|struct
+name|ifnet
+operator|*
+name|ifp
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|register

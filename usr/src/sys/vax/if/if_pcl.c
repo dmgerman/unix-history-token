@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_pcl.c	4.2	83/06/13	*/
+comment|/*	if_pcl.c	4.3	83/06/13	*/
 end_comment
 
 begin_include
@@ -498,12 +498,6 @@ operator|->
 name|ui_unit
 index|]
 decl_stmt|;
-specifier|register
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
 name|sc
 operator|->
 name|sc_if
@@ -713,6 +707,11 @@ name|s
 decl_stmt|;
 name|sin
 operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 operator|&
 name|sc
 operator|->
@@ -942,8 +941,6 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|type
-decl_stmt|,
 name|dest
 decl_stmt|,
 name|s
@@ -992,6 +989,9 @@ name|dest
 operator|=
 name|ntohl
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|dest
 argument_list|)
 expr_stmt|;
@@ -1796,20 +1796,12 @@ name|m
 decl_stmt|;
 name|int
 name|len
-decl_stmt|,
-name|plen
-decl_stmt|;
-name|short
-name|resid
 decl_stmt|;
 specifier|register
 name|struct
 name|ifqueue
 modifier|*
 name|inq
-decl_stmt|;
-name|int
-name|off
 decl_stmt|;
 name|sc
 operator|->
@@ -2170,6 +2162,11 @@ operator|->
 name|if_addr
 operator|=
 operator|*
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 expr_stmt|;
 name|ifp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.28	83/06/13	*/
+comment|/*	if_dmc.c	4.29	83/06/13	*/
 end_comment
 
 begin_include
@@ -69,6 +69,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/ioctl.h"
+end_include
+
+begin_comment
+comment|/* must precede tty.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"../h/tty.h"
 end_include
 
@@ -88,12 +98,6 @@ begin_include
 include|#
 directive|include
 file|"../h/vmmac.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ioctl.h"
 end_include
 
 begin_include
@@ -527,15 +531,6 @@ name|i
 operator|--
 control|)
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|ECHACK
-name|br
-operator|=
-literal|0x16
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -1059,8 +1054,18 @@ condition|)
 block|{
 name|rtinit
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 name|RTF_HOST
@@ -1671,8 +1676,6 @@ decl_stmt|;
 name|int
 name|arg
 decl_stmt|,
-name|arg2
-decl_stmt|,
 name|cmd
 decl_stmt|,
 name|len
@@ -1707,12 +1710,17 @@ operator|==
 literal|0
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|notdef
 name|arg2
 operator|=
 name|addr
 operator|->
 name|sel4
 expr_stmt|;
+endif|#
+directive|endif
 name|arg
 operator|=
 name|addr
@@ -2110,18 +2118,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|uba_device
-modifier|*
-name|ui
-init|=
-name|dmcinfo
-index|[
-name|ifp
-operator|->
-name|if_unit
-index|]
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -2354,6 +2350,11 @@ operator|->
 name|if_addr
 operator|=
 operator|*
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 expr_stmt|;
 name|ifp
@@ -2419,6 +2420,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

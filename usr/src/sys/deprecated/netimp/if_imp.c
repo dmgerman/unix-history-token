@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.50	83/06/13	*/
+comment|/*	if_imp.c	4.51	83/06/13	*/
 end_comment
 
 begin_include
@@ -305,11 +305,6 @@ name|sc
 operator|->
 name|imp_if
 decl_stmt|;
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
 comment|/* UNIT COULD BE AMBIGUOUS */
 name|ifp
 operator|->
@@ -433,7 +428,9 @@ operator|)
 operator|&
 name|sc
 operator|->
-name|sc_if
+name|imp_if
+operator|.
+name|if_addr
 expr_stmt|;
 if|if
 condition|(
@@ -488,7 +485,7 @@ return|return;
 block|}
 name|sc
 operator|->
-name|sc_if
+name|imp_if
 operator|.
 name|if_flags
 operator||=

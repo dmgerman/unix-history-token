@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.c	4.2	83/05/27	*/
+comment|/*	if_ether.c	4.3	83/06/13	*/
 end_comment
 
 begin_comment
@@ -626,11 +626,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOBUFS
-operator|)
-return|;
+return|return;
 name|m
 operator|->
 name|m_len
@@ -852,16 +848,17 @@ name|sa_family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
-return|return
-operator|(
 call|(
-modifier|*
+name|void
+call|)
+argument_list|(
+operator|*
 name|ac
 operator|->
 name|ac_if
 operator|.
 name|if_output
-call|)
+argument_list|)
 argument_list|(
 operator|&
 name|ac
@@ -873,8 +870,7 @@ argument_list|,
 operator|&
 name|sa
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_block
 
@@ -1279,6 +1275,15 @@ name|struct
 name|in_addr
 name|addr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|ac
+operator|=
+name|ac
+expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|.
 name|s_addr

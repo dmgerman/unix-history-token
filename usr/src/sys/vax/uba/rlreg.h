@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rlreg.h	4.1	83/02/08	*/
+comment|/*	rlreg.h	4.2	83/06/13	*/
 end_comment
 
 begin_struct
@@ -658,17 +658,6 @@ end_define
 
 begin_comment
 comment|/* sector address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RLMP_HS
-value|0000100
-end_define
-
-begin_comment
-comment|/* head select 						0 upper head 						1 lower head */
 end_comment
 
 begin_define

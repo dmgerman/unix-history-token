@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.79	83/06/12	*/
+comment|/*	if_en.c	4.80	83/06/13	*/
 end_comment
 
 begin_include
@@ -426,15 +426,6 @@ name|en_ostat
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ECHACK
-name|br
-operator|=
-literal|0x16
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
