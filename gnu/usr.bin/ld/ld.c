@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.32 1996/04/24 23:31:08 jdp Exp $  */
+comment|/*  *	$Id: ld.c,v 1.33 1996/05/28 16:17:48 phk Exp $  */
 end_comment
 
 begin_comment
@@ -3057,7 +3057,7 @@ argument_list|(
 name|arg
 argument_list|)
 operator|+
-literal|4
+literal|5
 argument_list|)
 expr_stmt|;
 name|strcpy
