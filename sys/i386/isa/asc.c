@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* asc.c - device driver for hand scanners  *  * Current version supports:  *  * 	- Trust AmiScan BW (GI1904 chipset)  *  * Copyright (c) 1995 Gunther Schadow.  All rights reserved.  * Copyright (c) 1995 Luigi Rizzo.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Gunther Schadow  *	and Luigi Rizzo.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* asc.c - device driver for hand scanners  *  * Current version supports:  *  * 	- AmiScan (Mustek) Color and BW hand scanners (GI1904 chipset)  *  * Copyright (c) 1995 Gunther Schadow.  All rights reserved.  * Copyright (c) 1995,1996,1997 Luigi Rizzo.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Gunther Schadow  *	and Luigi Rizzo.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.21 1996/09/06 23:07:09 phk Exp $  */
+comment|/*  * $Id: asc.c,v 1.21.2.1 1996/12/30 21:18:32 joerg Exp $  */
 end_comment
 
 begin_include
@@ -370,11 +370,11 @@ begin_define
 define|#
 directive|define
 name|FRMT_GRAY
-value|0x10
+value|0x1
 end_define
 
 begin_comment
-comment|/* output graymap (not implemented yet) */
+comment|/* output gray mode for color scanner */
 end_comment
 
 begin_define
@@ -397,6 +397,17 @@ end_define
 
 begin_comment
 comment|/***  *** THE GEMOMETRY TABLE  ***/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GREY_LINE
+value|826
+end_define
+
+begin_comment
+comment|/* 825, or 826 , or 550 ??? */
 end_comment
 
 begin_struct
@@ -507,6 +518,32 @@ name|ASC_RES_100
 block|}
 block|,
 block|{
+literal|200
+block|,
+literal|3
+operator|*
+name|GREY_LINE
+block|,
+literal|3
+operator|*
+name|GREY_LINE
+block|,
+literal|0
+comment|/* returned by color scanner */
+block|}
+block|,
+block|{
+literal|200
+block|,
+name|GREY_LINE
+block|,
+name|GREY_LINE
+block|,
+literal|0
+comment|/* color scanner, grey mode */
+block|}
+block|,
+block|{
 name|INVALID
 block|,
 literal|416
@@ -553,6 +590,10 @@ begin_struct
 struct|struct
 name|asc_unit
 block|{
+name|long
+name|thedev
+decl_stmt|;
+comment|/* XXX */
 name|int
 name|base
 decl_stmt|;
@@ -577,6 +618,9 @@ name|char
 name|cmd_byte
 decl_stmt|;
 comment|/* mirror of byte written to cmd port (ASC_CMD)*/
+name|char
+name|portf_byte
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
@@ -697,21 +741,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*** I could not find a reasonable buffer size limit other than by  *** experiments. MAXPHYS is obviously too much, while DEV_BSIZE and  *** PAGE_SIZE are really too small. There must be something wrong  *** with isa_dmastart/isa_dmarangecheck HELP!!!  ***/
+comment|/*** I could not find a reasonable buffer size limit other than by  *** experiments. MAXPHYS is obviously too much, while DEV_BSIZE and  *** PAGE_SIZE are really too small. There must be something wrong  *** with isa_dmastart/isa_dmarangecheck HELP!!!  ***  *** Note, must be DEFAULT_BLEN * samples_per_line<= MAX_BUFSIZE  ***/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAX_BUFSIZE
-value|0x3000
+value|0xb000
 end_define
+
+begin_comment
+comment|/* XXX was 0x3000 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFAULT_BLEN
-value|20
+value|16
 end_define
 
 begin_comment
@@ -1099,6 +1147,45 @@ expr_stmt|;
 block|}
 name|scu
 operator|->
+name|portf_byte
+operator|=
+literal|0
+expr_stmt|;
+comment|/* default */
+if|if
+condition|(
+name|geomtab
+index|[
+name|scu
+operator|->
+name|geometry
+index|]
+operator|.
+name|g_res
+operator|==
+literal|0
+operator|&&
+operator|!
+operator|(
+name|scu
+operator|->
+name|thedev
+operator|&
+name|FRMT_GRAY
+operator|)
+condition|)
+block|{
+comment|/* color scanner seems to require this */
+name|scu
+operator|->
+name|portf_byte
+operator|=
+literal|2
+expr_stmt|;
+comment|/* scu->geometry++; */
+block|}
+name|scu
+operator|->
 name|linesize
 operator|=
 name|geomtab
@@ -1269,6 +1356,94 @@ modifier|*
 name|scu
 parameter_list|)
 block|{
+name|unsigned
+name|char
+name|al
+init|=
+name|scu
+operator|->
+name|cmd_byte
+decl_stmt|;
+if|if
+condition|(
+name|geomtab
+index|[
+name|scu
+operator|->
+name|geometry
+index|]
+operator|.
+name|g_res
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* color */
+name|isa_dmastart
+argument_list|(
+name|B_READ
+argument_list|,
+name|scu
+operator|->
+name|sbuf
+operator|.
+name|base
+operator|+
+name|scu
+operator|->
+name|sbuf
+operator|.
+name|wptr
+argument_list|,
+name|scu
+operator|->
+name|linesize
+operator|+
+literal|90
+comment|/* XXX */
+argument_list|,
+name|scu
+operator|->
+name|dma_num
+argument_list|)
+expr_stmt|;
+comment|/* 	 * looks like we have to set and then clear this 	 * bit to enable the scanner to send interrupts 	 */
+name|outb
+argument_list|(
+name|ASC_CMD
+argument_list|,
+name|al
+operator||=
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* seems to disable interrupts */
+if|#
+directive|if
+literal|0
+block|outb( ASC_CMD, al |= 8 );
+comment|/* ??? seems useless */
+endif|#
+directive|endif
+name|outb
+argument_list|(
+name|ASC_CMD
+argument_list|,
+name|al
+operator|&=
+literal|0xfb
+argument_list|)
+expr_stmt|;
+name|scu
+operator|->
+name|cmd_byte
+operator|=
+name|al
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* normal */
 name|isa_dmastart
 argument_list|(
 name|B_READ
@@ -1312,6 +1487,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|scu
 operator|->
 name|flags
@@ -1513,6 +1689,38 @@ return|return
 name|PROBE_FAIL
 return|;
 block|}
+comment|/*  * NOTE NOTE NOTE  * the new AmiScan Color board uses int 10,11,12 instead of 3,5,10  * respectively. This means that the driver must act accordingly.  * Unfortunately there is no easy way of telling which board one has,  * other than trying to get an interrupt and noticing that it is  * missing. use "option ASC_NEW_BOARD" if you have a new board.  *  */
+if|#
+directive|if
+name|ASC_NEW_BOARD
+define|#
+directive|define
+name|ASC_IRQ_A
+value|10
+define|#
+directive|define
+name|ASC_IRQ_B
+value|11
+define|#
+directive|define
+name|ASC_IRQ_C
+value|12
+else|#
+directive|else
+define|#
+directive|define
+name|ASC_IRQ_A
+value|3
+define|#
+directive|define
+name|ASC_IRQ_B
+value|5
+define|#
+directive|define
+name|ASC_IRQ_C
+value|10
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|ffs
@@ -1526,7 +1734,7 @@ literal|1
 condition|)
 block|{
 case|case
-literal|3
+name|ASC_IRQ_A
 case|:
 name|scu
 operator|->
@@ -1536,7 +1744,7 @@ name|ASC_CNF_IRQ3
 expr_stmt|;
 break|break;
 case|case
-literal|5
+name|ASC_IRQ_B
 case|:
 name|scu
 operator|->
@@ -1546,7 +1754,7 @@ name|ASC_CNF_IRQ5
 expr_stmt|;
 break|break;
 case|case
-literal|10
+name|ASC_IRQ_C
 case|:
 name|scu
 operator|->
@@ -1568,9 +1776,14 @@ literal|"asc%d.probe: unsupported INT %d (only 3, 5, 10)\n"
 argument_list|,
 name|unit
 argument_list|,
+name|ffs
+argument_list|(
 name|isdp
 operator|->
 name|id_irq
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1692,7 +1905,7 @@ name|FLAG_DEBUG
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"asc%d: [GI1904/Trust Ami-Scan Grey, type S2]\n"
+literal|"asc%d: [GI1904/Trust Ami-Scan Grey/Color]\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2395,7 +2608,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-literal|"asc%d.open: unit was not attached successfully 0x04x\n"
+literal|"asc%d.open: unit was not attached successfully 0x%04x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2600,15 +2813,42 @@ name|outb
 argument_list|(
 name|ASC_BOH
 argument_list|,
-literal|0
+name|scu
+operator|->
+name|portf_byte
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|geomtab
+index|[
+name|scu
+operator|->
+name|geometry
+index|]
+operator|.
+name|g_res
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* color */
+name|scu
+operator|->
+name|cmd_byte
+operator|=
+literal|0x00
+expr_stmt|;
+block|}
+else|else
+block|{
 name|scu
 operator|->
 name|cmd_byte
 operator|=
 literal|0x90
 expr_stmt|;
+block|}
 name|outb
 argument_list|(
 name|ASC_CMD
@@ -3036,6 +3276,21 @@ name|count
 operator|=
 name|l
 expr_stmt|;
+if|if
+condition|(
+name|geomtab
+index|[
+name|scu
+operator|->
+name|geometry
+index|]
+operator|.
+name|g_res
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* BW scanner */
 for|for
 control|(
 name|p
@@ -3067,6 +3322,7 @@ operator|~
 operator|*
 name|p
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3503,6 +3759,21 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|geomtab
+index|[
+name|scu
+operator|->
+name|geometry
+index|]
+operator|.
+name|g_res
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* BW scanner */
 name|lprintf
 argument_list|(
 literal|"asc%d.read: invert buffer\n"
@@ -3545,6 +3816,7 @@ operator|~
 operator|*
 name|p
 expr_stmt|;
+block|}
 name|res
 operator|=
 name|uiomove
@@ -3772,7 +4044,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-literal|"asc%d.ioctl: unit was not attached successfully %0x04x\n"
+literal|"asc%d.ioctl: unit was not attached successfully 0x%04x\n"
 argument_list|,
 name|unit
 argument_list|,
