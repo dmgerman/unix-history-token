@@ -4276,6 +4276,10 @@ literal|"-f"
 argument_list|,
 name|tmp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
