@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. ** ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.6 1995/05/30 05:05:35 rgrimes Exp $ ** */
+comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. ** ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.7 1995/07/02 18:48:21 wpaul Exp $ ** */
 end_comment
 
 begin_include
@@ -317,6 +317,22 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dns_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|children
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|forked
 init|=
 literal|0
 decl_stmt|;
@@ -1183,6 +1199,13 @@ name|F_NEXT
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_YPALL
+value|0x08
+end_define
+
 begin_comment
 comment|/* ** Get a record from a DB database. ** This looks ugly because it emulates the behavior of the original ** GDBM-based routines. Blech. */
 end_comment
@@ -1271,6 +1294,13 @@ operator|)
 condition|)
 block|{
 comment|/* 	** This crap would be unnecessary if R_CURSOR actually worked. 	*/
+if|if
+condition|(
+name|flags
+operator|<
+name|F_YPALL
+condition|)
+block|{
 call|(
 name|dbp
 operator|->
@@ -1337,6 +1367,7 @@ argument_list|,
 name|R_NEXT
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 call|(
@@ -2094,7 +2125,7 @@ name|stat
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*     ** Do the jive thing if we didn't find the host in the YP map     ** and we have enabled the magic DNS lookup stuff.     **     ** XXX Perhaps this should be done in a sub-process for performance     **     reasons. Later.     */
+comment|/*     ** Do the jive thing if we didn't find the host in the YP map     ** and we have enabled the magic DNS lookup stuff.     **     ** DNS lookups are handled in a subprocess so that the server     ** doesn't block while waiting for requests to complete.     */
 if|if
 condition|(
 name|result
@@ -2121,6 +2152,27 @@ name|cp
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|children
+operator|<
+name|MAX_CHILDREN
+operator|&&
+name|fork
+argument_list|()
+condition|)
+block|{
+name|children
+operator|++
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+else|else
+name|forked
+operator|++
+expr_stmt|;
 name|key
 operator|->
 name|key
@@ -3243,7 +3295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Clean up after ypxfr child processes signal their termination. */
+comment|/* ** Clean up after child processes signal their termination. */
 end_comment
 
 begin_function
@@ -3259,6 +3311,9 @@ block|{
 name|int
 name|st
 decl_stmt|;
+name|children
+operator|--
+expr_stmt|;
 name|wait3
 argument_list|(
 operator|&
@@ -3575,13 +3630,6 @@ name|YPXFR_XFRERR
 expr_stmt|;
 default|default:
 block|{
-name|signal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|reapchild
-argument_list|)
-expr_stmt|;
 name|result
 operator|.
 name|xfrstat
@@ -3816,6 +3864,8 @@ operator|&
 name|dval
 argument_list|,
 name|F_NEXT
+operator||
+name|F_YPALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3978,6 +4028,27 @@ return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+name|children
+operator|<
+name|MAX_CHILDREN
+operator|&&
+name|fork
+argument_list|()
+condition|)
+block|{
+name|children
+operator|++
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+else|else
+name|forked
+operator|++
+expr_stmt|;
 name|__xdr_ypall_cb
 operator|.
 name|u
