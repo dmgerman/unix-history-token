@@ -4,6 +4,10 @@ comment|/* bootptest.h */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Hacks for sharing print-bootp.c between tcpdump and bootptest.  */
 end_comment
 
@@ -119,63 +123,18 @@ name|snapend
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|args
-parameter_list|)
-value|args
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|args
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|ipaddr_string
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|in_addr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|P
-end_undef
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
