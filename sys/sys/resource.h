@@ -276,7 +276,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* maximum size of all socket buffers */
+comment|/* virtual process size (inclusive of mmap) */
 end_comment
 
 begin_define
