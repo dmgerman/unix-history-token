@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.26 1996/07/24 21:22:36 phk Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.27 1996/07/30 18:00:32 bde Exp $  */
 end_comment
 
 begin_include
@@ -739,8 +739,8 @@ if|if
 condition|(
 name|path
 condition|)
-comment|/* decide whether to recurse more or return */
 block|{
+comment|/* decide whether to recurse more or return */
 return|return
 operator|(
 name|dev_finddir
@@ -1327,6 +1327,7 @@ return|return
 name|ENOMEM
 return|;
 block|}
+comment|/* 	 * If we have a proto, that means that we are duplicating some 	 * other device, which can only happen if we are not at the back plane 	 */
 if|if
 condition|(
 name|proto
@@ -1373,6 +1374,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/*  		 * We have no prototype, so start off with a clean slate 		 */
 name|bzero
 argument_list|(
 name|dnp
@@ -1492,6 +1494,108 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		 * make sure that the ops associated with it are the ops 		 * that we use (by default) for directories 		 */
+name|dnp
+operator|->
+name|ops
+operator|=
+operator|&
+name|devfs_vnodeop_p
+expr_stmt|;
+name|dnp
+operator|->
+name|mode
+operator||=
+literal|0555
+expr_stmt|;
+comment|/* default perms */
+break|break;
+case|case
+name|DEV_SLNK
+case|:
+comment|/* 		 * As it's a symlink allocate and store the link info 		 * Symlinks should only ever be created by the user, 		 * so they are not on the back plane and should not be  		 * propogated forward.. a bit like directories in that way.. 		 * A symlink only exists on one plane and has it's own 		 * node.. therefore we might be on any random plane. 		 */
+name|dnp
+operator|->
+name|by
+operator|.
+name|Slnk
+operator|.
+name|name
+operator|=
+name|malloc
+argument_list|(
+name|by
+operator|->
+name|Slnk
+operator|.
+name|namelen
+operator|+
+literal|1
+argument_list|,
+name|M_DEVFSNODE
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dnp
+operator|->
+name|by
+operator|.
+name|Slnk
+operator|.
+name|name
+condition|)
+block|{
+name|free
+argument_list|(
+name|dnp
+argument_list|,
+name|M_DEVFSNODE
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
+name|strncpy
+argument_list|(
+name|dnp
+operator|->
+name|by
+operator|.
+name|Slnk
+operator|.
+name|name
+argument_list|,
+name|by
+operator|->
+name|Slnk
+operator|.
+name|name
+argument_list|,
+name|by
+operator|->
+name|Slnk
+operator|.
+name|namelen
+argument_list|)
+expr_stmt|;
+name|dnp
+operator|->
+name|by
+operator|.
+name|Slnk
+operator|.
+name|namelen
+operator|=
+name|by
+operator|->
+name|Slnk
+operator|.
+name|namelen
+expr_stmt|;
 name|dnp
 operator|->
 name|ops
@@ -1697,6 +1801,29 @@ condition|)
 comment|/* can be -1 for initial free, on error */
 block|{
 comment|/*probably need to do other cleanups XXX */
+if|if
+condition|(
+name|dnp
+operator|->
+name|type
+operator|==
+name|DEV_SLNK
+condition|)
+block|{
+name|free
+argument_list|(
+name|dnp
+operator|->
+name|by
+operator|.
+name|Slnk
+operator|.
+name|name
+argument_list|,
+name|M_DEVFSNODE
+argument_list|)
+expr_stmt|;
+block|}
 name|devfs_dropvnode
 argument_list|(
 name|dnp
@@ -1789,7 +1916,7 @@ operator|->
 name|next_front
 control|)
 block|{
-comment|/* 		 * If a Dir (XXX symlink too one day) 		 * Make the node, using the original as a prototype) 		 */
+comment|/* 		 * If a Dir (XXX symlink too one day?) 		 * (...Nope, symlinks don't propogate..) 		 * Make the node, using the original as a prototype) 		 */
 if|if
 condition|(
 name|type
@@ -2087,7 +2214,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***************************************************************\ * Create and link in a new front element.. 			* * Parent can be 0 for a root node				* * Not presently usable to make a symlink XXX			* * recursively will create subnodes corresponding to equivalent	* * child nodes in the base level					* \***************************************************************/
+comment|/***************************************************************\ * Create and link in a new front element.. 			* * Parent can be 0 for a root node				* * Not presently usable to make a symlink XXX			* * (Ok, symlinks don't propogate) * recursively will create subnodes corresponding to equivalent	* * child nodes in the base level					* \***************************************************************/
 end_comment
 
 begin_comment
@@ -2430,6 +2557,7 @@ comment|/* if not fs root */
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|devnmp
 operator|->
@@ -2438,6 +2566,7 @@ operator|=
 name|devnmp
 operator|->
 name|next
+operator|)
 condition|)
 comment|/* yes, assign */
 block|{
@@ -2493,6 +2622,7 @@ block|}
 comment|/* 	 * If the node has a backing pointer we need to free ourselves 	 * from that.. 	 * Remember that we may not HAVE a backing node. 	 */
 if|if
 condition|(
+operator|(
 name|back
 operator|=
 name|devnmp
@@ -2502,11 +2632,13 @@ operator|.
 name|front
 operator|.
 name|realthing
+operator|)
 condition|)
 comment|/* yes an assign */
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|devnmp
 operator|->
@@ -2515,6 +2647,7 @@ operator|=
 name|devnmp
 operator|->
 name|next_front
+operator|)
 condition|)
 comment|/* yes, assign */
 block|{
@@ -2621,28 +2754,32 @@ comment|/* 	 * XXX: This is actually a "normal" case when vclean calls us withou
 block|if(vn_p->v_usecount == 0) 	{ 		printf("No references! "); 	}
 endif|#
 directive|endif
-if|if
+switch|switch
 condition|(
-operator|(
 name|vn_p
 operator|->
 name|v_type
-operator|==
-name|VBAD
-operator|)
-operator|||
-operator|(
-name|vn_p
-operator|->
-name|v_type
-operator|==
-name|VNON
-operator|)
 condition|)
 block|{
+case|case
+name|VBAD
+case|:
 name|printf
 argument_list|(
-literal|"bad-type2 "
+literal|"bad-type2 (VBAD)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+case|case
+name|VNON
+case|:
+name|printf
+argument_list|(
+literal|"bad-type2 (VNON)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3099,6 +3236,12 @@ block|{
 case|case
 name|DEV_SLNK
 case|:
+name|vn_p
+operator|->
+name|v_type
+operator|=
+name|VLNK
+expr_stmt|;
 break|break;
 case|case
 name|DEV_DIR
