@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumext.h,v 1.24 2000/04/02 03:21:34 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -40,6 +40,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Physical read and write drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|read_drive
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|driveio (a, b, c, d, B_READ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|write_drive
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|driveio (a, b, c, d, B_WRITE)
+end_define
 
 begin_define
 define|#
@@ -108,6 +144,16 @@ parameter_list|(
 name|int
 name|plexno
 parameter_list|,
+name|int
+name|sdno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|give_sd_to_drive
+parameter_list|(
 name|int
 name|sdno
 parameter_list|)
@@ -600,9 +646,6 @@ name|driveno
 parameter_list|,
 name|int
 name|force
-parameter_list|,
-name|int
-name|recurse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -772,50 +815,6 @@ end_function_decl
 begin_comment
 comment|/* XXX die die */
 end_comment
-
-begin_function_decl
-name|int
-name|read_drive
-parameter_list|(
-name|struct
-name|drive
-modifier|*
-name|drive
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|length
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|write_drive
-parameter_list|(
-name|struct
-name|drive
-modifier|*
-name|drive
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|length
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -1449,6 +1448,36 @@ name|int
 name|initsd
 parameter_list|(
 name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|buf
+modifier|*
+name|parityrebuild
+parameter_list|(
+name|struct
+name|plex
+modifier|*
+parameter_list|,
+name|u_int64_t
+parameter_list|,
+name|int
+parameter_list|,
+name|enum
+name|parityop
+parameter_list|,
+name|struct
+name|rangelock
+modifier|*
+modifier|*
+parameter_list|,
+name|off_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1494,6 +1523,17 @@ name|revive_block
 parameter_list|(
 name|int
 name|sdno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parityops
+parameter_list|(
+name|struct
+name|vinum_ioctl_msg
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1954,6 +1994,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* and the end of the queue */
+end_comment
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
 end_comment
 
 end_unit

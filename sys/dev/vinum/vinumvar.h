@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.24 2000/03/01 02:34:57 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -18,6 +18,12 @@ end_include
 begin_comment
 comment|/*  * Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them are soft limits.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUMROOT
+end_define
 
 begin_enum
 enum|enum
@@ -38,16 +44,16 @@ init|=
 literal|1048576
 block|,
 comment|/* minimum size of a slice */
-name|CDEV_MAJOR
+name|VINUM_CDEV_MAJOR
 init|=
 literal|91
 block|,
 comment|/* major number for character device */
-name|BDEV_MAJOR
+name|VINUM_BDEV_MAJOR
 init|=
 literal|25
 block|,
-comment|/* and block device */
+comment|/* and legacy major number for block device */
 name|ROUND_ROBIN_READPOL
 init|=
 operator|-
@@ -115,7 +121,7 @@ name|VINUM_SD_WIDTH
 init|=
 literal|8
 block|,
-comment|/*    * Shifts for the second half of raw plex and    * subdisk numbers   */
+comment|/*    * Shifts for the second half of raw plex and    * subdisk numbers  */
 name|VINUM_RAWPLEX_SHIFT
 init|=
 literal|8
@@ -165,7 +171,7 @@ init|=
 literal|64
 block|,
 comment|/* maximum length of any name */
-comment|/*  * Define a minor device number.  * This is not used directly; instead, it's  * called by the other macros.  */
+comment|/*      * Define a minor device number.      * This is not used directly; instead, it's      * called by the other macros.      */
 define|#
 directive|define
 name|VINUMMINOR
@@ -178,11 +184,11 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|( (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
-comment|/* Create block and character device minor numbers */
+value|( (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT)		\ 			      | (t<< VINUM_TYPE_SHIFT) )
+comment|/* Create device minor numbers */
 define|#
 directive|define
-name|VINUMBDEV
+name|VINUMDEV
 parameter_list|(
 name|v
 parameter_list|,
@@ -192,48 +198,21 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|makedev (BDEV_MAJOR, VINUMMINOR (v, p, s, t))
+value|makedev (VINUM_CDEV_MAJOR, VINUMMINOR (v, p, s, t))
 define|#
 directive|define
-name|VINUMCDEV
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|,
-name|t
-parameter_list|)
-value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
-define|#
-directive|define
-name|VINUM_BLOCK_PLEX
+name|VINUM_PLEX
 parameter_list|(
 name|p
 parameter_list|)
-value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR,				\ 				 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 				 | (p& 0xff)				\ 				 | ((p& ~0xff)<< 8) )
 define|#
 directive|define
-name|VINUM_CHAR_PLEX
-parameter_list|(
-name|p
-parameter_list|)
-value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
-define|#
-directive|define
-name|VINUM_BLOCK_SD
+name|VINUM_SD
 parameter_list|(
 name|s
 parameter_list|)
-value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
-define|#
-directive|define
-name|VINUM_CHAR_SD
-parameter_list|(
-name|s
-parameter_list|)
-value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR,				\ 				 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 				 | (s& 0xff)				\ 				 | ((s& ~0xff)<< 8) )
 comment|/* Create a bit mask for x bits */
 define|#
 directive|define
@@ -251,7 +230,7 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			     | ((d& ~MASK (VINUM_VOL_WIDTH))				\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
+value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			  | ((d& ~MASK (VINUM_VOL_WIDTH))			\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH))		\ 			  | (t<< VINUM_TYPE_SHIFT) )
 define|#
 directive|define
 name|VINUMRBDEV
@@ -260,7 +239,48 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|makedev (BDEV_MAJOR, VINUMRMINOR (d, t))
+value|makedev (VINUM_BDEV_MAJOR, VINUMRMINOR (d, t))
+comment|/* Block device stuff */
+define|#
+directive|define
+name|VINUMDEV
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|makedev (VINUM_CDEV_MAJOR, VINUMMINOR (v, p, s, t))
+define|#
+directive|define
+name|VINUM_BLOCK_PLEX
+parameter_list|(
+name|p
+parameter_list|)
+value|makedev (VINUM_BDEV_MAJOR,                            \ 					(VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					| (p& 0xff)                           \ 					| ((p& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUM_BLOCK_SD
+parameter_list|(
+name|s
+parameter_list|)
+value|makedev (VINUM_BDEV_MAJOR,                            \ 					(VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					| (s& 0xff)                           \ 					| ((s& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUMBDEV
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|makedev (VINUM_BDEV_MAJOR, VINUMMINOR (v, p, s, t))
 comment|/* extract device type */
 define|#
 directive|define
@@ -269,7 +289,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((minor (x)>> VINUM_TYPE_SHIFT)& 7)
-comment|/*  * This mess is used to catch people who compile  * a debug vinum(8) and non-debug kernel module,  * or the other way round.  */
+comment|/*      * This mess is used to catch people who compile      * a debug vinum(8) and non-debug kernel module,      * or the other way round.      */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -341,14 +361,19 @@ block|,
 comment|/* number of entries in plex region tables */
 name|INITIAL_LOCKS
 init|=
-literal|64
+literal|256
 block|,
 comment|/* number of locks to allocate to a plex */
+name|MAX_REVIVE_BLOCKSIZE
+init|=
+name|MAXPHYS
+block|,
+comment|/* maximum revive block size */
 name|DEFAULT_REVIVE_BLOCKSIZE
 init|=
 literal|65536
 block|,
-comment|/* size of block to transfer in one op */
+comment|/* default revive block size */
 name|VINUMHOSTNAMELEN
 init|=
 literal|32
@@ -374,7 +399,7 @@ begin_struct
 struct|struct
 name|devcode
 block|{
-comment|/*  * CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around   */
+comment|/*  * CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around  */
 name|unsigned
 name|volume
 range|:
@@ -411,7 +436,7 @@ range|:
 literal|3
 decl_stmt|;
 comment|/* type of object */
-comment|/*      * type field      VINUM_VOLUME = 0,      VINUM_PLEX = 1,      VINUM_SUBDISK = 2,      VINUM_DRIVE = 3,      VINUM_SUPERDEV = 4,      VINUM_RAWPLEX = 5,                                             VINUM_RAWSD = 6 */
+comment|/*      * type field      VINUM_VOLUME = 0,      VINUM_PLEX = 1,      VINUM_SUBDISK = 2,      VINUM_DRIVE = 3,      VINUM_SUPERDEV = 4,      VINUM_RAWPLEX = 5,      VINUM_RAWSD = 6 */
 name|unsigned
 name|signbit
 range|:
@@ -512,7 +537,7 @@ comment|/* super device for daemon only */
 end_comment
 
 begin_comment
-comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.   */
+comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.  */
 end_comment
 
 begin_enum
@@ -691,10 +716,25 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|VINUM_MAXACTIVE
+value|30000
+comment|/* maximum number of active requests */
+name|int
+name|active
+decl_stmt|;
+comment|/* current number of requests outstanding */
+name|int
+name|maxactive
+decl_stmt|;
+comment|/* maximum number of requests ever outstanding */
 if|#
 directive|if
 name|VINUMDEBUG
-name|int
+name|struct
+name|request
+modifier|*
 name|lastrq
 decl_stmt|;
 name|struct
@@ -795,7 +835,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose   */
+comment|/*  * hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose  */
 end_comment
 
 begin_struct
@@ -838,8 +878,7 @@ begin_struct
 struct|struct
 name|vinum_hdr
 block|{
-name|long
-name|long
+name|uint64_t
 name|magic
 decl_stmt|;
 comment|/* we're long on magic numbers */
@@ -964,10 +1003,6 @@ name|u_int64_t
 name|bytes_written
 decl_stmt|;
 comment|/* number of bytes written */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* and device number */
 name|char
 name|devicename
 index|[
@@ -975,17 +1010,10 @@ name|MAXDRIVENAME
 index|]
 decl_stmt|;
 comment|/* name of the slice it's on */
-name|struct
-name|vnode
-modifier|*
-name|vp
+name|dev_t
+name|dev
 decl_stmt|;
-comment|/* vnode pointer */
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
+comment|/* device information */
 name|struct
 name|vinum_label
 name|label
@@ -1020,6 +1048,19 @@ block|}
 modifier|*
 name|freelist
 struct|;
+define|#
+directive|define
+name|DRIVE_MAXACTIVE
+value|30000
+comment|/* maximum number of active requests */
+name|int
+name|active
+decl_stmt|;
+comment|/* current number of requests outstanding */
+name|int
+name|maxactive
+decl_stmt|;
+comment|/* maximum number of requests ever outstanding */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -1065,7 +1106,7 @@ name|int64_t
 name|driveoffset
 decl_stmt|;
 comment|/* offset on drive */
-comment|/*      * plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset       */
+comment|/*      * plexoffset is the offset from the beginning      * of the plex to the very first part of the      * subdisk, in sectors.  For striped, RAID-4 and      * RAID-5 plexes, only the first stripe is      * located at this offset      */
 name|int64_t
 name|plexoffset
 decl_stmt|;
@@ -1120,12 +1161,29 @@ name|int
 name|revive_interval
 decl_stmt|;
 comment|/* and time to wait between transfers */
+name|pid_t
+name|reviver
+decl_stmt|;
+comment|/* PID of reviving process */
 name|struct
 name|request
 modifier|*
 name|waitlist
 decl_stmt|;
 comment|/* list of requests waiting on revive op */
+comment|/* init parameters */
+name|u_int64_t
+name|initialized
+decl_stmt|;
+comment|/* block number of current init request */
+name|int
+name|init_blocksize
+decl_stmt|;
+comment|/* init block size (bytes) */
+name|int
+name|init_interval
+decl_stmt|;
+comment|/* and time to wait between transfers */
 name|char
 name|name
 index|[
@@ -1158,11 +1216,46 @@ comment|/* concatenated plex */
 name|plex_striped
 block|,
 comment|/* striped plex */
+name|plex_raid4
+block|,
+comment|/* RAID4 plex */
 name|plex_raid5
 comment|/* RAID5 plex */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* Recognize plex organizations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isstriped
+parameter_list|(
+name|p
+parameter_list|)
+value|(p->organization>= plex_striped)
+end_define
+
+begin_comment
+comment|/* RAID 1, 4 or 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isparity
+parameter_list|(
+name|p
+parameter_list|)
+value|(p->organization>= plex_raid4)
+end_define
+
+begin_comment
+comment|/* RAID 4 or 5 */
+end_comment
 
 begin_struct
 struct|struct
@@ -1233,6 +1326,10 @@ modifier|*
 name|lock
 decl_stmt|;
 comment|/* ranges of locked addresses */
+name|off_t
+name|checkblock
+decl_stmt|;
+comment|/* block number for parity op */
 comment|/* Statistics */
 name|u_int64_t
 name|reads
@@ -1410,7 +1507,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly   */
+comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly  */
 end_comment
 
 begin_define
@@ -1460,6 +1557,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MCFILENAMELEN
+value|16
+end_define
+
 begin_struct
 struct|struct
 name|mc
@@ -1483,7 +1587,7 @@ decl_stmt|;
 name|char
 name|file
 index|[
-literal|16
+name|MCFILENAMELEN
 index|]
 decl_stmt|;
 block|}
@@ -1491,7 +1595,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * These enums are used by the state transition  * routines.  They're in bit map format:  *  * Bit 0: Other plexes in the volume are down  * Bit 1: Other plexes in the volume are up  * Bit 2: The current plex is up  * Maybe they should be local to  * state.c   */
+comment|/*  * These enums are used by the state transition  * routines.  They're in bit map format:  *  * Bit 0: Other plexes in the volume are down  * Bit 1: Other plexes in the volume are up  * Bit 2: The current plex is up  * Maybe they should be local to  * state.c  */
 end_comment
 
 begin_enum
@@ -1589,7 +1693,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * This is really just a parameter to pass to  * set_<foo>_state, but since it needs to be known  * in the external definitions, we need to define  * it here   */
+comment|/*  * This is really just a parameter to pass to  * set_<foo>_state, but since it needs to be known  * in the external definitions, we need to define  * it here  */
 end_comment
 
 begin_enum
@@ -1611,6 +1715,25 @@ init|=
 literal|2
 block|,
 comment|/* we're currently configuring, don't save */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Operations for parityops to perform. */
+end_comment
+
+begin_enum
+enum|enum
+name|parityop
+block|{
+name|checkparity
+block|,
+name|rebuildparity
+block|,
+name|rebuildandcheckparity
+block|,
+comment|/* rebuildparity with the -v option */
 block|}
 enum|;
 end_enum
@@ -1689,6 +1812,12 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1699,6 +1828,11 @@ end_define
 begin_comment
 comment|/* test our longjmps */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|/*  * XXX replace all the checks on object validity with  * calls to val
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.12 2000/02/29 02:20:31 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -18,16 +18,6 @@ include|#
 directive|include
 file|<dev/vinum/request.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_comment
-comment|/* for sync(2) */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -82,6 +72,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|replaceobject
+parameter_list|(
+name|struct
+name|vinum_ioctl_msg
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|moveobject
 parameter_list|(
 name|struct
 name|vinum_ioctl_msg
@@ -1211,6 +1212,40 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+name|VINUM_PARITYOP
+case|:
+comment|/* check/rebuild RAID-4/5 parity */
+name|parityops
+argument_list|(
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* move an object */
+case|case
+name|VINUM_MOVE
+case|:
+name|moveobject
+argument_list|(
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 comment|/* FALLTHROUGH */
 block|}
@@ -1264,16 +1299,6 @@ condition|(
 name|cmd
 condition|)
 block|{
-case|case
-name|VINUM_INITSD
-case|:
-comment|/* initialize subdisk */
-return|return
-name|initsd
-argument_list|(
-name|objno
-argument_list|)
-return|;
 case|case
 name|DIOCGDINFO
 case|:
@@ -2415,7 +2440,7 @@ name|organization
 operator|!=
 name|plex_concat
 operator|)
-comment|/* can't attach to striped and raid-5 */
+comment|/* can't attach to striped and RAID-4/5 */
 operator|&&
 operator|(
 operator|!
@@ -2516,12 +2541,6 @@ argument_list|)
 expr_stmt|;
 name|save_config
 argument_list|()
-expr_stmt|;
-name|reply
-operator|->
-name|error
-operator|=
-literal|0
 expr_stmt|;
 block|}
 if|if
@@ -3137,24 +3156,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|isstriped
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_striped
-operator|)
-comment|/* we've just mutilated our plex, */
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
-operator|)
+argument_list|)
 condition|)
-comment|/* the data no longer matches */
+comment|/* we've just mutilated our plex, */
 name|set_plex_state
 argument_list|(
 name|plex
@@ -4057,6 +4064,211 @@ literal|"replace not implemented yet"
 argument_list|)
 expr_stmt|;
 comment|/*      save_config (); */
+block|}
+end_function
+
+begin_function
+name|void
+name|moveobject
+parameter_list|(
+name|struct
+name|vinum_ioctl_msg
+modifier|*
+name|msg
+parameter_list|)
+block|{
+name|struct
+name|_ioctl_reply
+modifier|*
+name|reply
+init|=
+operator|(
+expr|struct
+name|_ioctl_reply
+operator|*
+operator|)
+name|msg
+decl_stmt|;
+name|struct
+name|drive
+modifier|*
+name|drive
+decl_stmt|;
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+comment|/* Check that our objects are valid (i.e. they exist) */
+name|drive
+operator|=
+name|validdrive
+argument_list|(
+name|msg
+operator|->
+name|index
+argument_list|,
+operator|(
+expr|struct
+name|_ioctl_reply
+operator|*
+operator|)
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|==
+name|NULL
+condition|)
+return|return;
+name|sd
+operator|=
+name|validsd
+argument_list|(
+name|msg
+operator|->
+name|otherobject
+argument_list|,
+operator|(
+expr|struct
+name|_ioctl_reply
+operator|*
+operator|)
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|sd
+operator|->
+name|driveno
+operator|==
+name|msg
+operator|->
+name|index
+condition|)
+comment|/* sd already belongs to drive */
+return|return;
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|>
+name|sd_stale
+condition|)
+name|set_sd_state
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|,
+name|sd_stale
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+comment|/* make the subdisk stale */
+else|else
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_empty
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|plexno
+operator|>=
+literal|0
+condition|)
+comment|/* part of a plex, */
+name|update_plex_state
+argument_list|(
+name|sd
+operator|->
+name|plexno
+argument_list|)
+expr_stmt|;
+comment|/* update its state */
+comment|/* Return the space on the old drive */
+if|if
+condition|(
+operator|(
+name|sd
+operator|->
+name|driveno
+operator|>=
+literal|0
+operator|)
+comment|/* we have a drive, */
+operator|&&
+operator|(
+name|sd
+operator|->
+name|sectors
+operator|>
+literal|0
+operator|)
+condition|)
+comment|/* and some space on it */
+name|return_drive_space
+argument_list|(
+name|sd
+operator|->
+name|driveno
+argument_list|,
+comment|/* return the space */
+name|sd
+operator|->
+name|driveoffset
+argument_list|,
+name|sd
+operator|->
+name|sectors
+argument_list|)
+expr_stmt|;
+comment|/* Reassign the old subdisk */
+name|sd
+operator|->
+name|driveno
+operator|=
+name|msg
+operator|->
+name|index
+expr_stmt|;
+name|sd
+operator|->
+name|driveoffset
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* let the drive decide where to put us */
+name|give_sd_to_drive
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
+name|reply
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

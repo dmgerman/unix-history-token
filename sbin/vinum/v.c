@@ -4,11 +4,7 @@ comment|/* vinum.c: vinum interface program */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: v.c,v 1.30 2000/05/07 04:20:53 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -281,14 +277,26 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|verbose
+name|interval
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set verbose operation */
+comment|/* interval in ms between init/revive */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set verbose operation or verify */
 end_comment
 
 begin_decl_stmt
@@ -325,6 +333,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* show statistics */
+end_comment
+
+begin_decl_stmt
+name|int
+name|SSize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sector size for revive */
 end_comment
 
 begin_decl_stmt
@@ -478,6 +498,10 @@ name|envp
 index|[]
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|histstat
+decl_stmt|;
 if|if
 condition|(
 name|modfind
@@ -551,6 +575,89 @@ name|historyfile
 operator|=
 name|DEFAULT_HISTORYFILE
 expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|historyfile
+argument_list|,
+operator|&
+name|histstat
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* history file exists */
+if|if
+condition|(
+operator|(
+name|histstat
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFREG
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Vinum history file %s must be a regular file\n"
+argument_list|,
+name|historyfile
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|errno
+operator|!=
+name|ENOENT
+operator|)
+comment|/* not "not there",  */
+operator|&&
+operator|(
+name|errno
+operator|!=
+name|EROFS
+operator|)
+condition|)
+block|{
+comment|/* and not read-only file system */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't open %s: %s (%d)\n"
+argument_list|,
+name|historyfile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|history
 operator|=
 name|fopen
@@ -586,23 +693,6 @@ argument_list|)
 expr_stmt|;
 comment|/* before we start the daemon */
 block|}
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't open history file %s: %s (%d)\n"
-argument_list|,
-name|historyfile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
 name|superdev
 operator|=
 name|open
@@ -772,6 +862,22 @@ comment|/* do it */
 block|}
 else|else
 block|{
+comment|/* 	 * Catch a possible race condition which could cause us to 	 * longjmp() into nowhere if we receive a SIGINT in the next few 	 * lines. 	 */
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|command_fail
+argument_list|)
+condition|)
+comment|/* come back here on catastrophic failure */
+return|return
+literal|1
+return|;
+name|setsigs
+argument_list|()
+expr_stmt|;
+comment|/* set signal handler */
 for|for
 control|(
 init|;
@@ -787,12 +893,24 @@ name|int
 name|childstatus
 decl_stmt|;
 comment|/* from wait4 */
+if|if
+condition|(
 name|setjmp
 argument_list|(
 name|command_fail
 argument_list|)
-expr_stmt|;
+operator|==
+literal|2
+condition|)
 comment|/* come back here on catastrophic failure */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** interrupted ***\n"
+argument_list|)
+expr_stmt|;
+comment|/* interrupted */
 while|while
 condition|(
 name|wait4
@@ -970,6 +1088,70 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Set action on receiving a SIGINT */
+end_comment
+
+begin_function
+name|void
+name|setsigs
+parameter_list|()
+block|{
+name|struct
+name|sigaction
+name|act
+decl_stmt|;
+name|act
+operator|.
+name|sa_handler
+operator|=
+name|catchsig
+expr_stmt|;
+name|act
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|act
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|act
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|catchsig
+parameter_list|(
+name|int
+name|ignore
+parameter_list|)
+block|{
+name|longjmp
+argument_list|(
+name|command_fail
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -982,6 +1164,17 @@ end_define
 
 begin_comment
 comment|/* create pair "kw_foo", vinum_foo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vinum_move
+value|vinum_mv
+end_define
+
+begin_comment
+comment|/* synonym for 'mv' */
 end_comment
 
 begin_struct
@@ -1099,6 +1292,16 @@ argument_list|)
 block|,
 name|FUNKEY
 argument_list|(
+name|mv
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|move
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
 name|attach
 argument_list|)
 block|,
@@ -1164,6 +1367,16 @@ argument_list|)
 block|,
 name|FUNKEY
 argument_list|(
+name|raid4
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|raid5
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
 name|mirror
 argument_list|)
 block|,
@@ -1194,7 +1407,12 @@ argument_list|)
 block|,
 name|FUNKEY
 argument_list|(
-argument|rebuildparity
+name|rebuildparity
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+argument|dumpconfig
 argument_list|)
 block|}
 struct|;
@@ -1339,7 +1557,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* initialize flags */
-name|verbose
+name|vflag
 operator|=
 literal|0
 expr_stmt|;
@@ -1448,6 +1666,85 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+comment|/* interval */
+name|interval
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+name|i
+index|]
+index|[
+name|j
+operator|+
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+comment|/* operand follows, */
+name|interval
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+name|i
+index|]
+index|[
+name|j
+operator|+
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* use it */
+elseif|else
+if|if
+condition|(
+name|args
+operator|>
+operator|(
+name|i
+operator|+
+literal|1
+operator|)
+condition|)
+comment|/* another following, */
+name|interval
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+operator|++
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* use it */
+if|if
+condition|(
+name|interval
+operator|==
+literal|0
+condition|)
+comment|/* nothing valid, */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-i: no interval specified\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 comment|/* -n: get name */
@@ -1461,16 +1758,14 @@ literal|1
 condition|)
 block|{
 comment|/* last arg */
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"-n requires a name parameter\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 name|objectname
 operator|=
@@ -1512,10 +1807,88 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|SSize
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+name|i
+index|]
+index|[
+name|j
+operator|+
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+comment|/* operand follows, */
+name|SSize
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+name|i
+index|]
+index|[
+name|j
+operator|+
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* use it */
+elseif|else
+if|if
+condition|(
+name|args
+operator|>
+operator|(
+name|i
+operator|+
+literal|1
+operator|)
+condition|)
+comment|/* another following, */
+name|SSize
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+operator|++
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* use it */
+if|if
+condition|(
+name|SSize
+operator|==
+literal|0
+condition|)
+comment|/* nothing valid, */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-S: no size specified\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 comment|/* -v: verbose */
-name|verbose
+name|vflag
 operator|++
 expr_stmt|;
 break|break;
@@ -1523,7 +1896,7 @@ case|case
 literal|'V'
 case|:
 comment|/* -V: Very verbose */
-name|verbose
+name|vflag
 operator|++
 expr_stmt|;
 name|Verbose
@@ -2183,16 +2556,17 @@ comment|/* and make them again */
 name|VINUM_DIR
 literal|"/plex "
 name|VINUM_DIR
-literal|"/rplex "
-name|VINUM_DIR
 literal|"/sd "
+name|VINUM_DIR
+literal|"/rplex "
 name|VINUM_DIR
 literal|"/rsd "
 name|VINUM_DIR
-literal|"/vol "
-name|VINUM_DIR
 literal|"/rvol "
 name|VINUM_RDIR
+literal|" "
+name|VINUM_DIR
+literal|"/vol"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2208,7 +2582,7 @@ argument_list|,
 comment|/* block device, user only */
 name|makedev
 argument_list|(
-name|BDEV_MAJOR
+name|VINUM_BDEV_MAJOR
 argument_list|,
 name|VINUM_SUPERDEV
 argument_list|)
@@ -2243,7 +2617,7 @@ argument_list|,
 comment|/* block device, user only */
 name|makedev
 argument_list|(
-name|BDEV_MAJOR
+name|VINUM_BDEV_MAJOR
 argument_list|,
 name|VINUM_WRONGSUPERDEV
 argument_list|)
@@ -2289,7 +2663,7 @@ argument_list|,
 comment|/* block device, user only */
 name|makedev
 argument_list|(
-name|BDEV_MAJOR
+name|VINUM_BDEV_MAJOR
 argument_list|,
 name|VINUM_DAEMON_DEV
 argument_list|)
@@ -2434,8 +2808,8 @@ condition|(
 name|drive
 operator|.
 name|state
-operator|!=
-name|drive_unallocated
+operator|>
+name|drive_referenced
 condition|)
 block|{
 name|sprintf
@@ -2532,7 +2906,7 @@ expr_stmt|;
 comment|/* create a block device number */
 name|rvoldev
 operator|=
-name|VINUMCDEV
+name|VINUMDEV
 argument_list|(
 name|volno
 argument_list|,
@@ -2931,7 +3305,7 @@ argument_list|)
 expr_stmt|;
 name|plexcdev
 operator|=
-name|VINUM_CHAR_PLEX
+name|VINUM_PLEX
 argument_list|(
 name|plexno
 argument_list|)
@@ -3268,7 +3642,7 @@ argument_list|)
 expr_stmt|;
 name|sdcdev
 operator|=
-name|VINUM_CHAR_SD
+name|VINUM_SD
 argument_list|(
 name|sdno
 argument_list|)
@@ -3759,6 +4133,15 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"reviving %s"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|reply
@@ -3776,6 +4159,18 @@ condition|;
 control|)
 block|{
 comment|/* revive the subdisk */
+if|if
+condition|(
+name|interval
+condition|)
+name|usleep
+argument_list|(
+name|interval
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* pause between each copy */
 name|message
 operator|->
 name|index
@@ -3795,6 +4190,38 @@ operator|->
 name|state
 operator|=
 name|object_up
+expr_stmt|;
+if|if
+condition|(
+name|SSize
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* specified a size for init */
+if|if
+condition|(
+name|SSize
+operator|<
+literal|512
+condition|)
+name|SSize
+operator|<<=
+name|DEV_BSHIFT
+expr_stmt|;
+name|message
+operator|->
+name|blocksize
+operator|=
+name|SSize
+expr_stmt|;
+block|}
+else|else
+name|message
+operator|->
+name|blocksize
+operator|=
+name|DEFAULT_REVIVE_BLOCKSIZE
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -3925,6 +4352,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+comment|/* parent */
 name|printf
 argument_list|(
 literal|"Reviving %s in the background\n"
@@ -4079,7 +4507,7 @@ argument_list|,
 name|VINUM_DAEMON
 argument_list|,
 operator|&
-name|verbose
+name|vflag
 argument_list|)
 expr_stmt|;
 comment|/* we should hang here */

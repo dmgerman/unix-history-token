@@ -1,6 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.h,v 1.19 2000/04/26 04:17:33 grog Exp grog $  * $FreeBSD$  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L
+value|'F'
+end_define
+
+begin_comment
+comment|/* ID letter of our ioctls */
 end_comment
 
 begin_ifdef
@@ -13,7 +24,7 @@ begin_define
 define|#
 directive|define
 name|MAX_IOCTL_REPLY
-value|4096
+value|1024
 end_define
 
 begin_else
@@ -33,16 +44,123 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|L
-value|'F'
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+end_ifdef
+
+begin_struct
+struct|struct
+name|debuginfo
+block|{
+name|int
+name|changeit
+decl_stmt|;
+name|int
+name|param
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_enum
+enum|enum
+name|objecttype
+block|{
+name|drive_object
+block|,
+name|sd_object
+block|,
+name|plex_object
+block|,
+name|volume_object
+block|,
+name|invalid_object
+block|}
+enum|;
+end_enum
 
 begin_comment
-comment|/* ID letter of our ioctls */
+comment|/*  * The state to set with VINUM_SETSTATE.  Since each object has a  * different set of states, we need to translate later.  */
 end_comment
+
+begin_enum
+enum|enum
+name|objectstate
+block|{
+name|object_down
+block|,
+name|object_initializing
+block|,
+name|object_initialized
+block|,
+name|object_up
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * This structure is used for modifying objects  * (VINUM_SETSTATE, VINUM_REMOVE, VINUM_RESETSTATS, VINUM_ATTACH,  * VINUM_DETACH, VINUM_REPLACE  */
+end_comment
+
+begin_struct
+struct|struct
+name|vinum_ioctl_msg
+block|{
+name|int
+name|index
+decl_stmt|;
+name|enum
+name|objecttype
+name|type
+decl_stmt|;
+name|enum
+name|objectstate
+name|state
+decl_stmt|;
+comment|/* state to set (VINUM_SETSTATE) */
+name|enum
+name|parityop
+name|op
+decl_stmt|;
+comment|/* for parity ops */
+name|int
+name|force
+decl_stmt|;
+comment|/* do it even if it doesn't make sense */
+name|int
+name|recurse
+decl_stmt|;
+comment|/* recurse (VINUM_REMOVE) */
+name|int
+name|verify
+decl_stmt|;
+comment|/* verify (initsd, rebuildparity) */
+name|int
+name|otherobject
+decl_stmt|;
+comment|/* superordinate object (attach), 							    * replacement object (replace) */
+name|int
+name|rename
+decl_stmt|;
+comment|/* rename object (attach) */
+name|int64_t
+name|offset
+decl_stmt|;
+comment|/* offset of subdisk (for attach) */
+name|int
+name|blocksize
+decl_stmt|;
+comment|/* size of block to revive (bytes) */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* VINUM_CREATE returns a buffer of this kind */
@@ -61,6 +179,32 @@ index|[
 name|MAX_IOCTL_REPLY
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vinum_rename_msg
+block|{
+name|int
+name|index
+decl_stmt|;
+name|int
+name|recurse
+decl_stmt|;
+comment|/* rename subordinate objects too */
+name|enum
+name|objecttype
+name|type
+decl_stmt|;
+name|char
+name|newname
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+comment|/* new name to give to object */
 block|}
 struct|;
 end_struct
@@ -207,20 +351,6 @@ directive|ifdef
 name|VINUMDEBUG
 end_ifdef
 
-begin_struct
-struct|struct
-name|debuginfo
-block|{
-name|int
-name|changeit
-decl_stmt|;
-name|int
-name|param
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -237,23 +367,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_enum
-enum|enum
-name|objecttype
-block|{
-name|drive_object
-block|,
-name|sd_object
-block|,
-name|plex_object
-block|,
-name|volume_object
-block|,
-name|invalid_object
-block|}
-enum|;
-end_enum
-
 begin_comment
 comment|/*  * Start an object.  Pass two integers:  * msg [0] index in vinum_conf.<object>  * msg [1] type of object (see below)  *  * Return ioctl_reply  */
 end_comment
@@ -268,69 +381,6 @@ end_define
 begin_comment
 comment|/* start an object */
 end_comment
-
-begin_comment
-comment|/*  * The state to set with VINUM_SETSTATE.  Since  * each object has a different set of states, we  * need to translate later   */
-end_comment
-
-begin_enum
-enum|enum
-name|objectstate
-block|{
-name|object_down
-block|,
-name|object_initializing
-block|,
-name|object_initialized
-block|,
-name|object_up
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * This structure is used for modifying objects  * (VINUM_SETSTATE, VINUM_REMOVE, VINUM_RESETSTATS, VINUM_ATTACH,  * VINUM_DETACH, VINUM_REPLACE  */
-end_comment
-
-begin_struct
-struct|struct
-name|vinum_ioctl_msg
-block|{
-name|int
-name|index
-decl_stmt|;
-name|enum
-name|objecttype
-name|type
-decl_stmt|;
-name|enum
-name|objectstate
-name|state
-decl_stmt|;
-comment|/* state to set (VINUM_SETSTATE) */
-name|int
-name|force
-decl_stmt|;
-comment|/* do it even if it doesn't make sense */
-name|int
-name|recurse
-decl_stmt|;
-comment|/* recurse (VINUM_REMOVE) */
-name|int
-name|otherobject
-decl_stmt|;
-comment|/* superordinate object (attach), 							    * replacement object (replace) */
-name|int
-name|rename
-decl_stmt|;
-comment|/* rename object (attach) */
-name|int64_t
-name|offset
-decl_stmt|;
-comment|/* offset of subdisk (for attach) */
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -402,7 +452,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_REMOVE
-value|_IOWR(L, 83, struct vinum_ioctl_msg)
+value|_IOWR(L, 83, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -413,7 +463,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_READPOL
-value|_IOWR(L, 84, struct vinum_ioctl_msg)
+value|_IOWR(L, 84, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -435,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_RESETSTATS
-value|_IOWR(L, 86, struct vinum_ioctl_msg)
+value|_IOWR(L, 86, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -446,7 +496,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_ATTACH
-value|_IOWR(L, 87, struct vinum_ioctl_msg)
+value|_IOWR(L, 87, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -457,44 +507,18 @@ begin_define
 define|#
 directive|define
 name|VINUM_DETACH
-value|_IOWR(L, 88, struct vinum_ioctl_msg)
+value|_IOWR(L, 88, struct _ioctl_reply)
 end_define
 
 begin_comment
 comment|/* remove an object */
 end_comment
 
-begin_struct
-struct|struct
-name|vinum_rename_msg
-block|{
-name|int
-name|index
-decl_stmt|;
-name|int
-name|recurse
-decl_stmt|;
-comment|/* rename subordinate objects too */
-name|enum
-name|objecttype
-name|type
-decl_stmt|;
-name|char
-name|newname
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-comment|/* new name to give to object */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
 name|VINUM_RENAME
-value|_IOWR(L, 89, struct vinum_ioctl_msg)
+value|_IOWR(L, 89, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -505,7 +529,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_REPLACE
-value|_IOWR(L, 90, struct vinum_ioctl_msg)
+value|_IOWR(L, 90, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -576,6 +600,28 @@ end_define
 
 begin_comment
 comment|/* get daemon flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_PARITYOP
+value|_IOWR(L, 96, struct _ioctl_reply)
+end_define
+
+begin_comment
+comment|/* check/rebuild RAID-4/5 parity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_MOVE
+value|_IOWR(L, 98, struct _ioctl_reply)
+end_define
+
+begin_comment
+comment|/* move an object */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.26 1999/12/30 07:38:33 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -319,6 +319,10 @@ case|case
 name|loginfo_sdiol
 case|:
 comment|/* subdisk I/O launch */
+case|case
+name|loginfo_sdiodone
+case|:
+comment|/* subdisk I/O complete */
 name|bcopy
 argument_list|(
 name|info
@@ -630,7 +634,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* have nothing to do with this */
 return|return;
 block|}
 comment|/* FALLTHROUGH */
@@ -934,19 +937,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vol
-operator|->
-name|reads
-operator|++
-expr_stmt|;
-name|vol
-operator|->
-name|bytes_read
-operator|+=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
 name|plexno
 operator|=
 name|vol
@@ -1108,7 +1098,7 @@ return|;
 comment|/* now start the requests if we can */
 block|}
 else|else
-comment|/* 	 * This is a write operation.  We write to all 	 * plexes.  If this is a RAID 5 plex, we must also 	 * update the parity stripe. 	 */
+comment|/* 	 * This is a write operation.  We write to all plexes.  If this is 	 * a RAID-4 or RAID-5 plex, we must also update the parity stripe. 	 */
 block|{
 if|if
 condition|(
@@ -1116,20 +1106,6 @@ name|vol
 operator|!=
 name|NULL
 condition|)
-block|{
-name|vol
-operator|->
-name|writes
-operator|++
-expr_stmt|;
-name|vol
-operator|->
-name|bytes_written
-operator|+=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
 name|status
 operator|=
 name|build_write_request
@@ -1138,7 +1114,6 @@ name|rq
 argument_list|)
 expr_stmt|;
 comment|/* Not all the subdisks are up */
-block|}
 else|else
 block|{
 comment|/* plex I/O */
@@ -1296,9 +1271,15 @@ modifier|*
 name|rqe
 decl_stmt|;
 comment|/* current element */
-name|int
-name|s
+name|struct
+name|drive
+modifier|*
+name|drive
 decl_stmt|;
+name|int
+name|rcount
+decl_stmt|;
+comment|/* request count */
 comment|/*      * First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving      */
 if|if
 condition|(
@@ -1399,15 +1380,12 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Revive conflict sd %d: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq
 operator|->
 name|sdno
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|rq
 argument_list|,
 name|rq
@@ -1467,36 +1445,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* nothing yet */
-comment|/* XXX This is probably due to a bug */
-if|if
-condition|(
-name|rq
-operator|->
-name|rqg
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* no request */
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vinum: null rqg\n"
-argument_list|)
-expr_stmt|;
-name|abortrequest
-argument_list|(
-name|rq
-argument_list|,
-name|EINVAL
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 if|#
 directive|if
 name|VINUMDEBUG
@@ -1510,11 +1458,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Request: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Request: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|rq
 argument_list|,
 name|rq
@@ -1564,9 +1509,6 @@ name|vinum_conf
 operator|.
 name|lastrq
 operator|=
-operator|(
-name|int
-operator|)
 name|rq
 expr_stmt|;
 name|vinum_conf
@@ -1602,11 +1544,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
+comment|/*      * We used to have an splbio() here anyway, out      * of superstition.  With the division of labour      * below (first count the requests, then issue      * them), it looks as if we don't need this      * splbio() protection.  In fact, as dillon      * points out, there's a race condition      * incrementing and decrementing rq->active and      * rqg->active.  This splbio() didn't help      * there, because the device strategy routine      * can sleep.  Solve this by putting shorter      * duration locks on the code.      */
+comment|/*      * This loop happens without any participation      * of the bottom half, so it requires no      * protection.      */
 for|for
 control|(
 name|rqg
@@ -1677,44 +1616,186 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* one less active request */
-else|else
+block|}
+if|if
+condition|(
+name|rqg
+operator|->
+name|active
+condition|)
+comment|/* we have at least one active request, */
+name|rq
+operator|->
+name|active
+operator|++
+expr_stmt|;
+comment|/* one more active request group */
+block|}
+comment|/*      * Now fire off the requests.  In this loop the      * bottom half could be completing requests      * before we finish, so we need splbio() protection.      */
+for|for
+control|(
+name|rqg
+operator|=
+name|rq
+operator|->
+name|rqg
+init|;
+name|rqg
+operator|!=
+name|NULL
+condition|;
+control|)
 block|{
-comment|/* we can do it */
+comment|/* through the whole request chain */
+if|if
+condition|(
+name|rqg
+operator|->
+name|lockbase
+operator|>=
+literal|0
+condition|)
+comment|/* this rqg needs a lock first */
+name|rqg
+operator|->
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|rqg
+operator|->
+name|lockbase
+argument_list|,
+name|rqg
+operator|->
+name|rq
+operator|->
+name|bp
+argument_list|,
+operator|&
+name|PLEX
+index|[
+name|rqg
+operator|->
+name|plexno
+index|]
+argument_list|)
+expr_stmt|;
+name|rcount
+operator|=
+name|rqg
+operator|->
+name|count
+expr_stmt|;
+for|for
+control|(
+name|rqno
+operator|=
+literal|0
+init|;
+name|rqno
+operator|<
+name|rcount
+condition|;
+control|)
+block|{
+name|rqe
+operator|=
+operator|&
+name|rqg
+operator|->
+name|rqe
+index|[
+name|rqno
+index|]
+expr_stmt|;
+comment|/* 	     * Point to next rqg before the bottom end 	     * changes the structures. 	     */
+if|if
+condition|(
+operator|++
+name|rqno
+operator|>=
+name|rcount
+condition|)
+name|rqg
+operator|=
+name|rqg
+operator|->
+name|next
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|rqe
 operator|->
-name|b
-operator|.
-name|b_flags
+name|flags
 operator|&
-name|B_READ
+name|XFR_BAD_SUBDISK
 operator|)
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* this subdisk is good, */
+name|drive
+operator|=
+operator|&
+name|DRIVE
+index|[
 name|rqe
 operator|->
-name|b
-operator|.
-name|b_vp
+name|driveno
+index|]
+expr_stmt|;
+comment|/* look at drive */
+name|drive
 operator|->
-name|v_numoutput
+name|active
 operator|++
 expr_stmt|;
-comment|/* one more output going */
-name|rqe
+if|if
+condition|(
+name|drive
 operator|->
-name|b
-operator|.
-name|b_flags
-operator||=
-name|B_ORDERED
+name|active
+operator|>=
+name|drive
+operator|->
+name|maxactive
+condition|)
+name|drive
+operator|->
+name|maxactive
+operator|=
+name|drive
+operator|->
+name|active
 expr_stmt|;
-comment|/* stick to the request order */
-if|#
-directive|if
+name|vinum_conf
+operator|.
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|vinum_conf
+operator|.
+name|maxactive
+condition|)
+name|vinum_conf
+operator|.
+name|maxactive
+operator|=
+name|vinum_conf
+operator|.
+name|active
+expr_stmt|;
+ifdef|#
+directive|ifdef
 name|VINUMDEBUG
 if|if
 condition|(
@@ -1799,31 +1880,6 @@ if|if
 condition|(
 name|debug
 operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  vinumstart sd %d numoutput %ld\n"
-argument_list|,
-name|rqe
-operator|->
-name|sdno
-argument_list|,
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
 name|DEBUG_LASTREQS
 condition|)
 name|logrq
@@ -1869,25 +1925,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|rqg
-operator|->
-name|active
-condition|)
-comment|/* we have at least one active request, */
-name|rq
-operator|->
-name|active
-operator|++
-expr_stmt|;
-comment|/* one more active request group */
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2099,15 +2137,15 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2329,15 +2367,15 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2483,15 +2521,15 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2784,15 +2822,15 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2860,7 +2898,10 @@ block|}
 block|}
 block|}
 break|break;
-comment|/* 	 * RAID5 is complicated enough to have 	 * its own function 	 */
+comment|/* 	 * RAID-4 and RAID-5 are complicated enough to have their own 	 * function. 	 */
+case|case
+name|plex_raid4
+case|:
 case|case
 name|plex_raid5
 case|:
@@ -3452,6 +3493,7 @@ name|bp
 expr_stmt|;
 comment|/* pointer to user buffer header */
 comment|/* Initialize the buf struct */
+comment|/* copy these flags from user bp */
 name|bp
 operator|->
 name|b_flags
@@ -3461,6 +3503,8 @@ operator|->
 name|b_flags
 operator|&
 operator|(
+name|B_ORDERED
+operator||
 name|B_NOCACHE
 operator||
 name|B_READ
@@ -3468,7 +3512,6 @@ operator||
 name|B_ASYNC
 operator|)
 expr_stmt|;
-comment|/* copy these flags from user bp */
 name|bp
 operator|->
 name|b_flags
@@ -3484,7 +3527,6 @@ name|b_iodone
 operator|=
 name|complete_rqe
 expr_stmt|;
-comment|/* by calling us here */
 comment|/*      * You'd think that we wouldn't need to even      * build the request buffer for a dead subdisk,      * but in some cases we need information like      * the user buffer address.  Err on the side of      * generosity and supply what we can.  That      * obviously doesn't include drive information      * when the drive is dead.      */
 if|if
 condition|(
@@ -3498,7 +3540,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* subdisk is accessible, */
 name|bp
 operator|->
@@ -3514,21 +3555,6 @@ operator|.
 name|dev
 expr_stmt|;
 comment|/* drive device */
-name|bp
-operator|->
-name|b_vp
-operator|=
-name|DRIVE
-index|[
-name|rqe
-operator|->
-name|driveno
-index|]
-operator|.
-name|vp
-expr_stmt|;
-comment|/* drive vnode */
-block|}
 name|bp
 operator|->
 name|b_blkno
@@ -3750,12 +3776,6 @@ decl_stmt|;
 comment|/* user buffer */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|error
@@ -3766,6 +3786,12 @@ name|rq
 argument_list|)
 expr_stmt|;
 comment|/* free everything we're doing */
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
@@ -3834,6 +3860,30 @@ name|drive
 modifier|*
 name|drive
 decl_stmt|;
+if|#
+directive|if
+name|VINUMDEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_LASTREQS
+condition|)
+name|logrq
+argument_list|(
+name|loginfo_sdio
+argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
+name|bp
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sd
 operator|=
 operator|&
@@ -3860,6 +3910,81 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|drive
+operator|->
+name|state
+operator|!=
+name|drive_up
+condition|)
+block|{
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|>=
+name|sd_crashed
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* writing, */
+name|set_sd_state
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|,
+name|sd_stale
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+else|else
+name|set_sd_state
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|,
+name|sd_crashed
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+block|}
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*      * We allow access to any kind of subdisk as long as we can expect      * to get the I/O performed.      */
+if|if
+condition|(
 name|sd
 operator|->
 name|state
@@ -3870,24 +3995,16 @@ block|{
 comment|/* nothing to talk to, */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|EIO
 expr_stmt|;
-if|if
-condition|(
 name|bp
 operator|->
 name|b_flags
-operator|&
-name|B_BUSY
-condition|)
+operator||=
+name|B_ERROR
+expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
@@ -3921,15 +4038,15 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -3961,6 +4078,8 @@ operator|->
 name|b_flags
 operator||
 name|B_CALL
+operator||
+name|B_BUSY
 expr_stmt|;
 comment|/* inform us when it's done */
 name|sbp
@@ -4046,22 +4165,6 @@ operator|=
 name|sdio_done
 expr_stmt|;
 comment|/* come here on completion */
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|=
-name|DRIVE
-index|[
-name|sd
-operator|->
-name|driveno
-index|]
-operator|.
-name|vp
-expr_stmt|;
-comment|/* vnode */
 name|sbp
 operator|->
 name|bp
@@ -4162,31 +4265,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|if
-condition|(
-operator|(
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* write */
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -4272,31 +4350,6 @@ operator|.
 name|b_bcount
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  vinumstart sd %d numoutput %ld\n"
-argument_list|,
-name|sbp
-operator|->
-name|sdno
-argument_list|,
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|s
@@ -4321,19 +4374,15 @@ operator|(
 expr|union
 name|rqinfou
 operator|)
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
+operator|&
 name|sbp
+operator|->
+name|b
 argument_list|,
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
+operator|&
 name|sbp
+operator|->
+name|b
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4457,9 +4506,10 @@ operator|->
 name|b_dev
 argument_list|)
 operator|==
-name|BDEV_MAJOR
+name|VINUM_BDEV_MAJOR
 comment|/* and it's the block device */
 operator|&&
+operator|(
 operator|(
 name|bp
 operator|->
@@ -4469,6 +4519,7 @@ name|B_READ
 operator|)
 operator|==
 literal|0
+operator|)
 comment|/* and it's a write */
 operator|&&
 operator|(
@@ -4731,6 +4782,14 @@ name|elements
 expr_stmt|;
 comment|/* number of requests in the group */
 block|}
+name|rqg
+operator|->
+name|lockbase
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* no lock required yet */
 return|return
 name|rqg
 return|;
@@ -4944,6 +5003,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 

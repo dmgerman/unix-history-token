@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumlock.c,v 1.13 2000/05/02 23:25:02 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -162,8 +162,6 @@ operator|&
 name|lockdrive
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"vindrv"
 argument_list|,
@@ -318,8 +316,6 @@ operator|->
 name|volno
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"volock"
 argument_list|,
@@ -459,8 +455,6 @@ literal|0
 index|]
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"plexlk"
 argument_list|,
@@ -683,14 +677,6 @@ condition|)
 block|{
 comment|/* but not our request */
 comment|/* 		 * It would be nice to sleep on the lock 		 * itself, but it could get moved if the 		 * table expands during the wait.  Wait on 		 * the lock address + 1 (since waiting on 		 * 0 isn't allowed) instead.  It isn't 		 * exactly unique, but we won't have many 		 * conflicts.  The worst effect of a 		 * conflict would be an additional 		 * schedule and time through this loop. 		 */
-while|while
-condition|(
-name|lock
-operator|->
-name|stripe
-condition|)
-block|{
-comment|/* wait for it to become free */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -742,6 +728,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|plex
+operator|->
+name|lockwaits
+operator|++
+expr_stmt|;
+comment|/* waited one more time */
 name|tsleep
 argument_list|(
 operator|(
@@ -753,8 +745,6 @@ operator|->
 name|stripe
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"vrlock"
 argument_list|,
@@ -763,19 +753,24 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
+name|lock
+operator|=
 name|plex
 operator|->
-name|lockwaits
-operator|++
+name|lock
 expr_stmt|;
-comment|/* waited one more time */
+comment|/* start again */
+name|foundlocks
+operator|=
+literal|0
+expr_stmt|;
+name|pos
+operator|=
+name|NULL
+expr_stmt|;
 block|}
-break|break;
-comment|/* out of the inner level loop */
 block|}
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|pos
@@ -788,7 +783,6 @@ operator|=
 name|lock
 expr_stmt|;
 comment|/* a place to put this one */
-block|}
 block|}
 comment|/*      * The address range is free.  Add our lock      * entry.      */
 if|if
@@ -1054,8 +1048,6 @@ operator|&
 name|vinum_conf
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"vincfg"
 argument_list|,

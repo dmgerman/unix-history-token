@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*  * $Id: vinumhdr.h,v 1.16 1999/12/30 07:02:44 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -45,33 +45,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"DEVFS code not complete yet"
-end_error
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS */
-end_comment
 
 begin_include
 include|#
@@ -148,12 +121,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -167,12 +134,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dkbad.h>
 end_include
 
 begin_include
@@ -249,6 +210,12 @@ begin_include
 include|#
 directive|include
 file|<dev/vinum/vinumext.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_undef
@@ -354,7 +321,7 @@ name|Malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc((x), M_DEVBUF, M_WAITOK)
+value|malloc((x), M_DEVBUF, intr_nesting_level == 0)
 end_define
 
 begin_define

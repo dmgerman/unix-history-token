@@ -4,7 +4,7 @@ comment|/* vinuminterrupt.c: bottom half of the driver */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.9 2000/02/16 01:59:02 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -95,6 +95,11 @@ modifier|*
 name|ubp
 decl_stmt|;
 comment|/* user buffer */
+name|struct
+name|drive
+modifier|*
+name|drive
+decl_stmt|;
 name|rqe
 operator|=
 operator|(
@@ -150,6 +155,59 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|drive
+operator|=
+operator|&
+name|DRIVE
+index|[
+name|rqe
+operator|->
+name|driveno
+index|]
+expr_stmt|;
+name|drive
+operator|->
+name|active
+operator|--
+expr_stmt|;
+comment|/* one less outstanding I/O on this drive */
+name|vinum_conf
+operator|.
+name|active
+operator|--
+expr_stmt|;
+comment|/* one less outstanding I/O globally */
+if|if
+condition|(
+operator|(
+name|drive
+operator|->
+name|active
+operator|==
+operator|(
+name|DRIVE_MAXACTIVE
+operator|-
+literal|1
+operator|)
+operator|)
+comment|/* we were at the drive limit */
+operator|||
+operator|(
+name|vinum_conf
+operator|.
+name|active
+operator|==
+name|VINUM_MAXACTIVE
+operator|)
+condition|)
+comment|/* or the global limit */
+name|wakeup
+argument_list|(
+operator|&
+name|launch_requests
+argument_list|)
+expr_stmt|;
+comment|/* let another one at it */
 if|if
 condition|(
 operator|(
@@ -421,6 +479,61 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
+if|if
+condition|(
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* volume I/O, not plex */
+name|VOL
+index|[
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|reads
+operator|++
+expr_stmt|;
+name|VOL
+index|[
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|bytes_read
+operator|+=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -498,13 +611,62 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|PLEX
+index|[
+name|rqe
+operator|->
 name|rqg
 operator|->
-name|active
-operator|--
+name|plexno
+index|]
+operator|.
+name|volno
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* volume I/O, not plex */
+name|VOL
+index|[
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|writes
+operator|++
 expr_stmt|;
-comment|/* one less request active */
+name|VOL
+index|[
+name|PLEX
+index|[
+name|rqe
+operator|->
+name|rqg
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|bytes_written
+operator|+=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|rqg
@@ -597,14 +759,17 @@ operator|=
 name|urqe
 operator|->
 name|grouplen
-operator|<<
+operator|*
 operator|(
-name|DEV_BSHIFT
-operator|-
-literal|2
+name|DEV_BSIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 operator|)
 expr_stmt|;
-comment|/* and count involved */
+comment|/* and number of ints */
 for|for
 control|(
 name|count
@@ -628,7 +793,7 @@ index|[
 name|count
 index|]
 expr_stmt|;
-comment|/* 	 * In a normal read, we will normally read directly 	 * into the user buffer.  This doesn't work if 	 * we're also doing a recovery, so we have to 	 * copy it  	 */
+comment|/* 	 * In a normal read, we will normally read directly 	 * into the user buffer.  This doesn't work if 	 * we're also doing a recovery, so we have to 	 * copy it 	 */
 if|if
 condition|(
 name|rqe
@@ -716,22 +881,29 @@ operator||
 name|XFR_DEGRADED_WRITE
 operator|)
 operator|)
-comment|/* RAID 5 group write operation  */
+comment|/* RAID 4/5 group write operation  */
 operator|&&
 operator|(
 name|rqg
 operator|->
 name|active
 operator|==
-literal|0
+literal|1
 operator|)
 condition|)
-comment|/* and we've finished phase 1 */
+comment|/* and this is the last active request */
 name|complete_raid5_write
 argument_list|(
 name|rqe
 argument_list|)
 expr_stmt|;
+comment|/*      * This is the earliest place where we can be      * sure that the request has really finished,      * since complete_raid5_write can issue new      * requests.      */
+name|rqg
+operator|->
+name|active
+operator|--
+expr_stmt|;
+comment|/* this request now finished */
 if|if
 condition|(
 name|rqg
@@ -740,6 +912,7 @@ name|active
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* request group finished, */
 name|rq
 operator|->
@@ -747,6 +920,34 @@ name|active
 operator|--
 expr_stmt|;
 comment|/* one less */
+if|if
+condition|(
+name|rqg
+operator|->
+name|lock
+condition|)
+block|{
+comment|/* got a lock? */
+name|unlockrange
+argument_list|(
+name|rqg
+operator|->
+name|plexno
+argument_list|,
+name|rqg
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* yes, free it */
+name|rqg
+operator|->
+name|lock
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|rq
@@ -1065,12 +1266,17 @@ name|B_ERROR
 condition|)
 block|{
 comment|/* had an error */
+name|sbp
+operator|->
 name|bp
 operator|->
 name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+comment|/* propagate upwards */
+name|sbp
+operator|->
 name|bp
 operator|->
 name|b_error
@@ -1082,6 +1288,30 @@ operator|.
 name|b_error
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_LASTREQS
+condition|)
+name|logrq
+argument_list|(
+name|loginfo_sdiodone
+argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
+name|bp
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sbp
 operator|->
 name|bp
@@ -1095,14 +1325,6 @@ operator|.
 name|b_resid
 expr_stmt|;
 comment|/* copy the resid field */
-name|biodone
-argument_list|(
-name|sbp
-operator|->
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* complete the caller's I/O */
 comment|/* Now update the statistics */
 if|if
 condition|(
@@ -1133,8 +1355,10 @@ index|]
 operator|.
 name|bytes_read
 operator|+=
-name|bp
+name|sbp
 operator|->
+name|b
+operator|.
 name|b_bcount
 expr_stmt|;
 name|SD
@@ -1156,8 +1380,10 @@ index|]
 operator|.
 name|bytes_read
 operator|+=
-name|bp
+name|sbp
 operator|->
+name|b
+operator|.
 name|b_bcount
 expr_stmt|;
 block|}
@@ -1183,8 +1409,10 @@ index|]
 operator|.
 name|bytes_written
 operator|+=
-name|bp
+name|sbp
 operator|->
+name|b
+operator|.
 name|b_bcount
 expr_stmt|;
 name|SD
@@ -1206,11 +1434,21 @@ index|]
 operator|.
 name|bytes_written
 operator|+=
-name|bp
+name|sbp
 operator|->
+name|b
+operator|.
 name|b_bcount
 expr_stmt|;
 block|}
+name|biodone
+argument_list|(
+name|sbp
+operator|->
+name|bp
+argument_list|)
+expr_stmt|;
+comment|/* complete the caller's I/O */
 name|Free
 argument_list|(
 name|sbp
@@ -1220,7 +1458,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start the second phase of a RAID5 group write operation. */
+comment|/* Start the second phase of a RAID-4 or RAID-5 group write operation. */
 end_comment
 
 begin_function
@@ -1262,7 +1500,7 @@ comment|/* offset of request data from parity data */
 name|struct
 name|buf
 modifier|*
-name|bp
+name|ubp
 decl_stmt|;
 comment|/* user buffer header */
 name|struct
@@ -1303,7 +1541,7 @@ operator|->
 name|rq
 expr_stmt|;
 comment|/* point to our request */
-name|bp
+name|ubp
 operator|=
 name|rq
 operator|->
@@ -1321,7 +1559,7 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* point to the parity block */
-comment|/*      * If we get to this function, we have normal or      * degraded writes, or a combination of both.  We do      * the same thing in each case: we perform an      * exclusive or to the parity block.  The only      * difference is the origin of the data and the      * address range.       */
+comment|/*      * If we get to this function, we have normal or      * degraded writes, or a combination of both.  We do      * the same thing in each case: we perform an      * exclusive or to the parity block.  The only      * difference is the origin of the data and the      * address range.      */
 if|if
 condition|(
 name|rqe
@@ -1387,7 +1625,6 @@ operator|++
 control|)
 block|{
 comment|/* for all the data blocks */
-comment|/* 	     * This can do with improvement.  If we're doing 	     * both a degraded and a normal write, we don't 	     * need to xor (nor to read) the part of the block 	     * that we're going to overwrite.  FIXME XXX  	     */
 name|rqe
 operator|=
 operator|&
@@ -1435,7 +1672,7 @@ literal|2
 operator|)
 expr_stmt|;
 comment|/* and count involved */
-comment|/* 	     * add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block.   	     */
+comment|/* 	     * Add the data block to the parity block.  Before 	     * we started the request, we zeroed the parity 	     * block, so the result of adding all the other 	     * blocks and the block we want to write will be 	     * the correct parity block. 	     */
 for|for
 control|(
 name|count
@@ -1629,15 +1866,18 @@ operator|=
 name|rqe
 operator|->
 name|datalen
-operator|<<
+operator|*
 operator|(
-name|DEV_BSHIFT
-operator|-
-literal|2
+name|DEV_BSIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 operator|)
 expr_stmt|;
-comment|/* and count involved */
-comment|/* 		 * "remove" the old data block 		 * from the parity block  		 */
+comment|/* and number of ints */
+comment|/* 		 * "remove" the old data block 		 * from the parity block 		 */
 if|if
 condition|(
 operator|(
@@ -1765,7 +2005,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|bp
+name|ubp
 operator|->
 name|b_data
 index|[
@@ -1788,7 +2028,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|bp
+name|ubp
 operator|->
 name|b_data
 operator|)
@@ -1807,11 +2047,11 @@ name|int
 operator|*
 operator|)
 operator|(
-name|bp
+name|ubp
 operator|->
 name|b_data
 operator|+
-name|bp
+name|ubp
 operator|->
 name|b_bcount
 operator|)
@@ -1933,12 +2173,21 @@ expr_stmt|;
 comment|/* call us when you're done */
 name|rqe
 operator|->
+name|b
+operator|.
+name|b_iodone
+operator|=
+name|complete_rqe
+expr_stmt|;
+comment|/* by calling us here */
+name|rqe
+operator|->
 name|flags
 operator|&=
 operator|~
 name|XFR_PARITYOP
 expr_stmt|;
-comment|/* reset flags that brought use here */
+comment|/* reset flags that brought us here */
 name|rqe
 operator|->
 name|b
@@ -1946,7 +2195,7 @@ operator|.
 name|b_data
 operator|=
 operator|&
-name|bp
+name|ubp
 operator|->
 name|b_data
 index|[
@@ -2014,16 +2263,6 @@ name|active
 operator|++
 expr_stmt|;
 comment|/* another active request */
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 name|drive
 operator|=
 operator|&
@@ -2035,6 +2274,53 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* drive to access */
+comment|/* We can't sleep here, so we just increment the counters. */
+name|drive
+operator|->
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|active
+operator|>=
+name|drive
+operator|->
+name|maxactive
+condition|)
+name|drive
+operator|->
+name|maxactive
+operator|=
+name|drive
+operator|->
+name|active
+expr_stmt|;
+name|vinum_conf
+operator|.
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|vinum_conf
+operator|.
+name|maxactive
+condition|)
+name|vinum_conf
+operator|.
+name|maxactive
+operator|=
+name|vinum_conf
+operator|.
+name|active
+expr_stmt|;
 if|#
 directive|if
 name|VINUMDEBUG
@@ -2121,31 +2407,6 @@ if|if
 condition|(
 name|debug
 operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  raid5.2 sd %d numoutput %ld\n"
-argument_list|,
-name|rqe
-operator|->
-name|sdno
-argument_list|,
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
 name|DEBUG_LASTREQS
 condition|)
 name|logrq
@@ -2158,7 +2419,7 @@ name|rqinfou
 operator|)
 name|rqe
 argument_list|,
-name|bp
+name|ubp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2223,15 +2484,16 @@ name|b_flags
 operator||=
 name|B_CALL
 expr_stmt|;
-comment|/* call us when you're done */
+comment|/* tell us when you're done */
 name|rqe
 operator|->
-name|flags
-operator|&=
-operator|~
-name|XFR_PARITYOP
+name|b
+operator|.
+name|b_iodone
+operator|=
+name|complete_rqe
 expr_stmt|;
-comment|/* reset flags that brought use here */
+comment|/* by calling us here */
 name|rqg
 operator|->
 name|flags
@@ -2239,7 +2501,7 @@ operator|&=
 operator|~
 name|XFR_PARITYOP
 expr_stmt|;
-comment|/* reset flags that brought use here */
+comment|/* reset flags that brought us here */
 name|rqe
 operator|->
 name|b
@@ -2285,16 +2547,6 @@ name|active
 operator|++
 expr_stmt|;
 comment|/* another active request */
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 name|drive
 operator|=
 operator|&
@@ -2306,6 +2558,53 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* drive to access */
+comment|/* We can't sleep here, so we just increment the counters. */
+name|drive
+operator|->
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|active
+operator|>=
+name|drive
+operator|->
+name|maxactive
+condition|)
+name|drive
+operator|->
+name|maxactive
+operator|=
+name|drive
+operator|->
+name|active
+expr_stmt|;
+name|vinum_conf
+operator|.
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|vinum_conf
+operator|.
+name|maxactive
+condition|)
+name|vinum_conf
+operator|.
+name|maxactive
+operator|=
+name|vinum_conf
+operator|.
+name|active
+expr_stmt|;
 if|#
 directive|if
 name|VINUMDEBUG
@@ -2392,31 +2691,6 @@ if|if
 condition|(
 name|debug
 operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  raid5.3 sd %d numoutput %ld\n"
-argument_list|,
-name|rqe
-operator|->
-name|sdno
-argument_list|,
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
 name|DEBUG_LASTREQS
 condition|)
 name|logrq
@@ -2429,7 +2703,7 @@ name|rqinfou
 operator|)
 name|rqe
 argument_list|,
-name|bp
+name|ubp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2459,6 +2733,18 @@ operator|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*  * $Id: vext.h,v 1.17 2000/05/07 04:17:12 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -22,11 +22,22 @@ begin_define
 define|#
 directive|define
 name|PLEXINITSIZE
-value|61440
+value|65536
 end_define
 
 begin_comment
-comment|/* this is what the system does somewhere */
+comment|/* init in this size chunks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPLEXINITSIZE
+value|65536
+end_define
+
+begin_comment
+comment|/* max chunk size to use for init */
 end_comment
 
 begin_define
@@ -69,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_HISTORYFILE
-value|"/var/tmp/vinum_history"
+value|"/var/log/vinum_history"
 end_define
 
 begin_comment
@@ -121,6 +132,23 @@ end_function_decl
 begin_comment
 comment|/* check arg, error message if not valid */
 end_comment
+
+begin_function_decl
+name|void
+name|setsigs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|catchsig
+parameter_list|(
+name|int
+name|ignore
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -325,6 +353,26 @@ end_function_decl
 begin_function_decl
 name|void
 name|vinum_rm
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|arg0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_mv
 parameter_list|(
 name|int
 name|argc
@@ -807,6 +855,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|checkupdates
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|genvolname
 parameter_list|()
@@ -849,6 +904,46 @@ end_function_decl
 begin_function_decl
 name|void
 name|vinum_stripe
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_raid4
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_raid5
 parameter_list|(
 name|int
 name|argc
@@ -1048,6 +1143,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|parityops
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|enum
+name|parityop
+name|op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|start_daemon
 parameter_list|(
 name|void
@@ -1143,6 +1257,48 @@ begin_function_decl
 name|void
 name|list_defective_objects
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vinum_dumpconfig
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dumpconfig
+parameter_list|(
+name|char
+modifier|*
+name|part
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|check_drive
+parameter_list|(
+name|char
+modifier|*
+name|devicename
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1259,8 +1415,7 @@ name|char
 modifier|*
 name|lltoa
 parameter_list|(
-name|long
-name|long
+name|int64_t
 name|l
 parameter_list|,
 name|char
@@ -1333,8 +1488,7 @@ name|char
 modifier|*
 name|roughlength
 parameter_list|(
-name|long
-name|long
+name|int64_t
 name|bytes
 parameter_list|,
 name|int
@@ -1374,12 +1528,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|verbose
+name|interval
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set verbose operation */
+comment|/* interval in ms between init/revive */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set verbose operation or verify */
 end_comment
 
 begin_decl_stmt
@@ -1413,6 +1578,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* show statistics */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|SSize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sector size for revive */
 end_comment
 
 begin_decl_stmt
