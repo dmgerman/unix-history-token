@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.16 1995/01/31 11:41:45 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.17 1995/02/14 06:17:23 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_driver.h>
 end_include
 
 begin_comment
@@ -324,7 +330,33 @@ comment|/* 24 bits of other adapter characteristics go here */
 end_comment
 
 begin_comment
-comment|/*  * These entry points are called by the low-end drivers to get services from  * whatever high-end drivers they are attached to.  Each device type has one  * of these statically allocated.  */
+comment|/* Don't poke around inside of "scsi_data".  Each low level  * driver has its own definition for it.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|scsi_data
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|scsi_link
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* scsi_link refers to scsi_device and vice-versa */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|scsi_xfer
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * These entry points are called by the low-end drivers to get services from  * whatever high-end drivers they are attached to.  Each device type has one  * of these statically allocated.  *  * XXX dufault@hda.com: Each adapter driver has a scsi_device structure  *     that I don't think should be there.  *     This structure should be rearranged and cleaned up once the  *     instance down in the adapter drivers is removed.  */
 end_comment
 
 begin_struct
@@ -337,16 +369,24 @@ function_decl|(
 modifier|*
 name|err_handler
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|scsi_xfer
+modifier|*
+name|xs
+parameter_list|)
 function_decl|;
-comment|/* returns -1 to say err processing complete */
-comment|/*  8*/
+comment|/* return -1 to say 											* err processing complete */
+comment|/*	8*/
 name|void
 function_decl|(
 modifier|*
 name|start
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|u_int32
+name|unit
+parameter_list|)
 function_decl|;
 comment|/* 12*/
 name|int32
@@ -383,9 +423,326 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* 36*/
+name|int32
+name|link_flags
+decl_stmt|;
+comment|/* Flags OR'd into sc_link at attach time */
+comment|/* 40*/
+name|errval
+function_decl|(
+modifier|*
+name|attach
+function_decl|)
+parameter_list|(
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+comment|/* 44*/
+name|int
+function_decl|(
+modifier|*
+name|open
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+comment|/* 48*/
+name|int
+name|sizeof_scsi_data
+decl_stmt|;
+comment|/* 52*/
+name|int
+name|type
+decl_stmt|;
+comment|/* Type of device this supports */
+comment|/* 56*/
+name|int
+function_decl|(
+modifier|*
+name|getunit
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+function_decl|;
+comment|/* 60*/
+name|dev_t
+function_decl|(
+modifier|*
+name|setunit
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+comment|/* 64*/
+name|errval
+function_decl|(
+modifier|*
+name|dev_open
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+comment|/* 68*/
+name|errval
+function_decl|(
+modifier|*
+name|dev_ioctl
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|caddr_t
+name|arg
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+comment|/* 72*/
+name|errval
+function_decl|(
+modifier|*
+name|dev_close
+function_decl|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+comment|/* 76*/
+name|void
+function_decl|(
+modifier|*
+name|dev_strategy
+function_decl|)
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|,
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+parameter_list|)
+function_decl|;
+comment|/* Not initialized after this */
+define|#
+directive|define
+name|SCSI_LINK
+parameter_list|(
+name|DEV
+parameter_list|,
+name|UNIT
+parameter_list|)
+value|( \ 	(struct scsi_link *)(extend_get((DEV)->links, (UNIT))) \ 	)
+define|#
+directive|define
+name|SCSI_DATA
+parameter_list|(
+name|DEV
+parameter_list|,
+name|UNIT
+parameter_list|)
+value|( \ 	(SCSI_LINK((DEV), (UNIT)) ? \ 	(SCSI_LINK((DEV), (UNIT))->sd) : \ 	(struct scsi_data *)0) \ 	)
+comment|/* 80*/
+name|struct
+name|extend_array
+modifier|*
+name|links
+decl_stmt|;
+comment|/* 84*/
+name|int
+name|free_unit
+decl_stmt|;
+comment|/* 88*/
+name|struct
+name|scsi_device
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Next in list in the registry. */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* SCSI_DEVICE_ENTRIES: A macro to generate all the entry points from the  * name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_DEVICE_ENTRIES
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|errval NAME##attach(struct scsi_link *sc_link);	\ extern struct scsi_device NAME##_switch;	\ void NAME##init(void)	\ {	\ 	scsi_device_register(&NAME##_switch);	\ }	\ errval NAME##open(dev_t dev, int flags)	\ {	\ 	return scsi_open(dev, flags,&NAME##_switch);	\ }	\ errval NAME##ioctl(dev_t dev, int cmd, caddr_t addr, int flag)	\ {	\ 	return scsi_ioctl(dev, cmd, addr, flag,&NAME##_switch);	\ }	\ errval NAME##close(dev_t dev)	\ {	\ 	return scsi_close(dev,&NAME##_switch);	\ }	\ void NAME##minphys(struct buf *bp)	\ {	\ 	scsi_minphys(bp,&NAME##_switch);	\ } \ void NAME##strategy(struct buf *bp)	\ {	\ 	scsi_strategy(bp,&NAME##_switch);	\ }
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Configuration tables for config.  */
+end_comment
+
+begin_comment
+comment|/* A unit, type, etc can be SCCONF_ANY to indicate it is a '?'  *  in the config.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCCONF_UNSPEC
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCCONF_ANY
+value|-2
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|isa_driver
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|scsi_ctlr_config
+block|{
+name|int
+name|bus
+decl_stmt|;
+name|char
+modifier|*
+name|driver
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scsi_device_config
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* SCSI device name (sd, st, etc) */
+name|int
+name|unit
+decl_stmt|;
+comment|/* desired device unit */
+name|int
+name|cunit
+decl_stmt|;
+comment|/* Controller unit */
+name|int
+name|target
+decl_stmt|;
+comment|/* SCSI ID (target) */
+name|int
+name|lun
+decl_stmt|;
+comment|/* SCSI lun */
+name|int
+name|flags
+decl_stmt|;
+comment|/* Flags from config */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|scsi_tinit
+index|[]
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|scsi_ctlr_config
+name|scsi_cinit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|scsi_device_config
+name|scsi_dinit
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -684,7 +1041,14 @@ name|dev_t
 name|dev
 decl_stmt|;
 comment|/* Device major number (character) */
-comment|/* 40+*/
+comment|/* 40*/
+name|struct
+name|scsi_data
+modifier|*
+name|sd
+decl_stmt|;
+comment|/* Device data structure */
+comment|/* 44+*/
 name|struct
 name|scsi_inquiry_data
 name|inqbuf
@@ -698,7 +1062,7 @@ begin_define
 define|#
 directive|define
 name|SDEV_MEDIA_LOADED
-value|0x01
+value|0x00000001
 end_define
 
 begin_comment
@@ -709,7 +1073,7 @@ begin_define
 define|#
 directive|define
 name|SDEV_WAITING
-value|0x02
+value|0x00000002
 end_define
 
 begin_comment
@@ -720,18 +1084,22 @@ begin_define
 define|#
 directive|define
 name|SDEV_OPEN
-value|0x04
+value|0x00000004
 end_define
 
 begin_comment
 comment|/* at least 1 open session */
 end_comment
 
+begin_comment
+comment|/* XXX dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think eventually the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SDEV_BOUNCE
-value|0x08
+value|0x00000008
 end_define
 
 begin_comment
@@ -742,11 +1110,22 @@ begin_define
 define|#
 directive|define
 name|SDEV_DBX
-value|0xF0
+value|0x000000F0
 end_define
 
 begin_comment
 comment|/* debuging flags (scsi_debug.h) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDEV_ONCE_ONLY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* unit can only be opened once */
 end_comment
 
 begin_comment
@@ -1158,6 +1537,28 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_function_decl
+name|char
+modifier|*
+name|scsi_type_long_name
+parameter_list|(
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|scsi_type_name
+parameter_list|(
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|void
 name|scsi_attachdevs
@@ -1386,11 +1787,6 @@ operator|(
 name|dev_t
 name|dev
 operator|,
-expr|struct
-name|scsi_link
-operator|*
-name|sc_link
-operator|,
 name|int
 name|cmd
 operator|,
@@ -1399,6 +1795,11 @@ name|addr
 operator|,
 name|int
 name|f
+operator|,
+expr|struct
+name|scsi_link
+operator|*
+name|sc_link
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1438,6 +1839,9 @@ argument_list|)
 operator|(
 name|dev_t
 name|dev
+operator|,
+name|int
+name|flags
 operator|)
 operator|)
 argument_list|)
@@ -1593,20 +1997,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|scsi_internalize
+name|void
+name|scsi_device_register
 parameter_list|(
 name|struct
-name|scsi_link
+name|scsi_device
 modifier|*
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-parameter_list|,
-name|size_t
-modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 end_function_decl
