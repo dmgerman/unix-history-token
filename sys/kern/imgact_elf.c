@@ -202,22 +202,6 @@ name|OLD_EI_BRAND
 value|8
 end_define
 
-begin_expr_stmt
-name|__ElfType
-argument_list|(
-name|Brandinfo
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__ElfType
-argument_list|(
-name|Auxargs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -379,15 +363,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
+begin_function_decl
 name|int
+name|__elfN
+parameter_list|(
 name|fallback_brand
+parameter_list|)
 init|=
 operator|-
 literal|1
-decl_stmt|;
-end_decl_stmt
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -406,7 +392,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|__elfN
+argument_list|(
 name|fallback_brand
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -435,7 +424,10 @@ argument_list|)
 literal|".fallback_brand"
 argument_list|,
 operator|&
+name|__elfN
+argument_list|(
 name|fallback_brand
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -933,7 +925,10 @@ name|bi
 operator|->
 name|machine
 operator|&&
+name|__elfN
+argument_list|(
 name|fallback_brand
+argument_list|)
 operator|==
 name|bi
 operator|->

@@ -2075,8 +2075,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* XXX compatibility, remove for 6.0 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/imgact.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/imgact_elf.h>
+end_include
+
 begin_expr_stmt
-name|SYSCTL_STRING
+name|SYSCTL_INT
 argument_list|(
 name|_kern
 argument_list|,
@@ -2084,14 +2100,23 @@ name|OID_AUTO
 argument_list|,
 name|fallback_elf_brand
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
-literal|"kern.fallback_elf_brand is deprecated, use kern.elf32.fallback_brand or "
-literal|"kern.elf64.fallback_brand"
+operator|&
+name|__elfN
+argument_list|(
+name|fallback_brand
+argument_list|)
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|__elfN
+argument_list|(
+name|fallback_brand
+argument_list|)
+argument_list|)
 argument_list|,
-literal|""
+literal|"compatibility for kern.fallback_elf_brand"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
