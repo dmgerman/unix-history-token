@@ -1,7 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	7.8 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * Definitions of device driver entry switches  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|tty
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -18,7 +39,7 @@ name|dev_t
 name|dev
 operator|,
 name|int
-name|mode
+name|oflags
 operator|,
 name|int
 name|devtype
@@ -157,7 +178,7 @@ name|dev_t
 name|dev
 operator|,
 name|int
-name|mode
+name|oflags
 operator|,
 name|int
 name|devtype
@@ -329,10 +350,6 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|dev_t
-name|dev
-operator|,
-operator|...
 operator|)
 argument_list|)
 expr_stmt|;
