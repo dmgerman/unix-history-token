@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)uipc_mbuf.c	7.7 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)uipc_mbuf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -846,6 +846,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mfree
+condition|)
+break|break;
 block|}
 else|else
 block|{
@@ -1275,37 +1280,46 @@ begin_comment
 comment|/*  * Copy data from an mbuf chain starting "off" bytes from the beginning,  * continuing for "len" bytes, into the indicated buffer.  */
 end_comment
 
-begin_function
-name|struct
-name|mbuf
-modifier|*
+begin_expr_stmt
 name|m_copydata
-parameter_list|(
+argument_list|(
 name|m
-parameter_list|,
+argument_list|,
 name|off
-parameter_list|,
+argument_list|,
 name|len
-parameter_list|,
+argument_list|,
 name|cp
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|mbuf
-modifier|*
+operator|*
 name|m
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
 name|int
 name|off
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|int
 name|len
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|caddr_t
-modifier|*
 name|cp
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|unsigned
@@ -1391,6 +1405,8 @@ argument_list|(
 name|m
 operator|->
 name|m_len
+operator|-
+name|off
 argument_list|,
 name|len
 argument_list|)
@@ -1415,6 +1431,10 @@ name|len
 operator|-=
 name|count
 expr_stmt|;
+name|cp
+operator|+=
+name|count
+expr_stmt|;
 name|off
 operator|=
 literal|0
@@ -1427,7 +1447,7 @@ name|m_next
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 name|m_cat
