@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -9,6 +9,10 @@ struct|struct
 block|{
 name|int
 name|gl_pathc
+decl_stmt|;
+comment|/* count of total paths so far */
+name|int
+name|gl_matchc
 decl_stmt|;
 comment|/* count of paths matching pattern */
 name|int
@@ -41,52 +45,19 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|GLOB_ERR
+name|GLOB_APPEND
 value|0x01
 end_define
 
 begin_comment
-comment|/* return on error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_MARK
-value|0x02
-end_define
-
-begin_comment
-comment|/* append / to matching directories */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_NOSORT
-value|0x04
-end_define
-
-begin_comment
-comment|/* don't sort */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLOB_NOCHECK
-value|0x08
-end_define
-
-begin_comment
-comment|/* return pattern itself if nothing matches */
+comment|/* append to output from previous call */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_DOOFFS
-value|0x10
+value|0x02
 end_define
 
 begin_comment
@@ -96,12 +67,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GLOB_APPEND
+name|GLOB_ERR
+value|0x04
+end_define
+
+begin_comment
+comment|/* return on error */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GLOB_MAGCHAR
+value|0x08
+end_define
+
+begin_comment
+comment|/* pattern had globbing characters */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|GLOB_MARK
+value|0x10
+end_define
+
+begin_comment
+comment|/* append / to matching directories */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOCHECK
 value|0x20
 end_define
 
 begin_comment
-comment|/* append to output from previous call */
+comment|/* return pattern itself if nothing matches */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOSORT
+value|0x40
+end_define
+
+begin_comment
+comment|/* don't sort */
 end_comment
 
 begin_ifndef
@@ -114,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|GLOB_QUOTE
-value|0x40
+value|0x80
 end_define
 
 begin_comment
