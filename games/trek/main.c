@@ -362,8 +362,6 @@ literal|2
 condition|)
 name|syserr
 argument_list|(
-literal|0
-argument_list|,
 literal|"arg count"
 argument_list|)
 expr_stmt|;
