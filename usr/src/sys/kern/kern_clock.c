@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	6.11	85/03/08	*/
+comment|/*	kern_clock.c	6.12	85/04/05	*/
 end_comment
 
 begin_include
@@ -435,10 +435,6 @@ condition|(
 name|noproc
 operator|==
 literal|0
-operator|&&
-name|cpstate
-operator|!=
-name|CP_IDLE
 condition|)
 block|{
 if|if
