@@ -2962,20 +2962,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"pcic%d: Static bug detected, ignoring hardware.\n"
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|pcic_softc
-operator|*
-operator|)
-name|chan
-operator|)
+name|sc
 operator|->
-name|unit
+name|dev
+argument_list|,
+literal|"Static bug detected, ignoring hardware."
 argument_list|)
 expr_stmt|;
 return|return;

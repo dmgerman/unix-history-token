@@ -420,12 +420,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
 name|dev
-argument_list|)
+operator|=
+name|dev
 expr_stmt|;
 name|sp
 operator|=

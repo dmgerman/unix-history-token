@@ -139,26 +139,40 @@ comment|/* resource for I/O region */
 name|int
 name|memrid
 decl_stmt|;
+comment|/* Memory rid */
 name|struct
 name|resource
 modifier|*
 name|memres
 decl_stmt|;
+comment|/* Resource for memory mapped regs */
 name|int
 name|irqrid
 decl_stmt|;
+comment|/* Irq rid */
 name|struct
 name|resource
 modifier|*
 name|irqres
 decl_stmt|;
+comment|/* Irq resource */
 name|void
 modifier|*
 name|ih
 decl_stmt|;
-name|int
-name|unit
+comment|/* Our interrupt handler. */
+name|device_t
+name|dev
 decl_stmt|;
+comment|/* Our device */
+name|bus_space_tag_t
+name|bst
+decl_stmt|;
+comment|/* Bus tag for our regs */
+name|bus_space_handle_t
+name|bsh
+decl_stmt|;
+comment|/* Bus handle for our regs */
 name|struct
 name|callout_handle
 name|timeout_ch
