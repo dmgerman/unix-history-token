@@ -374,7 +374,7 @@ begin_define
 define|#
 directive|define
 name|KTR_CRITICAL
-value|0x10000000
+value|0010000000
 end_define
 
 begin_comment
@@ -395,8 +395,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_BUF
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Buffer cache */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x3fffffff
+value|0x7fffffff
 end_define
 
 begin_comment
