@@ -10543,18 +10543,13 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* XXX there should be a pcpu self mask */
 name|mask
 operator|&=
 operator|~
-operator|(
-literal|1
-operator|<<
 name|PCPU_GET
 argument_list|(
-name|cpuid
+name|cpumask
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
