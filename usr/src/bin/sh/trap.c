@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	8.3 (Berkeley) %G%"
+literal|"@(#)trap.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,6 +679,16 @@ endif|#
 directive|endif
 block|}
 block|}
+if|if
+condition|(
+name|signo
+operator|==
+name|SIGKILL
+condition|)
+comment|/* Pretend it worked */
+return|return
+literal|0
+return|;
 name|t
 operator|=
 operator|&
