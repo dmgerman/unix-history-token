@@ -3940,7 +3940,6 @@ case|:
 case|case
 name|VBLK
 case|:
-comment|/* 		 * if device, look at device number table for translation 		 */
 name|vp
 operator|->
 name|v_op
