@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.30 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1531,7 +1531,6 @@ operator|*
 name|p
 argument_list|)
 condition|)
-operator|*
 name|p
 operator|++
 expr_stmt|;
