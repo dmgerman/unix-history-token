@@ -7063,6 +7063,8 @@ goto|goto
 name|sendpkt
 goto|;
 comment|/* 	 * next hop determination.  This routine is derived from ether_outpout. 	 */
+name|again
+label|:
 if|if
 condition|(
 name|rt
@@ -7124,23 +7126,10 @@ name|rt_ifp
 operator|!=
 name|ifp
 condition|)
-block|{
-comment|/* XXX: loop care? */
-return|return
-name|nd6_output
-argument_list|(
-name|ifp
-argument_list|,
-name|origifp
-argument_list|,
-name|m0
-argument_list|,
-name|dst
-argument_list|,
-name|rt
-argument_list|)
-return|;
-block|}
+comment|/* 					 * XXX maybe we should update ifp too, 					 * but the original code didn't and I 					 * don't know what is correct here. 					 */
+goto|goto
+name|again
+goto|;
 block|}
 else|else
 name|senderr
