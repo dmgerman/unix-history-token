@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.1 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,13 @@ name|stop
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|topq
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -155,6 +162,15 @@ name|stophelp
 index|[]
 init|=
 literal|"stop a spooling daemon after current job completes and disable printing"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|topqhelp
+index|[]
+init|=
+literal|"put job at top of printer queue"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +289,16 @@ block|,
 name|stop
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"topq"
+block|,
+name|topqhelp
+block|,
+name|topq
+block|,
+literal|0
 block|}
 block|,
 block|{
