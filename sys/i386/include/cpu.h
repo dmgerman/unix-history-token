@@ -346,6 +346,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I486_CPU
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|tsc_present
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Return contents of in-cpu fast counter as a sort of "bogo-time"  * for non-critical timing.  */
 end_comment
@@ -370,10 +396,6 @@ name|defined
 argument_list|(
 name|I486_CPU
 argument_list|)
-specifier|extern
-name|u_int
-name|tsc_present
-decl_stmt|;
 name|struct
 name|timespec
 name|tv
