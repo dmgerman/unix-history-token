@@ -920,7 +920,7 @@ argument_list|)
 name|usermax
 operator|++
 expr_stmt|;
-comment|/* 		 * Don't allow the user to ask for too many 		 */
+comment|/* 		 * Don't allow the user to ask for too many 		 * or a negative number. 		 */
 if|if
 condition|(
 name|ifmr
@@ -935,6 +935,20 @@ name|ifm_count
 operator|=
 name|usermax
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ifmr
+operator|->
+name|ifm_count
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|ifmr
