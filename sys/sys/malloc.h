@@ -21,6 +21,18 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -130,9 +142,22 @@ modifier|*
 name|ks_shortdesc
 decl_stmt|;
 comment|/* short description */
+name|struct
+name|mtx
+name|ks_mtx
+decl_stmt|;
+comment|/* Lock for stats */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|malloc_mtx
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -152,7 +177,7 @@ parameter_list|,
 name|longdesc
 parameter_list|)
 define|\
-value|struct malloc_type type[1] = { \ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc } \ 	}; \ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init, type); \ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY, malloc_uninit, type)
+value|struct malloc_type type[1] = { \ 		{ NULL, 0, 0, 0, 0, 0, M_MAGIC, shortdesc, {} } \ 	}; \ 	SYSINIT(type##_init, SI_SUB_KMEM, SI_ORDER_SECOND, malloc_init, type); \ 	SYSUNINIT(type##_uninit, SI_SUB_KMEM, SI_ORDER_ANY, malloc_uninit, type)
 end_define
 
 begin_define

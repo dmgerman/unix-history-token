@@ -318,6 +318,12 @@ operator|&
 name|UMA_ZFLAG_MALLOC
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|malloc_mtx
+argument_list|)
+expr_stmt|;
 name|slab
 operator|=
 name|hash_sfind
@@ -325,6 +331,12 @@ argument_list|(
 name|mallochash
 argument_list|,
 name|mem
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|malloc_mtx
 argument_list|)
 expr_stmt|;
 block|}
