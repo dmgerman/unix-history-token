@@ -1057,11 +1057,11 @@ name|module_t
 name|mod
 parameter_list|,
 name|int
-name|what
+name|type
 parameter_list|,
 name|void
 modifier|*
-name|arg
+name|data
 parameter_list|)
 block|{
 name|int
@@ -1073,7 +1073,7 @@ literal|0
 expr_stmt|;
 switch|switch
 condition|(
-name|what
+name|type
 condition|)
 block|{
 case|case
