@@ -796,7 +796,10 @@ name|error
 operator|=
 name|ptrace_single_step
 argument_list|(
-name|td
+operator|&
+name|p
+operator|->
+name|p_thread
 argument_list|)
 operator|)
 condition|)
@@ -842,7 +845,10 @@ name|error
 operator|=
 name|ptrace_set_pc
 argument_list|(
-name|td
+operator|&
+name|p
+operator|->
+name|p_thread
 argument_list|,
 operator|(
 name|u_long
