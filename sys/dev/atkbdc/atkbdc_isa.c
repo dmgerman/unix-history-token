@@ -187,7 +187,7 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|u_long
+name|uintptr_t
 modifier|*
 name|val
 parameter_list|)
@@ -208,7 +208,7 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|u_long
+name|uintptr_t
 name|val
 parameter_list|)
 function_decl|;
@@ -1185,7 +1185,7 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|u_long
+name|uintptr_t
 modifier|*
 name|val
 parameter_list|)
@@ -1319,7 +1319,7 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|u_long
+name|uintptr_t
 name|val
 parameter_list|)
 block|{
