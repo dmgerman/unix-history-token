@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -650,6 +650,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|len
+operator|&
+literal|1
+condition|)
+name|len
+operator|++
+expr_stmt|;
+comment|/* Preserve Garbage Byte */
+if|if
+condition|(
 name|ip
 operator|->
 name|ip_len
@@ -914,6 +924,16 @@ operator|->
 name|idp_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|&
+literal|1
+condition|)
+name|len
+operator|++
+expr_stmt|;
+comment|/* Preserve Garbage Byte */
 name|m
 operator|=
 name|m0
