@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.28 1998/12/12 16:08:41 foxfair Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.29 1998/12/13 01:53:50 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,7 +525,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Cd:ps:u:v"
+literal|"Cd:ps:u:vN"
 argument_list|)
 operator|)
 operator|!=
@@ -3479,7 +3479,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd_mkdb [-C] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
+literal|"usage: pwd_mkdb [-C] [-N] [-p] [-d<dest dir>] [-s<cachesize>] [-u<local username>] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
