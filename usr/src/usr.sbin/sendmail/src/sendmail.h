@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.5	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	@(#)sendmail.h	3.6	%G% */
 end_comment
 
 begin_include
@@ -71,6 +71,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXATOM
+value|15
+end_define
+
+begin_comment
+comment|/* max atoms per address */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ALIASFILE
 value|"/usr/lib/aliases"
 end_define
@@ -92,6 +103,11 @@ modifier|*
 name|m_mailer
 decl_stmt|;
 comment|/* pathname of the mailer to use */
+name|char
+modifier|*
+name|m_name
+decl_stmt|;
+comment|/* symbolic name of this mailer */
 name|short
 name|m_flags
 decl_stmt|;
@@ -102,22 +118,9 @@ decl_stmt|;
 comment|/* the status code to use on unknown error */
 name|char
 modifier|*
-modifier|*
-name|m_local
-decl_stmt|;
-comment|/* list of local names for this host */
-name|char
-modifier|*
 name|m_from
 decl_stmt|;
 comment|/* pattern for From: header */
-name|char
-modifier|*
-modifier|*
-modifier|*
-name|m_hmap
-decl_stmt|;
-comment|/* host map */
 name|char
 modifier|*
 modifier|*
@@ -263,6 +266,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_USR_UPPER
+value|010000
+end_define
+
+begin_comment
+comment|/* preserve user case distinction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HST_UPPER
+value|020000
+end_define
+
+begin_comment
+comment|/* preserve host case distinction */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_ARPAFMT
 value|(M_NEEDDATE|M_NEEDFROM|M_MSGID|M_COMMAS)
 end_define
@@ -376,101 +401,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* queue of people that are aliases */
-end_comment
-
-begin_comment
-comment|/* **  Parse structure. **	This table drives the parser which determines the network **	to send the mail to. */
-end_comment
-
-begin_struct
-struct|struct
-name|parsetab
-block|{
-name|char
-name|p_char
-decl_stmt|;
-comment|/* trigger character */
-name|char
-name|p_mailer
-decl_stmt|;
-comment|/* the index of the mailer to call */
-name|short
-name|p_flags
-decl_stmt|;
-comment|/* see below */
-name|char
-modifier|*
-name|p_arg
-decl_stmt|;
-comment|/* extra info needed for some flags */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|P_MAP
-value|0001
-end_define
-
-begin_comment
-comment|/* map p_char -> p_arg[0] */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_HLAST
-value|0002
-end_define
-
-begin_comment
-comment|/* host is last,& right associative */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_ONE
-value|0004
-end_define
-
-begin_comment
-comment|/* can only be one p_char in addr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_MOVE
-value|0010
-end_define
-
-begin_comment
-comment|/* send untouched to host p_arg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_USR_UPPER
-value|0020
-end_define
-
-begin_comment
-comment|/* don't map UPPER->lower in user names */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_HST_UPPER
-value|0040
-end_define
-
-begin_comment
-comment|/* don't map UPPER->lower in host names */
 end_comment
 
 begin_comment
@@ -607,6 +537,99 @@ end_define
 
 begin_comment
 comment|/* indicates that this has been output */
+end_comment
+
+begin_comment
+comment|/* **  Rewrite rules. */
+end_comment
+
+begin_struct
+struct|struct
+name|rewrite
+block|{
+name|char
+modifier|*
+modifier|*
+name|r_lhs
+decl_stmt|;
+comment|/* pattern match */
+name|char
+modifier|*
+modifier|*
+name|r_rhs
+decl_stmt|;
+comment|/* substitution value */
+name|struct
+name|rewrite
+modifier|*
+name|r_next
+decl_stmt|;
+comment|/* next in chain */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|rewrite
+modifier|*
+name|RewriteRules
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MATCHANY
+value|'\020'
+end_define
+
+begin_comment
+comment|/* match exactly one token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHONE
+value|'\021'
+end_define
+
+begin_comment
+comment|/* match one or more tokens */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CANONNET
+value|'\025'
+end_define
+
+begin_comment
+comment|/* canonical net, next token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CANONHOST
+value|'\026'
+end_define
+
+begin_comment
+comment|/* canonical host, next token */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CANONUSER
+value|'\027'
+end_define
+
+begin_comment
+comment|/* canonical user, next N tokens */
 end_comment
 
 begin_comment

@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.4	%G%"
+literal|"@(#)main.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,6 +302,20 @@ begin_comment
 comment|/* header list */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|Macro
+index|[
+literal|128
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* macros */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -396,12 +410,6 @@ function_decl|;
 specifier|extern
 name|char
 modifier|*
-name|Macro
-index|[]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
 name|index
 parameter_list|()
 function_decl|;
@@ -421,6 +429,10 @@ modifier|*
 name|makemsgid
 parameter_list|()
 function_decl|;
+name|char
+modifier|*
+name|cfname
+decl_stmt|;
 name|bool
 name|canrename
 decl_stmt|;
@@ -536,8 +548,9 @@ name|from
 operator|=
 name|NULL
 expr_stmt|;
-name|initmacs
-argument_list|()
+name|cfname
+operator|=
+literal|"postbox.cf"
 expr_stmt|;
 comment|/* 	** Crack argv. 	*/
 while|while
@@ -794,33 +807,12 @@ case|case
 literal|'D'
 case|:
 comment|/* redefine internal macro */
-if|if
-condition|(
-operator|!
-name|isupper
-argument_list|(
-name|p
-index|[
-literal|2
-index|]
-argument_list|)
-condition|)
-name|usrerr
-argument_list|(
-literal|"Invalid flag: %s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-else|else
 name|Macro
 index|[
 name|p
 index|[
 literal|2
 index|]
-operator|-
-literal|'A'
 index|]
 operator|=
 operator|&
@@ -833,6 +825,19 @@ break|break;
 endif|#
 directive|endif
 endif|DEBUG
+case|case
+literal|'F'
+case|:
+comment|/* select control file */
+name|cfname
+operator|=
+operator|&
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -889,6 +894,11 @@ condition|)
 name|syserr
 argument_list|(
 literal|"-f and -a are mutually exclusive"
+argument_list|)
+expr_stmt|;
+name|readcf
+argument_list|(
+name|cfname
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Find out who the person is as far as the local system is 	**  concerned. 	** 	**	Under certain circumstances allow the user to say who 	**	s/he is (using -f or -r).  These are: 	**	1.  The user's uid is zero (root). 	**	2.  The user's login name is "network" (mail from 	**	    a network server). 	**	3.  The user's login name is "uucp" (mail from the 	**	    uucp network). 	**	4.  The address the user is trying to claim has a 	**	    "!" character in it (since #3 doesn't do it for 	**	    us if we are dialing out). 	**	A better check to replace #3& #4 would be if the 	**	effective uid is "UUCP" -- this would require me 	**	to rewrite getpwent to "grab" uucp as it went by, 	**	make getname more nasty, do another passwd file 	**	scan, or compile the UID of "UUCP" into the code, 	**	all of which are reprehensible. 	** 	**	Assuming all of these fail, we figure out something 	**	ourselves. 	*/

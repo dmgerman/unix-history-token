@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.3	%G%"
+literal|"@(#)savemail.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,14 +149,6 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|DaemonName
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
 name|strcpy
 argument_list|()
 decl_stmt|,
@@ -173,6 +165,15 @@ name|time
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Macro
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
@@ -317,7 +318,10 @@ name|printf
 argument_list|(
 literal|"\r\nMessage from %s\r\n"
 argument_list|,
-name|DaemonName
+name|Macro
+index|[
+literal|'d'
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
@@ -421,7 +425,10 @@ if|if
 condition|(
 name|parse
 argument_list|(
-name|DaemonName
+name|Macro
+index|[
+literal|'d'
+index|]
 argument_list|,
 operator|&
 name|From
