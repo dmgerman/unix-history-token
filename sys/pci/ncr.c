@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.22 1995/02/14 22:48:01 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.23 1995/02/14 23:33:36 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_PATCHLEVEL
-value|"pl13 95/02/09"
+value|"pl14 95/02/15"
 end_define
 
 begin_define
@@ -28,7 +28,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*========================================================== ** **	Configuration and Debugging ** **	May be overwritten in<arch/conf/XXXXX> ** **========================================================== */
+comment|/*========================================================== ** **	Configuration and Debugging ** **	May be overwritten in<arch/conf/xxxx> ** **========================================================== */
 end_comment
 
 begin_comment
@@ -2261,13 +2261,15 @@ comment|/* 	**	option for M_IDENTIFY message: enables disconnecting 	*/
 name|u_char
 name|disc
 decl_stmt|;
-comment|/* 	**	lockout of execption handler call while starting command. 	*/
-name|u_char
-name|lock
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NCR_IOMAPPED
+comment|/* 	**	address of the ncr control registers in io space 	*/
 name|u_short
 name|port
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -3223,7 +3225,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.22 1995/02/14 22:48:01 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.23 1995/02/14 23:33:36 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -9431,15 +9433,9 @@ argument|return; }
 comment|/*========================================================== ** ** **	Process pending device interrupts. ** ** **========================================================== */
 argument|int ncr_intr(np) 	ncb_p np; { 	int n =
 literal|0
-argument|;  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
+argument|; 	int oldspl = splbio();  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"["
-argument|);
-comment|/* XXX only for debug */
-argument|if (bio_imask& ~cpl) { 		if (!np->lock) 			printf (
-literal|"ncr_intr(%d): unmasked bio-irq: 0x%x.\n"
-argument|, 				np->unit, bio_imask& ~cpl); 		np->lock++;
-comment|/* only one of 256 ... */
-argument|};  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
+argument|);  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
 comment|/* 		**	Repeat until no outstanding ints 		*/
 argument|do { 			ncr_exception (np); 		} while (INB(nc_istat)& (INTF|SIP|DIP));  		n=
 literal|1
@@ -9447,7 +9443,7 @@ argument|; 		np->ticks =
 literal|100
 argument|; 	};  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"]\n"
-argument|);  	return (n); }
+argument|);  	splx (oldspl); 	return (n); }
 comment|/*========================================================== ** ** **	Start execution of a SCSI command. **	This is called from the generic SCSI driver. ** ** **========================================================== */
 argument|static INT32 ncr_start (struct scsi_xfer * xp) {
 ifndef|#
