@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_cksum.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_cksum.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,6 +136,11 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * There is a byte left from the last segment; 			 * ones-complement add it into the checksum. 			 */
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|sum
 operator|+=
 operator|*
@@ -145,7 +150,21 @@ operator|*
 operator|)
 name|w
 expr_stmt|;
-comment|/* Big-Endian, else<< 8 */
+else|#
+directive|else
+name|sum
+operator|+=
+operator|*
+operator|(
+name|u_char
+operator|*
+operator|)
+name|w
+operator|<<
+literal|8
+expr_stmt|;
+endif|#
+directive|endif
 name|sum
 operator|+=
 name|sum
@@ -525,7 +544,11 @@ name|commoncase
 goto|;
 name|uuuuglyy
 label|:
-comment|/* Big-Endian; else reverse ww and vv */
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 define|#
 directive|define
 name|ww
@@ -540,6 +563,31 @@ parameter_list|(
 name|n
 parameter_list|)
 value|(((u_char *)w)[n + n])
+else|#
+directive|else
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+define|#
+directive|define
+name|vv
+parameter_list|(
+name|n
+parameter_list|)
+value|(((u_char *)w)[n + n + 1])
+define|#
+directive|define
+name|ww
+parameter_list|(
+name|n
+parameter_list|)
+value|(((u_char *)w)[n + n])
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|sum2
 operator|=
 literal|0
@@ -1114,6 +1162,11 @@ operator|-
 literal|1
 condition|)
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|sum
 operator|+=
 operator|*
@@ -1125,7 +1178,19 @@ name|w
 operator|<<
 literal|8
 expr_stmt|;
-comment|/* Big-Endian, else no<< 8 */
+else|#
+directive|else
+name|sum
+operator|+=
+operator|*
+operator|(
+name|u_char
+operator|*
+operator|)
+name|w
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|FOLD
 argument_list|(
