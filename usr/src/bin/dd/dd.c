@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.5 (Berkeley) %G%"
+literal|"@(#)dd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1498,35 +1498,6 @@ operator|.
 name|p_stats
 expr_stmt|;
 block|}
-comment|/* 		 * POSIX states that if bs is set and no other conversions 		 * are specified, the block is output as it is read, without 		 * buffering. 		 */
-if|if
-condition|(
-name|ddflags
-operator|&
-name|C_BS
-condition|)
-block|{
-name|out
-operator|.
-name|dbcnt
-operator|=
-name|in
-operator|.
-name|dbcnt
-expr_stmt|;
-name|dd_out
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|in
-operator|.
-name|dbcnt
-operator|=
-literal|0
-expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|ddflags
@@ -1573,6 +1544,35 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 		 * POSIX states that if bs is set and no other conversions 		 * are specified, the block is output without buffering as 		 * it is read. 		 */
+if|if
+condition|(
+name|ddflags
+operator|&
+name|C_BS
+condition|)
+block|{
+name|out
+operator|.
+name|dbcnt
+operator|=
+name|in
+operator|.
+name|dbcnt
+expr_stmt|;
+name|dd_out
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|in
+operator|.
+name|dbcnt
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
 block|}
 name|in
 operator|.
