@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.9 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.10 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.9 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,6 +947,25 @@ break|break;
 name|initsys
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|state
+argument_list|,
+literal|"srvrsmtp %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+name|state
+argument_list|)
+expr_stmt|;
 comment|/* child -- go do the processing */
 name|p
 operator|=
@@ -1357,6 +1376,11 @@ operator|>
 literal|0
 condition|)
 break|break;
+name|setproctitle
+argument_list|(
+literal|"SMTP-VRFY"
+argument_list|)
+expr_stmt|;
 name|paddrtree
 argument_list|(
 name|a
