@@ -13,14 +13,6 @@ directive|include
 file|"sl.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NSL
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -30,12 +22,6 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|ACTUALLY_LKM_NOT_KERNEL
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -4399,11 +4385,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -286,9 +286,7 @@ specifier|extern
 name|struct
 name|ppp_softc
 name|ppp_softc
-index|[
-name|NPPP
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 

@@ -10,20 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ppp.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPPP
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|"opt_ppp.h"
 end_include
 
@@ -5426,15 +5412,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NPPP> 0 */
-end_comment
 
 end_unit
 
