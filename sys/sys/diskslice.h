@@ -239,6 +239,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DSO_COMPATLABEL
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|dsgetlabel
 parameter_list|(
 name|dev
