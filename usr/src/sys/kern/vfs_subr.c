@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4571,10 +4571,15 @@ name|struct
 name|vnode
 modifier|*
 name|vq
+decl_stmt|,
+modifier|*
+name|vnext
 decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+name|loop
+label|:
 if|if
 condition|(
 operator|(
@@ -4594,8 +4599,6 @@ operator|->
 name|v_usecount
 operator|)
 return|;
-name|loop
-label|:
 for|for
 control|(
 name|count
@@ -4613,11 +4616,15 @@ name|vq
 condition|;
 name|vq
 operator|=
+name|vnext
+control|)
+block|{
+name|vnext
+operator|=
 name|vq
 operator|->
 name|v_specnext
-control|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|vq
@@ -4645,6 +4652,10 @@ operator|->
 name|v_usecount
 operator|==
 literal|0
+operator|&&
+name|vq
+operator|!=
+name|vp
 condition|)
 block|{
 name|vgone
