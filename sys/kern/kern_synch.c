@@ -1852,20 +1852,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
 name|struct
 name|thread
 modifier|*
 name|newtd
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|proc
 modifier|*
@@ -2095,13 +2086,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
 name|newtd
 operator|=
 name|choosethread
@@ -2121,14 +2105,6 @@ name|newtd
 argument_list|)
 expr_stmt|;
 comment|/* SHAZAM!! */
-else|#
-directive|else
-name|cpu_switch
-argument_list|()
-expr_stmt|;
-comment|/* SHAZAM!!*/
-endif|#
-directive|endif
 name|sched_lock
 operator|.
 name|mtx_recurse

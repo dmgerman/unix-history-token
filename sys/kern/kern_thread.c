@@ -5714,13 +5714,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
 name|cpu_throw
 argument_list|(
 name|td
@@ -5729,13 +5722,6 @@ name|choosethread
 argument_list|()
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|cpu_throw
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"I'm a teapot!"
