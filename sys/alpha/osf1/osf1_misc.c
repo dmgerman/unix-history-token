@@ -8018,6 +8018,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|osf1_sysinfo
@@ -8099,6 +8103,12 @@ index|]
 operator|=
 name|KERN_HOSTNAME
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|userland_sysctl
@@ -8124,6 +8134,12 @@ literal|0
 argument_list|,
 operator|&
 name|bytes
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|td
