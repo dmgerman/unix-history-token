@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)append.c	5.3 (Berkeley) %G%"
+literal|"@(#)append.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -130,11 +142,6 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
-name|char
-modifier|*
-name|rname
-parameter_list|()
-function_decl|;
 name|afd
 operator|=
 name|open_archive

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	5.8 (Berkeley) %G%"
+literal|"@(#)ar.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -92,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|"archive.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -119,6 +137,17 @@ name|posarg
 decl_stmt|,
 modifier|*
 name|posname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|badoptions
+argument_list|()
+decl_stmt|,
+name|usage
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -183,11 +212,6 @@ decl_stmt|,
 name|replace
 argument_list|()
 decl_stmt|;
-name|char
-modifier|*
-name|rname
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|argc
@@ -841,21 +865,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|badoptions
-argument_list|(
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arg
+parameter_list|)
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -873,14 +893,13 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -978,7 +997,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
