@@ -261,6 +261,11 @@ modifier|*
 name|mii_pdata
 decl_stmt|;
 comment|/* pointer to parent's mii_data */
+name|struct
+name|callout_handle
+name|mii_auto_ch
+decl_stmt|;
+comment|/* callout handle for phy autoneg */
 name|int
 name|mii_flags
 decl_stmt|;
@@ -555,6 +560,20 @@ name|mii_softc
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|mii_phy_auto_stop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mii_softc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
