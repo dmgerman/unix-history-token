@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -210,6 +210,8 @@ argument_list|,
 name|data
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -237,6 +239,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -449,7 +459,7 @@ name|mfsp
 operator|->
 name|mfs_pid
 operator|=
-name|curproc
+name|p
 operator|->
 name|p_pid
 expr_stmt|;
@@ -662,6 +672,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|flags
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -676,6 +688,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -714,13 +734,6 @@ decl_stmt|;
 specifier|register
 name|caddr_t
 name|base
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
 decl_stmt|;
 name|int
 name|error
@@ -809,6 +822,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_NOFORCE
+argument_list|,
+name|p
 argument_list|)
 operator|!=
 literal|0
@@ -842,6 +857,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|sbp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -861,6 +878,14 @@ name|sbp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
@@ -873,6 +898,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|sbp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|sbp
