@@ -641,6 +641,17 @@ begin_comment
 comment|/* Default: Replace files on disk */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARCHIVE_EXTRACT_UNLINK
+value|(16)
+end_define
+
+begin_comment
+comment|/* Default: don't unlink existing files */
+end_comment
+
 begin_function_decl
 name|int
 name|archive_read_extract
