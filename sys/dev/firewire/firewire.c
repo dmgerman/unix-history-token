@@ -10081,11 +10081,11 @@ argument|,
 literal|0xffff
 argument|,
 literal|0xf0000000
-argument|| STATE_SET,
+argument|| STATE_SET, htonl(
 literal|1
 argument|<<
 literal|16
-argument|, 		fw_asy_callback_free);  	return
+argument|), 		fw_asy_callback_free);  	return
 literal|0
 argument|; }  DRIVER_MODULE(firewire,fwohci,firewire_driver,firewire_devclass,
 literal|0
