@@ -1635,7 +1635,7 @@ literal|109
 operator|,
 name|p
 operator|+=
-literal|3
+literal|4
 expr_stmt|;
 elseif|else
 if|if
