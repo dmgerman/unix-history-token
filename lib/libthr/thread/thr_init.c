@@ -181,6 +181,16 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|void
+name|_thread_init_hack
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * All weak references used within libc should be in this table.  * This will is so that static libraries will work.  *  * XXXTHR - Check this list.  */
 end_comment
@@ -193,6 +203,12 @@ name|references
 index|[]
 init|=
 block|{
+operator|&
+name|_thread_init_hack
+block|,
+operator|&
+name|_thread_init
+block|,
 operator|&
 name|_accept
 block|,
@@ -367,6 +383,12 @@ name|libgcc_references
 index|[]
 init|=
 block|{
+operator|&
+name|_thread_init_hack
+block|,
+operator|&
+name|_thread_init
+block|,
 operator|&
 name|_pthread_once
 block|,
