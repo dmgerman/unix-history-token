@@ -41859,7 +41859,7 @@ name|scb
 argument_list|,
 name|active_scb
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 goto|goto
@@ -42000,7 +42000,7 @@ name|scb
 argument_list|,
 name|NULL
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 goto|goto
