@@ -40,26 +40,6 @@ begin_comment
 comment|/* SYS_VAX */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_GETBOOTFILE
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -326,6 +306,26 @@ include|#
 directive|include
 file|"ntp_stdlib.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_GETBOOTFILE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2192,9 +2192,14 @@ block|;
 ifdef|#
 directive|ifdef
 name|HAVE_GETBOOTFILE
+comment|/* XXX bogus cast to avoid `const' poisoning. */
 operator|*
 name|kname
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|getbootfile
 argument_list|()
 block|;
