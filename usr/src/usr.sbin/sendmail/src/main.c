@@ -23,6 +23,12 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
 begin_expr_stmt
 name|SCCSID
 argument_list|(
@@ -33,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.148
+literal|3.149
 operator|%
 name|G
 operator|%
@@ -1994,7 +2000,9 @@ argument_list|()
 expr_stmt|;
 comment|/* disconnect from our controlling tty */
 name|disconnect
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -3113,13 +3121,21 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DISCONNECT -- remove our connection with any foreground process ** **	Parameters: **		none. ** **	Returns: **		none ** **	Side Effects: **		Trys to insure that we are immune to vagaries of **		the controlling tty. */
+comment|/* **  DISCONNECT -- remove our connection with any foreground process ** **	Parameters: **		fulldrop -- if set, we should also drop the controlling **			TTY if possible -- this should only be done when **			setting up the daemon since otherwise UUCP can **			leave us trying to open a dialin, and we will **			wait for the carrier. ** **	Returns: **		none ** **	Side Effects: **		Trys to insure that we are immune to vagaries of **		the controlling tty. */
 end_comment
 
 begin_macro
 name|disconnect
-argument_list|()
+argument_list|(
+argument|fulldrop
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|bool
+name|fulldrop
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3332,6 +3348,11 @@ ifdef|#
 directive|ifdef
 name|TIOCNOTTY
 comment|/* drop our controlling TTY completely if possible */
+if|if
+condition|(
+name|fulldrop
+condition|)
+block|{
 name|fd
 operator|=
 name|open
@@ -3368,6 +3389,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
