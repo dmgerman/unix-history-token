@@ -63,7 +63,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  * Job Table definitions.  *  * Each job has several things associated with it:  *	1) The process id of the child shell  *	2) The graph node describing the target being made by this job  *	3) A LstNode for the first command to be saved after the job  *	   completes. This is NULL if there was no "..." in the job's  *	   commands.  *	4) An FILE* for writing out the commands. This is only  *	   used before the job is actually started.  *	5) A union of things used for handling the shell's output. Different  *	   parts of the union are used based on the value of the usePipes  *	   flag. If it is true, the output is being caught via a pipe and  *	   the descriptors of our pipe, an array in which output is line  *	   buffered and the current position in that buffer are all  *	   maintained for each job. If, on the other hand, usePipes is false,  *	   the output is routed to a temporary file and all that is kept  *	   is the name of the file and the descriptor open to the file.  *	6) An identifier provided by and for the exclusive use of the  *	   Rmt module.  *	7) A word of flags which determine how the module handles errors,  *	   echoing, etc. for the job  *  * The job "table" is kept as a linked Lst in 'jobs', with the number of  * active jobs maintained in the 'nJobs' variable. At no time will this  * exceed the value of 'maxJobs', initialized by the Job_Init function.  *  * When a job is finished, the Make_Update function is called on each of the  * parents of the node which was just remade. This takes care of the upward  * traversal of the dependency graph.  */
+comment|/*-  * Job Table definitions.  *  * Each job has several things associated with it:  *	1) The process id of the child shell  *	2) The graph node describing the target being made by this job  *	3) A LstNode for the first command to be saved after the job  *	   completes. This is NULL if there was no "..." in the job's  *	   commands.  *	4) An FILE* for writing out the commands. This is only  *	   used before the job is actually started.  *	5) A union of things used for handling the shell's output. Different  *	   parts of the union are used based on the value of the usePipes  *	   flag. If it is true, the output is being caught via a pipe and  *	   the descriptors of our pipe, an array in which output is line  *	   buffered and the current position in that buffer are all  *	   maintained for each job. If, on the other hand, usePipes is false,  *	   the output is routed to a temporary file and all that is kept  *	   is the name of the file and the descriptor open to the file.  *	6) A word of flags which determine how the module handles errors,  *	   echoing, etc. for the job  *  * The job "table" is kept as a linked Lst in 'jobs', with the number of  * active jobs maintained in the 'nJobs' variable. At no time will this  * exceed the value of 'maxJobs', initialized by the Job_Init function.  *  * When a job is finished, the Make_Update function is called on each of the  * parents of the node which was just remade. This takes care of the upward  * traversal of the dependency graph.  */
 end_comment
 
 begin_define
@@ -106,10 +106,6 @@ modifier|*
 name|cmdFILE
 decl_stmt|;
 comment|/* When creating the shell script, this is 			     * where the commands go */
-name|int
-name|rmtID
-decl_stmt|;
-comment|/* ID returned from Rmt module */
 name|short
 name|flags
 decl_stmt|;
@@ -136,19 +132,9 @@ value|0x008
 comment|/* Ignore "..." lines when processing 				 * commands */
 define|#
 directive|define
-name|JOB_REMOTE
-value|0x010
-comment|/* Job is running remotely */
-define|#
-directive|define
 name|JOB_FIRST
 value|0x020
 comment|/* Job is first job for the node */
-define|#
-directive|define
-name|JOB_REMIGRATE
-value|0x040
-comment|/* Job needs to be remigrated */
 define|#
 directive|define
 name|JOB_RESTART
@@ -495,15 +481,6 @@ name|void
 name|Job_AbortAll
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|JobFlagForMigration
-parameter_list|(
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -691,7 +691,7 @@ value|(void) fprintf(fp, targFmt, gn->name);
 end_define
 
 begin_comment
-comment|/*  * When JobStart attempts to run a job remotely but can't, and isn't allowed  * to run the job locally, or when Job_CatchChildren detects a job that has  * been migrated home, the job is placed on the stoppedJobs queue to be run  * when the next job finishes.  */
+comment|/*  * When JobStart attempts to run a job but isn't allowed to  * or when Job_CatchChildren detects a job that has  * been stopped somehow, the job is placed on the stoppedJobs queue to be run  * when the next job finishes.  */
 end_comment
 
 begin_decl_stmt
@@ -702,7 +702,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Lst of Job structures describing 				 * jobs that were stopped due to concurrency 				 * limits or migration home */
+comment|/* Lst of Job structures describing 				 * jobs that were stopped due to concurrency 				 * limits or externally */
 end_comment
 
 begin_if
@@ -1043,7 +1043,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to a job if the job is remote or if USE_PGRP  *	is defined.  *  * Results:  *	=== 0  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to a job if USE_PGRP is defined.  *  * Results:  *	=== 0  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1080,7 +1080,6 @@ operator|*
 operator|)
 name|signop
 decl_stmt|;
-comment|/*      * Assume that sending the signal to job->pid will signal any remote      * job as well.      */
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -1112,7 +1111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobPassSig --  *	Pass a signal on to all remote jobs and to all local jobs if  *	USE_PGRP is defined, then die ourselves.  *  * Results:  *	None.  *  * Side Effects:  *	We die by the same signal.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobPassSig --  *	Pass a signal on to all local jobs if  *	USE_PGRP is defined, then die ourselves.  *  * Results:  *	None.  *  * Side Effects:  *	We die by the same signal.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2617,18 +2616,6 @@ operator|->
 name|node
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMIGRATE
-operator|)
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -2645,7 +2632,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|job
 operator|->
 name|flags
@@ -2697,8 +2683,6 @@ name|flags
 operator|&
 operator|(
 name|JOB_RESUME
-operator||
-name|JOB_REMIGRATE
 operator||
 name|JOB_RESTART
 operator|)
@@ -2801,18 +2785,6 @@ name|nJobs
 operator|+=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMOTE
-operator|)
-condition|)
-block|{
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -2830,7 +2802,6 @@ name|nLocal
 operator|+=
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|nJobs
@@ -3695,23 +3666,13 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Running %s %sly\n"
+literal|"Running %s\n"
 operator|,
 name|job
 operator|->
 name|node
 operator|->
 name|name
-operator|,
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMOTE
-condition|?
-literal|"remote"
-else|:
-literal|"local"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4208,29 +4169,10 @@ endif|#
 directive|endif
 comment|/* USE_KQUEUE */
 block|}
-if|if
-condition|(
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMOTE
-condition|)
-block|{
-name|job
-operator|->
-name|rmtID
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
 name|nLocal
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* 	     * XXX: Used to not happen if REMOTE. Why? 	     */
 if|if
 condition|(
 name|job
@@ -4262,7 +4204,6 @@ name|cmdFILE
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/*      * Now the job is actually running, add it to the table.      */
@@ -4543,212 +4484,6 @@ name|job
 operator|->
 name|flags
 operator|&
-name|JOB_REMIGRATE
-condition|)
-block|{
-if|if
-condition|(
-name|DEBUG
-argument_list|(
-name|JOB
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"*** remigrating %x(%s)\n"
-argument_list|,
-name|job
-operator|->
-name|pid
-argument_list|,
-name|job
-operator|->
-name|node
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|nLocal
-operator|!=
-name|maxLocal
-condition|)
-block|{
-comment|/* 	     * Job cannot be remigrated, but there's room on the local 	     * machine, so resume the job and note that another 	     * local job has started. 	     */
-if|if
-condition|(
-name|DEBUG
-argument_list|(
-name|JOB
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"*** resuming on local machine\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-name|KILL
-argument_list|(
-name|job
-operator|->
-name|pid
-argument_list|,
-name|SIGCONT
-argument_list|)
-expr_stmt|;
-name|nLocal
-operator|+=
-literal|1
-expr_stmt|;
-name|job
-operator|->
-name|flags
-operator|&=
-operator|~
-operator|(
-name|JOB_REMIGRATE
-operator||
-name|JOB_RESUME
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 	     * Job cannot be restarted. Mark the table as full and 	     * place the job back on the list of stopped jobs. 	     */
-if|if
-condition|(
-name|DEBUG
-argument_list|(
-name|JOB
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"*** holding\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|Lst_AtFront
-argument_list|(
-name|stoppedJobs
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|job
-argument_list|)
-expr_stmt|;
-name|jobFull
-operator|=
-name|TRUE
-expr_stmt|;
-name|DEBUGF
-argument_list|(
-name|JOB
-argument_list|,
-operator|(
-literal|"Job queue is full.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-operator|(
-name|void
-operator|)
-name|Lst_AtEnd
-argument_list|(
-name|jobs
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|job
-argument_list|)
-expr_stmt|;
-name|nJobs
-operator|+=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|nJobs
-operator|==
-name|maxJobs
-condition|)
-block|{
-name|jobFull
-operator|=
-name|TRUE
-expr_stmt|;
-name|DEBUGF
-argument_list|(
-name|JOB
-argument_list|,
-operator|(
-literal|"Job queue is full.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|job
-operator|->
-name|flags
-operator|&
 name|JOB_RESTART
 condition|)
 block|{
@@ -4853,13 +4588,6 @@ literal|"running locally\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|job
-operator|->
-name|flags
-operator|&=
-operator|~
-name|JOB_REMOTE
-expr_stmt|;
 block|}
 name|JobExec
 argument_list|(
@@ -4891,14 +4619,6 @@ if|if
 condition|(
 operator|(
 operator|(
-name|job
-operator|->
-name|flags
-operator|&
-name|JOB_REMOTE
-operator|)
-operator|||
-operator|(
 name|nLocal
 operator|<
 name|maxLocal
@@ -4928,7 +4648,7 @@ name|maxJobs
 operator|)
 condition|)
 block|{
-comment|/* 	     * If the job is remote, it's ok to resume it as long as the 	     * maximum concurrency won't be exceeded. If it's local and 	     * we haven't reached the local concurrency limit already (or the 	     * job must be run locally and maxLocal is 0), it's also ok to 	     * resume it. 	     */
+comment|/* 	     * If we haven't reached the concurrency limit already (or the 	     * job must be run and maxLocal is 0), it's ok to resume it. 	     */
 name|Boolean
 name|error
 decl_stmt|;
@@ -5123,10 +4843,6 @@ name|cmdsOK
 decl_stmt|;
 comment|/* true if the nodes commands were all right */
 name|Boolean
-name|local
-decl_stmt|;
-comment|/* Set true if the job was run locally */
-name|Boolean
 name|noExec
 decl_stmt|;
 comment|/* Set true if we decide not to run the job */
@@ -5152,8 +4868,6 @@ operator||
 name|JOB_IGNERR
 operator||
 name|JOB_SILENT
-operator||
-name|JOB_REMOTE
 operator|)
 expr_stmt|;
 name|job
@@ -5949,16 +5663,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|local
-operator|=
-name|TRUE
-expr_stmt|;
 if|if
 condition|(
-name|local
-operator|&&
-operator|(
-operator|(
 operator|(
 name|nLocal
 operator|>=
@@ -5979,11 +5685,9 @@ name|maxLocal
 operator|!=
 literal|0
 operator|)
-operator|)
-operator|)
 condition|)
 block|{
-comment|/* 	 * The job can only be run locally, but we've hit the limit of 	 * local concurrency, so put the job on hold until some other job 	 * finishes. Note that the special jobs (.BEGIN, .INTERRUPT and .END) 	 * may be run locally even when the local limit has been reached 	 * (e.g. when maxLocal == 0), though they will be exported if at 	 * all possible. In addition, any target marked with .NOEXPORT will 	 * be run locally if maxLocal is 0. 	 */
+comment|/* 	 * We've hit the limit of concurrency, so put the job on hold until 	 * some other job finishes. Note that the special jobs (.BEGIN, 	 * .INTERRUPT and .END) may be run even when the limit has been reached 	 * (e.g. when maxLocal == 0). 	 */
 name|jobFull
 operator|=
 name|TRUE
@@ -6022,13 +5726,9 @@ else|else
 block|{
 if|if
 condition|(
-operator|(
 name|nLocal
 operator|>=
 name|maxLocal
-operator|)
-operator|&&
-name|local
 condition|)
 block|{
 comment|/* 	     * If we're running this job locally as a special case (see above), 	     * at least say the table is full. 	     */
@@ -9065,11 +8765,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|Lst_Close
-argument_list|(
-name|stoppedJobs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|runINTERRUPT

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the Univers
 end_comment
 
 begin_comment
-comment|/*  * DEFMAXJOBS  * DEFMAXLOCAL  *	These control the default concurrency. On no occasion will more  *	than DEFMAXJOBS targets be created at once (locally or remotely)  *	DEFMAXLOCAL is the highest number of targets which will be  *	created on the local machine at once. Note that if you set this  *	to 0, nothing will ever happen...  */
+comment|/*  * DEFMAXJOBS  * DEFMAXLOCAL  *	These control the default concurrency. On no occasion will more  *	than DEFMAXJOBS targets be created at once.  *	DEFMAXLOCAL is the highest number of targets which will be  *	created on the local machine at once. Note that if you set this  *	to 0, nothing will ever happen...  */
 end_comment
 
 begin_define
