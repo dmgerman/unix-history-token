@@ -961,17 +961,19 @@ name|NULL
 block|}
 block|,
 comment|/* 	 * spin locks 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SMP
-argument_list|)
+block|{
+literal|"ap boot"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|"com"
 block|,
@@ -979,6 +981,8 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|{
@@ -1039,13 +1043,6 @@ comment|/* 	 * leaf locks 	 */
 ifdef|#
 directive|ifdef
 name|SMP
-block|{
-literal|"ap boot"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
 ifdef|#
 directive|ifdef
 name|__i386__
