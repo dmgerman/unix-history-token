@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mpool.c	5.4 (Berkeley) %G%"
+literal|"@(#)mpool.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,6 +410,22 @@ operator|->
 name|fd
 operator|=
 name|fd
+expr_stmt|;
+name|mp
+operator|->
+name|pgcookie
+operator|=
+name|NULL
+expr_stmt|;
+name|mp
+operator|->
+name|pgin
+operator|=
+name|mp
+operator|->
+name|pgout
+operator|=
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
