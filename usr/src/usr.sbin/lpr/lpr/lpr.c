@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -52,7 +52,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.11 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.13 (Berkeley) 8/31/92"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,17 +172,7 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
-name|char
-modifier|*
-name|tfname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tmp copy of cf before linking */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|cfname
@@ -194,6 +184,21 @@ comment|/* daemon control files, linked from tf's */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|class
+init|=
+name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* class title on header page */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|dfname
@@ -205,164 +210,7 @@ comment|/* data files */
 end_comment
 
 begin_decl_stmt
-name|int
-name|nact
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of jobs to act on */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tfd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* control file descriptor */
-end_comment
-
-begin_decl_stmt
-name|int
-name|mailflg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* send mail */
-end_comment
-
-begin_decl_stmt
-name|int
-name|qflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* q job, but don't exec daemon */
-end_comment
-
-begin_decl_stmt
-name|char
-name|format
-init|=
-literal|'f'
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* format char for printing files */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* remove files upon completion */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* symbolic link flag */
-end_comment
-
-begin_decl_stmt
-name|int
-name|inchar
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location to increment char in file names */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ncopies
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of copies to make */
-end_comment
-
-begin_decl_stmt
-name|int
-name|iflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* indentation wanted */
-end_comment
-
-begin_decl_stmt
-name|int
-name|indent
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* amount to indent */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hdr
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print header or not (default is yes) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|userid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user id */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|person
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user name */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|title
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pr'ing title */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|fonts
@@ -377,43 +225,66 @@ comment|/* troff font names */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
-modifier|*
-name|width
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* width for versatec printing */
-end_comment
-
-begin_decl_stmt
-name|char
-name|host
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* host name */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|class
+name|format
 init|=
-name|host
+literal|'f'
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* class title on header page */
+comment|/* format char for printing files */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|hdr
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print header or not (default is yes) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|iflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indentation wanted */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|inchar
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location to increment char in file names */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|indent
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* amount to indent */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|jobname
@@ -425,28 +296,145 @@ comment|/* job name on header page */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|name
+specifier|static
+name|int
+name|mailflg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* program name */
+comment|/* send mail */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|printer
+specifier|static
+name|int
+name|nact
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* printer name */
+comment|/* number of jobs to act on */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|ncopies
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of copies to make */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|person
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user name */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|qflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* q job, but don't exec daemon */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* remove files upon completion */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* symbolic link flag */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* control file descriptor */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|tfname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tmp copy of cf before linking */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|title
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pr'ing title */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|userid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user id */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|width
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* width for versatec printing */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|stat
 name|statb
@@ -454,79 +442,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|MX
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum number of blocks to copy */
-end_comment
-
-begin_decl_stmt
-name|int
-name|MC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum number of copies allowed */
-end_comment
-
-begin_decl_stmt
-name|int
-name|DU
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* daemon user-id */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|SD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spool directory */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|LO
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lock file name */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|RG
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* restrict group */
-end_comment
-
-begin_decl_stmt
-name|short
-name|SC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* suppress multiple copies */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|void
 name|card
 name|__P
@@ -542,6 +458,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|chkprinter
 name|__P
@@ -555,6 +472,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|cleanup
 name|__P
@@ -567,6 +485,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|copy
 name|__P
@@ -582,8 +501,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
-name|fatal
+name|fatal2
 name|__P
 argument_list|(
 operator|(
@@ -598,6 +518,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|itoa
@@ -611,6 +532,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|linked
@@ -625,6 +547,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|lmktemp
@@ -643,6 +566,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|mktemps
 name|__P
@@ -655,6 +579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfile
 name|__P
@@ -668,6 +593,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|test
 name|__P
@@ -681,7 +607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -1307,7 +1233,7 @@ name|ncopies
 operator|>
 literal|1
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"multiple copies are not allowed"
 argument_list|)
@@ -1322,7 +1248,7 @@ name|ncopies
 operator|>
 name|MC
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"only %d copies are allowed"
 argument_list|,
@@ -1359,7 +1285,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"Who are you?"
 argument_list|)
@@ -1396,7 +1322,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"Restricted group specified incorrectly"
 argument_list|)
@@ -1453,7 +1379,7 @@ name|gr_mem
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"Not a member of the restricted group"
 argument_list|)
@@ -1497,7 +1423,7 @@ operator|&
 literal|010
 operator|)
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"Printer queue is disabled"
 argument_list|)
@@ -2131,6 +2057,7 @@ comment|/*  * Create the file n and copy from file descriptor f.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|copy
 parameter_list|(
@@ -2366,6 +2293,7 @@ comment|/*  * Try and link the file to dfname. Return a pointer to the full  * p
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|linked
@@ -2521,6 +2449,7 @@ comment|/*  * Put a line into the control file.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|card
 parameter_list|(
@@ -2617,6 +2546,7 @@ comment|/*  * Create a new file in the spool directory.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nfile
 parameter_list|(
@@ -2782,6 +2712,7 @@ comment|/*  * Cleanup after interrupts and errors.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -2925,6 +2856,7 @@ comment|/*  * Test to see if this is a printable file.  * Return -1 if it is not
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|test
 parameter_list|(
@@ -3274,6 +3206,7 @@ comment|/*  * itoa - integer to string conversion  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|itoa
@@ -3339,6 +3272,7 @@ comment|/*  * Perform lookup for printer name or abbreviation --  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|chkprinter
 parameter_list|(
@@ -3352,43 +3286,26 @@ block|{
 name|int
 name|status
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-specifier|static
-name|char
-name|pbuf
-index|[
-name|BUFSIZ
-operator|/
-literal|2
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|bp
-init|=
-name|pbuf
-decl_stmt|;
 if|if
 condition|(
 operator|(
 name|status
 operator|=
-name|pgetent
+name|cgetent
 argument_list|(
-name|buf
+operator|&
+name|bp
+argument_list|,
+name|printcapdb
 argument_list|,
 name|s
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|2
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"cannot open printer description file"
 argument_list|)
@@ -3398,9 +3315,10 @@ if|if
 condition|(
 name|status
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"%s: unknown printer"
 argument_list|,
@@ -3409,19 +3327,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|SD
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"sd"
 argument_list|,
 operator|&
-name|bp
+name|SD
 argument_list|)
-operator|)
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|SD
 operator|=
@@ -3429,44 +3346,44 @@ name|_PATH_DEFSPOOL
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|LO
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"lo"
 argument_list|,
 operator|&
-name|bp
+name|LO
 argument_list|)
-operator|)
 operator|==
-name|NULL
+operator|-
+literal|1
 condition|)
 name|LO
 operator|=
 name|DEFLOCK
 expr_stmt|;
-name|RG
-operator|=
-name|pgetstr
+name|cgetstr
 argument_list|(
+name|bp
+argument_list|,
 literal|"rg"
 argument_list|,
 operator|&
-name|bp
+name|RG
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|MX
-operator|=
-name|pgetnum
+name|cgetnum
 argument_list|(
+name|bp
+argument_list|,
 literal|"mx"
+argument_list|,
+operator|&
+name|MX
 argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)
@@ -3476,14 +3393,15 @@ name|DEFMX
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|MC
-operator|=
-name|pgetnum
+name|cgetnum
 argument_list|(
+name|bp
+argument_list|,
 literal|"mc"
+argument_list|,
+operator|&
+name|MC
 argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)
@@ -3493,14 +3411,15 @@ name|DEFMAXCOPIES
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|DU
-operator|=
-name|pgetnum
+name|cgetnum
 argument_list|(
+name|bp
+argument_list|,
 literal|"du"
+argument_list|,
+operator|&
+name|DU
 argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)
@@ -3510,10 +3429,18 @@ name|DEFUID
 expr_stmt|;
 name|SC
 operator|=
-name|pgetflag
+operator|(
+name|cgetcap
 argument_list|(
+name|bp
+argument_list|,
 literal|"sc"
+argument_list|,
+literal|':'
 argument_list|)
+operator|!=
+name|NULL
+operator|)
 expr_stmt|;
 block|}
 end_function
@@ -3523,6 +3450,7 @@ comment|/*  * Make the temp files.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mktemps
 parameter_list|()
@@ -3810,6 +3738,7 @@ comment|/*  * Make a temp file name.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|lmktemp
@@ -3848,7 +3777,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatal2
 argument_list|(
 literal|"out of memory"
 argument_list|)
@@ -3908,11 +3837,12 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 if|#
 directive|if
 name|__STDC__
-name|fatal
+name|fatal2
 parameter_list|(
 specifier|const
 name|char
@@ -3923,7 +3853,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|fatal
+function|fatal2
 parameter_list|(
 name|msg
 parameter_list|,
