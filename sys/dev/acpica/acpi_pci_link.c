@@ -2838,10 +2838,12 @@ name|ACPI_FAILURE
 argument_list|(
 name|error
 argument_list|)
-operator|&&
-name|bootverbose
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"acpi link set: _CRS failed for link %s - %s\n"
@@ -2859,6 +2861,10 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|AE_OK
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2869,9 +2875,13 @@ operator|!=
 name|irq
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"acpi link set: curr irq %d != %d for %s (ignoring)\n"
+literal|"acpi link set: curr irq %d != %d for %s\n"
 argument_list|,
 name|link
 operator|->
