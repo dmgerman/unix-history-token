@@ -6,14 +6,43 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SNOOP_H_
+name|_SYS_SNOOP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SNOOP_H_
+name|_SYS_SNOOP_H_
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -109,55 +138,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from it's current tty.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNPSTTY
-value|_IOW('T', 90, dev_t)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNPGTTY
-value|_IOR('T', 89, dev_t)
-end_define
-
-begin_comment
-comment|/*  * Theese values would be returned by FIONREAD ioctl  * instead of number of characters in buffer in case  * of specific errors.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNP_OFLOW
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNP_TTYCLOSE
-value|-2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNP_DETACH
-value|-3
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
 comment|/* XXX several wrong storage classes and types here. */
 end_comment
 
@@ -225,13 +205,56 @@ begin_comment
 comment|/* KERNEL */
 end_comment
 
+begin_comment
+comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from it's current tty.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNPSTTY
+value|_IOW('T', 90, dev_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNPGTTY
+value|_IOR('T', 89, dev_t)
+end_define
+
+begin_comment
+comment|/*  * Theese values would be returned by FIONREAD ioctl  * instead of number of characters in buffer in case  * of specific errors.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNP_OFLOW
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP_TTYCLOSE
+value|-2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNP_DETACH
+value|-3
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _SNOOP_H_ */
+comment|/* !_SYS_SNOOP_H_ */
 end_comment
 
 end_unit
