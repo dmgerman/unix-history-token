@@ -7948,8 +7948,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
 name|exit
 label|:
+endif|#
+directive|endif
 if|if
 condition|(
 name|mp
