@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mpreg.h	1.1	87/11/17	*/
+comment|/*	mpreg.h	1.2	87/12/22	*/
 end_comment
 
 begin_comment
@@ -2370,49 +2370,49 @@ begin_define
 define|#
 directive|define
 name|MPIOPORTMAP
-value|_IOW(m,1, struct protports)
+value|_IOW('m',1, struct protports)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPIOHILO
-value|_IOW(m,3, short)
+value|_IOW('m',3, short)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPIOENDCODE
-value|_IO(m,4)
+value|_IO('m',4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPIOASYNCNF
-value|_IOW(m,7, struct abdcf)
+value|_IOW('m',7, struct abdcf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPIOENDDL
-value|_IO(m,10)
+value|_IO('m',10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPIOSTARTDL
-value|_IO(m,11)
+value|_IO('m',11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPIORESETBOARD
-value|_IO(m,12)
+value|_IO('m',12)
 end_define
 
 begin_comment

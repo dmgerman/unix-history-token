@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_enpreg.h	1.3	86/12/15	*/
+comment|/*	if_enpreg.h	1.4	87/12/22	*/
 end_comment
 
 begin_comment
@@ -788,7 +788,7 @@ begin_define
 define|#
 directive|define
 name|ENPIOGO
-value|_IO(S,1)
+value|_IO('S',1)
 end_define
 
 begin_comment
@@ -799,7 +799,7 @@ begin_define
 define|#
 directive|define
 name|ENPIORESET
-value|_IO(S,2)
+value|_IO('S',2)
 end_define
 
 begin_comment
