@@ -320,6 +320,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|rusage
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|kern_wait
@@ -342,7 +348,7 @@ parameter_list|,
 name|struct
 name|rusage
 modifier|*
-name|rusage
+name|rup
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -352,27 +358,18 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
 
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
-begin_struct_decl
-struct_decl|struct
-name|rusage
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* forward declaration */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
 name|pid_t
 name|wait
 parameter_list|(
@@ -401,6 +398,12 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_struct_decl
+struct_decl|struct
+name|rusage
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|pid_t
@@ -449,6 +452,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
