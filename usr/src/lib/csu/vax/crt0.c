@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.10 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +310,7 @@ name|CRT0
 end_ifdef
 
 begin_comment
-comment|/*  * null mcount and moncontrol,  * just in case some routine is compiled for profiling  */
+comment|/*  * null moncontrol, just in case some routine is compiled for profiling  */
 end_comment
 
 begin_macro
@@ -329,14 +329,6 @@ end_decl_stmt
 begin_block
 block|{  }
 end_block
-
-begin_asm
-asm|asm(".globl mcount");
-end_asm
-
-begin_asm
-asm|asm("mcount: rsb");
-end_asm
 
 begin_endif
 endif|#
