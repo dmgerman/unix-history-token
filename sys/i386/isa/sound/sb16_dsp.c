@@ -2146,6 +2146,14 @@ return|return
 literal|0
 return|;
 comment|/* Not a SB16 */
+name|hw_config
+operator|->
+name|io_base
+operator|=
+name|sb_config
+operator|->
+name|io_base
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
