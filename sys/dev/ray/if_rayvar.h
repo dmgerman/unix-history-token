@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.dem
 end_comment
 
 begin_comment
-comment|/*  * Network parameters, used twice in sotfc to store what we want and what  * we have.  */
+comment|/*  * Network parameters, used twice in sotfc to store what we want and what  * we have.  *  * The current parameters are ONLY valid in a function called from the runq  * and should not be accessed directly from ioctls.  */
 end_comment
 
 begin_struct
@@ -115,11 +115,6 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 comment|/* Ifnet common 		*/
-name|struct
-name|callout_handle
-name|reset_timerh
-decl_stmt|;
-comment|/* Handle for reset timer	*/
 name|struct
 name|callout_handle
 name|tx_timerh
@@ -690,6 +685,10 @@ define|\
 value|SRAM_WRITE_REGION((sc), (off) + offsetof(struct s, f), (p), (n))
 end_define
 
+begin_comment
+comment|/* Flags for runq entries */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -737,9 +736,31 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RAY_COM_FCHKRUNNING
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Check IFF_RUNNING	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_COM_FDETACHED
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Card is gone		*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RAY_COM_FLAGS_PRINTFB
 define|\
-value|"\020"			\ 	"\001WOK"		\ 	"\002RUNNING"		\ 	"\003COMPLETED"		\ 	"\004WAIT"
+value|"\020"			\ 	"\001WOK"		\ 	"\002RUNNING"		\ 	"\003COMPLETED"		\ 	"\004WAIT"		\ 	"\005CHKRUNNING"	\ 	"\006DETACHED"
 end_define
 
 begin_define
