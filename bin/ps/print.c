@@ -784,6 +784,8 @@ decl_stmt|;
 block|{
 name|int
 name|flag
+decl_stmt|,
+name|sflag
 decl_stmt|;
 name|char
 modifier|*
@@ -806,6 +808,14 @@ operator|->
 name|var
 expr_stmt|;
 name|flag
+operator|=
+name|k
+operator|->
+name|ki_p
+operator|->
+name|ki_flag
+expr_stmt|;
+name|sflag
 operator|=
 name|k
 operator|->
@@ -840,9 +850,9 @@ name|SSLEEP
 case|:
 if|if
 condition|(
-name|flag
+name|sflag
 operator|&
-name|P_SINTR
+name|PS_SINTR
 condition|)
 comment|/* interruptable (long) */
 operator|*
@@ -920,9 +930,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flag
+name|sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 condition|)
 operator|*
@@ -2642,9 +2652,9 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|==
 literal|0
@@ -2804,9 +2814,9 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|==
 literal|0
