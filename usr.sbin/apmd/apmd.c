@@ -268,7 +268,7 @@ literal|0
 argument_list|)
 name|EVENT_CONFIG_INITIALIZER
 argument_list|(
-argument|POWERSTATECHANG
+argument|POWERSTATECHANGE
 argument_list|,
 literal|0
 argument_list|)
