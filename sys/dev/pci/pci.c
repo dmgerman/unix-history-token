@@ -6101,6 +6101,12 @@ operator|->
 name|intline
 operator|==
 literal|255
+operator|||
+name|cfg
+operator|->
+name|intline
+operator|==
+literal|0
 operator|)
 operator|&&
 operator|(
