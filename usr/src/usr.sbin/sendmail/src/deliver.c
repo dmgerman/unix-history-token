@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.32 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2232,6 +2232,20 @@ argument_list|,
 name|to
 operator|->
 name|q_user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|10
+argument_list|,
+literal|100
+argument_list|)
+condition|)
+name|printopenfds
+argument_list|(
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	**  If this mailer is expensive, and if we don't want to make 	**  connections now, just mark these addresses and return. 	**	This is useful if we want to batch connections to 	**	reduce load.  This will cause the messages to be 	**	queued up, and a daemon will come along to send the 	**	messages later. 	**		This should be on a per-mailer basis. 	*/

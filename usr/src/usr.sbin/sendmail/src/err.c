@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.10 (Berkeley) %G%"
+literal|"@(#)err.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+if|if
+condition|(
+name|olderrno
+operator|==
+name|EMFILE
+condition|)
+name|printopenfds
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|panic
