@@ -627,17 +627,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VTBFREE
-value|0x100000
-end_define
-
-begin_comment
-comment|/* This vnode is on the to-be-freelist */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VONWORKLST
 value|0x200000
 end_define
@@ -1343,7 +1332,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(((vp)->v_flag& (VFREE|VTBFREE))&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
+value|(((vp)->v_flag& VFREE)&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
 end_define
 
 begin_define
@@ -3311,6 +3300,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|vfree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|vput
 name|__P
 argument_list|(
@@ -3386,22 +3390,6 @@ modifier|*
 name|spec_vnodeop_p
 decl_stmt|;
 end_decl_stmt
-
-begin_extern
-extern|extern TAILQ_HEAD(tobefreelist
-operator|,
-extern|vnode
-end_extern
-
-begin_expr_stmt
-unit|)
-name|vnode_tobefree_list
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* vnode free list */
-end_comment
 
 begin_endif
 endif|#
