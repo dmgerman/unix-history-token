@@ -166,6 +166,15 @@ operator|!
 name|request
 operator|->
 name|callback
+operator|&&
+operator|!
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+name|ATA_R_REQUEUE
+operator|)
 condition|)
 name|sema_init
 argument_list|(
@@ -179,8 +188,11 @@ argument_list|,
 literal|"ATA request done"
 argument_list|)
 expr_stmt|;
+comment|/* in IMMEDIATE_MODE we dont queue but call HW directly */
+comment|/* used only during reinit for getparm and config */
 if|if
 condition|(
+operator|(
 name|request
 operator|->
 name|device
@@ -190,9 +202,21 @@ operator|->
 name|flags
 operator|&
 name|ATA_IMMEDIATE_MODE
+operator|)
+operator|&&
+operator|(
+name|request
+operator|->
+name|flags
+operator|&
+operator|(
+name|ATA_R_CONTROL
+operator||
+name|ATA_R_IMMEDIATE
+operator|)
+operator|)
 condition|)
 block|{
-comment|// request->flags |= ATA_R_DEBUG;
 comment|/* arm timeout */
 if|if
 condition|(
@@ -245,17 +269,17 @@ argument_list|(
 name|request
 argument_list|)
 operator|==
-name|ATA_OP_CONTINUES
+name|ATA_OP_FINISHED
 condition|)
 block|{
-name|ATA_DEBUG_RQ
-argument_list|(
+if|if
+condition|(
+operator|!
 name|request
-argument_list|,
-literal|"wait for completition"
-argument_list|)
-expr_stmt|;
-name|sema_wait
+operator|->
+name|callback
+condition|)
+name|sema_destroy
 argument_list|(
 operator|&
 name|request
@@ -263,6 +287,7 @@ operator|->
 name|done
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 block|}
 else|else
@@ -286,7 +311,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|ATA_R_AT_HEAD
+name|ATA_R_IMMEDIATE
 condition|)
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -340,7 +365,7 @@ argument_list|,
 literal|"queued"
 argument_list|)
 expr_stmt|;
-comment|/* should we skip start ? */
+comment|/* should we skip start to avoid lock recursion ? */
 if|if
 condition|(
 operator|!
@@ -361,7 +386,8 @@ operator|->
 name|channel
 argument_list|)
 expr_stmt|;
-comment|/* if this is a requeued request callback/sleep is already setup */
+block|}
+comment|/* if this is a requeued request callback/sleep has been setup */
 if|if
 condition|(
 name|request
@@ -395,15 +421,6 @@ operator|->
 name|done
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|request
-operator|->
-name|callback
-condition|)
 name|sema_destroy
 argument_list|(
 operator|&
@@ -412,6 +429,7 @@ operator|->
 name|done
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1113,7 +1131,7 @@ operator|->
 name|flags
 operator||=
 operator|(
-name|ATA_R_AT_HEAD
+name|ATA_R_IMMEDIATE
 operator||
 name|ATA_R_REQUEUE
 operator|)
@@ -1334,6 +1352,16 @@ name|flags
 operator|&=
 operator|~
 name|ATA_R_SKIPSTART
+expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+operator|(
+name|ATA_R_IMMEDIATE
+operator||
+name|ATA_R_REQUEUE
+operator|)
 expr_stmt|;
 name|ata_queue_request
 argument_list|(

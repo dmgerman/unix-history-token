@@ -1144,7 +1144,7 @@ name|ATA_R_ORDERED
 value|0x0100
 define|#
 directive|define
-name|ATA_R_AT_HEAD
+name|ATA_R_IMMEDIATE
 value|0x0200
 define|#
 directive|define

@@ -3575,7 +3575,7 @@ operator|=
 operator|(
 name|ATA_R_READ
 operator||
-name|ATA_R_AT_HEAD
+name|ATA_R_IMMEDIATE
 operator||
 name|ATA_R_QUIET
 operator|)
@@ -3649,6 +3649,12 @@ name|request
 operator|->
 name|retries
 operator|--
+expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ATA_R_REQUEUE
 expr_stmt|;
 block|}
 name|ata_free_request

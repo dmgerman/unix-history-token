@@ -8530,7 +8530,7 @@ operator||=
 operator|(
 name|ATA_R_ATAPI
 operator||
-name|ATA_R_AT_HEAD
+name|ATA_R_IMMEDIATE
 operator|)
 expr_stmt|;
 name|ata_queue_request
