@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.16 (Berkeley) %G%"
+literal|"@(#)file.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,13 +446,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s:	"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 name|type
 argument_list|(
 name|p
@@ -483,16 +476,6 @@ operator|>
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s:	"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 name|type
 argument_list|(
 name|argv
@@ -602,6 +585,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|printf
+argument_list|(
+literal|"%s:\t"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|mbuf
