@@ -966,6 +966,9 @@ modifier|*
 name|aac_intr
 decl_stmt|;
 comment|/* interrupt handle */
+name|eventhandler_tag
+name|eh
+decl_stmt|;
 comment|/* controller features, limits and status */
 name|int
 name|aac_state

@@ -191,12 +191,6 @@ directive|include
 file|<dev/aac/aac_tables.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/aac/aac_cam.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|void
@@ -1675,6 +1669,10 @@ comment|/* Register the shutdown method to only be called post-dump */
 if|if
 condition|(
 operator|(
+name|sc
+operator|->
+name|eh
+operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_final
@@ -2554,11 +2552,6 @@ name|error
 operator|)
 return|;
 block|}
-name|bus_generic_detach
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -2628,6 +2621,15 @@ operator|(
 name|error
 operator|)
 return|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|shutdown_final
+argument_list|,
+name|sc
+operator|->
+name|eh
+argument_list|)
+expr_stmt|;
 name|aac_free
 argument_list|(
 name|sc
