@@ -303,8 +303,6 @@ specifier|static
 name|int
 name|next_dgl
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
