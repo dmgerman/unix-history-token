@@ -1886,6 +1886,12 @@ name|vm_paddr_t
 operator|)
 name|Maxmem
 argument_list|)
+operator|&&
+name|map
+operator|->
+name|pagesneeded
+operator|==
+literal|0
 condition|)
 block|{
 name|vm_offset_t
