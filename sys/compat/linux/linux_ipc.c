@@ -2715,15 +2715,9 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|linux_seminfo
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|arg
@@ -3265,9 +3259,6 @@ name|td
 operator|->
 name|td_retval
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|raddr

@@ -2976,9 +2976,6 @@ if|if
 condition|(
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|sfp
@@ -3406,9 +3403,6 @@ if|if
 condition|(
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|ucp

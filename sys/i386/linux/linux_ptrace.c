@@ -1378,7 +1378,8 @@ operator|->
 name|td_retval
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -1533,7 +1534,8 @@ operator|.
 name|reg
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -1558,7 +1560,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -1669,7 +1672,8 @@ operator|.
 name|fpreg
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -1694,7 +1698,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -1764,7 +1769,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -2038,7 +2044,8 @@ operator|.
 name|fpxreg
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -2221,7 +2228,8 @@ operator|->
 name|addr
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->
@@ -2368,7 +2376,8 @@ operator|->
 name|addr
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|uap
 operator|->

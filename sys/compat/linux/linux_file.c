@@ -911,9 +911,6 @@ name|td
 operator|->
 name|td_retval
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|res
@@ -4798,7 +4795,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4876,7 +4874,8 @@ operator|&
 name|linux_flock
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4897,7 +4896,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4958,7 +4958,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -5280,7 +5281,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -5358,7 +5360,8 @@ operator|&
 name|linux_flock
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -5379,7 +5382,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -5440,7 +5444,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->

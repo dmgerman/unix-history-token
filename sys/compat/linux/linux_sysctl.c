@@ -303,9 +303,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|args

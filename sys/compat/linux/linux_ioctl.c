@@ -615,7 +615,8 @@ name|d_secperunit
 operator|)
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -3725,7 +3726,8 @@ operator|&
 name|lios
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -3746,7 +3748,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -3807,7 +3810,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -3868,7 +3872,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -3968,7 +3973,8 @@ operator|&
 name|lio
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -3990,7 +3996,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4051,7 +4058,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4112,7 +4120,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4814,7 +4823,8 @@ operator|&
 name|lss
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -4841,7 +4851,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -5092,7 +5103,8 @@ operator|&
 name|linux_line
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7264,7 +7276,8 @@ operator|&
 name|lth
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7396,7 +7409,8 @@ operator|&
 name|lte
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7515,11 +7529,6 @@ argument_list|()
 decl_stmt|;
 name|bsdinfo
 operator|=
-operator|(
-expr|struct
-name|cd_sub_channel_info
-operator|*
-operator|)
 name|stackgap_alloc
 argument_list|(
 operator|&
@@ -7527,8 +7536,8 @@ name|sg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cd_sub_channel_info
+operator|*
+name|bsdinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7556,8 +7565,8 @@ name|data_len
 operator|=
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cd_sub_channel_info
+operator|*
+name|bsdinfo
 argument_list|)
 expr_stmt|;
 name|bsdsc
@@ -7597,7 +7606,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7608,8 +7618,7 @@ name|sc
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_cdrom_subchnl
+name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7728,7 +7737,8 @@ operator|&
 name|sc
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7736,8 +7746,7 @@ name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|linux_cdrom_subchnl
+name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7762,7 +7771,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7913,7 +7923,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -7924,7 +7935,7 @@ name|lds
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_dvd_struct
+name|lds
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7999,7 +8010,8 @@ operator|&
 name|lds
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -8007,7 +8019,7 @@ name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_dvd_struct
+name|lds
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8033,7 +8045,8 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -8044,7 +8057,7 @@ name|lda
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_dvd_authinfo
+name|lda
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8119,7 +8132,8 @@ operator|&
 name|lda
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -8127,7 +8141,7 @@ name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_dvd_authinfo
+name|lda
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8158,7 +8172,8 @@ operator|&
 name|lda
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -8166,7 +8181,7 @@ name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|l_dvd_authinfo
+name|lda
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8761,7 +8776,8 @@ operator|&
 name|version
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|args
 operator|->
@@ -10716,7 +10732,9 @@ operator|&
 name|ifc
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ifc
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10826,7 +10844,9 @@ operator|&
 name|ifr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ifr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10945,7 +10965,9 @@ operator|&
 name|ifr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ifr
+argument_list|)
 argument_list|,
 operator|&
 name|uio
@@ -10991,7 +11013,9 @@ argument_list|,
 name|uifc
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ifc
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11083,7 +11107,9 @@ operator|->
 name|ifr_flags
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|flags
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -11149,7 +11175,9 @@ operator|&
 name|lsa
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lsa
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lsa
@@ -11171,7 +11199,9 @@ operator|->
 name|ifr_hwaddr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lsa
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -11238,7 +11268,9 @@ operator|&
 name|lsa
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lsa
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lsa
@@ -11274,7 +11306,9 @@ operator|->
 name|ifr_hwaddr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lsa
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -11538,7 +11572,7 @@ operator|=
 name|copyin
 argument_list|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|args
@@ -11611,7 +11645,7 @@ argument_list|(
 name|ifname
 argument_list|,
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|args
@@ -12159,7 +12193,7 @@ argument_list|(
 name|lifname
 argument_list|,
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|args

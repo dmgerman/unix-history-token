@@ -1186,7 +1186,7 @@ endif|#
 directive|endif
 argument|if (uap->resource>= LINUX_RLIM_NLIMITS) 		return EINVAL;  	which = linux_to_bsd_resource[uap->resource];  	if (which == -
 literal|1
-argument|) 		return EINVAL;  	if ((error = 	   copyin((caddr_t)uap->rlim, (caddr_t)&rlim, sizeof (struct rlimit)))) 		return (error); 	return dosetrlimit(td,  which,&rlim); }  int linux_getrlimit(td, uap) 	struct thread *td; 	struct linux_getrlimit_args *uap; { 	u_int which;
+argument|) 		return EINVAL;  	if ((error = 	   copyin(uap->rlim,&rlim, sizeof (struct rlimit)))) 		return (error); 	return dosetrlimit(td,  which,&rlim); }  int linux_getrlimit(td, uap) 	struct thread *td; 	struct linux_getrlimit_args *uap; { 	u_int which;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1197,7 +1197,7 @@ endif|#
 directive|endif
 argument|if (uap->resource>= LINUX_RLIM_NLIMITS) 		return EINVAL;  	which = linux_to_bsd_resource[uap->resource];  	if (which == -
 literal|1
-argument|) 		return EINVAL;  	return (copyout((caddr_t)&td->td_proc->p_rlimit[which], 	    (caddr_t)uap->rlim, sizeof (struct rlimit))); }
+argument|) 		return EINVAL;  	return (copyout(&td->td_proc->p_rlimit[which], 	    uap->rlim, sizeof (struct rlimit))); }
 end_function
 
 end_unit

@@ -409,9 +409,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|gidset
@@ -739,9 +736,6 @@ name|copyout
 argument_list|(
 name|linux_gidset
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|gidset

@@ -574,9 +574,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|ptr
@@ -736,9 +733,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|ptr
@@ -1128,9 +1122,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|ptr
@@ -1976,9 +1967,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|ptr
@@ -3292,9 +3280,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|nsa
@@ -3447,9 +3432,6 @@ argument_list|(
 operator|&
 name|osa
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|args
 operator|->
 name|osa
