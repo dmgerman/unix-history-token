@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.49 2001/01/21 19:00:06 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.51 2001/10/24 15:30:17 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1624,7 +1624,14 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"uhub_explore: port %d status 0x%04x 0x%04x\n"
+literal|"uhub_explore: %s port %d status 0x%04x 0x%04x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|port
 operator|,
