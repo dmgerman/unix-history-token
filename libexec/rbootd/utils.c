@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)utils.c	8.2 (Berkeley) 2/22/94  *  * Utah $Hdr: utils.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*	$NetBSD: utils.c,v 1.6 1995/11/14 08:41:47 thorpej Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)utils.c	8.1 (Berkeley) 6/4/93  *  * From: Utah Hdr: utils.c 3.1 92/07/06  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -9,13 +13,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "@(#)utils.c	8.1 (Berkeley) 6/4/93";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)utils.c	8.2 (Berkeley) 2/22/94"
+literal|"$NetBSD: utils.c,v 1.6 1995/11/14 08:41:47 thorpej Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +40,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -144,7 +146,7 @@ name|i
 decl_stmt|,
 name|omask
 decl_stmt|;
-name|u_int
+name|u_int32_t
 name|t
 decl_stmt|;
 comment|/* 	 *  Since we will be working with RmpConns as well as DbgFp, we 	 *  must block signals that can affect either. 	 */
@@ -296,11 +298,14 @@ name|hp_llc
 operator|.
 name|ssap
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|hp_llc
 operator|.
 name|cntrl
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* display HP extensions to 802.2 Logical Link Control header */
@@ -313,17 +318,23 @@ name|DbgFp
 argument_list|,
 literal|"\tHP Ext:    DXSAP:%x SXSAP:%x\n"
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|hp_llc
 operator|.
 name|dxsap
+argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|hp_llc
 operator|.
 name|sxsap
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Display information about RMP packet using type field to 	 *  determine what kind of packet this is. 	 */
@@ -361,11 +372,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_brq
 operator|.
 name|rmp_session
+argument_list|)
 operator|==
 name|RMP_PROBESID
 condition|)
@@ -426,17 +440,23 @@ name|rmp_retcode
 argument_list|,
 name|t
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_brq
 operator|.
 name|rmp_session
+argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_brq
 operator|.
 name|rmp_version
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -535,17 +555,23 @@ name|rmp_retcode
 argument_list|,
 name|t
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_brpl
 operator|.
 name|rmp_session
+argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_brpl
 operator|.
 name|rmp_version
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DspFlnm
@@ -607,11 +633,14 @@ name|rmp_retcode
 argument_list|,
 name|t
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_rrq
 operator|.
 name|rmp_session
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -623,11 +652,14 @@ name|DbgFp
 argument_list|,
 literal|"\t\tNoOfBytes: %u\n"
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_rrq
 operator|.
 name|rmp_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -673,11 +705,14 @@ name|rmp_retcode
 argument_list|,
 name|t
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_rrpl
 operator|.
 name|rmp_session
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -729,11 +764,14 @@ name|r_done
 operator|.
 name|rmp_retcode
 argument_list|,
+name|ntohs
+argument_list|(
 name|rmp
 operator|->
 name|r_done
 operator|.
 name|rmp_session
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -785,7 +823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  GetEtherAddr -- convert an RMP (Ethernet) address into a string. ** **	An RMP BOOT packet has been received.  Look at the type field **	and process Boot Requests, Read Requests, and Boot Complete **	packets.  Any other type will be dropped with a warning msg. ** **	Parameters: **		addr - array of RMP_ADDRLEN bytes. ** **	Returns: **		Pointer to static string representation of `addr'. ** **	Side Effects: **		None. ** **	Warnings: **		- The return value points to a static buffer; it must **		  be copied if it's to be saved. **		- For speed, we assume a u_char consists of 8 bits. */
+comment|/* **  GetEtherAddr -- convert an RMP (Ethernet) address into a string. ** **	An RMP BOOT packet has been received.  Look at the type field **	and process Boot Requests, Read Requests, and Boot Complete **	packets.  Any other type will be dropped with a warning msg. ** **	Parameters: **		addr - array of RMP_ADDRLEN bytes. ** **	Returns: **		Pointer to static string representation of `addr'. ** **	Side Effects: **		None. ** **	Warnings: **		- The return value points to a static buffer; it must **		  be copied if it's to be saved. */
 end_comment
 
 begin_function
@@ -795,7 +833,7 @@ name|GetEtherAddr
 parameter_list|(
 name|addr
 parameter_list|)
-name|u_char
+name|u_int8_t
 modifier|*
 name|addr
 decl_stmt|;
@@ -823,25 +861,14 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
-name|cp1
-decl_stmt|,
-modifier|*
-name|cp2
+name|cp
 decl_stmt|;
 comment|/* 	 *  For each byte in `addr', convert it to "<hexchar><hexchar>:". 	 *  The last byte does not get a trailing `:' appended. 	 */
 name|i
 operator|=
 literal|0
 expr_stmt|;
-name|cp1
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|addr
-expr_stmt|;
-name|cp2
+name|cp
 operator|=
 name|etherstr
 expr_stmt|;
@@ -852,13 +879,13 @@ condition|;
 control|)
 block|{
 operator|*
-name|cp2
+name|cp
 operator|++
 operator|=
 name|Hex
 index|[
 operator|*
-name|cp1
+name|addr
 operator|>>
 literal|4
 operator|&
@@ -866,13 +893,13 @@ literal|0xf
 index|]
 expr_stmt|;
 operator|*
-name|cp2
+name|cp
 operator|++
 operator|=
 name|Hex
 index|[
 operator|*
-name|cp1
+name|addr
 operator|++
 operator|&
 literal|0xf
@@ -887,14 +914,14 @@ name|RMP_ADDRLEN
 condition|)
 break|break;
 operator|*
-name|cp2
+name|cp
 operator|++
 operator|=
 literal|':'
 expr_stmt|;
 block|}
 operator|*
-name|cp2
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -939,7 +966,7 @@ name|fprintf
 argument_list|(
 name|DbgFp
 argument_list|,
-literal|"\n\t\tFile Name (%d):<"
+literal|"\n\t\tFile Name (%u):<"
 argument_list|,
 name|size
 argument_list|)
@@ -993,7 +1020,7 @@ name|NewClient
 parameter_list|(
 name|addr
 parameter_list|)
-name|u_char
+name|u_int8_t
 modifier|*
 name|addr
 decl_stmt|;
