@@ -198,30 +198,43 @@ name|cdevsw
 name|acpi_cdevsw
 init|=
 block|{
+comment|/* open */
 name|acpiopen
 block|,
+comment|/* close */
 name|acpiclose
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|acpiioctl
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"acpi"
 block|,
+comment|/* maj */
 name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|}
 decl_stmt|;
