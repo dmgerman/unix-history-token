@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.10.2.2 1996/12/31 05:50:28 msmith Exp $"
+literal|"$Id: main.c,v 1.10.2.3 1997/05/11 05:28:54 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1851,6 +1851,14 @@ operator|==
 literal|2
 condition|)
 block|{
+name|oflush
+argument_list|()
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|execle
 argument_list|(
 name|PP
