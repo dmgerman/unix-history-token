@@ -95,6 +95,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_decl_stmt
 name|DIR
 modifier|*
@@ -259,6 +265,16 @@ name|time_t
 name|time
 parameter_list|()
 function_decl|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
