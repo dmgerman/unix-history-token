@@ -454,6 +454,7 @@ argument_list|)
 name|td_selq
 expr_stmt|;
 comment|/* (p) List of selinfos. */
+comment|/* Cleared during fork1() or thread_sched_upcall() */
 define|#
 directive|define
 name|td_startzero
@@ -562,27 +563,25 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* (k) switchin special func */
+name|u_int
+name|td_critnest
+decl_stmt|;
+comment|/* (k) Critical section nest level. */
 define|#
 directive|define
 name|td_endzero
 value|td_md
+comment|/* Copied during fork1() or thread_sched_upcall() */
 define|#
 directive|define
 name|td_startcopy
 value|td_endzero
-comment|/* XXXKSE p_md is in the "on your own" section in old struct proc */
+comment|/* XXXKSE just copying td_md needs checking! */
 name|struct
 name|mdthread
 name|td_md
 decl_stmt|;
 comment|/* (k) Any machine-dependent fields. */
-name|register_t
-name|td_retval
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* (k) Syscall aux returns. */
 name|u_char
 name|td_base_pri
 decl_stmt|;
@@ -595,6 +594,7 @@ define|#
 directive|define
 name|td_endcopy
 value|td_pcb
+comment|/*  * fields that must be manually set in fork1() or thread_sched_upcall()  * or already have been set in the allocator, contstructor, etc..  */
 name|struct
 name|pcb
 modifier|*
@@ -631,6 +631,13 @@ comment|/* on sleep queue AND suspend queue */
 block|}
 name|td_state
 enum|;
+name|register_t
+name|td_retval
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* (k) Syscall aux returns. */
 name|struct
 name|callout
 name|td_slpcallout
@@ -652,10 +659,6 @@ name|vm_offset_t
 name|td_kstack
 decl_stmt|;
 comment|/* Kernel VA of kstack. */
-name|u_int
-name|td_critnest
-decl_stmt|;
-comment|/* (k) Critical section nest level. */
 block|}
 struct|;
 end_struct
@@ -839,8 +842,6 @@ modifier|*
 name|ke_bound
 decl_stmt|;
 comment|/* Thread bound to this KSE (*) */
-comment|/*u_int		ke_estcpu; */
-comment|/* (j) Time averaged val of cpticks. */
 name|int
 name|ke_cpticks
 decl_stmt|;
@@ -1128,25 +1129,13 @@ name|kg_last_assigned
 decl_stmt|;
 comment|/* Last thread assigned to a KSE */
 name|int
-name|kg_numthreads
-decl_stmt|;
-comment|/* Num threads in total */
-name|int
 name|kg_runnable
 decl_stmt|;
 comment|/* Num runnable threads on queue. */
 name|int
-name|kg_kses
-decl_stmt|;
-comment|/* Num KSEs in group. */
-name|int
 name|kg_runq_kses
 decl_stmt|;
 comment|/* Num KSEs on runq. */
-name|int
-name|kg_idle_kses
-decl_stmt|;
-comment|/* num KSEs idle */
 define|#
 directive|define
 name|kg_endzero
@@ -1172,10 +1161,19 @@ comment|/* (j) Realtime priority. */
 define|#
 directive|define
 name|kg_endcopy
-value|kg_dummy
+value|kg_numthreads
 name|int
-name|kg_dummy
+name|kg_numthreads
 decl_stmt|;
+comment|/* Num threads in total */
+name|int
+name|kg_idle_kses
+decl_stmt|;
+comment|/* num KSEs idle */
+name|int
+name|kg_kses
+decl_stmt|;
+comment|/* Num KSEs in group. */
 block|}
 struct|;
 end_struct
@@ -1441,14 +1439,6 @@ modifier|*
 name|p_aioinfo
 decl_stmt|;
 comment|/* (c) ASYNC I/O info. */
-name|int
-name|p_numthreads
-decl_stmt|;
-comment|/* (?) number of threads */
-name|int
-name|p_numksegrps
-decl_stmt|;
-comment|/* (?) number of ksegrps */
 name|struct
 name|thread
 modifier|*
@@ -1521,6 +1511,14 @@ name|u_short
 name|p_xstat
 decl_stmt|;
 comment|/* (c) Exit status; also stop sig. */
+name|int
+name|p_numthreads
+decl_stmt|;
+comment|/* (?) number of threads */
+name|int
+name|p_numksegrps
+decl_stmt|;
+comment|/* (?) number of ksegrps */
 name|struct
 name|mdproc
 name|p_md

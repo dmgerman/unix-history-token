@@ -1798,22 +1798,24 @@ expr_stmt|;
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */
 name|td2
 operator|=
-name|thread_alloc
-argument_list|()
-expr_stmt|;
-name|ke2
-operator|=
-operator|&
+name|FIRST_THREAD_IN_PROC
+argument_list|(
 name|p2
-operator|->
-name|p_kse
+argument_list|)
 expr_stmt|;
 name|kg2
 operator|=
-operator|&
+name|FIRST_KSEGRP_IN_PROC
+argument_list|(
 name|p2
-operator|->
-name|p_ksegrp
+argument_list|)
+expr_stmt|;
+name|ke2
+operator|=
+name|FIRST_KSE_IN_KSEGRP
+argument_list|(
+name|kg2
+argument_list|)
 expr_stmt|;
 define|#
 directive|define
@@ -1868,13 +1870,27 @@ name|ke_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* bzero'd by the thread allocator */
-block|bzero(&td2->td_startzero, 	    (unsigned) RANGEOF(struct thread, td_startzero, td_endzero));
-endif|#
-directive|endif
+name|bzero
+argument_list|(
+operator|&
+name|td2
+operator|->
+name|td_startzero
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|RANGEOF
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
+name|td_startzero
+argument_list|,
+name|td_endzero
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -2033,18 +2049,6 @@ expr_stmt|;
 undef|#
 directive|undef
 name|RANGEOF
-comment|/* 	 * XXXKSE Theoretically only the running thread would get copied  	 * Others in the kernel would be 'aborted' in the child. 	 * i.e return E*something* 	 * On SMP we would have to stop them running on 	 * other CPUs! (set a flag in the proc that stops 	 * all returns to userland until completed) 	 * This is wrong but ok for 1:1. 	 */
-name|proc_linkup
-argument_list|(
-name|p2
-argument_list|,
-name|kg2
-argument_list|,
-name|ke2
-argument_list|,
-name|td2
-argument_list|)
-expr_stmt|;
 comment|/* Set up the thread as an active thread (as if runnable). */
 name|TAILQ_REMOVE
 argument_list|(
@@ -2089,7 +2093,6 @@ operator|~
 name|TDF_UNBOUND
 expr_stmt|;
 comment|/* For the rest of this syscall. */
-comment|/* note.. XXXKSE no pcb or u-area yet */
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_forkproc. 	 */
 name|p2
 operator|->
@@ -2553,15 +2556,6 @@ operator|->
 name|p_children
 argument_list|)
 expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|td2
-operator|->
-name|td_contested
-argument_list|)
-expr_stmt|;
-comment|/* XXXKSE only 1 thread? */
 name|callout_init
 argument_list|(
 operator|&
@@ -2572,17 +2566,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|td2
-operator|->
-name|td_slpcallout
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* XXXKSE */
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -2761,7 +2744,6 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXKSE: In KSE, there would be a race here if one thread was 	 * dieing due to a signal (or calling exit1() for that matter) while 	 * another thread was calling fork1().  Not sure how KSE wants to work 	 * around that.  The problem is that up until the point above, if p1 	 * gets killed, it won't find p2 in its list in order for it to be 	 * reparented.  Alternatively, we could add a new p_flag that gets set 	 * before we reparent all the children that we check above and just 	 * use init as our parent if that if that flag is set.  (Either that 	 * or abort the fork if the flag is set since our parent died trying 	 * to fork us (which is evil)). 	 */
 name|KASSERT
 argument_list|(
 name|newprocsig

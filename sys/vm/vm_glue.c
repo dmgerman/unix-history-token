@@ -1505,11 +1505,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|cpu_wait
@@ -1517,20 +1512,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE by here there should not be any threads left! */
-name|FOREACH_THREAD_IN_PROC
-argument_list|(
-argument|p
-argument_list|,
-argument|td
-argument_list|)
-block|{
-name|panic
-argument_list|(
-literal|"vm_waitproc: Survivor thread!"
-argument_list|)
-expr_stmt|;
-block|}
 name|vmspace_exitfree
 argument_list|(
 name|p

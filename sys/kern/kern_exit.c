@@ -2635,6 +2635,18 @@ operator|->
 name|p_mtx
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+operator|(
+literal|"wait1: no residual thread!"
+operator|)
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|proc_zone

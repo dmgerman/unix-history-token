@@ -393,27 +393,6 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_startzero
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
-argument_list|(
-expr|struct
-name|thread
-argument_list|,
-name|td_startzero
-argument_list|,
-name|td_endzero
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_state
@@ -426,14 +405,6 @@ name|td_flags
 operator||=
 name|TDF_UNBOUND
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Maybe move these here from process creation, but maybe not.    	 * Moving them here takes them away from their "natural" place 	 * in the fork process. 	 */
-comment|/* XXX td_contested does not appear to be initialized for threads! */
-block|LIST_INIT(&td->td_contested); 	callout_init(&td->td_slpcallout, 1);
-endif|#
-directive|endif
 name|cached_threads
 operator|--
 expr_stmt|;
@@ -765,7 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stash an embarasingly esxtra thread into the zombie thread queue.  */
+comment|/*  * Stash an embarasingly extra thread into the zombie thread queue.  */
 end_comment
 
 begin_function
@@ -1255,7 +1226,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|thread_stash
+name|thread_free
 argument_list|(
 name|ke
 operator|->
@@ -1275,6 +1246,16 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXSMP */
+comment|/* 	 * The last thread is left attached to the process 	 * So that the whole bundle gets recycled. Skip 	 * all this stuff. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_numthreads
+operator|>
+literal|1
+condition|)
+block|{
 comment|/* Reassign this thread's KSE. */
 name|ke
 operator|->
@@ -1334,7 +1315,7 @@ operator|->
 name|kg_numthreads
 operator|--
 expr_stmt|;
-comment|/* 	 * The test below is NOT true if we are the 	 * sole exiting thread. P_STOPPED_SINGLE is unset 	 * in exit1() after it is the only survivor. 	 */
+comment|/* 		 * The test below is NOT true if we are the 		 * sole exiting thread. P_STOPPED_SNGL is unset 		 * in exit1() after it is the only survivor. 		 */
 if|if
 condition|(
 name|P_SHOULDSTOP
@@ -1419,6 +1400,15 @@ name|ke_tdspare
 operator|=
 name|td
 expr_stmt|;
+block|}
+else|else
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 name|cpu_throw
 argument_list|()
 expr_stmt|;
@@ -1427,7 +1417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Link a thread to a process.  *  * Note that we do not link to the proc's ucred here.  * The thread is linked as if running but no KSE assigned.  */
+comment|/*  * Link a thread to a process.  * set up anything that needs to be initialized for it to  * be used by the process.  *  * Note that we do not link to the proc's ucred here.  * The thread is linked as if running but no KSE assigned.  */
 end_comment
 
 begin_function
@@ -1479,6 +1469,24 @@ operator|->
 name|td_last_kse
 operator|=
 name|NULL
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_contested
+argument_list|)
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_slpcallout
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -1546,12 +1554,6 @@ literal|"OIKS"
 argument_list|)
 expr_stmt|;
 block|}
-name|td
-operator|->
-name|td_critnest
-operator|=
-literal|0
-expr_stmt|;
 name|td
 operator|->
 name|td_kse
@@ -1658,6 +1660,53 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_startzero
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|RANGEOF
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
+name|td_startzero
+argument_list|,
+name|td_endzero
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_startcopy
+argument_list|,
+operator|&
+name|td2
+operator|->
+name|td_startcopy
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|RANGEOF
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
+name|td_startcopy
+argument_list|,
+name|td_endcopy
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|thread_link
 argument_list|(
 name|td2
@@ -1694,14 +1743,6 @@ operator|=
 name|TDF_UNBOUND
 operator||
 name|TDF_UPCALLING
-expr_stmt|;
-name|td2
-operator|->
-name|td_priority
-operator|=
-name|td
-operator|->
-name|td_priority
 expr_stmt|;
 name|setrunqueue
 argument_list|(
