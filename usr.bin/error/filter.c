@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: filter.c,v 1.2 1997/11/03 07:44:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,12 +115,23 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|lexsort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	Read the file ERRORNAME of the names of functions in lint  *	to ignore complaints about.  */
@@ -510,23 +521,37 @@ begin_function
 name|int
 name|lexsort
 parameter_list|(
-name|cpp1
+name|vcpp1
 parameter_list|,
-name|cpp2
+name|vcpp2
 parameter_list|)
-name|char
+specifier|const
+name|void
 modifier|*
-modifier|*
-name|cpp1
+name|vcpp1
 decl_stmt|,
 decl|*
-modifier|*
-name|cpp2
+name|vcpp2
 decl_stmt|;
 end_function
 
 begin_block
 block|{
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|cpp1
+init|=
+name|vcpp1
+decl_stmt|,
+modifier|*
+decl_stmt|const
+modifier|*
+name|cpp2
+init|=
+name|vcpp2
+decl_stmt|;
 return|return
 operator|(
 name|strcmp
