@@ -190,16 +190,28 @@ modifier|*
 modifier|*
 name|memp
 parameter_list|,
+name|int
+modifier|*
+name|memsz
+parameter_list|,
 name|struct
 name|mem_region
 modifier|*
 modifier|*
 name|availp
+parameter_list|,
+name|int
+modifier|*
+name|availsz
 parameter_list|)
 block|{
 name|int
 name|phandle
-comment|/*, i, j, cnt*/
+decl_stmt|;
+name|int
+name|asz
+decl_stmt|,
+name|msz
 decl_stmt|;
 comment|/* 	 * Get memory. 	 */
 if|if
@@ -216,6 +228,9 @@ operator|==
 operator|-
 literal|1
 operator|||
+operator|(
+name|msz
+operator|=
 name|OF_getprop
 argument_list|(
 name|phandle
@@ -232,9 +247,13 @@ index|]
 operator|*
 name|OFMEM_REGIONS
 argument_list|)
+operator|)
 operator|<=
 literal|0
 operator|||
+operator|(
+name|asz
+operator|=
 name|OF_getprop
 argument_list|(
 name|phandle
@@ -251,6 +270,7 @@ index|]
 operator|*
 name|OFMEM_REGIONS
 argument_list|)
+operator|)
 operator|<=
 literal|0
 condition|)
@@ -265,9 +285,31 @@ operator|=
 name|OFmem
 expr_stmt|;
 operator|*
+name|memsz
+operator|=
+name|msz
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mem_region
+argument_list|)
+expr_stmt|;
+operator|*
 name|availp
 operator|=
 name|OFavail
+expr_stmt|;
+operator|*
+name|availsz
+operator|=
+name|asz
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mem_region
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -353,12 +395,6 @@ asm|__asm __volatile("mtsr 13,%0" :: "r"(ofw_pmap.pm_sr[13]));
 asm|__asm __volatile("mtsr 14,%0" :: "r"(ofw_pmap.pm_sr[14]));
 asm|__asm __volatile("mtsr 15,%0" :: "r"(ofw_pmap.pm_sr[15]));
 block|}
-name|ofmsr
-operator||=
-name|PSL_RI
-operator||
-name|PSL_EE
-expr_stmt|;
 asm|__asm __volatile(	"\t"
 literal|"sync\n\t"
 literal|"mfmsr  %0\n\t"
