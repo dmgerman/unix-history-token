@@ -2230,7 +2230,7 @@ directive|endif
 comment|/* Note: We do not free memory for RISC programs, grab buffer, vbi buffers */
 comment|/* The memory is retained by the bktr_mem module so we can unload and */
 comment|/* then reload the main bktr driver module */
-comment|/* Unregister the /dev/bktrN, tunerN and vbiN devices */
+comment|/* Unregister the /dev/bktrN, tunerN and vbiN devices, 	 * the aliases for unit 0 are automatically destroyed */
 name|destroy_dev
 argument_list|(
 name|bktr
@@ -2252,45 +2252,6 @@ operator|->
 name|bktrdev
 argument_list|)
 expr_stmt|;
-comment|/* If this is unit 0, then destroy the alias entries too */
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|500000
-operator|)
-if|if
-condition|(
-name|unit
-operator|==
-literal|0
-condition|)
-block|{
-name|destroy_dev
-argument_list|(
-name|bktr
-operator|->
-name|vbidev_alias
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|bktr
-operator|->
-name|tunerdev_alias
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|bktr
-operator|->
-name|bktrdev_alias
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Deallocate resources. 	 */
 name|bus_teardown_intr
 argument_list|(
