@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.72 (Berkeley) %G%"
+literal|"@(#)main.c	8.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1539,12 +1539,17 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
+block|{
+name|res_init
+argument_list|()
+expr_stmt|;
 name|_res
 operator|.
 name|options
 operator||=
 name|RES_DEBUG
 expr_stmt|;
+block|}
 end_if
 
 begin_endif
