@@ -1217,6 +1217,10 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|level
@@ -1309,7 +1313,43 @@ break|break;
 case|case
 name|TCP_MAXSEG
 case|:
-comment|/* not yet */
+if|if
+condition|(
+name|m
+operator|&&
+operator|(
+name|i
+operator|=
+operator|*
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|int
+operator|*
+argument_list|)
+operator|)
+operator|>
+literal|0
+operator|&&
+name|i
+operator|<=
+name|tp
+operator|->
+name|t_maxseg
+condition|)
+name|tp
+operator|->
+name|t_maxseg
+operator|=
+name|i
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=
@@ -1423,7 +1463,7 @@ name|tcp_sendspace
 init|=
 literal|1024
 operator|*
-literal|4
+literal|8
 decl_stmt|;
 end_decl_stmt
 
@@ -1433,7 +1473,7 @@ name|tcp_recvspace
 init|=
 literal|1024
 operator|*
-literal|4
+literal|8
 decl_stmt|;
 end_decl_stmt
 
