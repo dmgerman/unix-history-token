@@ -1415,9 +1415,7 @@ name|nbp
 operator|->
 name|b_bufsize
 operator|=
-name|bp
-operator|->
-name|b_bufsize
+name|sz
 expr_stmt|;
 name|nbp
 operator|->
