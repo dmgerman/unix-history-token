@@ -32,7 +32,7 @@ directive|define
 name|FBSD_TARGET_CPU_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do						\     {						\       builtin_define ("__LP64__");		\     }						\   while (0)
+value|do						\     {						\       if (TARGET_64BIT)				\ 	{					\ 	  builtin_define ("__LP64__");		\ 	}					\     }						\   while (0)
 end_define
 
 begin_comment
