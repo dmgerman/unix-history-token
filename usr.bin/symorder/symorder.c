@@ -188,6 +188,8 @@ decl_stmt|,
 name|symfound
 decl_stmt|,
 name|small
+decl_stmt|,
+name|missing
 decl_stmt|;
 end_decl_stmt
 
@@ -278,7 +280,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"t"
+literal|"tm"
 argument_list|)
 operator|)
 operator|!=
@@ -297,6 +299,13 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'m'
+case|:
+name|missing
+operator|=
+literal|1
+expr_stmt|;
 case|case
 literal|'?'
 case|:
@@ -1161,6 +1170,11 @@ operator|.
 name|n_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|missing
+condition|)
 name|exit
 argument_list|(
 name|NOTFOUNDEXIT
