@@ -4317,6 +4317,14 @@ argument_list|,
 name|dq_freelist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dq
+operator|->
+name|dq_ump
+operator|!=
+name|NULL
+condition|)
 name|LIST_REMOVE
 argument_list|(
 name|dq
