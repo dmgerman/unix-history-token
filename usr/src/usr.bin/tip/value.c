@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)value.c	5.4 (Berkeley) %G%"
+literal|"@(#)value.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,6 +270,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function_decl
+specifier|static
+name|int
+name|vaccess
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*VARARGS1*/
 end_comment
@@ -518,6 +526,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_function_decl
+specifier|static
+name|void
+name|vprint
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|vlex
 argument_list|(
@@ -537,6 +553,11 @@ name|value_t
 modifier|*
 name|p
 decl_stmt|;
+specifier|static
+name|void
+name|vtoken
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|equal
@@ -638,7 +659,7 @@ end_block
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vtoken
 parameter_list|(
 name|s
@@ -845,7 +866,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vprint
 parameter_list|(
 name|p
