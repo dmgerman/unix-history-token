@@ -1200,7 +1200,9 @@ begin_decl_stmt
 name|int
 name|ip6_maxfragpackets
 init|=
-literal|200
+name|NMBCLUSTERS
+operator|/
+literal|4
 decl_stmt|;
 end_decl_stmt
 
