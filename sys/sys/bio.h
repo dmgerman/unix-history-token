@@ -237,6 +237,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|BIO_CMD0
+value|0x20
+end_define
+
+begin_comment
+comment|/* Available for local hacks */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BIO_CMD1
 value|0x40
 end_define
