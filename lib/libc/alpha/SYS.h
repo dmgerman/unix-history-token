@@ -13,33 +13,11 @@ directive|include
 file|<machine/asm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NETBSD_SYSCALLS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/netbsd_syscall.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/syscall.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -110,15 +110,6 @@ modifier|*
 name|vfcp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|__NETBSD_SYSCALLS
-name|errno
-operator|=
-name|ENOSYS
-expr_stmt|;
-else|#
-directive|else
 name|struct
 name|xvfsconf
 modifier|*
@@ -283,8 +274,6 @@ name|errno
 operator|=
 name|ENOENT
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 operator|-

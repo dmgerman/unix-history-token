@@ -479,14 +479,9 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-ifndef|#
-directive|ifndef
-name|__NETBSD_SYSCALLS
 operator|||
 name|issetugid
 argument_list|()
-endif|#
-directive|endif
 condition|)
 name|nlspath
 operator|=

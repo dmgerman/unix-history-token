@@ -219,26 +219,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__NETBSD_SYSCALLS
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|HAS_UTRACE
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*      * Make malloc/free/realloc thread-safe in libc for use with      * kernel threads.      */

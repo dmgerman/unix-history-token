@@ -296,13 +296,6 @@ operator|+
 name|ptsize
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__NETBSD_SYSCALLS
-argument_list|)
 if|if
 condition|(
 name|__getcwd
@@ -373,8 +366,6 @@ name|pt
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|bpt
 operator|=
 name|ept
