@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	4.3 %G%"
+literal|"@(#)rcmd.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,13 +260,7 @@ name|sin
 operator|.
 name|sin_port
 operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
 name|rport
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -784,7 +778,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-literal|0
+name|AF_INET
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
