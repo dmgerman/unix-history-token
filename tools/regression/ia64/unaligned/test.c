@@ -408,7 +408,6 @@ directive|endif
 end_endif
 
 begin_struct
-specifier|static
 struct|struct
 block|{
 name|DATA_TYPE
@@ -431,11 +430,7 @@ name|data
 struct|;
 end_struct
 
-begin_function
-name|int
-name|main
-parameter_list|()
-block|{
+begin_decl_stmt
 name|DATA_TYPE
 modifier|*
 name|aligned
@@ -445,6 +440,9 @@ name|data
 operator|.
 name|aligned
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DATA_TYPE
 modifier|*
 name|misaligned
@@ -457,11 +455,21 @@ name|data
 operator|.
 name|misaligned
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DATA_TYPE
 name|value
 init|=
 name|DATA_VALUE
 decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|main
+parameter_list|()
+block|{
 comment|/* Set PSR.ac. */
 asm|asm
 specifier|volatile
