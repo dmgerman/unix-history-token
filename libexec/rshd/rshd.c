@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rshd.c,v 1.9.2.7 1998/07/19 06:53:02 jkh Exp $"
+literal|"$Id: rshd.c,v 1.9.2.8 1998/07/19 11:02:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1468,15 +1468,14 @@ name|IPPORT_RESERVED
 operator|-
 literal|1
 decl_stmt|;
-name|int
 name|s
-init|=
+operator|=
 name|rresvport
 argument_list|(
 operator|&
 name|lport
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|s
