@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prvar.c 4.1 %G%"
+literal|"@(#)prvar.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,13 +98,17 @@ decl_stmt|,
 modifier|*
 name|fmt
 decl_stmt|,
-name|class
-decl_stmt|,
 modifier|*
 name|prnamep
 decl_stmt|,
 modifier|*
 name|comblk
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|class
 decl_stmt|;
 end_decl_stmt
 
