@@ -106,6 +106,13 @@ name|szsigcode
 value|(*(curthread->td_proc->p_sysent->sv_szsigcode))
 end_define
 
+begin_define
+define|#
+directive|define
+name|psstrings
+value|(curthread->td_proc->p_sysent->sv_psstrings)
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -118,7 +125,7 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
-name|PS_STRINGS
+name|psstrings
 operator|-
 name|szsigcode
 operator|-
@@ -176,7 +183,7 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
-name|PS_STRINGS
+name|psstrings
 operator|-
 name|szsigcode
 argument_list|)
