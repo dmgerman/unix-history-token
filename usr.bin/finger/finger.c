@@ -1084,6 +1084,7 @@ operator|*
 name|p
 condition|;
 control|)
+block|{
 name|netfinger
 argument_list|(
 operator|*
@@ -1091,6 +1092,19 @@ name|p
 operator|++
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|||
+name|entries
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|entries
