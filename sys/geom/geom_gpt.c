@@ -724,6 +724,7 @@ argument_list|)
 argument_list|)
 condition|)
 continue|continue;
+comment|/* XXX: This memory leaks */
 name|gs
 operator|->
 name|part
@@ -897,7 +898,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_std_spoiled
+name|g_slice_spoiled
 argument_list|(
 name|cp
 argument_list|)
