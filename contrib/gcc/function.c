@@ -5442,7 +5442,7 @@ operator|==
 name|context
 condition|)
 break|break;
-comment|/* If this is a variable-size object with a pseudo to address it,      put that pseudo into the stack, if the var is nonlocal.  */
+comment|/* If this is a variable-sized object or a structure passed by invisible      reference, with a pseudo to address it, put that pseudo into the stack      if the var is non-local.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -5508,12 +5508,28 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If this variable lives in the current function and we don't need to put it      in the stack for the sake of setjmp or the non-locality, try to keep it in      a register until we know we actually need the address.  */
 name|can_use_addressof
 operator|=
 operator|(
 name|function
 operator|==
 literal|0
+operator|&&
+operator|!
+operator|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|!=
+name|SAVE_EXPR
+operator|&&
+name|DECL_NONLOCAL
+argument_list|(
+name|decl
+argument_list|)
+operator|)
 operator|&&
 name|optimize
 operator|>
@@ -5587,7 +5603,6 @@ operator|==
 name|REG
 condition|)
 block|{
-comment|/* If this variable lives in the current function and we don't need 	 to put things in the stack for the sake of setjmp, try to keep it 	 in a register until we know we actually need the address.  */
 if|if
 condition|(
 name|can_use_addressof
