@@ -6935,6 +6935,14 @@ operator|=
 literal|"MagicMedia 256AV"
 expr_stmt|;
 break|break;
+case|case
+literal|0x0006
+case|:
+name|chip
+operator|=
+literal|"MagicMedia 256ZX"
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
