@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"deck.h"
 end_include
 
@@ -134,6 +140,22 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|f
+operator|=
+name|fopen
+argument_list|(
+name|_PATH_LOG
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
+comment|/* revoke */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -458,13 +480,8 @@ do|;
 if|if
 condition|(
 name|f
-operator|=
-name|fopen
-argument_list|(
-name|_PATH_LOG
-argument_list|,
-literal|"a"
-argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|(
@@ -779,12 +796,8 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 name|CARDS
 expr_stmt|;
@@ -794,12 +807,8 @@ block|{
 comment|/* comp cuts deck */
 name|j
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 name|CARDS
 expr_stmt|;
@@ -1593,12 +1602,8 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 operator|(
 name|CARDS
@@ -1664,12 +1669,8 @@ else|else
 block|{
 name|i
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 operator|(
 name|CARDS

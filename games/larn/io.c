@@ -2846,7 +2846,9 @@ literal|26
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 case|case
 literal|0
@@ -2882,7 +2884,9 @@ literal|12
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -3031,7 +3035,9 @@ literal|50
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -3072,7 +3078,9 @@ literal|57
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -3113,7 +3121,9 @@ literal|56
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -4081,7 +4091,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|int
-name|index
+name|pindex
 init|=
 literal|0
 decl_stmt|;
@@ -4103,7 +4113,7 @@ decl_stmt|;
 block|{
 name|outbuf
 index|[
-name|index
+name|pindex
 operator|++
 index|]
 operator|=
@@ -4111,7 +4121,7 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|pindex
 operator|>=
 name|BUFBIG
 condition|)
@@ -4134,7 +4144,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|index
+name|pindex
 condition|)
 name|write
 argument_list|(
@@ -4142,10 +4152,10 @@ name|lfd
 argument_list|,
 name|outbuf
 argument_list|,
-name|index
+name|pindex
 argument_list|)
 expr_stmt|;
-name|index
+name|pindex
 operator|=
 literal|0
 expr_stmt|;

@@ -304,6 +304,44 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|FILE
+modifier|*
+name|score_fp
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|open_score_file
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+operator|(
+name|score_fp
+operator|=
+name|fopen
+argument_list|(
+name|_PATH_SCORE
+argument_list|,
+literal|"a"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|perror
+argument_list|(
+name|_PATH_SCORE
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_macro
 name|post
 argument_list|(
@@ -319,10 +357,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 name|struct
 name|timeval
 name|tv
@@ -377,21 +411,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|=
-name|fopen
-argument_list|(
-name|_PATH_SCORE
-argument_list|,
-literal|"a"
-argument_list|)
-condition|)
-block|{
 name|fprintf
 argument_list|(
-name|fp
+name|score_fp
 argument_list|,
 literal|"%s  %8s  %c%20s"
 argument_list|,
@@ -411,7 +433,7 @@ name|wiz
 condition|)
 name|fprintf
 argument_list|(
-name|fp
+name|score_fp
 argument_list|,
 literal|"   wizard\n"
 argument_list|)
@@ -423,7 +445,7 @@ name|tempwiz
 condition|)
 name|fprintf
 argument_list|(
-name|fp
+name|score_fp
 argument_list|,
 literal|"   WIZARD!\n"
 argument_list|)
@@ -431,16 +453,9 @@ expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
-name|fp
+name|score_fp
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|perror
-argument_list|(
-name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 name|sigsetmask

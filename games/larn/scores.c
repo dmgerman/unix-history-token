@@ -2607,7 +2607,9 @@ literal|257
 operator|)
 condition|)
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* for quick exit or saved game */
 if|if
@@ -2737,7 +2739,9 @@ name|lflush
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|chmod
@@ -3087,7 +3091,9 @@ literal|0
 operator|)
 condition|)
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3109,7 +3115,9 @@ name|mailbill
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block

@@ -71,6 +71,13 @@ name|void
 name|die
 parameter_list|()
 function_decl|;
+comment|/* revoke */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|initscr
 argument_list|()
 expr_stmt|;

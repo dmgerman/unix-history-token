@@ -238,20 +238,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|uid_t
-name|uid
-decl_stmt|;
-comment|/*Drop the privilege.*/
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-name|setreuid
+comment|/* revoke privs */
+name|setgid
 argument_list|(
-name|uid
-argument_list|,
-name|uid
+name|getgid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|acnt

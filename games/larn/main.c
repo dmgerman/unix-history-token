@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"header.h"
 end_include
 
@@ -222,6 +228,10 @@ name|passwd
 modifier|*
 name|pwe
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 comment|/*  *	first task is to identify the player  */
 ifndef|#
 directive|ifndef
@@ -311,7 +321,9 @@ literal|39
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -573,7 +585,9 @@ name|lflush
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -582,15 +596,21 @@ endif|VT100
 comment|/*  *	now make scoreboard if it is not there (don't clear)  */
 if|if
 condition|(
-name|access
+name|stat
 argument_list|(
 name|scorefile
 argument_list|,
-literal|0
+operator|&
+name|sb
 argument_list|)
+operator|<
+literal|0
+operator|||
+name|sb
+operator|.
+name|st_size
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 comment|/* not there */
 name|makeboard
@@ -641,7 +661,9 @@ name|showscores
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* show scoreboard   */
 case|case
@@ -652,7 +674,9 @@ name|diedlog
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 case|case
 literal|'i'
@@ -661,7 +685,9 @@ name|showallscores
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* show all scoreboard */
 case|case
@@ -695,7 +721,9 @@ argument_list|()
 expr_stmt|;
 block|}
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 case|case
 literal|'n'
@@ -782,7 +810,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 case|case
 literal|'o'
@@ -815,7 +845,9 @@ index|]
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -913,7 +945,9 @@ literal|22
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#

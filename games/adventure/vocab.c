@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
@@ -305,7 +311,7 @@ index|[
 name|where
 index|]
 operator|=
-name|link
+name|linkx
 index|[
 name|object
 index|]
@@ -321,7 +327,7 @@ index|[
 name|where
 index|]
 init|;
-name|link
+name|linkx
 index|[
 name|temp
 index|]
@@ -330,18 +336,18 @@ name|object
 condition|;
 name|temp
 operator|=
-name|link
+name|linkx
 index|[
 name|temp
 index|]
 control|)
 empty_stmt|;
-name|link
+name|linkx
 index|[
 name|temp
 index|]
 operator|=
-name|link
+name|linkx
 index|[
 name|object
 index|]
@@ -413,7 +419,7 @@ operator|<=
 literal|0
 condition|)
 return|return;
-name|link
+name|linkx
 index|[
 name|object
 index|]

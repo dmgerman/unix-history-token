@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
 end_include
 
@@ -254,6 +260,20 @@ literal|' '
 condition|)
 comment|/* Convert first spaces to tab */
 block|{
+if|if
+condition|(
+name|count
+operator|++
+operator|%
+name|LINE
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%02x,"
@@ -325,7 +345,6 @@ name|LINE
 operator|==
 literal|0
 condition|)
-comment|/* Finished a line? */
 name|printf
 argument_list|(
 literal|"\n\t"

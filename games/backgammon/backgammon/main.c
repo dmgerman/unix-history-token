@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -424,20 +430,11 @@ name|long
 name|t
 decl_stmt|;
 comment|/* time for random num generator */
-name|uid_t
-name|uid
-decl_stmt|;
-comment|/*Drop the privilege.*/
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-name|setreuid
+comment|/* revoke privs */
+name|setgid
 argument_list|(
-name|uid
-argument_list|,
-name|uid
+name|getgid
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* initialization */
@@ -747,7 +744,9 @@ name|noteach
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else

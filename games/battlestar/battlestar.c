@@ -89,6 +89,16 @@ name|char
 modifier|*
 name|next
 decl_stmt|;
+name|open_score_file
+argument_list|()
+expr_stmt|;
+comment|/* revoke privs. */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|initialize
 argument_list|(
 name|argc
@@ -262,7 +272,9 @@ name|start
 goto|;
 default|default:
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}

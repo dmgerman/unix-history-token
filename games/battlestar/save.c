@@ -59,6 +59,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"externs.h"
 end_include
 
@@ -67,11 +73,6 @@ name|void
 name|restore
 parameter_list|()
 block|{
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|home
@@ -612,11 +613,6 @@ name|sbuf
 decl_stmt|;
 name|char
 modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
 name|home
 decl_stmt|;
 name|char
@@ -690,6 +686,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 if|if
@@ -715,11 +713,15 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|sbuf
 operator|.
-name|st_nlink
-operator|>
-literal|1
+name|st_mode
+operator|&
+name|S_IFLNK
+operator|)
+operator|==
+name|S_IFLNK
 condition|)
 block|{
 name|fprintf

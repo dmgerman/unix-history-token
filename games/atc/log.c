@@ -403,7 +403,7 @@ name|O_CREAT
 operator||
 name|O_RDWR
 argument_list|,
-literal|0644
+literal|0664
 argument_list|)
 expr_stmt|;
 if|if

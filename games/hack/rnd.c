@@ -3,6 +3,12 @@ begin_comment
 comment|/* rnd.c - version 1.0.2 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -10,7 +16,7 @@ name|RND
 parameter_list|(
 name|x
 parameter_list|)
-value|((random()>>3) % x)
+value|(random() % x)
 end_define
 
 begin_expr_stmt

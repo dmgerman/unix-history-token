@@ -87,6 +87,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 name|char
 name|keylist
@@ -995,11 +1001,6 @@ name|penalty
 modifier|*
 name|p
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 name|op
 operator|=
 name|opnum

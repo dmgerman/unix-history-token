@@ -115,24 +115,11 @@ end_decl_stmt
 
 begin_macro
 name|init
-argument_list|(
-argument|command
-argument_list|)
+argument_list|()
 end_macro
 
 begin_comment
 comment|/* everything for 1st time run  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|command
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* command we were called with  */
 end_comment
 
 begin_block
