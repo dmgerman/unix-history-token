@@ -2625,6 +2625,9 @@ operator|(
 name|INTR_POLARITY_LOW
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|EISA
 case|:
@@ -2661,6 +2664,8 @@ operator|(
 name|INTR_POLARITY_HIGH
 operator|)
 return|;
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(
@@ -2736,6 +2741,9 @@ operator|(
 name|INTR_TRIGGER_LEVEL
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|PC98
 case|case
 name|EISA
 case|:
@@ -2760,6 +2768,8 @@ name|src_bus_irq
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(
