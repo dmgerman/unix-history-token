@@ -2738,7 +2738,7 @@ goto|goto
 name|drop
 goto|;
 block|}
-comment|/* fit two pointers into the mbuf - assume, that the the data is 	 * pointer aligned. If it doesn't fit into the first mbuf, prepend 	 * another one, but leave the packet header where it is. atm_intr 	 * relies on this. */
+comment|/* fit two pointers into the mbuf - assume, that the the data is 	 * pointer aligned. If it doesn't fit into the first mbuf, prepend 	 * another one. 	 * Don't count the new fields in the packet length (XXX) 	 */
 name|mlen
 operator|=
 name|m
@@ -2770,7 +2770,7 @@ operator|<
 name|pfxlen
 condition|)
 block|{
-name|MGET
+name|MGETHDR
 argument_list|(
 name|m0
 argument_list|,
@@ -2809,6 +2809,13 @@ name|m_next
 operator|=
 name|m
 expr_stmt|;
+name|M_MOVE_PKTHDR
+argument_list|(
+name|m0
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|m0
@@ -2826,11 +2833,11 @@ name|m_data
 operator|-=
 name|pfxlen
 expr_stmt|;
-name|KB_DATASTART
+name|cp
+operator|=
+name|mtod
 argument_list|(
 name|m
-argument_list|,
-name|cp
 argument_list|,
 name|char
 operator|*
