@@ -239,7 +239,7 @@ block|,
 block|{
 literal|"  filesize%-4s     %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
@@ -247,7 +247,7 @@ block|,
 block|{
 literal|"  datasize%-4s     %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
@@ -255,7 +255,7 @@ block|,
 block|{
 literal|"  stacksize%-4s    %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
@@ -263,7 +263,7 @@ block|,
 block|{
 literal|"  coredumpsize%-4s %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
@@ -271,7 +271,7 @@ block|,
 block|{
 literal|"  memoryuse%-4s    %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
@@ -279,7 +279,7 @@ block|,
 block|{
 literal|"  memorylocked%-4s %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
@@ -311,7 +311,7 @@ block|,
 block|{
 literal|"  vmemoryuse%-4s   %8s"
 block|,
-literal|" kb\n"
+literal|" kB\n"
 block|,
 literal|1024
 block|}
