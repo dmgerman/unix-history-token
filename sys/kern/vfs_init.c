@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_init.c	8.3 (Berkeley) 1/4/94  * $Id: vfs_init.c,v 1.25 1997/03/02 11:06:21 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_init.c	8.3 (Berkeley) 1/4/94  * $Id: vfs_init.c,v 1.26 1997/08/02 14:31:44 bde Exp $  */
 end_comment
 
 begin_include
@@ -165,17 +165,6 @@ comment|/* and the operations they perform */
 end_comment
 
 begin_comment
-comment|/*  * This code doesn't work if the defn is **vnodop_defns with cc.  * The problem is because of the compiler sometimes putting in an  * extra level of indirection for arrays.  It's an interesting  * "feature" of C.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vfs_opv_numops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * A miscellaneous routine.  * A generic "default" routine that just returns an error.  */
 end_comment
 
@@ -193,7 +182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vfs_init.c  *  * Allocate and fill in operations vectors.  *  * An undocumented feature of this approach to defining operations is that  * there can be multiple entries in vfs_opv_descs for the same operations  * vector. This allows third parties to extend the set of operations  * supported by another layer in a binary compatibile way. For example,  * assume that NFS needed to be modified to support Ficus. NFS has an entry  * (probably nfs_vnopdeop_decls) declaring all the operations NFS supports by  * default. Ficus could add another entry (ficus_nfs_vnodeop_decl_entensions)  * listing those new operations Ficus adds to NFS, all without modifying the  * NFS code. (Of couse, the OTW NFS protocol still needs to be munged, but  * that is a(whole)nother story.) This is a feature.  */
+comment|/*  * vfs_init.c  *  * Allocate and fill in operations vectors.  *  * An undocumented feature of this approach to defining operations is that  * there can be multiple entries in vfs_opv_descs for the same operations  * vector. This allows third parties to extend the set of operations  * supported by another layer in a binary compatibile way. For example,  * assume that NFS needed to be modified to support Ficus. NFS has an entry  * (probably nfs_vnopdeop_decls) declaring all the operations NFS supports by  * default. Ficus could add another entry (ficus_nfs_vnodeop_decl_entensions)  * listing those new operations Ficus adds to NFS, all without modifying the  * NFS code. (Of couse, the OTW NFS protocol still needs to be munged, but  * that is a(whole)nother story.) This is a feature.  *  * Without an explicit reserve area, however, you must replace vnode_if.c  * and vnode_if.h when you do this, or you will be derefrencing of the  * end of vfs_op_descs[].  This is a flaw in the use of a structure  * pointer array rather than an agregate to define vfs_op_descs.  So  * it's not a very dynamic "feature".  */
 end_comment
 
 begin_function
@@ -520,6 +509,16 @@ literal|"Vnode_interface_init.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DODEBUG
+argument_list|(
+name|printf
+argument_list|(
+literal|"vfs_opv_numops=%d\n"
+argument_list|,
+name|vfs_opv_numops
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set all vnode vectors to a well known value. 	 */
 for|for
 control|(
@@ -547,26 +546,20 @@ operator|)
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Figure out how many ops there are by counting the table, 	 * and assign each its offset. 	 */
+comment|/* 	 * assign each op to its offset 	 * 	 * XXX This should not be needed, but is because the per 	 * XXX FS ops tables are not sorted according to the 	 * XXX vnodeop_desc's offset in vfs_op_descs.  This 	 * XXX is the same reason we have to take the hit for 	 * XXX the static inline function calls instead of using 	 * XXX simple macro references. 	 */
 for|for
 control|(
-name|vfs_opv_numops
-operator|=
-literal|0
-operator|,
 name|i
 operator|=
 literal|0
 init|;
-name|vfs_op_descs
-index|[
 name|i
-index|]
+operator|<
+name|vfs_opv_numops
 condition|;
 name|i
 operator|++
 control|)
-block|{
 name|vfs_op_descs
 index|[
 name|i
@@ -574,21 +567,7 @@ index|]
 operator|->
 name|vdesc_offset
 operator|=
-name|vfs_opv_numops
-expr_stmt|;
-name|vfs_opv_numops
-operator|++
-expr_stmt|;
-block|}
-name|DODEBUG
-argument_list|(
-name|printf
-argument_list|(
-literal|"vfs_opv_numops=%d\n"
-argument_list|,
-name|vfs_opv_numops
-argument_list|)
-argument_list|)
+name|i
 expr_stmt|;
 block|}
 end_function
