@@ -3205,6 +3205,17 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|p
+operator|->
+name|p_ucred
+operator|=
+name|newcred
+expr_stmt|;
+name|crfree
+argument_list|(
+name|oldcred
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
