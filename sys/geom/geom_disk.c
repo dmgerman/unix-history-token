@@ -680,6 +680,9 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|maybe_not
 name|struct
 name|disk
 modifier|*
@@ -735,6 +738,27 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|bp
+operator|->
+name|bio_completed
+operator|=
+name|bp
+operator|->
+name|bio_length
+operator|-
+name|bp
+operator|->
+name|bio_resid
+expr_stmt|;
+name|g_std_done
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
