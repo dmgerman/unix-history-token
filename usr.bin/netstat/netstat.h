@@ -340,7 +340,7 @@ name|mbpr
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -759,7 +759,7 @@ name|unixpr
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

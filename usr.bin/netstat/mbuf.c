@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.9 1997/11/10 08:03:36 ache Exp $"
+literal|"$Id: mbuf.c,v 1.10 1998/04/24 04:30:27 dg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,12 +294,7 @@ end_comment
 begin_function
 name|void
 name|mbpr
-parameter_list|(
-name|mbaddr
-parameter_list|)
-name|u_long
-name|mbaddr
-decl_stmt|;
+parameter_list|()
 block|{
 specifier|register
 name|int
