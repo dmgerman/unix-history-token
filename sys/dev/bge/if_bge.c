@@ -929,6 +929,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int8_t
@@ -981,6 +987,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1519,6 +1530,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_function
 specifier|static
 name|u_int8_t
@@ -1997,6 +2014,11 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Read a byte of data stored in the EEPROM at address 'addr.' The  * BCM570x supports both the traditional bitbang interface and an  * auto access interface for reading the EEPROM. We use the auto  * access method.  */
