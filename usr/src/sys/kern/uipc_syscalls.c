@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.17	82/04/10	*/
+comment|/*	uipc_syscalls.c	4.18	82/06/12	*/
 end_comment
 
 begin_include
@@ -791,6 +791,24 @@ name|so_error
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_CANTRCVMORE
+condition|)
+block|{
+name|so
+operator|->
+name|so_error
+operator|=
+name|ECONNABORTED
+expr_stmt|;
+break|break;
+block|}
 name|sleep
 argument_list|(
 operator|(
@@ -806,6 +824,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|so
