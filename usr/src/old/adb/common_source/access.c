@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)access.c	5.2 (Berkeley) %G%"
+literal|"@(#)access.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,15 +101,15 @@ name|mm
 decl_stmt|;
 specifier|static
 name|char
+modifier|*
 name|derr
-index|[]
 init|=
 literal|"data address not found"
 decl_stmt|;
 specifier|static
 name|char
+modifier|*
 name|terr
-index|[]
 init|=
 literal|"text address not found"
 decl_stmt|;
