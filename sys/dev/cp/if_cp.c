@@ -1131,7 +1131,7 @@ literal|"Cronyx-Tau-PCI serial adapter"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 return|return

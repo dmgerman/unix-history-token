@@ -267,7 +267,7 @@ name|PCI_DEVICE_920_2
 case|:
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

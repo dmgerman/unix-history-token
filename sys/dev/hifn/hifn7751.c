@@ -1124,7 +1124,7 @@ name|PCI_PRODUCT_INVERTEX_AEON
 condition|)
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 if|if
@@ -1175,7 +1175,7 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 if|if
@@ -1196,7 +1196,7 @@ name|PCI_PRODUCT_NETSEC_7751
 condition|)
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 return|return

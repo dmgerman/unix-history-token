@@ -1507,7 +1507,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*********************************************************************  *  Device identification routine  *  *  em_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device identification routine  *  *  em_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -1686,7 +1686,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

@@ -325,7 +325,7 @@ literal|"National Semiconductor CS4210"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -347,7 +347,7 @@ literal|"NEC uPD72861"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -369,7 +369,7 @@ literal|"NEC uPD72871/2"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -391,7 +391,7 @@ literal|"NEC uPD72870"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -413,7 +413,7 @@ literal|"NEC uPD72873"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -435,7 +435,7 @@ literal|"NEC uPD72874"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -458,7 +458,7 @@ literal|"SiS 7007"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -480,7 +480,7 @@ literal|"Texas Instruments TSB12LV22"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -502,7 +502,7 @@ literal|"Texas Instruments TSB12LV23"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -524,7 +524,7 @@ literal|"Texas Instruments TSB12LV26"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -546,7 +546,7 @@ literal|"Texas Instruments TSB43AA22"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -568,7 +568,7 @@ literal|"Texas Instruments TSB43AB22/A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -590,7 +590,7 @@ literal|"Texas Instruments TSB43AB21/A/AI/A-EP"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -612,7 +612,7 @@ literal|"Texas Instruments TSB43AB23"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -634,7 +634,7 @@ literal|"Texas Instruments TSB82AA2"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -656,7 +656,7 @@ literal|"Texas Instruments PCI4450"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -678,7 +678,7 @@ literal|"Texas Instruments PCI4410A"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -700,7 +700,7 @@ literal|"Texas Instruments PCI4451"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -722,7 +722,7 @@ literal|"Sony i.LINK (CXD1947)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -744,7 +744,7 @@ literal|"Sony i.LINK (CXD3222)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -766,7 +766,7 @@ literal|"VIA Fire II (VT6306)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -788,7 +788,7 @@ literal|"Ricoh R5C551"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -810,7 +810,7 @@ literal|"Ricoh R5C552"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -832,7 +832,7 @@ literal|"Apple Pangea"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -854,7 +854,7 @@ literal|"Apple UniNorth"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -876,7 +876,7 @@ literal|"Lucent FW322/323"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -898,7 +898,7 @@ literal|"Intel 82372FB"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 if|if
@@ -920,7 +920,7 @@ literal|"Adaptec AHA-894x/AIC-5800"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 endif|#
@@ -978,7 +978,7 @@ literal|"1394 Open Host Controller Interface"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|BUS_PROBE_DEFAULT
 return|;
 block|}
 return|return
