@@ -513,7 +513,11 @@ name|tick
 operator|+=
 name|ticks_per_intr
 expr_stmt|;
-asm|__asm __volatile ("mtdec %0" :: "r"(tick));
+name|mtdec
+argument_list|(
+name|tick
+argument_list|)
+expr_stmt|;
 comment|/* 	 * lasttb is used during microtime. Set it to the virtual 	 * start of this tick interval. 	 */
 name|lasttb
 operator|=
