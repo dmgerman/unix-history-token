@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.h,v 1.5 1999/05/17 15:58:45 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.h,v 1.6 1999/05/20 09:12:04 sos Exp $  */
 end_comment
 
 begin_comment
@@ -556,6 +556,140 @@ comment|/* read data */
 end_comment
 
 begin_comment
+comment|/*  ATAPI tape commands not in std ATAPI command set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_REWIND
+value|0x01
+end_define
+
+begin_comment
+comment|/* tape rewind */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_READ_CMD
+value|0x08
+end_define
+
+begin_comment
+comment|/* tape read data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_WRITE_CMD
+value|0x0a
+end_define
+
+begin_comment
+comment|/* tape write data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_WEOF
+value|0x10
+end_define
+
+begin_comment
+comment|/* tape write EOF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WEOF_WRITE_MASK
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_SPACE_CMD
+value|0x11
+end_define
+
+begin_comment
+comment|/* tape space command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SP_FM
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SP_EOD
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_ERASE
+value|0x19
+end_define
+
+begin_comment
+comment|/* tape erase */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_MODE_SENSE
+value|0x1a
+end_define
+
+begin_comment
+comment|/* tape mode sense */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_TAPE_LOAD_UNLOAD
+value|0x1b
+end_define
+
+begin_comment
+comment|/* tape load/unload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LU_LOAD_MASK
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|LU_RETENSION_MASK
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|LU_EOT_MASK
+value|0x04
+end_define
+
+begin_comment
 comment|/* ATAPI device parameter information */
 end_comment
 
@@ -915,7 +1049,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|reqsense
+name|atapi_reqsense
 block|{
 name|u_int8_t
 name|error_code
@@ -928,11 +1062,11 @@ name|valid
 range|:
 literal|1
 decl_stmt|;
-comment|/* follows QIC-157C */
+comment|/* follows ATAPI spec */
 name|u_int8_t
-name|reserved1
+name|segment
 decl_stmt|;
-comment|/* Segment number - reserved */
+comment|/* Segment number */
 name|u_int8_t
 name|sense_key
 range|:
@@ -963,8 +1097,9 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* filemark */
-name|u_int8_t
-name|info
+comment|/* cmd information */
+name|u_int32_t
+name|cmd_info
 name|__attribute__
 argument_list|(
 operator|(
@@ -972,15 +1107,20 @@ name|packed
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* cmd specific info */
 name|u_int8_t
-name|asl
+name|sense_length
 decl_stmt|;
 comment|/* additional sense length (n-7) */
-name|u_int8_t
-name|command_specific
-decl_stmt|;
 comment|/* additional cmd specific info */
+name|u_int32_t
+name|cmd_specific_info
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+decl_stmt|;
 name|u_int8_t
 name|asc
 decl_stmt|;
@@ -1012,14 +1152,7 @@ comment|/* sense key specific */
 name|u_int8_t
 name|sk_specific3
 decl_stmt|;
-comment|/* sense key Specific */
-name|u_int8_t
-name|pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* padding */
+comment|/* sense key specific */
 block|}
 struct|;
 end_struct
@@ -1044,6 +1177,10 @@ name|int32_t
 name|unit
 decl_stmt|;
 comment|/* ATA_MASTER or ATA_SLAVE */
+name|int8_t
+name|last_cmd
+decl_stmt|;
+comment|/* last cmd executed */
 name|u_int32_t
 name|flags
 decl_stmt|;
@@ -1184,6 +1321,8 @@ name|int32_t
 parameter_list|,
 name|int32_t
 parameter_list|,
+name|int32_t
+parameter_list|,
 name|atapi_callback_t
 parameter_list|,
 name|void
@@ -1197,7 +1336,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int32_t
 name|atapi_error
 parameter_list|(
 name|struct

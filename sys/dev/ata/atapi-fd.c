@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-fd.c,v 1.9 1999/05/30 16:51:15 phk Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-fd.c,v 1.10 1999/05/31 11:24:29 phk Exp $  */
 end_comment
 
 begin_include
@@ -186,20 +186,6 @@ name|afdstrategy
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|BDEV_MAJOR
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|118
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -247,7 +233,7 @@ comment|/* parms */
 name|noparms
 block|,
 comment|/* maj */
-name|CDEV_MAJOR
+literal|118
 block|,
 comment|/* dump */
 name|nodump
@@ -262,7 +248,7 @@ comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */
-name|BDEV_MAJOR
+literal|32
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -292,7 +278,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* The device is opened */
+comment|/* the device is opened */
 end_comment
 
 begin_define
@@ -303,7 +289,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* The media have changed */
+comment|/* the media have changed */
 end_comment
 
 begin_decl_stmt
@@ -319,7 +305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Drive info by unit number */
+comment|/* drive info by unit number */
 end_comment
 
 begin_decl_stmt
@@ -332,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of config'd drives */
+comment|/* number of config'd drives */
 end_comment
 
 begin_function_decl
@@ -647,7 +633,7 @@ name|DEVSTAT_TYPE_DIRECT
 operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
-literal|0x178
+literal|0x174
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -813,7 +799,7 @@ name|buffer
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Get drive capabilities, some drives needs this repeated */
+comment|/* get drive capabilities, some drives needs this repeated */
 for|for
 control|(
 name|count
@@ -850,6 +836,8 @@ name|buffer
 argument_list|)
 argument_list|,
 name|A_READ
+argument_list|,
+literal|30
 argument_list|,
 name|NULL
 argument_list|,
@@ -1415,7 +1403,7 @@ name|cap
 operator|.
 name|cylinders
 expr_stmt|;
-comment|/* Initialize slice tables. */
+comment|/* initialize slice tables. */
 return|return
 name|dsopen
 argument_list|(
@@ -1699,9 +1687,6 @@ return|return
 name|ENOTTY
 return|;
 block|}
-return|return
-name|error
-return|;
 block|}
 end_function
 
@@ -1884,7 +1869,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* Should reject all queued entries if media have changed. */
+comment|/* should reject all queued entries if media have changed. */
 if|if
 condition|(
 name|fdp
@@ -2107,6 +2092,8 @@ name|A_READ
 else|:
 literal|0
 argument_list|,
+literal|30
+argument_list|,
 name|afd_partial_done
 argument_list|,
 name|fdp
@@ -2219,6 +2206,8 @@ name|A_READ
 else|:
 literal|0
 argument_list|,
+literal|30
+argument_list|,
 name|afd_done
 argument_list|,
 name|fdp
@@ -2260,7 +2249,16 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|EIO
+name|atapi_error
+argument_list|(
+name|request
+operator|->
+name|device
+argument_list|,
+name|request
+operator|->
+name|result
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -2324,6 +2322,10 @@ name|B_ERROR
 operator|)
 condition|)
 block|{
+name|bp
+operator|->
+name|b_error
+operator|=
 name|atapi_error
 argument_list|(
 name|request
@@ -2334,12 +2336,6 @@ name|request
 operator|->
 name|result
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EIO
 expr_stmt|;
 name|bp
 operator|->
@@ -2469,6 +2465,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|30
+argument_list|,
 name|NULL
 argument_list|,
 name|NULL
@@ -2548,6 +2546,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
+literal|30
+argument_list|,
 name|NULL
 argument_list|,
 name|NULL
@@ -2586,29 +2586,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|error
-operator|&
-name|ATAPI_SK_MASK
-operator|)
-operator|&&
-operator|(
-operator|(
-name|error
-operator|&
-name|ATAPI_SK_MASK
-operator|)
 operator|==
-name|ATAPI_SK_NOT_READY
+name|EBUSY
 operator|||
-operator|(
 name|error
-operator|&
-name|ATAPI_SK_MASK
-operator|)
 operator|==
-name|ATAPI_SK_UNIT_ATTENTION
-operator|)
+name|EAGAIN
 condition|)
 block|{
 if|if
@@ -2635,35 +2619,22 @@ condition|)
 return|return
 name|error
 return|;
+return|return
 name|afd_lock_device
 argument_list|(
 name|fdp
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 if|if
 condition|(
 name|error
 condition|)
-block|{
-name|atapi_error
-argument_list|(
-name|fdp
-operator|->
-name|atp
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
-name|EIO
+name|error
 return|;
-block|}
 if|if
 condition|(
 name|close
@@ -2701,13 +2672,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|afd_lock_device
 argument_list|(
 name|fdp
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+name|error
+return|;
 name|fdp
 operator|->
 name|flags
@@ -2747,6 +2727,21 @@ operator|!
 name|afd_devsw_installed
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|afd_cdevsw
+operator|.
+name|d_maxio
+condition|)
+name|afd_cdevsw
+operator|.
+name|d_maxio
+operator|=
+literal|254
+operator|*
+name|DEV_BSIZE
+expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
