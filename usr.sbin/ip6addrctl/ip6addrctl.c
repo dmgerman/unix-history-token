@@ -415,7 +415,7 @@ name|strcasecmp
 argument_list|(
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 argument_list|,
 literal|"delete"
