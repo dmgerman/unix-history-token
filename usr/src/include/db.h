@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DB_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DB_H_
+end_define
 
 begin_comment
 comment|/* flags for DB.put() call */
@@ -46,6 +58,10 @@ directive|define
 name|R_PUT
 value|4
 end_define
+
+begin_comment
+comment|/* BTREE, HASH, RECNO */
+end_comment
 
 begin_comment
 comment|/* flags for DB.seq() call */
@@ -193,6 +209,13 @@ name|BTREEMAGIC
 value|0x053162
 end_define
 
+begin_define
+define|#
+directive|define
+name|BTREEVERSION
+value|2
+end_define
+
 begin_comment
 comment|/* structure used to pass parameters to the btree routines */
 end_comment
@@ -225,6 +248,10 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* compare function */
+name|int
+name|lorder
+decl_stmt|;
+comment|/* byte order */
 block|}
 name|BTREEINFO
 typedef|;
@@ -235,6 +262,13 @@ define|#
 directive|define
 name|HASHMAGIC
 value|0x061561
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASHVERSION
+value|1
 end_define
 
 begin_comment
@@ -269,6 +303,10 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* hash function */
+name|int
+name|lorder
+decl_stmt|;
+comment|/* byte order */
 block|}
 name|HASHINFO
 typedef|;
@@ -347,119 +385,158 @@ name|RECNOKEY
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-operator|||
-name|c_plusplus
-end_if
+begin_comment
+comment|/* Little endian<--> big endian long swap macros. */
+end_comment
 
-begin_function_decl
+begin_define
+define|#
+directive|define
+name|BLSWAP
+parameter_list|(
+name|a
+parameter_list|)
+value|{ \ 	u_long _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[3]; \ 	((char *)&a)[1] = ((char *)&_tmp)[2]; \ 	((char *)&a)[2] = ((char *)&_tmp)[1]; \ 	((char *)&a)[3] = ((char *)&_tmp)[0]; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLSWAP_COPY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|{ \ 	((char *)&(b))[0] = ((char *)&(a))[3]; \ 	((char *)&(b))[1] = ((char *)&(a))[2]; \ 	((char *)&(b))[2] = ((char *)&(a))[1]; \ 	((char *)&(b))[3] = ((char *)&(a))[0]; \ }
+end_define
+
+begin_comment
+comment|/* Little endian<--> big endian short swap macros. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSSWAP
+parameter_list|(
+name|a
+parameter_list|)
+value|{ \ 	u_short _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[1]; \ 	((char *)&a)[1] = ((char *)&_tmp)[0]; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSSWAP_COPY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|{ \ 	((char *)&(b))[0] = ((char *)&(a))[1]; \ 	((char *)&(b))[1] = ((char *)&(a))[0]; \ }
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
 name|DB
 modifier|*
 name|btree_open
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+operator|,
 name|int
 name|flags
-parameter_list|,
+operator|,
 name|int
 name|mode
-parameter_list|,
+operator|,
 specifier|const
 name|BTREEINFO
-modifier|*
+operator|*
 name|private
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|DB
 modifier|*
 name|hash_open
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+operator|,
 name|int
 name|flags
-parameter_list|,
+operator|,
 name|int
 name|mode
-parameter_list|,
+operator|,
 specifier|const
 name|HASHINFO
-modifier|*
+operator|*
 name|private
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|DB
 modifier|*
 name|recno_open
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+operator|,
 name|int
 name|flags
-parameter_list|,
+operator|,
 name|int
 name|mode
-parameter_list|,
+operator|,
 specifier|const
 name|RECNOINFO
-modifier|*
+operator|*
 name|private
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|DB
-modifier|*
-name|btree_open
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|DB
-modifier|*
-name|hash_open
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|DB
-modifier|*
-name|recno_open
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_DB_H_ */
+end_comment
 
 end_unit
 
