@@ -376,6 +376,7 @@ argument_list|)
 expr_stmt|;
 name|atomic_add_int
 argument_list|(
+operator|&
 name|zone_kmem_kvaspace
 argument_list|,
 name|totsize
@@ -1089,6 +1090,7 @@ operator|++
 expr_stmt|;
 name|atomic_add_int
 argument_list|(
+operator|&
 name|zone_kmem_pages
 argument_list|,
 literal|1
@@ -1180,6 +1182,7 @@ name|NULL
 condition|)
 name|atomic_add_int
 argument_list|(
+operator|&
 name|zone_kmem_pages
 argument_list|,
 name|z
@@ -1231,6 +1234,7 @@ name|NULL
 condition|)
 name|atomic_add_int
 argument_list|(
+operator|&
 name|zone_kern_pages
 argument_list|,
 name|z
