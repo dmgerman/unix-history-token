@@ -3275,11 +3275,16 @@ operator|->
 name|k_kseg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_THREAD_KERN
 name|dump_queues
 argument_list|(
 name|curkse
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Check if there are no threads ready to run: */
 while|while
 condition|(
