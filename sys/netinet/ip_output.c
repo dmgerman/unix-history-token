@@ -503,7 +503,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  */
+comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * In the IP forwarding case, the packet will arrive with options already  * inserted, so must have a NULL opt pointer.  */
 end_comment
 
 begin_function
