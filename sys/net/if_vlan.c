@@ -1479,7 +1479,7 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_ierrors
+name|if_oerrors
 operator|++
 expr_stmt|;
 continue|continue;
@@ -1527,7 +1527,7 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_ierrors
+name|if_oerrors
 operator|++
 expr_stmt|;
 continue|continue;
@@ -1722,16 +1722,10 @@ name|tag
 operator|=
 name|EVL_VLANOFTAG
 argument_list|(
-operator|*
-operator|(
-name|u_int
-operator|*
-operator|)
-operator|(
+name|VLAN_TAG_VALUE
+argument_list|(
 name|mtag
-operator|+
-literal|1
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|m_tag_delete
