@@ -1281,23 +1281,21 @@ name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
 name|u_int32_t
-label|:
-literal|13
-operator|,
 name|spd
-operator|:
-literal|3
-operator|,
-operator|:
+range|:
+literal|16
+decl_stmt|,
+comment|/* XXX include reserved field */
+range|:
 literal|8
-operator|,
+decl_stmt|,
 name|tcode
-operator|:
+range|:
 literal|4
-operator|,
-operator|:
+decl_stmt|,
+range|:
 literal|4
-expr_stmt|;
+decl_stmt|;
 else|#
 directive|else
 name|u_int32_t
@@ -1313,11 +1311,9 @@ literal|8
 operator|,
 name|spd
 operator|:
-literal|3
-operator|,
-operator|:
-literal|13
+literal|16
 expr_stmt|;
+comment|/* XXX include reserved fields */
 endif|#
 directive|endif
 block|}
