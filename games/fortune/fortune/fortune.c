@@ -135,6 +135,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"strfile.h"
 end_include
 
@@ -446,12 +452,6 @@ begin_comment
 comment|/* scatter un-allocted prob equally */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_REGEX
-end_ifndef
-
 begin_decl_stmt
 name|bool
 name|Match
@@ -463,11 +463,6 @@ end_decl_stmt
 begin_comment
 comment|/* dump fortunes matching a pattern */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -900,12 +895,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_REGEX
-end_ifndef
-
 begin_function_decl
 name|char
 modifier|*
@@ -946,116 +935,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_REGEX
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REGCMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RE_COMP
-parameter_list|(
-name|p
-parameter_list|)
-value|(Re_pat = regcmp(p, NULL))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BAD_COMP
-parameter_list|(
-name|f
-parameter_list|)
-value|((f) == NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RE_EXEC
-parameter_list|(
-name|p
-parameter_list|)
-value|regex(Re_pat, (p))
-end_define
-
 begin_decl_stmt
-name|char
-modifier|*
+specifier|static
+name|regex_t
 name|Re_pat
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|regcmp
-argument_list|()
-decl_stmt|,
-modifier|*
-name|regex
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RE_COMP
-parameter_list|(
-name|p
-parameter_list|)
-value|(p = re_comp(p))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BAD_COMP
-parameter_list|(
-name|f
-parameter_list|)
-value|((f) != NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RE_EXEC
-parameter_list|(
-name|p
-parameter_list|)
-value|re_exec(p)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -1100,9 +985,6 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_REGEX
 if|if
 condition|(
 name|Match
@@ -1115,8 +997,6 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|init_prob
 argument_list|()
 expr_stmt|;
@@ -1671,16 +1551,10 @@ block|{
 name|int
 name|ignore_case
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_REGEX
 name|char
 modifier|*
 name|pat
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* NO_REGEX */
 specifier|extern
 name|char
 modifier|*
@@ -1697,16 +1571,10 @@ name|ignore_case
 operator|=
 name|FALSE
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_REGEX
 name|pat
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NO_REGEX */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1833,35 +1701,6 @@ name|Wait
 operator|++
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|NO_REGEX
-case|case
-literal|'i'
-case|:
-comment|/* case-insensitive match */
-case|case
-literal|'m'
-case|:
-comment|/* dump out the fortunes */
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fortune: can't match fortunes on this system (Sorry)\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* NO_REGEX */
 case|case
 literal|'m'
 case|:
@@ -1882,9 +1721,6 @@ name|ignore_case
 operator|++
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* NO_REGEX */
 case|case
 literal|'?'
 case|:
@@ -1947,9 +1783,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-ifndef|#
-directive|ifndef
-name|NO_REGEX
 if|if
 condition|(
 name|pat
@@ -1957,6 +1790,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|ignore_case
@@ -1968,49 +1804,39 @@ argument_list|(
 name|pat
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|regcomp
+argument_list|(
+operator|&
+name|Re_pat
+argument_list|,
+name|pat
+argument_list|,
+name|REG_BASIC
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|BAD_COMP
-argument_list|(
-name|RE_COMP
-argument_list|(
-name|pat
-argument_list|)
-argument_list|)
+name|error
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|REGCMP
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n"
+literal|"regcomp(%s) fails\n"
 argument_list|,
 name|pat
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* REGCMP */
-name|fprintf
+name|exit
 argument_list|(
-name|stderr
-argument_list|,
-literal|"bad pattern: %s\n"
-argument_list|,
-name|pat
+literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* REGCMP */
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* NO_REGEX */
 block|}
 end_function
 
@@ -6198,12 +6024,6 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_REGEX
-end_ifndef
-
 begin_comment
 comment|/*  * conv_pat:  *	Convert the pattern to an ignore-case equivalent.  */
 end_comment
@@ -6851,10 +6671,21 @@ block|}
 block|}
 if|if
 condition|(
-name|RE_EXEC
+name|regexec
 argument_list|(
+operator|&
+name|Re_pat
+argument_list|,
 name|Fortbuf
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
+operator|!=
+name|REG_NOMATCH
 condition|)
 block|{
 name|printf
@@ -6931,15 +6762,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NO_REGEX */
-end_comment
-
 begin_function
 name|void
 name|usage
@@ -6981,9 +6803,6 @@ argument_list|,
 literal|"f"
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_REGEX
 operator|(
 name|void
 operator|)
@@ -6994,9 +6813,6 @@ argument_list|,
 literal|"i"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NO_REGEX */
 operator|(
 name|void
 operator|)
@@ -7007,9 +6823,6 @@ argument_list|,
 literal|"losw]"
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_REGEX
 operator|(
 name|void
 operator|)
@@ -7020,9 +6833,6 @@ argument_list|,
 literal|" [-m pattern]"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NO_REGEX */
 operator|(
 name|void
 operator|)
