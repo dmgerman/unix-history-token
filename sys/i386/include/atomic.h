@@ -426,14 +426,15 @@ end_if
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|I386_CPU
+name|SMP
 argument_list|)
 end_if
 
 begin_comment
-comment|/*  * We assume that a = b will do atomic loads and stores.  *  * XXX: This is _NOT_ safe on a P6 or higher because it does not guarantee  * memory ordering.  These should only be used on a 386.  */
+comment|/*  * We assume that a = b will do atomic loads and stores.  However, on a  * PentiumPro or higher, reads may pass writes, so for that case we have  * to use a serializing instruction (i.e. with LOCK) to do the load in  * SMP kernels.  For UP kernels, however, the cache of the single processor  * is always consistent, so we don't need any memory barriers.  */
 end_comment
 
 begin_define
@@ -448,7 +449,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ 	__asm __volatile("" : : : "memory");		\ }							\ struct __hack
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile("" : : : "memory");		\ 	*p = v;						\ }							\ struct __hack
 end_define
 
 begin_else
@@ -457,7 +458,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !defined(I386_CPU) */
+comment|/* defined(SMP) */
 end_comment
 
 begin_define
@@ -491,7 +492,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(I386_CPU) */
+comment|/* !defined(SMP) */
 end_comment
 
 begin_else
