@@ -34,12 +34,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"card.h"
 end_include
 
@@ -174,24 +168,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1711,11 +1692,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -1729,8 +1705,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_post_sync
@@ -2232,11 +2206,6 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* Handle BPF listeners. */
 if|if
 condition|(
@@ -2299,8 +2268,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* Receive packet. */
 name|m_adj
 argument_list|(
@@ -6025,11 +5992,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * If there's a BPF listner, bounce a copy of 	 * this frame to him. 	 */
 if|if
 condition|(
@@ -6044,8 +6006,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m0

@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -95,24 +89,11 @@ directive|include
 file|<net/if_media.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -5835,11 +5816,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -5853,8 +5829,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -7331,11 +7305,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -7349,8 +7318,6 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Transmit */
 name|sc_if
@@ -7772,11 +7739,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -7837,8 +7799,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* Remove header from mbuf and pass it on. */
 name|m_adj
 argument_list|(

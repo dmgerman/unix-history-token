@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -89,24 +83,11 @@ directive|include
 file|<net/if_media.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -7560,11 +7541,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -7578,8 +7554,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|fail
 label|:
 name|splx
@@ -8543,11 +8517,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * Handle BPF listeners. Let the BPF user see the packet, but 		 * don't pass it up to the ether_input() layer unless it's 		 * a broadcast packet, multicast packet, matches our ethernet 		 * address or the interface is in promiscuous mode. 		 */
 if|if
 condition|(
@@ -8610,8 +8579,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* Remove header from mbuf and pass it on. */
 name|m_adj
 argument_list|(
@@ -9988,11 +9955,6 @@ argument_list|)
 operator|=
 name|MX_TXSTAT_OWN
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
 if|if
 condition|(
@@ -10009,8 +9971,6 @@ operator|->
 name|mx_mbuf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|MX_TXOWN
 argument_list|(
 name|cur_tx
