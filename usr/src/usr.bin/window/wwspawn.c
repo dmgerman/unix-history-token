@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	1.6 83/07/26"
+literal|"@(#)wwspawn.c	2.1 83/07/30"
 decl_stmt|;
 end_decl_stmt
 
