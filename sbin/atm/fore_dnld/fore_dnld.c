@@ -1,32 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_dnld.c,v 1.2 1998/10/30 16:17:43 dg Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_dnld.c,v 1.3 1999/05/23 23:18:34 imp Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * User utilities  * --------------  *  * Download (pre)processed microcode into Fore Series-200 host adapter  * Interact with i960 uart on Fore Series-200 host adapter  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|RCSid
-init|=
-literal|"@(#) $Id: fore_dnld.c,v 1.2 1998/10/30 16:17:43 dg Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -38,30 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -79,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<net/if.h>
 end_include
 
 begin_include
@@ -136,6 +91,36 @@ directive|include
 file|<dev/hfa/fore_slave.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -178,6 +163,31 @@ end_endif
 begin_comment
 comment|/* !BSD */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"@(#) $Id: fore_dnld.c,v 1.3 1999/05/23 23:18:34 imp Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -377,20 +387,15 @@ name|Uart
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|delay
-argument_list|(
-argument|cnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cnt
+parameter_list|)
 name|int
 name|cnt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|usleep
 argument_list|(
@@ -398,7 +403,7 @@ name|cnt
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|unsigned
@@ -799,37 +804,26 @@ begin_comment
 comment|/*  * Transmit a line to the i960. Eol must be included as part of text to transmit.  *  * Arguments:  *	line			Character string to transmit  *	len			len of string. This allows us to include NULL's  *					in the string/block to be transmitted.  *  * Returns:  *	none  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|xmit_to_i960
-argument_list|(
-argument|line
-argument_list|,
-argument|len
-argument_list|,
-argument|dn
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|,
+name|len
+parameter_list|,
+name|dn
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dn
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -858,7 +852,7 @@ name|dn
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Send autobaud sequence to i960 monitor  *  * Arguments:  *	none  *  * Returns:  *	none  */
@@ -2548,6 +2542,9 @@ decl_stmt|;
 block|}
 name|binhdr
 struct|;
+ifdef|#
+directive|ifdef
+name|sun
 union|union
 block|{
 name|u_long
@@ -2564,6 +2561,8 @@ name|w1
 union|,
 name|w2
 union|;
+endif|#
+directive|endif
 name|int
 name|fd
 decl_stmt|;
@@ -3022,14 +3021,11 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|char
-name|c
-decl_stmt|;
 name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"go %x\r\n"
+literal|"go %lx\r\n"
 argument_list|,
 name|binhdr
 operator|.
@@ -3099,6 +3095,7 @@ comment|/*  * Program to download previously processed microcode to series-200 h
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -3150,11 +3147,6 @@ name|caddr_t
 name|buf
 decl_stmt|;
 comment|/* Ioctl buffer */
-name|Atm_config
-modifier|*
-name|adp
-decl_stmt|;
-comment|/* Adapter config */
 name|char
 name|bus_dev
 index|[
@@ -3573,6 +3565,9 @@ name|VENDOR_FORE
 condition|)
 block|{
 comment|/* 			 * Create /dev name 			 */
+ifdef|#
+directive|ifdef
+name|sun
 name|sprintf
 argument_list|(
 name|bus_dev
@@ -3584,6 +3579,17 @@ operator|->
 name|acp_busslot
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sprintf
+argument_list|(
+name|bus_dev
+argument_list|,
+name|DEV_NAME
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * Setup signal handlers 			 */
 name|signal
 argument_list|(
@@ -3897,7 +3903,7 @@ argument|) { 					sprintf ( filename,
 literal|"%s/%s.bin"
 argument|, 					    dirname, base ); 					if ( stat ( filename,&sbuf ) != -
 literal|1
-argument|) { 						sndfile = filename; 					} 				    } else 					sndfile = filename; 				    break; 			        } 			    } else 				sndfile = objfile;  			    if ( ext&& !binary ) 				err = xmitfile ( sndfile ); 			    else 				err = sendbinfile ( sndfile, ram );  			    if ( err ) { 				fprintf(stderr,
+argument|) { 						sndfile = filename; 					} 				    } else 					sndfile = filename; 				    break; 				default: 				    break; 			        } 			    } else 				sndfile = objfile;  			    if ( ext&& !binary ) 				err = xmitfile ( sndfile ); 			    else 				err = sendbinfile ( sndfile, ram );  			    if ( err ) { 				fprintf(stderr,
 literal|"%s download failed\n"
 argument|, 					air->acp_intf); 				(void) close(fd); 				continue; 			    }
 comment|/* 			     * Download completed - wait around a while for 			     * the driver to initialize the adapter 			     */

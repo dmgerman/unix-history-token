@@ -1,32 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: scspd.c,v 1.6 1998/08/21 18:08:25 johnc Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: scspd.c,v 1.1 1998/09/15 08:23:17 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Server Cache Synchronization Protocol (SCSP) Support  * ----------------------------------------------------  *  * SCSP server daemon main line code  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|RCSid
-init|=
-literal|"@(#) $Id: scspd.c,v 1.6 1998/08/21 18:08:25 johnc Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -43,37 +22,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttycom.h>
 end_include
 
 begin_include
@@ -86,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ttycom.h>
 end_include
 
 begin_include
@@ -133,7 +88,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libatm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -153,6 +144,25 @@ include|#
 directive|include
 file|"scsp_var.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"@(#) $Id: scspd.c,v 1.1 1998/09/15 08:23:17 phk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Global variables  */
@@ -343,6 +353,7 @@ decl_stmt|;
 comment|/* 	 * Save program name, ignoring any path components 	 */
 if|if
 condition|(
+operator|(
 name|prog
 operator|=
 operator|(
@@ -358,6 +369,9 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|prog
 operator|++
@@ -961,6 +975,7 @@ comment|/*  * Main line code  *  * Process command line parameters, read configu
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1429,12 +1444,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|dcsp
 operator|=
 name|scsp_find_dcs
 argument_list|(
 name|i
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rc
@@ -1611,12 +1630,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|ssp
 operator|=
 name|scsp_find_server
 argument_list|(
 name|i
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rc
@@ -1630,12 +1653,16 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|dcsp
 operator|=
 name|scsp_find_dcs
 argument_list|(
 name|i
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rc

@@ -1,32 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atmarp_subr.c,v 1.6 1998/08/13 20:11:11 johnc Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atmarp_subr.c,v 1.1 1998/09/15 08:23:14 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Server Cache Synchronization Protocol (SCSP) Support  * ----------------------------------------------------  *  * SCSP-ATMARP server interface: misc. subroutines  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|RCSid
-init|=
-literal|"@(#) $Id: atmarp_subr.c,v 1.6 1998/08/13 20:11:11 johnc Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -38,36 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_include
@@ -92,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -157,7 +112,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libatm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -183,6 +174,25 @@ include|#
 directive|include
 file|"atmarp_var.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"@(#) $Id: atmarp_subr.c,v 1.1 1998/09/15 08:23:14 phk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Find an ATMARP interface, given its socket number  *  * Arguments:  *	sd	socket descriptor  *  * Returns:  *	0	failure  *	else	pointer to interface associated with socket  *  */
@@ -2356,11 +2366,8 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"\t  next:            0x%0x\n"
+literal|"\t  next:            %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|ip
 operator|->
 name|next
@@ -2549,11 +2556,8 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"ATMARP network interface entry at 0x%0x\n"
+literal|"ATMARP network interface entry at %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|aip
 argument_list|)
 expr_stmt|;
@@ -2561,11 +2565,8 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"\tai_next:           0x%0x\n"
+literal|"\tai_next:           %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|aip
 operator|->
 name|ai_next
@@ -2739,11 +2740,8 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"ATMARP entry at 0x%0x\n"
+literal|"ATMARP entry at %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|aap
 argument_list|)
 expr_stmt|;
@@ -2751,11 +2749,8 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"\taa_next:      0x%0x\n"
+literal|"\taa_next:      %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|aap
 operator|->
 name|aa_next
@@ -2843,7 +2838,7 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"\taa_seq:       %d (0x%x)\n"
+literal|"\taa_seq:       %ld (0x%lx)\n"
 argument_list|,
 name|aap
 operator|->
@@ -2858,11 +2853,8 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"\taa_intf:      0x%0x\n"
+literal|"\taa_intf:      %p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|aap
 operator|->
 name|aa_intf

@@ -1,32 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_print.c,v 1.12 1998/07/30 22:38:56 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_print.c,v 1.1 1998/09/15 08:22:45 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * User configuration and display program  * --------------------------------------  *  * Print routines for "show" subcommand  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|RCSid
-init|=
-literal|"@(#) $Id: atm_print.c,v 1.12 1998/07/30 22:38:56 mks Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -38,24 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -74,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -127,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libatm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatm/ipatm/ipatm_var.h>
 end_include
 
@@ -163,8 +124,57 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libatm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"atm.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"@(#) $Id: atm_print.c,v 1.1 1998/09/15 08:22:45 phk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1256,12 +1266,6 @@ decl_stmt|,
 modifier|*
 name|state
 decl_stmt|;
-name|char
-name|print_lis
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|struct
 name|in_addr
 modifier|*
@@ -1432,7 +1436,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"/0x%0x"
+literal|"/0x%0lx"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -1557,7 +1561,7 @@ expr_stmt|;
 comment|/* 	 * Print the ARP server information 	 */
 name|printf
 argument_list|(
-literal|"%-8s  %-8s  %-8s  %-14s  %-4s  %d\n"
+literal|"%-8s  %-8s  %-8s  %-14s  %-4s  %ld\n"
 argument_list|,
 name|si
 operator|->
@@ -1644,9 +1648,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|atm_addr
-decl_stmt|,
-modifier|*
-name|ip_addr
 decl_stmt|;
 name|char
 modifier|*
@@ -1658,11 +1659,6 @@ modifier|*
 name|state_name
 init|=
 literal|"-"
-decl_stmt|;
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
 decl_stmt|;
 name|struct
 name|state
@@ -2339,9 +2335,6 @@ modifier|*
 name|pi
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 comment|/* 	 * Print a header if it hasn't already been done 	 */
 if|if
 condition|(
@@ -2362,7 +2355,7 @@ block|}
 comment|/* 	 * Print the interface statistics 	 */
 name|printf
 argument_list|(
-literal|"%-9s  %7d %8d  %5d %7d %8d  %5d  %5d\n"
+literal|"%-9s  %7ld %8ld  %5ld %7ld %8ld  %5ld  %5ld\n"
 argument_list|,
 name|pi
 operator|->
@@ -2461,7 +2454,7 @@ name|VCC_IN
 condition|)
 name|printf
 argument_list|(
-literal|"  %7d %8d  %5d"
+literal|"  %7ld %8ld  %5ld"
 argument_list|,
 name|vi
 operator|->
@@ -2492,7 +2485,7 @@ name|VCC_OUT
 condition|)
 name|printf
 argument_list|(
-literal|" %7d %8d  %5d\n"
+literal|" %7ld %8ld  %5ld\n"
 argument_list|,
 name|vi
 operator|->
@@ -2552,11 +2545,6 @@ init|=
 literal|"-"
 decl_stmt|;
 name|char
-modifier|*
-name|proto_name
-init|=
-literal|"-"
-decl_stmt|,
 modifier|*
 name|state_name
 init|=

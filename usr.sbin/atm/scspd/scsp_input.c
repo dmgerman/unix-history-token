@@ -1,32 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: scsp_input.c,v 1.3 1998/08/13 20:11:15 johnc Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: scsp_input.c,v 1.1 1998/09/15 08:23:16 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Server Cache Synchronization Protocol (SCSP) Support  * ----------------------------------------------------  *  * Input packet processing  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|RCSid
-init|=
-literal|"@(#) $Id: scsp_input.c,v 1.3 1998/08/13 20:11:15 johnc Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -43,31 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -80,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
 end_include
 
 begin_include
@@ -133,7 +88,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libatm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -153,6 +138,25 @@ include|#
 directive|include
 file|"scsp_var.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"@(#) $Id: scsp_input.c,v 1.1 1998/09/15 08:23:16 phk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -650,9 +654,6 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|idp
-decl_stmt|,
-modifier|*
-name|odp
 decl_stmt|;
 name|struct
 name|scsp_nmcp
@@ -1072,9 +1073,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|idp
-decl_stmt|,
-modifier|*
-name|odp
 decl_stmt|;
 name|struct
 name|scsp_ncsa
@@ -1084,6 +1082,8 @@ decl_stmt|;
 name|Scsp_csa
 modifier|*
 name|csap
+init|=
+name|NULL
 decl_stmt|;
 comment|/* 	 * Check the record length 	 */
 name|scp
@@ -1753,8 +1753,6 @@ name|acspp
 decl_stmt|;
 block|{
 name|int
-name|i
-decl_stmt|,
 name|len
 decl_stmt|,
 name|proc_len
@@ -1767,6 +1765,8 @@ decl_stmt|;
 name|Scsp_atmarp_csa
 modifier|*
 name|acsp
+init|=
+name|NULL
 decl_stmt|;
 comment|/* 	 * Initial packet verification 	 */
 name|sacp
@@ -1876,6 +1876,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|len
 operator|=
 operator|(
@@ -1885,6 +1886,9 @@ name|sa_shtl
 operator|&
 name|ARP_TL_LMASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -2004,6 +2008,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|len
 operator|=
 operator|(
@@ -2013,6 +2018,9 @@ name|sa_sstl
 operator|&
 name|ARP_TL_LMASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -2097,11 +2105,15 @@ block|}
 comment|/* 	 * Verify/gather source IP address 	 */
 if|if
 condition|(
+operator|(
 name|len
 operator|=
 name|sacp
 operator|->
 name|sa_spln
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -2183,6 +2195,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|len
 operator|=
 operator|(
@@ -2192,6 +2205,9 @@ name|sa_thtl
 operator|&
 name|ARP_TL_LMASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -2311,6 +2327,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|len
 operator|=
 operator|(
@@ -2320,6 +2337,9 @@ name|sa_tstl
 operator|&
 name|ARP_TL_LMASK
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -2404,11 +2424,15 @@ block|}
 comment|/* 	 * Verify/gather target IP address 	 */
 if|if
 condition|(
+operator|(
 name|len
 operator|=
 name|sacp
 operator|->
 name|sa_tpln
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
