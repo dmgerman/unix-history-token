@@ -7256,6 +7256,7 @@ operator|>
 literal|0
 operator|)
 condition|)
+block|{
 name|ifp
 operator|->
 name|if_flags
@@ -7265,6 +7266,12 @@ operator|(
 name|IFF_OACTIVE
 operator|)
 expr_stmt|;
+name|oltr_start
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7558,6 +7565,18 @@ expr|struct
 name|iso88025_header
 operator|*
 argument_list|)
+expr_stmt|;
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|header
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|th
 expr_stmt|;
 name|m
 operator|=

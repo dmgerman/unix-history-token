@@ -148,6 +148,32 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|iso88025_sockaddr_data
+block|{
+name|u_char
+name|ether_dhost
+index|[
+name|ISO88025_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_char
+name|ether_shost
+index|[
+name|ISO88025_ADDR_LEN
+index|]
+decl_stmt|;
+name|u_char
+name|ac
+decl_stmt|;
+name|u_char
+name|fc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Structure of a 48-bit iso 802.5 address.  *  ( We could also add the 16 bit addresses as a union)  */
 end_comment
