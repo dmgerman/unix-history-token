@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_ubt_var.h  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_ubt_var.h,v 1.1 2002/11/09 19:09:02 max Exp $  * $FreeBSD$  */
+comment|/*  * ng_ubt_var.h  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_ubt_var.h,v 1.2 2003/03/22 23:44:36 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -123,6 +123,40 @@ directive|define
 name|UBT_SCO_XMIT
 value|(1<< 3)
 comment|/* SCO xmit in progress */
+define|#
+directive|define
+name|UBT_EVT_RECV
+value|(1<< 4)
+comment|/* EVN recv in progress */
+define|#
+directive|define
+name|UBT_ACL_RECV
+value|(1<< 5)
+comment|/* ACL recv in progress */
+define|#
+directive|define
+name|UBT_SCO_RECV
+value|(1<< 6)
+comment|/* SCO recv in progress */
+define|#
+directive|define
+name|UBT_CTRL_DEV
+value|(1<< 7)
+comment|/* ctrl device is open */
+define|#
+directive|define
+name|UBT_INTR_DEV
+value|(1<< 8)
+comment|/* intr device is open */
+define|#
+directive|define
+name|UBT_BULK_DEV
+value|(1<< 9)
+comment|/* bulk device is open */
+define|#
+directive|define
+name|UBT_ANY_DEV
+value|(UBT_CTRL_DEV|UBT_INTR_DEV|UBT_BULK_DEV)
 name|ng_ubt_node_stat_ep
 name|sc_stat
 decl_stmt|;
@@ -197,16 +231,6 @@ name|usbd_interface_handle
 name|sc_iface1
 decl_stmt|;
 comment|/* USB interface 1 */
-name|struct
-name|ifqueue
-name|sc_inq
-decl_stmt|;
-comment|/* incoming queue */
-name|void
-modifier|*
-name|sc_ith
-decl_stmt|;
-comment|/* SWI interrupt handler */
 comment|/* Interrupt pipe (HCI events) */
 name|int
 name|sc_intr_ep
@@ -220,16 +244,12 @@ name|usbd_xfer_handle
 name|sc_intr_xfer
 decl_stmt|;
 comment|/* intr xfer */
-name|u_int8_t
+name|struct
+name|mbuf
 modifier|*
 name|sc_intr_buffer
 decl_stmt|;
 comment|/* interrupt buffer */
-define|#
-directive|define
-name|UBT_INTR_BUFFER_SIZE
-define|\
-value|(sizeof(ng_hci_event_pkt_t) + NG_HCI_EVENT_PKT_SIZE)
 comment|/* Control pipe (HCI commands) */
 name|usbd_xfer_handle
 name|sc_ctrl_xfer
@@ -241,7 +261,7 @@ name|sc_ctrl_buffer
 decl_stmt|;
 comment|/* control buffer */
 name|struct
-name|ifqueue
+name|ng_bt_mbufq
 name|sc_cmdq
 decl_stmt|;
 comment|/* HCI command queue */
@@ -263,7 +283,8 @@ name|usbd_xfer_handle
 name|sc_bulk_in_xfer
 decl_stmt|;
 comment|/* bulk-in xfer */
-name|void
+name|struct
+name|mbuf
 modifier|*
 name|sc_bulk_in_buffer
 decl_stmt|;
@@ -287,7 +308,7 @@ name|sc_bulk_out_buffer
 decl_stmt|;
 comment|/* bulk-out buffer */
 name|struct
-name|ifqueue
+name|ng_bt_mbufq
 name|sc_aclq
 decl_stmt|;
 comment|/* ACL data queue */
@@ -295,7 +316,7 @@ define|#
 directive|define
 name|UBT_BULK_BUFFER_SIZE
 define|\
-value|512
+value|MCLBYTES
 comment|/* XXX should be big enough to hold one frame */
 comment|/* Isoc. in pipe (SCO data) */
 name|int
@@ -344,7 +365,7 @@ name|sc_isoc_out_frlen
 decl_stmt|;
 comment|/* isoc-out. frame length */
 name|struct
-name|ifqueue
+name|ng_bt_mbufq
 name|sc_scoq
 decl_stmt|;
 comment|/* SCO data queue */
@@ -370,6 +391,26 @@ name|hook_p
 name|sc_hook
 decl_stmt|;
 comment|/* upstream hook */
+comment|/* Device specific */
+name|dev_t
+name|sc_ctrl_dev
+decl_stmt|;
+comment|/* control device */
+name|dev_t
+name|sc_intr_dev
+decl_stmt|;
+comment|/* interrupt device */
+name|dev_t
+name|sc_bulk_dev
+decl_stmt|;
+comment|/* bulk device */
+name|int
+name|sc_refcnt
+decl_stmt|;
+comment|/* device ref. count */
+name|int
+name|sc_dying
+decl_stmt|;
 block|}
 struct|;
 end_struct

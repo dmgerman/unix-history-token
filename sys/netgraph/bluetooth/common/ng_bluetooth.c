@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bluetooth.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_bluetooth.c,v 1.1.1.1 2002/09/04 21:47:41 max Exp $  * $FreeBSD$  */
+comment|/*  * bluetooth.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_bluetooth.c,v 1.3 2003/04/26 22:37:31 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -60,19 +60,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|bluetooth_hci_connect_timeout_value
-init|=
-literal|60
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sec */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int32_t
-name|bluetooth_hci_watchdog_timeout_value
 init|=
 literal|60
 decl_stmt|;
@@ -402,27 +389,6 @@ name|_net_bluetooth_hci
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|watchdog_timeout
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|bluetooth_hci_watchdog_timeout_value
-argument_list|,
-literal|60
-argument_list|,
-literal|"HCI connection watchdog timeout (sec)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_bluetooth_hci
-argument_list|,
-name|OID_AUTO
-argument_list|,
 name|max_neighbor_age
 argument_list|,
 name|CTLFLAG_RW
@@ -717,27 +683,6 @@ end_comment
 
 begin_function
 name|u_int32_t
-name|bluetooth_hci_watchdog_timeout
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|bluetooth_hci_watchdog_timeout_value
-operator|*
-name|hz
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* bluetooth_hci_watchdog_timeout */
-end_comment
-
-begin_function
-name|u_int32_t
 name|bluetooth_hci_max_neighbor_age
 parameter_list|(
 name|void
@@ -796,6 +741,28 @@ end_function
 begin_comment
 comment|/* bluetooth_l2cap_ertx_timeout */
 end_comment
+
+begin_comment
+comment|/*   * RFCOMM  */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_bluetooth
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rfcomm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bluetooth RFCOMM family"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Handle loading and unloading for this code.  */

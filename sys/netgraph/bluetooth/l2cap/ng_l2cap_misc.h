@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_l2cap_misc.h  *  * Copyright (c) Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_l2cap_misc.h,v 1.6 2002/04/16 00:43:57 max Exp $  * $FreeBSD$  */
+comment|/*  * ng_l2cap_misc.h  *  * Copyright (c) Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_l2cap_misc.h,v 1.2 2003/04/28 21:44:59 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -43,6 +43,24 @@ parameter_list|(
 name|ng_l2cap_p
 parameter_list|,
 name|bdaddr_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ng_l2cap_con_ref
+parameter_list|(
+name|ng_l2cap_con_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ng_l2cap_con_unref
+parameter_list|(
+name|ng_l2cap_con_p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -129,7 +147,7 @@ parameter_list|,
 name|cmd
 parameter_list|)
 define|\
-value|do { \ 	TAILQ_INSERT_TAIL(&(con)->cmd_list, (cmd), next); \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(con)->cmd_list, (cmd), next); \ 	ng_l2cap_con_ref((con)); \ } while (0)
 end_define
 
 begin_define
@@ -140,7 +158,7 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|do { \ 	TAILQ_REMOVE(&((cmd)->con->cmd_list), (cmd), next); \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&((cmd)->con->cmd_list), (cmd), next); \ 	ng_l2cap_con_unref((cmd)->con); \ } while (0)
 end_define
 
 begin_define
@@ -194,6 +212,24 @@ end_function_decl
 begin_comment
 comment|/*  * Timeout  */
 end_comment
+
+begin_function_decl
+name|void
+name|ng_l2cap_discon_timeout
+parameter_list|(
+name|ng_l2cap_con_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ng_l2cap_discon_untimeout
+parameter_list|(
+name|ng_l2cap_con_p
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

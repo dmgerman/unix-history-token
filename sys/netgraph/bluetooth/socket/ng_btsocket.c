@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_btsocket.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_btsocket.c,v 1.20 2002/09/13 17:56:58 max Exp $  * $FreeBSD$  */
+comment|/*  * ng_btsocket.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_btsocket.c,v 1.3 2003/01/19 00:19:04 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bitstring.h>
 end_include
 
@@ -121,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|"ng_btsocket_l2cap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ng_btsocket_rfcomm.h"
 end_include
 
 begin_function_decl
@@ -360,6 +372,77 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Bluetooth STREAM RFCOMM sockets  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pr_usrreqs
+name|ng_btsocket_rfcomm_usrreqs
+init|=
+block|{
+name|ng_btsocket_rfcomm_abort
+block|,
+comment|/* abort */
+name|ng_btsocket_rfcomm_accept
+block|,
+comment|/* accept */
+name|ng_btsocket_rfcomm_attach
+block|,
+comment|/* attach */
+name|ng_btsocket_rfcomm_bind
+block|,
+comment|/* bind */
+name|ng_btsocket_rfcomm_connect
+block|,
+comment|/* connect */
+name|pru_connect2_notsupp
+block|,
+comment|/* connect2 */
+name|ng_btsocket_rfcomm_control
+block|,
+comment|/* control */
+name|ng_btsocket_rfcomm_detach
+block|,
+comment|/* detach */
+name|ng_btsocket_rfcomm_disconnect
+block|,
+comment|/* disconnect */
+name|ng_btsocket_rfcomm_listen
+block|,
+comment|/* listen */
+name|ng_btsocket_rfcomm_peeraddr
+block|,
+comment|/* peeraddr */
+name|pru_rcvd_notsupp
+block|,
+comment|/* rcvd */
+name|pru_rcvoob_notsupp
+block|,
+comment|/* rcvoob */
+name|ng_btsocket_rfcomm_send
+block|,
+comment|/* send */
+name|pru_sense_null
+block|,
+comment|/* send */
+name|NULL
+block|,
+comment|/* shutdown */
+name|ng_btsocket_rfcomm_sockaddr
+block|,
+comment|/* sockaddr */
+name|sosend
+block|,
+name|soreceive
+block|,
+name|sopoll
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*   * Definitions of protocols supported in the BLUETOOTH domain   */
 end_comment
 
@@ -511,6 +594,53 @@ comment|/* usrreq table (above) */
 comment|/* { NULL } */
 comment|/* pfh (protocol filter head?) */
 block|}
+block|,
+block|{
+name|SOCK_STREAM
+block|,
+comment|/* protocol type */
+operator|&
+name|ng_btsocket_domain
+block|,
+comment|/* backpointer to domain */
+name|BLUETOOTH_PROTO_RFCOMM
+block|,
+comment|/* protocol */
+name|PR_ATOMIC
+operator||
+name|PR_CONNREQUIRED
+block|,
+comment|/* flags */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* input, output, ctlinput */
+name|ng_btsocket_rfcomm_ctloutput
+block|,
+comment|/* ctloutput */
+name|NULL
+block|,
+comment|/* ousrreq() */
+name|ng_btsocket_rfcomm_init
+block|,
+comment|/* init */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* fasttimeo, slowtimo, drain */
+operator|&
+name|ng_btsocket_rfcomm_usrreqs
+block|,
+comment|/* usrreq table (above) */
+comment|/* { NULL } */
+comment|/* pfh (protocol filter head?) */
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -613,6 +743,24 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Bluetooth L2CAP sockets family"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_bluetooth_rfcomm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sockets
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bluetooth RFCOMM sockets family"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
