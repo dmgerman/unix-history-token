@@ -151,6 +151,16 @@ file|<i386/linux/linux_util.h>
 end_include
 
 begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|linux
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
 name|M_LINUX
