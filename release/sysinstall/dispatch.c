@@ -1581,9 +1581,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -1607,9 +1605,7 @@ return|;
 block|}
 name|fp
 operator|=
-name|mediaDevice
-operator|->
-name|get
+name|DEVICE_GET
 argument_list|(
 name|mediaDevice
 argument_list|,

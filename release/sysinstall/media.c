@@ -380,9 +380,7 @@ if|if
 condition|(
 name|mediaDevice
 condition|)
-name|mediaDevice
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -1337,9 +1335,7 @@ if|if
 condition|(
 name|networkDev
 condition|)
-name|networkDev
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|networkDev
 argument_list|)
@@ -1368,9 +1364,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|networkDev
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|networkDev
 argument_list|)
@@ -1711,9 +1705,7 @@ if|if
 condition|(
 name|networkDev
 condition|)
-name|networkDev
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|networkDev
 argument_list|)
@@ -2409,9 +2401,7 @@ if|if
 condition|(
 name|networkDev
 condition|)
-name|networkDev
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|networkDev
 argument_list|)
@@ -2433,9 +2423,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|networkDev
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|networkDev
 argument_list|)
@@ -2496,9 +2484,7 @@ if|if
 condition|(
 name|networkDev
 condition|)
-name|networkDev
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|networkDev
 argument_list|)

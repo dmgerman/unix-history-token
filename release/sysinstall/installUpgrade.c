@@ -1497,9 +1497,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -1955,9 +1953,7 @@ name|mediaVerify
 argument_list|()
 operator|||
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)

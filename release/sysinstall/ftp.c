@@ -143,9 +143,7 @@ condition|(
 name|netdev
 condition|)
 return|return
-name|netdev
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|netdev
 argument_list|)
@@ -188,9 +186,7 @@ if|if
 condition|(
 name|netdev
 condition|)
-name|netdev
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|netdev
 argument_list|)
@@ -898,9 +894,7 @@ name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
 comment|/* If we can't re-initialize, just forget it */
-name|dev
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|dev
 argument_list|)
@@ -908,9 +902,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|dev
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|dev
 argument_list|)

@@ -6283,6 +6283,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Macros.  Please find a better place for us!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICE_INIT
+parameter_list|(
+name|d
+parameter_list|)
+value|((d) != NULL ? (d)->init((d)) : NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_GET
+parameter_list|(
+name|d
+parameter_list|,
+name|b
+parameter_list|,
+name|f
+parameter_list|)
+value|((d) != NULL ? (d)->get((d), (b), (f)) : NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICE_SHUTDOWN
+parameter_list|(
+name|d
+parameter_list|)
+value|((d) != NULL ? (d)->shutdown((d)) : (void)0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

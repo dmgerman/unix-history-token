@@ -1433,12 +1433,7 @@ name|i
 operator|++
 control|)
 block|{
-name|Devices
-index|[
-name|i
-index|]
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|Devices
 index|[

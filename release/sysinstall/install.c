@@ -1111,7 +1111,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Please insert a FreeBSD live filesystem CDROM and press return"
+literal|"Please insert a FreeBSD live filesystem CD/DVD and press return"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1449,9 +1449,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -2376,9 +2374,7 @@ condition|)
 if|if
 condition|(
 operator|!
-name|tmp
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|tmp
 argument_list|)
@@ -2851,9 +2847,7 @@ label|:
 if|if
 condition|(
 operator|!
-name|mediaDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|mediaDevice
 argument_list|)

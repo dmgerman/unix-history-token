@@ -92,12 +92,8 @@ name|TRUE
 return|;
 if|if
 condition|(
-name|netDevice
-operator|&&
 operator|!
-name|netDevice
-operator|->
-name|init
+name|DEVICE_INIT
 argument_list|(
 name|netDevice
 argument_list|)
@@ -178,9 +174,7 @@ if|if
 condition|(
 name|netDevice
 condition|)
-name|netDevice
-operator|->
-name|shutdown
+name|DEVICE_SHUTDOWN
 argument_list|(
 name|netDevice
 argument_list|)
