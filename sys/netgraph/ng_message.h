@@ -1140,7 +1140,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|do {								\ 	  KASSERT(!(how& M_DONTWAIT),					\ 	      ("NG_MKMESSAGE() with how=M_DONTWAIT (%d)\n", how));	\ 	  KASSERT(!(how& M_TRYWAIT),					\ 	      ("NG_MKMESSAGE() with how=M_TRYWAIT (%d)\n", how));	\ 	  MALLOC((msg), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((msg) == NULL)						\ 	    break;							\ 	  (msg)->header.version = NG_VERSION;				\ 	  (msg)->header.typecookie = (cookie);				\ 	  (msg)->header.cmd = (cmdid);					\ 	  (msg)->header.arglen = (len);					\ 	  strncpy((msg)->header.cmdstr, #cmdid,				\ 	    sizeof((msg)->header.cmdstr) - 1);				\ 	} while (0)
+value|do {								\ 	  MALLOC((msg), struct ng_mesg *, sizeof(struct ng_mesg)	\ 	    + (len), M_NETGRAPH_MSG, (how) | M_ZERO);			\ 	  if ((msg) == NULL)						\ 	    break;							\ 	  (msg)->header.version = NG_VERSION;				\ 	  (msg)->header.typecookie = (cookie);				\ 	  (msg)->header.cmd = (cmdid);					\ 	  (msg)->header.arglen = (len);					\ 	  strncpy((msg)->header.cmdstr, #cmdid,				\ 	    sizeof((msg)->header.cmdstr) - 1);				\ 	} while (0)
 end_define
 
 begin_comment
