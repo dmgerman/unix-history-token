@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	3.3	%G%	*/
+comment|/*	ubavar.h	3.4	%G%	*/
 end_comment
 
 begin_comment
@@ -776,6 +776,58 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_union
+union|union
+name|ub_info
+block|{
+struct|struct
+name|ub_Info
+block|{
+name|unsigned
+name|int
+name|Ub_off
+range|:
+literal|18
+decl_stmt|,
+name|Ub_npf
+range|:
+literal|10
+decl_stmt|,
+name|Ub_bdp
+range|:
+literal|4
+decl_stmt|;
+block|}
+name|ub_I
+struct|;
+name|int
+name|ub_word
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|ub_off
+value|ub_I.Ub_off
+end_define
+
+begin_define
+define|#
+directive|define
+name|ub_npf
+value|ub_I.Ub_npf
+end_define
+
+begin_define
+define|#
+directive|define
+name|ub_bdp
+value|ub_I.Ub_bdp
+end_define
 
 end_unit
 
