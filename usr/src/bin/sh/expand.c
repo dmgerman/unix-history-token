@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	5.8 (Berkeley) %G%"
+literal|"@(#)expand.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,6 +953,11 @@ name|EXP_CASE
 operator|)
 decl_stmt|;
 comment|/* do CTLESC */
+name|int
+name|firsteq
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1085,6 +1090,10 @@ break|break;
 case|case
 literal|':'
 case|:
+case|case
+literal|'='
+case|:
+comment|/* 			 * sort of a hack - expand tildes in variable 			 * assignments (after the first '=' and after ':'s). 			 */
 name|STPUTC
 argument_list|(
 name|c
@@ -1103,6 +1112,25 @@ name|p
 operator|==
 literal|'~'
 condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'='
+condition|)
+block|{
+if|if
+condition|(
+name|firsteq
+condition|)
+name|firsteq
+operator|=
+literal|0
+expr_stmt|;
+else|else
+break|break;
+block|}
 name|p
 operator|=
 name|exptilde
@@ -1112,6 +1140,7 @@ argument_list|,
 name|flag
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|STPUTC
