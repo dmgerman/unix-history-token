@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.88
+literal|3.89
 operator|%
 name|G
 operator|%
@@ -3099,7 +3099,7 @@ literal|'\0'
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"From $f  $d remote from $g"
+literal|"From $f  $d remote from $g\n"
 argument_list|,
 name|buf
 argument_list|,
