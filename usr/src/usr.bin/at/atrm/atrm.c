@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrm.c	5.3 (Berkeley) %G%"
+literal|"@(#)atrm.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,24 +49,6 @@ end_endif
 begin_comment
 comment|/*  *	synopsis: atrm [-f] [-i] [-] [[job #] [user] ...]  *  *  *	Remove files from the directory /usr/spool/at. These files  *	represent jobs to be run at a later date.  *  *	Author: Steve Wall  *		Computer Systems Research Group  *		University of California @ Berkeley  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -90,6 +72,24 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
