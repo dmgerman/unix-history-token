@@ -97,7 +97,7 @@ name|driver_t
 name|ahc_pci_driver
 init|=
 block|{
-literal|"ahc_pci"
+literal|"ahc"
 block|,
 name|ahc_pci_device_methods
 block|,
@@ -110,13 +110,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|ahc_pci_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -126,7 +119,7 @@ name|pci
 argument_list|,
 name|ahc_pci_driver
 argument_list|,
-name|ahc_pci_devclass
+name|ahc_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -144,7 +137,7 @@ name|cardbus
 argument_list|,
 name|ahc_pci_driver
 argument_list|,
-name|ahc_pci_devclass
+name|ahc_devclass
 argument_list|,
 literal|0
 argument_list|,

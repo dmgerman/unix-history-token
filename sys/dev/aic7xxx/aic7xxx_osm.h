@@ -283,6 +283,17 @@ comment|/* CAM_NEW_TRAN_CODE */
 end_comment
 
 begin_comment
+comment|/*************************** Attachment Bookkeeping ***************************/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|ahc_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/****************************** Platform Macros *******************************/
 end_comment
 
