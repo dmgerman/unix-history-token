@@ -134,7 +134,7 @@ operator|,
 expr|enum
 name|STYLE
 operator|,
-name|long
+name|off_t
 operator|,
 expr|struct
 name|stat
@@ -168,7 +168,7 @@ name|enum
 name|STYLE
 name|style
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 name|struct
@@ -280,7 +280,7 @@ name|enum
 name|STYLE
 name|style
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 name|struct

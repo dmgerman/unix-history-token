@@ -193,7 +193,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 name|enum
@@ -220,7 +220,7 @@ name|forward
 parameter_list|,
 name|backward
 parameter_list|)
-value|{					\ 	if (style)							\ 		usage();						\ 	off = strtol(optarg,&p, 10) * (units);				\ 	if (*p)								\ 		errx(1, "illegal offset -- %s", optarg);		\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
+value|{					\ 	if (style)							\ 		usage();						\ 	off = strtoll(optarg,&p, 10) * (units);                        \ 	if (*p)								\ 		errx(1, "illegal offset -- %s", optarg);		\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
 comment|/* FALLTHROUGH */
 value|\ 	default:							\ 		style = (backward);					\ 		break;							\ 	}								\ }
 name|obsolete

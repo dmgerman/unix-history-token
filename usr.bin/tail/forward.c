@@ -135,7 +135,7 @@ operator|(
 name|FILE
 operator|*
 operator|,
-name|long
+name|off_t
 operator|,
 expr|struct
 name|stat
@@ -194,7 +194,7 @@ name|enum
 name|STYLE
 name|style
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 name|struct
@@ -268,7 +268,7 @@ name|st_size
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
@@ -402,7 +402,7 @@ name|st_size
 operator|>=
 name|off
 operator|&&
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
@@ -486,11 +486,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_END
 argument_list|)
@@ -854,11 +857,14 @@ block|{
 comment|/* file shrank, reposition to end */
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_END
 argument_list|)
@@ -1026,7 +1032,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 name|struct
