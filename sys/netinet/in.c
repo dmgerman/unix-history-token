@@ -2340,7 +2340,7 @@ name|iflr
 operator|->
 name|addr
 operator|.
-name|__ss_family
+name|ss_family
 operator|!=
 name|AF_INET
 condition|)
@@ -2353,7 +2353,7 @@ name|iflr
 operator|->
 name|addr
 operator|.
-name|__ss_len
+name|ss_len
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -2371,13 +2371,13 @@ name|iflr
 operator|->
 name|dstaddr
 operator|.
-name|__ss_family
+name|ss_family
 operator|&&
 name|iflr
 operator|->
 name|dstaddr
 operator|.
-name|__ss_family
+name|ss_family
 operator|!=
 name|AF_INET
 condition|)
@@ -2390,13 +2390,13 @@ name|iflr
 operator|->
 name|dstaddr
 operator|.
-name|__ss_family
+name|ss_family
 operator|&&
 name|iflr
 operator|->
 name|dstaddr
 operator|.
-name|__ss_len
+name|ss_len
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -2501,7 +2501,7 @@ name|iflr
 operator|->
 name|addr
 operator|.
-name|__ss_len
+name|ss_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -2510,7 +2510,7 @@ name|iflr
 operator|->
 name|dstaddr
 operator|.
-name|__ss_family
+name|ss_family
 condition|)
 block|{
 comment|/*XXX*/
@@ -2530,7 +2530,7 @@ name|iflr
 operator|->
 name|dstaddr
 operator|.
-name|__ss_len
+name|ss_len
 argument_list|)
 expr_stmt|;
 block|}

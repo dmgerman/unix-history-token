@@ -850,11 +850,11 @@ struct|struct
 name|sockaddr_storage
 block|{
 name|u_char
-name|__ss_len
+name|ss_len
 decl_stmt|;
 comment|/* address length */
 name|sa_family_t
-name|__ss_family
+name|ss_family
 decl_stmt|;
 comment|/* address family */
 name|char

@@ -2052,7 +2052,7 @@ name|spidx
 operator|->
 name|src
 operator|.
-name|__ss_len
+name|ss_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2074,7 +2074,7 @@ name|spidx
 operator|->
 name|dst
 operator|.
-name|__ss_len
+name|ss_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2137,7 +2137,7 @@ name|saidx
 operator|->
 name|src
 operator|.
-name|__ss_len
+name|ss_len
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2159,7 +2159,7 @@ name|saidx
 operator|->
 name|dst
 operator|.
-name|__ss_len
+name|ss_len
 argument_list|)
 expr_stmt|;
 name|printf
