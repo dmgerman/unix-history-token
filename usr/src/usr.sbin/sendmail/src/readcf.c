@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.20 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2182,6 +2182,24 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"fileclass(%s, fmt=%s)\n"
+argument_list|,
+name|filename
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|filename
 index|[
 literal|0
@@ -2214,6 +2232,25 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|37
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"  cannot stat (%s)\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2445,24 +2482,11 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* enter the word in the symbol table */
-name|s
-operator|=
-name|stab
-argument_list|(
-name|q
-argument_list|,
-name|ST_CLASS
-argument_list|,
-name|ST_ENTER
-argument_list|)
-expr_stmt|;
-name|setbitn
+name|setclass
 argument_list|(
 name|class
 argument_list|,
-name|s
-operator|->
-name|s_class
+name|q
 argument_list|)
 expr_stmt|;
 block|}
