@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.10 (Berkeley) %G%"
+literal|"@(#)popen.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,13 +235,11 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|pids
+argument_list|,
+literal|0
 argument_list|,
 name|fds
 operator|*
