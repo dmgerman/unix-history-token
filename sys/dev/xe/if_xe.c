@@ -2572,6 +2572,13 @@ condition|)
 block|{
 name|mbp
 operator|->
+name|m_flags
+operator||=
+name|M_HASFCS
+expr_stmt|;
+comment|/* FCS is included in our 						 * packet */
+name|mbp
+operator|->
 name|m_pkthdr
 operator|.
 name|len
