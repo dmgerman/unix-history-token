@@ -32,7 +32,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
 end_include
 
 begin_include
@@ -194,18 +200,6 @@ end_include
 begin_comment
 comment|/* def. of struct route */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
 
 begin_include
 include|#
