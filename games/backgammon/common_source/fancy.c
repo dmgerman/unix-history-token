@@ -31,6 +31,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"back.h"
 end_include
 
@@ -395,12 +413,17 @@ name|realc
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|int
 name|addbuf
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|fboard
