@@ -1331,7 +1331,7 @@ name|numdevs
 operator|=
 name|devstat_getnumdevs
 argument_list|(
-name|NULL
+name|kd
 argument_list|)
 operator|)
 operator|<
@@ -1442,7 +1442,7 @@ name|numdevs
 operator|=
 name|devstat_getnumdevs
 argument_list|(
-name|NULL
+name|kd
 argument_list|)
 operator|)
 operator|<
@@ -1591,7 +1591,7 @@ name|numdevs
 operator|=
 name|devstat_getnumdevs
 argument_list|(
-name|NULL
+name|kd
 argument_list|)
 operator|)
 operator|==
@@ -1654,7 +1654,7 @@ if|if
 condition|(
 name|devstat_getnumdevs
 argument_list|(
-name|NULL
+name|kd
 argument_list|)
 operator|!=
 name|dinfo
@@ -1671,7 +1671,7 @@ name|numdevs
 operator|=
 name|devstat_getnumdevs
 argument_list|(
-name|NULL
+name|kd
 argument_list|)
 operator|)
 operator|<
