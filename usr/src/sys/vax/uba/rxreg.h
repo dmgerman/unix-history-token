@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxreg.h	4.6	83/04/23	*/
+comment|/*	rxreg.h	4.6	83/05/06	*/
 end_comment
 
 begin_comment
@@ -369,6 +369,17 @@ end_define
 
 begin_comment
 comment|/* return density of current disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RXIOC_MASK
+value|0x0ffff
+end_define
+
+begin_comment
+comment|/* mask for ioctl codes */
 end_comment
 
 begin_ifdef
