@@ -49,7 +49,7 @@ file|<geom/geom_int.h>
 end_include
 
 begin_function
-name|uint32_t
+name|uint16_t
 name|g_dec_be2
 parameter_list|(
 name|u_char
@@ -125,7 +125,7 @@ block|}
 end_function
 
 begin_function
-name|uint32_t
+name|uint16_t
 name|g_dec_le2
 parameter_list|(
 name|u_char

@@ -235,6 +235,7 @@ name|name
 parameter_list|,
 name|int
 name|namelen
+name|__unused
 parameter_list|,
 name|dev_t
 modifier|*

@@ -1432,7 +1432,7 @@ comment|/* geom_enc.c */
 end_comment
 
 begin_function_decl
-name|uint32_t
+name|uint16_t
 name|g_dec_be2
 parameter_list|(
 name|u_char
@@ -1454,7 +1454,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
+name|uint16_t
 name|g_dec_le2
 parameter_list|(
 name|u_char
