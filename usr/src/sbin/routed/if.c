@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.1 (Berkeley) %G%"
+literal|"@(#)if.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,7 +277,7 @@ if|if
 condition|(
 name|af
 operator|>=
-name|AF_MAX
+name|af_max
 condition|)
 return|return
 operator|(
@@ -400,7 +400,7 @@ if|if
 condition|(
 name|af
 operator|>=
-name|AF_MAX
+name|af_max
 condition|)
 return|return
 operator|(

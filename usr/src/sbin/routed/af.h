@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)af.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)af.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -79,6 +79,15 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* canonicalize address for compares */
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|af_format
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* convert address to string */
 block|}
 struct|;
 end_struct
@@ -107,14 +116,22 @@ begin_decl_stmt
 name|struct
 name|afswitch
 name|afswitch
-index|[
-name|AF_MAX
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* table proper */
+end_comment
+
+begin_decl_stmt
+name|int
+name|af_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of entries in table */
 end_comment
 
 end_unit

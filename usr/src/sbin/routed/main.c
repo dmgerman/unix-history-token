@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,14 @@ operator||
 name|LOG_ODELAY
 argument_list|,
 name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
+name|setlogmask
+argument_list|(
+name|LOG_UPTO
+argument_list|(
+name|LOG_WARNING
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -336,6 +344,43 @@ condition|)
 block|{
 name|tracepackets
 operator|++
+expr_stmt|;
+name|setlogmask
+argument_list|(
+name|LOG_UPTO
+argument_list|(
+name|LOG_DEBUG
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-d"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|setlogmask
+argument_list|(
+name|LOG_UPTO
+argument_list|(
+name|LOG_DEBUG
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|argv
 operator|++

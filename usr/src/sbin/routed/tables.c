@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.1 (Berkeley) %G%"
+literal|"@(#)tables.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|dst
 operator|->
 name|sa_family
 operator|>=
-name|AF_MAX
+name|af_max
 condition|)
 return|return
 operator|(
@@ -324,7 +324,7 @@ if|if
 condition|(
 name|af
 operator|>=
-name|AF_MAX
+name|af_max
 condition|)
 return|return
 operator|(
@@ -564,7 +564,7 @@ if|if
 condition|(
 name|af
 operator|>=
-name|AF_MAX
+name|af_max
 condition|)
 return|return;
 operator|(
