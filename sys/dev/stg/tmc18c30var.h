@@ -53,6 +53,10 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
+name|int
+name|sc_wc
+decl_stmt|;
+comment|/* weight counter */
 name|u_int
 name|sc_chip
 decl_stmt|;
@@ -142,22 +146,22 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*****************************************************************  * Lun information   *****************************************************************/
+comment|/*****************************************************************  * Target information   *****************************************************************/
 end_comment
 
 begin_struct
 struct|struct
-name|stg_lun_info
+name|stg_targ_info
 block|{
 name|struct
-name|lun_info
-name|sli_li
+name|targ_info
+name|sti_ti
 decl_stmt|;
 comment|/* generic data */
 name|u_int8_t
-name|sli_reg_synch
+name|sti_reg_synch
 decl_stmt|;
-comment|/* synch register per lun */
+comment|/* synch register per target */
 block|}
 struct|;
 end_struct

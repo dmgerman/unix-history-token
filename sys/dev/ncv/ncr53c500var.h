@@ -54,6 +54,10 @@ modifier|*
 name|sc_ih
 decl_stmt|;
 name|int
+name|sc_wc
+decl_stmt|;
+comment|/* weight counter */
+name|int
 name|sc_selstop
 decl_stmt|;
 comment|/* sel atn stop asserted */
@@ -84,6 +88,9 @@ name|int
 name|port_rid
 decl_stmt|;
 name|int
+name|port_rid_dmy
+decl_stmt|;
+name|int
 name|irq_rid
 decl_stmt|;
 name|int
@@ -93,6 +100,11 @@ name|struct
 name|resource
 modifier|*
 name|port_res
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|port_res_dmy
 decl_stmt|;
 name|struct
 name|resource
@@ -115,29 +127,29 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*****************************************************************  * Lun information   *****************************************************************/
+comment|/*****************************************************************  * Target information   *****************************************************************/
 end_comment
 
 begin_struct
 struct|struct
-name|ncv_lun_info
+name|ncv_targ_info
 block|{
 name|struct
-name|lun_info
-name|nli_li
+name|targ_info
+name|nti_ti
 decl_stmt|;
 name|u_int8_t
-name|nli_reg_cfg3
+name|nti_reg_cfg3
 decl_stmt|;
-comment|/* cfg3 images per lun */
+comment|/* cfg3 images per target */
 name|u_int8_t
-name|nli_reg_offset
+name|nti_reg_offset
 decl_stmt|;
-comment|/* synch offset register per lun */
+comment|/* synch offset register per target */
 name|u_int8_t
-name|nli_reg_period
+name|nti_reg_period
 decl_stmt|;
-comment|/* synch period register per lun */
+comment|/* synch period register per target */
 block|}
 struct|;
 end_struct
