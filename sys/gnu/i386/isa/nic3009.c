@@ -5,12 +5,12 @@ name|char
 name|nic39_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3009.c,v 1.1 1995/02/14 15:00:14 jkh Exp $"
+literal|"@(#)$Id: nic3009.c,v 1.2 1995/02/15 06:28:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3009.c,v $  * Revision 1.1  1995/02/14  15:00:14  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3009.c,v $  * Revision 1.2  1995/02/15  06:28:20  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:14  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gnu/i386/isa/isa_device.h"
+file|"i386/isa/isa_device.h"
 end_include
 
 begin_include
@@ -230,21 +230,13 @@ name|Isdn_Typ
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern isdn_start_out(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+name|void
+name|isdn_start_out
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 specifier|static
@@ -1089,12 +1081,23 @@ specifier|static
 name|void
 name|make_intr
 parameter_list|(
+name|void
+modifier|*
+name|gen
+parameter_list|)
+block|{
 name|struct
 name|nnic_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|nnic_softc
+operator|*
+operator|)
+name|gen
+decl_stmt|;
 name|dpr_type
 modifier|*
 name|dpr
@@ -6326,6 +6329,10 @@ name|timeout
 argument_list|(
 name|isdn_start_out
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|chan
 operator|->
 name|ctrl
@@ -6820,6 +6827,10 @@ name|timeout
 argument_list|(
 name|make_intr
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sc
 argument_list|,
 literal|1
@@ -6833,10 +6844,20 @@ specifier|static
 name|void
 name|nnnicintr
 parameter_list|(
-name|unsigned
-name|unit
+name|void
+modifier|*
+name|gen
 parameter_list|)
 block|{
+name|unsigned
+name|int
+name|unit
+init|=
+operator|(
+name|int
+operator|)
+name|gen
+decl_stmt|;
 specifier|register
 name|struct
 name|nnic_softc
@@ -6908,6 +6929,10 @@ name|timeout
 argument_list|(
 name|nnnicintr
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|,
 literal|1

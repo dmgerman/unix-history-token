@@ -5,12 +5,12 @@ name|char
 name|nic38_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3008.c,v 1.1 1995/01/25 14:06:18 jkr Exp jkr $"
+literal|"@(#)$Id: nic3008.c,v 1.1 1995/02/14 15:00:10 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -64,19 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i386/isa/nic3008.h"
+file|"gnu/i386/isa/nic3008.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/niccyreg.h"
+file|"gnu/i386/isa/niccyreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"isdn/isdn_ioctl.h"
+file|"gnu/isdn/isdn_ioctl.h"
 end_include
 
 begin_define
@@ -287,13 +287,6 @@ name|Isdn_Typ
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|old_spy
@@ -335,14 +328,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_extern
-extern|extern isdn_start_out(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|isdn_start_out
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -4646,6 +4638,10 @@ name|timeout
 argument_list|(
 name|isdn_start_out
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|chan
 operator|->
 name|ctrl
