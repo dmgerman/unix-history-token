@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.c	8.2 (Berkeley) 3/28/94  *  * $Id: bpf.c,v 1.46 1998/12/07 21:58:36 archie Exp $  */
+comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.c	8.2 (Berkeley) 3/28/94  *  * $Id: bpf.c,v 1.47 1999/01/27 22:42:13 dillon Exp $  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"bpfilter.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-end_if
 
 begin_ifndef
 ifndef|#
@@ -228,6 +220,14 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Older BSDs don't have kernel malloc.  */
@@ -4907,6 +4907,108 @@ argument|bpf_drvinit
 argument_list|,
 argument|NULL
 argument_list|)
+else|#
+directive|else
+comment|/* !BPFILTER */
+comment|/*  * NOP stubs to allow bpf-using drivers to load and function.  *  * A 'better' implementation would allow the core bpf functionality  * to be loaded at runtime.  */
+name|void
+name|bpf_tap
+parameter_list|(
+name|ifp
+parameter_list|,
+name|pkt
+parameter_list|,
+name|pktlen
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+specifier|register
+name|u_char
+modifier|*
+name|pkt
+decl_stmt|;
+specifier|register
+name|u_int
+name|pktlen
+decl_stmt|;
+block|{ }
+name|void
+name|bpf_mtap
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+block|{ }
+name|void
+name|bpfattach
+parameter_list|(
+name|ifp
+parameter_list|,
+name|dlt
+parameter_list|,
+name|hdrlen
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|u_int
+name|dlt
+decl_stmt|,
+name|hdrlen
+decl_stmt|;
+block|{ }
+name|u_int
+name|bpf_filter
+parameter_list|(
+name|pc
+parameter_list|,
+name|p
+parameter_list|,
+name|wirelen
+parameter_list|,
+name|buflen
+parameter_list|)
+specifier|register
+name|struct
+name|bpf_insn
+modifier|*
+name|pc
+decl_stmt|;
+specifier|register
+name|u_char
+modifier|*
+name|p
+decl_stmt|;
+name|u_int
+name|wirelen
+decl_stmt|;
+specifier|register
+name|u_int
+name|buflen
+decl_stmt|;
+block|{
+return|return
+operator|-
+literal|1
+return|;
+comment|/* "no filter" behaviour */
+block|}
 end_block
 
 begin_endif
