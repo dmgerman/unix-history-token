@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inet.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inet.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-specifier|extern
 name|unsigned
 name|long
 name|inet_addr
@@ -43,7 +42,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+name|unsigned
+name|long
+name|inet_aton
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|in_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|long
 name|inet_lnaof
@@ -58,7 +75,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|in_addr
 name|inet_makeaddr
@@ -74,7 +90,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|unsigned
 name|long
 name|inet_netof
@@ -89,7 +104,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|unsigned
 name|long
 name|inet_network
@@ -105,7 +119,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|inet_ntoa
