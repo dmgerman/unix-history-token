@@ -9837,6 +9837,10 @@ operator|&&
 name|cls
 operator|!=
 name|PCIC_MEMORY
+operator|&&
+name|cls
+operator|!=
+name|PCIC_BASEPERIPH
 condition|)
 block|{
 comment|/* 		 * PCI spec is clear that we can only go into D3 state from 		 * D0 state.  Transition from D[12] into D0 before going 		 * to D3 state. 		 */
