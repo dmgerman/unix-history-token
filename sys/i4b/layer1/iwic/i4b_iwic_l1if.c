@@ -64,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/i4b_debug.h>
 end_include
 
@@ -119,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/layer1/iwic/i4b_iwic_ext.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer1/iwic/i4b_w6692.h>
 end_include
 
 begin_comment

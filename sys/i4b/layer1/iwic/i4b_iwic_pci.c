@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/i4b_ioctl.h>
 end_include
 
@@ -143,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/layer1/iwic/i4b_iwic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer1/iwic/i4b_iwic_ext.h>
 end_include
 
 begin_include

@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/i4b_ioctl.h>
 end_include
 

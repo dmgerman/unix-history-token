@@ -284,12 +284,6 @@ begin_comment
 comment|/* minor number: lower 6 bits = unit number */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<i4b/layer4/i4b_l4.h>
-end_include
-
 begin_define
 define|#
 directive|define

@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -77,18 +71,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/layer1/isic/i4b_isic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer1/isic/i4b_isac.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer1/isic/i4b_hscx.h>
 end_include
 
 begin_include

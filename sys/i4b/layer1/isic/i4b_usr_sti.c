@@ -83,12 +83,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -141,12 +135,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/i4b_debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/i4b_ioctl.h>
 end_include
 
@@ -176,12 +164,6 @@ begin_include
 include|#
 directive|include
 file|<i4b/layer1/isic/i4b_isic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i4b/layer1/isic/i4b_isac.h>
 end_include
 
 begin_include
