@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.12 %G%"
+literal|"@(#)c21.c 4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7474,13 +7474,7 @@ name|NUSE
 operator|&&
 name|bitsize
 index|[
-name|p
-operator|->
-name|back
-operator|->
 name|subop
-operator|&
-literal|0xF
 index|]
 operator|>=
 operator|(
