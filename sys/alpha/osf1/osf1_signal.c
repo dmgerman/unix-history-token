@@ -442,220 +442,6 @@ parameter_list|)
 value|(*(s) |= sigmask(n))
 end_define
 
-begin_decl_stmt
-name|int
-name|bsd_to_osf1_sig
-index|[
-name|OSF1_SIGTBLSZ
-index|]
-init|=
-block|{
-name|OSF1_SIGHUP
-block|,
-comment|/* 1 */
-name|OSF1_SIGINT
-block|,
-comment|/* 2 */
-name|OSF1_SIGQUIT
-block|,
-comment|/* 3 */
-name|OSF1_SIGILL
-block|,
-comment|/* 4 */
-name|OSF1_SIGTRAP
-block|,
-comment|/* 5 */
-name|OSF1_SIGABRT
-block|,
-comment|/* 6 */
-name|OSF1_SIGEMT
-block|,
-comment|/* 7 */
-name|OSF1_SIGFPE
-block|,
-comment|/* 8 */
-name|OSF1_SIGKILL
-block|,
-comment|/* 9 */
-name|OSF1_SIGBUS
-block|,
-comment|/* 10 */
-name|OSF1_SIGSEGV
-block|,
-comment|/* 11 */
-name|OSF1_SIGSYS
-block|,
-comment|/* 12 */
-name|OSF1_SIGPIPE
-block|,
-comment|/* 13 */
-name|OSF1_SIGALRM
-block|,
-comment|/* 14 */
-name|OSF1_SIGTERM
-block|,
-comment|/* 15 */
-name|OSF1_SIGURG
-block|,
-comment|/* 16 */
-name|OSF1_SIGSTOP
-block|,
-comment|/* 17 */
-name|OSF1_SIGTSTP
-block|,
-comment|/* 18 */
-name|OSF1_SIGCONT
-block|,
-comment|/* 19 */
-name|OSF1_SIGCHLD
-block|,
-comment|/* 20 */
-name|OSF1_SIGTTIN
-block|,
-comment|/* 21 */
-name|OSF1_SIGTTOU
-block|,
-comment|/* 22 */
-name|OSF1_SIGIO
-block|,
-comment|/* 23 */
-name|OSF1_SIGXCPU
-block|,
-comment|/* 24 */
-name|OSF1_SIGXFSZ
-block|,
-comment|/* 25 */
-name|OSF1_SIGVTALRM
-block|,
-comment|/* 26 */
-name|OSF1_SIGPROF
-block|,
-comment|/* 27 */
-name|OSF1_SIGWINCH
-block|,
-comment|/* 28 */
-name|OSF1_SIGINFO
-block|,
-comment|/* 29 */
-name|OSF1_SIGUSR1
-block|,
-comment|/* 30 */
-name|OSF1_SIGUSR2
-block|,
-comment|/* 31 */
-literal|0
-comment|/* 32 */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|osf1_to_bsd_sig
-index|[
-name|OSF1_SIGTBLSZ
-index|]
-init|=
-block|{
-name|SIGHUP
-block|,
-comment|/* 1 */
-name|SIGINT
-block|,
-comment|/* 2 */
-name|SIGQUIT
-block|,
-comment|/* 3 */
-name|SIGILL
-block|,
-comment|/* 4 */
-name|SIGTRAP
-block|,
-comment|/* 5 */
-name|SIGABRT
-block|,
-comment|/* 6 */
-name|SIGEMT
-block|,
-comment|/* 7 */
-name|SIGFPE
-block|,
-comment|/* 8 */
-name|SIGKILL
-block|,
-comment|/* 9 */
-name|SIGBUS
-block|,
-comment|/* 10 */
-name|SIGSEGV
-block|,
-comment|/* 11 */
-name|SIGSYS
-block|,
-comment|/* 12 */
-name|SIGPIPE
-block|,
-comment|/* 13 */
-name|SIGALRM
-block|,
-comment|/* 14 */
-name|SIGTERM
-block|,
-comment|/* 15 */
-name|SIGURG
-block|,
-comment|/* 16 */
-name|SIGSTOP
-block|,
-comment|/* 17 */
-name|SIGTSTP
-block|,
-comment|/* 18 */
-name|SIGCONT
-block|,
-comment|/* 19 */
-name|SIGCHLD
-block|,
-comment|/* 20 */
-name|SIGTTIN
-block|,
-comment|/* 21 */
-name|SIGTTOU
-block|,
-comment|/* 22 */
-name|SIGIO
-block|,
-comment|/* 23 */
-name|SIGXCPU
-block|,
-comment|/* 24 */
-name|SIGXFSZ
-block|,
-comment|/* 25 */
-name|SIGVTALRM
-block|,
-comment|/* 26 */
-name|SIGPROF
-block|,
-comment|/* 27 */
-name|SIGWINCH
-block|,
-comment|/* 28 */
-name|SIGINFO
-block|,
-comment|/* 29 */
-name|SIGUSR1
-block|,
-comment|/* 30 */
-name|SIGUSR2
-block|,
-comment|/* 31 */
-literal|0
-comment|/* 32 */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|osf1_to_bsd_sigset
@@ -674,10 +460,10 @@ modifier|*
 name|bss
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|,
-name|newsig
+specifier|const
+name|u_int32_t
+modifier|*
+name|obits
 decl_stmt|;
 name|SIGEMPTYSET
 argument_list|(
@@ -685,54 +471,39 @@ operator|*
 name|bss
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
+name|obits
 operator|=
-literal|1
-init|;
-name|i
-operator|<=
-name|OSF1_SIGTBLSZ
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|osf1_sigismember
-argument_list|(
+operator|(
+specifier|const
+name|u_int32_t
+operator|*
+operator|)
 name|oss
-argument_list|,
-name|i
-argument_list|)
-condition|)
-block|{
-name|newsig
-operator|=
-name|osf1_to_bsd_sig
+expr_stmt|;
+name|bss
+operator|->
+name|__bits
 index|[
-name|_SIG_IDX
-argument_list|(
-name|i
-argument_list|)
+literal|0
+index|]
+operator|=
+name|obits
+index|[
+literal|0
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|newsig
-condition|)
-name|SIGADDSET
-argument_list|(
-operator|*
 name|bss
-argument_list|,
-name|newsig
-argument_list|)
+operator|->
+name|__bits
+index|[
+literal|1
+index|]
+operator|=
+name|obits
+index|[
+literal|1
+index|]
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -754,64 +525,47 @@ modifier|*
 name|oss
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|,
-name|newsig
+name|u_int32_t
+modifier|*
+name|obits
 decl_stmt|;
 name|osf1_sigemptyset
 argument_list|(
 name|oss
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
+name|obits
 operator|=
-literal|1
-init|;
-name|i
-operator|<=
-name|OSF1_SIGTBLSZ
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|SIGISMEMBER
-argument_list|(
+operator|(
+name|u_int32_t
 operator|*
-name|bss
-argument_list|,
-name|i
-argument_list|)
-condition|)
-block|{
-name|newsig
-operator|=
-name|bsd_to_osf1_sig
+operator|)
+name|oss
+expr_stmt|;
+name|obits
 index|[
-name|_SIG_IDX
-argument_list|(
-name|i
-argument_list|)
+literal|0
+index|]
+operator|=
+name|bss
+operator|->
+name|__bits
+index|[
+literal|0
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|newsig
-condition|)
-name|osf1_sigaddset
-argument_list|(
-name|oss
-argument_list|,
-name|newsig
-argument_list|)
+name|obits
+index|[
+literal|1
+index|]
+operator|=
+name|bss
+operator|->
+name|__bits
+index|[
+literal|1
+index|]
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -1498,14 +1252,11 @@ argument_list|,
 name|sig
 argument_list|)
 operator|=
-name|OSF1_OSF12BSD_SIG
-argument_list|(
 name|SCARG
 argument_list|(
 name|uap
 argument_list|,
 name|signum
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SCARG
@@ -1945,8 +1696,6 @@ argument_list|()
 expr_stmt|;
 name|signum
 operator|=
-name|OSF1_OSF12BSD_SIG
-argument_list|(
 name|OSF1_SIGNO
 argument_list|(
 name|SCARG
@@ -1954,7 +1703,6 @@ argument_list|(
 name|uap
 argument_list|,
 name|signum
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3194,14 +2942,11 @@ argument_list|,
 name|signum
 argument_list|)
 operator|=
-name|OSF1_OSF12BSD_SIG
-argument_list|(
 name|SCARG
 argument_list|(
 name|uap
 argument_list|,
 name|signum
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3470,11 +3215,11 @@ name|sc_onstack
 operator|=
 name|oonstack
 expr_stmt|;
-name|SIG2OSIG
+name|bsd_to_osf1_sigset
 argument_list|(
-operator|*
 name|mask
 argument_list|,
+operator|&
 name|ksi
 operator|.
 name|si_sc
@@ -3990,15 +3735,17 @@ operator|~
 name|SS_ONSTACK
 expr_stmt|;
 comment|/* 	 * longjmp is still implemented by calling osigreturn. The new 	 * sigmask is stored in sc_reserved, sc_mask is only used for 	 * backward compatibility. 	 */
-name|SIGSETOLD
+name|osf1_to_bsd_sigset
 argument_list|(
-name|p
-operator|->
-name|p_sigmask
-argument_list|,
+operator|&
 name|ksc
 operator|.
 name|sc_mask
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_sigmask
 argument_list|)
 expr_stmt|;
 name|SIG_CANTMASK
