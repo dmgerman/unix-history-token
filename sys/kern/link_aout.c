@@ -2312,7 +2312,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|NULL
+literal|0
 return|;
 name|hashbase
 operator|=

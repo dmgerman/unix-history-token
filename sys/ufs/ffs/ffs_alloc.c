@@ -5694,7 +5694,7 @@ name|len
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 if|if

@@ -3158,7 +3158,7 @@ operator|&
 name|INP_IPV4
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|inp
@@ -3617,7 +3617,7 @@ operator|&
 name|INP_IPV4
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 endif|#
@@ -3780,7 +3780,7 @@ operator|&
 name|INP_IPV4
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 endif|#
@@ -4012,7 +4012,7 @@ operator|&
 name|INP_IPV4
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 endif|#
@@ -4143,7 +4143,7 @@ operator|&
 name|INP_IPV4
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 endif|#

@@ -4879,7 +4879,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 if|if

@@ -4872,7 +4872,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 break|break;
 name|error
@@ -4889,7 +4889,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 break|break;
 return|return
@@ -8594,7 +8594,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -687,7 +687,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -1490,6 +1490,10 @@ name|sockaddr_in6
 argument_list|)
 condition|)
 return|return;
+name|off
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2842,7 +2846,7 @@ operator|&
 name|IN6P_BINDV6ONLY
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|struct
@@ -3104,7 +3108,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|inp
@@ -3197,7 +3201,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if

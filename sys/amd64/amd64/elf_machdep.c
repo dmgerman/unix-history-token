@@ -224,7 +224,7 @@ if|if
 condition|(
 name|addr
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|-
@@ -279,7 +279,7 @@ if|if
 condition|(
 name|addr
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|-
@@ -354,7 +354,7 @@ if|if
 condition|(
 name|addr
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|-

@@ -1102,7 +1102,7 @@ operator|&
 name|INP_IPV4
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 endif|#

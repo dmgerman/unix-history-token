@@ -3392,7 +3392,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|NULL
+literal|0
 condition|)
 name|in6_sin_2_v4mapsin6_in_sock
 argument_list|(
@@ -3476,7 +3476,7 @@ if|if
 condition|(
 name|error
 operator|==
-name|NULL
+literal|0
 condition|)
 name|in6_sin_2_v4mapsin6_in_sock
 argument_list|(
@@ -3714,7 +3714,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|inp
@@ -3940,7 +3940,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -4072,7 +4072,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -4530,7 +4530,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -4628,7 +4628,7 @@ operator|&
 name|INP_IPV6
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 if|if
