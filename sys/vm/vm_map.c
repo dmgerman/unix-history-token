@@ -2851,10 +2851,9 @@ name|object
 condition|)
 block|{
 comment|/* 		 * When object is non-NULL, it could be shared with another 		 * process.  We have to set or clear OBJ_ONEMAPPING  		 * appropriately. 		 */
-name|mtx_lock
+name|vm_object_lock
 argument_list|(
-operator|&
-name|Giant
+name|object
 argument_list|)
 expr_stmt|;
 if|if
@@ -2884,10 +2883,9 @@ name|OBJ_ONEMAPPING
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|vm_object_unlock
 argument_list|(
-operator|&
-name|Giant
+name|object
 argument_list|)
 expr_stmt|;
 block|}
