@@ -1009,9 +1009,11 @@ name|SIZE_ASM_OP
 value|".size"
 end_define
 
-begin_empty
-empty|#unset SET_ASM_OP
-end_empty
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
 
 begin_define
 define|#
