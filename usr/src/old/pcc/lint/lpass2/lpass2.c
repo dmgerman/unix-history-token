@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.10	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.11	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,8 +1066,10 @@ else|#
 directive|else
 name|h
 operator|=
+operator|*
 operator|(
 name|int
+operator|*
 operator|)
 name|r
 operator|.
@@ -1131,15 +1133,20 @@ else|#
 directive|else
 if|if
 condition|(
+name|strcmp
+argument_list|(
 name|r
 operator|.
 name|l
 operator|.
 name|name
-operator|==
+argument_list|,
 name|q
 operator|->
 name|name
+argument_list|)
+operator|==
+literal|0
 condition|)
 endif|#
 directive|endif
@@ -1656,15 +1663,15 @@ endif|#
 directive|endif
 argument|nu =
 literal|1
-argument|; 		}  	if( !ISFTN(q->symty.t.aty) ){ 		switch( q->decflag ){  		case LIB: 			nu = nd =
+argument|; 		}  	switch( q->decflag ){  	case LIB: 		nu = nd =
 literal|0
 argument|;
 comment|/* don't complain about uses on libraries */
-argument|break; 		case LDX: 			if( !xflag ) break; 		case LUV: 		case LUE:
+argument|break; 	case LDX: 		if( !xflag ) break; 	case LUV: 	case LUE:
 comment|/* 01/04/80 */
-argument|case LUV | LUE: 		case LUM: 			nd =
+argument|case LUV | LUE: 	case LUM: 		nd =
 literal|1
-argument|; 			} 		} 	if( uflag&& ( nu || nd ) )
+argument|; 	} 	if( uflag&& ( nu || nd ) )
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
