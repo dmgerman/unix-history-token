@@ -730,6 +730,13 @@ name|vfs_update_interval
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|osreldate
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * kernel related system variables.  */
 end_comment
@@ -901,6 +908,23 @@ argument_list|,
 name|newp
 argument_list|,
 name|version
+argument_list|)
+operator|)
+return|;
+case|case
+name|KERN_OSRELDATE
+case|:
+return|return
+operator|(
+name|sysctl_rdint
+argument_list|(
+name|oldp
+argument_list|,
+name|oldlenp
+argument_list|,
+name|newp
+argument_list|,
+name|osreldate
 argument_list|)
 operator|)
 return|;
