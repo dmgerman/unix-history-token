@@ -3,5 +3,39 @@ begin_comment
 comment|/* !Automatically generated from ./functions.def - DO NOT EDIT! */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEED_basename
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NEED_basename
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEED_on_exit
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NEED_on_exit
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

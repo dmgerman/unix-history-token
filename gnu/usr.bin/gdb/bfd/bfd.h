@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 1996 Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* bfd.h -- The only header file required by users of the bfd library  The bfd.h file is generated from bfd-in.h and various .c files; if you change it, your changes will probably be lost.  All the prototypes and definitions following the comment "THE FOLLOWING IS EXTRACTED FROM THE SOURCE" are extracted from the source files for BFD.  If you change it, someone oneday will extract it from the source again, and your changes will be lost.  To save yourself from this bind, change the definitions in the source in the bfd directory.  Type "make docs" and then "make headers" in that directory, and magically this file will change to reflect your changes.  If you don't have the tools to perform the extraction, then you are safe from someone on your system trampling over your header files. You should still maintain the equivalence between the source and this file though; every change you make to the .c file should be reflected here.  */
+comment|/* bfd.h -- The only header file required by users of the bfd library   The bfd.h file is generated from bfd-in.h and various .c files; if you change it, your changes will probably be lost.  All the prototypes and definitions following the comment "THE FOLLOWING IS EXTRACTED FROM THE SOURCE" are extracted from the source files for BFD.  If you change it, someone oneday will extract it from the source again, and your changes will be lost.  To save yourself from this bind, change the definitions in the source in the bfd directory.  Type "make docs" and then "make headers" in that directory, and magically this file will change to reflect your changes.  If you don't have the tools to perform the extraction, then you are safe from someone on your system trampling over your header files. You should still maintain the equivalence between the source and this file though; every change you make to the .c file should be reflected here.  */
 end_comment
 
 begin_ifndef
@@ -19,144 +19,114 @@ directive|define
 name|__BFD_H_SEEN__
 end_define
 
-begin_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 include|#
 directive|include
 file|"ansidecl.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"obstack.h"
-end_include
-
-begin_comment
 comment|/* These two lines get substitutions done by commands in Makefile.in.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|BFD_VERSION
-value|"cygnus-2.3"
-end_define
-
-begin_define
+value|"cygnus-2.6"
 define|#
 directive|define
 name|BFD_ARCH_SIZE
 value|32
-end_define
-
-begin_if
+define|#
+directive|define
+name|BFD_HOST_64BIT_LONG
+value|0
 if|#
 directive|if
 name|BFD_ARCH_SIZE
 operator|>=
 literal|64
-end_if
-
-begin_define
 define|#
 directive|define
 name|BFD64
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|INLINE
-end_ifndef
-
-begin_if
 if|#
 directive|if
 name|__GNUC__
 operator|>=
 literal|2
-end_if
-
-begin_define
 define|#
 directive|define
 name|INLINE
 value|__inline__
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|INLINE
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* 64-bit type definition (if any) from bfd's sysdep.h goes here */
-end_comment
-
-begin_comment
 comment|/* forward declaration */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|struct
 name|_bfd
 name|bfd
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* To squelch erroneous compiler warnings ("illegal pointer    combination") from the SVR3 compiler, we would like to typedef    boolean to int (it doesn't like functions which return boolean.    Making sure they are never implicitly declared to return int    doesn't seem to help).  But this file is not configured based on    the host.  */
-end_comment
-
-begin_comment
 comment|/* General rules: functions which are boolean return true on success    and false on failure (unless they're a predicate).   -- bfd.doc */
-end_comment
-
-begin_comment
 comment|/* I'm sure this is going to break something and someone is going to    force me to change it. */
-end_comment
-
-begin_comment
 comment|/* typedef enum boolean {false, true} boolean; */
-end_comment
-
-begin_comment
 comment|/* Yup, SVR4 has a "typedef enum boolean" in<sys/types.h>  -fnf */
-end_comment
-
-begin_comment
 comment|/* It gets worse if the host also defines a true/false enum... -sts */
-end_comment
-
-begin_ifndef
+comment|/* And even worse if your compiler has built-in boolean types... -law */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUG__
+argument_list|)
+operator|&&
+operator|(
+name|__GNUC_MINOR__
+operator|>
+literal|5
+operator|)
+define|#
+directive|define
+name|TRUE_FALSE_ALREADY_DEFINED
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MPW
+comment|/* Pre-emptive strike - get the file with the enum. */
+include|#
+directive|include
+file|<Types.h>
+define|#
+directive|define
+name|TRUE_FALSE_ALREADY_DEFINED
+endif|#
+directive|endif
+comment|/* MPW */
 ifndef|#
 directive|ifndef
 name|TRUE_FALSE_ALREADY_DEFINED
-end_ifndef
-
-begin_typedef
 typedef|typedef
 enum|enum
 name|bfd_boolean
@@ -167,212 +137,123 @@ name|true
 block|}
 name|boolean
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|BFD_TRUE_FALSE
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_typedef
+comment|/* Use enum names that will appear nowhere else.  */
 typedef|typedef
 enum|enum
 name|bfd_boolean
 block|{
-name|bfd_false
+name|bfd_fffalse
 block|,
-name|bfd_true
+name|bfd_tttrue
 block|}
 name|boolean
 typedef|;
-end_typedef
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* A pointer to a position in a file.  */
-end_comment
-
-begin_comment
-comment|/* FIXME:  This should be using off_t from<sys/types.h>.    For now, try to avoid breaking stuff by not including<sys/types.h> here.    This will break on systems with 64-bit file offsets (e.g. 4.4BSD).    Probably the best long-term answer is to avoid using file_ptr AND off_t    in this header file, and to handle this in the BFD implementation    rather than in its interface.  */
-end_comment
-
-begin_comment
+comment|/* FIXME:  This should be using off_t from<sys/types.h>.    For now, try to avoid breaking stuff by not including<sys/types.h> here.    This will break on systems with 64-bit file offsets (e.g. 4.4BSD).    Probably the best long-term answer is to avoid using file_ptr AND off_t     in this header file, and to handle this in the BFD implementation    rather than in its interface.  */
 comment|/* typedef off_t	file_ptr; */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|long
 name|int
 name|file_ptr
 typedef|;
-end_typedef
-
-begin_comment
-comment|/* Support for different sizes of target format ints and addresses.  If the    host implements 64-bit values, it defines BFD_HOST_64_BIT to be the appropriate    type.  Otherwise, this code will fall back on gcc's "long long" type if gcc    is being used.  BFD_HOST_64_BIT must be defined in such a way as to be a valid    type name by itself or with "unsigned" prefixed.  It should be a signed    type by itself.     If neither is the case, then compilation will fail if 64-bit targets are    requested.  If you don't request any 64-bit targets, you should be safe. */
-end_comment
-
-begin_ifdef
+comment|/* Support for different sizes of target format ints and addresses.    If the type `long' is at least 64 bits, BFD_HOST_64BIT_LONG will be    set to 1 above.  Otherwise, if gcc is being used, this code will    use gcc's "long long" type.  Otherwise, the compilation will fail    if 64-bit targets are requested.  */
 ifdef|#
 directive|ifdef
 name|BFD64
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BFD_HOST_64_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BFD_HOST_64_BIT
-value|long long
-end_define
-
-begin_typedef
-typedef|typedef
-name|BFD_HOST_64_BIT
-name|int64_type
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|BFD_HOST_64_BIT
-name|uint64_type
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|uint64_type
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|uint64_type
-value|unsigned long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|int64_type
-value|long long
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
-name|uint64_typeLOW
-end_ifndef
-
-begin_define
+name|BFD_HOST_64_BIT
+if|#
+directive|if
+name|BFD_HOST_64BIT_LONG
 define|#
 directive|define
-name|uint64_typeLOW
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(((x)& 0xffffffff)))
-end_define
-
-begin_define
+name|BFD_HOST_64_BIT
+value|long
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|__GNUC__
 define|#
 directive|define
-name|uint64_typeHIGH
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(((x)>> 32)& 0xffffffff))
-end_define
-
-begin_endif
+name|BFD_HOST_64_BIT
+value|long long
 endif|#
 directive|endif
-end_endif
-
-begin_typedef
+comment|/* defined (__GNUC__) */
+endif|#
+directive|endif
+comment|/* ! BFD_HOST_64BIT_LONG */
+endif|#
+directive|endif
+comment|/* ! defined (BFD_HOST_64_BIT) */
 typedef|typedef
 name|unsigned
 name|BFD_HOST_64_BIT
 name|bfd_vma
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|BFD_HOST_64_BIT
 name|bfd_signed_vma
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|BFD_HOST_64_BIT
 name|bfd_size_type
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|BFD_HOST_64_BIT
 name|symvalue
 typedef|;
-end_typedef
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|fprintf_vma
-end_ifndef
-
-begin_define
+if|#
+directive|if
+name|BFD_HOST_64BIT_LONG
+define|#
+directive|define
+name|sprintf_vma
+parameter_list|(
+name|s
+parameter_list|,
+name|x
+parameter_list|)
+value|sprintf (s, "%016lx", x)
+define|#
+directive|define
+name|fprintf_vma
+parameter_list|(
+name|f
+parameter_list|,
+name|x
+parameter_list|)
+value|fprintf (f, "%016lx", x)
+else|#
+directive|else
+define|#
+directive|define
+name|_bfd_int64_low
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long) (((x)& 0xffffffff)))
+define|#
+directive|define
+name|_bfd_int64_high
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long) (((x)>> 32)& 0xffffffff))
 define|#
 directive|define
 name|fprintf_vma
@@ -382,10 +263,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|fprintf(s,"%08lx%08lx", uint64_typeHIGH(x), uint64_typeLOW(x))
-end_define
-
-begin_define
+value|fprintf ((s), "%08lx%08lx", _bfd_int64_high (x), _bfd_int64_low (x))
 define|#
 directive|define
 name|sprintf_vma
@@ -395,67 +273,36 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|sprintf(s,"%08lx%08lx", uint64_typeHIGH(x), uint64_typeLOW(x))
-end_define
-
-begin_endif
+value|sprintf ((s), "%08lx%08lx", _bfd_int64_high (x), _bfd_int64_low (x))
 endif|#
 directive|endif
-end_endif
-
-begin_else
+endif|#
+directive|endif
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* not BFD64  */
-end_comment
-
-begin_comment
 comment|/* Represent a target address.  Also used as a generic unsigned type    which is guaranteed to be big enough to hold any arithmetic types    we need to deal with.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|long
 name|bfd_vma
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* A generic signed type which is guaranteed to be big enough to hold any    arithmetic types we need to deal with.  Can be assumed to be compatible    with bfd_vma in the same way that signed and unsigned ints are compatible    (as parameters, in assignment, etc).  */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|long
 name|bfd_signed_vma
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|long
 name|symvalue
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|long
 name|bfd_size_type
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* Print a bfd_vma x on stream s.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|fprintf_vma
@@ -465,9 +312,6 @@ parameter_list|,
 name|x
 parameter_list|)
 value|fprintf(s, "%08lx", x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|sprintf_vma
@@ -477,18 +321,9 @@ parameter_list|,
 name|x
 parameter_list|)
 value|sprintf(s, "%08lx", x)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* not BFD64  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|printf_vma
@@ -496,28 +331,18 @@ parameter_list|(
 name|x
 parameter_list|)
 value|fprintf_vma(stdout,x)
-end_define
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|int
 name|flagword
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* 32 bits of flags */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
+typedef|typedef
+name|unsigned
+name|char
+name|bfd_byte
+typedef|;
 comment|/** File formats */
-end_comment
-
-begin_typedef
 typedef|typedef
 enum|enum
 name|bfd_format
@@ -541,175 +366,91 @@ block|}
 comment|/* marks the end; don't use it! */
 name|bfd_format
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* Values that may appear in the flags field of a BFD.  These also    appear in the object_flags field of the bfd_target structure, where    they indicate the set of flags used by that backend (not all flags    are meaningful for all object file formats) (FIXME: at the moment,    the object_flags values have mostly just been copied from backend    to another, and are not necessarily correct).  */
-end_comment
-
-begin_comment
 comment|/* No flags.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NO_FLAGS
 value|0x00
-end_define
-
-begin_comment
 comment|/* BFD contains relocation entries.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HAS_RELOC
 value|0x01
-end_define
-
-begin_comment
 comment|/* BFD is directly executable.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EXEC_P
 value|0x02
-end_define
-
-begin_comment
 comment|/* BFD has line number information (basically used for F_LNNO in a    COFF header).  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HAS_LINENO
 value|0x04
-end_define
-
-begin_comment
 comment|/* BFD has debugging information.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HAS_DEBUG
 value|0x08
-end_define
-
-begin_comment
 comment|/* BFD has symbols.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HAS_SYMS
 value|0x10
-end_define
-
-begin_comment
 comment|/* BFD has local symbols (basically used for F_LSYMS in a COFF    header).  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|HAS_LOCALS
 value|0x20
-end_define
-
-begin_comment
 comment|/* BFD is a dynamic object.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DYNAMIC
 value|0x40
-end_define
-
-begin_comment
 comment|/* Text section is write protected (if D_PAGED is not set, this is    like an a.out NMAGIC file) (the linker sets this by default, but    clears it for -r or -N).  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|WP_TEXT
 value|0x80
-end_define
-
-begin_comment
 comment|/* BFD is dynamically paged (this is like an a.out ZMAGIC file) (the    linker sets this by default, but clears it for -r or -n or -N).  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|D_PAGED
 value|0x100
-end_define
-
-begin_comment
-comment|/* BFD is relaxable (this means that bfd_relax_section may be able to    do something).  */
-end_comment
-
-begin_define
+comment|/* BFD is relaxable (this means that bfd_relax_section may be able to    do something) (sometimes bfd_relax_section can do something even if    this is not set).  */
 define|#
 directive|define
 name|BFD_IS_RELAXABLE
 value|0x200
-end_define
-
-begin_comment
 comment|/* This may be set before writing out a BFD to request using a    traditional format.  For example, this is used to request that when    writing out an a.out object the symbols not be hashed to eliminate    duplicates.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|BFD_TRADITIONAL_FORMAT
 value|0x400
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* This flag indicates that the BFD contents are actually cached in    memory.  If this is set, iostream points to a bfd_in_memory struct.  */
+define|#
+directive|define
+name|BFD_IN_MEMORY
+value|0x800
 comment|/* symbols and relocation */
-end_comment
-
-begin_comment
 comment|/* A count of carsyms (canonical archive symbols).  */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|long
 name|symindex
 typedef|;
-end_typedef
-
-begin_define
+comment|/* How to perform a relocation.  */
+typedef|typedef
+specifier|const
+name|struct
+name|reloc_howto_struct
+name|reloc_howto_type
+typedef|;
 define|#
 directive|define
 name|BFD_NO_MORE_SYMBOLS
 value|((symindex) ~0)
-end_define
-
-begin_comment
 comment|/* General purpose part of a symbol X;    target specific parts are in libcoff.h, libaout.h, etc.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section
@@ -717,9 +458,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)->section)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_output_section
@@ -727,9 +465,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)->section->output_section)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_set_section
@@ -739,9 +474,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|((x)->section) = (y)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_asymbol_base
@@ -749,9 +481,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)->section->vma)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_asymbol_value
@@ -759,9 +488,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(bfd_asymbol_base(x) + (x)->value)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_asymbol_name
@@ -769,13 +495,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)->name)
-end_define
-
-begin_comment
 comment|/*Perhaps future: #define bfd_asymbol_bfd(x) ((x)->section->owner)*/
-end_comment
-
-begin_define
 define|#
 directive|define
 name|bfd_asymbol_bfd
@@ -783,9 +503,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)->the_bfd)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_asymbol_flavour
@@ -793,17 +510,8 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(bfd_asymbol_bfd(x)->xvec->flavour)
-end_define
-
-begin_comment
 comment|/* A canonical archive symbol.  */
-end_comment
-
-begin_comment
 comment|/* This is a type pun with struct ranlib on purpose! */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|carsym
@@ -819,17 +527,8 @@ comment|/* look here to find the file */
 block|}
 name|carsym
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* to make these you call a carsymogen */
-end_comment
-
-begin_comment
 comment|/* Used in generating armaps (archive tables of contents).    Perhaps just a forward definition would do? */
-end_comment
-
-begin_struct
 struct|struct
 name|orl
 block|{
@@ -850,16 +549,7 @@ decl_stmt|;
 comment|/* index into string table */
 block|}
 struct|;
-end_struct
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Linenumber stuff */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|lineno_cache_entry
@@ -888,16 +578,7 @@ union|;
 block|}
 name|alent
 typedef|;
-end_typedef
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* object and core file sections */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|align_power
@@ -908,18 +589,12 @@ name|align
 parameter_list|)
 define|\
 value|( ((addr) + ((1<<(align))-1))& (-1<< (align)))
-end_define
-
-begin_typedef
 typedef|typedef
 name|struct
 name|sec
 modifier|*
 name|sec_ptr
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_name
@@ -929,9 +604,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->name + 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_vma
@@ -941,9 +613,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->vma + 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_alignment
@@ -953,9 +622,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->alignment_power + 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_section_name
@@ -965,9 +631,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->name)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_section_size
@@ -977,9 +640,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|(bfd_get_section_size_before_reloc(ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_section_vma
@@ -989,9 +649,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->vma)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_section_alignment
@@ -1001,9 +658,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->alignment_power)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_flags
@@ -1013,9 +667,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->flags + 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_userdata
@@ -1025,9 +676,6 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->userdata)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_is_com_section
@@ -1035,9 +683,6 @@ parameter_list|(
 name|ptr
 parameter_list|)
 value|(((ptr)->flags& SEC_IS_COMMON) != 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_set_section_vma
@@ -1048,10 +693,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|(((ptr)->vma = (ptr)->lma= (val)), ((ptr)->user_set_vma = true), true)
-end_define
-
-begin_define
+value|(((ptr)->vma = (ptr)->lma= (val)), ((ptr)->user_set_vma = (boolean)true), true)
 define|#
 directive|define
 name|bfd_set_section_alignment
@@ -1063,9 +705,6 @@ parameter_list|,
 name|val
 parameter_list|)
 value|(((ptr)->alignment_power = (val)),true)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_set_section_userdata
@@ -1077,20 +716,11 @@ parameter_list|,
 name|val
 parameter_list|)
 value|(((ptr)->userdata = (val)),true)
-end_define
-
-begin_typedef
 typedef|typedef
 name|struct
 name|stat
 name|stat_type
 typedef|;
-end_typedef
-
-begin_escape
-end_escape
-
-begin_typedef
 typedef|typedef
 enum|enum
 name|bfd_print_symbol
@@ -1103,13 +733,7 @@ name|bfd_print_symbol_all
 block|}
 name|bfd_print_symbol_type
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* Information about a symbol that nm needs.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|_symbol_info
@@ -1126,36 +750,43 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* Symbol name.  */
+name|unsigned
+name|char
+name|stab_type
+decl_stmt|;
+comment|/* Stab type.  */
 name|char
 name|stab_other
 decl_stmt|;
-comment|/* Unused. */
+comment|/* Stab other. */
 name|short
 name|stab_desc
 decl_stmt|;
-comment|/* Info for N_TYPE.  */
+comment|/* Stab desc.  */
 name|CONST
 name|char
 modifier|*
 name|stab_name
 decl_stmt|;
+comment|/* String for stab type.  */
 block|}
 name|symbol_info
 typedef|;
-end_typedef
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* Get the name of a stabs type code.  */
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|bfd_get_stab_name
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Hash table routines.  There is no way to free up a hash table.  */
-end_comment
-
-begin_comment
 comment|/* An element in the hash table.  Most uses will actually use a larger    structure, and an instance of this will be the first field.  */
-end_comment
-
-begin_struct
 struct|struct
 name|bfd_hash_entry
 block|{
@@ -1178,13 +809,7 @@ name|hash
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/* A hash table.  */
-end_comment
-
-begin_struct
 struct|struct
 name|bfd_hash_table
 block|{
@@ -1232,13 +857,7 @@ name|memory
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/* Initialize a hash table.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_hash_table_init
@@ -1271,13 +890,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Initialize a hash table specifying a size.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_hash_table_init_n
@@ -1314,13 +927,7 @@ name|size
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Free up a hash table.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|bfd_hash_table_free
@@ -1333,13 +940,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Look up a string in a hash table.  If CREATE is true, a new entry    will be created for this string if one does not already exist.  The    COPY argument must be true if this routine should copy the string    into newly allocated memory when adding an entry.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|struct
 name|bfd_hash_entry
@@ -1364,13 +965,30 @@ name|copy
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+comment|/* Replace an entry in a hash table.  */
+specifier|extern
+name|void
+name|bfd_hash_replace
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_hash_table
+operator|*
+operator|,
+expr|struct
+name|bfd_hash_entry
+operator|*
+name|old
+operator|,
+expr|struct
+name|bfd_hash_entry
+operator|*
+name|nw
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Base method for creating a hash table entry.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|struct
 name|bfd_hash_entry
@@ -1393,13 +1011,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Grab some space for a hash table entry.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|PTR
 name|bfd_hash_allocate
@@ -1415,13 +1027,7 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Traverse a hash table in a random order, calling a function on each    element.  If the function returns false, the traversal stops.  The    INFO argument is passed to the function.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|bfd_hash_traverse
@@ -1449,28 +1055,13 @@ name|info
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Semi-portable string concatenation in cpp.    The CAT4 hack is to avoid a problem with some strict ANSI C preprocessors.    The problem is, "32_" is not a valid preprocessing token, and we don't    want extra underscores (e.g., "nlm_32_").  The XCAT2 macro will cause the    inner CAT macros to be evaluated first, producing still-valid pp-tokens.    Then the final concatenation can be done.  (Sigh.)  */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|CAT
-end_ifndef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SABER
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|CAT
@@ -1480,9 +1071,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|a##b
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAT3
@@ -1494,9 +1082,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|a##b##c
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAT4
@@ -1510,14 +1095,8 @@ parameter_list|,
 name|d
 parameter_list|)
 value|a##b##c##d
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -1529,9 +1108,6 @@ name|defined
 argument_list|(
 name|ALMOST_STDC
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|CAT
@@ -1541,9 +1117,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|a##b
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAT3
@@ -1555,9 +1128,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|a##b##c
-end_define
-
-begin_define
 define|#
 directive|define
 name|XCAT2
@@ -1567,9 +1137,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|CAT(a,b)
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAT4
@@ -1583,14 +1150,8 @@ parameter_list|,
 name|d
 parameter_list|)
 value|XCAT2(CAT(a,b),CAT(c,d))
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|CAT
@@ -1602,9 +1163,6 @@ parameter_list|)
 value|a
 comment|/**/
 value|b
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAT3
@@ -1620,9 +1178,6 @@ comment|/**/
 value|b
 comment|/**/
 value|c
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAT4
@@ -1642,42 +1197,118 @@ comment|/**/
 value|c
 comment|/**/
 value|d
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|COFF_SWAP_TABLE
 value|(PTR)&bfd_coff_std_swap_table
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* User program access to BFD facilities */
-end_comment
-
-begin_comment
+comment|/* Direct I/O routines, for programs which know more about the object    file than BFD does.  Use higher level routines if possible.  */
+specifier|extern
+name|bfd_size_type
+name|bfd_read
+name|PARAMS
+argument_list|(
+operator|(
+name|PTR
+operator|,
+name|bfd_size_type
+name|size
+operator|,
+name|bfd_size_type
+name|nitems
+operator|,
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|bfd_size_type
+name|bfd_write
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|PTR
+operator|,
+name|bfd_size_type
+name|size
+operator|,
+name|bfd_size_type
+name|nitems
+operator|,
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|bfd_seek
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+name|file_ptr
+name|fp
+operator|,
+name|int
+name|direction
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|long
+name|bfd_tell
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|bfd_flush
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|bfd_stat
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Cast from const char * to char * so that caller can assign to    a char * without a warning.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|bfd_get_filename
@@ -1685,9 +1316,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((char *) (abfd)->filename)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_cacheable
@@ -1695,9 +1323,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->cacheable)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_format
@@ -1705,9 +1330,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->format)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_target
@@ -1715,9 +1337,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->xvec->name)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_flavour
@@ -1725,9 +1344,36 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->xvec->flavour)
-end_define
-
-begin_define
+define|#
+directive|define
+name|bfd_big_endian
+parameter_list|(
+name|abfd
+parameter_list|)
+value|((abfd)->xvec->byteorder == BFD_ENDIAN_BIG)
+define|#
+directive|define
+name|bfd_little_endian
+parameter_list|(
+name|abfd
+parameter_list|)
+value|((abfd)->xvec->byteorder == BFD_ENDIAN_LITTLE)
+define|#
+directive|define
+name|bfd_header_big_endian
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|((abfd)->xvec->header_byteorder == BFD_ENDIAN_BIG)
+define|#
+directive|define
+name|bfd_header_little_endian
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|((abfd)->xvec->header_byteorder == BFD_ENDIAN_LITTLE)
 define|#
 directive|define
 name|bfd_get_file_flags
@@ -1735,9 +1381,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->flags)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_applicable_file_flags
@@ -1745,9 +1388,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->xvec->object_flags)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_applicable_section_flags
@@ -1755,9 +1395,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->xvec->section_flags)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_my_archive
@@ -1765,9 +1402,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->my_archive)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_has_map
@@ -1775,9 +1409,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->has_armap)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_valid_reloc_types
@@ -1785,9 +1416,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->xvec->valid_reloc_types)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_usrdata
@@ -1795,9 +1423,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->usrdata)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_start_address
@@ -1805,9 +1430,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->start_address)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_symcount
@@ -1815,9 +1437,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->symcount)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_outsymbols
@@ -1825,9 +1444,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->outsymbols)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_count_sections
@@ -1835,9 +1451,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->section_count)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_symbol_leading_char
@@ -1845,9 +1458,6 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->xvec->symbol_leading_char)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_set_cacheable
@@ -1856,14 +1466,42 @@ name|abfd
 parameter_list|,
 name|bool
 parameter_list|)
-value|(((abfd)->cacheable = (bool)), true)
-end_define
-
-begin_comment
+value|(((abfd)->cacheable = (boolean)(bool)), true)
+specifier|extern
+name|boolean
+name|bfd_record_phdr
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|boolean
+operator|,
+name|flagword
+operator|,
+name|boolean
+operator|,
+name|bfd_vma
+operator|,
+name|boolean
+operator|,
+name|boolean
+operator|,
+name|unsigned
+name|int
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Byte swapping routines.  */
-end_comment
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_getb64
 name|PARAMS
@@ -1876,9 +1514,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_getl64
 name|PARAMS
@@ -1891,9 +1526,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_signed_vma
 name|bfd_getb_signed_64
 name|PARAMS
@@ -1906,9 +1538,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_signed_vma
 name|bfd_getl_signed_64
 name|PARAMS
@@ -1921,9 +1550,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_getb32
 name|PARAMS
@@ -1936,9 +1562,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_getl32
 name|PARAMS
@@ -1951,9 +1574,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_signed_vma
 name|bfd_getb_signed_32
 name|PARAMS
@@ -1966,9 +1586,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_signed_vma
 name|bfd_getl_signed_32
 name|PARAMS
@@ -1981,9 +1598,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_getb16
 name|PARAMS
@@ -1996,9 +1610,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_getl16
 name|PARAMS
@@ -2011,9 +1622,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_signed_vma
 name|bfd_getb_signed_16
 name|PARAMS
@@ -2026,9 +1634,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_signed_vma
 name|bfd_getl_signed_16
 name|PARAMS
@@ -2041,9 +1646,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_putb64
 name|PARAMS
@@ -2057,9 +1659,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_putl64
 name|PARAMS
@@ -2073,9 +1672,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_putb32
 name|PARAMS
@@ -2089,9 +1685,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_putl32
 name|PARAMS
@@ -2105,9 +1698,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_putb16
 name|PARAMS
@@ -2121,9 +1711,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_putl16
 name|PARAMS
@@ -2137,16 +1724,7 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* Externally visible ECOFF routines.  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -2158,44 +1736,26 @@ name|defined
 argument_list|(
 name|ALMOST_STDC
 argument_list|)
-end_if
-
-begin_struct_decl
 struct_decl|struct
 name|ecoff_debug_info
 struct_decl|;
-end_struct_decl
-
-begin_struct_decl
 struct_decl|struct
 name|ecoff_debug_swap
 struct_decl|;
-end_struct_decl
-
-begin_struct_decl
 struct_decl|struct
 name|ecoff_extr
 struct_decl|;
-end_struct_decl
-
-begin_struct_decl
 struct_decl|struct
 name|symbol_cache_entry
 struct_decl|;
-end_struct_decl
-
-begin_struct_decl
 struct_decl|struct
 name|bfd_link_info
 struct_decl|;
-end_struct_decl
-
-begin_endif
+struct_decl|struct
+name|bfd_link_hash_entry
+struct_decl|;
 endif|#
 directive|endif
-end_endif
-
-begin_decl_stmt
 specifier|extern
 name|bfd_vma
 name|bfd_ecoff_get_gp_value
@@ -2208,9 +1768,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_set_gp_value
@@ -2226,9 +1783,6 @@ name|gp_value
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_set_regmasks
@@ -2254,9 +1808,6 @@ name|cprmask
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|PTR
 name|bfd_ecoff_debug_init
@@ -2284,9 +1835,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|bfd_ecoff_debug_free
@@ -2317,9 +1865,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_debug_accumulate
@@ -2365,9 +1910,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_debug_accumulate_other
@@ -2402,9 +1944,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_debug_externals
@@ -2459,9 +1998,6 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_debug_one_external
@@ -2495,9 +2031,6 @@ name|esym
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|bfd_size_type
 name|bfd_ecoff_debug_size
@@ -2521,9 +2054,6 @@ name|swap
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_write_debug
@@ -2550,9 +2080,6 @@ name|where
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_ecoff_write_accumulated_debug
@@ -2587,13 +2114,53 @@ name|where
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|extern
+name|boolean
+name|bfd_mips_ecoff_create_embedded_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Externally visible ELF routines.  */
-end_comment
-
-begin_decl_stmt
+struct|struct
+name|bfd_link_needed_list
+block|{
+name|struct
+name|bfd_link_needed_list
+modifier|*
+name|next
+decl_stmt|;
+name|bfd
+modifier|*
+name|by
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
 specifier|extern
 name|boolean
 name|bfd_elf32_record_link_assignment
@@ -2610,12 +2177,11 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_elf64_record_link_assignment
@@ -2632,12 +2198,28 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|extern
+name|struct
+name|bfd_link_needed_list
+modifier|*
+name|bfd_elf_get_needed_list
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
 name|boolean
 name|bfd_elf32_size_dynamic_sections
@@ -2647,6 +2229,16 @@ operator|(
 name|bfd
 operator|*
 operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|boolean
+operator|,
 expr|struct
 name|bfd_link_info
 operator|*
@@ -2658,9 +2250,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_elf64_size_dynamic_sections
@@ -2670,6 +2259,16 @@ operator|(
 name|bfd
 operator|*
 operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|boolean
+operator|,
 expr|struct
 name|bfd_link_info
 operator|*
@@ -2681,9 +2280,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|void
 name|bfd_elf_set_dt_needed_name
@@ -2699,13 +2295,37 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|bfd_elf_get_dt_soname
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* SunOS shared library support routines for the linker.  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
+name|struct
+name|bfd_link_needed_list
+modifier|*
+name|bfd_sunos_get_needed_list
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
 name|boolean
 name|bfd_sunos_record_link_assignment
@@ -2725,9 +2345,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|boolean
 name|bfd_sunos_size_dynamic_sections
@@ -2758,16 +2375,10 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Linux shared library support routines for the linker.  */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|boolean
-name|bfd_linux_size_dynamic_sections
+name|bfd_i386linux_size_dynamic_sections
 name|PARAMS
 argument_list|(
 operator|(
@@ -2780,13 +2391,252 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
+specifier|extern
+name|boolean
+name|bfd_m68klinux_size_dynamic_sections
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* mmap hacks */
+struct_decl|struct
+name|_bfd_window_internal
+struct_decl|;
+typedef|typedef
+name|struct
+name|_bfd_window_internal
+name|bfd_window_internal
+typedef|;
+typedef|typedef
+struct|struct
+name|_bfd_window
+block|{
+comment|/* What the user asked for.  */
+name|PTR
+name|data
+decl_stmt|;
+name|bfd_size_type
+name|size
+decl_stmt|;
+comment|/* The actual window used by BFD.  Small user-requested read-only      regions sharing a page may share a single window into the object      file.  Read-write versions shouldn't until I've fixed things to      keep track of which portions have been claimed by the      application; don't want to give the same region back when the      application wants two writable copies!  */
+name|struct
+name|_bfd_window_internal
+modifier|*
+name|i
+decl_stmt|;
+block|}
+name|bfd_window
+typedef|;
+specifier|extern
+name|void
+name|bfd_init_window
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_window
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|bfd_free_window
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_window
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_get_file_window
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|file_ptr
+operator|,
+name|bfd_size_type
+operator|,
+name|bfd_window
+operator|*
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* XCOFF support routines for the linker.  */
+specifier|extern
+name|boolean
+name|bfd_xcoff_link_record_set
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|bfd_link_hash_entry
+operator|*
+operator|,
+name|bfd_size_type
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_xcoff_import_symbol
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|bfd_link_hash_entry
+operator|*
+operator|,
+name|bfd_vma
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_xcoff_export_symbol
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|bfd_link_hash_entry
+operator|*
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_xcoff_link_count_reloc
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_xcoff_record_link_assignment
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_xcoff_size_dynamic_sections
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|,
+name|boolean
+operator|,
+name|int
+operator|,
+name|boolean
+operator|,
+name|boolean
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* And more from the source.  */
-end_comment
-
-begin_decl_stmt
 name|void
 name|bfd_init
 name|PARAMS
@@ -2796,9 +2646,6 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd
 modifier|*
 name|bfd_openr
@@ -2817,9 +2664,6 @@ name|target
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd
 modifier|*
 name|bfd_fdopenr
@@ -2841,9 +2685,15 @@ name|fd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|bfd
+modifier|*
+name|bfd_openstreamr
+name|PARAMS
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
 name|bfd
 modifier|*
 name|bfd_openw
@@ -2862,9 +2712,6 @@ name|target
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_close
 name|PARAMS
@@ -2876,9 +2723,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_close_all_done
 name|PARAMS
@@ -2889,9 +2733,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_size_type
 name|bfd_alloc_size
 name|PARAMS
@@ -2903,9 +2744,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd
 modifier|*
 name|bfd_create
@@ -2923,13 +2761,7 @@ name|templ
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Byte swapping macros for user section data.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|bfd_put_8
@@ -2942,17 +2774,11 @@ name|ptr
 parameter_list|)
 define|\
 value|(*((unsigned char *)(ptr)) = (unsigned char)(val))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_signed_8
 define|\
 value|bfd_put_8
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_8
@@ -2963,9 +2789,6 @@ name|ptr
 parameter_list|)
 define|\
 value|(*(unsigned char *)(ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_signed_8
@@ -2976,9 +2799,6 @@ name|ptr
 parameter_list|)
 define|\
 value|((*(unsigned char *)(ptr) ^ 0x80) - 0x80)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_16
@@ -2991,17 +2811,11 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_putx16, ((val),(ptr)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_signed_16
 define|\
 value|bfd_put_16
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_16
@@ -3012,9 +2826,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_getx16, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_signed_16
@@ -3025,9 +2836,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, bfd_getx_signed_16, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_32
@@ -3040,17 +2848,11 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_putx32, ((val),(ptr)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_signed_32
 define|\
 value|bfd_put_32
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_32
@@ -3061,9 +2863,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_getx32, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_signed_32
@@ -3074,9 +2873,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_getx_signed_32, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_64
@@ -3089,17 +2885,11 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_putx64, ((val), (ptr)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_put_signed_64
 define|\
 value|bfd_put_64
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_64
@@ -3110,9 +2900,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_getx64, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_signed_64
@@ -3123,13 +2910,7 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_getx_signed_64, (ptr))
-end_define
-
-begin_comment
 comment|/* Byte swapping macros for file header data.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_8
@@ -3142,9 +2923,6 @@ name|ptr
 parameter_list|)
 define|\
 value|bfd_put_8 (abfd, val, ptr)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_signed_8
@@ -3157,9 +2935,6 @@ name|ptr
 parameter_list|)
 define|\
 value|bfd_put_8 (abfd, val, ptr)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_8
@@ -3170,9 +2945,6 @@ name|ptr
 parameter_list|)
 define|\
 value|bfd_get_8 (abfd, ptr)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_signed_8
@@ -3183,9 +2955,6 @@ name|ptr
 parameter_list|)
 define|\
 value|bfd_get_signed_8 (abfd, ptr)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_16
@@ -3198,17 +2967,11 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_putx16,(val,ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_signed_16
 define|\
 value|bfd_h_put_16
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_16
@@ -3219,9 +2982,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx16,(ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_signed_16
@@ -3232,9 +2992,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx_signed_16, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_32
@@ -3247,17 +3004,11 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_putx32,(val,ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_signed_32
 define|\
 value|bfd_h_put_32
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_32
@@ -3268,9 +3019,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx32,(ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_signed_32
@@ -3281,9 +3029,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx_signed_32, (ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_64
@@ -3296,17 +3041,11 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_putx64,(val, ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_put_signed_64
 define|\
 value|bfd_h_put_64
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_64
@@ -3317,9 +3056,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx64,(ptr))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_h_get_signed_64
@@ -3330,9 +3066,6 @@ name|ptr
 parameter_list|)
 define|\
 value|BFD_SEND(abfd, bfd_h_getx_signed_64, (ptr))
-end_define
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|sec
@@ -3454,6 +3187,16 @@ define|#
 directive|define
 name|SEC_IN_MEMORY
 value|0x20000
+comment|/* The contents of this section are to be excluded by the 	    linker for executable and shared objects unless those 	    objects are to be further relocated.  */
+define|#
+directive|define
+name|SEC_EXCLUDE
+value|0x40000
+comment|/* The contents of this section are to be sorted by the 	   based on the address specified in the associated symbol 	   table.  */
+define|#
+directive|define
+name|SEC_SORT_ENTRIES
+value|0x80000
 comment|/*  End of section flags.  */
 comment|/*  The virtual memory address of the section - where it will be            at run time.  The symbols are relocated against this.  The 	    user_set_vma flag is maintained by bfd; if it's not set, the 	    backend can assign addresses (for example, in<<a.out>>, where 	    the default address for<<.data>> is dependent on the specific 	    target and various flags).  */
 name|bfd_vma
@@ -3589,60 +3332,33 @@ decl_stmt|;
 block|}
 name|asection
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* These sections are global, and are managed by BFD.  The application        and target back end are not permitted to change the values in 	these sections.  New code should use the section_ptr macros rather        than referring directly to the const sections.  The const sections        may eventually vanish.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|BFD_ABS_SECTION_NAME
 value|"*ABS*"
-end_define
-
-begin_define
 define|#
 directive|define
 name|BFD_UND_SECTION_NAME
 value|"*UND*"
-end_define
-
-begin_define
 define|#
 directive|define
 name|BFD_COM_SECTION_NAME
 value|"*COM*"
-end_define
-
-begin_define
 define|#
 directive|define
 name|BFD_IND_SECTION_NAME
 value|"*IND*"
-end_define
-
-begin_comment
 comment|/* the absolute section */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|asection
 name|bfd_abs_section
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_abs_section_ptr
 value|((asection *)&bfd_abs_section)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_is_abs_section
@@ -3650,28 +3366,16 @@ parameter_list|(
 name|sec
 parameter_list|)
 value|((sec) == bfd_abs_section_ptr)
-end_define
-
-begin_comment
 comment|/* Pointer to the undefined section */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|asection
 name|bfd_und_section
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_und_section_ptr
 value|((asection *)&bfd_und_section)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_is_und_section
@@ -3679,47 +3383,26 @@ parameter_list|(
 name|sec
 parameter_list|)
 value|((sec) == bfd_und_section_ptr)
-end_define
-
-begin_comment
 comment|/* Pointer to the common section */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|asection
 name|bfd_com_section
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_com_section_ptr
 value|((asection *)&bfd_com_section)
-end_define
-
-begin_comment
 comment|/* Pointer to the indirect section */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|asection
 name|bfd_ind_section
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_ind_section_ptr
 value|((asection *)&bfd_ind_section)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_is_ind_section
@@ -3727,9 +3410,6 @@ parameter_list|(
 name|sec
 parameter_list|)
 value|((sec) == bfd_ind_section_ptr)
-end_define
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
@@ -3738,9 +3418,6 @@ modifier|*
 specifier|const
 name|bfd_abs_symbol
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
@@ -3749,9 +3426,6 @@ modifier|*
 specifier|const
 name|bfd_com_symbol
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
@@ -3760,9 +3434,6 @@ modifier|*
 specifier|const
 name|bfd_und_symbol
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
@@ -3771,9 +3442,6 @@ modifier|*
 specifier|const
 name|bfd_ind_symbol
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_size_before_reloc
@@ -3782,9 +3450,6 @@ name|section
 parameter_list|)
 define|\
 value|(section->reloc_done ? (abort(),1): (section)->_raw_size)
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_section_size_after_reloc
@@ -3793,9 +3458,6 @@ name|section
 parameter_list|)
 define|\
 value|((section->reloc_done) ? (section)->_cooked_size: (abort(),1))
-end_define
-
-begin_decl_stmt
 name|asection
 modifier|*
 name|bfd_get_section_by_name
@@ -3813,9 +3475,6 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|asection
 modifier|*
 name|bfd_make_section_old_way
@@ -3833,9 +3492,6 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|asection
 modifier|*
 name|bfd_make_section_anyway
@@ -3853,9 +3509,6 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|asection
 modifier|*
 name|bfd_make_section
@@ -3872,9 +3525,6 @@ name|name
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_section_flags
 name|PARAMS
@@ -3893,9 +3543,6 @@ name|flags
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_map_over_sections
 name|PARAMS
@@ -3927,9 +3574,6 @@ name|obj
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_section_size
 name|PARAMS
@@ -3948,9 +3592,6 @@ name|val
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_section_contents
 name|PARAMS
@@ -3975,9 +3616,6 @@ name|count
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_get_section_contents
 name|PARAMS
@@ -4002,9 +3640,6 @@ name|count
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_copy_private_section_data
 name|PARAMS
@@ -4028,9 +3663,6 @@ name|osec
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_copy_private_section_data
@@ -4045,9 +3677,6 @@ name|osection
 parameter_list|)
 define|\
 value|BFD_SEND (ibfd, _bfd_copy_private_section_data, \ 		(ibfd, isection, obfd, osection))
-end_define
-
-begin_enum
 enum|enum
 name|bfd_architecture
 block|{
@@ -4066,7 +3695,7 @@ comment|/* DEC Vax */
 name|bfd_arch_i960
 block|,
 comment|/* Intel 960 */
-comment|/* The order of the following is important.        lower number indicates a machine type that        only accepts a subset of the instructions        available to machines with higher numbers.        The exception is the "ca", which is        incompatible with all other machines except        "core". */
+comment|/* The order of the following is important.        lower number indicates a machine type that         only accepts a subset of the instructions        available to machines with higher numbers.        The exception is the "ca", which is        incompatible with all other machines except         "core". */
 define|#
 directive|define
 name|bfd_mach_i960_core
@@ -4091,12 +3720,51 @@ define|#
 directive|define
 name|bfd_mach_i960_ca
 value|6
+define|#
+directive|define
+name|bfd_mach_i960_jx
+value|7
+define|#
+directive|define
+name|bfd_mach_i960_hx
+value|8
 name|bfd_arch_a29k
 block|,
 comment|/* AMD 29000 */
 name|bfd_arch_sparc
 block|,
 comment|/* SPARC */
+define|#
+directive|define
+name|bfd_mach_sparc
+value|1
+comment|/* The difference between v8plus and v9 is that v9 is a true 64 bit env.  */
+define|#
+directive|define
+name|bfd_mach_sparc_v8plus
+value|2
+define|#
+directive|define
+name|bfd_mach_sparc_v8plusa
+value|3
+comment|/* with ultrasparc add'ns */
+define|#
+directive|define
+name|bfd_mach_sparc_v9
+value|4
+define|#
+directive|define
+name|bfd_mach_sparc_v9a
+value|5
+comment|/* with ultrasparc add'ns */
+comment|/* Nonzero if MACH has the v9 instruction set.  */
+define|#
+directive|define
+name|bfd_mach_sparc_v9_p
+parameter_list|(
+name|mach
+parameter_list|)
+value|((mach) != bfd_mach_sparc)
 name|bfd_arch_mips
 block|,
 comment|/* MIPS Rxxxx */
@@ -4167,15 +3835,18 @@ comment|/* Hitachi SH */
 name|bfd_arch_alpha
 block|,
 comment|/* Dec Alpha */
+name|bfd_arch_arm
+block|,
+comment|/* Advanced Risc Machines ARM */
 name|bfd_arch_ns32k
 block|,
 comment|/* National Semiconductors ns32000 */
+name|bfd_arch_w65
+block|,
+comment|/* WDC 65816 */
 name|bfd_arch_last
 block|}
 enum|;
-end_enum
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|bfd_arch_info
@@ -4193,14 +3864,16 @@ name|enum
 name|bfd_architecture
 name|arch
 decl_stmt|;
+name|unsigned
 name|long
 name|mach
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|arch_name
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|printable_name
@@ -4213,7 +3886,7 @@ comment|/* true if this is the default machine for the architecture */
 name|boolean
 name|the_default
 decl_stmt|;
-name|CONST
+specifier|const
 name|struct
 name|bfd_arch_info
 modifier|*
@@ -4224,13 +3897,13 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|CONST
+specifier|const
 expr|struct
 name|bfd_arch_info
 operator|*
 name|a
 operator|,
-name|CONST
+specifier|const
 expr|struct
 name|bfd_arch_info
 operator|*
@@ -4245,40 +3918,18 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|CONST
+specifier|const
 expr|struct
 name|bfd_arch_info
 operator|*
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* How to disassemble an instruction, producing a printable      representation on a specified stdio stream.  This isn't      defined for most processors at present, because of the size      of the additional tables it would drag in, and because gdb      wants to use a different interface.  */
-name|unsigned
-name|int
-argument_list|(
-operator|*
-name|disassemble
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd_vma
-name|addr
-operator|,
-name|CONST
-name|char
-operator|*
-name|data
-operator|,
-name|PTR
-name|stream
-operator|)
-argument_list|)
-decl_stmt|;
+specifier|const
 name|struct
 name|bfd_arch_info
 modifier|*
@@ -4287,10 +3938,7 @@ decl_stmt|;
 block|}
 name|bfd_arch_info_type
 typedef|;
-end_typedef
-
-begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|bfd_printable_name
@@ -4303,47 +3951,39 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|bfd_arch_info_type
 modifier|*
 name|bfd_scan_arch
 name|PARAMS
 argument_list|(
 operator|(
-name|CONST
+specifier|const
 name|char
 operator|*
 name|string
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CONST
+specifier|const
 name|bfd_arch_info_type
 modifier|*
 name|bfd_arch_get_compatible
 name|PARAMS
 argument_list|(
 operator|(
-name|CONST
+specifier|const
 name|bfd
 operator|*
 name|abfd
 operator|,
-name|CONST
+specifier|const
 name|bfd
 operator|*
 name|bbfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_set_arch_info
 name|PARAMS
@@ -4353,15 +3993,13 @@ name|bfd
 operator|*
 name|abfd
 operator|,
+specifier|const
 name|bfd_arch_info_type
 operator|*
 name|arg
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|enum
 name|bfd_architecture
 name|bfd_get_arch
@@ -4374,9 +4012,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|bfd_get_mach
@@ -4389,9 +4024,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|bfd_arch_bits_per_byte
@@ -4404,9 +4036,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|bfd_arch_bits_per_address
@@ -4419,9 +4048,7 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|bfd_arch_info_type
 modifier|*
 name|bfd_get_arch_info
@@ -4434,9 +4061,7 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|bfd_arch_info_type
 modifier|*
 name|bfd_lookup_arch
@@ -4447,15 +4072,13 @@ expr|enum
 name|bfd_architecture
 name|arch
 operator|,
+name|unsigned
 name|long
 name|machine
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|bfd_printable_arch_mach
@@ -4472,9 +4095,6 @@ name|machine
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 enum|enum
 name|bfd_reloc_status
@@ -4505,9 +4125,6 @@ name|bfd_reloc_dangerous
 block|}
 name|bfd_reloc_status_type
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|reloc_cache_entry
@@ -4528,18 +4145,13 @@ name|bfd_vma
 name|addend
 decl_stmt|;
 comment|/* Pointer to how to perform the required relocation */
-specifier|const
-name|struct
-name|reloc_howto_struct
+name|reloc_howto_type
 modifier|*
 name|howto
 decl_stmt|;
 block|}
 name|arelent
 typedef|;
-end_typedef
-
-begin_enum
 enum|enum
 name|complain_overflow
 block|{
@@ -4556,25 +4168,6 @@ comment|/* Complain if the value overflows when considered as an 	   unsigned nu
 name|complain_overflow_unsigned
 block|}
 enum|;
-end_enum
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|bfd_byte
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|reloc_howto_struct
-name|reloc_howto_type
-typedef|;
-end_typedef
-
-begin_struct
 struct|struct
 name|reloc_howto_struct
 block|{
@@ -4673,9 +4266,6 @@ name|pcrel_offset
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_define
 define|#
 directive|define
 name|HOWTO
@@ -4708,9 +4298,6 @@ name|PC
 parameter_list|)
 define|\
 value|{(unsigned)C,R,S,B, P, BI, O,SF,NAME,INPLACE,MASKSRC,MASKDST,PC}
-end_define
-
-begin_define
 define|#
 directive|define
 name|NEWHOWTO
@@ -4726,9 +4313,6 @@ parameter_list|,
 name|IN
 parameter_list|)
 value|HOWTO(0,0,SIZE,0,REL,0,complain_overflow_dont,FUNCTION, NAME,false,0,0,IN)
-end_define
-
-begin_define
 define|#
 directive|define
 name|HOWTO_PREPARE
@@ -4739,23 +4323,16 @@ name|symbol
 parameter_list|)
 define|\
 value|{                                            \   if (symbol != (asymbol *)NULL) {             \     if (bfd_is_com_section (symbol->section)) { \       relocation = 0;                          \     }                                          \     else {                                     \       relocation = symbol->value;              \     }                                          \   }                                            \ }
-end_define
-
-begin_decl_stmt
 name|int
 name|bfd_get_reloc_size
 name|PARAMS
 argument_list|(
 operator|(
-specifier|const
 name|reloc_howto_type
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|relent_chain
@@ -4771,9 +4348,6 @@ decl_stmt|;
 block|}
 name|arelent_chain
 typedef|;
-end_typedef
-
-begin_decl_stmt
 name|bfd_reloc_status_type
 name|bfd_perform_relocation
 name|PARAMS
@@ -4805,14 +4379,42 @@ name|error_message
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
+name|bfd_reloc_status_type
+name|bfd_install_relocation
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+name|arelent
+operator|*
+name|reloc_entry
+operator|,
+name|PTR
+name|data
+operator|,
+name|bfd_vma
+name|data_start
+operator|,
+name|asection
+operator|*
+name|input_section
+operator|,
+name|char
+operator|*
+operator|*
+name|error_message
+operator|)
+argument_list|)
+decl_stmt|;
 enum|enum
 name|bfd_reloc_code_real
 block|{
-comment|/* Basic absolute relocations */
+name|_dummy_first_bfd_reloc_code_real
+block|,
+comment|/* Basic absolute relocations of N bits. */
 name|BFD_RELOC_64
 block|,
 name|BFD_RELOC_32
@@ -4825,58 +4427,106 @@ name|BFD_RELOC_14
 block|,
 name|BFD_RELOC_8
 block|,
-comment|/* PC-relative relocations */
+comment|/* PC-relative relocations.  Sometimes these are relative to the address of the relocation itself; sometimes they are relative to the start of the section containing the relocation.  It depends on the specific target.  The 24-bit relocation is used in some Intel 960 configurations. */
 name|BFD_RELOC_64_PCREL
 block|,
 name|BFD_RELOC_32_PCREL
 block|,
 name|BFD_RELOC_24_PCREL
 block|,
-comment|/* used by i960 */
 name|BFD_RELOC_16_PCREL
+block|,
+name|BFD_RELOC_12_PCREL
 block|,
 name|BFD_RELOC_8_PCREL
 block|,
-comment|/* Linkage-table relative */
+comment|/* For ELF. */
+name|BFD_RELOC_32_GOT_PCREL
+block|,
+name|BFD_RELOC_16_GOT_PCREL
+block|,
+name|BFD_RELOC_8_GOT_PCREL
+block|,
+name|BFD_RELOC_32_GOTOFF
+block|,
+name|BFD_RELOC_16_GOTOFF
+block|,
+name|BFD_RELOC_LO16_GOTOFF
+block|,
+name|BFD_RELOC_HI16_GOTOFF
+block|,
+name|BFD_RELOC_HI16_S_GOTOFF
+block|,
+name|BFD_RELOC_8_GOTOFF
+block|,
+name|BFD_RELOC_32_PLT_PCREL
+block|,
+name|BFD_RELOC_24_PLT_PCREL
+block|,
+name|BFD_RELOC_16_PLT_PCREL
+block|,
+name|BFD_RELOC_8_PLT_PCREL
+block|,
+name|BFD_RELOC_32_PLTOFF
+block|,
+name|BFD_RELOC_16_PLTOFF
+block|,
+name|BFD_RELOC_LO16_PLTOFF
+block|,
+name|BFD_RELOC_HI16_PLTOFF
+block|,
+name|BFD_RELOC_HI16_S_PLTOFF
+block|,
+name|BFD_RELOC_8_PLTOFF
+block|,
+comment|/* Relocations used by 68K ELF. */
+name|BFD_RELOC_68K_GLOB_DAT
+block|,
+name|BFD_RELOC_68K_JMP_SLOT
+block|,
+name|BFD_RELOC_68K_RELATIVE
+block|,
+comment|/* Linkage-table relative. */
 name|BFD_RELOC_32_BASEREL
 block|,
 name|BFD_RELOC_16_BASEREL
 block|,
+name|BFD_RELOC_LO16_BASEREL
+block|,
+name|BFD_RELOC_HI16_BASEREL
+block|,
+name|BFD_RELOC_HI16_S_BASEREL
+block|,
 name|BFD_RELOC_8_BASEREL
 block|,
-comment|/* The type of reloc used to build a contructor table - at the moment      probably a 32 bit wide abs address, but the cpu can choose. */
-name|BFD_RELOC_CTOR
+name|BFD_RELOC_RVA
 block|,
-comment|/* 8 bits wide, but used to form an address like 0xffnn */
+comment|/* Absolute 8-bit relocation, but used to form an address like 0xFFnn. */
 name|BFD_RELOC_8_FFnn
 block|,
-comment|/* 32-bit pc-relative, shifted right 2 bits (i.e., 30-bit      word displacement, e.g. for SPARC) */
+comment|/* These PC-relative relocations are stored as word displacements -- i.e., byte displacements shifted right two bits.  The 30-bit word displacement (<<32_PCREL_S2>> -- 32 bits, shifted 2) is used on the SPARC.  (SPARC tools generally refer to this as<<WDISP30>>.)  The signed 16-bit displacement is used on the MIPS, and the 23-bit displacement is used on the Alpha. */
 name|BFD_RELOC_32_PCREL_S2
 block|,
-comment|/* signed 16-bit pc-relative, shifted right 2 bits (e.g. for MIPS) */
 name|BFD_RELOC_16_PCREL_S2
 block|,
-comment|/* this is used on the Alpha */
 name|BFD_RELOC_23_PCREL_S2
 block|,
-comment|/* High 22 bits of 32-bit value, placed into lower 22 bits of      target word; simple reloc.  */
+comment|/* High 22 bits and low 10 bits of 32-bit value, placed into lower bits of the target word.  These are used on the SPARC. */
 name|BFD_RELOC_HI22
 block|,
-comment|/* Low 10 bits.  */
 name|BFD_RELOC_LO10
 block|,
-comment|/* For systems that allocate a Global Pointer register, these are      displacements off that register.  These relocation types are      handled specially, because the value the register will have is      decided relatively late.  */
+comment|/* For systems that allocate a Global Pointer register, these are displacements off that register.  These relocation types are handled specially, because the value the register will have is decided relatively late. */
 name|BFD_RELOC_GPREL16
 block|,
 name|BFD_RELOC_GPREL32
 block|,
-comment|/* Reloc types used for i960/b.out.  */
+comment|/* Reloc types used for i960/b.out. */
 name|BFD_RELOC_I960_CALLJ
 block|,
-comment|/* now for the sparc/elf codes */
+comment|/* SPARC ELF relocations.  There is probably some overlap with other relocation types already defined. */
 name|BFD_RELOC_NONE
 block|,
-comment|/* actually used */
 name|BFD_RELOC_SPARC_WDISP22
 block|,
 name|BFD_RELOC_SPARC22
@@ -4905,20 +4555,20 @@ name|BFD_RELOC_SPARC_RELATIVE
 block|,
 name|BFD_RELOC_SPARC_UA32
 block|,
-comment|/* these are a.out specific? */
+comment|/* I think these are specific to SPARC a.out (e.g., Sun 4). */
 name|BFD_RELOC_SPARC_BASE13
 block|,
 name|BFD_RELOC_SPARC_BASE22
 block|,
-comment|/* some relocations we're using for sparc v9      -- subject to change */
-name|BFD_RELOC_SPARC_10
-block|,
-name|BFD_RELOC_SPARC_11
-block|,
+comment|/* Some relocations we're using for SPARC V9 -- subject to change. */
 define|#
 directive|define
 name|BFD_RELOC_SPARC_64
 value|BFD_RELOC_64
+name|BFD_RELOC_SPARC_10
+block|,
+name|BFD_RELOC_SPARC_11
+block|,
 name|BFD_RELOC_SPARC_OLO10
 block|,
 name|BFD_RELOC_SPARC_HH22
@@ -4939,50 +4589,53 @@ name|BFD_RELOC_SPARC_WDISP19
 block|,
 name|BFD_RELOC_SPARC_GLOB_JMP
 block|,
-name|BFD_RELOC_SPARC_LO7
+name|BFD_RELOC_SPARC_7
 block|,
-comment|/* Alpha ECOFF relocations.  Some of these treat the symbol or "addend"      in some special way.  */
-comment|/* For GPDISP_HI16 ("gpdisp") relocations, the symbol is ignored when      writing; when reading, it will be the absolute section symbol.  The      addend is the displacement in bytes of the "lda" instruction from      the "ldah" instruction (which is at the address of this reloc).  */
+name|BFD_RELOC_SPARC_6
+block|,
+name|BFD_RELOC_SPARC_5
+block|,
+comment|/* Alpha ECOFF relocations.  Some of these treat the symbol or "addend" in some special way. For GPDISP_HI16 ("gpdisp") relocations, the symbol is ignored when writing; when reading, it will be the absolute section symbol.  The addend is the displacement in bytes of the "lda" instruction from the "ldah" instruction (which is at the address of this reloc). */
 name|BFD_RELOC_ALPHA_GPDISP_HI16
 block|,
-comment|/* For GPDISP_LO16 ("ignore") relocations, the symbol is handled as      with GPDISP_HI16 relocs.  The addend is ignored when writing the      relocations out, and is filled in with the file's GP value on      reading, for convenience.  */
+comment|/* For GPDISP_LO16 ("ignore") relocations, the symbol is handled as with GPDISP_HI16 relocs.  The addend is ignored when writing the relocations out, and is filled in with the file's GP value on reading, for convenience. */
 name|BFD_RELOC_ALPHA_GPDISP_LO16
 block|,
-comment|/* The Alpha LITERAL/LITUSE relocs are produced by a symbol reference;      the assembler turns it into a LDQ instruction to load the address of      the symbol, and then fills in a register in the real instruction.       The LITERAL reloc, at the LDQ instruction, refers to the .lita      section symbol.  The addend is ignored when writing, but is filled      in with the file's GP value on reading, for convenience, as with the      GPDISP_LO16 reloc.       The LITUSE reloc, on the instruction using the loaded address, gives      information to the linker that it might be able to use to optimize      away some literal section references.  The symbol is ignored (read      as the absolute section symbol), and the "addend" indicates the type      of instruction using the register:               1 - "memory" fmt insn               2 - byte-manipulation (byte offset reg)               3 - jsr (target of branch)       The GNU linker currently doesn't do any of this optimizing.  */
+comment|/* The Alpha LITERAL/LITUSE relocs are produced by a symbol reference; the assembler turns it into a LDQ instruction to load the address of the symbol, and then fills in a register in the real instruction.  The LITERAL reloc, at the LDQ instruction, refers to the .lita section symbol.  The addend is ignored when writing, but is filled in with the file's GP value on reading, for convenience, as with the GPDISP_LO16 reloc.  The LITUSE reloc, on the instruction using the loaded address, gives information to the linker that it might be able to use to optimize away some literal section references.  The symbol is ignored (read as the absolute section symbol), and the "addend" indicates the type of instruction using the register: 1 - "memory" fmt insn 2 - byte-manipulation (byte offset reg) 3 - jsr (target of branch)  The GNU linker currently doesn't do any of this optimizing. */
 name|BFD_RELOC_ALPHA_LITERAL
 block|,
 name|BFD_RELOC_ALPHA_LITUSE
 block|,
-comment|/* The HINT relocation indicates a value that should be filled into the      "hint" field of a jmp/jsr/ret instruction, for possible branch-      prediction logic which may be provided on some processors.  */
+comment|/* The HINT relocation indicates a value that should be filled into the "hint" field of a jmp/jsr/ret instruction, for possible branch- prediction logic which may be provided on some processors. */
 name|BFD_RELOC_ALPHA_HINT
 block|,
-comment|/* Bits 27..2 of the relocation address shifted right 2 bits;      simple reloc otherwise.  */
+comment|/* Bits 27..2 of the relocation address shifted right 2 bits; simple reloc otherwise. */
 name|BFD_RELOC_MIPS_JMP
 block|,
-comment|/* High 16 bits of 32-bit value; simple reloc.  */
+comment|/* High 16 bits of 32-bit value; simple reloc. */
 name|BFD_RELOC_HI16
 block|,
-comment|/* High 16 bits of 32-bit value but the low 16 bits will be sign      extended and added to form the final result.  If the low 16      bits form a negative number, we need to add one to the high value      to compensate for the borrow when the low bits are added.  */
+comment|/* High 16 bits of 32-bit value but the low 16 bits will be sign extended and added to form the final result.  If the low 16 bits form a negative number, we need to add one to the high value to compensate for the borrow when the low bits are added. */
 name|BFD_RELOC_HI16_S
 block|,
-comment|/* Low 16 bits.  */
+comment|/* Low 16 bits. */
 name|BFD_RELOC_LO16
 block|,
-comment|/* Like BFD_RELOC_HI16_S, but PC relative.  */
+comment|/* Like BFD_RELOC_HI16_S, but PC relative. */
 name|BFD_RELOC_PCREL_HI16_S
 block|,
-comment|/* Like BFD_RELOC_LO16, but PC relative.  */
+comment|/* Like BFD_RELOC_LO16, but PC relative. */
 name|BFD_RELOC_PCREL_LO16
 block|,
-comment|/* relocation relative to the global pointer.  */
+comment|/* Relocation relative to the global pointer. */
 define|#
 directive|define
 name|BFD_RELOC_MIPS_GPREL
 value|BFD_RELOC_GPREL16
-comment|/* Relocation against a MIPS literal section.  */
+comment|/* Relocation against a MIPS literal section. */
 name|BFD_RELOC_MIPS_LITERAL
 block|,
-comment|/* MIPS ELF relocations.  */
+comment|/* MIPS ELF relocations. */
 name|BFD_RELOC_MIPS_GOT16
 block|,
 name|BFD_RELOC_MIPS_CALL16
@@ -4991,6 +4644,14 @@ define|#
 directive|define
 name|BFD_RELOC_MIPS_GPREL32
 value|BFD_RELOC_GPREL32
+name|BFD_RELOC_MIPS_GOT_HI16
+block|,
+name|BFD_RELOC_MIPS_GOT_LO16
+block|,
+name|BFD_RELOC_MIPS_CALL_HI16
+block|,
+name|BFD_RELOC_MIPS_CALL_LO16
+block|,
 comment|/* i386/elf relocations */
 name|BFD_RELOC_386_GOT32
 block|,
@@ -5033,27 +4694,103 @@ name|BFD_RELOC_NS32K_DISP_16_PCREL
 block|,
 name|BFD_RELOC_NS32K_DISP_32_PCREL
 block|,
-comment|/* PowerPC/POWER (RS/6000) relocs.  */
-comment|/* 26 bit relative branch.  Low two bits must be zero.  High 24      bits installed in bits 6 through 29 of instruction.  */
+comment|/* Power(rs6000) and PowerPC relocations. */
 name|BFD_RELOC_PPC_B26
 block|,
-comment|/* 26 bit absolute branch, like BFD_RELOC_PPC_B26 but absolute.  */
 name|BFD_RELOC_PPC_BA26
 block|,
-comment|/* 16 bit TOC relative reference.  */
 name|BFD_RELOC_PPC_TOC16
 block|,
-comment|/* this must be the highest numeric value */
+name|BFD_RELOC_PPC_B16
+block|,
+name|BFD_RELOC_PPC_B16_BRTAKEN
+block|,
+name|BFD_RELOC_PPC_B16_BRNTAKEN
+block|,
+name|BFD_RELOC_PPC_BA16
+block|,
+name|BFD_RELOC_PPC_BA16_BRTAKEN
+block|,
+name|BFD_RELOC_PPC_BA16_BRNTAKEN
+block|,
+name|BFD_RELOC_PPC_COPY
+block|,
+name|BFD_RELOC_PPC_GLOB_DAT
+block|,
+name|BFD_RELOC_PPC_JMP_SLOT
+block|,
+name|BFD_RELOC_PPC_RELATIVE
+block|,
+name|BFD_RELOC_PPC_LOCAL24PC
+block|,
+name|BFD_RELOC_PPC_EMB_NADDR32
+block|,
+name|BFD_RELOC_PPC_EMB_NADDR16
+block|,
+name|BFD_RELOC_PPC_EMB_NADDR16_LO
+block|,
+name|BFD_RELOC_PPC_EMB_NADDR16_HI
+block|,
+name|BFD_RELOC_PPC_EMB_NADDR16_HA
+block|,
+name|BFD_RELOC_PPC_EMB_SDAI16
+block|,
+name|BFD_RELOC_PPC_EMB_SDA2I16
+block|,
+name|BFD_RELOC_PPC_EMB_SDA2REL
+block|,
+name|BFD_RELOC_PPC_EMB_SDA21
+block|,
+name|BFD_RELOC_PPC_EMB_MRKREF
+block|,
+name|BFD_RELOC_PPC_EMB_RELSEC16
+block|,
+name|BFD_RELOC_PPC_EMB_RELST_LO
+block|,
+name|BFD_RELOC_PPC_EMB_RELST_HI
+block|,
+name|BFD_RELOC_PPC_EMB_RELST_HA
+block|,
+name|BFD_RELOC_PPC_EMB_BIT_FLD
+block|,
+name|BFD_RELOC_PPC_EMB_RELSDA
+block|,
+comment|/* The type of reloc used to build a contructor table - at the moment probably a 32 bit wide absolute relocation, but the target can choose. It generally does map to one of the other relocation types. */
+name|BFD_RELOC_CTOR
+block|,
+comment|/* ARM 26 bit pc-relative branch.  The lowest two bits must be zero and are not stored in the instruction. */
+name|BFD_RELOC_ARM_PCREL_BRANCH
+block|,
+comment|/* These relocs are only used within the ARM assembler.  They are not (at present) written to any object files. */
+name|BFD_RELOC_ARM_IMMEDIATE
+block|,
+name|BFD_RELOC_ARM_OFFSET_IMM
+block|,
+name|BFD_RELOC_ARM_SHIFT_IMM
+block|,
+name|BFD_RELOC_ARM_SWI
+block|,
+name|BFD_RELOC_ARM_MULTI
+block|,
+name|BFD_RELOC_ARM_CP_OFF_IMM
+block|,
+name|BFD_RELOC_ARM_ADR_IMM
+block|,
+name|BFD_RELOC_ARM_LDR_IMM
+block|,
+name|BFD_RELOC_ARM_LITERAL
+block|,
+name|BFD_RELOC_ARM_IN_POOL
+block|,
 name|BFD_RELOC_UNUSED
 block|}
+enum|;
+typedef|typedef
+name|enum
+name|bfd_reloc_code_real
 name|bfd_reloc_code_real_type
 typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|reloc_howto_struct
+name|reloc_howto_type
 modifier|*
 name|bfd_reloc_type_lookup
 name|PARAMS
@@ -5068,9 +4805,18 @@ name|code
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_typedef
+specifier|const
+name|char
+modifier|*
+name|bfd_get_reloc_code_name
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_reloc_code_real_type
+name|code
+operator|)
+argument_list|)
+decl_stmt|;
 typedef|typedef
 struct|struct
 name|symbol_cache_entry
@@ -5163,12 +4909,12 @@ define|#
 directive|define
 name|BSF_CONSTRUCTOR
 value|0x800
-comment|/* Signal that the symbol is a warning symbol. If the symbol 	   is a warning symbol, then the value field (I know this is 	   tacky) will point to the asymbol which when referenced will 	   cause the warning. */
+comment|/* Signal that the symbol is a warning symbol.  The name is a 	   warning.  The name of the next symbol is the one to warn about; 	   if a reference is made to a symbol with the same name as the next 	   symbol, a warning is issued by the linker. */
 define|#
 directive|define
 name|BSF_WARNING
 value|0x1000
-comment|/* Signal that the symbol is indirect. The value of the symbol 	   is a pointer to an undefined asymbol which contains the 	   name to use instead. */
+comment|/* Signal that the symbol is indirect.  This symbol is an indirect 	   pointer to the symbol with the same name as the next symbol. */
 define|#
 directive|define
 name|BSF_INDIRECT
@@ -5183,25 +4929,35 @@ define|#
 directive|define
 name|BSF_DYNAMIC
 value|0x8000
+comment|/* The symbol denotes a data object.  Used in ELF, and perhaps           others someday.  */
+define|#
+directive|define
+name|BSF_OBJECT
+value|0x10000
 name|flagword
 name|flags
 decl_stmt|;
-comment|/* A pointer to the section to which this symbol is 	   relative.  This will always be non NULL, there are special           sections for undefined and absolute symbols */
+comment|/* A pointer to the section to which this symbol is 	   relative.  This will always be non NULL, there are special           sections for undefined and absolute symbols.  */
 name|struct
 name|sec
 modifier|*
 name|section
 decl_stmt|;
-comment|/* Back end special data. This is being phased out in favour 	   of making this a union. */
+comment|/* Back end special data.  */
+union|union
+block|{
 name|PTR
-name|udata
+name|p
 decl_stmt|;
+name|bfd_vma
+name|i
+decl_stmt|;
+block|}
+name|udata
+union|;
 block|}
 name|asymbol
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|bfd_get_symtab_upper_bound
@@ -5210,9 +4966,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_get_symtab_upper_bound, (abfd))
-end_define
-
-begin_decl_stmt
 name|boolean
 name|bfd_is_local_label
 name|PARAMS
@@ -5228,9 +4981,6 @@ name|sym
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_is_local_label
@@ -5241,9 +4991,6 @@ name|sym
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_is_local_label,(abfd, sym))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_canonicalize_symtab
@@ -5254,9 +5001,6 @@ name|location
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_canonicalize_symtab,\                   (abfd, location))
-end_define
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_symtab
 name|PARAMS
@@ -5277,9 +5021,6 @@ name|count
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_print_symbol_vandf
 name|PARAMS
@@ -5294,9 +5035,6 @@ name|symbol
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_make_empty_symbol
@@ -5305,9 +5043,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_make_empty_symbol, (abfd))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_make_debug_symbol
@@ -5320,9 +5055,6 @@ name|size
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_make_debug_symbol, (abfd, ptr, size))
-end_define
-
-begin_decl_stmt
 name|int
 name|bfd_decode_symclass
 name|PARAMS
@@ -5334,9 +5066,6 @@ name|symbol
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_symbol_info
 name|PARAMS
@@ -5352,9 +5081,43 @@ name|ret
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_struct
+name|boolean
+name|bfd_copy_private_symbol_data
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|ibfd
+operator|,
+name|asymbol
+operator|*
+name|isym
+operator|,
+name|bfd
+operator|*
+name|obfd
+operator|,
+name|asymbol
+operator|*
+name|osym
+operator|)
+argument_list|)
+decl_stmt|;
+define|#
+directive|define
+name|bfd_copy_private_symbol_data
+parameter_list|(
+name|ibfd
+parameter_list|,
+name|isymbol
+parameter_list|,
+name|obfd
+parameter_list|,
+name|osymbol
+parameter_list|)
+define|\
+value|BFD_SEND (ibfd, _bfd_copy_private_symbol_data, \ 		(ibfd, isymbol, obfd, osymbol))
 struct|struct
 name|_bfd
 block|{
@@ -5371,9 +5134,8 @@ name|bfd_target
 modifier|*
 name|xvec
 decl_stmt|;
-comment|/* To avoid dragging too many header files into every file that        includes `<<bfd.h>>', IOSTREAM has been declared as a "char        *", and MTIME as a "long".  Their correct types, to which they        are cast when used, are "FILE *" and "time_t".    The iostream        is the result of an fopen on the filename. */
-name|char
-modifier|*
+comment|/* To avoid dragging too many header files into every file that        includes `<<bfd.h>>', IOSTREAM has been declared as a "char        *", and MTIME as a "long".  Their correct types, to which they        are cast when used, are "FILE *" and "time_t".    The iostream        is the result of an fopen on the filename.  However, if the        BFD_IN_MEMORY flag is set, then iostream is actually a pointer        to a bfd_in_memory struct.  */
+name|PTR
 name|iostream
 decl_stmt|;
 comment|/* Is the file descriptor being cached?  That is, can it be closed as        needed, and re-opened when accessed later?  */
@@ -5462,7 +5224,7 @@ name|unsigned
 name|int
 name|section_count
 decl_stmt|;
-comment|/* Stuff only useful for object files:        The start address. */
+comment|/* Stuff only useful for object files:         The start address. */
 name|bfd_vma
 name|start_address
 decl_stmt|;
@@ -5479,6 +5241,7 @@ modifier|*
 name|outsymbols
 decl_stmt|;
 comment|/* Pointer to structure which contains architecture information*/
+specifier|const
 name|struct
 name|bfd_arch_info
 modifier|*
@@ -5548,6 +5311,16 @@ modifier|*
 name|coff_obj_data
 decl_stmt|;
 name|struct
+name|pe_tdata
+modifier|*
+name|pe_obj_data
+decl_stmt|;
+name|struct
+name|xcoff_tdata
+modifier|*
+name|xcoff_obj_data
+decl_stmt|;
+name|struct
 name|ecoff_tdata
 modifier|*
 name|ecoff_obj_data
@@ -5566,6 +5339,11 @@ name|struct
 name|srec_data_struct
 modifier|*
 name|srec_data
+decl_stmt|;
+name|struct
+name|ihex_data_struct
+modifier|*
+name|ihex_data
 decl_stmt|;
 name|struct
 name|tekhex_data_struct
@@ -5632,6 +5410,16 @@ name|cisco_core_struct
 modifier|*
 name|cisco_core_data
 decl_stmt|;
+name|struct
+name|versados_data_struct
+modifier|*
+name|versados_data
+decl_stmt|;
+name|struct
+name|netbsd_core_struct
+modifier|*
+name|netbsd_core_data
+decl_stmt|;
 name|PTR
 name|any
 decl_stmt|;
@@ -5649,9 +5437,6 @@ name|memory
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_typedef
 typedef|typedef
 enum|enum
 name|bfd_error
@@ -5672,6 +5457,8 @@ name|bfd_error_no_memory
 block|,
 name|bfd_error_no_symbols
 block|,
+name|bfd_error_no_armap
+block|,
 name|bfd_error_no_more_archived_files
 block|,
 name|bfd_error_malformed_archive
@@ -5690,13 +5477,12 @@ name|bfd_error_bad_value
 block|,
 name|bfd_error_file_truncated
 block|,
+name|bfd_error_file_too_big
+block|,
 name|bfd_error_invalid_error_code
 block|}
 name|bfd_error_type
 typedef|;
-end_typedef
-
-begin_decl_stmt
 name|bfd_error_type
 name|bfd_get_error
 name|PARAMS
@@ -5706,9 +5492,6 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_set_error
 name|PARAMS
@@ -5719,9 +5502,6 @@ name|error_tag
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CONST
 name|char
 modifier|*
@@ -5734,9 +5514,6 @@ name|error_tag
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_perror
 name|PARAMS
@@ -5749,9 +5526,42 @@ name|message
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+typedef|typedef
+name|void
+argument_list|(
+argument|*bfd_error_handler_type
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+name|bfd_error_handler_type
+name|bfd_set_error_handler
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_error_handler_type
+operator|)
+argument_list|)
+decl_stmt|;
+name|void
+name|bfd_set_error_program_name
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|long
 name|bfd_get_reloc_upper_bound
 name|PARAMS
@@ -5767,9 +5577,6 @@ name|sect
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|bfd_canonicalize_reloc
 name|PARAMS
@@ -5795,9 +5602,6 @@ name|syms
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_set_reloc
 name|PARAMS
@@ -5822,9 +5626,6 @@ name|count
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_file_flags
 name|PARAMS
@@ -5839,9 +5640,6 @@ name|flags
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_start_address
 name|PARAMS
@@ -5856,9 +5654,6 @@ name|vma
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|bfd_get_mtime
 name|PARAMS
@@ -5870,9 +5665,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|bfd_get_size
 name|PARAMS
@@ -5884,9 +5676,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|bfd_get_gp_size
 name|PARAMS
@@ -5898,9 +5687,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|bfd_set_gp_size
 name|PARAMS
@@ -5915,9 +5701,6 @@ name|i
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd_vma
 name|bfd_scan_vma
 name|PARAMS
@@ -5939,9 +5722,6 @@ name|base
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_copy_private_bfd_data
 name|PARAMS
@@ -5957,9 +5737,6 @@ name|obfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|bfd_copy_private_bfd_data
@@ -5970,9 +5747,55 @@ name|obfd
 parameter_list|)
 define|\
 value|BFD_SEND (ibfd, _bfd_copy_private_bfd_data, \ 		(ibfd, obfd))
-end_define
-
-begin_define
+name|boolean
+name|bfd_merge_private_bfd_data
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|ibfd
+operator|,
+name|bfd
+operator|*
+name|obfd
+operator|)
+argument_list|)
+decl_stmt|;
+define|#
+directive|define
+name|bfd_merge_private_bfd_data
+parameter_list|(
+name|ibfd
+parameter_list|,
+name|obfd
+parameter_list|)
+define|\
+value|BFD_SEND (ibfd, _bfd_merge_private_bfd_data, \ 		(ibfd, obfd))
+name|boolean
+name|bfd_set_private_flags
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+name|flagword
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+define|#
+directive|define
+name|bfd_set_private_flags
+parameter_list|(
+name|abfd
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_set_private_flags, \ 		(abfd, flags))
 define|#
 directive|define
 name|bfd_sizeof_headers
@@ -5983,9 +5806,6 @@ name|reloc
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_sizeof_headers, (abfd, reloc))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_find_nearest_line
@@ -6006,13 +5826,7 @@ name|line
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_find_nearest_line,  (abfd, sec, syms, off, file, func, line))
-end_define
-
-begin_comment
 comment|/* Do these three do anything useful at all, for any back end?  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|bfd_debug_info_start
@@ -6021,9 +5835,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_debug_info_start, (abfd))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_debug_info_end
@@ -6032,9 +5843,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_debug_info_end, (abfd))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_debug_info_accumulate
@@ -6045,9 +5853,6 @@ name|section
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_debug_info_accumulate, (abfd, section))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_stat_arch_elt
@@ -6058,9 +5863,14 @@ name|stat
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_stat_arch_elt,(abfd, stat))
-end_define
-
-begin_define
+define|#
+directive|define
+name|bfd_update_armap_timestamp
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_update_armap_timestamp, (abfd))
 define|#
 directive|define
 name|bfd_set_arch_mach
@@ -6073,30 +5883,6 @@ name|mach
 parameter_list|)
 define|\
 value|BFD_SEND ( abfd, _bfd_set_arch_mach, (abfd, arch, mach))
-end_define
-
-begin_define
-define|#
-directive|define
-name|bfd_get_relocated_section_contents
-parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|,
-name|link_order
-parameter_list|,
-name|data
-parameter_list|,
-name|relocateable
-parameter_list|,
-name|symbols
-parameter_list|)
-define|\
-value|BFD_SEND (abfd, _bfd_get_relocated_section_contents, \                  (abfd, link_info, link_order, data, relocateable, symbols))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_relax_section
@@ -6111,9 +5897,6 @@ name|again
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_relax_section, (abfd, section, link_info, again))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_link_hash_table_create
@@ -6122,9 +5905,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_link_hash_table_create, (abfd))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_link_add_symbols
@@ -6135,9 +5915,6 @@ name|info
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_link_add_symbols, (abfd, info))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_final_link
@@ -6148,9 +5925,6 @@ name|info
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_final_link, (abfd, info))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_free_cached_info
@@ -6159,9 +5933,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_free_cached_info, (abfd))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_dynamic_symtab_upper_bound
@@ -6170,9 +5941,16 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_get_dynamic_symtab_upper_bound, (abfd))
-end_define
-
-begin_define
+define|#
+directive|define
+name|bfd_print_private_bfd_data
+parameter_list|(
+name|abfd
+parameter_list|,
+name|file
+parameter_list|)
+define|\
+value|BFD_SEND (abfd, _bfd_print_private_bfd_data, (abfd, file))
 define|#
 directive|define
 name|bfd_canonicalize_dynamic_symtab
@@ -6183,9 +5961,6 @@ name|asymbols
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_canonicalize_dynamic_symtab, (abfd, asymbols))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_get_dynamic_reloc_upper_bound
@@ -6194,9 +5969,6 @@ name|abfd
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_get_dynamic_reloc_upper_bound, (abfd))
-end_define
-
-begin_define
 define|#
 directive|define
 name|bfd_canonicalize_dynamic_reloc
@@ -6209,9 +5981,35 @@ name|asyms
 parameter_list|)
 define|\
 value|BFD_SEND (abfd, _bfd_canonicalize_dynamic_reloc, (abfd, arels, asyms))
-end_define
-
-begin_decl_stmt
+specifier|extern
+name|bfd_byte
+modifier|*
+name|bfd_get_relocated_section_contents
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|bfd_link_order
+operator|*
+operator|,
+name|bfd_byte
+operator|*
+operator|,
+name|boolean
+operator|,
+name|asymbol
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|symindex
 name|bfd_get_next_mapent
 name|PARAMS
@@ -6231,9 +6029,6 @@ name|sym
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_archive_head
 name|PARAMS
@@ -6249,27 +6044,6 @@ name|new_head
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bfd
-modifier|*
-name|bfd_get_elt_at_index
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|archive
-operator|,
-name|int
-name|index
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bfd
 modifier|*
 name|bfd_openr_next_archived_file
@@ -6286,9 +6060,6 @@ name|previous
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CONST
 name|char
 modifier|*
@@ -6302,9 +6073,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|bfd_core_file_failing_signal
 name|PARAMS
@@ -6316,9 +6084,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|core_file_matches_executable_p
 name|PARAMS
@@ -6334,9 +6099,6 @@ name|exec_bfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|BFD_SEND
@@ -6349,21 +6111,12 @@ name|arglist
 parameter_list|)
 define|\
 value|((*((bfd)->xvec->message)) arglist)
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG_BFD_SEND
-end_ifdef
-
-begin_undef
 undef|#
 directive|undef
 name|BFD_SEND
-end_undef
-
-begin_define
 define|#
 directive|define
 name|BFD_SEND
@@ -6376,14 +6129,8 @@ name|arglist
 parameter_list|)
 define|\
 value|(((bfd)&& (bfd)->xvec&& (bfd)->xvec->message) ? \     ((*((bfd)->xvec->message)) arglist) : \     (bfd_assert (__FILE__,__LINE__), NULL))
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
 define|#
 directive|define
 name|BFD_SEND_FMT
@@ -6396,21 +6143,12 @@ name|arglist
 parameter_list|)
 define|\
 value|(((bfd)->xvec->message[(int)((bfd)->format)]) arglist)
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG_BFD_SEND
-end_ifdef
-
-begin_undef
 undef|#
 directive|undef
 name|BFD_SEND_FMT
-end_undef
-
-begin_define
 define|#
 directive|define
 name|BFD_SEND_FMT
@@ -6423,14 +6161,8 @@ name|arglist
 parameter_list|)
 define|\
 value|(((bfd)&& (bfd)->xvec&& (bfd)->xvec->message) ? \    (((bfd)->xvec->message[(int)((bfd)->format)]) arglist) : \    (bfd_assert (__FILE__,__LINE__), NULL))
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_enum
 enum|enum
 name|bfd_flavour
 block|{
@@ -6454,26 +6186,33 @@ name|bfd_target_tekhex_flavour
 block|,
 name|bfd_target_srec_flavour
 block|,
+name|bfd_target_ihex_flavour
+block|,
 name|bfd_target_som_flavour
 block|,
 name|bfd_target_os9k_flavour
+block|,
+name|bfd_target_versados_flavour
+block|,
+name|bfd_target_msdos_flavour
 block|}
 enum|;
-end_enum
-
-begin_comment
+enum|enum
+name|bfd_endian
+block|{
+name|BFD_ENDIAN_BIG
+block|,
+name|BFD_ENDIAN_LITTLE
+block|,
+name|BFD_ENDIAN_UNKNOWN
+block|}
+enum|;
 comment|/* Forward declaration.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|struct
 name|bfd_link_info
 name|_bfd_link_info
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 struct|struct
 name|bfd_target
@@ -6486,11 +6225,13 @@ name|enum
 name|bfd_flavour
 name|flavour
 decl_stmt|;
-name|boolean
-name|byteorder_big_p
+name|enum
+name|bfd_endian
+name|byteorder
 decl_stmt|;
-name|boolean
-name|header_byteorder_big_p
+name|enum
+name|bfd_endian
+name|header_byteorder
 decl_stmt|;
 name|flagword
 name|object_flags
@@ -6507,10 +6248,6 @@ decl_stmt|;
 name|unsigned
 name|short
 name|ar_max_namelen
-decl_stmt|;
-name|unsigned
-name|int
-name|align_power_min
 decl_stmt|;
 name|bfd_vma
 argument_list|(
@@ -6803,7 +6540,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CAT(NAME,_close_and_cleanup),\ CAT(NAME,_bfd_free_cached_info),\ CAT(NAME,_new_section_hook),\ CAT(NAME,_get_section_contents)
+value|CAT(NAME,_close_and_cleanup),\ CAT(NAME,_bfd_free_cached_info),\ CAT(NAME,_new_section_hook),\ CAT(NAME,_get_section_contents),\ CAT(NAME,_get_section_contents_in_window)
 comment|/* Called when the BFD is being closed to do any necessary cleanup.  */
 name|boolean
 argument_list|(
@@ -6866,6 +6603,27 @@ name|bfd_size_type
 operator|)
 argument_list|)
 expr_stmt|;
+name|boolean
+argument_list|(
+argument|*_bfd_get_section_contents_in_window
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|sec_ptr
+operator|,
+name|bfd_window
+operator|*
+operator|,
+name|file_ptr
+operator|,
+name|bfd_size_type
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Entry points to copy private data.  */
 define|#
 directive|define
@@ -6874,11 +6632,28 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CAT(NAME,_bfd_copy_private_bfd_data),\ CAT(NAME,_bfd_copy_private_section_data)
+value|CAT(NAME,_bfd_copy_private_bfd_data),\ CAT(NAME,_bfd_merge_private_bfd_data),\ CAT(NAME,_bfd_copy_private_section_data),\ CAT(NAME,_bfd_copy_private_symbol_data),\ CAT(NAME,_bfd_set_private_flags),\ CAT(NAME,_bfd_print_private_bfd_data)
+block|\
 comment|/* Called to copy BFD general private data from one object file      to another.  */
 name|boolean
 argument_list|(
 argument|*_bfd_copy_private_bfd_data
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called to merge BFD general private data from one object file      to a common output file when linking.  */
+name|boolean
+argument_list|(
+argument|*_bfd_merge_private_bfd_data
 argument_list|)
 name|PARAMS
 argument_list|(
@@ -6908,6 +6683,58 @@ name|bfd
 operator|*
 operator|,
 name|sec_ptr
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called to copy BFD private symbol data from one symbol       to another.  */
+name|boolean
+argument_list|(
+argument|*_bfd_copy_private_symbol_data
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called to set private backend flags */
+name|boolean
+argument_list|(
+argument|*_bfd_set_private_flags
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|flagword
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called to print private BFD data */
+name|boolean
+argument_list|(
+argument|*_bfd_print_private_bfd_data
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6969,7 +6796,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CAT(NAME,_slurp_armap),\ CAT(NAME,_slurp_extended_name_table),\ CAT(NAME,_truncate_arname),\ CAT(NAME,_write_armap),\ CAT(NAME,_openr_next_archived_file),\ CAT(NAME,_generic_stat_arch_elt)
+value|CAT(NAME,_slurp_armap),\ CAT(NAME,_slurp_extended_name_table),\ CAT(NAME,_construct_extended_name_table),\ CAT(NAME,_truncate_arname),\ CAT(NAME,_write_armap),\ CAT(NAME,_read_ar_hdr),\ CAT(NAME,_openr_next_archived_file),\ CAT(NAME,_get_elt_at_index),\ CAT(NAME,_generic_stat_arch_elt),\ CAT(NAME,_update_armap_timestamp)
 name|boolean
 argument_list|(
 argument|*_bfd_slurp_armap
@@ -6990,6 +6817,30 @@ name|PARAMS
 argument_list|(
 operator|(
 name|bfd
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|boolean
+argument_list|(
+argument|*_bfd_construct_extended_name_table
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|bfd_size_type
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -7042,6 +6893,18 @@ name|stridx
 operator|)
 argument_list|)
 expr_stmt|;
+name|PTR
+argument_list|(
+argument|*_bfd_read_ar_hdr_fn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|bfd
 operator|*
 operator|(
@@ -7061,6 +6924,31 @@ name|prev
 operator|)
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|bfd_get_elt_at_index
+parameter_list|(
+name|b
+parameter_list|,
+name|i
+parameter_list|)
+value|BFD_SEND(b, _bfd_get_elt_at_index, (b,i))
+name|bfd
+operator|*
+operator|(
+operator|*
+name|_bfd_get_elt_at_index
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|symindex
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 argument_list|(
 argument|*_bfd_stat_arch_elt
@@ -7077,6 +6965,18 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|boolean
+argument_list|(
+argument|*_bfd_update_armap_timestamp
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Entry points used for symbols.  */
 define|#
 directive|define
@@ -7085,7 +6985,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CAT(NAME,_get_symtab_upper_bound),\ CAT(NAME,_get_symtab),\ CAT(NAME,_make_empty_symbol),\ CAT(NAME,_print_symbol),\ CAT(NAME,_get_symbol_info),\ CAT(NAME,_bfd_is_local_label),\ CAT(NAME,_get_lineno),\ CAT(NAME,_find_nearest_line),\ CAT(NAME,_bfd_make_debug_symbol)
+value|CAT(NAME,_get_symtab_upper_bound),\ CAT(NAME,_get_symtab),\ CAT(NAME,_make_empty_symbol),\ CAT(NAME,_print_symbol),\ CAT(NAME,_get_symbol_info),\ CAT(NAME,_bfd_is_local_label),\ CAT(NAME,_get_lineno),\ CAT(NAME,_find_nearest_line),\ CAT(NAME,_bfd_make_debug_symbol),\ CAT(NAME,_read_minisymbols),\ CAT(NAME,_minisymbol_to_symbol)
 name|long
 argument_list|(
 argument|*_bfd_get_symtab_upper_bound
@@ -7294,6 +7194,77 @@ name|size
 operator|)
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|bfd_read_minisymbols
+parameter_list|(
+name|b
+parameter_list|,
+name|d
+parameter_list|,
+name|m
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|BFD_SEND (b, _read_minisymbols, (b, d, m, s))
+name|long
+argument_list|(
+argument|*_read_minisymbols
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|boolean
+operator|,
+name|PTR
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|bfd_minisymbol_to_symbol
+parameter_list|(
+name|b
+parameter_list|,
+name|d
+parameter_list|,
+name|m
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|BFD_SEND (b, _minisymbol_to_symbol, (b, d, m, f))
+name|asymbol
+operator|*
+operator|(
+operator|*
+name|_minisymbol_to_symbol
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|boolean
+operator|,
+specifier|const
+name|PTR
+operator|,
+name|asymbol
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Routines for relocs.  */
 define|#
 directive|define
@@ -7341,14 +7312,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* See documentation on reloc types.  */
-name|CONST
-name|struct
-name|reloc_howto_struct
-modifier|*
-argument_list|(
+name|reloc_howto_type
+operator|*
+operator|(
 operator|*
 name|reloc_type_lookup
-argument_list|)
+operator|)
 name|PARAMS
 argument_list|(
 operator|(
@@ -7360,7 +7329,7 @@ name|bfd_reloc_code_real_type
 name|code
 operator|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* Routines used when writing an object file.  */
 define|#
 directive|define
@@ -7416,7 +7385,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|CAT(NAME,_sizeof_headers),\ CAT(NAME,_bfd_get_relocated_section_contents),\ CAT(NAME,_bfd_relax_section),\ CAT(NAME,_bfd_link_hash_table_create),\ CAT(NAME,_bfd_link_add_symbols),\ CAT(NAME,_bfd_final_link)
+value|CAT(NAME,_sizeof_headers),\ CAT(NAME,_bfd_get_relocated_section_contents),\ CAT(NAME,_bfd_relax_section),\ CAT(NAME,_bfd_link_hash_table_create),\ CAT(NAME,_bfd_link_add_symbols),\ CAT(NAME,_bfd_final_link),\ CAT(NAME,_bfd_link_split_section)
 name|int
 argument_list|(
 argument|*_bfd_sizeof_headers
@@ -7539,6 +7508,23 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Should this section be split up into smaller pieces during linking.  */
+name|boolean
+argument_list|(
+argument|*_bfd_link_split_section
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Routines to handle dynamic symbols and relocs.  */
 define|#
 directive|define
@@ -7620,9 +7606,6 @@ decl_stmt|;
 block|}
 name|bfd_target
 typedef|;
-end_typedef
-
-begin_decl_stmt
 specifier|const
 name|bfd_target
 modifier|*
@@ -7641,9 +7624,6 @@ name|abfd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|char
 modifier|*
@@ -7656,9 +7636,6 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_check_format
 name|PARAMS
@@ -7673,9 +7650,6 @@ name|format
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_check_format_matches
 name|PARAMS
@@ -7696,9 +7670,6 @@ name|matching
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean
 name|bfd_set_format
 name|PARAMS
@@ -7713,9 +7684,6 @@ name|format
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CONST
 name|char
 modifier|*
@@ -7728,7 +7696,16 @@ name|format
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -37,18 +37,59 @@ directive|include
 file|<alloca.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|__builtin_alloca
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Stupid include file doesn't declare it */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+name|PTR
+name|alloca
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_function_decl
-name|char
-modifier|*
+name|PTR
 name|alloca
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* must agree with functions.def */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
