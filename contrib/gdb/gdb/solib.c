@@ -3704,6 +3704,8 @@ expr_stmt|;
 comment|/* For SVR4 versions, the first entry in the link map is for the 	 inferior executable, so we must ignore it.  For some versions of 	 SVR4, it has no name.  For others (Solaris 2.3 for example), it 	 does have a name, so we can no longer use a missing name to 	 decide when to ignore it. */
 if|if
 condition|(
+name|new
+operator|&&
 operator|!
 name|IGNORE_FIRST_LINK_MAP_ENTRY
 argument_list|(
