@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vidcontrol.c,v 1.21 1998/09/16 13:55:26 abial Exp $"
+literal|"$Id: vidcontrol.c,v 1.22 1998/09/23 10:00:15 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1261,6 +1261,9 @@ name|modes
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|SW_TEXT_80x25
 block|{
 literal|"80x25"
 block|,
@@ -1321,6 +1324,8 @@ block|,
 name|SW_TEXT_132x60
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"VGA_40x25"
 block|,
