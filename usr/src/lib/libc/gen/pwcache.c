@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwcache.c	5.4 (Berkeley) %G%"
+literal|"@(#)pwcache.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,8 @@ name|char
 name|name
 index|[
 name|UT_NAMESIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 block|}
