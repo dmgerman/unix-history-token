@@ -2099,9 +2099,6 @@ name|pcie_cfg_elem
 operator|*
 name|elem
 block|;
-name|critical_enter
-argument_list|()
-block|;
 name|pcielist
 operator|=
 operator|&
@@ -2274,6 +2271,12 @@ name|pa
 decl_stmt|,
 name|papage
 decl_stmt|;
+name|int
+name|data
+decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|pa
 operator|=
 name|PCIE_PADDR
@@ -2323,8 +2326,8 @@ block|{
 case|case
 literal|4
 case|:
-return|return
-operator|(
+name|data
+operator|=
 operator|*
 operator|(
 specifier|volatile
@@ -2334,13 +2337,13 @@ operator|)
 operator|(
 name|va
 operator|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
-return|return
-operator|(
+name|data
+operator|=
 operator|*
 operator|(
 specifier|volatile
@@ -2350,13 +2353,13 @@ operator|)
 operator|(
 name|va
 operator|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|1
 case|:
-return|return
-operator|(
+name|data
+operator|=
 operator|*
 operator|(
 specifier|volatile
@@ -2366,8 +2369,8 @@ operator|)
 operator|(
 name|va
 operator|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -2375,6 +2378,14 @@ literal|"pciereg_cfgread: invalid width"
 argument_list|)
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|data
+operator|)
+return|;
 block|}
 end_function
 
@@ -2416,6 +2427,9 @@ name|pa
 decl_stmt|,
 name|papage
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|pa
 operator|=
 name|PCIE_PADDR
@@ -2517,6 +2531,9 @@ literal|"pciereg_cfgwrite: invalid width"
 argument_list|)
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
