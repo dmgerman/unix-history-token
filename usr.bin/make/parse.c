@@ -2315,7 +2315,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-comment|/* 		 * We don't want to end a word on ':' or '!' if there is a 		 * better match later on in the string.  By "better" I mean 		 * one that is followed by whitespace.	This allows the user 		 * to have targets like: 		 *    fie::fi:fo: fum 		 * where "fie::fi:fo" is the target.  In real life this is used 		 * for perl5 library man pages where "::" separates an object 		 * from its class.  Ie: "File::Spec::Unix".  This behaviour 		 * is also consistent with other versions of make. 		 */
+comment|/* 		 * We don't want to end a word on ':' or '!' if there is a 		 * better match later on in the string (greedy matching). 		 * This allows the user to have targets like: 		 *    fie::fi:fo: fum 		 *    foo::bar: 		 * where "fie::fi:fo" and "foo::bar" are the targets.  In 		 * real life this is used for perl5 library man pages where 		 * "::" separates an object from its class. 		 * Ie: "File::Spec::Unix".  This behaviour is also consistent 		 * with other versions of make. 		 */
 name|char
 modifier|*
 name|p
@@ -2354,8 +2354,6 @@ name|p
 argument_list|)
 condition|)
 break|break;
-do|do
-block|{
 name|p
 operator|+=
 name|strcspn
@@ -2365,26 +2363,6 @@ argument_list|,
 literal|"!:"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-break|break;
-block|}
-do|while
-condition|(
-operator|!
-name|isspace
-argument_list|(
-operator|*
-operator|++
-name|p
-argument_list|)
-condition|)
-do|;
 comment|/* No better match later on... */
 if|if
 condition|(
