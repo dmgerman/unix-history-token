@@ -2222,12 +2222,6 @@ expr_stmt|;
 block|}
 end_if
 
-begin_expr_stmt
-name|critical_exit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
 begin_return
 return|return
 operator|(
