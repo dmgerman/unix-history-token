@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -49,6 +37,24 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"resourcevar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"signalvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -102,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machine/cpu.h"
 end_include
 
@@ -109,18 +121,6 @@ begin_include
 include|#
 directive|include
 file|"vm/vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_map.h"
 end_include
 
 begin_comment
@@ -157,28 +157,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|filedesc
 name|filedesc0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|file
-modifier|*
-name|fd0
-index|[
-name|NOEXTENT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|fdflags0
-index|[
-name|NOEXTENT
-index|]
+name|filedesc0
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +173,17 @@ begin_decl_stmt
 name|struct
 name|vmspace
 name|vmspace0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|curproc
+init|=
+operator|&
+name|proc0
 decl_stmt|;
 end_decl_stmt
 
@@ -266,7 +257,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|struct
-name|filedesc
+name|filedesc0
 modifier|*
 name|fdp
 decl_stmt|;
@@ -432,37 +423,54 @@ name|p
 operator|->
 name|p_fd
 operator|=
+operator|&
 name|fdp
+operator|->
+name|fd_fd
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_refcnt
 operator|=
 literal|1
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_cmask
 operator|=
 name|cmask
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_ofiles
 operator|=
-name|fd0
+name|fdp
+operator|->
+name|fd_dfiles
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_ofileflags
 operator|=
-name|fdflags0
+name|fdp
+operator|->
+name|fd_dfileflags
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_nfiles
 operator|=
-name|NOEXTENT
+name|NDFILE
 expr_stmt|;
 comment|/* 	 * Set initial limits 	 */
 name|p
@@ -616,8 +624,17 @@ operator|->
 name|p_stats
 operator|=
 operator|&
-name|u
-operator|.
+operator|(
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|)
+operator|->
 name|u_stats
 expr_stmt|;
 name|p
@@ -625,8 +642,17 @@ operator|->
 name|p_sigacts
 operator|=
 operator|&
-name|u
-operator|.
+operator|(
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|)
+operator|->
 name|u_sigacts
 expr_stmt|;
 name|rqinit
@@ -790,7 +816,7 @@ argument_list|(
 literal|"cannot mount root"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get vnode for '/'. 	 * Setup rootdir and fdp->fd_cdir to point to it. 	 */
+comment|/* 	 * Get vnode for '/'. 	 * Setup rootdir and fdp->fd_fd.fd_cdir to point to it. 	 */
 if|if
 condition|(
 name|VFS_ROOT
@@ -808,6 +834,8 @@ argument_list|)
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_cdir
 operator|=
 name|rootdir
@@ -816,6 +844,8 @@ name|VREF
 argument_list|(
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_cdir
 argument_list|)
 expr_stmt|;
@@ -826,6 +856,8 @@ argument_list|)
 expr_stmt|;
 name|fdp
 operator|->
+name|fd_fd
+operator|.
 name|fd_rdir
 operator|=
 name|NULL
