@@ -459,7 +459,7 @@ value|0x3c
 end_define
 
 begin_comment
-comment|/* Firemware version */
+comment|/* Firmware version */
 end_comment
 
 begin_define

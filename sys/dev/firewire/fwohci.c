@@ -2881,7 +2881,7 @@ name|fwohcidb_tr
 modifier|*
 name|db_tr
 decl_stmt|;
-comment|/* Disable interrupt */
+comment|/* Disable interrupts */
 name|OWRITE
 argument_list|(
 name|sc
@@ -2892,7 +2892,7 @@ operator|~
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Now stopping all DMA channel */
+comment|/* Now stopping all DMA channels */
 name|OWRITE
 argument_list|(
 name|sc
@@ -3508,7 +3508,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Enable interrupt */
+comment|/* Enable interrupts */
 name|OWRITE
 argument_list|(
 name|sc
@@ -3656,7 +3656,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Available Isochrounous DMA channel probe */
+comment|/* Available Isochronous DMA channel probe */
 name|OWRITE
 argument_list|(
 name|sc
@@ -3749,7 +3749,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No. of Isochronous channel is %d.\n"
+literal|"No. of Isochronous channels is %d.\n"
 argument_list|,
 name|i
 argument_list|)
@@ -4244,7 +4244,7 @@ literal|0
 block|bzero(&sc->fc.config_rom[0], CROMSIZE); 	sc->fc.config_rom[1] = 0x31333934; 	sc->fc.config_rom[2] = 0xf000a002; 	sc->fc.config_rom[3] = OREAD(sc, OHCI_EUID_HI); 	sc->fc.config_rom[4] = OREAD(sc, OHCI_EUID_LO); 	sc->fc.config_rom[5] = 0; 	sc->fc.config_rom[0] = (4<< 24) | (5<< 16);  	sc->fc.config_rom[0] |= fw_crc16(&sc->fc.config_rom[1], 5*4);
 endif|#
 directive|endif
-comment|/* SID recieve buffer must allign 2^11 */
+comment|/* SID recieve buffer must align 2^11 */
 define|#
 directive|define
 name|OHCI_SIDSIZE
@@ -10682,7 +10682,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* XXX resume isochronus receive automatically. (how about TX?) */
+comment|/* XXX resume isochronous receive automatically. (how about TX?) */
 for|for
 control|(
 name|i

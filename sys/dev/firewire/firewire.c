@@ -4353,7 +4353,7 @@ value|(((addr)< (fwb)->start)?-1:\     ((fwb)->end< (addr))?1:0)
 end_define
 
 begin_comment
-comment|/*  * To lookup binded process from IEEE1394 address.  */
+comment|/*  * To lookup bound process from IEEE1394 address.  */
 end_comment
 
 begin_function
@@ -4683,7 +4683,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"%s: no such bind\n"
+literal|"%s: no such binding\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -8078,7 +8078,7 @@ operator|.
 name|data
 operator|)
 expr_stmt|;
-comment|/* If CSR is minimal confinguration, more investgation is not needed. */
+comment|/* If CSR is minimal confinguration, more investigation is not needed. */
 if|if
 condition|(
 name|chdr
@@ -9225,7 +9225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To allocate uniq transaction label.  */
+comment|/*  * To allocate unique transaction label.  */
 end_comment
 
 begin_function
@@ -9819,7 +9819,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generic packet receving process.  */
+comment|/*  * Generic packet receiving process.  */
 end_comment
 
 begin_function
