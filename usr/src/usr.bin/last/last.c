@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)last.c	4.7 (Berkeley) %G%"
+literal|"@(#)last.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,7 +595,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s"
+literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s "
 argument_list|,
 name|NMAX
 argument_list|,
@@ -732,6 +732,23 @@ condition|(
 name|print
 condition|)
 block|{
+if|if
+condition|(
+name|lineq
+argument_list|(
+name|bp
+operator|->
+name|ut_line
+argument_list|,
+literal|"~"
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|otime
