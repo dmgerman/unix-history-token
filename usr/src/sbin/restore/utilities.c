@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.12	(Berkeley)	83/05/06"
+literal|"@(#)utilities.c	3.13	(Berkeley)	83/05/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,16 +403,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot rename %s to %s\n"
+literal|"Warning: cannot rename %s to %s"
 argument_list|,
 name|from
 argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"rename"
+literal|""
 argument_list|)
 expr_stmt|;
 return|return;
@@ -799,16 +807,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot create symbolic link %s->%s\n"
+literal|"Warning: cannot create symbolic link %s->%s"
 argument_list|,
 name|new
 argument_list|,
 name|existing
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"symlink"
+literal|""
 argument_list|)
 expr_stmt|;
 return|return;
@@ -838,16 +854,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot create hard link %s->%s\n"
+literal|"Warning: cannot create hard link %s->%s"
 argument_list|,
 name|new
 argument_list|,
 name|existing
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"link"
+literal|""
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1703,6 +1727,9 @@ argument_list|,
 literal|"[yn] "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stderr

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.10	(Berkeley)	83/05/14"
+literal|"@(#)dirs.c	3.11	(Berkeley)	83/05/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,23 @@ begin_function_decl
 specifier|extern
 name|ino_t
 name|search
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|direct
+modifier|*
+name|rst_readdir
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rst_seekdir
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -816,7 +833,7 @@ argument_list|(
 name|locname
 argument_list|)
 expr_stmt|;
-name|seekdir
+name|rst_seekdir
 argument_list|(
 name|dirp
 argument_list|,
@@ -831,7 +848,7 @@ argument_list|)
 expr_stmt|;
 name|dp
 operator|=
-name|readdir
+name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
@@ -857,7 +874,7 @@ condition|)
 block|{
 name|dp
 operator|=
-name|readdir
+name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
@@ -917,7 +934,7 @@ condition|)
 block|{
 name|dp
 operator|=
-name|readdir
+name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
@@ -1044,7 +1061,7 @@ argument_list|,
 name|todo
 argument_list|)
 expr_stmt|;
-name|seekdir
+name|rst_seekdir
 argument_list|(
 name|dirp
 argument_list|,
@@ -1058,7 +1075,7 @@ expr_stmt|;
 block|}
 name|dp
 operator|=
-name|readdir
+name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
@@ -1277,7 +1294,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|seekdir
+name|rst_seekdir
 argument_list|(
 name|dirp
 argument_list|,
@@ -1301,7 +1318,7 @@ do|do
 block|{
 name|dp
 operator|=
-name|readdir
+name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)
@@ -1853,12 +1870,12 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Seek to an entry in a directory.  * Only values returned by ``telldir'' should be passed to seekdir.  * This routine handles many directories in a single file.  * It takes the base of the directory in the file, plus  * the desired seek offset into it.  */
+comment|/*  * Seek to an entry in a directory.  * Only values returned by ``telldir'' should be passed to rst_seekdir.  * This routine handles many directories in a single file.  * It takes the base of the directory in the file, plus  * the desired seek offset into it.  */
 end_comment
 
 begin_function
 name|void
-name|seekdir
+name|rst_seekdir
 parameter_list|(
 name|dirp
 parameter_list|,
@@ -1901,7 +1918,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad seek pointer to seekdir %d\n"
+literal|"bad seek pointer to rst_seekdir %d\n"
 argument_list|,
 name|loc
 argument_list|)
@@ -1979,7 +1996,7 @@ begin_function
 name|struct
 name|direct
 modifier|*
-name|readdir
+name|rst_readdir
 parameter_list|(
 name|dirp
 parameter_list|)
@@ -2150,12 +2167,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|dp
-operator|->
-name|d_ino
-operator|<
-literal|0
-operator|||
 name|dp
 operator|->
 name|d_ino
@@ -2498,9 +2509,22 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot create file\n"
+literal|"%s: "
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"cannot create file"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2509,7 +2533,7 @@ name|FAIL
 operator|)
 return|;
 block|}
-name|seekdir
+name|rst_seekdir
 argument_list|(
 name|dirp
 argument_list|,
@@ -2773,7 +2797,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|seekdir
+name|rst_seekdir
 argument_list|(
 name|dirp
 argument_list|,
@@ -2963,7 +2987,7 @@ while|while
 condition|(
 name|dp
 operator|=
-name|readdir
+name|rst_readdir
 argument_list|(
 name|dirp
 argument_list|)

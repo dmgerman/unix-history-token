@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.16	(Berkeley)	83/05/14"
+literal|"@(#)tape.c	3.17	(Berkeley)	83/05/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,17 +212,23 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|RRESTORE
 name|char
 modifier|*
 name|host
 decl_stmt|;
+endif|#
+directive|endif
+endif|RRESTORE
 name|terminal
 operator|=
 name|stdin
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 name|host
 operator|=
 name|source
@@ -335,7 +341,7 @@ name|source
 expr_stmt|;
 endif|#
 directive|endif
-endif|RRESTOR
+endif|RRESTORE
 block|}
 end_block
 
@@ -385,7 +391,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 if|if
 condition|(
 operator|(
@@ -430,12 +436,8 @@ condition|)
 endif|#
 directive|endif
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: cannot open tape\n"
-argument_list|,
 name|magtape
 argument_list|)
 expr_stmt|;
@@ -645,11 +647,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot stat .\n"
+literal|"cannot stat ."
 argument_list|)
 expr_stmt|;
 name|done
@@ -1156,7 +1156,7 @@ condition|)
 empty_stmt|;
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 if|if
 condition|(
 operator|(
@@ -1457,7 +1457,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 name|rmtioctl
 argument_list|(
 name|MTFSF
@@ -1734,9 +1734,22 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot create symbolic link\n"
+literal|"%s: "
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"cannot create symbolic link"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1800,9 +1813,22 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot create special file\n"
+literal|"%s: "
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"cannot create special file"
 argument_list|)
 expr_stmt|;
 name|skipfile
@@ -1895,9 +1921,22 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot create file\n"
+literal|"%s: "
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"cannot create file"
 argument_list|)
 expr_stmt|;
 name|skipfile
@@ -2865,7 +2904,7 @@ name|getmore
 label|:
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 name|i
 operator|=
 name|rmtread
@@ -3052,7 +3091,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 if|if
 condition|(
 name|rmtseek
@@ -3086,11 +3125,9 @@ condition|)
 endif|#
 directive|endif
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"continuation failed\n"
+literal|"continuation failed"
 argument_list|)
 expr_stmt|;
 name|done
@@ -3216,7 +3253,7 @@ condition|)
 return|return;
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 name|rmtclose
 argument_list|()
 expr_stmt|;
@@ -4524,7 +4561,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RRESTOR
+name|RRESTORE
 end_ifdef
 
 begin_comment
@@ -4572,7 +4609,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|RRESTOR
+endif|RRESTORE
 end_endif
 
 end_unit
