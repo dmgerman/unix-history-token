@@ -4684,7 +4684,12 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* 	 * Next create a situation where write combining 	 * or read prefetching could be initiated by the 	 * CPU or host bridge.  Our device does not support 	 * either, so look for data corruption and/or flagged 	 * PCI errors. 	 */
+comment|/* 	 * Next create a situation where write combining 	 * or read prefetching could be initiated by the 	 * CPU or host bridge.  Our device does not support 	 * either, so look for data corruption and/or flagged 	 * PCI errors.  First pause without causing another 	 * chip reset. 	 */
+name|hcntrl
+operator|&=
+operator|~
+name|CHIPRST
+expr_stmt|;
 name|ahc_outb
 argument_list|(
 name|ahc
