@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)decode.c	5.2 (Berkeley) %G%"
+literal|"@(#)decode.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,10 +843,6 @@ parameter_list|()
 block|{
 name|char
 modifier|*
-name|filename
-decl_stmt|;
-name|char
-modifier|*
 name|homedir
 decl_stmt|;
 name|int
@@ -854,6 +850,12 @@ name|f
 decl_stmt|;
 name|int
 name|n
+decl_stmt|;
+name|char
+name|filename
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 specifier|extern
 name|char
@@ -876,30 +878,9 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|filename
-operator|=
-name|calloc
-argument_list|(
-name|strlen
-argument_list|(
-name|homedir
-argument_list|)
-operator|+
-literal|7
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|filename
-operator|==
-name|NULL
-condition|)
-return|return;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|filename
@@ -917,12 +898,7 @@ name|open
 argument_list|(
 name|filename
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|filename
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
