@@ -714,9 +714,6 @@ modifier|*
 name|disk
 parameter_list|)
 block|{
-name|int
-name|rofd
-decl_stmt|;
 name|ERROR
 argument_list|(
 name|disk
@@ -735,11 +732,12 @@ condition|)
 return|return
 literal|0
 return|;
-name|rofd
-operator|=
+name|close
+argument_list|(
 name|disk
 operator|->
 name|d_fd
+argument_list|)
 expr_stmt|;
 name|disk
 operator|->
@@ -769,12 +767,6 @@ name|disk
 argument_list|,
 literal|"failed to open disk for writing"
 argument_list|)
-expr_stmt|;
-name|disk
-operator|->
-name|d_fd
-operator|=
-name|rofd
 expr_stmt|;
 return|return
 operator|-
