@@ -132,13 +132,11 @@ end_comment
 begin_decl_stmt
 name|int
 name|tof
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* top of form; init true if open does ff */
+comment|/* true if at top of form */
 end_comment
 
 begin_decl_stmt
@@ -261,6 +259,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* page length in pixels */
+end_comment
+
+begin_decl_stmt
+name|char
+name|indent
+index|[
+literal|10
+index|]
+init|=
+literal|"-i0"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indentation size in characters */
 end_comment
 
 begin_macro
@@ -1036,7 +1049,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" changes default indents driver 	 *                   must have stty/gtty avaialble 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
+comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
 comment|/* pass 1 */
 while|while
 condition|(
@@ -1293,6 +1306,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
+case|case
+literal|'I'
+case|:
+comment|/* indent amount */
+name|strcpy
+argument_list|(
+name|indent
+operator|+
+literal|2
+argument_list|,
+name|line
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+continue|continue;
 default|default:
 comment|/* some file to print */
 if|if
@@ -1349,9 +1378,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 continue|continue;
-case|case
-literal|'I'
-case|:
 case|case
 literal|'N'
 case|:
@@ -1908,9 +1934,16 @@ index|]
 operator|=
 name|length
 expr_stmt|;
+name|av
+index|[
+literal|3
+index|]
+operator|=
+name|indent
+expr_stmt|;
 name|n
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 break|break;
 case|case
@@ -1942,9 +1975,16 @@ index|]
 operator|=
 name|length
 expr_stmt|;
+name|av
+index|[
+literal|4
+index|]
+operator|=
+name|indent
+expr_stmt|;
 name|n
 operator|=
-literal|4
+literal|5
 expr_stmt|;
 break|break;
 case|case
@@ -4997,6 +5037,14 @@ condition|)
 name|XS
 operator|=
 literal|0
+expr_stmt|;
+name|tof
+operator|=
+operator|!
+name|pgetflag
+argument_list|(
+literal|"fo"
+argument_list|)
 expr_stmt|;
 block|}
 end_block
