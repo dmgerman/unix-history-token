@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	1.3 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	1.4 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -334,7 +334,7 @@ begin_decl_stmt
 name|char
 name|myname
 index|[
-literal|9
+name|PATHSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
