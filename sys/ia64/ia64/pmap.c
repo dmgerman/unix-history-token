@@ -5689,15 +5689,8 @@ name|pv_entry_t
 name|pv
 decl_stmt|;
 name|int
-name|nmodify
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
-name|nmodify
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 name|defined
