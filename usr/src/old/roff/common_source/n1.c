@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.5 %G%"
+literal|"@(#)n1.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2596,6 +2596,10 @@ name|a
 expr_stmt|;
 name|eibuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|MAXPTR
 expr_stmt|;
 name|i
@@ -4162,6 +4166,10 @@ operator|&&
 operator|(
 name|ibufp
 operator|!=
+operator|(
+name|char
+operator|*
+operator|)
 name|MAXPTR
 operator|)
 operator|)
@@ -5469,6 +5477,10 @@ name|a
 expr_stmt|;
 name|eibuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|MAXPTR
 expr_stmt|;
 name|noscale

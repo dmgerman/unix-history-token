@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lmain.c	4.1 (Berkeley) %G%"
+literal|"@(#)lmain.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,6 +624,11 @@ argument_list|)
 expr_stmt|;
 name|def
 operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|DEFSIZE
@@ -637,6 +642,11 @@ argument_list|)
 expr_stmt|;
 name|subs
 operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|DEFSIZE
@@ -665,6 +675,11 @@ argument_list|)
 expr_stmt|;
 name|sname
 operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|STARTSIZE
@@ -794,6 +809,10 @@ name|p
 decl_stmt|;
 name|gotof
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|nstates
@@ -807,6 +826,10 @@ argument_list|)
 expr_stmt|;
 name|nexts
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|ntrans
@@ -833,6 +856,11 @@ argument_list|)
 expr_stmt|;
 name|state
 operator|=
+operator|(
+name|int
+operator|*
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|nstates
@@ -846,6 +874,10 @@ argument_list|)
 expr_stmt|;
 name|atable
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|nstates
@@ -859,6 +891,10 @@ argument_list|)
 expr_stmt|;
 name|sfall
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|nstates
@@ -900,6 +936,11 @@ argument_list|)
 expr_stmt|;
 name|foll
 operator|=
+operator|(
+name|int
+operator|*
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|tptr
@@ -917,6 +958,10 @@ name|nxtpos
 operator|=
 name|positions
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|maxpos
@@ -1188,6 +1233,10 @@ name|p
 decl_stmt|;
 name|verify
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|outsize
@@ -1201,6 +1250,10 @@ argument_list|)
 expr_stmt|;
 name|advance
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|outsize
@@ -1214,6 +1267,10 @@ argument_list|)
 expr_stmt|;
 name|stoff
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|myalloc
 argument_list|(
 name|stnum
@@ -1405,7 +1462,8 @@ name|b
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|char
+modifier|*
 name|i
 decl_stmt|;
 name|i
@@ -1433,6 +1491,10 @@ if|if
 condition|(
 name|i
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 operator|-
 literal|1
 condition|)
