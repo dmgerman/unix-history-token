@@ -5424,7 +5424,7 @@ block|{
 define|#
 directive|define
 name|SINGLE_OPTS
-value|"[-aC" OPT_LAZY_f "HhjlmrSTuvwXxZ]"
+value|"[-aCc" OPT_LAZY_f "HhjlmrSTuvwXxZ]"
 operator|(
 name|void
 operator|)
