@@ -2767,11 +2767,6 @@ condition|(
 name|next
 operator|==
 name|NULL
-operator|||
-operator|*
-name|next
-operator|!=
-literal|'"'
 condition|)
 break|break;
 name|strcpy
@@ -2788,6 +2783,14 @@ expr_stmt|;
 name|line_end
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|next
+operator|!=
+literal|'"'
+condition|)
+break|break;
 name|next
 operator|++
 expr_stmt|;
