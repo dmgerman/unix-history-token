@@ -5860,7 +5860,7 @@ operator|(
 operator|(
 name|u_int32
 operator|)
-name|random
+name|arc4random
 argument_list|()
 operator|>>
 literal|8
@@ -13998,13 +13998,6 @@ ifdef|#
 directive|ifdef
 name|SYSV
 name|srand48
-argument_list|(
-name|seed
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|srandom
 argument_list|(
 name|seed
 argument_list|)

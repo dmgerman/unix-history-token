@@ -1535,14 +1535,6 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|srandom
-argument_list|(
-name|gethostid
-argument_list|()
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * Get generation id       */
@@ -4173,13 +4165,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vsprintf
+name|vsnprintf
 argument_list|(
 operator|&
 name|fmt
 index|[
 literal|10
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
+operator|-
+literal|10
 argument_list|,
 name|format
 argument_list|,
@@ -4303,13 +4302,15 @@ operator|&
 name|now_sec
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|logmsg
 index|[
 name|logmsgno
 operator|++
 index|]
+argument_list|,
+name|LOGMSGSIZE
 argument_list|,
 literal|"%02d:%02d:%02d.%03ld %s err %d"
 argument_list|,
