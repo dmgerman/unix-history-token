@@ -7562,9 +7562,8 @@ operator|->
 name|base
 operator|)
 expr_stmt|;
-name|PUSH
+name|PUSHPTR
 argument_list|(
-operator|*
 name|pBase
 argument_list|)
 expr_stmt|;
