@@ -1285,6 +1285,7 @@ operator|-
 name|pat
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1307,6 +1308,7 @@ argument_list|,
 name|len
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
@@ -1324,6 +1326,7 @@ name|pat
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|Byte
 operator|*
 operator|)
