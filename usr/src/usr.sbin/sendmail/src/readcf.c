@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.18 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -618,7 +618,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"invalid rewrite line \"%s\""
+literal|"invalid rewrite line \"%s\" (tab expected)"
 argument_list|,
 name|bp
 argument_list|)
