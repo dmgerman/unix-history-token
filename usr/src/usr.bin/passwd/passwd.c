@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.8 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2917,7 +2917,7 @@ name|str
 operator|&&
 operator|*
 name|ptr
-operator|!=
+operator|==
 literal|' '
 condition|;
 name|ptr
