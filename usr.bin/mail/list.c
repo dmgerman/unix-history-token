@@ -2380,6 +2380,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -2392,6 +2396,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -2918,6 +2926,10 @@ if|if
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -2925,6 +2937,10 @@ argument_list|)
 operator|!=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp2
 operator|++
@@ -3101,6 +3117,10 @@ if|if
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -3108,6 +3128,10 @@ argument_list|)
 operator|!=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp2
 operator|++
@@ -3364,6 +3388,10 @@ if|if
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -3371,6 +3399,10 @@ argument_list|)
 operator|!=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp2
 operator|++

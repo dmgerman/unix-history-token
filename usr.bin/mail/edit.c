@@ -358,6 +358,9 @@ name|mp
 operator|->
 name|m_size
 operator|=
+operator|(
+name|long
+operator|)
 name|fsize
 argument_list|(
 name|fp

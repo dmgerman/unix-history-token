@@ -993,6 +993,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1026,6 +1030,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1151,6 +1159,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -2499,6 +2511,10 @@ name|ig
 operator|=
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|f
 argument_list|)
 condition|?

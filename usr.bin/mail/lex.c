@@ -557,7 +557,7 @@ expr_stmt|;
 comment|/* 	 * New mail may have arrived while we were reading 	 * the mail file, so reset mailsize to be where 	 * we really are in the file... 	 */
 name|mailsize
 operator|=
-name|ftell
+name|ftello
 argument_list|(
 name|ibuf
 argument_list|)
@@ -622,7 +622,7 @@ name|int
 name|incfile
 parameter_list|()
 block|{
-name|int
+name|off_t
 name|newsize
 decl_stmt|;
 name|int
@@ -717,7 +717,7 @@ argument_list|)
 expr_stmt|;
 name|mailsize
 operator|=
-name|ftell
+name|ftello
 argument_list|(
 name|ibuf
 argument_list|)
@@ -1154,6 +1154,10 @@ name|linebuf
 init|;
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1584,6 +1588,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)

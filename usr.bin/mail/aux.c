@@ -648,6 +648,10 @@ name|linebuf
 init|;
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -986,6 +990,10 @@ operator|++
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|dest
 argument_list|)
