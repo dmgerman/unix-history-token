@@ -2976,7 +2976,7 @@ name|LogIPV6CP
 else|:
 name|LogPHASE
 argument_list|,
-literal|"0x08lx: Unacceptable token!\n"
+literal|"0x%08lx: Unacceptable token!\n"
 argument_list|,
 operator|(
 name|unsigned
