@@ -4608,7 +4608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Save the result of a getpwnam.  Used for USER command, since  * the data returned must not be clobbered by any other command  * (e.g., globbing).  */
+comment|/*  * Save the result of a getpwnam.  Used for USER command, since  * the data returned must not be clobbered by any other command  * (e.g., globbing).  * NB: The data returned by sgetpwnam() will remain valid until  * the next call to this function.  Its difference from getpwnam()  * is that sgetpwnam() is known to be called from ftpd code only.  */
 end_comment
 
 begin_function
