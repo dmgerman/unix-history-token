@@ -189,7 +189,7 @@ operator|(
 operator|(
 name|c
 operator|>=
-literal|0x80
+literal|0x81
 operator|&&
 name|c
 operator|<=
