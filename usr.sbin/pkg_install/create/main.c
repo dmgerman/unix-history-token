@@ -464,7 +464,7 @@ literal|'y'
 case|:
 name|UseBzip2
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
