@@ -2020,6 +2020,15 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|state
+operator|==
+name|ST_OPENED
+condition|)
+block|{
 name|FsmInitRestartCounter
 argument_list|(
 name|fp
@@ -2057,6 +2066,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ST_REQSENT
