@@ -7797,22 +7797,24 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we know the signal is bound for a specific thread then we 	 * assume that we are in that threads context.  This is the case 	 * for SIGXCPU, SIGILL, etc.  Otherwise someone did a kill() from 	 * userland and the real thread doesn't actually matter. 	 */
+comment|/* 	 * If we know the signal is bound for a specific thread then we 	 * assume that we are in that threads context.  This is the case 	 * for SIGXCPU, SIGILL, etc. Otherwise someone did a kill() from 	 * userland, if current thread can handle the signal, it should 	 * get the signal. 	 */
 if|if
 condition|(
-operator|(
-name|prop
-operator|&
-name|SA_PROC
-operator|)
-operator|!=
-literal|0
-operator|&&
 name|curthread
 operator|->
 name|td_proc
 operator|==
 name|p
+operator|&&
+operator|!
+name|SIGISMEMBER
+argument_list|(
+name|curthread
+operator|->
+name|td_sigmask
+argument_list|,
+name|sig
+argument_list|)
 condition|)
 return|return
 operator|(
