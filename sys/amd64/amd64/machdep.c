@@ -288,6 +288,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
