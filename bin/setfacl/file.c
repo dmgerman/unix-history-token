@@ -36,17 +36,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"setfacl.h"
 end_include
 
 begin_comment
-comment|/* read acl text from a file and return the corresponding acl */
+comment|/*  * read acl text from a file and return the corresponding acl  */
 end_comment
 
 begin_function
@@ -71,12 +65,13 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|filename
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"(null) filename in get_acl_from_file()"
 argument_list|)
@@ -94,22 +89,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|filename
 argument_list|,
 literal|"-"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 name|have_stdin
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"cannot specify more than one stdin"
 argument_list|)
@@ -136,12 +134,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|file
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"fopen() %s failed"
 argument_list|,
@@ -172,6 +171,8 @@ name|ferror
 argument_list|(
 name|file
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|fclose
@@ -181,7 +182,7 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"error reading from %s"
 argument_list|,
@@ -192,11 +193,12 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
 name|feof
 argument_list|(
 name|file
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|fclose
@@ -206,7 +208,7 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"line too long in %s"
 argument_list|,
@@ -220,10 +222,12 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|acl_from_text
 argument_list|(
 name|buf
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

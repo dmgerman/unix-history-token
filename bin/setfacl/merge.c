@@ -36,17 +36,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"setfacl.h"
 end_include
 
 begin_comment
-comment|/* merge acl into existing file's ACL */
+comment|/*  * merge an ACL into existing file's ACL  */
 end_comment
 
 begin_function
@@ -120,12 +114,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl_new
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_dup() failed"
 argument_list|)
@@ -173,7 +168,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_tag_type() failed - invalid ACL entry"
 argument_list|)
@@ -195,8 +190,9 @@ name|ACL_FIRST_ENTRY
 expr_stmt|;
 while|while
 condition|(
-operator|!
 name|have_entry
+operator|==
+literal|0
 operator|&&
 name|acl_get_entry
 argument_list|(
@@ -230,7 +226,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_tag_type() failed"
 argument_list|)
@@ -250,7 +246,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_tag_type() failed"
 argument_list|)
@@ -288,7 +284,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_qualifier() failed"
 argument_list|)
@@ -308,7 +304,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_qualifier() failed"
 argument_list|)
@@ -338,7 +334,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_permset() failed"
 argument_list|)
@@ -357,7 +353,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_set_permset() failed"
 argument_list|)
@@ -379,8 +375,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|have_entry
+operator|==
+literal|0
 condition|)
 break|break;
 comment|/* FALLTHROUGH */
@@ -411,7 +408,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_permset() failed"
 argument_list|)
@@ -430,7 +427,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_set_permset() failed"
 argument_list|)
@@ -444,7 +441,7 @@ default|default:
 comment|/* should never be here */
 name|errx
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"Invalid tag type: %i"
 argument_list|,
@@ -457,8 +454,9 @@ block|}
 comment|/* if this entry has not been found, it must be new */
 if|if
 condition|(
-operator|!
 name|have_entry
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -482,8 +480,10 @@ name|acl_new
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -500,7 +500,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_copy_entry() failed"
 argument_list|)
@@ -549,7 +549,9 @@ name|acl_new
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

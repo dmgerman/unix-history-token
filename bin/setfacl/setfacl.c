@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -219,7 +213,9 @@ name|filename
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|acl
@@ -248,15 +244,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl
 index|[
 literal|0
 index|]
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_file() failed"
 argument_list|)
@@ -285,15 +282,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl
 index|[
 literal|1
 index|]
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_get_file() failed"
 argument_list|)
@@ -308,7 +306,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|acl
+operator|)
 return|;
 block|}
 end_function
@@ -331,7 +331,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -461,14 +461,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|entry
 operator|->
 name|acl
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"get_acl_from_file() failed"
 argument_list|)
@@ -625,14 +626,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|entry
 operator|->
 name|acl
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"acl_from_text() failed"
 argument_list|)
@@ -686,14 +688,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|entry
 operator|->
 name|acl
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"acl_from_text() failed"
 argument_list|)
@@ -731,8 +734,9 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|n_flag
+operator|==
+literal|0
 operator|&&
 name|TAILQ_EMPTY
 argument_list|(
@@ -750,7 +754,6 @@ name|argc
 operator|==
 literal|0
 operator|||
-operator|!
 name|strcmp
 argument_list|(
 name|argv
@@ -760,6 +763,8 @@ index|]
 argument_list|,
 literal|"-"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -768,7 +773,7 @@ name|have_stdin
 condition|)
 name|err
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|,
 literal|"cannot have more than one stdin"
 argument_list|)
@@ -870,8 +875,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl
+operator|==
+name|NULL
 condition|)
 continue|continue;
 if|if
@@ -1014,7 +1020,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-comment|/* NOTREACHED */
 block|}
 block|}
 comment|/* don't bother setting the ACL if something is broken */
@@ -1132,7 +1137,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|carried_error
+operator|)
 return|;
 block|}
 end_function

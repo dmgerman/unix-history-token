@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"setfacl.h"
 end_include
 
@@ -63,13 +57,15 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"calloc() failed"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ptr
+operator|)
 return|;
 block|}
 end_function

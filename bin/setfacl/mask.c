@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"setfacl.h"
 end_include
 
@@ -92,7 +86,9 @@ condition|(
 name|have_mask
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|acl
 operator|=
@@ -104,20 +100,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_dup() failed"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|n_flag
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * If no mask entry is specified and the -n option is not 		 * specified, then the permissions of the resulting ACL mask 		 * entry shall be set to the union of the permissions 		 * associated with all entries which belong to the file group 		 * class in the resulting ACL 		 */
@@ -141,8 +139,10 @@ name|acl
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 block|}
@@ -205,7 +205,9 @@ name|acl
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -221,7 +223,9 @@ name|acl
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 operator|*
@@ -237,7 +241,9 @@ name|acl
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

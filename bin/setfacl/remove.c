@@ -42,17 +42,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"setfacl.h"
 end_include
 
 begin_comment
-comment|/* remove ACL entries from an ACL */
+comment|/*  * remove ACL entries from an ACL  */
 end_comment
 
 begin_function
@@ -114,12 +108,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl_new
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_dup() failed"
 argument_list|)
@@ -250,17 +245,21 @@ condition|(
 name|carried_error
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* remove default entries */
+comment|/*  * remove default entries  */
 end_comment
 
 begin_function
@@ -300,11 +299,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|prev_acl
 index|[
 literal|1
 index|]
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -322,18 +322,22 @@ literal|"cannot remove default ACL"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* remove extended entries */
+comment|/*  * remove extended entries  */
 end_comment
 
 begin_function
@@ -395,12 +399,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl_old
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
 literal|"acl_dup() failed"
 argument_list|)
@@ -418,14 +423,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl_new
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"%s"
+literal|1
 argument_list|,
 literal|"acl_init() failed"
 argument_list|)
@@ -627,8 +631,9 @@ if|if
 condition|(
 name|have_mask_entry
 operator|&&
-operator|!
 name|n_flag
+operator|==
+literal|0
 condition|)
 block|{
 if|if
