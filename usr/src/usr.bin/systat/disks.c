@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	1.1 (Lucasfilm) %G%"
+literal|"@(#)disks.c	1.2 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_ifdef
@@ -71,6 +83,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_decl_stmt
 name|char

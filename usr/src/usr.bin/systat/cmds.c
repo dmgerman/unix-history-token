@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	1.3 (Lucasfilm) %G%"
+literal|"@(#)cmds.c	1.4 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,18 @@ begin_include
 include|#
 directive|include
 file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_macro
@@ -100,6 +112,22 @@ operator|==
 literal|'\0'
 condition|)
 return|return;
+for|for
+control|(
+init|;
+operator|*
+name|cp
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|;
+name|cp
+operator|++
+control|)
+empty_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -159,7 +187,7 @@ argument_list|)
 expr_stmt|;
 name|mvaddstr
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 literal|0
 argument_list|,
@@ -195,22 +223,6 @@ block|{
 name|int
 name|x
 decl_stmt|;
-for|for
-control|(
-init|;
-operator|*
-name|cp
-operator|&&
-name|isspace
-argument_list|(
-operator|*
-name|cp
-argument_list|)
-condition|;
-name|cp
-operator|++
-control|)
-empty_stmt|;
 name|x
 operator|=
 operator|*
@@ -230,19 +242,12 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|mvprintw
+name|error
 argument_list|(
-literal|22
-argument_list|,
-literal|0
-argument_list|,
 literal|"%d: bad interval."
 argument_list|,
 name|x
 argument_list|)
-expr_stmt|;
-name|clrtoeol
-argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -368,19 +373,31 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-name|mvprintw
+if|if
+condition|(
+name|curcmd
+operator|->
+name|c_cmd
+operator|&&
+call|(
+modifier|*
+name|curcmd
+operator|->
+name|c_cmd
+call|)
 argument_list|(
-literal|22
+name|cmd
 argument_list|,
-literal|0
-argument_list|,
+name|cp
+argument_list|)
+condition|)
+return|return;
+name|error
+argument_list|(
 literal|"%s: Unknown command."
 argument_list|,
 name|cmd
 argument_list|)
-expr_stmt|;
-name|clrtoeol
-argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -557,12 +574,8 @@ end_macro
 
 begin_block
 block|{
-name|mvprintw
+name|error
 argument_list|(
-literal|22
-argument_list|,
-literal|0
-argument_list|,
 literal|"Showing %s, refresh every %d seconds."
 argument_list|,
 name|curcmd
@@ -571,9 +584,6 @@ name|c_name
 argument_list|,
 name|naptime
 argument_list|)
-expr_stmt|;
-name|clrtoeol
-argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -595,7 +605,7 @@ argument_list|)
 expr_stmt|;
 name|move
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 literal|0
 argument_list|)
@@ -651,7 +661,7 @@ argument_list|()
 expr_stmt|;
 name|move
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 name|col
 argument_list|)

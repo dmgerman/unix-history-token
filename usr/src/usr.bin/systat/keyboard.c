@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyboard.c	1.1 (Lucasfilm) %G%"
+literal|"@(#)keyboard.c	1.2 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,18 @@ directive|include
 file|"systat.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_macro
 name|keyboard
 argument_list|()
@@ -45,6 +57,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|int
+name|oldmask
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -57,7 +72,7 @@ literal|0
 expr_stmt|;
 name|move
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 literal|0
 argument_list|)
@@ -133,9 +148,8 @@ name|l
 argument_list|)
 condition|)
 block|{
-name|int
 name|oldmask
-init|=
+operator|=
 name|sigblock
 argument_list|(
 name|mask
@@ -143,7 +157,7 @@ argument_list|(
 name|SIGALRM
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|wrefresh
 argument_list|(
 name|curscr
@@ -166,8 +180,23 @@ name|g
 argument_list|)
 condition|)
 block|{
+name|oldmask
+operator|=
+name|sigblock
+argument_list|(
+name|mask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|status
 argument_list|()
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+name|oldmask
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -180,7 +209,7 @@ condition|)
 continue|continue;
 name|move
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 literal|0
 argument_list|)
@@ -326,7 +355,7 @@ name|doerase
 label|:
 name|move
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 name|col
 argument_list|)
@@ -353,7 +382,7 @@ name|ch
 expr_stmt|;
 name|mvaddch
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 name|col
 argument_list|,
@@ -389,11 +418,26 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|oldmask
+operator|=
+name|sigblock
+argument_list|(
+name|mask
+argument_list|(
+name|SIGALRM
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|command
 argument_list|(
 name|line
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+name|oldmask
 argument_list|)
 expr_stmt|;
 block|}

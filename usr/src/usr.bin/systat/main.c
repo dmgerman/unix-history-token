@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.6 (Lucasfilm) %G%"
+literal|"@(#)main.c	1.7 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,24 @@ begin_include
 include|#
 directive|include
 file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_decl_stmt
@@ -112,6 +130,20 @@ name|suspend
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|double
+name|lave
+decl_stmt|,
+name|ccpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dellave
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -405,6 +437,12 @@ expr_stmt|;
 comment|/* 	 * Initialize display.  Load average appears in a one line 	 * window of its own.  Current command's display appears in 	 * an overlapping sub-window of stdscr configured by the display 	 * routines to minimize update work by curses. 	 */
 name|initscr
 argument_list|()
+expr_stmt|;
+name|CMDLINE
+operator|=
+name|LINES
+operator|-
+literal|1
 expr_stmt|;
 name|wnd
 operator|=
@@ -841,7 +879,7 @@ argument_list|)
 expr_stmt|;
 name|move
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 name|col
 argument_list|)
@@ -864,6 +902,12 @@ end_macro
 
 begin_block
 block|{
+name|double
+name|avenrun
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|lseek
 argument_list|(
 name|kmem
@@ -882,24 +926,36 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
-operator|&
-name|lave
+name|avenrun
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|lave
+name|avenrun
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|mvprintw
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 literal|0
 argument_list|,
-literal|"%4.1f"
+literal|"%4.1f %4.1f %4.1f"
 argument_list|,
-name|lave
+name|avenrun
+index|[
+literal|0
+index|]
+argument_list|,
+name|avenrun
+index|[
+literal|1
+index|]
+argument_list|,
+name|avenrun
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 name|clrtoeol
@@ -943,7 +999,7 @@ begin_block
 block|{
 name|mvprintw
 argument_list|(
-literal|22
+name|CMDLINE
 argument_list|,
 literal|0
 argument_list|,

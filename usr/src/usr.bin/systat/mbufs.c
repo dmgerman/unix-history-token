@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbufs.c	1.2 (Lucasfilm) %G%"
+literal|"@(#)mbufs.c	1.3 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
 end_include
 
 begin_function

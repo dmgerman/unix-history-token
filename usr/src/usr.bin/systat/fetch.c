@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fetch.c	1.3 (Lucasfilm) %G%"
+literal|"@(#)fetch.c	1.4 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,54 @@ begin_include
 include|#
 directive|include
 file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmac.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_function
