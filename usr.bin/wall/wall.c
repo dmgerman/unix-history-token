@@ -647,6 +647,24 @@ operator|!
 name|nobanner
 condition|)
 block|{
+name|char
+modifier|*
+name|tty
+init|=
+name|ttyname
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tty
+condition|)
+name|tty
+operator|=
+literal|"no tty"
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -763,10 +781,7 @@ argument_list|)
 argument_list|,
 literal|"        (%s) at %d:%02d %s..."
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|tty
 argument_list|,
 name|lt
 operator|->
