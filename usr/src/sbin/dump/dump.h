@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.2 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.3 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../../h/dumprestor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utmp.h>
 end_include
 
@@ -87,12 +93,6 @@ argument_list|)
 argument_list|()
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<dumprestor.h>
-end_include
 
 begin_include
 include|#

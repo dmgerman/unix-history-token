@@ -4,8 +4,15 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)dumprestore.h 1.1 %G%" */
+comment|/* "@(#)dumprestore.h 1.2 %G%" */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_BSIZE
+value|1024
+end_define
 
 begin_define
 define|#
@@ -26,6 +33,20 @@ define|#
 directive|define
 name|MSIZ
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|BLKING
+value|(FSIZE/TP_BSIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_NINDIR
+value|(TP_BSIZE/2)
 end_define
 
 begin_define
@@ -84,9 +105,18 @@ name|CHECKSUM
 value|(int)84446
 end_define
 
-begin_struct
+begin_union
+union|union
+name|u_spcl
+block|{
+name|char
+name|dummy
+index|[
+name|TP_BSIZE
+index|]
+decl_stmt|;
 struct|struct
-name|spcl
+name|s_spcl
 block|{
 name|int
 name|c_type
@@ -122,13 +152,23 @@ decl_stmt|;
 name|char
 name|c_addr
 index|[
-name|BSIZE
+name|TP_NINDIR
 index|]
 decl_stmt|;
 block|}
-name|spcl
+name|s_spcl
 struct|;
-end_struct
+block|}
+name|u_spcl
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|spcl
+value|u_spcl.s_spcl
+end_define
 
 begin_struct
 struct|struct

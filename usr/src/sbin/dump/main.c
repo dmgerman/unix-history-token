@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.3 (Berkeley) %G%"
+literal|"@(#)main.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -726,7 +726,7 @@ operator|(
 name|esize
 comment|/* blocks */
 operator|*
-name|BSIZE
+name|FSIZE
 comment|/* bytes / block */
 operator|*
 operator|(

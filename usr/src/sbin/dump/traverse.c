@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.2 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

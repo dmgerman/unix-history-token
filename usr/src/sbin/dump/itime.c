@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.2 (Berkeley) %G%"
+literal|"@(#)itime.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,16 +1041,20 @@ name|ip
 operator|->
 name|di_size
 operator|+
-name|BSIZE
+name|FSIZE
 operator|-
 literal|1
 operator|)
 operator|/
-name|BSIZE
+name|FSIZE
 expr_stmt|;
 name|esize
 operator|+=
 name|s
+expr_stmt|;
+name|s
+operator|/=
+name|FRAG
 expr_stmt|;
 if|if
 condition|(
@@ -1106,6 +1110,8 @@ expr_stmt|;
 name|esize
 operator|+=
 name|s
+operator|*
+name|FRAG
 expr_stmt|;
 block|}
 block|}
@@ -1196,6 +1202,8 @@ argument_list|(
 name|short
 argument_list|)
 operator|)
+operator|*
+name|FRAG
 expr_stmt|;
 block|}
 end_block
