@@ -150,18 +150,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASTERISK
-value|*
-end_define
-
-begin_define
-define|#
-directive|define
 name|P
 parameter_list|(
 name|s
 parameter_list|)
-value|(/ASTERISK s ASTERISK/)
+value|()
 end_define
 
 begin_ifndef
