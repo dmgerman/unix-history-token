@@ -24,6 +24,39 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
+begin_comment
+comment|/*  * Frequency of the clock ticks reported by times().  Deprecated - use  * sysconf(_SC_CLK_TCK) instead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLK_TCK
+value|_BSD_CLOCKS_PER_SEC_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Frequency of the clock ticks reported by clock().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCKS_PER_SEC
+value|_BSD_CLOCKS_PER_SEC_
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NULL
 end_ifndef
 
@@ -163,16 +196,6 @@ comment|/* timezone abbreviation */
 block|}
 struct|;
 end_struct
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
-end_include
-
-begin_comment
-comment|/* Include file containing CLK_TCK. */
-end_comment
 
 begin_include
 include|#
