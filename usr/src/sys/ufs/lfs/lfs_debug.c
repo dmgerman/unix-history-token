@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_debug.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_debug.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -444,6 +444,9 @@ name|di_gid
 argument_list|,
 literal|"size  "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|dip
 operator|->
 name|di_size
