@@ -24,14 +24,6 @@ comment|/*-------------------------------------------------------------------  *
 end_comment
 
 begin_comment
-comment|/*  *  Support for earliest LSI53C1010 boards.  *  *  This option enables work-arounds for the experimental   *  C1010 chips revision 0 to work in DT mode.  *  Since, officially supported chips (B0 stepping and later)  *  have been fixed, nobody, except driver maintainers,  *  should ever needed this option to have been defined.  *  This option and the code it addresses will be removed   *  from the source in some later version of the driver.  *  By the way, the 53C1010 B0 stepping (rev. 1) has been   *  tested ok with Ultra3 DT data transfers using this driver,  *  without these work-arounds being enabled.  */
-end_comment
-
-begin_comment
-comment|/* #define	SYM_CONF_BROKEN_U3EN_SUPPORT */
-end_comment
-
-begin_comment
 comment|/*  *  Use Normal IO instead of MMIO.  */
 end_comment
 
