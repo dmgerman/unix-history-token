@@ -22,6 +22,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MII_OUI_ALTIMA
+value|0x0010a9
+end_define
+
+begin_comment
+comment|/* Altima Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MII_OUI_AMD
 value|0x00001a
 end_define
@@ -173,6 +184,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MII_OUI_xxALTIMA
+value|0x000895
+end_define
+
+begin_comment
+comment|/* Altima Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MII_OUI_xxBROADCOM
 value|0x000818
 end_define
@@ -269,6 +291,24 @@ end_comment
 begin_comment
 comment|/*  * List of known models.  Grouped by oui.  */
 end_comment
+
+begin_comment
+comment|/* Altima Communications PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_xxALTIMA_AC101
+value|0x0021
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_xxALTIMA_AC101
+value|"AC101 10/100 media interface"
+end_define
 
 begin_comment
 comment|/* Advanced Micro Devices PHYs */
