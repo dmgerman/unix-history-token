@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.15 1998/04/21 22:02:01 des Exp $"
+literal|"$Id: print.c,v 1.16 1998/04/24 07:49:50 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -700,13 +700,6 @@ block|}
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|TAB
-value|8
-end_define
-
 begin_function
 name|void
 name|printcol
@@ -761,6 +754,22 @@ name|numrows
 decl_stmt|,
 name|row
 decl_stmt|;
+name|int
+name|tabwidth
+decl_stmt|;
+if|if
+condition|(
+name|f_notabs
+condition|)
+name|tabwidth
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|tabwidth
+operator|=
+literal|8
+expr_stmt|;
 comment|/* 	 * Have to do random access in the linked list -- build a table 	 * of pointers. 	 */
 if|if
 condition|(
@@ -892,12 +901,12 @@ operator|=
 operator|(
 name|colwidth
 operator|+
-name|TAB
+name|tabwidth
 operator|)
 operator|&
 operator|~
 operator|(
-name|TAB
+name|tabwidth
 operator|-
 literal|1
 operator|)
@@ -1048,12 +1057,12 @@ operator|(
 operator|(
 name|chcnt
 operator|+
-name|TAB
+name|tabwidth
 operator|)
 operator|&
 operator|~
 operator|(
-name|TAB
+name|tabwidth
 operator|-
 literal|1
 operator|)
@@ -1068,6 +1077,10 @@ name|void
 operator|)
 name|putchar
 argument_list|(
+name|f_notabs
+condition|?
+literal|' '
+else|:
 literal|'\t'
 argument_list|)
 expr_stmt|;
