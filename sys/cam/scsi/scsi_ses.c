@@ -2782,14 +2782,21 @@ condition|(
 name|error
 condition|)
 break|break;
+name|tmp
+operator|=
+name|ssc
+operator|->
+name|ses_encstat
+operator|&
+operator|~
+name|ENCI_SVALID
+expr_stmt|;
 name|error
 operator|=
 name|copyout
 argument_list|(
 operator|&
-name|ssc
-operator|->
-name|ses_encstat
+name|tmp
 argument_list|,
 name|addr
 argument_list|,
@@ -2802,9 +2809,8 @@ expr_stmt|;
 name|ssc
 operator|->
 name|ses_encstat
-operator|&=
-operator|~
-name|ENCI_SVALID
+operator|=
+name|tmp
 expr_stmt|;
 break|break;
 case|case
@@ -6826,7 +6832,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function needs a little explanation.  *  * The arguments are:  *  *  *	char *b, int amt  *  *		These describes the raw input SES status data and length.  *  *	uint8_t *ep  *  *		This is a map of the number of types for each element type  *		in the enclosure.  *  *	int elt  *  *		This is the element type being sought. If elt is -1,  *		then overal enclosure status is being sought.  *  *	int elm  *  *		This is the ordinal Mth element of type elt being sought.  *  *	SesComStat *sp  *  *		This is the output area to store the status for  *		the Mth element of type Elt.  */
+comment|/*  * This function needs a little explanation.  *  * The arguments are:  *  *  *	char *b, int amt  *  *		These describes the raw input SES status data and length.  *  *	uint8_t *ep  *  *		This is a map of the number of types for each element type  *		in the enclosure.  *  *	int elt  *  *		This is the element type being sought. If elt is -1,  *		then overall enclosure status is being sought.  *  *	int elm  *  *		This is the ordinal Mth element of type elt being sought.  *  *	SesComStat *sp  *  *		This is the output area to store the status for  *		the Mth element of type Elt.  */
 end_comment
 
 begin_function
