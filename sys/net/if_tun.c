@@ -1650,7 +1650,6 @@ operator|&
 name|IFF_RUNNING
 condition|)
 block|{
-specifier|register
 name|struct
 name|ifaddr
 modifier|*
@@ -1794,7 +1793,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-specifier|register
 name|struct
 name|ifaddr
 modifier|*

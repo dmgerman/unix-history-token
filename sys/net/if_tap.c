@@ -1704,7 +1704,7 @@ comment|/* tapcreate */
 end_comment
 
 begin_comment
-comment|/*  * tapopen   *  * to open tunnel. must be superuser  */
+comment|/*  * tapopen  *  * to open tunnel. must be superuser  */
 end_comment
 
 begin_function
@@ -2564,7 +2564,7 @@ comment|/* tapifioctl */
 end_comment
 
 begin_comment
-comment|/*  * tapifstart   *   * queue packets from higher level ready to put out  */
+comment|/*  * tapifstart  *  * queue packets from higher level ready to put out  */
 end_comment
 
 begin_function

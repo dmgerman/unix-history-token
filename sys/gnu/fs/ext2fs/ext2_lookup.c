@@ -177,7 +177,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*     DIRBLKSIZE in ffs is DEV_BSIZE (in most cases 512)    while it is the native blocksize in ext2fs - thus, a #define    is no longer appropriate */
+comment|/*    DIRBLKSIZE in ffs is DEV_BSIZE (in most cases 512)    while it is the native blocksize in ext2fs - thus, a #define    is no longer appropriate */
 end_comment
 
 begin_undef
@@ -325,7 +325,7 @@ comment|/*  * Vnode op for reading directories.  *  * The routine below assumes 
 end_comment
 
 begin_comment
-comment|/*  * this is exactly what we do here - the problem is that the conversion  * will blow up some entries by four bytes, so it can't be done in place.  * This is too bad. Right now the conversion is done entry by entry, the  * converted entry is sent via uiomove.   *  * XXX allocate a buffer, convert as many entries as possible, then send  * the whole buffer to uiomove  */
+comment|/*  * this is exactly what we do here - the problem is that the conversion  * will blow up some entries by four bytes, so it can't be done in place.  * This is too bad. Right now the conversion is done entry by entry, the  * converted entry is sent via uiomove.  *  * XXX allocate a buffer, convert as many entries as possible, then send  * the whole buffer to uiomove  */
 end_comment
 
 begin_function
@@ -336,7 +336,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* {                 struct vnode *a_vp;                 struct uio *a_uio;                 struct ucred *a_cred;         } */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2814,7 +2814,7 @@ name|error_msg
 operator|=
 literal|"directory entry across blocks"
 expr_stmt|;
-comment|/* else LATER 	     if (de->inode> dir->i_sb->u.ext2_sb.s_es->s_inodes_count)                 error_msg = "inode out of bounds"; 	*/
+comment|/* else LATER 	     if (de->inode> dir->i_sb->u.ext2_sb.s_es->s_inodes_count) 		error_msg = "inode out of bounds"; 	*/
 if|if
 condition|(
 name|error_msg

@@ -584,7 +584,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -594,7 +593,6 @@ name|ap
 operator|->
 name|a_vap
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_node
 modifier|*
@@ -1030,7 +1028,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -1040,7 +1037,6 @@ name|ap
 operator|->
 name|a_uio
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_node
 modifier|*
@@ -1051,7 +1047,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_mnt
 modifier|*
@@ -2014,7 +2009,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -3294,7 +3288,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -3304,7 +3297,6 @@ name|ap
 operator|->
 name|a_bp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3314,7 +3306,6 @@ name|bp
 operator|->
 name|b_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|iso_node
 modifier|*

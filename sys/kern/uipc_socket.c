@@ -688,7 +688,6 @@ modifier|*
 modifier|*
 name|aso
 decl_stmt|;
-specifier|register
 name|int
 name|type
 decl_stmt|;
@@ -706,19 +705,16 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|protosw
 modifier|*
 name|prp
 decl_stmt|;
-specifier|register
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-specifier|register
 name|int
 name|error
 decl_stmt|;
@@ -1170,7 +1166,6 @@ name|backlog
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -1308,7 +1303,6 @@ name|sofree
 parameter_list|(
 name|so
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -1458,7 +1452,6 @@ name|soclose
 parameter_list|(
 name|so
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -1872,7 +1865,6 @@ name|so
 parameter_list|,
 name|nam
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -1959,7 +1951,6 @@ name|nam
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -2080,7 +2071,6 @@ name|so1
 parameter_list|,
 name|so2
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -2138,7 +2128,6 @@ name|sodisconnect
 parameter_list|(
 name|so
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -2338,7 +2327,6 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -2379,13 +2367,11 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|long
 name|space
 decl_stmt|,
@@ -3444,7 +3430,6 @@ name|controlp
 parameter_list|,
 name|flagsp
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
@@ -3487,7 +3472,6 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|int
 name|flags
 decl_stmt|,
@@ -5356,18 +5340,15 @@ name|so
 parameter_list|,
 name|how
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-specifier|register
 name|int
 name|how
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|protosw
 modifier|*
@@ -5445,14 +5426,12 @@ name|sorflush
 parameter_list|(
 name|so
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|sockbuf
 modifier|*
@@ -5463,7 +5442,6 @@ name|so
 operator|->
 name|so_rcv
 decl_stmt|;
-specifier|register
 name|struct
 name|protosw
 modifier|*
@@ -5473,7 +5451,6 @@ name|so
 operator|->
 name|so_proto
 decl_stmt|;
-specifier|register
 name|int
 name|s
 decl_stmt|;
@@ -8158,7 +8135,6 @@ name|sohasoutofband
 parameter_list|(
 name|so
 parameter_list|)
-specifier|register
 name|struct
 name|socket
 modifier|*

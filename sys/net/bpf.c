@@ -629,7 +629,6 @@ name|sockp
 parameter_list|,
 name|datlen
 parameter_list|)
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -644,7 +643,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -654,7 +652,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|sockaddr
 modifier|*
@@ -1280,7 +1277,7 @@ name|dev
 operator|->
 name|si_drv1
 expr_stmt|;
-comment|/* 	 * Each minor can be opened by only one process.  If the requested  	 * minor is in use, return EBUSY. 	 */
+comment|/* 	 * Each minor can be opened by only one process.  If the requested 	 * minor is in use, return EBUSY. 	 */
 if|if
 condition|(
 name|d
@@ -1630,7 +1627,6 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -1945,7 +1941,6 @@ name|bpf_wakeup
 parameter_list|(
 name|d
 parameter_list|)
-specifier|register
 name|struct
 name|bpf_d
 modifier|*
@@ -2598,7 +2593,6 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|u_int
 name|size
 init|=
@@ -3841,7 +3835,6 @@ name|events
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|dev_t
 name|dev
 decl_stmt|;
@@ -4031,23 +4024,19 @@ name|bpf_if
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|pkt
 decl_stmt|;
-specifier|register
 name|u_int
 name|pktlen
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|bpf_d
 modifier|*
 name|d
 decl_stmt|;
-specifier|register
 name|u_int
 name|slen
 decl_stmt|;
@@ -4177,19 +4166,16 @@ name|void
 modifier|*
 name|dst_arg
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
 block|{
-specifier|register
 specifier|const
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|u_int
 name|count
 decl_stmt|;
@@ -4480,7 +4466,7 @@ name|snaplen
 argument_list|,
 name|cpfn
 argument_list|)
-decl|register struct
+decl|struct
 name|bpf_d
 modifier|*
 name|d
@@ -4488,7 +4474,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|u_char
 modifier|*
 name|pkt
@@ -4496,7 +4481,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|u_int
 name|pktlen
 decl_stmt|,
@@ -4505,7 +4489,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|register
 name|void
 function_decl|(
 modifier|*
@@ -4526,19 +4509,16 @@ end_function_decl
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|bpf_hdr
 modifier|*
 name|hp
 decl_stmt|;
-specifier|register
 name|int
 name|totlen
 decl_stmt|,
 name|curlen
 decl_stmt|;
-specifier|register
 name|int
 name|hdrlen
 init|=
@@ -4732,7 +4712,6 @@ name|bpf_allocbufs
 parameter_list|(
 name|d
 parameter_list|)
-specifier|register
 name|struct
 name|bpf_d
 modifier|*
@@ -4843,7 +4822,6 @@ name|bpf_freed
 parameter_list|(
 name|d
 parameter_list|)
-specifier|register
 name|struct
 name|bpf_d
 modifier|*
@@ -5896,12 +5874,10 @@ name|bpf_if
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|pkt
 decl_stmt|;
-specifier|register
 name|u_int
 name|pktlen
 decl_stmt|;
@@ -5978,14 +5954,12 @@ name|wirelen
 parameter_list|,
 name|buflen
 parameter_list|)
-specifier|register
 specifier|const
 name|struct
 name|bpf_insn
 modifier|*
 name|pc
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p
@@ -5993,7 +5967,6 @@ decl_stmt|;
 name|u_int
 name|wirelen
 decl_stmt|;
-specifier|register
 name|u_int
 name|buflen
 decl_stmt|;

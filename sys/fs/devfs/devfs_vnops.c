@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * TODO:  *	remove empty directories  *	mknod: hunt down DE_DELETED, compare name, reinstantiate.   *	mkdir: want it ?  */
+comment|/*  * TODO:  *	remove empty directories  *	mknod: hunt down DE_DELETED, compare name, reinstantiate.  *	mkdir: want it ?  */
 end_comment
 
 begin_include
@@ -2292,7 +2292,7 @@ name|vop_mknod_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* struct vop_mknod_args {         struct vnodeop_desc *a_desc;         struct vnode *a_dvp;         struct vnode **a_vpp;         struct componentname *a_cnp;         struct vattr *a_vap; }; */
+comment|/* struct vop_mknod_args { 	struct vnodeop_desc *a_desc; 	struct vnode *a_dvp; 	struct vnode **a_vpp; 	struct componentname *a_cnp; 	struct vattr *a_vap; }; */
 block|{
 name|struct
 name|componentname

@@ -493,7 +493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This function creates and initializes a pts/ptc pair  *  * pts == /dev/tty[pqrsPQRS][0123456789abcdefghijklmnopqrstuv]  * ptc == /dev/pty[pqrsPQRS][0123456789abcdefghijklmnopqrstuv]  *  * XXX: define and add mapping of upper minor bits to allow more   *      than 256 ptys.  */
+comment|/*  * This function creates and initializes a pts/ptc pair  *  * pts == /dev/tty[pqrsPQRS][0123456789abcdefghijklmnopqrstuv]  * ptc == /dev/pty[pqrsPQRS][0123456789abcdefghijklmnopqrstuv]  *  * XXX: define and add mapping of upper minor bits to allow more  *      than 256 ptys.  */
 end_comment
 
 begin_function
@@ -677,7 +677,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -956,7 +955,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1054,7 +1052,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1064,7 +1061,6 @@ name|dev
 operator|->
 name|si_tty
 decl_stmt|;
-specifier|register
 name|struct
 name|pt_ioctl
 modifier|*
@@ -1432,7 +1428,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1499,7 +1494,6 @@ modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|pt_ioctl
 modifier|*
@@ -1660,7 +1654,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1828,7 +1821,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1935,7 +1927,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -2290,7 +2281,6 @@ name|tp
 parameter_list|,
 name|flush
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -2405,7 +2395,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -2725,7 +2714,6 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -2735,7 +2723,6 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -2745,14 +2732,12 @@ name|dev
 operator|->
 name|si_tty
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|cc
 init|=
@@ -3323,7 +3308,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -3333,7 +3317,6 @@ name|dev
 operator|->
 name|si_tty
 decl_stmt|;
-specifier|register
 name|struct
 name|pt_ioctl
 modifier|*
@@ -3343,7 +3326,6 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cc
@@ -3535,7 +3517,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * The rest of the ioctls shouldn't be called until  		 * the slave is open. 		 */
+comment|/* 		 * The rest of the ioctls shouldn't be called until 		 * the slave is open. 		 */
 if|if
 condition|(
 operator|(

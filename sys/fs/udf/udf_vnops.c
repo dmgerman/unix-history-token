@@ -2320,7 +2320,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* At this point, the name is in 16-bit Unicode.  Compact it down  	 * to 8-bit 	 */
+comment|/* At this point, the name is in 16-bit Unicode.  Compact it down 	 * to 8-bit 	 */
 for|for
 control|(
 name|i
@@ -4935,7 +4935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the block and then set the data pointer to correspond with the   * offset passed in.  Only read in at most 'size' bytes, and then set 'size'  * to the number of bytes pointed to.  If 'size' is zero, try to read in a  * whole extent.  * XXX 'size' is limited to the logical block size for now due to problems  * with udf_read()  */
+comment|/*  * Read the block and then set the data pointer to correspond with the  * offset passed in.  Only read in at most 'size' bytes, and then set 'size'  * to the number of bytes pointed to.  If 'size' is zero, try to read in a  * whole extent.  * XXX 'size' is limited to the logical block size for now due to problems  * with udf_read()  */
 end_comment
 
 begin_function
