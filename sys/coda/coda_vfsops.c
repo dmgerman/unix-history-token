@@ -1638,6 +1638,22 @@ argument_list|,
 literal|"CODA"
 argument_list|)
 expr_stmt|;
+name|snprintf
+argument_list|(
+name|sbp
+operator|->
+name|f_fstypename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sbp
+operator|->
+name|f_fstypename
+argument_list|)
+argument_list|,
+literal|"coda"
+argument_list|)
+expr_stmt|;
 comment|/*  MARK_INT_SAT(CODA_STATFS_STATS); */
 return|return
 operator|(
