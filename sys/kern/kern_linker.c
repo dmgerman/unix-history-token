@@ -512,6 +512,17 @@ operator|)
 name|lc
 argument_list|)
 expr_stmt|;
+operator|(
+operator|(
+name|kobj_class_t
+operator|)
+name|lc
+operator|)
+operator|->
+name|refs
+operator|++
+expr_stmt|;
+comment|/* prevent ops being freed */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
