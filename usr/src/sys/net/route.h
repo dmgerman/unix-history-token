@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -381,6 +381,17 @@ end_define
 
 begin_comment
 comment|/* manually added */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_BLACKHOLE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* just discard pkts (during updates) */
 end_comment
 
 begin_define
