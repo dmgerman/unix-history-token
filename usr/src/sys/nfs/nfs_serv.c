@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -250,8 +250,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
 specifier|register
 name|struct
 name|nfsv2_fattr
@@ -484,10 +482,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_SETATTR
-expr_stmt|;
 name|struct
 name|vattr
 name|va
@@ -1013,8 +1007,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
 specifier|register
 name|struct
 name|nfsv2_fattr
@@ -1557,8 +1549,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_READLINK
-expr_stmt|;
 name|struct
 name|iovec
 name|iv
@@ -2072,10 +2062,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_READ
-expr_stmt|;
 specifier|register
 name|struct
 name|iovec
@@ -2798,10 +2784,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_WRITE
-expr_stmt|;
 specifier|register
 name|struct
 name|iovec
@@ -3523,16 +3505,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_CREATE
-expr_stmt|;
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_MKNOD
-expr_stmt|;
-name|USES_VOP_SETATTR
-expr_stmt|;
 specifier|register
 name|struct
 name|nfsv2_fattr
@@ -4617,10 +4589,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_REMOVE
-expr_stmt|;
 name|struct
 name|nameidata
 name|nd
@@ -4985,10 +4953,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_RENAME
-expr_stmt|;
 specifier|register
 name|u_long
 modifier|*
@@ -5858,10 +5822,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_LINK
-expr_stmt|;
 name|struct
 name|nameidata
 name|nd
@@ -6288,10 +6248,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_SYMLINK
-expr_stmt|;
 name|struct
 name|vattr
 name|va
@@ -6839,12 +6795,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_MKDIR
-expr_stmt|;
 name|struct
 name|vattr
 name|va
@@ -7372,10 +7322,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_RMDIR
-expr_stmt|;
 specifier|register
 name|u_long
 modifier|*
@@ -7756,10 +7702,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_READDIR
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -8783,14 +8725,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_VGET
-expr_stmt|;
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_READDIR
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -9500,9 +9434,11 @@ expr_stmt|;
 comment|/* 			 * For readdir_and_lookup get the vnode using 			 * the file number. 			 */
 if|if
 condition|(
-name|VOP_VGET
+name|VFS_VGET
 argument_list|(
 name|vp
+operator|->
+name|v_mount
 argument_list|,
 name|dp
 operator|->
@@ -10556,10 +10492,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ACCESS
-expr_stmt|;
-name|USES_VOP_GETATTR
-expr_stmt|;
 name|struct
 name|vattr
 name|vattr
