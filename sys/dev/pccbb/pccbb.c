@@ -6157,6 +6157,7 @@ name|err
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|CBB_CARD_PRESENT
 argument_list|(
 name|cbb_get
