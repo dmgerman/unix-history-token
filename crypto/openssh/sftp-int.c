@@ -2160,6 +2160,14 @@ argument_list|,
 operator|&
 name|g
 argument_list|)
+operator|!=
+literal|0
+operator|||
+name|g
+operator|.
+name|gl_matchc
+operator|==
+literal|0
 condition|)
 block|{
 name|error
