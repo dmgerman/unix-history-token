@@ -85,7 +85,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CARD_IO_GV
+name|CARD_IO_BCTV2
 value|9
 end_define
 
@@ -141,8 +141,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_IO_BCTV3
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_IO_GV
+value|CARD_IO_BCTV2
 end_define
 
 begin_function_decl
