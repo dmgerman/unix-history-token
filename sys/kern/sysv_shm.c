@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.4 1995/02/20 22:23:13 davidg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.5 1995/05/30 08:06:04 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -735,6 +735,15 @@ name|p_vmspace
 operator|->
 name|vm_shm
 expr_stmt|;
+if|if
+condition|(
+name|shmmap_s
+operator|==
+name|NULL
+condition|)
+return|return
+name|EINVAL
+return|;
 for|for
 control|(
 name|i
