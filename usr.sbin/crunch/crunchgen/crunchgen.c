@@ -3071,9 +3071,22 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"crunchgen_objs:\n\t@echo 'OBJS= '${%s}\n"
+literal|"loop:\n\t@echo 'OBJS= '${%s}\n"
 argument_list|,
 name|objvar
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"crunchgen_objs:\n\t@make -f %s $(OPTS) $(%s_OPTS) loop\n"
+argument_list|,
+name|tempfname
+argument_list|,
+name|p
+operator|->
+name|ident
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -4395,7 +4408,17 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t(cd $(%s_SRCDIR)&& make depend&& make $(%s_OBJS))\n"
+literal|"\t(cd $(%s_SRCDIR)&& make obj&& \\\n"
+literal|"\t\tmake $(OPTS) $(%s_OPTS) depend&& \\\n"
+literal|"\t\tmake $(OPTS) $(%s_OPTS) $(%s_OBJS))\n"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|,
+name|p
+operator|->
+name|ident
 argument_list|,
 name|p
 operator|->
