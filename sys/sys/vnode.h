@@ -1845,6 +1845,17 @@ define|\
 value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, NULL) != LK_SHARED)			\ 		panic("%s: %p is not locked shared but should be",	\ 		    str, _vp);						\ } while (0)
 end_define
 
+begin_function_decl
+name|void
+name|vop_rename_pre
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else

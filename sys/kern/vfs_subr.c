@@ -1088,10 +1088,97 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|vop_rename_pre
+parameter_list|(
+name|void
+modifier|*
+name|ap
+parameter_list|)
+block|{
+name|struct
+name|vop_rename_args
+modifier|*
+name|a
+init|=
+name|ap
+decl_stmt|;
+comment|/* Check the source (from) */
+if|if
+condition|(
+name|a
+operator|->
+name|a_tdvp
+operator|!=
+name|a
+operator|->
+name|a_fdvp
+condition|)
+name|ASSERT_VOP_UNLOCKED
+argument_list|(
+name|a
+operator|->
+name|a_fdvp
+argument_list|,
+literal|"vop_rename: fdvp locked.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|a_tvp
+operator|!=
+name|a
+operator|->
+name|a_fvp
+condition|)
+name|ASSERT_VOP_UNLOCKED
+argument_list|(
+name|a
+operator|->
+name|a_fvp
+argument_list|,
+literal|"vop_rename: tvp locked.\n"
+argument_list|)
+expr_stmt|;
+comment|/* Check the target */
+if|if
+condition|(
+name|a
+operator|->
+name|a_tvp
+condition|)
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|a
+operator|->
+name|a_tvp
+argument_list|,
+literal|"vop_rename: tvp not locked.\n"
+argument_list|)
+expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|a
+operator|->
+name|a_tdvp
+argument_list|,
+literal|"vop_rename: tdvp not locked.\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DEBUG_VFS_LOCKS */
+end_comment
 
 begin_function
 name|void
