@@ -530,9 +530,6 @@ parameter_list|,
 name|int
 modifier|*
 name|nauxfd
-parameter_list|,
-name|pid_t
-name|newpid
 parameter_list|)
 block|{
 name|int

@@ -46,7 +46,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Device types */
+comment|/* Device types (don't use zero, it'll be confused with NULL in physical2iov */
 end_comment
 
 begin_define
@@ -296,8 +296,6 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|pid_t
 parameter_list|)
 function_decl|;
 name|int
@@ -745,8 +743,20 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|physical_LockedDevice
+parameter_list|(
+name|struct
+name|physical
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -8605,9 +8605,6 @@ parameter_list|,
 name|int
 modifier|*
 name|nauxfd
-parameter_list|,
-name|pid_t
-name|newpid
 parameter_list|)
 block|{
 comment|/* If `dl' is NULL, we're allocating before a Fromiov() */
@@ -8709,16 +8706,11 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|dl
-condition|?
-name|dl
-else|:
-name|malloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|dl
-argument_list|)
 expr_stmt|;
 name|iov
 index|[
@@ -8754,10 +8746,7 @@ argument_list|,
 name|DATALINK_MAXNAME
 argument_list|)
 else|:
-name|malloc
-argument_list|(
-name|DATALINK_MAXNAME
-argument_list|)
+name|NULL
 expr_stmt|;
 name|iov
 index|[
@@ -8793,8 +8782,6 @@ argument_list|,
 name|auxfd
 argument_list|,
 name|nauxfd
-argument_list|,
-name|newpid
 argument_list|)
 expr_stmt|;
 if|if

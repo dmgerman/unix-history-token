@@ -898,6 +898,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|bundle_LinkSize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|bundle_ReceiveDatalink
 parameter_list|(
@@ -906,10 +916,6 @@ name|bundle
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|sockaddr_un
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
