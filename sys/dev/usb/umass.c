@@ -5933,7 +5933,7 @@ argument_list|(
 name|UDMASS_BBB
 argument_list|,
 operator|(
-literal|"%s: actlen=%d != residue=%d\n"
+literal|"%s: residue=%d != calc.res.=%d\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -5941,14 +5941,6 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|)
-operator|,
-name|sc
-operator|->
-name|transfer_datalen
-operator|-
-name|sc
-operator|->
-name|transfer_actlen
 operator|,
 name|UGETDW
 argument_list|(
@@ -5958,6 +5950,14 @@ name|csw
 operator|.
 name|dCSWDataResidue
 argument_list|)
+operator|,
+name|sc
+operator|->
+name|transfer_datalen
+operator|-
+name|sc
+operator|->
+name|transfer_actlen
 operator|)
 argument_list|)
 expr_stmt|;
