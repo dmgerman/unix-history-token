@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -557,6 +557,18 @@ parameter_list|,
 name|p
 parameter_list|)
 value|((p)->fds_bits[(n)/NFDBITS]& (1<< ((n) % NFDBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_COPY
+parameter_list|(
+name|f
+parameter_list|,
+name|t
+parameter_list|)
+value|bcopy(f, t, sizeof(*(f)))
 end_define
 
 begin_define
