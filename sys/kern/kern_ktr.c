@@ -210,10 +210,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * This variable is used only by gdb to work out what fields are in  * ktr_entry.  */
-end_comment
-
 begin_decl_stmt
 name|int
 name|ktr_cpumask
