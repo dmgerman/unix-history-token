@@ -498,7 +498,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"acquire(): lkp == %p, extflags == 0x%x, wanted == 0x%x\n"
+literal|"acquire(): lkp == %p, extflags == 0x%x, wanted == 0x%x"
 argument_list|,
 name|lkp
 argument_list|,
