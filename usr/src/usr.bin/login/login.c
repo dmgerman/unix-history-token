@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.18 82/06/27"
+literal|"@(#)login.c	4.19 82/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -2104,7 +2104,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|inigrp
+name|initgroups
 argument_list|(
 name|name
 argument_list|,

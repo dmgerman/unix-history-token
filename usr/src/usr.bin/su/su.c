@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)su.c	4.2 (Berkeley) 4.2"
+literal|"@(#)su.c	4.3 (Berkeley) 4.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +321,7 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-name|inigrp
+name|initgroups
 argument_list|(
 name|nptr
 argument_list|,
