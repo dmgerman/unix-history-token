@@ -9,7 +9,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	3.1	%G%"
+literal|"@(#)rmail.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,7 +351,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"%s -f%s"
+literal|"%s -em -f%s"
 argument_list|,
 name|MAILER
 argument_list|,
