@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999,2000 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998,1999,2000,2001 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -810,113 +810,33 @@ literal|1
 decl_stmt|;
 comment|/* fixed packet type */
 name|u_int8_t
-name|multi_session
+name|session_type
 range|:
 literal|2
 decl_stmt|;
-comment|/* multi-session type */
+comment|/* session type */
 define|#
 directive|define
-name|CDR_MSES_NONE
+name|CDR_SESS_NONE
 value|0x00
 define|#
 directive|define
-name|CDR_MSES_FINAL
+name|CDR_SESS_FINAL
 value|0x01
 define|#
 directive|define
-name|CDR_MSES_RESERVED
+name|CDR_SESS_RESERVED
 value|0x02
 define|#
 directive|define
-name|CDR_MSES_MULTI
+name|CDR_SESS_MULTI
 value|0x03
 name|u_int8_t
-name|data_block_type
+name|datablock_type
 range|:
 literal|4
 decl_stmt|;
-comment|/* data block type code */
-define|#
-directive|define
-name|CDR_DB_RAW
-value|0x0
-comment|/* 2352 bytes of raw data */
-define|#
-directive|define
-name|CDR_DB_RAW_PQ
-value|0x1
-comment|/* 2368 bytes raw data + P/Q subchan */
-define|#
-directive|define
-name|CDR_DB_RAW_PW
-value|0x2
-comment|/* 2448 bytes raw data + P-W subchan */
-define|#
-directive|define
-name|CDR_DB_RAW_PW_R
-value|0x3
-comment|/* 2448 bytes raw data + P-W raw sub */
-define|#
-directive|define
-name|CDR_DB_RES_4
-value|0x4
-comment|/* reserved */
-define|#
-directive|define
-name|CDR_DB_RES_5
-value|0x5
-comment|/* reserved */
-define|#
-directive|define
-name|CDR_DB_RES_6
-value|0x6
-comment|/* reserved */
-define|#
-directive|define
-name|CDR_DB_VS_7
-value|0x7
-comment|/* vendor specific */
-define|#
-directive|define
-name|CDR_DB_ROM_MODE1
-value|0x8
-comment|/* 2048 bytes Mode 1 (ISO/IEC 10149) */
-define|#
-directive|define
-name|CDR_DB_ROM_MODE2
-value|0x9
-comment|/* 2336 bytes Mode 2 (ISO/IEC 10149) */
-define|#
-directive|define
-name|CDR_DB_XA_MODE1
-value|0xa
-comment|/* 2048 bytes Mode 1 (CD-ROM XA 1) */
-define|#
-directive|define
-name|CDR_DB_XA_MODE2_F1
-value|0xb
-comment|/* 2056 bytes Mode 2 (CD-ROM XA 1) */
-define|#
-directive|define
-name|CDR_DB_XA_MODE2_F2
-value|0xc
-comment|/* 2324 bytes Mode 2 (CD-ROM XA 2) */
-define|#
-directive|define
-name|CDR_DB_XA_MODE2_MIX
-value|0xd
-comment|/* 2332 bytes Mode 2 (CD-ROM XA 1/2) */
-define|#
-directive|define
-name|CDR_DB_RES_14
-value|0xe
-comment|/* reserved */
-define|#
-directive|define
-name|CDR_DB_VS_15
-value|0xf
-comment|/* vendor specific */
+comment|/* data type code (see cdrio.h) */
 name|u_int8_t
 name|reserved4_4567
 range|:
