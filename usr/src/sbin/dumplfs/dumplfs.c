@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.5 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -392,7 +392,7 @@ define|#
 directive|define
 name|print_iheader
 define|\
-value|(void)printf("inum\tstatus\tversion\tdaddr\t\tatime\tfreeptr\n")
+value|(void)printf("inum\tstatus\tversion\tdaddr\t\tfreeptr\n")
 end_define
 
 begin_define
@@ -405,7 +405,7 @@ parameter_list|,
 name|ip
 parameter_list|)
 define|\
-value|if (ip->if_daddr == LFS_UNUSED_DADDR) \ 		(void)printf("%d\tFREE\t%d\t \t\t \t%d\n", \ 		    i, ip->if_version, ip->if_nextfree); \ 	else \ 		(void)printf("%d\tINUSE\t%d\t%8X    \t%s\n", \ 		    i, ip->if_version, ip->if_daddr, \ 		    ctime((time_t *)&ip->if_st_atime))
+value|if (ip->if_daddr == LFS_UNUSED_DADDR) \ 		(void)printf("%d\tFREE\t%d\t \t\t%d\n", \ 		    i, ip->if_version, ip->if_nextfree); \ 	else \ 		(void)printf("%d\tINUSE\t%d\t%8X    \n", \ 		    i, ip->if_version, ip->if_daddr)
 end_define
 
 begin_function
@@ -959,8 +959,6 @@ argument_list|(
 literal|"\nIFILE contents\n"
 argument_list|)
 expr_stmt|;
-name|print_suheader
-expr_stmt|;
 name|nblocks
 operator|=
 name|dip
@@ -1061,22 +1059,23 @@ argument_list|,
 name|ipage
 argument_list|)
 expr_stmt|;
+name|print_suheader
+expr_stmt|;
 continue|continue;
 block|}
-else|else
-name|i
-operator|-=
-name|lfsp
-operator|->
-name|lfs_cleansz
-expr_stmt|;
 if|if
 condition|(
 name|i
 operator|<
+operator|(
 name|lfsp
 operator|->
 name|lfs_segtabsz
+operator|+
+name|lfsp
+operator|->
+name|lfs_cleansz
+operator|)
 condition|)
 block|{
 name|inum
