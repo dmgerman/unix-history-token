@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	4.3 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)exp.c	4.3 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* EXP(X)  * RETURN THE EXPONENTIAL OF X  * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 2/15/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)	  *	copysign(x,y)	  *	finite(x)  *  * Kernel function:  *	exp__E(x,c)  *  * Method:  *	1. Argument Reduction: given the input x, find r and integer k such   *	   that  *	                   x = k*ln2 + r,  |r|<= 0.5*ln2 .    *	   r will be represented as r := z+c for better accuracy.  *  *	2. Compute expm1(r)=exp(r)-1 by   *  *			expm1(r=z+c) := z + exp__E(z,r)  *  *	3. exp(x) = 2^k * ( expm1(r) + 1 ).  *  * Special cases:  *	exp(INF) is INF, exp(NaN) is NaN;  *	exp(-INF)=  0;  *	for finite argument, only exp(0)=1 is exact.  *  * Accuracy:  *	exp(x) returns the exponential of x nearly rounded. In a test run  *	with 1,156,000 random arguments on a VAX, the maximum observed  *	error was .768 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* EXP(X)  * RETURN THE EXPONENTIAL OF X  * DOUBLE PRECISION (IEEE 53 bits, VAX D FORMAT 56 BITS)  * CODED IN C BY K.C. NG, 1/19/85;   * REVISED BY K.C. NG on 2/6/85, 2/15/85, 3/7/85, 3/24/85, 4/16/85, 6/14/86.  *  * Required system supported functions:  *	scalb(x,n)	  *	copysign(x,y)	  *	finite(x)  *  * Method:  *	1. Argument Reduction: given the input x, find r and integer k such   *	   that  *	                   x = k*ln2 + r,  |r|<= 0.5*ln2 .    *	   r will be represented as r := z+c for better accuracy.  *  *	2. Compute exp(r) by   *  *		exp(r) = 1 + r + r*R1/(2-R1),  *	   where  *		R1 = x - x^2*(p1+x^2*(p2+x^2*(p3+x^2*(p4+p5*x^2)))).  *  *	3. exp(x) = 2^k * exp(r) .  *  * Special cases:  *	exp(INF) is INF, exp(NaN) is NaN;  *	exp(-INF)=  0;  *	for finite argument, only exp(0)=1 is exact.  *  * Accuracy:  *	exp(x) returns the exponential of x nearly rounded. In a test run  *	with 1,156,000 random arguments on a VAX, the maximum observed  *	error was 0.869 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -61,6 +61,26 @@ end_comment
 
 begin_comment
 comment|/* invln2 =  1.4426950408889634148E0     ; Hex  2^  1   *  .B8AA3B295C17F1 */
+end_comment
+
+begin_comment
+comment|/* p1     =  1.6666666666666602251E-1    , Hex  2^-2    *  .AAAAAAAAAAA9F1 */
+end_comment
+
+begin_comment
+comment|/* p2     = -2.7777777777015591216E-3    , Hex  2^-8    * -.B60B60B5F5EC94 */
+end_comment
+
+begin_comment
+comment|/* p3     =  6.6137563214379341918E-5    , Hex  2^-13   *  .8AB355792EF15F */
+end_comment
+
+begin_comment
+comment|/* p4     = -1.6533902205465250480E-6    , Hex  2^-19   * -.DDEA0E2E935F84 */
+end_comment
+
+begin_comment
+comment|/* p5     =  4.1381367970572387085E-8    , Hex  2^-24   *  .B1BB4B95F52683 */
 end_comment
 
 begin_decl_stmt
@@ -133,6 +153,76 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|long
+name|p1x
+index|[]
+init|=
+block|{
+literal|0xaaaa3f2a
+block|,
+literal|0xa9f1aaaa
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|p2x
+index|[]
+init|=
+block|{
+literal|0x0b60bc36
+block|,
+literal|0xec94b5f5
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|p3x
+index|[]
+init|=
+block|{
+literal|0xb355398a
+block|,
+literal|0xf15f792e
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|p4x
+index|[]
+init|=
+block|{
+literal|0xea0eb6dd
+block|,
+literal|0x5f842e93
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|long
+name|p5x
+index|[]
+init|=
+block|{
+literal|0xbb4b3431
+block|,
+literal|0x268395f5
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -168,6 +258,41 @@ name|invln2
 value|(*(double*)invln2x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|p1
+value|(*(double*)p1x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|p2
+value|(*(double*)p2x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|p3
+value|(*(double*)p3x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|p4
+value|(*(double*)p4x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|p5
+value|(*(double*)p5x)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -180,6 +305,43 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|double
+name|p1
+init|=
+literal|1.6666666666666601904E
+operator|-
+literal|1
+decl_stmt|,
+comment|/*Hex  2^-3    *  1.555555555553E */
+name|p2
+init|=
+operator|-
+literal|2.7777777777015593384E
+operator|-
+literal|3
+decl_stmt|,
+comment|/*Hex  2^-9    * -1.6C16C16BEBD93 */
+name|p3
+init|=
+literal|6.6137563214379343612E
+operator|-
+literal|5
+decl_stmt|,
+comment|/*Hex  2^-14   *  1.1566AAF25DE2C */
+name|p4
+init|=
+operator|-
+literal|1.6533902205465251539E
+operator|-
+literal|6
+decl_stmt|,
+comment|/*Hex  2^-20   * -1.BBD41C5D26BF1 */
+name|p5
+init|=
+literal|4.1381367970572384604E
+operator|-
+literal|8
+decl_stmt|,
+comment|/*Hex  2^-25   *  1.6376972BEA4D0 */
 name|ln2hi
 init|=
 literal|6.9314718036912381649E
@@ -235,9 +397,6 @@ name|scalb
 argument_list|()
 decl_stmt|,
 name|copysign
-argument_list|()
-decl_stmt|,
-name|exp__E
 argument_list|()
 decl_stmt|,
 name|z
@@ -300,7 +459,7 @@ name|x
 argument_list|)
 expr_stmt|;
 comment|/* k=NINT(x/ln2) */
-comment|/* express x-k*ln2 as z+c */
+comment|/* express x-k*ln2 as hi-lo and let x=hi-lo rounded */
 name|hi
 operator|=
 name|x
@@ -309,7 +468,7 @@ name|k
 operator|*
 name|ln2hi
 expr_stmt|;
-name|z
+name|x
 operator|=
 name|hi
 operator|-
@@ -321,37 +480,70 @@ operator|*
 name|ln2lo
 operator|)
 expr_stmt|;
+comment|/* return 2^k*[1+x+x*c/(2+c)]  */
+name|z
+operator|=
+name|x
+operator|*
+name|x
+expr_stmt|;
 name|c
 operator|=
+name|x
+operator|-
+name|z
+operator|*
+operator|(
+name|p1
+operator|+
+name|z
+operator|*
+operator|(
+name|p2
+operator|+
+name|z
+operator|*
+operator|(
+name|p3
+operator|+
+name|z
+operator|*
+operator|(
+name|p4
+operator|+
+name|z
+operator|*
+name|p5
+operator|)
+operator|)
+operator|)
+operator|)
+expr_stmt|;
+return|return
+name|scalb
+argument_list|(
+literal|1.0
+operator|+
 operator|(
 name|hi
 operator|-
-name|z
-operator|)
-operator|-
-name|lo
-expr_stmt|;
-comment|/* return 2^k*[expm1(x) + 1]  */
-name|z
-operator|+=
-name|exp__E
-argument_list|(
-name|z
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-return|return
 operator|(
-name|scalb
-argument_list|(
-name|z
-operator|+
-literal|1.0
+name|lo
+operator|-
+name|x
+operator|*
+name|c
+operator|/
+operator|(
+literal|2.0
+operator|-
+name|c
+operator|)
+operator|)
+operator|)
 argument_list|,
 name|k
 argument_list|)
-operator|)
 return|;
 block|}
 comment|/* end of x> lntiny */
