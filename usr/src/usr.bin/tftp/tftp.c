@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftp.c	5.9 (Berkeley) %G%"
+literal|"@(#)tftp.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,12 +182,10 @@ name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|timer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|timeout
 operator|+=
@@ -222,7 +220,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Send the requested file.  */
@@ -477,7 +475,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|sin
@@ -549,7 +549,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|from
@@ -1005,7 +1007,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|sin
@@ -1073,7 +1077,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|from
@@ -1335,6 +1341,11 @@ literal|4
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -1736,6 +1747,11 @@ name|length
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t1.c	4.3 %G%"
+literal|"@(#)t1.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,7 +100,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|unix
-name|int
+name|void
 name|badsig
 parameter_list|()
 function_decl|;
@@ -469,12 +469,10 @@ directive|ifdef
 name|unix
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|badsig
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -489,7 +487,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
