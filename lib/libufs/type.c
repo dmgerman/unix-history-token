@@ -557,6 +557,12 @@ literal|0
 expr_stmt|;
 name|disk
 operator|->
+name|d_lcg
+operator|=
+literal|0
+expr_stmt|;
+name|disk
+operator|->
 name|d_mine
 operator|=
 literal|0

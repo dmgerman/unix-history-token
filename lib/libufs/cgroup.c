@@ -223,6 +223,12 @@ operator|-
 literal|1
 return|;
 block|}
+name|disk
+operator|->
+name|d_lcg
+operator|=
+name|c
+expr_stmt|;
 return|return
 literal|1
 return|;

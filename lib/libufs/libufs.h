@@ -172,6 +172,10 @@ name|int
 name|d_ccg
 decl_stmt|;
 comment|/* current cylinder group */
+name|int
+name|d_lcg
+decl_stmt|;
+comment|/* last cylinder group (in d_cg) */
 specifier|const
 name|char
 modifier|*
