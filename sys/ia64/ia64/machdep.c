@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 
@@ -1187,8 +1193,8 @@ comment|/* NO OUTPUT ALLOWED UNTIL FURTHER NOTICE */
 comment|/* 	 * TODO: Disable interrupts, floating point etc. 	 * Maybe flush cache and tlb 	 */
 asm|__asm __volatile("mov ar.fpsr=%0" :: "r"(IA64_FPSR_DEFAULT));
 comment|/* 	 * TODO: Get critical system information (if possible, from the 	 * information provided by the boot program). 	 */
-comment|/* 	 * Initalize the (temporary) bootstrap console interface, so 	 * we can use printf until the VM system starts being setup. 	 * The real console is initialized before then. 	 * TODO: I guess we start with a serial console here. 	 */
-name|ssccnattach
+comment|/* 	 * Initialize the console before we print anything out. 	 */
+name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* OUTPUT NOW ALLOWED */
