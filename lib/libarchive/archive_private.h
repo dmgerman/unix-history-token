@@ -134,6 +134,10 @@ comment|/* Position in UNCOMPRESSED data stream. */
 name|off_t
 name|file_position
 decl_stmt|;
+comment|/* Position in COMPRESSED data stream. */
+name|off_t
+name|raw_position
+decl_stmt|;
 comment|/* File offset of beginning of most recently-read header. */
 name|off_t
 name|header_position

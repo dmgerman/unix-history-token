@@ -492,7 +492,13 @@ operator|->
 name|buffer_size
 argument_list|)
 expr_stmt|;
-comment|/* TODO: if ret< state->buffer_size */
+comment|/* XXX TODO: if ret< state->buffer_size XXX */
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|ret
+expr_stmt|;
 name|state
 operator|->
 name|next
@@ -559,6 +565,12 @@ operator|-=
 name|to_copy
 expr_stmt|;
 block|}
+name|a
+operator|->
+name|file_position
+operator|+=
+name|length
+expr_stmt|;
 return|return
 operator|(
 name|length

@@ -1016,6 +1016,36 @@ begin_comment
 comment|/*  * Accessor functions to read/set various information in  * the struct archive object:  */
 end_comment
 
+begin_comment
+comment|/* Bytes written after compression or read before decompression. */
+end_comment
+
+begin_function_decl
+name|int64_t
+name|archive_position_compressed
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Bytes written to compressor or read from decompressor. */
+end_comment
+
+begin_function_decl
+name|int64_t
+name|archive_position_uncompressed
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|const
 name|char

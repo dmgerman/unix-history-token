@@ -1317,6 +1317,12 @@ name|ARCHIVE_FATAL
 operator|)
 return|;
 block|}
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|ret
+expr_stmt|;
 name|state
 operator|->
 name|stream

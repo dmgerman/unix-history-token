@@ -818,6 +818,12 @@ operator|(
 name|ret
 operator|)
 return|;
+name|a
+operator|->
+name|file_position
+operator|+=
+name|length
+expr_stmt|;
 return|return
 operator|(
 name|length
@@ -1251,6 +1257,12 @@ name|state
 operator|->
 name|compressed_buffer_size
 argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|ret
 expr_stmt|;
 name|state
 operator|->

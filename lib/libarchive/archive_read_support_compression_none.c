@@ -739,6 +739,12 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+name|a
+operator|->
+name|raw_position
+operator|+=
+name|bytes_read
+expr_stmt|;
 name|state
 operator|->
 name|client_total
