@@ -308,6 +308,7 @@ name|f
 operator|>
 name|bufl
 condition|)
+block|{
 if|if
 condition|(
 name|buf
@@ -337,6 +338,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
