@@ -978,27 +978,13 @@ name|npx_intrs_while_probing
 operator|++
 expr_stmt|;
 comment|/* 	 * The BUSY# latch must be cleared in all cases so that the next 	 * unmasked npx exception causes an interrupt. 	 */
-ifdef|#
-directive|ifdef
-name|PC98
 name|outb
 argument_list|(
-literal|0xf8
+name|IO_NPX
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|outb
-argument_list|(
-literal|0xf0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * fpcurthread is normally non-null here.  In that case, schedule an 	 * AST to finish the exception handling in the correct context 	 * (this interrupt may occur after the thread has entered the 	 * kernel via a syscall or an interrupt).  Otherwise, the npx 	 * state of the thread that caused this interrupt must have been 	 * pushed to the thread's pcb, and clearing of the busy latch 	 * above has finished the (essentially null) handling of this 	 * interrupt.  Control will eventually return to the instruction 	 * that caused it and it will repeat.  We will eventually (usually 	 * soon) win the race to handle the interrupt properly. 	 */
 name|td
 operator|=
@@ -1152,9 +1138,6 @@ argument_list|(
 literal|"npx: can't get ports"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 if|if
 condition|(
 name|resource_int_value
@@ -1173,32 +1156,8 @@ literal|0
 condition|)
 name|irq_num
 operator|=
-literal|8
+name|IRQ_NPX
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|resource_int_value
-argument_list|(
-literal|"npx"
-argument_list|,
-literal|0
-argument_list|,
-literal|"irq"
-argument_list|,
-operator|&
-name|irq_num
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|irq_num
-operator|=
-literal|13
-expr_stmt|;
-endif|#
-directive|endif
 name|irq_rid
 operator|=
 literal|0
@@ -1262,36 +1221,16 @@ literal|"npx: can't create intr"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Partially reset the coprocessor, if any.  Some BIOS's don't reset 	 * it after a warm boot. 	 */
-ifdef|#
-directive|ifdef
-name|PC98
+name|npx_full_reset
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
-literal|0xf8
+name|IO_NPX
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|outb
-argument_list|(
-literal|0xf1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* full reset on some systems, NOP on others */
-name|outb
-argument_list|(
-literal|0xf0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* clear BUSY# latch */
-endif|#
-directive|endif
 comment|/* 	 * Prepare to trap all ESC (i.e., NPX) instructions and all WAIT 	 * instructions.  We must set the CR0_MP bit and use the CR0_TS 	 * bit to control the trap, because setting the CR0_EM bit does 	 * not cause WAIT instructions to trap.  It's important to trap 	 * WAIT instructions - otherwise the "wait" variants of no-wait 	 * control instructions would degenerate to the "no-wait" variants 	 * after FP context switches but work correctly otherwise.  It's 	 * particularly important to trap WAITs when there is no NPX - 	 * otherwise the "wait" variants would always degenerate. 	 * 	 * Try setting CR0_NE to get correct error reporting on 486DX's. 	 * Setting it should fail or do nothing on lesser processors. 	 */
 name|load_cr0
 argument_list|(
