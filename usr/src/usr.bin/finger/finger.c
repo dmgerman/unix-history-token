@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.7 (Berkeley) %G%"
+literal|"@(#)finger.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,11 +192,11 @@ begin_define
 define|#
 directive|define
 name|TALKABLE
-value|0222
+value|0220
 end_define
 
 begin_comment
-comment|/* tty is writable if 222 mode */
+comment|/* tty is writable if 220 mode */
 end_comment
 
 begin_decl_stmt

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mesg.c	4.2 (Berkeley) %G%"
+literal|"@(#)mesg.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,7 +119,7 @@ name|sbuf
 operator|.
 name|st_mode
 operator|&
-literal|02
+literal|020
 condition|)
 name|fprintf
 argument_list|(
@@ -162,7 +162,7 @@ name|sbuf
 operator|.
 name|st_mode
 operator||
-literal|022
+literal|020
 argument_list|)
 expr_stmt|;
 break|break;
@@ -176,7 +176,7 @@ operator|.
 name|st_mode
 operator|&
 operator|~
-literal|022
+literal|020
 argument_list|)
 expr_stmt|;
 name|r
