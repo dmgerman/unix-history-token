@@ -16,7 +16,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  * $Id: lib.c,v 1.17 1996/07/12 19:08:23 jkh Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.18 1996/10/01 01:22:30 peter Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -1993,9 +1993,12 @@ name|stdout
 argument_list|,
 literal|" needed due to %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2137,9 +2140,12 @@ name|stdout
 argument_list|,
 literal|" needed due to shared lib ref %s (%d)\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|lsp
 condition|?

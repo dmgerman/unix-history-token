@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.35 1996/07/12 19:08:20 jkh Exp $  */
+comment|/*  *	$Id: ld.c,v 1.36 1996/10/01 01:22:23 peter Exp $  */
 end_comment
 
 begin_comment
@@ -5915,9 +5915,12 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6482,9 +6485,12 @@ name|printf
 argument_list|(
 literal|"%s: not overridden by weak symbol from %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -6995,9 +7001,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s %s%s in "
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 operator|(
 name|N_ISWEAK
@@ -7695,9 +7704,12 @@ literal|1
 argument_list|,
 literal|"internal error: global ref to set el %s with -r"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8013,9 +8025,12 @@ literal|1
 argument_list|,
 literal|"internal error: digest_pass1,1: %s: undefined_global_sym_count = %d"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|undefined_global_sym_count
 argument_list|)
@@ -8205,9 +8220,12 @@ name|printf
 argument_list|(
 literal|"pass1: SO definition for %s, type %x in %s at %#x\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -8276,9 +8294,12 @@ argument_list|,
 literal|"internal error: digest_pass1,2: "
 literal|"%s: undefined_global_sym_count = %d"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|undefined_global_sym_count
 argument_list|)
@@ -8335,9 +8356,12 @@ argument_list|,
 literal|"internal error: digest_pass1,3: "
 literal|"%s: not a common: %x"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -8600,9 +8624,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s has jmpslot in %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -8791,9 +8818,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s RRS entry in %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -9511,9 +9541,12 @@ name|warnx
 argument_list|(
 literal|"pass2: %s: alias isn't"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -9851,9 +9884,12 @@ name|printf
 argument_list|(
 literal|"symbol %s assigned to location %#lx\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -9907,9 +9943,12 @@ literal|1
 argument_list|,
 literal|"%s: common isn't"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9947,9 +9986,12 @@ literal|1
 argument_list|,
 literal|"%s: Bogus N_SIZE item"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10095,9 +10137,12 @@ literal|"common"
 else|:
 literal|"data"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|size
 argument_list|,
@@ -11719,9 +11764,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s defined as %x in %s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -11821,9 +11869,12 @@ literal|1
 argument_list|,
 literal|"Copy item isn't: %s"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|relocation
@@ -11881,9 +11932,12 @@ name|stderr
 argument_list|,
 literal|"symbol %s claims RRS in %s%s\n"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -13632,9 +13686,12 @@ name|warnx
 argument_list|(
 literal|"symbol %s remains undefined"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13790,9 +13847,12 @@ literal|1
 argument_list|,
 literal|"%s: N_INDR has value %#x"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
@@ -13900,9 +13960,12 @@ literal|1
 argument_list|,
 literal|"internal error: %s defined in mysterious way"
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Allocate string table space for the symbol name. 		 */
@@ -14077,9 +14140,12 @@ literal|"writesym(#%d): %s, type %x\n"
 argument_list|,
 name|syms_written
 argument_list|,
+name|demangle
+argument_list|(
 name|sp
 operator|->
 name|name
+argument_list|)
 argument_list|,
 name|sp
 operator|->
