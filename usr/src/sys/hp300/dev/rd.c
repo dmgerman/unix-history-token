@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.44 92/12/26$  *  *	@(#)rd.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.44 92/12/26$  *  *	@(#)rd.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1967,6 +1967,22 @@ name|sc_type
 index|]
 operator|.
 name|ri_nblocks
+expr_stmt|;
+comment|/* XXX reset other info since readdisklabel screws with it */
+name|lp
+operator|->
+name|d_npartitions
+operator|=
+literal|3
+expr_stmt|;
+name|pi
+index|[
+literal|0
+index|]
+operator|.
+name|p_size
+operator|=
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
