@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-icmp.c,v 1.20 94/06/14 20:17:39 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-icmp.c,v 1.2 1995/03/08 12:52:32 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -789,6 +789,39 @@ case|:
 name|str
 operator|=
 literal|"echo request"
+expr_stmt|;
+break|break;
+case|case
+name|ICMP_ROUTERADVERT
+case|:
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"router advert, %d rtrs, lifetime %d"
+argument_list|,
+name|dp
+operator|->
+name|icmp_num_addrs
+argument_list|,
+name|ntohs
+argument_list|(
+name|dp
+operator|->
+name|icmp_lifetime
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ICMP_ROUTERSOLICIT
+case|:
+name|str
+operator|=
+literal|"router solicitation"
 expr_stmt|;
 break|break;
 case|case
