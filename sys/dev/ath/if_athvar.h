@@ -689,9 +689,13 @@ name|ieeerate
 decl_stmt|;
 comment|/* IEEE rate */
 name|u_int8_t
-name|flags
+name|rxflags
 decl_stmt|;
-comment|/* radiotap flags */
+comment|/* radiotap rx flags */
+name|u_int8_t
+name|txflags
+decl_stmt|;
+comment|/* radiotap tx flags */
 name|u_int16_t
 name|ledon
 decl_stmt|;
@@ -792,19 +796,10 @@ name|sc_tx_th_len
 decl_stmt|;
 union|union
 block|{
-struct|struct
-block|{
 name|struct
 name|ath_rx_radiotap_header
 name|th
 decl_stmt|;
-name|struct
-name|ieee80211_qosframe
-name|wh
-decl_stmt|;
-block|}
-name|u
-struct|;
 name|u_int8_t
 name|pad
 index|[
@@ -815,7 +810,7 @@ block|}
 name|u_rx_rt
 union|;
 name|int
-name|sc_rx_rt_len
+name|sc_rx_th_len
 decl_stmt|;
 name|struct
 name|task
@@ -991,22 +986,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|sc_rx
-value|u_rx_rt.u
-end_define
-
-begin_define
-define|#
-directive|define
 name|sc_rx_th
-value|sc_rx.th
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_rx_wh
-value|sc_rx.wh
+value|u_rx_rt.th
 end_define
 
 begin_define
