@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|TICK_GRACE
-value|1000
+value|10000
 end_define
 
 begin_function
@@ -236,6 +236,9 @@ decl_stmt|;
 name|u_long
 name|next
 decl_stmt|;
+name|register_t
+name|i
+decl_stmt|;
 name|tick_process
 argument_list|(
 name|cf
@@ -255,7 +258,9 @@ argument_list|)
 operator|+
 name|tick_increment
 expr_stmt|;
-name|critical_enter
+name|i
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 while|while
@@ -278,14 +283,6 @@ name|missed
 operator|++
 expr_stmt|;
 block|}
-name|atomic_add_int
-argument_list|(
-operator|&
-name|tick_missed
-argument_list|,
-name|missed
-argument_list|)
-expr_stmt|;
 name|wr
 argument_list|(
 name|asr23
@@ -295,8 +292,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
+name|intr_restore
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|tick_missed
+argument_list|,
+name|missed
+argument_list|)
 expr_stmt|;
 for|for
 control|(
