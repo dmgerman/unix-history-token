@@ -166,6 +166,15 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|abortpr
@@ -479,6 +488,17 @@ operator|&&
 name|c
 operator|!=
 literal|':'
+operator|&&
+operator|(
+name|cp1
+operator|-
+name|prbuf
+operator|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|prbuf
+argument_list|)
 condition|)
 operator|*
 name|cp1
@@ -644,9 +664,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -668,6 +693,11 @@ condition|(
 name|dis
 condition|)
 block|{
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -777,7 +807,9 @@ literal|"\tno daemon to abort\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 else|else
 block|{
@@ -786,7 +818,9 @@ argument_list|(
 literal|"\tcannot stat lock file\n"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 comment|/* 	 * Kill the current daemon to stop printing now. 	 */
@@ -811,7 +845,9 @@ argument_list|(
 literal|"\tcannot open lock file\n"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -850,7 +886,9 @@ argument_list|(
 literal|"\tno daemon to abort\n"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 operator|(
 name|void
@@ -876,6 +914,19 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ESRCH
+condition|)
+name|printf
+argument_list|(
+literal|"\tno daemon to abort\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"\tWarning: daemon (pid %d) not killed\n"
@@ -883,12 +934,20 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
 literal|"\tdaemon (pid %d) killed\n"
 argument_list|,
 name|pid
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 block|}
@@ -1578,6 +1637,17 @@ operator|=
 name|SD
 init|;
 operator|(
+name|lp
+operator|-
+name|line
+operator|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|&&
+operator|(
 operator|*
 name|lp
 operator|++
@@ -1597,6 +1667,11 @@ index|]
 operator|=
 literal|'/'
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 name|nitems
 operator|=
 name|scandir
@@ -1609,6 +1684,11 @@ argument_list|,
 name|doselect
 argument_list|,
 name|sortq
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1814,6 +1894,11 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|unlink
@@ -1836,6 +1921,11 @@ argument_list|(
 literal|"\tremoved %s\n"
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2102,9 +2192,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -2121,6 +2216,11 @@ name|printer
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn off the group execute bit of the lock file to enable queuing. 	 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -2161,6 +2261,11 @@ literal|"\tqueuing enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2429,9 +2534,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -2448,6 +2558,11 @@ name|printer
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn on the group execute bit of the lock file to disable queuing. 	 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -2540,12 +2655,16 @@ literal|"\tqueuing disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 else|else
 name|printf
 argument_list|(
 literal|"\tcannot stat lock file\n"
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 block|}
@@ -2875,15 +2994,25 @@ comment|/* 	 * Turn on the group execute bit of the lock file to disable queuing
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
 name|SD
 argument_list|,
 name|LO
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
 argument_list|)
 expr_stmt|;
 if|if
@@ -2978,6 +3107,11 @@ literal|"\tprinter and queuing disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 else|else
@@ -2990,9 +3124,14 @@ comment|/* 	 * Write the message into the status file. 	 */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -3035,8 +3174,18 @@ argument_list|(
 literal|"\tcannot create status file\n"
 argument_list|)
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3678,9 +3827,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -3697,6 +3851,11 @@ name|printer
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn off the owner execute bit of the lock file to enable printing. 	 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|enable
@@ -3764,6 +3923,11 @@ else|else
 name|printf
 argument_list|(
 literal|"\tdaemon started\n"
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 block|}
@@ -4650,9 +4814,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -4669,6 +4838,11 @@ name|printer
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn on the owner execute bit of the lock file to disable printing. 	 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -4778,6 +4952,11 @@ else|else
 name|printf
 argument_list|(
 literal|"\tcannot stat lock file\n"
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 block|}
@@ -4964,6 +5143,11 @@ argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -4981,8 +5165,15 @@ argument_list|,
 name|SD
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|nitems
 operator|=
 name|getq
@@ -5092,6 +5283,11 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Turn on the public execute bit of the lock file to 	 * get lpd to rebuild the queue after the current job. 	 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|changed
@@ -5124,6 +5320,13 @@ operator||
 literal|01
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5150,6 +5353,9 @@ name|tvp
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|tvp
 index|[
@@ -5184,8 +5390,13 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
 name|utimes
 argument_list|(
 name|q
@@ -5194,6 +5405,15 @@ name|q_name
 argument_list|,
 name|tvp
 argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 block|}
@@ -5461,9 +5681,11 @@ name|queue
 condition|;
 control|)
 block|{
-if|if
-condition|(
-operator|(
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -5477,7 +5699,15 @@ name|q_name
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
 operator|==
 name|NULL
 condition|)

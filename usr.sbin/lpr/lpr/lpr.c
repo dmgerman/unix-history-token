@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.15 1997/05/13 20:46:45 brian Exp $\n"
+literal|"\n$Id: lpr.c,v 1.16 1997/07/08 21:03:16 dima Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -625,6 +625,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -679,6 +687,21 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|signal
@@ -1305,6 +1328,11 @@ argument_list|(
 name|tfname
 argument_list|)
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1319,6 +1347,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* owned by daemon for protection */
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|card
 argument_list|(
 literal|'H'
@@ -1795,6 +1828,11 @@ index|]
 operator|--
 expr_stmt|;
 comment|/* 		 * Touch the control file to fix position in the queue. 		 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1923,6 +1961,11 @@ argument_list|(
 name|tfname
 argument_list|)
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|qflag
@@ -1957,6 +2000,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 comment|/* NOTREACHED */
 block|}
 end_function
@@ -2227,6 +2275,10 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+specifier|register
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -2365,14 +2417,28 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
 name|symlink
 argument_list|(
 name|file
 argument_list|,
 name|dfname
 argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
 condition|?
 name|NULL
 else|:
@@ -2515,6 +2581,11 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/* should block signals */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|open
@@ -2589,7 +2660,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* cleanup does exit */
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -2707,6 +2784,11 @@ expr_stmt|;
 name|i
 operator|=
 name|inchar
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3567,6 +3649,11 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|lmktemp
+parameter_list|()
+function_decl|;
 operator|(
 name|void
 operator|)
@@ -3582,6 +3669,11 @@ argument_list|,
 literal|"%s/.seq"
 argument_list|,
 name|SD
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
 argument_list|)
 expr_stmt|;
 if|if
@@ -3644,6 +3736,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 literal|0

@@ -603,6 +603,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|compar
@@ -824,12 +833,22 @@ expr_stmt|;
 comment|/* 	 * Try connecting to the server. 	 */
 name|retry
 label|:
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|rresvport
 argument_list|(
 operator|&
 name|lport
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1102,6 +1121,11 @@ decl_stmt|;
 name|int
 name|arraysz
 decl_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1138,7 +1162,12 @@ condition|)
 goto|goto
 name|errdone
 goto|;
-comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry. 	 */
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Estimate the array size by taking the size of the directory file 	 * and dividing it by a multiple of the minimum size entry.  	 */
 name|arraysz
 operator|=
 operator|(
@@ -1218,6 +1247,11 @@ literal|'f'
 condition|)
 continue|continue;
 comment|/* daemon control files only */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -1234,6 +1268,11 @@ literal|0
 condition|)
 continue|continue;
 comment|/* Doesn't exist */
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 operator|(

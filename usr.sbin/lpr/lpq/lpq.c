@@ -165,6 +165,14 @@ comment|/* # of users in user array */
 end_comment
 
 begin_decl_stmt
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|ckqueue
@@ -232,6 +240,21 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
+name|euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|name
 operator|=
 operator|*

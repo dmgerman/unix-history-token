@@ -156,6 +156,33 @@ begin_comment
 comment|/* active control file name */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|uid
+decl_stmt|,
+name|euid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* real and effective user id's */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|do_unlink
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|rmjob
@@ -395,6 +422,11 @@ operator|=
 name|root
 expr_stmt|;
 block|}
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -434,6 +466,11 @@ argument_list|(
 literal|"cannot access spool directory"
 argument_list|)
 expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nitems
@@ -453,6 +490,11 @@ name|current
 argument_list|)
 condition|)
 block|{
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 name|assasinated
 operator|=
 name|kill
@@ -463,6 +505,11 @@ name|SIGINT
 argument_list|)
 operator|==
 literal|0
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -553,6 +600,11 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -568,6 +620,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|errno
@@ -585,6 +638,12 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -626,6 +685,10 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EPERM
 condition|)
 block|{
 operator|(
@@ -748,6 +811,11 @@ name|file
 argument_list|)
 condition|)
 return|return;
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -768,6 +836,11 @@ argument_list|(
 literal|"cannot open %s"
 argument_list|,
 name|file
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
 argument_list|)
 expr_stmt|;
 while|while
@@ -826,19 +899,8 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-name|printf
+name|do_unlink
 argument_list|(
-name|unlink
-argument_list|(
-name|line
-operator|+
-literal|1
-argument_list|)
-condition|?
-literal|"cannot dequeue %s\n"
-else|:
-literal|"%s dequeued\n"
-argument_list|,
 name|line
 operator|+
 literal|1
@@ -854,6 +916,29 @@ argument_list|(
 name|cfp
 argument_list|)
 expr_stmt|;
+name|do_unlink
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|do_unlink
+parameter_list|(
+name|file
+parameter_list|)
+name|char
+modifier|*
+name|file
+decl_stmt|;
+block|{
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 name|from
@@ -867,12 +952,26 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-name|printf
+name|seteuid
 argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
 name|unlink
 argument_list|(
 name|file
 argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|ret
 condition|?
 literal|"cannot dequeue %s\n"
 else|:
@@ -974,6 +1073,11 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * get the owner's name from the control file. 	 */
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -994,6 +1098,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|getline
