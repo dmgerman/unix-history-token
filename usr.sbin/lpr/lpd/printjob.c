@@ -300,6 +300,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|pid_t
+name|of_pid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* process id of output filter, if any */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|int
 name|child
 decl_stmt|;
@@ -345,17 +356,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|ofilter
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* id of output filter, if any */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|tfd
 init|=
 operator|-
@@ -376,17 +376,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* prstatic inter file descriptor */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pid of lpd process */
 end_comment
 
 begin_decl_stmt
@@ -1029,6 +1018,9 @@ decl_stmt|;
 name|off_t
 name|pidoff
 decl_stmt|;
+name|pid_t
+name|printpid
+decl_stmt|;
 name|int
 name|errcnt
 decl_stmt|,
@@ -1118,7 +1110,7 @@ name|getegid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|pid
+name|printpid
 operator|=
 name|getpid
 argument_list|()
@@ -1128,7 +1120,7 @@ name|setpgrp
 argument_list|(
 literal|0
 argument_list|,
-name|pid
+name|printpid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * At initial lpd startup, printjob may be called with various 	 * signal handlers in effect.  After that initial startup, any 	 * calls to printjob will have a *different* set of signal-handlers 	 * in effect.  Make sure all handlers are the ones we want. 	 */
@@ -1338,7 +1330,7 @@ name|line
 argument_list|,
 literal|"%u\n"
 argument_list|,
-name|pid
+name|printpid
 argument_list|)
 expr_stmt|;
 name|pidoff
@@ -1834,14 +1826,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ofilter
+name|of_pid
 operator|>
 literal|0
 condition|)
 block|{
 name|kill
 argument_list|(
-name|ofilter
+name|of_pid
 argument_list|,
 name|SIGCONT
 argument_list|)
@@ -1870,7 +1862,7 @@ literal|0
 operator|&&
 name|i
 operator|!=
-name|ofilter
+name|of_pid
 condition|)
 empty_stmt|;
 if|if
@@ -1889,10 +1881,10 @@ name|pp
 operator|->
 name|printer
 argument_list|,
-name|ofilter
+name|of_pid
 argument_list|)
 expr_stmt|;
-name|ofilter
+name|of_pid
 operator|=
 literal|0
 expr_stmt|;
@@ -3166,9 +3158,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|pid_t
+name|wpid
+decl_stmt|;
 name|int
-name|pid
-decl_stmt|,
 name|p
 index|[
 literal|2
@@ -4260,7 +4253,7 @@ name|pfd
 expr_stmt|;
 if|if
 condition|(
-name|ofilter
+name|of_pid
 operator|>
 literal|0
 condition|)
@@ -4278,7 +4271,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|pid
+name|wpid
 operator|=
 name|wait3
 argument_list|(
@@ -4293,14 +4286,14 @@ operator|)
 operator|>
 literal|0
 operator|&&
-name|pid
+name|wpid
 operator|!=
-name|ofilter
+name|of_pid
 condition|)
 empty_stmt|;
 if|if
 condition|(
-name|pid
+name|wpid
 operator|<
 literal|0
 condition|)
@@ -4344,7 +4337,7 @@ name|pp
 operator|->
 name|printer
 argument_list|,
-name|ofilter
+name|of_pid
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
@@ -4488,7 +4481,7 @@ block|{
 while|while
 condition|(
 operator|(
-name|pid
+name|wpid
 operator|=
 name|wait
 argument_list|(
@@ -4499,14 +4492,14 @@ operator|)
 operator|>
 literal|0
 operator|&&
-name|pid
+name|wpid
 operator|!=
 name|child
 condition|)
 empty_stmt|;
 if|if
 condition|(
-name|pid
+name|wpid
 operator|<
 literal|0
 condition|)
@@ -4562,7 +4555,7 @@ if|if
 condition|(
 name|kill
 argument_list|(
-name|ofilter
+name|of_pid
 argument_list|,
 name|SIGCONT
 argument_list|)
@@ -6339,14 +6332,15 @@ name|int
 name|outfd
 parameter_list|)
 block|{
+name|pid_t
+name|fpid
+decl_stmt|,
+name|wpid
+decl_stmt|;
 name|int
 name|errfd
 decl_stmt|,
-name|fpid
-decl_stmt|,
 name|retcode
-decl_stmt|,
-name|wpid
 decl_stmt|,
 name|wstatus
 decl_stmt|;
@@ -7860,12 +7854,13 @@ name|int
 name|action
 parameter_list|)
 block|{
+name|pid_t
+name|forkpid
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|fail
-decl_stmt|,
-name|forkpid
 decl_stmt|;
 name|struct
 name|passwd
@@ -8196,13 +8191,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ofilter
+name|of_pid
 operator|>
 literal|0
 condition|)
 name|kill
 argument_list|(
-name|ofilter
+name|of_pid
 argument_list|,
 name|SIGCONT
 argument_list|)
@@ -8219,7 +8214,7 @@ condition|)
 empty_stmt|;
 if|if
 condition|(
-name|ofilter
+name|of_pid
 operator|>
 literal|0
 operator|&&
@@ -8487,7 +8482,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|ofilter
+name|of_pid
 operator|=
 literal|0
 expr_stmt|;
@@ -8569,7 +8564,7 @@ name|LPF_INPUT
 index|]
 operator|&&
 operator|!
-name|ofilter
+name|of_pid
 condition|)
 block|{
 name|pipe
@@ -8602,7 +8597,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|ofilter
+name|of_pid
 operator|=
 name|dofork
 argument_list|(
@@ -8755,7 +8750,7 @@ name|ofd
 operator|=
 name|pfd
 expr_stmt|;
-name|ofilter
+name|of_pid
 operator|=
 literal|0
 expr_stmt|;
