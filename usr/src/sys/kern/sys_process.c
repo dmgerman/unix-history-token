@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -377,21 +377,28 @@ begin_comment
 comment|/*  * Code that the child process  * executes to implement the command  * of the parent process in tracing.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|procxmt
-argument_list|()
-end_macro
+argument_list|(
+name|p
+argument_list|)
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 specifier|register
 name|int
 name|i
+decl_stmt|,
+modifier|*
+name|poff
 decl_stmt|;
-specifier|register
-operator|*
-name|p
-expr_stmt|;
 specifier|register
 name|struct
 name|text
@@ -413,9 +420,7 @@ name|ipc
 operator|.
 name|ip_lock
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 condition|)
@@ -424,9 +429,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_slptime
 operator|=
@@ -613,9 +616,7 @@ if|if
 condition|(
 name|xp
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_textp
 condition|)
@@ -801,16 +802,12 @@ argument_list|)
 comment|/* make sure the old value is not in cache */
 name|ckeyrelease
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_ckey
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_ckey
 operator|=
@@ -840,9 +837,7 @@ name|xp
 operator|->
 name|x_ckey
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_ckey
 expr_stmt|;
@@ -929,7 +924,7 @@ name|ipc
 operator|.
 name|ip_addr
 expr_stmt|;
-name|p
+name|poff
 operator|=
 operator|(
 name|int
@@ -958,7 +953,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|p
+name|poff
 operator|==
 operator|&
 name|u
@@ -976,7 +971,7 @@ name|ok
 goto|;
 if|if
 condition|(
-name|p
+name|poff
 operator|==
 operator|&
 name|u
@@ -1035,7 +1030,7 @@ directive|ifdef
 name|FPCOPROC
 if|if
 condition|(
-name|p
+name|poff
 operator|>=
 operator|(
 name|int
@@ -1049,7 +1044,7 @@ name|pcb_fpregs
 operator|.
 name|fpf_regs
 operator|&&
-name|p
+name|poff
 operator|<=
 operator|(
 name|int
@@ -1077,7 +1072,7 @@ goto|;
 name|ok
 label|:
 operator|*
-name|p
+name|poff
 operator|=
 name|ipc
 operator|.
@@ -1131,9 +1126,7 @@ condition|)
 goto|goto
 name|error
 goto|;
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_cursig
 operator|=
@@ -1186,9 +1179,9 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
+argument_list|,
+name|p
 operator|->
 name|p_cursig
 argument_list|)
