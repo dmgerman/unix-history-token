@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.5 (Berkeley) 81/04/01"
+literal|"@(#)iostat.c	4.6 (Berkeley) 81/04/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1384,10 +1384,6 @@ name|n_value
 expr_stmt|;
 if|if
 condition|(
-name|mp
-operator|==
-literal|0
-operator|||
 name|up
 operator|==
 literal|0
@@ -1406,6 +1402,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mp
+condition|)
 while|while
 condition|(
 literal|1
