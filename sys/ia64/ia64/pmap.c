@@ -2683,6 +2683,14 @@ name|va
 operator|>>
 literal|61
 expr_stmt|;
+comment|/* 	 * We get called for virtual addresses that may just as well be 	 * kernel addresses (ie region 5, 6 or 7). Since the pm_rid field 	 * only holds region IDs for user regions, we have to make sure 	 * the region is within bounds. 	 */
+if|if
+condition|(
+name|rr
+operator|>=
+literal|5
+condition|)
+return|return;
 if|if
 condition|(
 name|pmap
