@@ -4415,6 +4415,24 @@ expr_stmt|;
 if|if
 condition|(
 name|do_time
+operator|==
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"%10u "
+argument_list|,
+name|rule
+operator|->
+name|timestamp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|do_time
+operator|==
+literal|1
 condition|)
 block|{
 name|char
@@ -18897,7 +18915,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"acdefhnNqs:Stv"
+literal|"acdefhnNqs:STtv"
 argument_list|)
 operator|)
 operator|!=
@@ -19009,6 +19027,15 @@ name|do_time
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|do_time
+operator|=
+literal|2
+expr_stmt|;
+comment|/* numeric timestamp */
 break|break;
 case|case
 literal|'v'
