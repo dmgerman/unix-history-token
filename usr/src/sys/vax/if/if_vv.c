@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.11	82/12/17	*/
+comment|/*	if_vv.c	4.12	82/12/23	*/
 end_comment
 
 begin_include
@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -79,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/netisr.h"
 end_include
 
 begin_include
@@ -1571,11 +1589,13 @@ name|waitcount
 operator|<
 literal|10
 condition|)
+block|{
 name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
