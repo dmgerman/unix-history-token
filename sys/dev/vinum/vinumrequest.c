@@ -682,7 +682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start a transfer.  Return -1 on error,  * 0 if OK, 1 if we need to retry.  * Parameter reviveok is set when doing  * transfers for revives: it allows transfers to  * be started immediately when a revive is in  * progress.  During revive, normal transfers  * are queued if they share address space with  * a currently active revive operation.  */
+comment|/*  * Start a transfer.  Return -1 on error, 0 if OK,  * 1 if we need to retry.  Parameter reviveok is  * set when doing transfers for revives: it allows  * transfers to be started immediately when a  * revive is in progress.  During revive, normal  * transfers are queued if they share address  * space with a currently active revive operation.  */
 end_comment
 
 begin_function
@@ -844,7 +844,7 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Note the volume ID.  This can be NULL, which      * the request building functions use as an      * indication for single plex I/O      */
+comment|/*      * Note the volume ID.  This can be NULL, which      * the request building functions use as an      * indication for single plex I/O.      */
 name|rq
 operator|->
 name|bp
@@ -1117,6 +1117,82 @@ name|vol
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|vol
+operator|->
+name|plexes
+operator|>
+literal|0
+operator|)
+comment|/* multiple plex */
+operator|||
+operator|(
+name|isparity
+argument_list|(
+operator|(
+operator|&
+name|PLEX
+index|[
+name|vol
+operator|->
+name|plex
+index|[
+literal|0
+index|]
+index|]
+operator|)
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* or RAID-[45], */
+name|rq
+operator|->
+name|save_data
+operator|=
+name|bp
+operator|->
+name|b_data
+expr_stmt|;
+comment|/* save the data buffer address */
+name|bp
+operator|->
+name|b_data
+operator|=
+name|Malloc
+argument_list|(
+name|bp
+operator|->
+name|b_bufsize
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|rq
+operator|->
+name|save_data
+argument_list|,
+name|bp
+operator|->
+name|b_data
+argument_list|,
+name|bp
+operator|->
+name|b_bufsize
+argument_list|)
+expr_stmt|;
+comment|/* make a copy */
+name|rq
+operator|->
+name|flags
+operator||=
+name|XFR_COPYBUF
+expr_stmt|;
+comment|/* and note that we did it */
+block|}
 name|status
 operator|=
 name|build_write_request
@@ -1124,7 +1200,7 @@ argument_list|(
 name|rq
 argument_list|)
 expr_stmt|;
-comment|/* Not all the subdisks are up */
+block|}
 else|else
 block|{
 comment|/* plex I/O */
@@ -1199,6 +1275,31 @@ operator|.
 name|bio_flags
 operator||=
 name|BIO_ERROR
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rq
+operator|->
+name|flags
+operator|&
+name|XFR_COPYBUF
+condition|)
+block|{
+name|Free
+argument_list|(
+name|bp
+operator|->
+name|b_data
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_data
+operator|=
+name|rq
+operator|->
+name|save_data
 expr_stmt|;
 block|}
 name|bufdone
