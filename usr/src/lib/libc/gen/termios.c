@@ -437,8 +437,6 @@ operator||
 name|ICRNL
 operator||
 name|IXON
-operator||
-name|IEXTEN
 operator|)
 expr_stmt|;
 name|t
@@ -465,6 +463,8 @@ operator||
 name|ICANON
 operator||
 name|ISIG
+operator||
+name|IEXTEN
 operator|)
 expr_stmt|;
 comment|/* set MIN/TIME */
