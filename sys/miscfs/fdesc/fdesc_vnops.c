@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fdesc_vnops.c	8.9 (Berkeley) 1/21/94  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fdesc_vnops.c	8.17 (Berkeley) 5/22/95  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -194,37 +194,29 @@ directive|endif
 define|#
 directive|define
 name|NFDCACHE
-value|3
+value|4
 define|#
 directive|define
 name|FD_NHASH
 parameter_list|(
 name|ix
 parameter_list|)
-value|((ix)& NFDCACHE)
-comment|/*  * Cache head  */
-expr|struct
-name|fdcache
-block|{ 	struct
+define|\
+value|(&fdhashtbl[(ix)& fdhash])
+name|LIST_HEAD
+argument_list|(
+name|fdhashhead
+argument_list|,
 name|fdescnode
+argument_list|)
 operator|*
-name|fc_forw
-block|; 	struct
-name|fdescnode
-operator|*
-name|fc_back
-block|; }
+name|fdhashtbl
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
-name|struct
-name|fdcache
-name|fdcache
-index|[
-name|NFDCACHE
-index|]
+name|u_long
+name|fdhash
 decl_stmt|;
 end_decl_stmt
 
@@ -234,16 +226,21 @@ end_comment
 
 begin_macro
 name|fdesc_init
-argument_list|()
+argument_list|(
+argument|vfsp
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|fdcache
-modifier|*
-name|fc
-decl_stmt|;
 name|devctty
 operator|=
 name|makedev
@@ -253,70 +250,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|fc
+name|fdhashtbl
 operator|=
-name|fdcache
-init|;
-name|fc
-operator|<
-name|fdcache
-operator|+
+name|hashinit
+argument_list|(
 name|NFDCACHE
-condition|;
-name|fc
-operator|++
-control|)
-name|fc
-operator|->
-name|fc_forw
-operator|=
-name|fc
-operator|->
-name|fc_back
-operator|=
-operator|(
-expr|struct
-name|fdescnode
-operator|*
-operator|)
-name|fc
+argument_list|,
+name|M_CACHE
+argument_list|,
+operator|&
+name|fdhash
+argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Compute hash list for given target vnode  */
-end_comment
-
-begin_function
-specifier|static
-name|struct
-name|fdcache
-modifier|*
-name|fdesc_hash
-parameter_list|(
-name|ix
-parameter_list|)
-name|int
-name|ix
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|&
-name|fdcache
-index|[
-name|FD_NHASH
-argument_list|(
-name|ix
-argument_list|)
-index|]
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|int
@@ -349,7 +296,15 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
-name|fdcache
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
+name|fdhashhead
 modifier|*
 name|fc
 decl_stmt|;
@@ -363,37 +318,34 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|loop
-label|:
 name|fc
 operator|=
-name|fdesc_hash
+name|FD_NHASH
 argument_list|(
 name|ix
 argument_list|)
 expr_stmt|;
+name|loop
+label|:
 for|for
 control|(
 name|fd
 operator|=
 name|fc
 operator|->
-name|fc_forw
+name|lh_first
 init|;
 name|fd
 operator|!=
-operator|(
-expr|struct
-name|fdescnode
-operator|*
-operator|)
-name|fc
+literal|0
 condition|;
 name|fd
 operator|=
 name|fd
 operator|->
-name|fd_forw
+name|fd_hash
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -422,6 +374,8 @@ operator|->
 name|fd_vnode
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -551,18 +505,13 @@ name|fd_ix
 operator|=
 name|ix
 expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
 name|fc
-operator|=
-name|fdesc_hash
-argument_list|(
-name|ix
-argument_list|)
-expr_stmt|;
-name|insque
-argument_list|(
+argument_list|,
 name|fd
 argument_list|,
-name|fc
+name|fd_hash
 argument_list|)
 expr_stmt|;
 name|out
@@ -639,17 +588,40 @@ name|ap
 operator|->
 name|a_dvp
 decl_stmt|;
+name|struct
+name|componentname
+modifier|*
+name|cnp
+init|=
+name|ap
+operator|->
+name|a_cnp
+decl_stmt|;
 name|char
 modifier|*
 name|pname
+init|=
+name|cnp
+operator|->
+name|cn_nameptr
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
 decl_stmt|;
 name|int
 name|nfiles
+init|=
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_nfiles
 decl_stmt|;
 name|unsigned
 name|fd
@@ -666,19 +638,18 @@ name|char
 modifier|*
 name|ln
 decl_stmt|;
-name|pname
-operator|=
-name|ap
-operator|->
-name|a_cnp
-operator|->
-name|cn_nameptr
+name|VOP_UNLOCK
+argument_list|(
+name|dvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_namelen
 operator|==
@@ -700,9 +671,15 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|dvp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -711,22 +688,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|p
-operator|=
-name|ap
-operator|->
-name|a_cnp
-operator|->
-name|cn_proc
-expr_stmt|;
-name|nfiles
-operator|=
-name|p
-operator|->
-name|p_fd
-operator|->
-name|fd_nfiles
-expr_stmt|;
 switch|switch
 condition|(
 name|VTOFDESC
@@ -759,9 +720,7 @@ name|Froot
 case|:
 if|if
 condition|(
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_namelen
 operator|==
@@ -813,9 +772,15 @@ name|v_type
 operator|=
 name|VDIR
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -826,9 +791,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_namelen
 operator|==
@@ -905,9 +868,15 @@ name|v_type
 operator|=
 name|VFIFO
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -922,9 +891,7 @@ literal|0
 expr_stmt|;
 switch|switch
 condition|(
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_namelen
 condition|)
@@ -1056,9 +1023,15 @@ name|v_type
 operator|=
 name|VLNK
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1083,9 +1056,7 @@ name|Fdevfd
 case|:
 if|if
 condition|(
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_namelen
 operator|==
@@ -1103,6 +1074,8 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|error
 operator|=
 name|fdesc_root
@@ -1113,10 +1086,13 @@ name|v_mount
 argument_list|,
 name|vpp
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|bad
+goto|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -1233,6 +1209,17 @@ name|fd_fd
 operator|=
 name|fd
 expr_stmt|;
+name|vn_lock
+argument_list|(
+name|fvp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -1247,6 +1234,17 @@ block|}
 name|bad
 label|:
 empty_stmt|;
+name|vn_lock
+argument_list|(
+name|dvp
+argument_list|,
+name|LK_SHARED
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -1472,12 +1470,29 @@ operator|==
 name|VDIR
 condition|)
 block|{
-comment|/* 			 * don't allow directories to show up because 			 * that causes loops in the namespace. 			 */
+comment|/* 			 * directories can cause loops in the namespace, 			 * so turn off the 'x' bits to avoid trouble. 			 */
 name|vap
 operator|->
-name|va_type
-operator|=
-name|VFIFO
+name|va_mode
+operator|&=
+operator|~
+operator|(
+operator|(
+name|VEXEC
+operator|)
+operator||
+operator|(
+name|VEXEC
+operator|>>
+literal|3
+operator|)
+operator||
+operator|(
+name|VEXEC
+operator|>>
+literal|6
+operator|)
+operator|)
 expr_stmt|;
 block|}
 break|break;
@@ -2302,7 +2317,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2327,6 +2342,18 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * We don't allow exporting fdesc mounts, and currently local 	 * requests do not need cookies. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+condition|)
+name|panic
+argument_list|(
+literal|"fdesc_readdir: not hungry"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|VTOFDESC
@@ -3102,7 +3129,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3117,6 +3144,17 @@ operator|->
 name|a_vp
 decl_stmt|;
 comment|/* 	 * Clear out the v_type field to avoid 	 * nasty things happening in vgone(). 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_type
@@ -3153,12 +3191,21 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|remque
-argument_list|(
+name|struct
+name|fdescnode
+modifier|*
+name|fd
+init|=
 name|VTOFDESC
 argument_list|(
 name|vp
 argument_list|)
+decl_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|fd
+argument_list|,
+name|fd_hash
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -3374,23 +3421,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * /dev/fd vnode unsupported operation  */
-end_comment
-
-begin_function
-name|int
-name|fdesc_enotsupp
-parameter_list|()
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * /dev/fd "should never get here" operation  */
 end_comment
 
@@ -3408,35 +3438,18 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_comment
-comment|/*  * /dev/fd vnode null operation  */
-end_comment
-
-begin_function
-name|int
-name|fdesc_nullop
-parameter_list|()
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
 name|fdesc_create
-value|((int (*) __P((struct  vop_create_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_create_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_mknod_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3457,7 +3470,14 @@ begin_define
 define|#
 directive|define
 name|fdesc_mmap
-value|((int (*) __P((struct  vop_mmap_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_mmap_args *)))eopnotsupp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fdesc_revoke
+value|vop_revoke
 end_define
 
 begin_define
@@ -3478,42 +3498,42 @@ begin_define
 define|#
 directive|define
 name|fdesc_remove
-value|((int (*) __P((struct  vop_remove_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_remove_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_link
-value|((int (*) __P((struct  vop_link_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_link_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_rename
-value|((int (*) __P((struct  vop_rename_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_rename_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_mkdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_rmdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_symlink
-value|((int (*) __P((struct vop_symlink_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3527,14 +3547,14 @@ begin_define
 define|#
 directive|define
 name|fdesc_lock
-value|((int (*) __P((struct  vop_lock_args *)))nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_define
@@ -3555,14 +3575,15 @@ begin_define
 define|#
 directive|define
 name|fdesc_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_advlock
-value|((int (*) __P((struct vop_advlock_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct vop_advlock_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3570,21 +3591,14 @@ define|#
 directive|define
 name|fdesc_blkatoff
 define|\
-value|((int (*) __P((struct  vop_blkatoff_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdesc_vget
-value|((int (*) __P((struct  vop_vget_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_blkatoff_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_valloc
-value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) fdesc_enotsupp)
+value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) eopnotsupp)
 end_define
 
 begin_define
@@ -3592,21 +3606,21 @@ define|#
 directive|define
 name|fdesc_truncate
 define|\
-value|((int (*) __P((struct  vop_truncate_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_truncate_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_update
-value|((int (*) __P((struct  vop_update_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_update_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_bwrite
-value|((int (*) __P((struct  vop_bwrite_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_bwrite_args *)))eopnotsupp)
 end_define
 
 begin_function_decl
@@ -3730,6 +3744,14 @@ name|fdesc_select
 block|}
 block|,
 comment|/* select */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+name|fdesc_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_mmap_desc

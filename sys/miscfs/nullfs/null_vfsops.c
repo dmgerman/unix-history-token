@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)null_vfsops.c	8.2 (Berkeley) 1/21/94  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)null_vfsops.c	8.7 (Berkeley) 5/14/95  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -291,6 +297,10 @@ comment|/* 	 * Unlock the node (either the lower or the alias) 	 */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the node alias worked 	 */
@@ -363,11 +373,9 @@ name|qaddr_t
 operator|)
 name|xmp
 expr_stmt|;
-name|getnewfsid
+name|vfs_getnewfsid
 argument_list|(
 name|mp
-argument_list|,
-name|MOUNT_LOFS
 argument_list|)
 expr_stmt|;
 operator|(
@@ -559,10 +567,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|doforce
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
@@ -581,23 +585,10 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-block|{
-comment|/* lofs can never be rootfs so don't check for it */
-if|if
-condition|(
-operator|!
-name|doforce
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
 if|#
 directive|if
@@ -704,6 +695,14 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -752,9 +751,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1261,11 +1266,20 @@ name|nullfs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|nullfs_sysctl
+value|((int (*) __P((int *, u_int, void *, size_t *, void *, \ 	    size_t, struct proc *)))eopnotsupp)
+end_define
 
 begin_decl_stmt
 name|struct
@@ -1294,6 +1308,8 @@ block|,
 name|nullfs_vptofh
 block|,
 name|nullfs_init
+block|,
+name|nullfs_sysctl
 block|, }
 decl_stmt|;
 end_decl_stmt

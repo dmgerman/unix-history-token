@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)portal_vnops.c	8.8 (Berkeley) 1/21/94  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)portal_vnops.c	8.14 (Berkeley) 5/21/95  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -215,13 +215,39 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|char
+name|struct
+name|componentname
 modifier|*
-name|pname
+name|cnp
 init|=
 name|ap
 operator|->
 name|a_cnp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+init|=
+name|ap
+operator|->
+name|a_vpp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|dvp
+init|=
+name|ap
+operator|->
+name|a_dvp
+decl_stmt|;
+name|char
+modifier|*
+name|pname
+init|=
+name|cnp
 operator|->
 name|cn_nameptr
 decl_stmt|;
@@ -247,11 +273,33 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
+operator|*
+name|vpp
+operator|=
+name|NULLVP
+expr_stmt|;
 if|if
 condition|(
-name|ap
+name|cnp
 operator|->
-name|a_cnp
+name|cn_nameiop
+operator|==
+name|DELETE
+operator|||
+name|cnp
+operator|->
+name|cn_nameiop
+operator|==
+name|RENAME
+condition|)
+return|return
+operator|(
+name|EROFS
+operator|)
+return|;
+if|if
+condition|(
+name|cnp
 operator|->
 name|cn_namelen
 operator|==
@@ -264,22 +312,16 @@ literal|'.'
 condition|)
 block|{
 operator|*
-name|ap
-operator|->
-name|a_vpp
+name|vpp
 operator|=
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 expr_stmt|;
 name|VREF
 argument_list|(
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 argument_list|)
 expr_stmt|;
-comment|/*VOP_LOCK(ap->a_dvp);*/
+comment|/*VOP_LOCK(dvp);*/
 return|return
 operator|(
 literal|0
@@ -292,9 +334,7 @@ name|getnewvnode
 argument_list|(
 name|VT_PORTAL
 argument_list|,
-name|ap
-operator|->
-name|a_dvp
+name|dvp
 operator|->
 name|v_mount
 argument_list|,
@@ -364,17 +404,13 @@ control|)
 name|size
 operator|++
 expr_stmt|;
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_consume
 operator|=
 name|size
 operator|-
-name|ap
-operator|->
-name|a_cnp
+name|cnp
 operator|->
 name|cn_namelen
 expr_stmt|;
@@ -422,9 +458,7 @@ name|portal_fileid
 operator|++
 expr_stmt|;
 operator|*
-name|ap
-operator|->
-name|a_vpp
+name|vpp
 operator|=
 name|fvp
 expr_stmt|;
@@ -441,19 +475,10 @@ if|if
 condition|(
 name|fvp
 condition|)
-block|{
 name|vrele
 argument_list|(
 name|fvp
 argument_list|)
-expr_stmt|;
-block|}
-operator|*
-name|ap
-operator|->
-name|a_vpp
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -1588,6 +1613,10 @@ name|ap
 operator|->
 name|a_vap
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|bzero
 argument_list|(
 name|vap
@@ -1647,6 +1676,15 @@ name|DEV_BSIZE
 expr_stmt|;
 name|microtime
 argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+name|TIMEVAL_TO_TIMESPEC
+argument_list|(
+operator|&
+name|tv
+argument_list|,
 operator|&
 name|vap
 operator|->
@@ -1844,11 +1882,23 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
+comment|/* 	 * We don't allow exporting portal mounts, and currently local 	 * requests do not need cookies. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+condition|)
+name|panic
+argument_list|(
+literal|"portal_readdir: not hungry"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1865,11 +1915,24 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
+name|VOP_UNLOCK
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2263,6 +2326,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|portal_revoke
+value|vop_revoke
+end_define
+
+begin_define
+define|#
+directive|define
 name|portal_fsync
 value|((int (*) __P((struct  vop_fsync_args *)))nullop)
 end_define
@@ -2336,14 +2406,14 @@ begin_define
 define|#
 directive|define
 name|portal_lock
-value|((int (*) __P((struct  vop_lock_args *)))nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|portal_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_define
@@ -2365,7 +2435,15 @@ begin_define
 define|#
 directive|define
 name|portal_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fifo_islocked
+value|((int(*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
@@ -2542,6 +2620,14 @@ name|portal_mmap
 block|}
 block|,
 comment|/* mmap */
+block|{
+operator|&
+name|vop_revoke_desc
+block|,
+name|portal_revoke
+block|}
+block|,
+comment|/* revoke */
 block|{
 operator|&
 name|vop_fsync_desc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)union.h	8.2 (Berkeley) 2/17/94  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)union.h	8.9 (Berkeley) 12/10/94  */
 end_comment
 
 begin_struct
@@ -169,6 +169,12 @@ modifier|*
 name|un_dirvp
 decl_stmt|;
 comment|/* Parent dir of uppervp */
+name|struct
+name|vnode
+modifier|*
+name|un_pvp
+decl_stmt|;
+comment|/* Parent vnode */
 name|char
 modifier|*
 name|un_path
@@ -182,9 +188,25 @@ name|int
 name|un_openl
 decl_stmt|;
 comment|/* # of opens on lowervp */
+name|unsigned
 name|int
 name|un_flags
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|un_dircache
+decl_stmt|;
+comment|/* cached union stack */
+name|off_t
+name|un_uppersz
+decl_stmt|;
+comment|/* size of upper object */
+name|off_t
+name|un_lowersz
+decl_stmt|;
+comment|/* size of lower object */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -233,6 +255,17 @@ begin_comment
 comment|/* Keep upper node locked on vput */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UN_CACHED
+value|0x10
+end_define
+
+begin_comment
+comment|/* In union cache */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -268,6 +301,8 @@ operator|,
 expr|struct
 name|vnode
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -281,7 +316,11 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|vnode
 operator|*
 operator|,
 expr|struct
@@ -289,11 +328,55 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|vnode
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|union_copyup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_node
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|ucred
 operator|*
 operator|,
 expr|struct
-name|vnode
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|union_dowhiteout
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_node
+operator|*
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+expr|struct
+name|proc
 operator|*
 operator|)
 argument_list|)
@@ -322,6 +405,32 @@ operator|,
 expr|struct
 name|vnode
 operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|union_mkwhiteout
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_mount
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|componentname
+operator|*
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -443,6 +552,25 @@ operator|,
 expr|struct
 name|vnode
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|union_newsize
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|off_t
+operator|,
+name|off_t
 operator|)
 argument_list|)
 decl_stmt|;

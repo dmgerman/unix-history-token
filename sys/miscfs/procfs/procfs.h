@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs.h	8.6 (Berkeley) 2/3/94  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs.h	8.9 (Berkeley) 5/14/95  *  * From:  *	$Id: procfs.h,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -14,6 +14,9 @@ block|{
 name|Proot
 block|,
 comment|/* the filesystem root */
+name|Pcurproc
+block|,
+comment|/* symbolic link for curproc */
 name|Pproc
 block|,
 comment|/* a process-specific sub-directory */
@@ -190,7 +193,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|(((type) == Proot) ? \ 			2 : \ 			((((pid)+1)<< 3) + ((int) (type))))
+value|(((type)< Pproc) ? \ 			((type) + 2) : \ 			((((pid)+1)<< 4) + ((int) (type))))
 end_define
 
 begin_comment
@@ -242,7 +245,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|vfs_getuserstr
 name|__P
@@ -263,7 +265,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|vfs_namemap_t
 modifier|*
 name|vfs_findname
@@ -309,7 +310,6 @@ value|((pid) ? pfind(pid) :&proc0)
 end_define
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_freevp
 name|__P
@@ -324,7 +324,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_allocvp
 name|__P
@@ -348,7 +347,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|vnode
 modifier|*
@@ -365,7 +363,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_sstep
 name|__P
@@ -374,13 +371,14 @@ operator|(
 expr|struct
 name|proc
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|void
 name|procfs_fix_sstep
 name|__P
@@ -395,7 +393,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_read_regs
 name|__P
@@ -414,7 +411,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_write_regs
 name|__P
@@ -433,7 +429,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_read_fpregs
 name|__P
@@ -452,7 +447,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_write_fpregs
 name|__P
@@ -471,7 +465,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_donote
 name|__P
@@ -500,7 +493,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_doregs
 name|__P
@@ -529,7 +521,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_dofpregs
 name|__P
@@ -558,7 +549,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_domem
 name|__P
@@ -587,7 +577,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_doctl
 name|__P
@@ -616,7 +605,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|procfs_dostatus
 name|__P
@@ -639,6 +627,52 @@ expr|struct
 name|uio
 operator|*
 name|uio
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* functions to check whether or not files should be displayed */
+end_comment
+
+begin_decl_stmt
+name|int
+name|procfs_validfile
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|procfs_validfpregs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|procfs_validregs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -850,6 +884,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|procfs_revoke
+value|vop_revoke
+end_define
+
+begin_define
+define|#
+directive|define
 name|procfs_fsync
 value|((int (*) __P((struct vop_fsync_args *))) procfs_badop)
 end_define
@@ -917,12 +958,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|int
 name|procfs_readlink
-value|((int (*) __P((struct vop_readlink_args *))) procfs_badop)
-end_define
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readlink_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -970,14 +1018,14 @@ begin_define
 define|#
 directive|define
 name|procfs_lock
-value|((int (*) __P((struct vop_lock_args *))) nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|procfs_unlock
-value|((int (*) __P((struct vop_unlock_args *))) nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_decl_stmt
@@ -1019,7 +1067,8 @@ begin_define
 define|#
 directive|define
 name|procfs_islocked
-value|((int (*) __P((struct vop_islocked_args *))) nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
