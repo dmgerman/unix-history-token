@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -201,12 +207,6 @@ begin_include
 include|#
 directive|include
 file|<vm/uma.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include
@@ -1814,17 +1814,6 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
 name|bzero
 argument_list|(
 operator|&
@@ -1832,10 +1821,7 @@ name|p2
 operator|->
 name|p_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|proc
@@ -1853,10 +1839,7 @@ name|td2
 operator|->
 name|td_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|thread
@@ -1874,10 +1857,7 @@ name|kg2
 operator|->
 name|kg_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|ksegrp
@@ -1900,10 +1880,7 @@ name|p2
 operator|->
 name|p_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|proc
@@ -1926,10 +1903,7 @@ name|td2
 operator|->
 name|td_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|thread
@@ -1954,10 +1928,7 @@ name|kg2
 operator|->
 name|kg_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|ksegrp
@@ -1968,9 +1939,6 @@ name|kg_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|RANGEOF
 name|td2
 operator|->
 name|td_sigstk
@@ -1979,7 +1947,7 @@ name|td
 operator|->
 name|td_sigstk
 expr_stmt|;
-comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats substruct is set in vm_forkproc. 	 */
+comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 */
 name|p2
 operator|->
 name|p_flag
@@ -2141,6 +2109,17 @@ argument_list|(
 name|p1
 operator|->
 name|p_limit
+argument_list|)
+expr_stmt|;
+name|pstats_fork
+argument_list|(
+name|p1
+operator|->
+name|p_stats
+argument_list|,
+name|p2
+operator|->
+name|p_stats
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
