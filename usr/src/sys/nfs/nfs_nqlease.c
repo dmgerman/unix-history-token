@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5490,6 +5490,8 @@ condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -5762,11 +5764,13 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 operator|&&
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -6123,11 +6127,26 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search the mount list for all nqnfs mounts and do their timer 	 * queues. 	 */
+for|for
+control|(
 name|mp
 operator|=
-name|rootfs
-expr_stmt|;
-do|do
+name|mountlist
+operator|.
+name|tqh_first
+init|;
+name|mp
+operator|!=
+name|NULL
+condition|;
+name|mp
+operator|=
+name|mp
+operator|->
+name|mnt_list
+operator|.
+name|tqe_next
+control|)
 block|{
 if|if
 condition|(
@@ -6194,20 +6213,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|mp
-operator|=
-name|mp
-operator|->
-name|mnt_next
-expr_stmt|;
 block|}
-do|while
-condition|(
-name|mp
-operator|!=
-name|rootfs
-condition|)
-do|;
 block|}
 end_function
 
