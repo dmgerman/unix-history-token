@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -534,6 +534,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argp
@@ -762,13 +769,6 @@ operator|->
 name|msklen
 expr_stmt|;
 block|}
-name|ump
-operator|=
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|saddr
@@ -1208,19 +1208,16 @@ operator|(
 name|EACCES
 operator|)
 return|;
-if|if
-condition|(
-name|nam
-operator|==
-name|NULL
-condition|)
-block|{
 name|np
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|nam
+operator|!=
+name|NULL
+condition|)
 block|{
 name|saddr
 operator|=
@@ -1247,16 +1244,9 @@ expr_stmt|;
 if|if
 condition|(
 name|rnh
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-name|np
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
 block|{
 name|np
 operator|=
@@ -1284,6 +1274,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|np
+operator|&&
 name|np
 operator|->
 name|netc_rnodes
