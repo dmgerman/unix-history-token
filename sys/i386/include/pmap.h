@@ -1286,20 +1286,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
-name|clean_eva
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|clean_sva
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|vm_paddr_t
 name|phys_avail
 index|[]
