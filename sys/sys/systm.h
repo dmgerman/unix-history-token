@@ -2464,7 +2464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Common `proc' functions are declared here so that proc.h can be included  * less often.  */
+comment|/*  * Common `proc' functions are declared here so that proc.h can be included  * less often.  */
 end_comment
 
 begin_function_decl

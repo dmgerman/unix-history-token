@@ -1440,7 +1440,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Install placeholder to claim the resources owned by the  * PCI bus interface.  This could be used to extract the   * config space registers in the extreme case where the PnP  * ID is available and the PCI BIOS isn't, but for now we just  * eat the PnP ID and do nothing else.  *  * XXX we should silence this probe, as it will generally confuse   * people.  */
+comment|/*  * Install placeholder to claim the resources owned by the  * PCI bus interface.  This could be used to extract the  * config space registers in the extreme case where the PnP  * ID is available and the PCI BIOS isn't, but for now we just  * eat the PnP ID and do nothing else.  *  * XXX we should silence this probe, as it will generally confuse  * people.  */
 end_comment
 
 begin_decl_stmt
