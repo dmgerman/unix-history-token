@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -124,7 +130,7 @@ name|PRVERB
 parameter_list|(
 name|x
 parameter_list|)
-value|if (bootverbose) device_printf x
+value|do { \ 				if (bootverbose) { device_printf x; } \ 			} while (0)
 end_define
 
 begin_function_decl
@@ -137,6 +143,55 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pcic_ignore_function_1
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pcic.ignore_function_1"
+argument_list|,
+operator|&
+name|pcic_ignore_function_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_pcic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pcic
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ignore_function_1
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pcic_ignore_function_1
+argument_list|,
+literal|0
+argument_list|,
+literal|"When set, driver ignores pci function 1 of the bridge"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -1736,6 +1791,33 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+if|if
+condition|(
+name|pcic_ignore_function_1
+operator|&&
+name|pci_get_function
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|PRVERB
+argument_list|(
+operator|(
+name|dev
+operator|,
+literal|"Ignoring function 1\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|device_id
 operator|=
 name|pci_get_devid
