@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ftp.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ftp.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -114,6 +114,37 @@ begin_comment
 comment|/* local byte size */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FTP_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|typenames
+index|[]
+init|=
+block|{
+literal|"0"
+block|,
+literal|"ASCII"
+block|,
+literal|"EBCDIC"
+block|,
+literal|"Image"
+block|,
+literal|"Local"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Form codes  */
 end_comment
@@ -150,6 +181,35 @@ end_define
 begin_comment
 comment|/* carriage control (ASA) */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FTP_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|formnames
+index|[]
+init|=
+block|{
+literal|"0"
+block|,
+literal|"Nonprint"
+block|,
+literal|"Telnet"
+block|,
+literal|"Carriage-control"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structure codes  */
@@ -188,6 +248,35 @@ begin_comment
 comment|/* page structure */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FTP_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|strunames
+index|[]
+init|=
+block|{
+literal|"0"
+block|,
+literal|"File"
+block|,
+literal|"Record"
+block|,
+literal|"Page"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Mode types  */
 end_comment
@@ -224,6 +313,35 @@ end_define
 begin_comment
 comment|/* compressed */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FTP_NAMES
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|modenames
+index|[]
+init|=
+block|{
+literal|"0"
+block|,
+literal|"Stream"
+block|,
+literal|"Block"
+block|,
+literal|"Compressed"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Record Tokens  */
