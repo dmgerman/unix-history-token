@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwmisc.c	1.4 83/07/19"
+literal|"@(#)wwmisc.c	1.5 83/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|wp
 argument_list|)

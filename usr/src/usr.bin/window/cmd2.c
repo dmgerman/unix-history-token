@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.2 83/07/19"
+literal|"@(#)cmd2.c	1.3 83/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,16 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|wwputs
+argument_list|(
+literal|"Can't open help window.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|wwprintf
 argument_list|(
 name|w
@@ -99,112 +108,112 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[1-9]   select window [1-9] and exit command mode\r\n"
+literal|"[1-9]   Select window [1-9] and exit command mode\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%%[1-9]  select window [1-9]\r\n"
+literal|"%%[1-9]  Select window [1-9]\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"c[1-9]  close window [1-9]\r\n"
+literal|"c[1-9]  Close window [1-9]\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"C       close all empty windows\r\n"
+literal|"C       Close all empty windows\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Z       close all windows\r\n"
+literal|"Z       Close all windows\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Q       show all windows in sequence\r\n"
+literal|"Q       Show all windows in sequence\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"R       force refresh after every newline in current window\r\n"
+literal|"R       Force refresh after every newline in current window\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"r       don't refresh every line\r\n"
+literal|"r       Don't refresh every line\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"w       open a new window\r\n"
+literal|"w       Open a new window\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"s       print IO statistics\r\n"
+literal|"s       Print IO statistics\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"t       print resource usage of this program\r\n"
+literal|"t       Print resource usage of this program\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"T       print resource usage of children\r\n"
+literal|"T       Print resource usage of children\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"escape  exit command mode\r\n"
+literal|"escape  Exit command mode\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^L      redraw screen\r\n"
+literal|"^L      Redraw screen\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^Z      suspend\r\n"
+literal|"^Z      Suspend\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|".       quit\r\n"
+literal|".       Quit\r\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -258,7 +267,16 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|wwputs
+argument_list|(
+literal|"Can't open time window.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|gettimeofday
 argument_list|(
 operator|&
@@ -607,6 +625,77 @@ return|;
 block|}
 end_function
 
+begin_macro
+name|doquit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|wwputs
+argument_list|(
+literal|"Really quit? "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+name|wwsetcursor
+argument_list|(
+name|WCurRow
+argument_list|(
+name|cmdwin
+operator|->
+name|ww_win
+argument_list|)
+argument_list|,
+name|WCurCol
+argument_list|(
+name|cmdwin
+operator|->
+name|ww_win
+argument_list|)
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|bpeekc
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|bread
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bgetc
+argument_list|()
+operator|==
+literal|'y'
+condition|)
+block|{
+name|wwputs
+argument_list|(
+literal|"Yes"
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+name|quit
+operator|++
+expr_stmt|;
+block|}
+else|else
+name|wwputs
+argument_list|(
+literal|"\r\n"
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_function
 name|struct
 name|ww
@@ -651,18 +740,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|wwputs
-argument_list|(
-literal|"\r\nCan't open help window.  "
-argument_list|,
-name|cmdwin
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 name|wwframe
 argument_list|(
 name|w
@@ -677,7 +757,7 @@ argument_list|,
 name|WINVERSE
 argument_list|)
 expr_stmt|;
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|w
 argument_list|)
@@ -703,6 +783,11 @@ end_expr_stmt
 
 begin_block
 block|{
+name|wwsetcurwin
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
@@ -760,7 +845,7 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|cmdwin
 argument_list|)

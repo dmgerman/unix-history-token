@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	1.2 83/07/19"
+literal|"@(#)cmd.c	1.3 83/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,12 +345,17 @@ break|break;
 case|case
 literal|'.'
 case|:
-name|quit
-operator|++
+name|doquit
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|quit
+condition|)
 goto|goto
 name|out
 goto|;
+break|break;
 default|default:
 name|Ding
 argument_list|()
@@ -359,9 +364,7 @@ name|wwprintf
 argument_list|(
 name|cmdwin
 argument_list|,
-literal|"(%x) Type ? for help.  "
-argument_list|,
-name|c
+literal|"Type ? for help.  "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -411,7 +414,7 @@ condition|(
 operator|!
 name|quit
 condition|)
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|selwin
 argument_list|)
@@ -541,12 +544,12 @@ name|WINVERSE
 argument_list|)
 expr_stmt|;
 comment|/* bring it to the top just below cmdwin */
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|cmdwin
 argument_list|)

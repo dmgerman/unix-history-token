@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	1.1 83/07/19"
+literal|"@(#)cmd4.c	1.2 83/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +106,7 @@ continue|continue;
 name|done_it
 operator|++
 expr_stmt|;
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|w
 argument_list|)
@@ -154,7 +154,9 @@ argument_list|(
 name|w
 argument_list|)
 expr|;
-return|return;
+goto|goto
+name|out
+goto|;
 case|case
 operator|-
 literal|1
@@ -171,7 +173,7 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|cmdwin
 argument_list|)
@@ -184,6 +186,8 @@ block|}
 break|break;
 block|}
 block|}
+name|out
+label|:
 if|if
 condition|(
 operator|!
@@ -198,7 +202,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|cmdwin
 argument_list|)

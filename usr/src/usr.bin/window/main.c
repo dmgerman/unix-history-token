@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.4 83/07/19"
+literal|"@(#)main.c	1.5 83/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,7 +85,7 @@ name|cmdwin
 operator|=
 name|wwopen
 argument_list|(
-literal|1
+name|WW_NONE
 argument_list|,
 literal|0
 argument_list|,
@@ -118,7 +118,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|cmdwin
 argument_list|)
@@ -136,6 +136,7 @@ condition|;
 name|n
 operator|++
 control|)
+comment|/* XXX */
 name|Waputc
 argument_list|(
 literal|0
@@ -160,6 +161,27 @@ argument_list|(
 name|SIGCHLD
 argument_list|,
 name|wwchild
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|doconfig
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|dodefault
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|selwin
+operator|!=
+literal|0
+condition|)
+name|wwsetcurwin
+argument_list|(
+name|selwin
 argument_list|)
 expr_stmt|;
 while|while
@@ -352,7 +374,7 @@ name|ibufc
 operator|-=
 name|n
 expr_stmt|;
-name|wwsetcurrent
+name|wwsetcurwin
 argument_list|(
 name|cmdwin
 argument_list|)
