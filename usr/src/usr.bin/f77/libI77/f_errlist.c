@@ -1,10 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.1";  *  * f77 I/O error messages  */
+comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.2";  *  * f77 I/O error messages  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|f_errlist
@@ -84,7 +83,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|f_nerr
 init|=
