@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"../ufs/dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"uio.h"
 end_include
 
@@ -36,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/dir.h>
 end_include
 
 begin_endif
@@ -51,43 +63,119 @@ begin_struct
 struct|struct
 name|nameidata
 block|{
+comment|/* arguments to namei and related context: */
 name|caddr_t
 name|ni_dirp
 decl_stmt|;
 comment|/* pathname pointer */
+name|enum
+name|uio_seg
+name|ni_segflg
+decl_stmt|;
+comment|/* location of pathname */
 name|short
 name|ni_nameiop
 decl_stmt|;
 comment|/* see below */
-name|short
-name|ni_error
-decl_stmt|;
-comment|/* error return if any */
-name|off_t
-name|ni_endoff
-decl_stmt|;
-comment|/* end of useful stuff in directory */
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|ni_pdir
+name|ni_cdir
 decl_stmt|;
-comment|/* inode of parent directory of dirp */
+comment|/* current directory */
 name|struct
-name|iovec
-name|ni_iovec
+name|vnode
+modifier|*
+name|ni_rdir
 decl_stmt|;
-comment|/* MUST be pointed to by ni_iov */
+comment|/* root directory, if not normal root */
 name|struct
-name|uio
-name|ni_uio
+name|ucred
+modifier|*
+name|ni_cred
 decl_stmt|;
-comment|/* directory I/O parameters */
+comment|/* credentials */
+comment|/* shared between namei, lookup routines and commit routines: */
+name|caddr_t
+name|ni_pnbuf
+decl_stmt|;
+comment|/* pathname buffer */
+name|char
+modifier|*
+name|ni_ptr
+decl_stmt|;
+comment|/* current location in pathname */
+name|char
+modifier|*
+name|ni_next
+decl_stmt|;
+comment|/* next location in pathname */
+name|u_int
+name|ni_pathlen
+decl_stmt|;
+comment|/* remaining chars in path */
+name|short
+name|ni_namelen
+decl_stmt|;
+comment|/* length of current component */
+name|short
+name|ni_loopcnt
+decl_stmt|;
+comment|/* count of symlinks encountered */
+name|char
+name|ni_makeentry
+decl_stmt|;
+comment|/* 1 => add entry to name cache */
+name|char
+name|ni_isdotdot
+decl_stmt|;
+comment|/* 1 => current component name is .. */
+comment|/* results: */
+name|struct
+name|vnode
+modifier|*
+name|ni_vp
+decl_stmt|;
+comment|/* vnode of result */
+name|struct
+name|vnode
+modifier|*
+name|ni_dvp
+decl_stmt|;
+comment|/* vnode of intermediate directory */
+comment|/* side effects: */
 name|struct
 name|direct
 name|ni_dent
 decl_stmt|;
 comment|/* current directory entry */
+comment|/* BEGIN UFS SPECIFIC */
+name|off_t
+name|ni_endoff
+decl_stmt|;
+comment|/* end of useful directory contents */
+struct|struct
+name|ndirinfo
+block|{
+comment|/* saved info for new dir entry */
+name|struct
+name|iovec
+name|nd_iovec
+decl_stmt|;
+comment|/* pointed to by ni_iov */
+name|struct
+name|uio
+name|nd_uio
+decl_stmt|;
+comment|/* directory I/O parameters */
+name|u_long
+name|nd_hash
+decl_stmt|;
+comment|/* hash value of nd_dent */
+block|}
+name|ni_nd
+struct|;
+comment|/* END UFS SPECIFIC */
 block|}
 struct|;
 end_struct
@@ -96,49 +184,56 @@ begin_define
 define|#
 directive|define
 name|ni_base
-value|ni_iovec.iov_base
+value|ni_nd.nd_iovec.iov_base
 end_define
 
 begin_define
 define|#
 directive|define
 name|ni_count
-value|ni_iovec.iov_len
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_iov
-value|ni_uio.uio_iov
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_iovcnt
-value|ni_uio.uio_iovcnt
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_offset
-value|ni_uio.uio_offset
+value|ni_nd.nd_iovec.iov_len
 end_define
 
 begin_define
 define|#
 directive|define
 name|ni_segflg
-value|ni_uio.uio_segflg
+value|ni_nd.nd_uio.uio_segflg
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_iov
+value|ni_nd.nd_uio.uio_iov
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_iovcnt
+value|ni_nd.nd_uio.uio_iovcnt
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_offset
+value|ni_nd.nd_uio.uio_offset
 end_define
 
 begin_define
 define|#
 directive|define
 name|ni_resid
-value|ni_uio.uio_resid
+value|ni_nd.nd_uio.uio_resid
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_hash
+value|ni_nd.nd_hash
 end_define
 
 begin_ifdef
@@ -187,12 +282,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RENAME
+value|3
+end_define
+
+begin_comment
+comment|/* setup for file renaming */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPFLAG
+value|3
+end_define
+
+begin_comment
+comment|/* mask for operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKLEAF
+value|0x04
+end_define
+
+begin_comment
+comment|/* lock inode on return */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOCKPARENT
+value|0x08
+end_define
+
+begin_comment
+comment|/* want parent vnode returned locked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WANTPARENT
 value|0x10
 end_define
 
 begin_comment
-comment|/* see the top of namei */
+comment|/* want parent vnode returned unlocked */
 end_comment
 
 begin_define
@@ -228,6 +367,17 @@ begin_comment
 comment|/* don't follow symbolic links (pseudo) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOMOUNT
+value|0x80
+end_define
+
+begin_comment
+comment|/* don't cross mount points */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -235,6 +385,17 @@ end_endif
 
 begin_comment
 comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCHNAMLEN
+value|15
+end_define
+
+begin_comment
+comment|/* maximum name segment length we bother with */
 end_comment
 
 begin_struct
@@ -267,36 +428,21 @@ name|nc_prev
 decl_stmt|;
 comment|/* LRU chain */
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|nc_ip
+name|nc_vp
 decl_stmt|;
-comment|/* inode the name refers to */
-name|ino_t
-name|nc_ino
+comment|/* vnode the name refers to */
+name|struct
+name|vnode
+modifier|*
+name|nc_dp
 decl_stmt|;
-comment|/* ino of parent of name */
-name|dev_t
-name|nc_dev
-decl_stmt|;
-comment|/* dev of parent of name */
-name|dev_t
-name|nc_idev
-decl_stmt|;
-comment|/* dev of the name ref'd */
-name|long
-name|nc_id
-decl_stmt|;
-comment|/* referenced inode's id */
+comment|/* vnode of parent of name */
 name|char
 name|nc_nlen
 decl_stmt|;
 comment|/* length of name */
-define|#
-directive|define
-name|NCHNAMLEN
-value|15
-comment|/* maximum name segment length we bother with */
 name|char
 name|nc_name
 index|[
@@ -304,9 +450,29 @@ name|NCHNAMLEN
 index|]
 decl_stmt|;
 comment|/* segment name */
+name|struct
+name|ucred
+modifier|*
+name|nc_cred
+decl_stmt|;
+comment|/* ??? credentials */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ANYCRED
+value|((struct ucred *) -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOCRED
+value|((struct ucred *) 0)
+end_define
 
 begin_ifdef
 ifdef|#

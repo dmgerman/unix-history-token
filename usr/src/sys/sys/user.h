@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)user.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)user.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -39,6 +39,12 @@ directive|include
 file|"namei.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ucred.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -72,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
 end_include
 
 begin_endif
@@ -189,33 +201,39 @@ name|u_eosys
 decl_stmt|;
 comment|/* special action on end of syscall */
 comment|/* 1.1 - processes and protection */
-name|uid_t
-name|u_uid
-decl_stmt|;
-comment|/* effective user id */
-name|uid_t
+define|#
+directive|define
 name|u_ruid
-decl_stmt|;
+value|u_cred->cr_ruid
 comment|/* real user id */
-name|gid_t
-name|u_gid
-decl_stmt|;
-comment|/* effective group id */
 name|gid_t
 name|u_rgid
 decl_stmt|;
 comment|/* real group id */
-name|gid_t
-name|u_groups
-index|[
-name|NGROUPS
-index|]
-decl_stmt|;
-comment|/* groups, 0 terminated */
 define|#
 directive|define
 name|u_cred
-value|u_uid
+value|u_nd.ni_cred
+define|#
+directive|define
+name|u_uid
+value|u_cred->cr_uid
+comment|/* effective user id */
+define|#
+directive|define
+name|u_gid
+value|u_cred->cr_gid
+comment|/* effective group id */
+define|#
+directive|define
+name|u_ngroups
+value|u_cred->cr_ngroups
+comment|/* number of group id's */
+define|#
+directive|define
+name|u_groups
+value|u_cred->cr_groups
+comment|/* list of effective grp id's */
 comment|/* 1.2 - memory management */
 name|size_t
 name|u_tsize
@@ -242,10 +260,13 @@ comment|/* disk map for stack segment */
 name|struct
 name|dmap
 name|u_cdmap
-decl_stmt|,
+decl_stmt|;
+comment|/* temp data segment disk map */
+name|struct
+name|dmap
 name|u_csmap
 decl_stmt|;
-comment|/* shadows of u_dmap, u_smap, for 					   use of parent during fork */
+comment|/* temp stack segment disk map */
 name|label_t
 name|u_ssave
 decl_stmt|;
@@ -339,17 +360,15 @@ directive|define
 name|UF_MAPPED
 value|0x2
 comment|/* mapped from device */
-name|struct
-name|inode
-modifier|*
+define|#
+directive|define
 name|u_cdir
-decl_stmt|;
+value|u_nd.ni_cdir
 comment|/* current directory */
-name|struct
-name|inode
-modifier|*
+define|#
+directive|define
 name|u_rdir
-decl_stmt|;
+value|u_nd.ni_rdir
 comment|/* root directory of current process */
 name|struct
 name|tty
@@ -440,29 +459,6 @@ name|u_qflags
 decl_stmt|;
 comment|/* per process quota flags */
 comment|/* namei& co. */
-struct|struct
-name|nameicache
-block|{
-comment|/* last successful directory search */
-name|int
-name|nc_prevoffset
-decl_stmt|;
-comment|/* offset at which last entry found */
-name|ino_t
-name|nc_inumber
-decl_stmt|;
-comment|/* inum of cached directory */
-name|dev_t
-name|nc_dev
-decl_stmt|;
-comment|/* dev of cached directory */
-name|time_t
-name|nc_time
-decl_stmt|;
-comment|/* time stamp for cache entry */
-block|}
-name|u_ncache
-struct|;
 name|struct
 name|nameidata
 name|u_nd
