@@ -3031,6 +3031,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|uva
 argument_list|,
 literal|0
