@@ -24,7 +24,7 @@ file|"time.h"
 end_include
 
 begin_comment
-comment|/*  *	defines.h 2.3 of 5/18/78  */
+comment|/*  *	defines.h 2.3 of 5/18/78  *	defines.h 1.2 of %G%  */
 end_comment
 
 begin_define
@@ -818,7 +818,7 @@ begin_define
 define|#
 directive|define
 name|SZLNAM
-value|(8)
+value|(9)
 end_define
 
 begin_comment
@@ -829,7 +829,7 @@ begin_define
 define|#
 directive|define
 name|LNLNAM
-value|(7)
+value|(8)
 end_define
 
 begin_comment
