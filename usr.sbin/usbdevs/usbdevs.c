@@ -377,7 +377,7 @@ name|vendorNo
 argument_list|,
 name|di
 operator|.
-name|revision
+name|release
 argument_list|)
 expr_stmt|;
 block|}
