@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.12 (Berkeley) %G%"
+literal|"@(#)optr.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_else
@@ -429,6 +423,9 @@ literal|0
 condition|)
 do|;
 comment|/* 	 *	Turn off the alarm, and reset the signal to trap out.. 	 */
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 literal|0
@@ -452,6 +449,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mytty
@@ -555,6 +555,9 @@ argument_list|,
 name|alarmcatch
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 literal|120
@@ -629,6 +632,9 @@ argument_list|(
 name|OPGRENT
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|endgrent
 argument_list|()
 expr_stmt|;
@@ -698,9 +704,6 @@ name|struct
 name|utmp
 name|utmp
 decl_stmt|;
-name|int
-name|nusers
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -756,6 +759,10 @@ name|clock
 operator|=
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -797,10 +804,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|nusers
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -814,6 +817,10 @@ if|if
 condition|(
 name|fread
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|utmp
 argument_list|,
@@ -843,9 +850,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|nusers
-operator|++
-expr_stmt|;
 for|for
 control|(
 name|np
@@ -1162,8 +1166,15 @@ name|tnow
 decl_stmt|,
 name|deltat
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 operator|&
 name|tnow
 argument_list|)
@@ -1234,42 +1245,6 @@ literal|60
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  *	tapesize: total number of blocks estimated over all reels  *	blockswritten:	blocks actually written, over all reels  *	etapes:	estimated number of tapes to write  *  *	tsize:	blocks can write on this reel  *	asize:	blocks written on this reel  *	tapeno:	number of tapes written so far  */
-end_comment
-
-begin_function
-name|int
-name|blocksontape
-parameter_list|()
-block|{
-if|if
-condition|(
-name|tapeno
-operator|==
-name|etapes
-condition|)
-return|return
-operator|(
-name|tapesize
-operator|-
-operator|(
-name|etapes
-operator|-
-literal|1
-operator|)
-operator|*
-name|tsize
-operator|)
-return|;
-return|return
-operator|(
-name|tsize
-operator|)
-return|;
 block|}
 end_function
 
@@ -1553,6 +1528,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
 name|vfprintf
 argument_list|(
 name|stderr
@@ -1875,6 +1853,9 @@ operator|=
 name|pf
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|endfsent
 argument_list|()
 expr_stmt|;
@@ -2102,6 +2083,9 @@ decl_stmt|;
 name|time_t
 name|tnow
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -2118,6 +2102,10 @@ expr_stmt|;
 comment|/* /etc/dumpdates input */
 name|qsort
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ddatev
 argument_list|,
 name|nddates
@@ -2396,62 +2384,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_function
-name|int
-name|max
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-name|int
-name|a
-decl_stmt|,
-name|b
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|a
-operator|>
-name|b
-condition|?
-name|a
-else|:
-name|b
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-name|int
-name|a
-decl_stmt|,
-name|b
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|a
-operator|<
-name|b
-condition|?
-name|a
-else|:
-name|b
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 

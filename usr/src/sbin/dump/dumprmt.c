@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.14 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,30 +76,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/inode.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -138,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -151,6 +121,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
 
 begin_include
 include|#
@@ -314,6 +290,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|exit
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|rmthost
@@ -363,6 +347,9 @@ name|void
 name|rmtconnaborted
 parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -370,6 +357,9 @@ argument_list|,
 literal|"rdump: Lost connection to remote host.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 literal|1
@@ -428,6 +418,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -435,6 +428,9 @@ argument_list|,
 literal|"rdump: shell/tcp: unknown service\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|exit
 argument_list|(
 literal|1
@@ -471,6 +467,9 @@ argument_list|(
 operator|&
 name|rmtpeer
 argument_list|,
+operator|(
+name|u_short
+operator|)
 name|sp
 operator|->
 name|s_port
@@ -481,6 +480,10 @@ name|name
 argument_list|,
 name|_PATH_RMT
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
