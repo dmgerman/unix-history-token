@@ -825,11 +825,16 @@ modifier|*
 name|rt
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|mbuf
 modifier|*
 name|n
 decl_stmt|;
+endif|#
+directive|endif
 name|M_ASSERTPKTHDR
 argument_list|(
 name|m
