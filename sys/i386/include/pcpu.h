@@ -204,32 +204,7 @@ name|globaldata
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* page 1..4 - CPAGE1,CPAGE2,CPAGE3,PPAGE1 */
-name|char
-name|CPAGE1
-index|[
-name|PAGE_SIZE
-index|]
-decl_stmt|;
-name|char
-name|CPAGE2
-index|[
-name|PAGE_SIZE
-index|]
-decl_stmt|;
-name|char
-name|CPAGE3
-index|[
-name|PAGE_SIZE
-index|]
-decl_stmt|;
-name|char
-name|PPAGE1
-index|[
-name|PAGE_SIZE
-index|]
-decl_stmt|;
-comment|/* page 5..4+UPAGES - idle stack (UPAGES pages) */
+comment|/* page 1 - idle stack (UPAGES pages) */
 name|char
 name|idlestack
 index|[
@@ -238,6 +213,7 @@ operator|*
 name|PAGE_SIZE
 index|]
 decl_stmt|;
+comment|/* page 1+UPAGES... */
 block|}
 struct|;
 end_struct

@@ -8681,7 +8681,7 @@ name|SMPpt
 index|[
 name|pg
 operator|+
-literal|5
+literal|1
 operator|+
 name|i
 index|]
@@ -8704,46 +8704,6 @@ name|stack
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SMPpt
-index|[
-name|pg
-operator|+
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* *prv_CMAP1 */
-name|SMPpt
-index|[
-name|pg
-operator|+
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* *prv_CMAP2 */
-name|SMPpt
-index|[
-name|pg
-operator|+
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* *prv_CMAP3 */
-name|SMPpt
-index|[
-name|pg
-operator|+
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* *prv_PMAP1 */
 comment|/* prime data page for it to use */
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -9008,7 +8968,7 @@ operator|++
 control|)
 name|SMPpt
 index|[
-literal|5
+literal|1
 operator|+
 name|i
 index|]
