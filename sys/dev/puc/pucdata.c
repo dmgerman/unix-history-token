@@ -5115,7 +5115,7 @@ block|,
 block|{
 literal|0xffff
 block|,
-literal|0xffff
+literal|0xfffc
 block|,
 literal|0
 block|,
