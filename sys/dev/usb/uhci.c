@@ -3112,6 +3112,13 @@ name|UHCI_INTR_SPIE
 argument_list|)
 expr_stmt|;
 comment|/* re-enable intrs */
+name|UHCICMD
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_CMD_MAXP
+argument_list|)
+expr_stmt|;
 name|uhci_run
 argument_list|(
 name|sc
