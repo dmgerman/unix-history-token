@@ -450,7 +450,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_NHALF
-value|(PRIO_TOTAL>> 2)
+value|(PRIO_TOTAL / 2)
 end_define
 
 begin_define
