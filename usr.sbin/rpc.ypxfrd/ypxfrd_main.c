@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypxfrd_main.c,v 1.1.1.1.2.3 1997/11/07 03:16:22 wpaul Exp $"
+literal|"$Id: ypxfrd_main.c,v 1.1.1.1.2.4 1998/03/09 13:52:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -604,6 +604,13 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|int
+name|saved_errno
+decl_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -613,6 +620,10 @@ condition|)
 block|{
 name|load_securenets
 argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 return|return;
 block|}
@@ -659,6 +670,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
+return|return;
 block|}
 end_function
 
