@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.22 (Berkeley) %G%"
+literal|"@(#)inode.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2444,7 +2444,7 @@ name|dp
 operator|->
 name|di_mtime
 operator|.
-name|tv_sec
+name|ts_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2758,7 +2758,7 @@ name|dp
 operator|->
 name|di_atime
 operator|.
-name|tv_sec
+name|ts_sec
 argument_list|)
 expr_stmt|;
 name|dp
