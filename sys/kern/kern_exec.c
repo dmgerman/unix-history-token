@@ -563,6 +563,12 @@ name|ps_strings
 operator|=
 literal|0
 expr_stmt|;
+name|imgp
+operator|->
+name|auxarg_size
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings 	 */
 name|imgp
 operator|->
@@ -2693,7 +2699,29 @@ name|imgp
 operator|->
 name|auxargs
 condition|)
-comment|/* 	 * The '+ 2' is for the null pointers at the end of each of the 	 * arg and env vector sets, and 'AT_COUNT*2' is room for the 	 * ELF Auxargs data. 	 */
+block|{
+comment|/* 		 * 'AT_COUNT*2' is size for the ELF Auxargs data. This is for 		 * lower compatibility. 		 */
+name|imgp
+operator|->
+name|auxarg_size
+operator|=
+operator|(
+name|imgp
+operator|->
+name|auxarg_size
+operator|)
+condition|?
+name|imgp
+operator|->
+name|auxarg_size
+else|:
+operator|(
+name|AT_COUNT
+operator|*
+literal|2
+operator|)
+expr_stmt|;
+comment|/* 		 * The '+ 2' is for the null pointers at the end of each of 		 * the arg and env vector sets,and imgp->auxarg_size is room 		 * for argument of Runtime loader. 		 */
 name|vectp
 operator|=
 operator|(
@@ -2715,9 +2743,9 @@ name|envc
 operator|+
 literal|2
 operator|+
-name|AT_COUNT
-operator|*
-literal|2
+name|imgp
+operator|->
+name|auxarg_size
 operator|)
 operator|*
 sizeof|sizeof
@@ -2727,8 +2755,9 @@ operator|*
 argument_list|)
 operator|)
 expr_stmt|;
+block|}
 else|else
-comment|/* 	 * The '+ 2' is for the null pointers at the end of each of the 	 * arg and env vector sets 	 */
+comment|/* 		 * The '+ 2' is for the null pointers at the end of each of 		 * the arg and env vector sets 		 */
 name|vectp
 operator|=
 operator|(

@@ -127,6 +127,9 @@ name|long
 name|ps_strings
 decl_stmt|;
 comment|/* PS_STRINGS for BSD/OS binaries */
+name|size_t
+name|auxarg_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
