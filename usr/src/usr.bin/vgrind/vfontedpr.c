@@ -640,12 +640,16 @@ index|]
 argument_list|)
 expr_stmt|;
 name|argc
-operator|-=
-literal|2
-expr_stmt|;
+operator|--
+operator|,
 name|argv
-operator|+=
-literal|2
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -1420,12 +1424,12 @@ argument_list|)
 expr_stmt|;
 name|ps
 argument_list|(
-literal|"'wh 0 he\n"
+literal|"'wh 0 vH\n"
 argument_list|)
 expr_stmt|;
 name|ps
 argument_list|(
-literal|"'wh -1i fo\n"
+literal|"'wh -1i vF\n"
 argument_list|)
 expr_stmt|;
 block|}
