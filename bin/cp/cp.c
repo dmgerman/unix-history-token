@@ -1178,7 +1178,7 @@ operator|==
 name|FTS_DP
 condition|)
 block|{
-comment|/* 			 * We are finished with this directory.  If we didn't 			 * copy it, or otherwise don't need to change its 			 * attributes, then we are done. 			 */
+comment|/* 			 * We are nearly finished with this directory.  If we 			 * didn't actually copy it, or otherwise don't need to 			 * change its attributes, then we are done. 			 */
 if|if
 condition|(
 operator|!
@@ -1187,7 +1187,7 @@ operator|->
 name|fts_number
 condition|)
 continue|continue;
-comment|/* 			 * If -p is in effect, set all the attributes. 			 * Otherwise, set the correct permissions, limited 			 * by the umask.  The permissions are often correct 			 * when the directory is initial made, and we can 			 * avoid a chmod().  Note that mkdir() does not honour 			 * setuid, setgid and sticky bits, but we normally 			 * want to preserve them on directories. 			 */
+comment|/* 			 * If -p is in effect, set all the attributes. 			 * Otherwise, set the correct permissions, limited 			 * by the umask.  Optimise by avoiding a chmod() 			 * if possible (which is usually the case if we 			 * made the directory).  Note that mkdir() does not 			 * honour setuid, setgid and sticky bits, but we 			 * normally want to preserve them on directories. 			 */
 if|if
 condition|(
 name|pflag
