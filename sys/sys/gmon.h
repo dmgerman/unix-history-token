@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)gmon.h	8.2 (Berkeley) 1/4/94  * $Id: gmon.h,v 1.6 1995/05/30 08:14:22 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)gmon.h	8.2 (Berkeley) 1/4/94  * $Id: gmon.h,v 1.7 1995/08/29 03:09:14 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,7 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* reserved */
+comment|/* XXX should record counter size and density */
 block|}
 struct|;
 end_struct
@@ -68,8 +69,26 @@ value|0x00051879
 end_define
 
 begin_comment
-comment|/*  * histogram counters are unsigned shorts (according to the kernel).  */
+comment|/*  * Type of histogram counters used in the kernel.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF4
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HISTCOUNTER
+value|unsigned
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -78,26 +97,42 @@ name|HISTCOUNTER
 value|unsigned short
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * fraction of text space to allocate for histogram counters here, 1/2  */
+comment|/*  * Fraction of text space to allocate for histogram counters.  * We allocate counters at the same or higher density as function  * addresses, so that each counter belongs to a unique function.  * A lower density of counters would give less resolution but a  * higher density would be wasted.  *  * Assume that function addresses are at least 4-byte-aligned.  * It would be better to get the linker to align functions more  * strictly so that we could use smaller tables.  */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|FUNCTION_ALIGNMENT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|HISTFRACTION
-value|2
+value|(FUNCTION_ALIGNMENT / sizeof(HISTCOUNTER) == 0 \ 			 ? 1 : FUNCTION_ALIGNMENT / sizeof(HISTCOUNTER))
 end_define
 
 begin_comment
 comment|/*  * Fraction of text space to allocate for from hash buckets.  * The value of HASHFRACTION is based on the minimum number of bytes  * of separation between two subroutine call points in the object code.  * Given MIN_SUBR_SEPARATION bytes of separation the value of  * HASHFRACTION is calculated as:  *  *	HASHFRACTION = MIN_SUBR_SEPARATION / (2 * sizeof(short) - 1);  *  * For example, on the VAX, the shortest two call sequence is:  *  *	calls	$0,(r0)  *	calls	$0,(r0)  *  * which is separated by only three bytes, thus HASHFRACTION is  * calculated as:  *  *	HASHFRACTION = 3 / (2 * 2 - 1) = 1  *  * Note that the division above rounds down, thus if MIN_SUBR_FRACTION  * is less than three, this algorithm will not work!  *  * In practice, however, call instructions are rarely at a minimal  * distance.  Hence, we will define HASHFRACTION to be 2 across all  * architectures.  This saves a reasonable amount of space for  * profiling data structures without (in practice) sacrificing  * any granularity.  */
 end_comment
 
+begin_comment
+comment|/*  * XXX I think the above analysis completely misses the point.  I think  * the point is that addresses in different functions must hash to  * different values.  Since the hash is essentially division by  * sizeof(unsigned short), the correct formula is:  *  * 	HASHFRACTION = MIN_FUNCTION_ALIGNMENT / sizeof(unsigned short)  *  * Note that he unsigned short here has nothing to do with the one for  * HISTFRACTION.  *  * Hash collisions from a two call sequence don't matter.  They get  * handled like collisions for calls to different addresses from the  * same address through a function pointer.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HASHFRACTION
-value|2
+value|(FUNCTION_ALIGNMENT / sizeof(unsigned short) == 0 \ 			 ? 1 : FUNCTION_ALIGNMENT / sizeof(unsigned short))
 end_define
 
 begin_comment
@@ -209,7 +244,7 @@ block|{
 name|int
 name|state
 decl_stmt|;
-name|u_short
+name|HISTCOUNTER
 modifier|*
 name|kcount
 decl_stmt|;
@@ -234,10 +269,10 @@ decl_stmt|;
 name|long
 name|tolimit
 decl_stmt|;
-name|u_long
+name|fptrint_t
 name|lowpc
 decl_stmt|;
-name|u_long
+name|fptrint_t
 name|highpc
 decl_stmt|;
 name|u_long
@@ -245,6 +280,57 @@ name|textsize
 decl_stmt|;
 name|u_long
 name|hashfraction
+decl_stmt|;
+name|u_long
+name|profrate
+decl_stmt|;
+name|HISTCOUNTER
+modifier|*
+name|cputime_count
+decl_stmt|;
+name|u_int
+name|cputime_overhead
+decl_stmt|;
+name|u_int
+name|cputime_overhead_frac
+decl_stmt|;
+name|u_int
+name|cputime_overhead_resid
+decl_stmt|;
+name|u_int
+name|cputime_overhead_sub
+decl_stmt|;
+name|HISTCOUNTER
+modifier|*
+name|mcount_count
+decl_stmt|;
+name|u_int
+name|mcount_overhead
+decl_stmt|;
+name|u_int
+name|mcount_overhead_frac
+decl_stmt|;
+name|u_int
+name|mcount_overhead_resid
+decl_stmt|;
+name|u_int
+name|mcount_overhead_sub
+decl_stmt|;
+name|HISTCOUNTER
+modifier|*
+name|mexitcount_count
+decl_stmt|;
+name|u_int
+name|mexitcount_overhead
+decl_stmt|;
+name|u_int
+name|mexitcount_overhead_frac
+decl_stmt|;
+name|u_int
+name|mexitcount_overhead_resid
+decl_stmt|;
+name|u_int
+name|mexitcount_overhead_sub
 decl_stmt|;
 block|}
 struct|;
@@ -288,6 +374,13 @@ define|#
 directive|define
 name|GMON_PROF_OFF
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|GMON_PROF_HIRES
+value|4
 end_define
 
 begin_comment

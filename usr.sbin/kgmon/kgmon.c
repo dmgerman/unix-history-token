@@ -183,6 +183,8 @@ end_struct
 
 begin_decl_stmt
 name|int
+name|Bflag
+decl_stmt|,
 name|bflag
 decl_stmt|,
 name|hflag
@@ -318,7 +320,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"M:N:bhpr"
+literal|"M:N:Bbhpr"
 argument_list|)
 operator|)
 operator|!=
@@ -351,6 +353,14 @@ case|:
 name|system
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|Bflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -393,7 +403,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kgmon [-bhrp] [-M core] [-N system]\n"
+literal|"usage: kgmon [-Bbhrp] [-M core] [-N system]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -493,6 +503,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|Bflag
+condition|)
+name|disp
+operator|=
+name|GMON_PROF_HIRES
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|bflag
 condition|)
 name|disp
@@ -553,7 +572,31 @@ name|GMON_PROF_OFF
 condition|?
 literal|"off"
 else|:
+name|disp
+operator|==
+name|GMON_PROF_HIRES
+condition|?
+literal|"running (high resolution)"
+else|:
+name|disp
+operator|==
+name|GMON_PROF_ON
+condition|?
 literal|"running"
+else|:
+name|disp
+operator|==
+name|GMON_PROF_BUSY
+condition|?
+literal|"busy"
+else|:
+name|disp
+operator|==
+name|GMON_PROF_ERROR
+condition|?
+literal|"off (error)"
+else|:
+literal|"in an unknown state"
 argument_list|)
 expr_stmt|;
 return|return
@@ -695,6 +738,8 @@ if|if
 condition|(
 operator|!
 operator|(
+name|Bflag
+operator|||
 name|bflag
 operator|||
 name|hflag
@@ -704,9 +749,15 @@ operator|||
 operator|(
 name|pflag
 operator|&&
+operator|(
+name|state
+operator|==
+name|GMON_PROF_HIRES
+operator|||
 name|state
 operator|==
 name|GMON_PROF_ON
+operator|)
 operator|)
 operator|)
 condition|)
@@ -771,6 +822,8 @@ block|}
 name|openmode
 operator|=
 operator|(
+name|Bflag
+operator|||
 name|bflag
 operator|||
 name|hflag
@@ -972,9 +1025,15 @@ if|if
 condition|(
 name|pflag
 operator|&&
+operator|(
+name|mode
+operator|==
+name|GMON_PROF_HIRES
+operator|||
 name|mode
 operator|==
 name|GMON_PROF_ON
+operator|)
 condition|)
 operator|(
 name|void
@@ -998,6 +1057,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-r supressed\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Bflag
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-B supressed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1029,6 +1102,8 @@ literal|"-h supressed\n"
 argument_list|)
 expr_stmt|;
 name|rflag
+operator|=
+name|Bflag
 operator|=
 name|bflag
 operator|=
@@ -1574,11 +1649,30 @@ name|h
 operator|.
 name|profrate
 operator|=
+name|kvp
+operator|->
+name|gpm
+operator|.
+name|profrate
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|.
+name|profrate
+operator|==
+literal|0
+condition|)
+name|h
+operator|.
+name|profrate
+operator|=
 name|getprofhz
 argument_list|(
 name|kvp
 argument_list|)
 expr_stmt|;
+comment|/* ancient kernel */
 name|fwrite
 argument_list|(
 operator|(
