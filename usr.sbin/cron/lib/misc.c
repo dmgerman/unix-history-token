@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: misc.c,v 2.9 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: misc.c,v 1.1.1.1 1994/08/27 13:43:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2479,7 +2479,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_SAVED_SUIDS
+name|HAVE_SAVED_UIDS
 end_ifdef
 
 begin_decl_stmt
