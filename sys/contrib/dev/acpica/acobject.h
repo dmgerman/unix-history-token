@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 123 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 124 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -296,9 +296,25 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|INFINITE_CONCURRENCY
+name|ACPI_INFINITE_CONCURRENCY
 value|0xFF
 end_define
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_INTERNAL_METHOD
+function_decl|)
+parameter_list|(
+name|struct
+name|acpi_walk_state
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -322,6 +338,9 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|AmlStart
+decl_stmt|;
+name|ACPI_INTERNAL_METHOD
+name|Implementation
 decl_stmt|;
 name|UINT8
 name|Concurrency

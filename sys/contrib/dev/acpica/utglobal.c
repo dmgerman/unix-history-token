@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 193 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 194 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -440,11 +440,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Strings supported by the _OSI predefined (internal) method */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ValidOsiStrings
+index|[
+name|ACPI_NUM_OSI_STRINGS
+index|]
+init|=
+block|{
+literal|"Linux"
+block|,
+literal|"Windows 2000"
+block|,
+literal|"Windows 2001"
+block|,
+literal|"Windows 2001.1"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/******************************************************************************  *  * Namespace globals  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * Initial values are currently supported only for types String and Number.  * Both are specified as strings in this table.  *  * NOTES:  * 1) _SB_ is defined to be a device to allow _SB_/_INI to be run  *    during the initialization sequence.  */
+comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * NOTES:  * 1) _SB_ is defined to be a device to allow \_SB_._INI to be run  *    during the initialization sequence.  */
 end_comment
 
 begin_decl_stmt
@@ -520,6 +545,7 @@ block|}
 block|,
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
 name|ACPI_NO_METHOD_EXECUTION
@@ -1350,7 +1376,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching; when  * stored in a table it really means that we have thus far seen no evidence to  * indicatewhat type is actually going to be stored for this entry.  */
+comment|/*  * Elements of AcpiGbl_NsTypeNames below must match  * one-to-one with values of ACPI_OBJECT_TYPE  *  * The type ACPI_TYPE_ANY (Untyped) is used as a "don't care" when searching; when  * stored in a table it really means that we have thus far seen no evidence to  * indicate what type is actually going to be stored for this entry.  */
 end_comment
 
 begin_decl_stmt
@@ -1999,6 +2025,15 @@ name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"UtInitGlobals"
 argument_list|)
+expr_stmt|;
+comment|/* Runtime configuration */
+name|AcpiGbl_CreateOsiMethod
+operator|=
+name|TRUE
+expr_stmt|;
+name|AcpiGbl_AllMethodsSerialized
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* Memory allocation and cache lists */
 name|ACPI_MEMSET

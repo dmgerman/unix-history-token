@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 264 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 265 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2822,7 +2822,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Address Spaces (Operation Regions */
+comment|/* Address Spaces (For Operation Regions) */
 end_comment
 
 begin_typedef

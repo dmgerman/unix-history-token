@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -536,7 +536,8 @@ operator|!
 name|ParserState
 condition|)
 block|{
-return|return;
+name|return_VOID
+expr_stmt|;
 block|}
 comment|/* Delete anything on the scope stack */
 while|while

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 177 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 179 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -155,6 +155,25 @@ name|InitVal
 operator|++
 control|)
 block|{
+comment|/* _OSI is optional for now, will be permanent later */
+if|if
+condition|(
+operator|!
+name|ACPI_STRCMP
+argument_list|(
+name|InitVal
+operator|->
+name|Name
+argument_list|,
+literal|"_OSI"
+argument_list|)
+operator|&&
+operator|!
+name|AcpiGbl_CreateOsiMethod
+condition|)
+block|{
+continue|continue;
+block|}
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -330,14 +349,14 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ACPI_NO_METHOD_EXECUTION
+name|_ACPI_ASL_COMPILER
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ACPI_CONSTANT_EVAL_ONLY
+name|_ACPI_DUMP_APP
 argument_list|)
-comment|/* Compiler cheats by putting parameter count in the OwnerID */
+comment|/* iASL Compiler cheats by putting parameter count in the OwnerID */
 name|NewNode
 operator|->
 name|OwnerId
@@ -347,6 +366,25 @@ operator|->
 name|Method
 operator|.
 name|ParamCount
+expr_stmt|;
+else|#
+directive|else
+comment|/* Mark this as a very SPECIAL method */
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|MethodFlags
+operator|=
+name|AML_METHOD_INTERNAL_ONLY
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Implementation
+operator|=
+name|AcpiUtOsiImplementation
 expr_stmt|;
 endif|#
 directive|endif

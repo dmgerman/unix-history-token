@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -171,7 +171,7 @@ name|Method
 operator|.
 name|Concurrency
 operator|!=
-name|INFINITE_CONCURRENCY
+name|ACPI_INFINITE_CONCURRENCY
 operator|)
 operator|&&
 operator|(
@@ -660,6 +660,20 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|MethodFlags
+operator|&
+name|AML_METHOD_INTERNAL_ONLY
+operator|)
+condition|)
+block|{
 comment|/* 1) Parse: Create a new walk state for the preempting walk */
 name|NextWalkState
 operator|=
@@ -769,6 +783,7 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 2) Execute: Create a new state for the preempting walk */
 name|NextWalkState
 operator|=
@@ -917,6 +932,34 @@ name|NextWalkState
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|MethodFlags
+operator|&
+name|AML_METHOD_INTERNAL_ONLY
+condition|)
+block|{
+name|Status
+operator|=
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Implementation
+argument_list|(
+name|NextWalkState
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -925,6 +968,24 @@ expr_stmt|;
 comment|/* On error, we must delete the new walk state */
 name|Cleanup
 label|:
+if|if
+condition|(
+name|NextWalkState
+operator|->
+name|MethodDesc
+condition|)
+block|{
+comment|/* Decrement the thread count on the method parse tree */
+name|NextWalkState
+operator|->
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|ThreadCount
+operator|--
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1197,7 +1258,8 @@ expr_stmt|;
 comment|/* Ignore error and continue cleanup */
 block|}
 block|}
-comment|/* Decrement the thread count on the method parse tree */
+if|if
+condition|(
 name|WalkState
 operator|->
 name|MethodDesc
@@ -1205,8 +1267,26 @@ operator|->
 name|Method
 operator|.
 name|ThreadCount
-operator|--
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_DISPATCH
+operator|,
+literal|"*** Not deleting method namespace, there are still %d threads\n"
+operator|,
+name|WalkState
+operator|->
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|ThreadCount
+operator|)
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1219,6 +1299,52 @@ operator|.
 name|ThreadCount
 condition|)
 block|{
+comment|/*          * Support to dynamically change a method from NotSerialized to          * Serialized if it appears that the method is written foolishly and          * does not support multiple thread execution.  The best example of this          * is if such a method creates namespace objects and blocks.  A second          * thread will fail with an AE_ALREADY_EXISTS exception          *          * This code is here because we must wait until the last thread exits          * before creating the synchronization semaphore.          */
+if|if
+condition|(
+operator|(
+name|WalkState
+operator|->
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Concurrency
+operator|==
+literal|1
+operator|)
+operator|&&
+operator|(
+operator|!
+name|WalkState
+operator|->
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Semaphore
+operator|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiOsCreateSemaphore
+argument_list|(
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|WalkState
+operator|->
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Semaphore
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*          * There are no more threads executing this method.  Perform          * additional cleanup.          *          * The method Node is stored in the walk state          */
 name|MethodNode
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -291,6 +291,19 @@ argument_list|(
 literal|"EvGpeDetect"
 argument_list|)
 expr_stmt|;
+comment|/* Check for the case where there are no GPEs */
+if|if
+condition|(
+operator|!
+name|GpeXruptList
+condition|)
+block|{
+return|return
+operator|(
+name|IntStatus
+operator|)
+return|;
+block|}
 comment|/* Examine all GPE blocks attached to this interrupt level */
 name|AcpiOsAcquireLock
 argument_list|(

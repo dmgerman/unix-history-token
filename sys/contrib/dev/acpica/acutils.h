@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 159 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 160 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1400,6 +1400,17 @@ directive|define
 name|METHOD_NAME__PRS
 value|"_PRS"
 end_define
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtOsiImplementation
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS

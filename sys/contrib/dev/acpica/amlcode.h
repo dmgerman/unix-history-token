@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 75 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2192,28 +2192,53 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* bit fields in MethodFlags byte */
+comment|/* Bit fields in MethodFlags byte */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|METHOD_FLAGS_ARG_COUNT
+name|AML_METHOD_ARG_COUNT
 value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_FLAGS_SERIALIZED
+name|AML_METHOD_SERIALIZED
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_FLAGS_SYNCH_LEVEL
+name|AML_METHOD_SYNCH_LEVEL
 value|0xF0
+end_define
+
+begin_comment
+comment|/* METHOD_FLAGS_ARG_COUNT is not used internally, define additional flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_METHOD_INTERNAL_ONLY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_METHOD_RESERVED1
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_METHOD_RESERVED2
+value|0x04
 end_define
 
 begin_endif

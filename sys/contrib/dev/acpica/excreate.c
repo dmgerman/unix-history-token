@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 102 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1370,7 +1370,7 @@ name|AmlLength
 operator|=
 name|AmlLength
 expr_stmt|;
-comment|/* disassemble the method flags */
+comment|/*      * Disassemble the method flags.  Split off the Arg Count      * for efficiency      */
 name|MethodFlags
 operator|=
 operator|(
@@ -1391,7 +1391,15 @@ name|Method
 operator|.
 name|MethodFlags
 operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
 name|MethodFlags
+operator|&
+operator|~
+name|AML_METHOD_ARG_COUNT
+argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -1405,15 +1413,38 @@ call|)
 argument_list|(
 name|MethodFlags
 operator|&
-name|METHOD_FLAGS_ARG_COUNT
+name|AML_METHOD_ARG_COUNT
 argument_list|)
 expr_stmt|;
 comment|/*      * Get the concurrency count.  If required, a semaphore will be      * created for this method when it is parsed.      */
 if|if
 condition|(
+name|AcpiGbl_AllMethodsSerialized
+condition|)
+block|{
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|Concurrency
+operator|=
+literal|1
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|MethodFlags
+operator||=
+name|AML_METHOD_SERIALIZED
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|MethodFlags
 operator|&
-name|METHOD_FLAGS_SERIALIZED
+name|AML_METHOD_SERIALIZED
 condition|)
 block|{
 comment|/*          * ACPI 1.0: Concurrency = 1          * ACPI 2.0: Concurrency = (SyncLevel (in method declaration) + 1)          */
@@ -1431,7 +1462,7 @@ operator|(
 operator|(
 name|MethodFlags
 operator|&
-name|METHOD_FLAGS_SYNCH_LEVEL
+name|AML_METHOD_SYNCH_LEVEL
 operator|)
 operator|>>
 literal|4
@@ -1449,7 +1480,7 @@ name|Method
 operator|.
 name|Concurrency
 operator|=
-name|INFINITE_CONCURRENCY
+name|ACPI_INFINITE_CONCURRENCY
 expr_stmt|;
 block|}
 comment|/* Attach the new object to the method Node */

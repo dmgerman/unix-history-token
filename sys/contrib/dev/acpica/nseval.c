@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 123 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 124 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -78,12 +78,12 @@ modifier|*
 name|ReturnObject
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -91,14 +91,15 @@ name|Node
 init|=
 name|NULL
 decl_stmt|;
+name|ACPI_GENERIC_STATE
+modifier|*
+name|ScopeInfo
+decl_stmt|;
 name|char
 modifier|*
 name|InternalPath
 init|=
 name|NULL
-decl_stmt|;
-name|ACPI_GENERIC_STATE
-name|ScopeInfo
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -142,6 +143,21 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
+name|ScopeInfo
+operator|=
+name|AcpiUtCreateGenericState
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ScopeInfo
+condition|)
+block|{
+goto|goto
+name|Cleanup1
+goto|;
 block|}
 comment|/* Get the prefix handle and Node */
 name|Status
@@ -194,7 +210,7 @@ goto|;
 block|}
 comment|/* Lookup the name in the namespace */
 name|ScopeInfo
-operator|.
+operator|->
 name|Scope
 operator|.
 name|Node
@@ -205,7 +221,6 @@ name|Status
 operator|=
 name|AcpiNsLookup
 argument_list|(
-operator|&
 name|ScopeInfo
 argument_list|,
 name|InternalPath
@@ -300,6 +315,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 name|Cleanup
+label|:
+name|AcpiUtDeleteGenericState
+argument_list|(
+name|ScopeInfo
+argument_list|)
+expr_stmt|;
+name|Cleanup1
 label|:
 name|ACPI_MEM_FREE
 argument_list|(
