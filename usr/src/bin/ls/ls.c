@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.23 (Berkeley) %G%"
+literal|"@(#)ls.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,10 +346,6 @@ name|stat
 argument_list|()
 decl_stmt|;
 name|struct
-name|sgttyb
-name|sgbuf
-decl_stmt|;
-name|struct
 name|winsize
 name|win
 decl_stmt|;
@@ -412,19 +408,6 @@ block|{
 name|f_nonprint
 operator|=
 literal|1
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-literal|1
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|&
-name|sgbuf
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
