@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	6.4	84/01/31	*/
+comment|/*	ip_icmp.c	6.5	84/03/13	*/
 end_comment
 
 begin_include
@@ -549,6 +549,10 @@ name|ip_hl
 operator|<<
 literal|2
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|int
 argument_list|(
 operator|*
@@ -557,8 +561,6 @@ argument_list|)
 argument_list|()
 decl_stmt|,
 name|code
-decl_stmt|,
-name|i
 decl_stmt|;
 specifier|extern
 name|u_char
@@ -602,6 +604,18 @@ goto|goto
 name|free
 goto|;
 block|}
+comment|/* THIS LENGTH CHECK STILL MISSES ANY IP OPTIONS IN ICMP_IP */
+name|i
+operator|=
+name|MIN
+argument_list|(
+name|icmplen
+argument_list|,
+name|ICMP_ADVLENMIN
+operator|+
+name|hlen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -615,7 +629,7 @@ name|m
 operator|->
 name|m_len
 operator|<
-name|icmplen
+name|i
 operator|)
 operator|&&
 operator|(
@@ -625,7 +639,7 @@ name|m_pullup
 argument_list|(
 name|m
 argument_list|,
-name|icmplen
+name|i
 argument_list|)
 operator|)
 operator|==
@@ -639,6 +653,17 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -662,22 +687,8 @@ name|icmp
 operator|*
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-name|icp
-operator|->
-name|icmp_cksum
-expr_stmt|;
-name|icp
-operator|->
-name|icmp_cksum
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
-name|i
-operator|!=
 name|in_cksum
 argument_list|(
 name|m
