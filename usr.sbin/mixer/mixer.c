@@ -3,31 +3,19 @@ begin_comment
 comment|/*  *	This is an example of a mixer program for Linux  *  *	updated 1/1/93 to add stereo, level query, broken  *      	devmask kludge - cmetz@thor.tjhsst.edu  *  * (C) Craig Metz and Hannu Savolainen 1993.  *  * You may do anything you wish with this program.  *  * ditto for my modifications (John-Mark Gurney, 1997)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

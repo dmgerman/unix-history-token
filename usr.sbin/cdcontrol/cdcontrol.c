@@ -3,31 +3,19 @@ begin_comment
 comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
