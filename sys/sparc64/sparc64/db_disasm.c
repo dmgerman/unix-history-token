@@ -42,6 +42,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|abs
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)> 0 ? (v) : -(v))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIGN
 parameter_list|(
 name|v
