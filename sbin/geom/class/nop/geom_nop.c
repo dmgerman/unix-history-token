@@ -73,6 +73,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|intmax_t
+name|offset
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|intmax_t
+name|size
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|g_command
 name|class_commands
@@ -96,6 +114,28 @@ literal|"failprob"
 block|,
 operator|&
 name|failprob
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
+block|{
+literal|'o'
+block|,
+literal|"offset"
+block|,
+operator|&
+name|offset
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
+block|{
+literal|'s'
+block|,
+literal|"size"
+block|,
+operator|&
+name|size
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -180,7 +220,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s create [-v] [-f failprob]<dev1> [dev2 [...]]\n"
+literal|"usage: %s create [-v] [-f failprob] [-o offset] [-s size]<dev1> [dev2 [...]]\n"
 argument_list|,
 name|name
 argument_list|)

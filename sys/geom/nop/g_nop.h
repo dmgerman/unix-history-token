@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|G_NOP_VERSION
-value|1
+value|2
 end_define
 
 begin_define
@@ -65,6 +65,20 @@ modifier|...
 parameter_list|)
 value|do {					\ 	if (g_nop_debug>= 2) {						\ 		printf("GEOM_NOP[2]: ");				\ 		printf(__VA_ARGS__);					\ 		printf(" ");						\ 		g_print_bio(bp);					\ 		printf("\n");						\ 	}								\ } while (0)
 end_define
+
+begin_struct
+struct|struct
+name|g_nop_softc
+block|{
+name|off_t
+name|sc_offset
+decl_stmt|;
+name|u_int
+name|sc_failprob
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
