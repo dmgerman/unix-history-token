@@ -1360,16 +1360,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|iszerodev
-parameter_list|(
-name|dev_t
-name|_dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|dev_t
 name|makebdev
 parameter_list|(
