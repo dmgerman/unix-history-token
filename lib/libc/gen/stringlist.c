@@ -106,7 +106,7 @@ name|sl
 operator|==
 name|NULL
 condition|)
-name|_err
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -150,7 +150,7 @@ name|sl_str
 operator|==
 name|NULL
 condition|)
-name|_err
+name|err
 argument_list|(
 literal|1
 argument_list|,
@@ -232,7 +232,7 @@ name|sl_str
 operator|==
 name|NULL
 condition|)
-name|_err
+name|err
 argument_list|(
 literal|1
 argument_list|,
