@@ -3601,6 +3601,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT_DEVICEID_8100
+value|0x8100
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT_REVID_8139CPLUS
 value|0x20
 end_define
