@@ -518,7 +518,6 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-return|return
 name|uma_zfree_arg
 argument_list|(
 name|zone
@@ -527,7 +526,7 @@ name|item
 argument_list|,
 name|NULL
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
