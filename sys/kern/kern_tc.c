@@ -1592,7 +1592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Step our concept of GMT.  This is done by modifying our estimate of  * when we booted.  XXX: needs futher work.  */
+comment|/*  * Step our concept of UTC.  This is done by modifying our estimate of  * when we booted.  XXX: needs futher work.  */
 end_comment
 
 begin_function
@@ -1939,7 +1939,7 @@ name|scale
 operator|*
 literal|2
 expr_stmt|;
-comment|/* Update the GMT timestamps used for the get*() functions. */
+comment|/* Update the UTC timestamps used for the get*() functions. */
 name|bt
 operator|=
 name|th
