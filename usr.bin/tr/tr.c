@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tr.c,v 1.6 1997/08/18 07:24:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,7 +798,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cds"
+literal|"cdsu"
 argument_list|)
 operator|)
 operator|!=
@@ -835,6 +835,21 @@ case|:
 name|sflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1499,13 +1514,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: tr [-cs] string1 string2"
+literal|"usage: tr [-csu] string1 string2"
 argument_list|,
-literal|"       tr [-c] -d string1"
+literal|"       tr [-cu] -d string1"
 argument_list|,
-literal|"       tr [-c] -s string1"
+literal|"       tr [-cu] -s string1"
 argument_list|,
-literal|"       tr [-c] -ds string1 string2"
+literal|"       tr [-cu] -ds string1 string2"
 argument_list|)
 expr_stmt|;
 name|exit
