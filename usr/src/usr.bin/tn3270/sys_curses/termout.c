@@ -99,6 +99,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../ctlr/oia.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../ctlr/options.ext"
 end_include
 
@@ -1986,6 +1992,19 @@ end_function_decl
 
 begin_escape
 end_escape
+
+begin_function
+name|void
+name|ScreenOIA
+parameter_list|(
+name|oia
+parameter_list|)
+name|OIA
+modifier|*
+name|oia
+decl_stmt|;
+block|{ }
+end_function
 
 begin_comment
 comment|/* InitTerminal - called to initialize the screen, etc. */
