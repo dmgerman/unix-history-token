@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_eon.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_eon.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|eonrtrequest
 parameter_list|()
 function_decl|;
@@ -919,33 +919,28 @@ begin_comment
 comment|/*  * FUNCTION:		eonrtrequest  *  * PURPOSE:			maintains list of direct eon recipients.  *					sets up IP route for rest.  *  * RETURNS:			nothing  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|eonrtrequest
-argument_list|(
+parameter_list|(
 name|cmd
-argument_list|,
+parameter_list|,
 name|rt
-argument_list|,
+parameter_list|,
 name|gate
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|rtentry
-operator|*
+modifier|*
 name|rt
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|sockaddr
 modifier|*
 name|gate
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|unsigned
 name|long
@@ -1266,7 +1261,7 @@ name|el_ei
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		eoninit  *  * PURPOSE:			initialization  *  * RETURNS:			nothing  */
