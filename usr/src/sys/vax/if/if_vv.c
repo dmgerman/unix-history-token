@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Proteon proNET-10 and proNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right. Thus the name is "vv".  *  * This driver is compatible with the proNET 10 meagbit and  * 80 megabit token ring interfaces (models p1000 and p1080).  * A unit may be marked as 80 megabit using "flags 1" in the  * config file.  *  * TRAILERS: You must turn off trailers via ifconfig if you want to share  * a ring with software using the following protocol types:  *  3: Address Resolution Protocol  *  4: HDLC (old Proteon drivers)  *  5: VAX Debugging Protocol (never used)  * This is because the protocol type values chosen for trailers  * conflict with these protocols. It's too late to change either now.  *  * HARDWARE COMPATABILITY: This driver prefers that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. They can be supported  * by adding "| UBA_NEED16" to the vs_ifuba.ifu_flags initialization  * in vvattach().  *  * The old warning about use without Wire Centers applies only to CTL  * (p1002) cards with serial<= 057, which have not received ECO 176-743,  * which was implemented in March, 1982. Most such CTLs have received  * this ECO.  */
+comment|/*  * Proteon proNET-10 and proNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right. Thus the name is "vv".  *  * This driver is compatible with the proNET 10 meagbit and  * 80 megabit token ring interfaces (models p1000 and p1080).  * A unit may be marked as 80 megabit using "flags 1" in the  * config file.  *  * TRAILERS: This driver has a new implementation of trailers that  * is at least a tolerable neighbor on the ring. The offset is not  * stored in the protocol type, but instead only in the vh_info  * field. Also, the vh_info field, and the two shorts before the  * trailing header, are in network byte order, not VAX byte order.  *  * Of course, nothing but BSD UNIX supports trailers on ProNET.  * If you need interoperability with anything else, turn off  * trailers using the -trailers option to /etc/ifconfig!  *  * HARDWARE COMPATABILITY: This driver prefers that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. They can be supported  * by adding "| UBA_NEED16" to the vs_ifuba.ifu_flags initialization  * in vvattach().  *  * The old warning about use without Wire Centers applies only to CTL  * (p1002) cards with serial<= 057, which have not received ECO 176-743,  * which was implemented in March, 1982. Most such CTLs have received  * this ECO.  */
 end_comment
 
 begin_include
@@ -3045,29 +3045,18 @@ condition|(
 name|vv
 operator|->
 name|vh_type
-operator|>=
-name|RING_IPTrailer
-operator|&&
-name|vv
-operator|->
-name|vh_type
-operator|<
-name|RING_IPTrailer
-operator|+
-name|RING_IPNTrailer
+operator|==
+name|RING_TRAILER
 condition|)
 block|{
 name|off
 operator|=
-operator|(
+name|ntohs
+argument_list|(
 name|vv
 operator|->
-name|vh_type
-operator|-
-name|RING_IPTrailer
-operator|)
-operator|*
-literal|512
+name|vh_info
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3129,7 +3118,10 @@ name|vv
 argument_list|,
 name|off
 operator|+
-literal|2
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
 argument_list|,
 name|u_short
 operator|*
@@ -3838,13 +3830,7 @@ condition|)
 block|{
 name|type
 operator|=
-name|RING_IPTrailer
-operator|+
-operator|(
-name|off
-operator|>>
-literal|9
-operator|)
+name|RING_TRAILER
 expr_stmt|;
 name|m
 operator|->
