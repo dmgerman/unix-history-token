@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cmds.c,v 1.8 1997/06/27 09:30:01 ache Exp $ */
+comment|/*	$Id: cmds.c,v 1.9 1997/06/27 10:21:22 ache Exp $ */
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.8 1997/06/27 09:30:01 ache Exp $"
+literal|"$Id: cmds.c,v 1.9 1997/06/27 10:21:22 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2064,6 +2064,40 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+literal|'|'
+operator|&&
+operator|!
+name|another
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|,
+literal|"(Warning: remote file starts with '|') local-file"
+argument_list|)
+condition|)
+block|{
+name|code
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|loc
 operator|++
 expr_stmt|;
@@ -2735,6 +2769,46 @@ operator|=
 literal|0
 expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|interactive
+operator|&&
+operator|*
+name|cp
+operator|==
+literal|'|'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"skipping %s for security reasons\n"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'|'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Note: next file starts with '|', which runs it through a pipe\n"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
