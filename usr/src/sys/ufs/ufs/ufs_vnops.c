@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.70 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.71 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -130,7 +130,6 @@ file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ufs_chmod
 name|__P
@@ -151,7 +150,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ufs_chown
 name|__P
@@ -245,6 +243,95 @@ name|IFMT
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_NOQUAD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SETHIGH
+parameter_list|(
+name|q
+parameter_list|,
+name|h
+parameter_list|)
+value|(q).val[_QUAD_HIGHWORD] = (h)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETLOW
+parameter_list|(
+name|q
+parameter_list|,
+name|l
+parameter_list|)
+value|(q).val[_QUAD_LOWWORD] = (l)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* QUAD */
+end_comment
+
+begin_union
+union|union
+name|_qcvt
+block|{
+name|quad_t
+name|qcvt
+decl_stmt|;
+name|long
+name|val
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|SETHIGH
+parameter_list|(
+name|q
+parameter_list|,
+name|h
+parameter_list|)
+value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_HIGHWORD] = (h); \ 	(q) = tmp.qcvt; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETLOW
+parameter_list|(
+name|q
+parameter_list|,
+name|l
+parameter_list|)
+value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_LOWWORD] = (l); \ 	(q) = tmp.qcvt; \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* QUAD */
+end_comment
 
 begin_comment
 comment|/*  * Create a regular file  */
@@ -1113,12 +1200,17 @@ operator|->
 name|i_blocks
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_NOQUAD
 name|vap
 operator|->
 name|va_bytes_rsv
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|vap
 operator|->
 name|va_type
@@ -1126,6 +1218,14 @@ operator|=
 name|vp
 operator|->
 name|v_type
+expr_stmt|;
+name|vap
+operator|->
+name|va_filerev
+operator|=
+name|ip
+operator|->
+name|i_modrev
 expr_stmt|;
 return|return
 operator|(
@@ -7093,6 +7193,31 @@ operator|->
 name|v_flag
 operator||=
 name|VROOT
+expr_stmt|;
+comment|/* 	 * Initialize modrev times 	 */
+name|SETHIGH
+argument_list|(
+name|ip
+operator|->
+name|i_modrev
+argument_list|,
+name|mono_time
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+name|SETLOW
+argument_list|(
+name|ip
+operator|->
+name|i_modrev
+argument_list|,
+name|mono_time
+operator|.
+name|tv_usec
+operator|*
+literal|4294
+argument_list|)
 expr_stmt|;
 operator|*
 name|vpp
