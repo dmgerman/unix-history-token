@@ -8746,7 +8746,7 @@ argument_list|(
 operator|&
 name|cif
 operator|->
-name|cif_tmp
+name|cif_tmo
 argument_list|,
 name|NET_CALLOUT_MPSAFE
 argument_list|)
