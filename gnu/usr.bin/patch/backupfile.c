@@ -348,6 +348,7 @@ name|char
 modifier|*
 name|_arg
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1208,6 +1209,7 @@ name|char
 modifier|*
 name|arg
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1542,6 +1544,18 @@ name|char
 modifier|*
 name|s
 init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|basename
 argument_list|(
 name|filename
