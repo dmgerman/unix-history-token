@@ -11,24 +11,20 @@ begin_comment
 comment|/*  * Additional Copyright (c) 1997, by Matthew Jacob, for NASA/Ames Research Ctr.  * Addidional Copyright (c) 2000, by C. Stephen Gunn, Waterspout Communications  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1996 Jason R. Thorpe.  All rights reserved."
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static const char copyright[] = 	"@(#) Copyright (c) 1996 Jason R. Thorpe.  All rights reserved.";
 endif|#
 directive|endif
 end_endif
@@ -36,6 +32,11 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

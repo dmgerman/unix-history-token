@@ -13,16 +13,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1993 Andrew Moore, Talke Studio. \n\  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char copyright[] = "@(#) Copyright (c) 1993 Andrew Moore, Talke Studio. \n\  All rights reserved.\n";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
