@@ -1466,7 +1466,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no calendar file."
+literal|"no calendar file in current directory."
 argument_list|)
 expr_stmt|;
 block|}
