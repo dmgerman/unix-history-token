@@ -145,44 +145,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * First 5 arguments are specified by the PowerPC SVR4 ABI.  * The last argument, ps_strings, is a BSD extension.  */
-end_comment
-
-begin_function_decl
-name|void
-name|_start
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|Struct_Obj_Entry
-modifier|*
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-parameter_list|,
-name|struct
-name|ps_strings
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -209,7 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The entry function. */
+comment|/* The entry function.  *  * First 5 arguments are specified by the PowerPC SVR4 ABI.  * The last argument, ps_strings, is a BSD extension.  */
 end_comment
 
 begin_decl_stmt
