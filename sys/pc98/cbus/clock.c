@@ -5312,7 +5312,12 @@ condition|)
 block|{
 name|apic_8254_intr
 operator|=
+name|apic_irq
+argument_list|(
 literal|0
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|setup_8254_mixed_mode
 argument_list|()
@@ -5549,14 +5554,60 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"APIC_IO: Broken MP table detected: "
-literal|"8254 is not connected to IO APIC int pin %d\n"
+literal|"8254 is not connected to "
+literal|"IOAPIC #%d intpin %d\n"
+argument_list|,
+name|int_to_apicintpin
+index|[
+name|apic_8254_intr
+index|]
+operator|.
+name|ioapic
+argument_list|,
+name|int_to_apicintpin
+index|[
+name|apic_8254_intr
+index|]
+operator|.
+name|int_pin
+argument_list|)
+expr_stmt|;
+comment|/*  			 * Revoke current ISA IRQ 0 assignment and  			 * configure a fallback interrupt routing from 			 * the 8254 Timer via the 8259 PIC to the 			 * an ExtInt interrupt line on IOAPIC #0 intpin 0. 			 * We reuse the low level interrupt handler number. 			 */
+if|if
+condition|(
+name|apic_irq
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|revoke_apic_irq
+argument_list|(
+name|apic_8254_intr
+argument_list|)
+expr_stmt|;
+name|assign_apic_irq
+argument_list|(
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 name|apic_8254_intr
 argument_list|)
 expr_stmt|;
+block|}
 name|apic_8254_intr
 operator|=
+name|apic_irq
+argument_list|(
 literal|0
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|setup_8254_mixed_mode
 argument_list|()
@@ -5592,19 +5643,57 @@ block|}
 block|}
 if|if
 condition|(
+name|apic_int_type
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|3
+operator|||
+name|int_to_apicintpin
+index|[
 name|apic_8254_intr
+index|]
+operator|.
+name|ioapic
+operator|!=
+literal|0
+operator|||
+name|int_to_apicintpin
+index|[
+name|apic_8254_intr
+index|]
+operator|.
+name|int_pin
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"APIC_IO: routing 8254 via pin %d\n"
+literal|"APIC_IO: routing 8254 via IOAPIC #%d intpin %d\n"
 argument_list|,
+name|int_to_apicintpin
+index|[
 name|apic_8254_intr
+index|]
+operator|.
+name|ioapic
+argument_list|,
+name|int_to_apicintpin
+index|[
+name|apic_8254_intr
+index|]
+operator|.
+name|int_pin
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"APIC_IO: routing 8254 via 8259 on pin 0\n"
+literal|"APIC_IO: "
+literal|"routing 8254 via 8259 and IOAPIC #0 intpin 0\n"
 argument_list|)
 expr_stmt|;
 endif|#
