@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993 Sean Eric Fagan  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry and Sean Eric Fagan.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_mem.c	8.4 (Berkeley) 1/21/94  *  *	$Id: procfs_mem.c,v 1.17 1996/01/25 06:05:38 peter Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993 Sean Eric Fagan  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry and Sean Eric Fagan.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_mem.c	8.4 (Berkeley) 1/21/94  *  *	$Id: procfs_mem.c,v 1.18 1996/06/11 23:52:27 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -167,6 +167,25 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
+name|int
+name|fix_prot
+init|=
+literal|0
+decl_stmt|;
+name|vm_map_t
+name|map
+decl_stmt|;
+name|vm_object_t
+name|object
+init|=
+name|NULL
+decl_stmt|;
+name|vm_offset_t
+name|pageno
+init|=
+literal|0
+decl_stmt|;
+comment|/* page number */
 comment|/* 	 * if the vmspace is in the midst of being deallocated or the 	 * process is exiting, don't try to grab anything.  The page table 	 * usage in that process can be messed up. 	 */
 name|vm
 operator|=
@@ -200,6 +219,14 @@ name|vm
 operator|->
 name|vm_refcnt
 expr_stmt|;
+comment|/* 	 * The map we want... 	 */
+name|map
+operator|=
+operator|&
+name|vm
+operator|->
+name|vm_map
+expr_stmt|;
 name|writing
 operator|=
 name|uio
@@ -212,12 +239,7 @@ comment|/* 	 * Only map in one page at a time.  We don't have to, but it 	 * mak
 do|do
 block|{
 name|vm_map_t
-name|map
-decl_stmt|,
 name|tmap
-decl_stmt|;
-name|vm_object_t
-name|object
 decl_stmt|;
 name|vm_offset_t
 name|kva
@@ -231,18 +253,11 @@ name|int
 name|page_offset
 decl_stmt|;
 comment|/* offset into page */
-name|vm_offset_t
-name|pageno
-decl_stmt|;
-comment|/* page number */
 name|vm_map_entry_t
 name|out_entry
 decl_stmt|;
 name|vm_prot_t
 name|out_prot
-decl_stmt|;
-name|vm_page_t
-name|m
 decl_stmt|;
 name|boolean_t
 name|wired
@@ -255,9 +270,14 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
-name|int
 name|fix_prot
-decl_stmt|;
+operator|=
+literal|0
+expr_stmt|;
+name|object
+operator|=
+name|NULL
+expr_stmt|;
 name|uva
 operator|=
 operator|(
@@ -345,6 +365,11 @@ operator|)
 condition|)
 block|{
 comment|/* aiee! */
+name|PRELE
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EFAULT
@@ -414,23 +439,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * The map we want... 		 */
-name|map
-operator|=
-operator|&
-name|vm
-operator|->
-name|vm_map
-expr_stmt|;
 comment|/* 		 * Check the permissions for the area we're interested 		 * in. 		 */
-name|fix_prot
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|writing
 condition|)
+block|{
 name|fix_prot
 operator|=
 operator|!
@@ -452,7 +466,7 @@ condition|(
 name|fix_prot
 condition|)
 block|{
-comment|/* 			 * If the page is not writable, we make it so. 			 * XXX It is possible that a page may *not* be 			 * read/executable, if a process changes that! 			 * We will assume, for now, that a page is either 			 * VM_PROT_ALL, or VM_PROT_READ|VM_PROT_EXECUTE. 			 */
+comment|/* 				 * If the page is not writable, we make it so. 				 * XXX It is possible that a page may *not* be 				 * read/executable, if a process changes that! 				 * We will assume, for now, that a page is either 				 * VM_PROT_ALL, or VM_PROT_READ|VM_PROT_EXECUTE. 				 */
 name|error
 operator|=
 name|vm_map_protect
@@ -474,7 +488,15 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+comment|/* 					 * We don't have to undo something 					 * that didn't work, so we clear the 					 * flag. 					 */
+name|fix_prot
+operator|=
+literal|0
+expr_stmt|;
 break|break;
+block|}
+block|}
 block|}
 comment|/* 		 * Now we need to get the page.  out_entry, out_prot, wired, 		 * and single_use aren't used.  One would think the vm code 		 * would be a *bit* nicer...  We use tmap because 		 * vm_map_lookup() can change the map argument. 		 */
 name|tmap
@@ -515,12 +537,24 @@ operator|&
 name|single_use
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We're done with tmap now. 		 */
 if|if
 condition|(
-operator|!
 name|error
 condition|)
+block|{
+comment|/* 			 * Make sure that there is no residue in 'object' from 			 * an error return on vm_map_lookup. 			 */
+name|object
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * We're done with tmap now. 		 * But reference the object first, so that we won't loose 		 * it. 		 */
+name|vm_object_reference
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_map_lookup_done
 argument_list|(
 name|tmap
@@ -531,9 +565,6 @@ expr_stmt|;
 comment|/* 		 * Fault the page in... 		 */
 if|if
 condition|(
-operator|!
-name|error
-operator|&&
 name|writing
 operator|&&
 name|object
@@ -541,6 +572,9 @@ operator|->
 name|backing_object
 condition|)
 block|{
+name|vm_page_t
+name|m
+decl_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -556,6 +590,7 @@ name|m
 operator|==
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 name|vm_fault
@@ -569,13 +604,10 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* Find space in kernel_map for the page we're interested in */
-if|if
-condition|(
-operator|!
-name|error
-condition|)
 name|error
 operator|=
 name|vm_map_find
@@ -605,17 +637,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
 condition|)
 block|{
-comment|/* 			 * Neither vm_map_lookup() nor vm_map_find() appear 			 * to add a reference count to the object, so we do 			 * that here and now. 			 */
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Mark the page we just found as pageable. 			 */
+break|break;
+block|}
+comment|/* 		 * Mark the page we just found as pageable. 		 */
 name|error
 operator|=
 name|vm_map_pageable
@@ -631,12 +658,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Now do the i/o move. 			 */
 if|if
 condition|(
-operator|!
 name|error
 condition|)
+block|{
+name|vm_map_remove
+argument_list|(
+name|kernel_map
+argument_list|,
+name|kva
+argument_list|,
+name|kva
+operator|+
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|object
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * Now do the i/o move. 		 */
 name|error
 operator|=
 name|uiomove
@@ -655,6 +699,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+comment|/* 		 * vm_map_remove gets rid of the object reference, so 		 * we need to get rid of our 'object' pointer if there 		 * is subsequently an error. 		 */
 name|vm_map_remove
 argument_list|(
 name|kernel_map
@@ -666,7 +711,61 @@ operator|+
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+name|object
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 		 * Undo the protection 'damage'. 		 */
+if|if
+condition|(
+name|fix_prot
+condition|)
+block|{
+name|vm_map_protect
+argument_list|(
+name|map
+argument_list|,
+name|pageno
+argument_list|,
+name|pageno
+operator|+
+name|PAGE_SIZE
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_EXECUTE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|fix_prot
+operator|=
+literal|0
+expr_stmt|;
 block|}
+block|}
+do|while
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|uio
+operator|->
+name|uio_resid
+operator|>
+literal|0
+condition|)
+do|;
+if|if
+condition|(
+name|object
+condition|)
+name|vm_object_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fix_prot
@@ -688,20 +787,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|error
-operator|==
-literal|0
-operator|&&
-name|uio
-operator|->
-name|uio_resid
-operator|>
-literal|0
-condition|)
-do|;
 name|vmspace_free
 argument_list|(
 name|vm
