@@ -692,9 +692,9 @@ name|sc
 operator|->
 name|nsect
 operator|>
-literal|1024
+literal|63
 condition|?
-literal|1024
+literal|63
 else|:
 name|sc
 operator|->
