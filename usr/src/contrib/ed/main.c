@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +38,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -85,7 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<limits.h>
 end_include
 
 begin_ifdef
@@ -413,6 +407,8 @@ name|jmp_buf
 name|ctrl_position
 decl_stmt|,
 name|ctrl_position2
+decl_stmt|,
+name|ctrl_position3
 decl_stmt|;
 end_decl_stmt
 
@@ -431,6 +427,10 @@ init|=
 literal|0
 decl_stmt|,
 name|sigspecial2
+init|=
+literal|0
+decl_stmt|,
+name|sigspecial3
 init|=
 literal|0
 decl_stmt|;
@@ -2193,6 +2193,18 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|sigspecial3
+condition|)
+block|{
+name|sigspecial3
+operator|=
+literal|0
+expr_stmt|;
+name|SIGINT_ILACTION
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|sigspecial2
 condition|)
 block|{
@@ -2200,7 +2212,7 @@ name|sigspecial2
 operator|=
 literal|0
 expr_stmt|;
-name|SIGINT_ILACTION
+name|SIGINT_ALACTION
 expr_stmt|;
 block|}
 elseif|else

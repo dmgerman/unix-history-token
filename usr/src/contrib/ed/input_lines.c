@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.4 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,23 +63,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DBI
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<db.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -149,6 +132,8 @@ name|int
 name|l_nn_max
 init|=
 name|nn_max
+decl_stmt|,
+name|l_jmp_flag
 decl_stmt|;
 name|char
 modifier|*
@@ -241,6 +226,18 @@ expr_stmt|;
 name|sigspecial
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|l_jmp_flag
+operator|=
+name|setjmp
+argument_list|(
+name|ctrl_position3
+argument_list|)
+condition|)
+goto|goto
+name|point
+goto|;
 for|for
 control|(
 init|;
@@ -259,13 +256,20 @@ condition|)
 goto|goto
 name|point
 goto|;
-comment|/* If NULL or bit-8 high not text; chuck. */
+name|sigspecial3
+operator|=
+literal|1
+expr_stmt|;
 name|l_ss
 operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+name|sigspecial3
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -295,17 +299,10 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
 operator|!
 name|l_ss
-operator|)
-operator|||
-operator|(
-name|l_ss
-operator|>
-literal|127
-operator|)
 condition|)
+comment|/* 8-bit okay, but NULL not */
 continue|continue;
 name|l_text
 index|[
@@ -370,6 +367,10 @@ name|eof_mk
 label|:
 name|nn_max_end
 operator|=
+operator|(
+name|LINE
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -628,6 +629,10 @@ expr_stmt|;
 name|sigspecial
 operator|--
 expr_stmt|;
+name|sigspecial3
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sigint_flag
@@ -647,10 +652,6 @@ expr_stmt|;
 name|ss
 operator|=
 name|l_ss
-expr_stmt|;
-name|sigspecial
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rodney Ruddock of the University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)ed.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rodney Ruddock of the University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)ed.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -41,8 +41,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIGINT_ILACTION
+name|SIGINT_ALACTION
 value|longjmp(ctrl_position2, INTERUPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGINT_ILACTION
+value|longjmp(ctrl_position3, INTERUPT)
 end_define
 
 begin_define
@@ -444,6 +451,8 @@ decl_stmt|,
 name|sigspecial
 decl_stmt|,
 name|sigspecial2
+decl_stmt|,
+name|sigspecial3
 decl_stmt|;
 end_decl_stmt
 
@@ -453,6 +462,8 @@ name|jmp_buf
 name|ctrl_position
 decl_stmt|,
 name|ctrl_position2
+decl_stmt|,
+name|ctrl_position3
 decl_stmt|;
 end_decl_stmt
 
