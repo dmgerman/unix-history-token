@@ -3027,6 +3027,7 @@ literal|0
 init|;
 name|i
 operator|<
+operator|*
 name|nret
 condition|;
 name|i
@@ -3046,6 +3047,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|nret
 operator|>
 literal|0
