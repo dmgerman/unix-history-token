@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbuf.h	4.12	82/05/18	*/
+comment|/*	mbuf.h	4.13	82/06/14	*/
 end_comment
 
 begin_comment
@@ -279,28 +279,13 @@ value|{ int ms = splimp(); \ 	  if ((m)->m_free) panic("mfree"); (m)->m_free = 1
 end_define
 
 begin_comment
-comment|/*  * Mbuf statistics.  Clients can committ hunks of space until we are  * overcommitted by the fraction represented by MBUFOVERALLOCFRAG.  * We keep track of the amount of space committed, the number  * of mbufs and clusters allocated from the free memory pool, and  * the number of mbufs and clusters on our free lists.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBUFOVERALLOCFRACTION
-value|3 / 2
-end_define
-
-begin_comment
-comment|/* don't parenthesize ! */
+comment|/*  * Mbuf statistics.  */
 end_comment
 
 begin_struct
 struct|struct
 name|mbstat
 block|{
-name|short
-name|m_mbcommitted
-decl_stmt|;
-comment|/* most we'll allow pool size to get */
 name|short
 name|m_mbufs
 decl_stmt|;
