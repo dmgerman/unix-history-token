@@ -1708,7 +1708,6 @@ case|:
 case|case
 name|ALPHA_MMCSR_FOW
 case|:
-block|{
 name|pmap_emulate_reference
 argument_list|(
 name|p
@@ -1725,7 +1724,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 case|case
 name|ALPHA_MMCSR_INVALTRANS
 case|:

@@ -483,28 +483,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|PV_TABLE_MOD
-value|0x01
-end_define
-
-begin_comment
-comment|/* modified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PV_TABLE_REF
-value|0x02
-end_define
-
-begin_comment
-comment|/* referenced */
-end_comment
-
 begin_struct
 struct|struct
 name|pmap
@@ -530,10 +508,6 @@ name|int
 name|pm_count
 decl_stmt|;
 comment|/* reference count */
-name|int
-name|pm_flags
-decl_stmt|;
-comment|/* pmap flags */
 name|u_int32_t
 name|pm_active
 decl_stmt|;
