@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.52 1999/01/26 02:38:10 julian Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.53 1999/03/02 00:28:07 julian Exp $  */
 end_comment
 
 begin_include
@@ -2844,37 +2844,6 @@ name|flags
 operator||=
 name|MAP_ANON
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VM_STACK
-comment|/* Linux Threads will map into the proc stack space, unless      * we prevent it.  This causes problems if we're not using      * our VM_STACK options.      */
-if|if
-condition|(
-operator|(
-name|unsigned
-name|int
-operator|)
-name|linux_args
-operator|.
-name|addr
-operator|+
-name|linux_args
-operator|.
-name|len
-operator|>
-operator|(
-name|USRSTACK
-operator|-
-name|MAXSSIZ
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|linux_args
@@ -2884,17 +2853,12 @@ operator|&
 name|LINUX_MAP_GROWSDOWN
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|VM_STACK
 name|bsd_args
 operator|.
 name|flags
 operator||=
 name|MAP_STACK
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* The linux MAP_GROWSDOWN option does not limit auto 	 * growth of the region.  Linux mmap with this option 	 * takes as addr the inital BOS, and as len, the initial 	 * region size.  It can then grow down from addr without 	 * limit.  However, linux threads has an implicit internal 	 * limit to stack size of STACK_SIZE.  Its just not 	 * enforced explicitly in linux.  But, here we impose 	 * a limit of (STACK_SIZE - GUARD_SIZE) on the stack 	 * region, since we can do this with our mmap. 	 * 	 * Our mmap with MAP_STACK takes addr as the maximum 	 * downsize limit on BOS, and as len the max size of 	 * the region.  It them maps the top SGROWSIZ bytes, 	 * and autgrows the region down, up to the limit 	 * in addr. 	 * 	 * If we don't use the MAP_STACK option, the effect 	 * of this code is to allocate a stack region of a 	 * fixed size of (STACK_SIZE - GUARD_SIZE). 	 */
 comment|/* This gives us TOS */
 name|bsd_args
