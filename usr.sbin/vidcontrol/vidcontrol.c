@@ -101,6 +101,27 @@ directive|include
 file|"decode.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|_VESA_800x600_DFL_COLS
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|_VESA_800x600_DFL_ROWS
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|_VESA_800x600_DFL_FNSZ
+value|16
+end_define
+
 begin_decl_stmt
 name|char
 name|legal_colors
@@ -162,6 +183,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|vesa_cols
+init|=
+name|_VESA_800x600_DFL_COLS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vesa_rows
+init|=
+name|_VESA_800x600_DFL_ROWS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|letter
 decl_stmt|;
@@ -190,9 +227,9 @@ literal|"usage: vidcontrol [-r fg bg] [-b color] [-c appearance] [-d] [-l scrmap
 argument_list|,
 literal|"                  [-i adapter | mode] [-L] [-M char] [-m on|off]"
 argument_list|,
-literal|"                  [-f size file] [-s number] [-t N|off] [-x] [mode]"
+literal|"                  [-f size file] [-s number] [-t N|off] [-x] [-g geometry]"
 argument_list|,
-literal|"                  [fgcol [bgcol]] [show]"
+literal|"                  [mode] [fgcol [bgcol]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1593,30 +1630,100 @@ operator|==
 name|SW_VESA_800x600
 condition|)
 block|{
+comment|/* columns */
+if|if
+condition|(
+operator|(
+name|vesa_cols
+operator|*
+literal|8
+operator|>
+literal|800
+operator|)
+operator|||
+operator|(
+name|vesa_cols
+operator|<=
+literal|0
+operator|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"incorrect number of columns: %d"
+argument_list|,
+name|vesa_cols
+argument_list|)
+expr_stmt|;
 name|size
 index|[
 literal|0
 index|]
 operator|=
-literal|80
+name|_VESA_800x600_DFL_COLS
 expr_stmt|;
-comment|/* columns */
+block|}
+else|else
+block|{
+name|size
+index|[
+literal|0
+index|]
+operator|=
+name|vesa_cols
+expr_stmt|;
+block|}
+comment|/* rows */
+if|if
+condition|(
+operator|(
+name|vesa_rows
+operator|*
+name|_VESA_800x600_DFL_FNSZ
+operator|>
+literal|600
+operator|)
+operator|||
+operator|(
+name|vesa_rows
+operator|<=
+literal|0
+operator|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"incorrect number of rows: %d"
+argument_list|,
+name|vesa_rows
+argument_list|)
+expr_stmt|;
 name|size
 index|[
 literal|1
 index|]
 operator|=
-literal|25
+name|_VESA_800x600_DFL_ROWS
 expr_stmt|;
-comment|/* rows */
+block|}
+else|else
+block|{
+name|size
+index|[
+literal|1
+index|]
+operator|=
+name|vesa_rows
+expr_stmt|;
+block|}
+comment|/* font size */
 name|size
 index|[
 literal|2
 index|]
 operator|=
-literal|16
+name|_VESA_800x600_DFL_FNSZ
 expr_stmt|;
-comment|/* font size */
 if|if
 condition|(
 name|ioctl
@@ -2992,7 +3099,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:df:i:l:LM:m:r:s:t:x"
+literal|"b:c:df:g:i:l:LM:m:r:s:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -3049,6 +3156,39 @@ literal|'f'
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'g'
+case|:
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%dx%d"
+argument_list|,
+operator|&
+name|vesa_cols
+argument_list|,
+operator|&
+name|vesa_rows
+argument_list|)
+operator|!=
+literal|2
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"incorrect geometry: %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'i'
