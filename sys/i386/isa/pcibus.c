@@ -589,6 +589,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x00101166
+case|:
+name|s
+operator|=
+literal|"ServerWorks CIOB30 host to PCI bridge"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|pci_cfgread
+argument_list|(
+name|cfg
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* XXX unknown chipset, but working */
 case|case
 literal|0x00171166
