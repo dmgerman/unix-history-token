@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	af.h	4.1	83/01/11	*/
+comment|/*	af.h	4.2	84/03/07	*/
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ name|af_portcheck
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* packet from priviledged peer? */
+comment|/* packet from privileged peer? */
 name|int
 function_decl|(
 modifier|*
@@ -63,6 +63,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* tells if address for host or net */
+name|int
+function_decl|(
+modifier|*
+name|af_ishost
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* tells if address is valid */
 name|int
 function_decl|(
 modifier|*

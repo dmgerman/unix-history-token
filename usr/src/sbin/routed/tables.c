@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	4.4 (Berkeley) %G%"
+literal|"@(#)tables.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +104,7 @@ modifier|*
 name|rh
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|hash
 decl_stmt|;
 name|struct
@@ -284,7 +284,7 @@ modifier|*
 name|rh
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|hash
 decl_stmt|;
 name|struct
@@ -545,7 +545,8 @@ operator|->
 name|sa_family
 decl_stmt|,
 name|flags
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|hash
 decl_stmt|;
 if|if
@@ -580,7 +581,7 @@ index|[
 name|af
 index|]
 operator|.
-name|af_checkhost
+name|af_ishost
 operator|)
 operator|(
 name|dst

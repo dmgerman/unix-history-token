@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	4.4 (Berkeley) %G%"
+literal|"@(#)trace.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -887,6 +887,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|tracepackets
+operator|&&
 operator|(
 name|rt
 operator|->

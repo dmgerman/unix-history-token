@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.5 (Berkeley) %G%"
+literal|"@(#)input.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -556,11 +556,34 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|n
 operator|->
 name|rip_metric
 operator|>=
 name|HOPCNT_INFINITY
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+call|(
+modifier|*
+name|afp
+operator|->
+name|af_checkhost
+call|)
+argument_list|(
+operator|&
+name|n
+operator|->
+name|rip_dst
+argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|rt
@@ -611,6 +634,9 @@ operator|->
 name|rt_router
 argument_list|)
 operator|||
+operator|(
+name|unsigned
+operator|)
 name|n
 operator|->
 name|rip_metric
