@@ -5537,6 +5537,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -5550,6 +5556,11 @@ literal|28
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Consider the problem of a recreated (and retransmitted) cookie.  If the  * original SYN was accepted, the connection is established.  The second   * SYN is inflight, and if it arrives with an ISN that falls within the   * receive window, the connection is killed.    *  * However, since cookies have other problems, this may not be worth  * worrying about.  */
