@@ -668,29 +668,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|devstat_start_transaction_bio
-parameter_list|(
-name|struct
-name|devstat
-modifier|*
-name|ds
-parameter_list|,
-name|struct
-name|bio
-modifier|*
-name|bp
-parameter_list|)
-block|{
-name|devstat_start_transaction
-argument_list|(
-name|ds
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Record the ending of a transaction, and incrment the various counters.  *  * Ordering in this function, and in devstat_start_transaction() is VERY  * important.  The idea here is to run without locks, so we are very  * careful to only modify some fields on the way "down" (i.e. at  * transaction start) and some fields on the way "up" (i.e. at transaction  * completion).  One exception is busy_from, which we only modify in  * devstat_start_transaction() when there are no outstanding transactions,  * and thus it can't be modified in devstat_end_transaction()  * simultaneously.  */
 end_comment
