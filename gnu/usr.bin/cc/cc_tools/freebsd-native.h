@@ -111,11 +111,11 @@ name|STANDARD_EXEC_PREFIX
 value|PREFIX"/libexec/"
 end_define
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|MD_EXEC_PREFIX
-end_define
+end_undef
 
 begin_comment
 comment|/* We don't want one. */
