@@ -222,7 +222,7 @@ name|KCB_GET64
 parameter_list|(
 name|name
 parameter_list|)
-value|({					\ 	__kcb_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%fs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_long *)(__kcb_offset(name))));		\ 	__result = *(__kcb_type(name) *)&__i;			\ 								\ 	__result;						\ })
+value|({					\ 	__kcb_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%fs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_long *)(__kcb_offset(name))));		\ 	__result = (__kcb_type(name))__i;			\ 								\ 	__result;						\ })
 end_define
 
 begin_comment
@@ -238,7 +238,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|({					\ 	__kcb_type(name) __val = (val);				\ 								\ 	u_long __i;						\ 	__i = *(u_long *)&__val;				\ 	__asm __volatile("movq %1,%%fs:%0"			\ 	    : "=m" (*(u_long *)(__kcb_offset(name)))		\ 	    : "r" (__i));					\ })
+value|({					\ 	__kcb_type(name) __val = (val);				\ 								\ 	u_long __i;						\ 	__i = (u_long)__val;					\ 	__asm __volatile("movq %1,%%fs:%0"			\ 	    : "=m" (*(u_long *)(__kcb_offset(name)))		\ 	    : "r" (__i));					\ })
 end_define
 
 begin_function
