@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)up.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)up.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,49 +10,49 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dkbad.h"
+file|"dkbad.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/pte.h"
+file|"vax/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/upreg.h"
+file|"vaxuba/upreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"vaxuba/ubareg.h"
 end_include
 
 begin_include
@@ -127,6 +127,12 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_decl_stmt
 name|struct
 name|dkbad
@@ -142,6 +148,11 @@ end_decl_stmt
 begin_comment
 comment|/* bad sector table */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -426,6 +437,9 @@ argument_list|(
 literal|"up bad unit"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 comment|/* 		 * Read in the bad sector table. 		 */
 name|tio
 operator|=
@@ -576,6 +590,8 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|sc
 operator|->
 name|gottype
@@ -1069,6 +1085,9 @@ name|st
 operator|->
 name|nsect
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|sc
@@ -1123,6 +1142,8 @@ name|upwc
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|waitdry
 operator|=
 literal|0
@@ -1149,6 +1170,9 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|upaddr
@@ -1291,6 +1315,8 @@ condition|)
 goto|goto
 name|success
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|++
@@ -1674,6 +1700,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
 
 begin_comment
 comment|/*  * Correct an ECC error, and restart the  * i/o to complete the transfer (if necessary).   * This is quite complicated because the transfer  * may be going to an odd memory address base and/or  * across a page boundary.  */
@@ -2332,6 +2364,11 @@ return|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|upstart
 argument_list|(
@@ -2488,6 +2525,9 @@ operator||
 name|UP_GO
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|SMALL
 case|case
 name|F_HDR
 operator||
@@ -2554,6 +2594,8 @@ operator||
 name|UP_GO
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|io
 operator|->
@@ -2619,6 +2661,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|SMALL
 name|int
 name|unit
 init|=
@@ -2739,6 +2784,16 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+else|SMALL
+return|return
+operator|(
+name|ECMD
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_block
 
