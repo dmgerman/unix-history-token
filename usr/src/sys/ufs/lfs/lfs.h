@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -185,11 +185,11 @@ comment|/* number of blocks per segment */
 name|u_long
 name|lfs_dsize
 decl_stmt|;
-comment|/* number of data blocks in fs */
+comment|/* number of disk blocks in fs */
 name|u_long
 name|lfs_bsize
 decl_stmt|;
-comment|/* size of basic blocks in fs */
+comment|/* file system block size */
 name|u_long
 name|lfs_fsize
 decl_stmt|;
@@ -1092,6 +1092,47 @@ comment|/* run-time flags for this segment */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ISSPACE
+parameter_list|(
+name|F
+parameter_list|,
+name|BB
+parameter_list|,
+name|C
+parameter_list|)
+define|\
+value|(((C)->cr_uid == 0&& (F)->lfs_bfree>= (BB)) || \ 	((C)->cr_uid != 0&& IS_FREESPACE(F, BB)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_FREESPACE
+parameter_list|(
+name|F
+parameter_list|,
+name|BB
+parameter_list|)
+define|\
+value|((F)->lfs_bfree> ((F)->lfs_dsize * (F)->lfs_minfree / 100 + (BB)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSPACE_XXX
+parameter_list|(
+name|F
+parameter_list|,
+name|BB
+parameter_list|)
+define|\
+value|((F)->lfs_bfree>= (BB))
+end_define
 
 end_unit
 
