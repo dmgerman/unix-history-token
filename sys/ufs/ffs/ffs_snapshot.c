@@ -4398,11 +4398,12 @@ argument_list|)
 expr_stmt|;
 name|base
 operator|=
-name|cg
-operator|*
+name|cgbase
+argument_list|(
 name|fs
-operator|->
-name|fs_fpg
+argument_list|,
+name|cg
+argument_list|)
 operator|/
 name|fs
 operator|->
