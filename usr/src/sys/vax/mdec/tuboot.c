@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tuboot.c	4.4	83/06/22	*/
+comment|/*	tuboot.c	4.5	83/06/29	*/
 end_comment
 
 begin_comment
@@ -533,7 +533,11 @@ name|mfpr
 name|$RXDB
 decl_stmt|,
 name|r0
-name|movzbl
+name|extzv
+name|$0
+decl_stmt|,
+name|$7
+decl_stmt|,
 name|r0
 decl_stmt|,
 name|r0
