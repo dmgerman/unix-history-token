@@ -92,17 +92,6 @@ file|"ed.h"
 end_include
 
 begin_comment
-comment|/*  * Define a divisor for rand() that yields a uniform distribution in the  * range 0-255.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAND_DIV
-value|(((unsigned) RAND_MAX + 1)>> 8)
-end_define
-
-begin_comment
 comment|/*  * BSD and System V systems offer special library calls that do  * block move_liness and fills, so if possible we take advantage of them  */
 end_comment
 
@@ -392,21 +381,6 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* initialize the padding vector */
-name|srand
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -431,10 +405,10 @@ call|(
 name|char
 call|)
 argument_list|(
-name|rand
+name|arc4random
 argument_list|()
-operator|/
-name|RAND_DIV
+operator|%
+literal|256
 argument_list|)
 expr_stmt|;
 endif|#
