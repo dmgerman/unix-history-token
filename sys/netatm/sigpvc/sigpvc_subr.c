@@ -127,6 +127,12 @@ directive|include
 file|<netatm/sigpvc/sigpvc_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -148,9 +154,8 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|sigpvc_vcpool
+name|uma_zone_t
+name|sigpvc_vc_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -367,15 +372,13 @@ block|}
 comment|/* 	 * Allocate control block for PVC 	 */
 name|vcp
 operator|=
-operator|(
-expr|struct
-name|vccb
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|sigpvc_vcpool
+name|sigpvc_vc_zone
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
