@@ -10855,9 +10855,9 @@ index|]
 operator|=
 name|htons
 argument_list|(
-name|mreq
+name|ifp
 operator|->
-name|ipv6mr_interface
+name|if_index
 argument_list|)
 expr_stmt|;
 block|}
