@@ -1935,6 +1935,10 @@ name|isdigit
 argument_list|(
 name|ch
 argument_list|)
+operator|||
+name|ch
+operator|>
+literal|'7'
 condition|)
 break|break;
 name|val
