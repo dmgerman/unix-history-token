@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.14 %G%"
+literal|"@(#)lex.c	1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1667,6 +1667,16 @@ begin_comment
 comment|/*  * The following gets called on receipt of a rubout.  This is  * to abort printout of a command, mainly.  * Dispatching here when command() is inactive crashes rcv.  * Close all open files except 0, 1, 2, and the temporary.  * The special call to getuserid() is needed so it won't get  * annoyed about losing its open file.  * Also, unstack all source files.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|inithdr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* am printing startup headers */
+end_comment
+
 begin_macro
 name|stop
 argument_list|()
@@ -1690,8 +1700,17 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|inithdr
+condition|)
 name|sawcom
 operator|++
+expr_stmt|;
+name|inithdr
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1919,11 +1938,20 @@ operator|&&
 operator|!
 name|noheader
 condition|)
+block|{
+name|inithdr
+operator|++
+expr_stmt|;
 name|headers
 argument_list|(
 name|vec
 argument_list|)
 expr_stmt|;
+name|inithdr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_block
 
