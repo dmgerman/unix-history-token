@@ -466,6 +466,50 @@ define|\
 value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART)
 end_define
 
+begin_comment
+comment|/* Capabilities that interfaces can advertise. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_RXCSUM
+value|0x0001
+end_define
+
+begin_comment
+comment|/* can offload checksum on RX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TXCSUM
+value|0x0002
+end_define
+
+begin_comment
+comment|/* can offload checksum on TX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_NETCONS
+value|0x0004
+end_define
+
+begin_comment
+comment|/* can be a network console */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWCSUM
+value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -651,6 +695,12 @@ decl_stmt|;
 name|caddr_t
 name|ifru_data
 decl_stmt|;
+name|int
+name|ifru_cap
+index|[
+literal|2
+index|]
+decl_stmt|;
 block|}
 name|ifr_ifru
 union|;
@@ -704,6 +754,16 @@ directive|define
 name|ifr_data
 value|ifr_ifru.ifru_data
 comment|/* for use by interface */
+define|#
+directive|define
+name|ifr_reqcap
+value|ifr_ifru.ifru_cap[0]
+comment|/* requested capabilities */
+define|#
+directive|define
+name|ifr_curcap
+value|ifr_ifru.ifru_cap[1]
+comment|/* current capabilities */
 block|}
 struct|;
 end_struct
