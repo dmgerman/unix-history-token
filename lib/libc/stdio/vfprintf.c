@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfprintf.c,v 1.16 1997/12/25 00:32:17 ache Exp $"
+literal|"$Id: vfprintf.c,v 1.17 1998/01/04 22:28:47 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,28 +124,11 @@ directive|include
 file|"fvwrite.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread_private.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define FLOATING_POINT to get floating point. */
@@ -1586,20 +1569,11 @@ name|val
 parameter_list|)
 define|\
 value|n2 = 0; \         cp = fmt; \         while (is_digit(*cp)) { \                 n2 = 10 * n2 + to_digit(*cp); \                 cp++; \         } \         if (*cp == '$') { \             	int hold = nextarg; \                 if (argtable == NULL) { \                         argtable = statargtable; \                         __find_arguments (fmt0, orgap,&argtable); \                 } \                 nextarg = n2; \                 val = GETARG (int); \                 nextarg = hold; \                 fmt = ++cp; \         } else { \ 		val = GETARG (int); \         }
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_flockfile
+name|FLOCKFILE
 argument_list|(
 name|fp
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
 if|if
 condition|(
@@ -1609,16 +1583,11 @@ name|fp
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|EOF
@@ -1655,16 +1624,11 @@ operator|>=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|__sbprintf
@@ -3538,16 +3502,11 @@ name|ret
 operator|=
 name|EOF
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(

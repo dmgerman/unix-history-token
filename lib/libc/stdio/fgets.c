@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fgets.c,v 1.7 1997/02/22 15:01:53 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,28 +68,11 @@ directive|include
 file|"local.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread_private.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Read at most n-1 characters from the given file.  * Stop when a newline has been read, or the count runs out.  * Return first argument, or NULL if no characters were read.  */
@@ -150,20 +133,11 @@ operator|(
 name|NULL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_flockfile
+name|FLOCKFILE
 argument_list|(
 name|fp
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|buf
@@ -209,16 +183,11 @@ operator|==
 name|buf
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL
@@ -319,16 +288,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|buf
@@ -381,16 +345,11 @@ name|s
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|buf

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftell.c,v 1.7 1997/02/22 15:02:07 peter Exp $"
+literal|"$Id: ftell.c,v 1.8 1997/03/11 11:40:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,28 +68,11 @@ directive|include
 file|"local.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread_private.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * ftell: return current offset.  */
@@ -132,20 +115,11 @@ literal|1L
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_flockfile
+name|FLOCKFILE
 argument_list|(
 name|fp
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Find offset of underlying I/O object, then 	 * adjust for buffered bytes. 	 */
 if|if
 condition|(
@@ -192,16 +166,11 @@ operator|-
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|pos
@@ -269,16 +238,11 @@ operator|.
 name|_base
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|pos

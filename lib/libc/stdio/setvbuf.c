@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: setvbuf.c,v 1.5 1997/02/22 15:02:27 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,28 +68,11 @@ directive|include
 file|"local.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread_private.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Set one of the three kinds of buffering, optionally including  * a buffer.  */
@@ -168,20 +151,11 @@ operator|(
 name|EOF
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_flockfile
+name|FLOCKFILE
 argument_list|(
 name|fp
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Write current buffer, if any.  Discard unread input (including 	 * ungetc data), cancel line buffering, and free old buffer if 	 * malloc()ed.  We also clear any eof condition, as if this were 	 * a seek. 	 */
 name|ret
 operator|=
@@ -393,16 +367,11 @@ name|_size
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|ret
@@ -523,16 +492,11 @@ name|__cleanup
 operator|=
 name|_cleanup
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|ret

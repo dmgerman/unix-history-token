@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getchar.c,v 1.5 1997/02/22 15:02:12 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,28 +60,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"pthread_private.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -97,20 +80,11 @@ block|{
 name|int
 name|retval
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_flockfile
+name|FLOCKFILE
 argument_list|(
 name|stdin
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|retval
 operator|=
 name|getc
@@ -118,16 +92,11 @@ argument_list|(
 name|stdin
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-name|_thread_funlockfile
+name|FUNLOCKFILE
 argument_list|(
 name|stdin
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|retval
