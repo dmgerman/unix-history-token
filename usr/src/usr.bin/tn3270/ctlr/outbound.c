@@ -2352,6 +2352,26 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|SetOiaReady3274
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|Stop3270
+parameter_list|()
+block|{
+name|ResetOiaReady3274
+argument_list|(
+operator|&
+name|OperatorInformationArea
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
