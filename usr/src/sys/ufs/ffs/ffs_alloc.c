@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -1532,6 +1538,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_valloc_args
+comment|/* { 		struct vnode *a_pvp; 		int a_mode; 		struct ucred *a_cred; 		struct vnode **a_vpp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1539,10 +1546,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_VFREE
-expr_stmt|;
-name|USES_VOP_VGET
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1570,6 +1573,13 @@ name|struct
 name|inode
 modifier|*
 name|ip
+decl_stmt|;
+name|mode_t
+name|mode
+init|=
+name|ap
+operator|->
+name|a_mode
 decl_stmt|;
 name|ino_t
 name|ino
@@ -1617,9 +1627,7 @@ goto|;
 if|if
 condition|(
 operator|(
-name|ap
-operator|->
-name|a_mode
+name|mode
 operator|&
 name|IFMT
 operator|)
@@ -1681,9 +1689,7 @@ name|long
 operator|)
 name|ipref
 argument_list|,
-name|ap
-operator|->
-name|a_mode
+name|mode
 argument_list|,
 name|ffs_ialloccg
 argument_list|)
@@ -1699,7 +1705,7 @@ name|noinodes
 goto|;
 name|error
 operator|=
-name|FFS_VGET
+name|VFS_VGET
 argument_list|(
 name|pvp
 operator|->
@@ -1723,9 +1729,7 @@ name|pvp
 argument_list|,
 name|ino
 argument_list|,
-name|ap
-operator|->
-name|a_mode
+name|mode
 argument_list|)
 expr_stmt|;
 return|return
@@ -1753,7 +1757,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ap->a_mode = 0%o, inum = %d, fs = %s\n"
+literal|"mode = 0%o, inum = %d, fs = %s\n"
 argument_list|,
 name|ip
 operator|->
@@ -5519,6 +5523,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_vfree_args
+comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -5540,6 +5545,13 @@ name|struct
 name|inode
 modifier|*
 name|pip
+decl_stmt|;
+name|ino_t
+name|ino
+init|=
+name|ap
+operator|->
+name|a_ino
 decl_stmt|;
 name|struct
 name|buf
@@ -5571,9 +5583,7 @@ condition|(
 operator|(
 name|u_int
 operator|)
-name|ap
-operator|->
-name|a_ino
+name|ino
 operator|>=
 name|fs
 operator|->
@@ -5585,15 +5595,13 @@ name|fs_ncg
 condition|)
 name|panic
 argument_list|(
-literal|"ifree: range: dev = 0x%x, ap->a_ino = %d, fs = %s\n"
+literal|"ifree: range: dev = 0x%x, ino = %d, fs = %s\n"
 argument_list|,
 name|pip
 operator|->
 name|i_dev
 argument_list|,
-name|ap
-operator|->
-name|a_ino
+name|ino
 argument_list|,
 name|fs
 operator|->
@@ -5606,9 +5614,7 @@ name|itog
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
-name|a_ino
+name|ino
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5737,9 +5743,7 @@ name|time
 operator|.
 name|tv_sec
 expr_stmt|;
-name|ap
-operator|->
-name|a_ino
+name|ino
 operator|%=
 name|fs
 operator|->
@@ -5754,23 +5758,19 @@ argument_list|(
 name|cgp
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_ino
+name|ino
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%x, ap->a_ino = %d, fs = %s\n"
+literal|"dev = 0x%x, ino = %d, fs = %s\n"
 argument_list|,
 name|pip
 operator|->
 name|i_dev
 argument_list|,
-name|ap
-operator|->
-name|a_ino
+name|ino
 argument_list|,
 name|fs
 operator|->
@@ -5798,16 +5798,12 @@ argument_list|(
 name|cgp
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_ino
+name|ino
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_ino
+name|ino
 operator|<
 name|cgp
 operator|->
@@ -5817,9 +5813,7 @@ name|cgp
 operator|->
 name|cg_irotor
 operator|=
-name|ap
-operator|->
-name|a_ino
+name|ino
 expr_stmt|;
 name|cgp
 operator|->
