@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.13 (Berkeley) %G%"
+literal|"@(#)hash.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,6 +1122,12 @@ operator|->
 name|sync
 operator|=
 name|hash_sync
+expr_stmt|;
+name|dbp
+operator|->
+name|type
+operator|=
+name|DB_HASH
 expr_stmt|;
 ifdef|#
 directive|ifdef

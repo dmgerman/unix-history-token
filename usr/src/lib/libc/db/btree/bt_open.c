@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,12 @@ operator|->
 name|sync
 operator|=
 name|bt_sync
+expr_stmt|;
+name|db
+operator|->
+name|type
+operator|=
+name|DB_BTREE
 expr_stmt|;
 return|return
 operator|(

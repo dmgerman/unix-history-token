@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -161,7 +161,23 @@ name|void
 modifier|*
 name|internal
 decl_stmt|;
-comment|/* access method private; really void * */
+comment|/* access method private */
+define|#
+directive|define
+name|DB_BTREE
+value|1
+define|#
+directive|define
+name|DB_HASH
+value|2
+define|#
+directive|define
+name|DB_RECNO
+value|3
+name|int
+name|type
+decl_stmt|;
+comment|/* type of underlying db */
 name|int
 argument_list|(
 argument|*close
