@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mac.h>
 end_include
 
@@ -102,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/filedesc.h>
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -133,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
 end_include
 
 begin_include
@@ -1850,7 +1850,7 @@ if|if
 condition|(
 name|ioflag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|BPFD_UNLOCK
