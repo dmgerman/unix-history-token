@@ -2236,6 +2236,7 @@ name|splx
 parameter_list|(
 name|intrmask_t
 name|ipl
+name|__unused
 parameter_list|)
 block|{
 return|return;
