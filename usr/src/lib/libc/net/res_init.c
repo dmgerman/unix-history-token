@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.6 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,34 +74,18 @@ begin_comment
 comment|/*  * Resolver configuration file. Contains the address of the  * inital name server to query and the default domain for  * non fully qualified domain names.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CONFFILE
-end_ifdef
+end_ifndef
 
-begin_decl_stmt
-name|char
-modifier|*
-name|conffile
-init|=
+begin_define
+define|#
+directive|define
 name|CONFFILE
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|conffile
-init|=
-literal|"/etc/resolv.conf"
-decl_stmt|;
-end_decl_stmt
+value|"/etc/resolv.conf"
+end_define
 
 begin_endif
 endif|#
@@ -249,7 +233,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|conffile
+name|CONFFILE
 argument_list|,
 literal|"r"
 argument_list|)
