@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcent.c,v 1.4 1996/06/10 20:13:04 jraynard Exp $"
+literal|"$Id: getrpcent.c,v 1.5 1996/06/11 17:22:48 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -512,6 +512,8 @@ name|struct
 name|rpcent
 modifier|*
 name|rpc
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -546,11 +548,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|rpc
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 for|for
 control|(
 name|rp
@@ -580,19 +580,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|rpc
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 block|}
+name|done
+label|:
 name|endrpcent
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|rpc
 operator|)
 return|;
 block|}
@@ -1047,6 +1047,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* -1 so there is room to append a \n below */
 if|if
 condition|(
 name|fgets
@@ -1056,6 +1057,8 @@ operator|->
 name|line
 argument_list|,
 name|BUFSIZ
+operator|-
+literal|1
 argument_list|,
 name|d
 operator|->
@@ -1152,8 +1155,17 @@ name|line
 argument_list|,
 name|val
 argument_list|,
-name|len
+name|BUFSIZ
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|line
+index|[
+name|BUFSIZ
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|p
 operator|=
@@ -1161,9 +1173,7 @@ name|d
 operator|->
 name|line
 expr_stmt|;
-name|d
-operator|->
-name|line
+name|p
 index|[
 name|len
 index|]
