@@ -287,7 +287,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 comment|/* 	 * Vnodes keep a pointer to any associated pager so no need to 	 * lookup with vm_pager_lookup. 	 */
@@ -313,7 +313,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 block|{
 comment|/* 		 * Allocate pager structures 		 */
@@ -337,11 +337,11 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 name|vnp
@@ -364,7 +364,7 @@ if|if
 condition|(
 name|vnp
 operator|==
-name|VN_PAGER_NULL
+name|NULL
 condition|)
 block|{
 name|free
@@ -379,7 +379,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -458,7 +458,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VM_PAGER_NULL
+name|NULL
 operator|)
 return|;
 block|}
@@ -838,7 +838,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|VM_PAGER_NULL
+name|NULL
 condition|)
 return|return;
 name|err
@@ -1168,7 +1168,7 @@ if|if
 condition|(
 name|object
 operator|==
-name|VM_OBJECT_NULL
+name|NULL
 condition|)
 return|return;
 ifdef|#
@@ -1408,7 +1408,7 @@ if|if
 condition|(
 name|pager
 operator|==
-name|vm_pager_null
+name|NULL
 condition|)
 return|return
 operator|(
