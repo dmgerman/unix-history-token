@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	4.10 (Berkeley) %G%"
+literal|"@(#)syslogd.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3434,7 +3434,12 @@ name|Sumask
 operator|=
 name|mask
 argument_list|(
-name|LOG_ALERT
+name|KERN_EMERG
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|LOG_EMERG
 argument_list|)
 expr_stmt|;
 for|for
