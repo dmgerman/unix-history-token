@@ -3193,17 +3193,12 @@ begin_function
 name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
-name|pmap
-parameter_list|,
-name|va
-parameter_list|)
-specifier|register
 name|pmap_t
 name|pmap
-decl_stmt|;
+parameter_list|,
 name|vm_offset_t
 name|va
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_paddr_t
 name|rtval
@@ -3219,7 +3214,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 literal|0
@@ -3294,7 +3289,6 @@ expr_stmt|;
 name|rtval
 operator|=
 operator|(
-operator|(
 operator|*
 name|pte
 operator|&
@@ -3305,7 +3299,6 @@ operator|(
 name|va
 operator|&
 name|PAGE_MASK
-operator|)
 operator|)
 expr_stmt|;
 name|PMAP_UNLOCK
