@@ -87,7 +87,7 @@ comment|/*  * bytes -- read bytes to an offset from the end and display.  *  * T
 end_comment
 
 begin_function
-name|void
+name|int
 name|bytes
 parameter_list|(
 name|fp
@@ -215,7 +215,9 @@ block|{
 name|ierr
 argument_list|()
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -415,7 +417,7 @@ comment|/*  * lines -- read lines to an offset from the end and display.  *  * T
 end_comment
 
 begin_function
-name|void
+name|int
 name|lines
 parameter_list|(
 name|fp
@@ -725,7 +727,9 @@ block|{
 name|ierr
 argument_list|()
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 if|if
 condition|(

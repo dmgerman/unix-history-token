@@ -733,6 +733,19 @@ operator|++
 operator|=
 name|ch
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+block|{
+name|ierr
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 comment|/* 		 * If no input data for this block and we tossed some data, 		 * recover it. 		 */
 if|if
 condition|(

@@ -82,7 +82,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|bytes
 name|__P
 argument_list|(
@@ -97,7 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|lines
 name|__P
 argument_list|(
