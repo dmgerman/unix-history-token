@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)systm.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -92,17 +92,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* select timeout address */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|kmapwnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* kernel map want flag */
 end_comment
 
 begin_decl_stmt
