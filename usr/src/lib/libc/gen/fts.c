@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.10 (Berkeley) %G%"
+literal|"@(#)fts.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,17 +100,27 @@ name|fts_cycle
 argument_list|()
 decl_stmt|,
 modifier|*
-name|fts_sort
+name|fts_root
 argument_list|()
 decl_stmt|,
 modifier|*
-name|fts_root
+name|fts_sort
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fts_lfree
+argument_list|()
+decl_stmt|,
+name|fts_load
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|short
+name|u_short
 name|fts_stat
 parameter_list|()
 function_decl|;
@@ -134,13 +144,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISSET
+parameter_list|(
+name|opt
+parameter_list|)
+value|(sp->fts_options& opt)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|opt
+parameter_list|)
+value|(sp->fts_options |= opt)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHDIR
 parameter_list|(
 name|sp
 parameter_list|,
 name|path
 parameter_list|)
-value|(!(sp->fts_options& FTS_NOCHDIR)&& chdir(path))
+value|(!ISSET(FTS_NOCHDIR)&& chdir(path))
 end_define
 
 begin_define
@@ -152,8 +182,38 @@ name|sp
 parameter_list|,
 name|fd
 parameter_list|)
-value|(!(sp->fts_options& FTS_NOCHDIR)&& fchdir(fd))
+value|(!ISSET(FTS_NOCHDIR)&& fchdir(fd))
 end_define
+
+begin_comment
+comment|/* fts_build flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCHILD
+value|1
+end_define
+
+begin_comment
+comment|/* from fts_children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BREAD
+value|2
+end_define
+
+begin_comment
+comment|/* from fts_read */
+end_comment
+
+begin_comment
+comment|/* fts_level values */
+end_comment
 
 begin_define
 define|#
@@ -169,48 +229,10 @@ name|ROOTPARENTLEVEL
 value|-1
 end_define
 
-begin_comment
-comment|/* fts_build flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCHILD
-value|1
-end_define
-
-begin_comment
-comment|/* from ftschildren */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BREAD
-value|2
-end_define
-
-begin_comment
-comment|/* from ftsread */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|FTS
-modifier|*
-name|stream
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current stream pointer */
-end_comment
-
 begin_decl_stmt
 name|FTS
 modifier|*
-name|ftsopen
+name|fts_open
 argument_list|(
 name|argv
 argument_list|,
@@ -275,13 +297,11 @@ modifier|*
 name|fts_path
 parameter_list|()
 function_decl|;
-comment|/* allocate/initialize the stream */
+comment|/* Allocate/initialize the stream */
 if|if
 condition|(
 operator|!
 operator|(
-name|stream
-operator|=
 name|sp
 operator|=
 operator|(
@@ -321,26 +341,26 @@ name|fts_compar
 operator|=
 name|compar
 expr_stmt|;
-comment|/* 	 * logical walks turn on NOCHDIR; symbolic links are just too 	 * hard to deal with. 	 */
 name|sp
 operator|->
 name|fts_options
 operator|=
 name|options
 expr_stmt|;
+comment|/* Logical walks turn on NOCHDIR; symbolic links are too hard. */
 if|if
 condition|(
-name|options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_LOGICAL
+argument_list|)
 condition|)
-name|sp
-operator|->
-name|fts_options
-operator||=
+name|SET
+argument_list|(
 name|FTS_NOCHDIR
+argument_list|)
 expr_stmt|;
-comment|/* allocate/initialize root's parent */
+comment|/* Allocate/initialize root's parent. */
 if|if
 condition|(
 operator|!
@@ -349,6 +369,8 @@ name|parent
 operator|=
 name|fts_alloc
 argument_list|(
+name|sp
+argument_list|,
 literal|""
 argument_list|,
 literal|0
@@ -364,7 +386,7 @@ name|fts_level
 operator|=
 name|ROOTPARENTLEVEL
 expr_stmt|;
-comment|/* allocate/initialize root(s) */
+comment|/* Allocate/initialize root(s). */
 name|maxlen
 operator|=
 operator|-
@@ -398,6 +420,8 @@ name|p
 operator|=
 name|fts_root
 argument_list|(
+name|sp
+argument_list|,
 operator|*
 name|argv
 argument_list|)
@@ -420,7 +444,7 @@ name|p
 operator|->
 name|fts_namelen
 expr_stmt|;
-comment|/* 		 * if comparison routine supplied, traverse in sorted 		 * order; otherwise traverse in the order specified. 		 */
+comment|/* 		 * If comparison routine supplied, traverse in sorted 		 * order; otherwise traverse in the order specified. 		 */
 if|if
 condition|(
 name|compar
@@ -459,6 +483,8 @@ name|fts_info
 operator|=
 name|fts_stat
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|,
 literal|0
@@ -523,12 +549,14 @@ name|root
 operator|=
 name|fts_sort
 argument_list|(
+name|sp
+argument_list|,
 name|root
 argument_list|,
 name|nitems
 argument_list|)
 expr_stmt|;
-comment|/* 	 * allocate a dummy pointer and make ftsread think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_NS 	 * so that everything about the "current" node is ignored. 	 */
+comment|/* 	 * Allocate a dummy pointer and make fts_read think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_NS 	 * so that everything about the "current" node is ignored. 	 */
 if|if
 condition|(
 operator|!
@@ -539,6 +567,8 @@ name|fts_cur
 operator|=
 name|fts_alloc
 argument_list|(
+name|sp
+argument_list|,
 literal|""
 argument_list|,
 literal|0
@@ -564,12 +594,14 @@ name|fts_info
 operator|=
 name|FTS_NS
 expr_stmt|;
-comment|/* start out with at least 1K+ of path space */
+comment|/* Start out with at least 1K+ of path space. */
 if|if
 condition|(
 operator|!
 name|fts_path
 argument_list|(
+name|sp
+argument_list|,
 name|MAX
 argument_list|(
 name|maxlen
@@ -581,15 +613,14 @@ condition|)
 goto|goto
 name|mem3
 goto|;
-comment|/* 	 * if using chdir(2), grab a file descriptor pointing to dot to insure 	 * that we can get back here; this could be avoided for some paths, 	 * but almost certainly not worth the effort.  Slashes, symbolic links, 	 * and ".." are all fairly nasty problems.  Note, if we can't get the 	 * descriptor we run anyway, just more slowly. 	 */
+comment|/* 	 * If using chdir(2), grab a file descriptor pointing to dot to insure 	 * that we can get back here; this could be avoided for some paths, 	 * but almost certainly not worth the effort.  Slashes, symbolic links, 	 * and ".." are all fairly nasty problems.  Note, if we can't get the 	 * descriptor we run anyway, just more slowly. 	 */
 if|if
 condition|(
 operator|!
-operator|(
-name|options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOCHDIR
-operator|)
+argument_list|)
 operator|&&
 operator|(
 name|sp
@@ -608,11 +639,10 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|sp
-operator|->
-name|fts_options
-operator||=
+name|SET
+argument_list|(
 name|FTS_NOCHDIR
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -621,9 +651,6 @@ operator|)
 return|;
 name|mem3
 label|:
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -642,9 +669,6 @@ argument_list|(
 name|root
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -656,9 +680,6 @@ argument_list|)
 expr_stmt|;
 name|mem1
 label|:
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -676,20 +697,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|fts_load
-argument_list|(
+parameter_list|(
+name|sp
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 specifier|register
 name|FTSENT
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -700,7 +725,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* 	 * load the stream structure for the next traversal; set the 	 * accpath field specially so the chdir gets done to the right 	 * place and the user can access the first node. 	 */
+comment|/* 	 * Load the stream structure for the next traversal; set the 	 * fts_accpath field specially so the chdir gets done to the 	 * right place and the user can access the first node. 	 */
 name|len
 operator|=
 name|p
@@ -717,7 +742,7 @@ name|p
 operator|->
 name|fts_name
 argument_list|,
-name|stream
+name|sp
 operator|->
 name|fts_path
 argument_list|,
@@ -791,15 +816,15 @@ name|p
 operator|->
 name|fts_path
 operator|=
-name|stream
+name|sp
 operator|->
 name|fts_path
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
-name|ftsclose
+name|fts_close
 argument_list|(
 argument|sp
 argument_list|)
@@ -832,7 +857,7 @@ operator|->
 name|fts_cur
 condition|)
 block|{
-comment|/* 		 * this still works if we haven't read anything -- the dummy 		 * structure points to the root list, so we step through to 		 * the end of the root list which has a valid parent pointer. 		 */
+comment|/* 		 * This still works if we haven't read anything -- the dummy 		 * structure points to the root list, so we step through to 		 * the end of the root list which has a valid parent pointer. 		 */
 for|for
 control|(
 name|p
@@ -867,9 +892,6 @@ name|p
 operator|->
 name|fts_parent
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -880,9 +902,6 @@ name|freep
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -893,7 +912,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* free up child linked list, sort array, path buffer */
+comment|/* Free up child linked list, sort array, path buffer. */
 if|if
 condition|(
 name|sp
@@ -913,9 +932,6 @@ name|sp
 operator|->
 name|fts_array
 condition|)
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -927,9 +943,6 @@ operator|->
 name|fts_array
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -941,17 +954,14 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
-comment|/* 	 * return to original directory, save errno if necessary; 	 * free up the directory buffer 	 */
+comment|/* 	 * Return to original directory, save errno if necessary; free up 	 * the directory buffer. 	 */
 if|if
 condition|(
 operator|!
-operator|(
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOCHDIR
-operator|)
+argument_list|)
 condition|)
 block|{
 name|saved_errno
@@ -978,10 +988,7 @@ name|fts_sd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* free up the stream pointer */
-operator|(
-name|void
-operator|)
+comment|/* Free up the stream pointer. */
 name|free
 argument_list|(
 operator|(
@@ -991,17 +998,14 @@ operator|)
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* set errno and return */
+comment|/* Set errno and return. */
 if|if
 condition|(
 operator|!
-operator|(
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOCHDIR
-operator|)
+argument_list|)
 operator|&&
 name|saved_errno
 condition|)
@@ -1028,7 +1032,7 @@ end_block
 begin_function
 name|FTSENT
 modifier|*
-name|ftsread
+name|fts_read
 parameter_list|(
 name|sp
 parameter_list|)
@@ -1059,7 +1063,7 @@ specifier|static
 name|int
 name|cd
 decl_stmt|;
-comment|/* if finished or unrecoverable error, return NULL */
+comment|/* If finished or unrecoverable error, return NULL. */
 if|if
 condition|(
 operator|!
@@ -1067,29 +1071,24 @@ name|sp
 operator|->
 name|fts_cur
 operator|||
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS__STOP
+argument_list|)
 condition|)
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-comment|/* set global stream pointer, and current node pointer */
-name|stream
-operator|=
-name|sp
-expr_stmt|;
+comment|/* Set current node pointer. */
 name|p
 operator|=
 name|sp
 operator|->
 name|fts_cur
 expr_stmt|;
-comment|/* save and zero out user instructions */
+comment|/* Save and zero out user instructions. */
 name|instr
 operator|=
 name|p
@@ -1100,9 +1099,9 @@ name|p
 operator|->
 name|fts_instr
 operator|=
-literal|0
+name|FTS__NOINSTR
 expr_stmt|;
-comment|/* if used link pointer for cycle detection, restore it */
+comment|/* If used fts_link pointer for cycle detection, restore it. */
 if|if
 condition|(
 name|sp
@@ -1125,7 +1124,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* any type of file may be re-visited; re-stat and return */
+comment|/* Any type of file may be re-visited; re-stat and return. */
 if|if
 condition|(
 name|instr
@@ -1139,6 +1138,8 @@ name|fts_info
 operator|=
 name|fts_stat
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|,
 literal|0
@@ -1150,7 +1151,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* following a symbolic link */
+comment|/* Following a symbolic link. */
 if|if
 condition|(
 name|p
@@ -1170,6 +1171,8 @@ name|fts_info
 operator|=
 name|fts_stat
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|,
 literal|1
@@ -1181,7 +1184,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* directory in pre-order */
+comment|/* Directory in pre-order. */
 if|if
 condition|(
 name|p
@@ -1191,18 +1194,17 @@ operator|==
 name|FTS_D
 condition|)
 block|{
-comment|/* if skipped or crossed mount point, do post-order visit */
+comment|/* If skipped or crossed mount point, do post-order visit. */
 if|if
 condition|(
 name|instr
 operator|==
 name|FTS_SKIP
 operator|||
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_XDEV
+argument_list|)
 operator|&&
 name|p
 operator|->
@@ -1248,7 +1250,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* read the directory if necessary, and return first entry */
+comment|/* Read the directory if necessary, and return first entry. */
 if|if
 condition|(
 name|sp
@@ -1370,7 +1372,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* move to next node on this level */
+comment|/* Move to next node on this level. */
 name|next
 label|:
 name|tmp
@@ -1386,7 +1388,7 @@ operator|->
 name|fts_link
 condition|)
 block|{
-comment|/* 		 * if root level node, set up paths and return.  If not the 		 * first time, and it's not an absolute pathname, get back 		 * to starting directory. 		 */
+comment|/* 		 * If root level node, set up paths and return.  If not the 		 * first time, and it's not an absolute pathname, get back 		 * to starting directory.  If that fails, we're dead. 		 */
 if|if
 condition|(
 name|p
@@ -1398,12 +1400,11 @@ condition|)
 block|{
 name|fts_load
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1436,7 +1437,7 @@ name|fts_sd
 argument_list|)
 condition|)
 block|{
-comment|/* should never happen... */
+comment|/* Can't get back to start; we're dead. */
 name|p
 operator|->
 name|fts_path
@@ -1449,11 +1450,10 @@ name|fts_info
 operator|=
 name|FTS_ERR
 expr_stmt|;
-name|sp
-operator|->
-name|fts_options
-operator||=
+name|SET
+argument_list|(
 name|FTS__STOP
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1475,6 +1475,8 @@ name|fts_info
 operator|=
 name|fts_stat
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|,
 literal|0
@@ -1493,9 +1495,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1505,7 +1504,7 @@ operator|)
 name|tmp
 argument_list|)
 expr_stmt|;
-comment|/* user may have called ftsset on node */
+comment|/* User may have called fts_set on node. */
 if|if
 condition|(
 name|p
@@ -1532,6 +1531,8 @@ name|fts_info
 operator|=
 name|fts_stat
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|,
 literal|1
@@ -1541,10 +1542,10 @@ name|p
 operator|->
 name|fts_instr
 operator|=
-literal|0
+name|FTS__NOINSTR
 expr_stmt|;
 block|}
-comment|/* fill in the paths */
+comment|/* Fill in the paths. */
 name|cp
 operator|=
 name|sp
@@ -1579,7 +1580,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* check for directory cycles */
+comment|/* Check for directory cycles. */
 if|if
 condition|(
 name|p
@@ -1630,16 +1631,13 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* move to parent */
+comment|/* Move to parent. */
 name|p
 operator|=
 name|tmp
 operator|->
 name|fts_parent
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -1658,10 +1656,7 @@ operator|==
 name|ROOTPARENTLEVEL
 condition|)
 block|{
-comment|/* 		 * done; free everything up and set errno to 0 so the user 		 * can distinguish between error and EOF. 		 */
-operator|(
-name|void
-operator|)
+comment|/* 		 * Done; free everything up and set errno to 0 so the user 		 * can distinguish between error and EOF. 		 */
 name|free
 argument_list|(
 operator|(
@@ -1706,11 +1701,10 @@ literal|".."
 argument_list|)
 condition|)
 block|{
-name|sp
-operator|->
-name|fts_options
-operator||=
+name|SET
+argument_list|(
 name|FTS__STOP
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -1739,7 +1733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ftsset takes the stream as an argument although it's not used in this  * implementation; it would be necessary if anyone wanted to add global  * semantics to fts using ftsset.  A possible error return is allowed for  * similar reasons.  */
+comment|/*  * fts_set takes the stream as an argument although it's not used in this  * implementation; it would be necessary if anyone wanted to add global  * semantics to fts using fts_set.  An error return is allowed for similar  * reasons.  */
 end_comment
 
 begin_comment
@@ -1747,7 +1741,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|ftsset
+name|fts_set
 argument_list|(
 argument|sp
 argument_list|,
@@ -1796,7 +1790,7 @@ end_block
 begin_function
 name|FTSENT
 modifier|*
-name|ftschildren
+name|fts_children
 parameter_list|(
 name|sp
 parameter_list|)
@@ -1814,36 +1808,49 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-comment|/* 	 * set errno to 0 so that user can tell the difference between an 	 * error and a directory without entries. 	 */
-name|errno
-operator|=
-literal|0
-expr_stmt|;
+comment|/* Set current node pointer. */
 name|p
 operator|=
 name|sp
 operator|->
 name|fts_cur
 expr_stmt|;
+comment|/* 	 * Set errno to 0 so that user can tell the difference between an 	 * error and a directory without entries. 	 */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
+name|ISSET
+argument_list|(
+name|FTS__STOP
+argument_list|)
+operator|||
 name|p
 operator|->
 name|fts_info
 operator|!=
 name|FTS_D
-operator|||
-name|sp
+operator|&&
+name|p
 operator|->
-name|fts_options
-operator|&
-name|FTS__STOP
+name|fts_info
+operator|!=
+name|FTS_DNX
+operator|&&
+name|p
+operator|->
+name|fts_info
+operator|!=
+name|FTS_DNR
 condition|)
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+comment|/* Free up any previous child list. */
 if|if
 condition|(
 name|sp
@@ -1857,7 +1864,7 @@ operator|->
 name|fts_child
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if using chdir on a relative path and called BEFORE ftsread on the 	 * root of a traversal, we can lose because we need to chdir into the 	 * subdirectory, and we don't know where the current directory is to 	 * get back so that the upcoming chdir by ftsread will work. 	 */
+comment|/* 	 * If using chdir on a relative path and called BEFORE fts_read does 	 * its chdir to the root of a traversal, we can lose because we need 	 * to chdir into the subdirectory, and we don't know where the current 	 * directory is to get back so that the upcoming chdir by fts_read 	 * will work. 	 */
 if|if
 condition|(
 name|p
@@ -1875,11 +1882,10 @@ index|]
 operator|==
 literal|'/'
 operator|||
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOCHDIR
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2025,6 +2031,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+comment|/* Set current node pointer. */
 name|p
 operator|=
 name|sp
@@ -2053,15 +2060,15 @@ operator|==
 name|BREAD
 condition|)
 block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|p
 operator|->
 name|fts_info
 operator|=
 name|FTS_DNR
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return
@@ -2070,20 +2077,18 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * the real slowdown in walking the tree is the stat calls.  If 	 * FTS_NOSTAT is set and it's a physical walk (so that symbolic 	 * links can't be directories), fts assumes that the number of 	 * subdirectories in a node is equal to the number of links to 	 * the parent.  This allows stat calls to be skipped in any leaf 	 * directories and for any nodes after the directories in the 	 * parent node have been found.  This empirically cuts the stat 	 * calls by about 2/3. 	 */
+comment|/* 	 * The real slowdown in walking the tree is the stat calls.  If 	 * FTS_NOSTAT is set and it's a physical walk (so that symbolic 	 * links can't be directories), fts assumes that the number of 	 * subdirectories in a node is equal to the number of links to 	 * the parent.  This allows stat calls to be skipped in any leaf 	 * directories and for any nodes after the directories in the 	 * parent node have been found.  This empirically cuts the stat 	 * calls by about 2/3. 	 */
 name|nlinks
 operator|=
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOSTAT
+argument_list|)
 operator|&&
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_PHYSICAL
+argument_list|)
 condition|?
 name|p
 operator|->
@@ -2092,11 +2097,10 @@ operator|.
 name|st_nlink
 operator|-
 operator|(
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_SEEDOT
+argument_list|)
 condition|?
 literal|0
 else|:
@@ -2106,7 +2110,11 @@ else|:
 operator|-
 literal|1
 expr_stmt|;
-comment|/* if told to descend or found links and not told not to descend. */
+comment|/* If told to descend or found links and not told not to descend. */
+name|descend
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|nlinks
@@ -2115,9 +2123,9 @@ name|type
 operator|==
 name|BREAD
 condition|)
-block|{
 if|if
 condition|(
+operator|!
 name|FCHDIR
 argument_list|(
 name|sp
@@ -2128,6 +2136,12 @@ name|dirp
 argument_list|)
 argument_list|)
 condition|)
+name|descend
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 		 * Return all the information possible; fts_read doing a 		 * relative walk of the tree will have to descend, so it 		 * can't succeed.  Fts_children or absolute walks of the 		 * tree can succeed, but no stat information will be available. 		 */
+else|else
 block|{
 if|if
 condition|(
@@ -2136,17 +2150,6 @@ operator|==
 name|BREAD
 condition|)
 block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_DNX
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -2155,23 +2158,28 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_DNX
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
-name|descend
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|descend
+name|nlinks
 operator|=
 literal|0
 expr_stmt|;
-comment|/* get max file name length that can be stored in current path */
+block|}
+comment|/* Get max file name length that can be stored in current path. */
 name|maxlen
 operator|=
 name|sp
@@ -2213,7 +2221,7 @@ name|fts_level
 operator|+
 literal|1
 expr_stmt|;
-comment|/* read the directory, attching each new entry to the `link' pointer */
+comment|/* Read the directory, attching each new entry to the `link' pointer. */
 for|for
 control|(
 name|head
@@ -2243,13 +2251,10 @@ name|d_name
 argument_list|)
 operator|&&
 operator|!
-operator|(
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_SEEDOT
-operator|)
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -2260,10 +2265,15 @@ name|p
 operator|=
 name|fts_alloc
 argument_list|(
+name|sp
+argument_list|,
 name|dp
 operator|->
 name|d_name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dp
 operator|->
 name|d_namlen
@@ -2293,6 +2303,8 @@ condition|(
 operator|!
 name|fts_path
 argument_list|(
+name|sp
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -2302,20 +2314,16 @@ name|d_namlen
 argument_list|)
 condition|)
 block|{
-comment|/* quit: this stream no longer has a path */
-name|sp
-operator|->
-name|fts_options
-operator||=
+comment|/* Quit: this stream no longer has a path. */
+name|SET
+argument_list|(
 name|FTS__STOP
+argument_list|)
 expr_stmt|;
 name|saved_errno
 operator|=
 name|errno
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -2356,15 +2364,15 @@ literal|".."
 argument_list|)
 condition|)
 block|{
+comment|/* 					 * chdir error is more interesting 					 * than memory error, since it stops 					 * everything. 					 */
 name|saved_errno
 operator|=
 name|errno
 expr_stmt|;
-name|sp
-operator|->
-name|fts_options
-operator||=
+name|SET
+argument_list|(
 name|FTS__STOP
+argument_list|)
 expr_stmt|;
 block|}
 name|errno
@@ -2416,11 +2424,10 @@ name|p
 operator|->
 name|fts_accpath
 operator|=
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOCHDIR
+argument_list|)
 condition|?
 name|p
 operator|->
@@ -2449,14 +2456,13 @@ condition|(
 name|nlinks
 condition|)
 block|{
-comment|/* make sure fts_stat has a filename to stat */
+comment|/* Make sure fts_stat has a filename to stat. */
 if|if
 condition|(
-name|sp
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_NOCHDIR
+argument_list|)
 condition|)
 name|bcopy
 argument_list|(
@@ -2479,6 +2485,8 @@ name|fts_info
 operator|=
 name|fts_stat
 argument_list|(
+name|sp
+argument_list|,
 name|p
 argument_list|,
 literal|0
@@ -2543,7 +2551,7 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-comment|/* reset the path */
+comment|/* Reset the path. */
 if|if
 condition|(
 name|cp
@@ -2562,7 +2570,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * if descended: if were called from ftsread and didn't find anything, 	 * or were called from ftschildren, get back. 	 */
+comment|/* 	 * If descended: if were called from fts_read and didn't find anything, 	 * or were called from fts_children, get back. 	 */
 if|if
 condition|(
 name|descend
@@ -2584,11 +2592,10 @@ literal|".."
 argument_list|)
 condition|)
 block|{
-name|sp
-operator|->
-name|fts_options
-operator||=
+name|SET
+argument_list|(
 name|FTS__STOP
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -2640,6 +2647,8 @@ name|head
 operator|=
 name|fts_sort
 argument_list|(
+name|sp
+argument_list|,
 name|head
 argument_list|,
 name|nitems
@@ -2685,32 +2694,37 @@ end_function
 
 begin_function
 specifier|static
-name|short
+name|u_short
 name|fts_stat
 parameter_list|(
+name|sp
+parameter_list|,
 name|p
 parameter_list|,
-name|symflag
+name|follow
 parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 specifier|register
 name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
 name|int
-name|symflag
+name|follow
 decl_stmt|;
 block|{
-comment|/* 	 * detection of symbolic links w/o targets.  If FTS_FOLLOW is set, 	 * the symlink structure is overwritten with the stat structure of 	 * the target. 	 */
+comment|/* 	 * If doing a logical walk, or application requested FTS_FOLLOW, do 	 * a stat(2).  If that fails, either fail or do an lstat(2) for a 	 * non-existent symlink.  (The check has to be done, or we wouldn't 	 * detect a symlink being deleted.) 	 * 	 * Don't leave errno set for FTS_NS cases.		XXX 	 */
 if|if
 condition|(
-name|stream
-operator|->
-name|fts_options
-operator|&
+name|ISSET
+argument_list|(
 name|FTS_LOGICAL
+argument_list|)
 operator|||
-name|symflag
+name|follow
 condition|)
 block|{
 if|if
@@ -2727,10 +2741,15 @@ operator|->
 name|fts_statb
 argument_list|)
 condition|)
-return|return
-operator|(
-name|symflag
-operator|||
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|follow
+operator|&&
 operator|!
 name|lstat
 argument_list|(
@@ -2743,12 +2762,25 @@ name|p
 operator|->
 name|fts_statb
 argument_list|)
-condition|?
+condition|)
+return|return
+operator|(
 name|FTS_SLNONE
-else|:
-name|FTS_ERR
 operator|)
 return|;
+else|else
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|FTS_NS
+operator|)
+return|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
@@ -2765,47 +2797,65 @@ operator|->
 name|fts_statb
 argument_list|)
 condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
-name|FTS_ERR
+name|FTS_NS
 operator|)
 return|;
-switch|switch
+block|}
+if|if
 condition|(
+name|S_ISDIR
+argument_list|(
 name|p
 operator|->
 name|fts_statb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
+argument_list|)
 condition|)
-block|{
-case|case
-name|S_IFDIR
-case|:
 return|return
 operator|(
 name|FTS_D
 operator|)
 return|;
-case|case
-name|S_IFLNK
-case|:
+if|if
+condition|(
+name|S_ISLNK
+argument_list|(
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
 return|return
 operator|(
 name|FTS_SL
 operator|)
 return|;
-case|case
-name|S_IFREG
-case|:
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
 return|return
 operator|(
 name|FTS_F
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|FTS_DEFAULT
@@ -2836,7 +2886,7 @@ specifier|register
 name|ino_t
 name|ino
 decl_stmt|;
-comment|/* 	 * cycle detection is brute force; if the tree gets deep enough or 	 * the number of symbolic links to directories is really high 	 * something faster might be worthwhile. 	 */
+comment|/* 	 * Cycle detection is brute force; if the tree gets deep enough or 	 * the number of symbolic links to directories is really high 	 * something faster might be worthwhile. 	 */
 name|dev
 operator|=
 name|p
@@ -2925,10 +2975,16 @@ name|FTSENT
 modifier|*
 name|fts_sort
 parameter_list|(
+name|sp
+parameter_list|,
 name|head
 parameter_list|,
 name|nitems
 parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 name|FTSENT
 modifier|*
 name|head
@@ -2947,17 +3003,17 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * construct an array of pointers to the structures and call qsort(3). 	 * Reassemble the array in the order returned by qsort.  If unable to 	 * sort for memory reasons, return the directory entries in their 	 * current order.  Allocate enough space for the current needs plus 	 * 40 so we don't realloc one entry at a time. 	 */
+comment|/* 	 * Construct an array of pointers to the structures and call qsort(3). 	 * Reassemble the array in the order returned by qsort.  If unable to 	 * sort for memory reasons, return the directory entries in their 	 * current order.  Allocate enough space for the current needs plus 	 * 40 so we don't realloc one entry at a time. 	 */
 if|if
 condition|(
 name|nitems
 operator|>
-name|stream
+name|sp
 operator|->
 name|fts_nitems
 condition|)
 block|{
-name|stream
+name|sp
 operator|->
 name|fts_nitems
 operator|=
@@ -2969,7 +3025,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|stream
+name|sp
 operator|->
 name|fts_array
 operator|=
@@ -2978,18 +3034,18 @@ argument_list|(
 name|FTSENT
 operator|*
 argument_list|,
-name|stream
+name|sp
 operator|->
 name|fts_nitems
 argument_list|,
-name|stream
+name|sp
 operator|->
 name|fts_array
 argument_list|)
 operator|)
 condition|)
 block|{
-name|stream
+name|sp
 operator|->
 name|fts_nitems
 operator|=
@@ -3006,7 +3062,7 @@ for|for
 control|(
 name|ap
 operator|=
-name|stream
+name|sp
 operator|->
 name|fts_array
 operator|,
@@ -3034,7 +3090,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|stream
+name|sp
 operator|->
 name|fts_array
 argument_list|,
@@ -3046,7 +3102,7 @@ name|FTSENT
 operator|*
 argument_list|)
 argument_list|,
-name|stream
+name|sp
 operator|->
 name|fts_compar
 argument_list|)
@@ -3059,7 +3115,7 @@ operator|*
 operator|(
 name|ap
 operator|=
-name|stream
+name|sp
 operator|->
 name|fts_array
 operator|)
@@ -3105,10 +3161,16 @@ name|FTSENT
 modifier|*
 name|fts_alloc
 parameter_list|(
+name|sp
+parameter_list|,
 name|name
 parameter_list|,
 name|len
 parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -3123,7 +3185,7 @@ name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * variable sized structures; the name is the last element so 	 * allocate enough extra space after the structure to hold it. 	 */
+comment|/* 	 * Variable sized structures; the name is the last element so 	 * allocate enough extra space after the structure to hold it. 	 */
 if|if
 condition|(
 operator|!
@@ -3178,7 +3240,7 @@ name|p
 operator|->
 name|fts_path
 operator|=
-name|stream
+name|sp
 operator|->
 name|fts_path
 expr_stmt|;
@@ -3186,21 +3248,17 @@ name|p
 operator|->
 name|fts_instr
 operator|=
-literal|0
+name|FTS__NOINSTR
 expr_stmt|;
 name|p
 operator|->
-name|fts_local
-operator|.
-name|number
+name|fts_number
 operator|=
 literal|0
 expr_stmt|;
 name|p
 operator|->
-name|fts_local
-operator|.
-name|pointer
+name|fts_pointer
 operator|=
 name|NULL
 expr_stmt|;
@@ -3212,26 +3270,25 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|fts_lfree
-argument_list|(
+parameter_list|(
 name|head
-argument_list|)
+parameter_list|)
 specifier|register
 name|FTSENT
-operator|*
+modifier|*
 name|head
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Free a linked list of structures. */
 while|while
 condition|(
 name|p
@@ -3245,9 +3302,6 @@ name|head
 operator|->
 name|fts_link
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 operator|(
@@ -3259,10 +3313,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * allow essentially unlimited paths; certain programs (find, remove, ls)  * need to work on any tree.  Most systems will allow creation of paths  * much longer than MAXPATHLEN, even though the kernel won't resolve them.  * Add an extra 128 bytes to the requested size so that we don't realloc  * the path 2 bytes at a time.  */
+comment|/*  * Allow essentially unlimited paths; certain programs (find, rm, ls) need to  * work on any tree.  Most systems will allow creation of paths much longer  * than MAXPATHLEN, even though the kernel won't resolve them.  Add an extra  * 128 bytes to the requested size so that we don't realloc the path 2 bytes  * at a time.  */
 end_comment
 
 begin_function
@@ -3271,13 +3325,19 @@ name|char
 modifier|*
 name|fts_path
 parameter_list|(
+name|sp
+parameter_list|,
 name|size
 parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 name|int
 name|size
 decl_stmt|;
 block|{
-name|stream
+name|sp
 operator|->
 name|fts_pathlen
 operator|+=
@@ -3287,7 +3347,7 @@ literal|128
 expr_stmt|;
 return|return
 operator|(
-name|stream
+name|sp
 operator|->
 name|fts_path
 operator|=
@@ -3295,11 +3355,11 @@ name|R
 argument_list|(
 name|char
 argument_list|,
-name|stream
+name|sp
 operator|->
 name|fts_pathlen
 argument_list|,
-name|stream
+name|sp
 operator|->
 name|fts_path
 argument_list|)
@@ -3314,8 +3374,14 @@ name|FTSENT
 modifier|*
 name|fts_root
 parameter_list|(
+name|sp
+parameter_list|,
 name|name
 parameter_list|)
+name|FTS
+modifier|*
+name|sp
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -3327,7 +3393,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* 	 * rip trailing slashes; it's somewhat unclear in POSIX 1003.1 what 	 * /a/b/ really is, they don't talk about what a null path component 	 * resolves to.  This hopefully does what the user intended.  Don't 	 * allow null pathnames. 	 */
+comment|/* 	 * Rip trailing slashes; it's somewhat unclear in POSIX 1003.1 what 	 * /a/b/ really is, they don't talk about what a null path component 	 * resolves to.  This hopefully does what the user intended.  Don't 	 * allow null pathnames. 	 */
 for|for
 control|(
 name|cp
@@ -3381,6 +3447,8 @@ return|return
 operator|(
 name|fts_alloc
 argument_list|(
+name|sp
+argument_list|,
 name|name
 argument_list|,
 name|cp
