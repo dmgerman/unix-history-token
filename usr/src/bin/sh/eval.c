@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	8.4 (Berkeley) %G%"
+literal|"@(#)eval.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4201,8 +4201,9 @@ argument_list|(
 name|cmdenviron
 argument_list|)
 expr_stmt|;
+comment|/*  	 * Preserve exitstatus of a previous possible redirection 	 * as POSIX mandates  	 */
 return|return
-literal|0
+name|exitstatus
 return|;
 block|}
 end_function
