@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.5 1995/09/02 17:20:50 amurai Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.4.4.1 1995/10/06 11:24:31 davidg Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -1474,6 +1474,65 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+comment|/* switch back to original privileges */
+if|if
+condition|(
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT
+argument_list|,
+literal|"setgid: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_CHAT
+argument_list|,
+literal|"setuid: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|pid
 operator|=
 name|execvp
