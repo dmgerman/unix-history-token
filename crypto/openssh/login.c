@@ -357,13 +357,11 @@ name|ut_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|realhostname_sa
 argument_list|(
 name|u
 operator|.
 name|ut_host
-argument_list|,
-name|host
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -371,6 +369,12 @@ name|u
 operator|.
 name|ut_host
 argument_list|)
+argument_list|,
+name|addr
+argument_list|,
+name|addr
+operator|->
+name|sa_len
 argument_list|)
 expr_stmt|;
 comment|/* Figure out the file names. */
