@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)getcwd.c	4.8	(Berkeley)	%G%	*/
+comment|/*	@(#)getcwd.c	4.9	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -364,7 +364,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|stat
+name|lstat
 argument_list|(
 name|dir
 operator|->
