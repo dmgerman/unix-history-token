@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1982 Regents of the University of California */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nextaddr.c 1.4 %G%"
+literal|"@(#)nextaddr.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/*  * Calculate the next address that will be executed from the current one.  *  * If the next address depends on runtime data (e.g. a conditional  * branch will depend on the value on top of the stack),  * we must execute up to the given address with "stepto".  *  * If the second argument is TRUE, we treat a CALL instruction as  * straight line rather than following it as a branch.  */
