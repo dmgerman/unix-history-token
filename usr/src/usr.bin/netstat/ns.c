@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.7 (Berkeley) %G%"
+literal|"@(#)ns.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp_timer.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netns/ns.h>
 end_include
 
@@ -137,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<netns/spidp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netns/spp_timer.h>
 end_include
 
 begin_include
