@@ -106,6 +106,12 @@ begin_comment
 comment|/* ** In the current implementation, "tzset()" refuses to deal with files that ** exceed any of the limits below. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TZ_MAX_TIMES
+end_ifndef
+
 begin_comment
 comment|/* ** The TZ_MAX_TIMES value below is enough to handle a bit more than a ** year's worth of solar time (corrected daily to the nearest second) or ** 138 years of Pacific Presidential Election time ** (where there are three time zone transitions every fourth year). */
 end_comment
@@ -117,14 +123,13 @@ name|TZ_MAX_TIMES
 value|370
 end_define
 
-begin_define
-define|#
-directive|define
-name|NOSOLAR
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* 4BSD doesn't currently handle solar time */
+comment|/* TZ_MAX_TIMES */
 end_comment
 
 begin_ifndef
