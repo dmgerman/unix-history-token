@@ -227,11 +227,32 @@ begin_comment
 comment|/* Some operating systems treat text and binary files differently.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BEOS__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
 name|O_BINARY
-end_if
+end_undef
+
+begin_comment
+comment|/* BeOS 5 has O_BINARY and O_TEXT, but they have no effect. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_FILE_CONTENTS
+end_ifdef
 
 begin_include
 include|#
@@ -268,39 +289,6 @@ parameter_list|(
 name|fd
 parameter_list|)
 value|_setmode (fd, O_BINARY)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|O_BINARY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|O_BINARY
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_BINARY
-parameter_list|(
-name|fd
-parameter_list|)
-value|(void)0
 end_define
 
 begin_endif
@@ -386,14 +374,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* This assumes _WIN32, like DJGPP, has D_OK.  Does it?  In what header?  */
-end_comment
+begin_decl_stmt
+name|int
+name|isdir
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|D_OK
+name|HAVE_DIR_EACCES_BUG
 end_ifdef
 
 begin_ifdef
@@ -412,7 +410,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|((e) == EISDIR \       || ((e) == EACCES&& access (f, D_OK) == 0&& ((e) = EISDIR, 1)))
+value|((e) == EISDIR \       || ((e) == EACCES&& isdir (f)&& ((e) = EISDIR, 1)))
 end_define
 
 begin_else
@@ -429,7 +427,7 @@ name|e
 parameter_list|,
 name|f
 parameter_list|)
-value|((e) == EACCES&& access (f, D_OK) == 0)
+value|((e) == EACCES&& isdir (f))
 end_define
 
 begin_endif

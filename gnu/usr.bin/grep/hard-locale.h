@@ -1,23 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|SAVEDIR_H_
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HARD_LOCALE_H_
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SAVEDIR_H_
+name|HARD_LOCALE_H_
+value|1
 end_define
+
+begin_if
+if|#
+directive|if
+name|HAVE_CONFIG_H
+end_if
 
 begin_include
 include|#
 directive|include
-file|"exclude.h"
+file|<config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -75,28 +85,12 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|savedir
+name|int
+name|hard_locale
 name|PARAMS
 argument_list|(
 operator|(
-specifier|const
-name|char
-operator|*
-name|dir
-operator|,
-name|off_t
-name|name_size
-operator|,
-expr|struct
-name|exclude
-operator|*
-operator|,
-expr|struct
-name|exclude
-operator|*
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -106,6 +100,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HARD_LOCALE_H_ */
+end_comment
 
 end_unit
 
