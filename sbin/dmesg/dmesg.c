@@ -877,7 +877,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dmesg [-M core] [-N system]\n"
+literal|"usage: dmesg [-a] [-M core] [-N system]\n"
 argument_list|)
 expr_stmt|;
 name|exit
