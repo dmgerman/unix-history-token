@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.60 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.61 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.60 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.61 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -944,6 +944,7 @@ block|{
 if|#
 directive|if
 name|NAMED_BIND
+comment|/* check for name server timeouts */
 if|if
 condition|(
 name|errno
@@ -953,26 +954,28 @@ operator|||
 name|h_errno
 operator|==
 name|TRY_AGAIN
-condition|)
-return|return
+operator|||
 operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
-comment|/* if name server is specified, assume temp fail */
-if|if
-condition|(
 name|errno
 operator|==
 name|ECONNREFUSED
 operator|&&
 name|UseNameServer
+operator|)
 condition|)
+block|{
+name|mci
+operator|->
+name|mci_status
+operator|=
+literal|"466"
+expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 return|return

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.45 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3358,26 +3358,57 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-comment|/* Recipient: -- the name from the RCPT command */
-for|for
-control|(
+comment|/* Recipient: -- use name of alias */
 name|r
 operator|=
 name|q
-init|;
+expr_stmt|;
+if|if
+condition|(
 name|r
 operator|->
 name|q_alias
 operator|!=
 name|NULL
-condition|;
+condition|)
 name|r
 operator|=
 name|r
 operator|->
 name|q_alias
-control|)
-continue|continue;
+expr_stmt|;
+name|p
+operator|=
+name|r
+operator|->
+name|q_user
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'@'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Recipient: %s@%s"
+argument_list|,
+name|p
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -3387,9 +3418,7 @@ name|buf
 argument_list|,
 literal|"Recipient: %s"
 argument_list|,
-name|r
-operator|->
-name|q_paddr
+name|p
 argument_list|)
 expr_stmt|;
 name|putline
@@ -3477,6 +3506,22 @@ condition|(
 name|q
 operator|->
 name|q_status
+operator|==
+name|NULL
+condition|)
+name|q
+operator|->
+name|q_status
+operator|=
+name|q
+operator|->
+name|q_fstatus
+expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|q_status
 operator|!=
 name|NULL
 condition|)
@@ -3487,24 +3532,6 @@ argument_list|,
 name|q
 operator|->
 name|q_status
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|q
-operator|->
-name|q_fstatus
-operator|!=
-name|NULL
-condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-name|q
-operator|->
-name|q_fstatus
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3745,16 +3772,26 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Final-Recipient: -- if through alias */
-if|if
-condition|(
+comment|/* Final-Recipient: -- the name from the RCPT command */
+for|for
+control|(
+name|r
+operator|=
 name|q
+init|;
+name|r
 operator|->
 name|q_alias
 operator|!=
 name|NULL
-condition|)
-block|{
+condition|;
+name|r
+operator|=
+name|r
+operator|->
+name|q_alias
+control|)
+continue|continue;
 operator|(
 name|void
 operator|)
@@ -3764,7 +3801,7 @@ name|buf
 argument_list|,
 literal|"Final-Recipient: %s"
 argument_list|,
-name|q
+name|r
 operator|->
 name|q_paddr
 argument_list|)
@@ -3776,7 +3813,6 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Final-Status: -- same as Status?  XXX */
 if|if
 condition|(
@@ -3788,9 +3824,11 @@ name|NULL
 operator|&&
 name|q
 operator|->
-name|q_status
+name|q_fstatus
 operator|!=
-name|NULL
+name|q
+operator|->
+name|q_status
 condition|)
 block|{
 operator|(
@@ -3883,7 +3921,39 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Remote-Recipient: -- same as Final-Recipient?  XXX */
+elseif|else
+if|if
+condition|(
+name|q
+operator|->
+name|q_host
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Remote-MTA: %s"
+argument_list|,
+name|q
+operator|->
+name|q_host
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Remote-Recipient: -- recipient passed to far end */
 if|if
 condition|(
 name|strcmp
@@ -3892,7 +3962,7 @@ name|q
 operator|->
 name|q_user
 argument_list|,
-name|q
+name|r
 operator|->
 name|q_paddr
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.45 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,6 +624,12 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
+expr_stmt|;
+name|a
+operator|->
+name|q_status
+operator|=
+literal|"466"
 expr_stmt|;
 block|}
 comment|/* 	**  Compute return value. 	*/
