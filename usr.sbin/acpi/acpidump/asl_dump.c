@@ -890,6 +890,16 @@ parameter_list|)
 value|do {					\ 	asl_env.curname = old_name;					\ } while(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ASL_CREATE_LOCALNAMEOBJ
+parameter_list|(
+name|dp
+parameter_list|)
+value|do {				\ 	if(scope_within_method){					\ 		aml_create_name(&asl_env, dp);				\ 	}								\ }while(0);
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -3634,6 +3644,11 @@ argument_list|(
 literal|"OperationRegion("
 argument_list|)
 expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|asl_dump_termobj
 argument_list|(
 operator|&
@@ -3779,6 +3794,11 @@ case|:
 case|case
 literal|'/'
 case|:
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|name
 operator|=
 name|asl_dump_namestring
@@ -4449,7 +4469,7 @@ name|pkglength
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Field("
+literal|"BankField("
 argument_list|)
 expr_stmt|;
 name|asl_dump_termobj
@@ -5771,6 +5791,11 @@ argument_list|(
 literal|"Alias("
 argument_list|)
 expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|asl_dump_termobj
 argument_list|(
 operator|&
@@ -5805,6 +5830,11 @@ comment|/* NameOp */
 name|printf
 argument_list|(
 literal|"Name("
+argument_list|)
+expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
 argument_list|)
 expr_stmt|;
 name|asl_dump_termobj
@@ -5908,6 +5938,11 @@ comment|/* MutexOp */
 name|printf
 argument_list|(
 literal|"Mutex("
+argument_list|)
+expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
 argument_list|)
 expr_stmt|;
 name|asl_dump_termobj
@@ -6033,6 +6068,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|", "
+argument_list|)
+expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
 argument_list|)
 expr_stmt|;
 name|asl_dump_termobj
@@ -7476,6 +7516,11 @@ argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|asl_dump_termobj
 argument_list|(
 operator|&
@@ -7523,6 +7568,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|", "
+argument_list|)
+expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
 argument_list|)
 expr_stmt|;
 name|asl_dump_termobj
@@ -7574,6 +7624,11 @@ argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 name|asl_dump_termobj
 argument_list|(
 operator|&
@@ -7621,6 +7676,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|", "
+argument_list|)
+expr_stmt|;
+name|ASL_CREATE_LOCALNAMEOBJ
+argument_list|(
+name|dp
 argument_list|)
 expr_stmt|;
 name|asl_dump_termobj
