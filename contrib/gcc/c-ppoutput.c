@@ -1355,7 +1355,7 @@ name|print
 operator|.
 name|outf
 argument_list|,
-literal|"#ident \"%s\"\n"
+literal|"#ident %s\n"
 argument_list|,
 name|str
 operator|->
