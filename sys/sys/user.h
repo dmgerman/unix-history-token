@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|644
+value|648
 end_define
 
 begin_comment
