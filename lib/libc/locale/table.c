@@ -94,6 +94,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|_none_mbsinit
+parameter_list|(
+specifier|const
+name|mbstate_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|size_t
 name|_none_wcrtomb
 parameter_list|(
@@ -2094,6 +2106,22 @@ name|__restrict
 parameter_list|)
 init|=
 name|_none_mbrtowc
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|__mbsinit
+function_decl|)
+parameter_list|(
+specifier|const
+name|mbstate_t
+modifier|*
+parameter_list|)
+init|=
+name|_none_mbsinit
 function_decl|;
 end_function_decl
 
