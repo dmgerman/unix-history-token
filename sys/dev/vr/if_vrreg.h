@@ -2660,6 +2660,20 @@ name|VIA_DEVICEID_RHINE_II_2
 value|0x3065
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIA_DEVICEID_RHINE_III
+value|0x3106
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIA_DEVICEID_RHINE_III_M
+value|0x3053
+end_define
+
 begin_comment
 comment|/*  * Delta Electronics device ID.  */
 end_comment
