@@ -6819,12 +6819,14 @@ operator|==
 name|NE7_RQM
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
 argument_list|,
 literal|"ready for output in input\n"
 argument_list|)
+operator|)
 return|;
 comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
 if|if
@@ -6860,6 +6862,7 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
@@ -6870,6 +6873,7 @@ literal|"input ready timeout\n"
 else|:
 literal|0
 argument_list|)
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -6898,7 +6902,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 else|#
 directive|else
@@ -6920,7 +6926,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 endif|#
 directive|endif
@@ -6998,12 +7006,14 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
 argument_list|,
 literal|"direction bit not set\n"
 argument_list|)
+operator|)
 return|;
 comment|/* Check that the floppy controller is ready for a command */
 name|i
@@ -7061,6 +7071,7 @@ operator|<=
 literal|0
 condition|)
 return|return
+operator|(
 name|fdc_err
 argument_list|(
 name|fdc
@@ -7071,6 +7082,7 @@ literal|"output ready timeout\n"
 else|:
 literal|0
 argument_list|)
+operator|)
 return|;
 comment|/* Send the command and return */
 name|fddata_wr
