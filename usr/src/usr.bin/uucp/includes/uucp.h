@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)uucp.h	5.17	%G%	*/
+comment|/*	@(#)uucp.h	5.18	%G%	*/
 end_comment
 
 begin_include
@@ -358,6 +358,12 @@ begin_comment
 comment|/*  * If you are running 4.3bsd, define BSD4_3 and BSD4_2  * If you are just running 4.2bsd, define BSD4_2  * If you are running the BRL version of 4.2BSD define BRL4_2, NOT BSD4_3  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_3
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -368,6 +374,17 @@ begin_comment
 comment|/**/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_2
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -377,6 +394,11 @@ end_define
 begin_comment
 comment|/**/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*#define BRL4_2 /**/
