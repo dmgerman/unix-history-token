@@ -748,6 +748,12 @@ case|:
 case|case
 literal|'b'
 case|:
+case|case
+literal|'S'
+case|:
+case|case
+literal|'s'
+case|:
 return|return
 name|size
 operator|*
