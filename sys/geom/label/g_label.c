@@ -124,6 +124,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.label.debug"
+argument_list|,
+operator|&
+name|g_label_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_label
@@ -954,6 +965,20 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Skip providers with 0 sectorsize. */
+if|if
+condition|(
+name|pp
+operator|->
+name|sectorsize
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 if|if
 condition|(
 name|strcmp
