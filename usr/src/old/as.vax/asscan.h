@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)asscan.h 4.1 %G%" */
+comment|/* "@(#)asscan.h 4.2 %G%" */
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(unsigned short *)ptr=val, ptr += sizeof(short)
+value|*(unsigned short *)ptr=val,	ptr += sizeof(short)
 end_define
 
 begin_define
@@ -177,7 +177,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(unsigned int *)ptr=val, ptr += sizeof(int)
+value|*(unsigned int *)ptr=val,	ptr += sizeof(int)
 end_define
 
 begin_define
@@ -201,7 +201,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|*(unsigned long *)ptr=val,ptr += sizeof(long)
+value|*(unsigned long *)ptr=val,	ptr += sizeof(long)
 end_define
 
 begin_define
