@@ -2142,6 +2142,12 @@ operator|->
 name|p_itcallout
 argument_list|)
 expr_stmt|;
+name|getmicrouptime
+argument_list|(
+operator|&
+name|ctv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timevalisset
@@ -2152,6 +2158,7 @@ operator|.
 name|it_value
 argument_list|)
 condition|)
+block|{
 name|callout_reset
 argument_list|(
 operator|&
@@ -2172,12 +2179,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|getmicrouptime
-argument_list|(
-operator|&
-name|ctv
-argument_list|)
-expr_stmt|;
 name|timevaladd
 argument_list|(
 operator|&
@@ -2189,6 +2190,7 @@ operator|&
 name|ctv
 argument_list|)
 expr_stmt|;
+block|}
 name|oitv
 operator|=
 name|p
