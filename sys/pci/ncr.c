@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.18 1995/02/04 14:02:44 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.19 1995/02/06 22:01:58 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_PATCHLEVEL
-value|"pl10 95/02/06"
+value|"pl11 95/02/09"
 end_define
 
 begin_define
@@ -3132,7 +3132,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.18 1995/02/04 14:02:44 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.19 1995/02/06 22:01:58 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -9278,7 +9278,13 @@ argument|int ncr_intr(np) 	ncb_p np; { 	int n =
 literal|0
 argument|;  	if (DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"["
-argument|);  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
+argument|);
+comment|/* XXX only for debug */
+argument|if (bio_imask& ~cpl) { 		if (!np->lock) 			printf (
+literal|"ncr_intr(%d): unmasked bio-irq: 0x%x.\n"
+argument|, 				np->unit, bio_imask& ~cpl); 		np->lock++;
+comment|/* only one of 256 ... */
+argument|};  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
 comment|/* 		**	Repeat until no outstanding ints 		*/
 argument|do { 			ncr_exception (np); 		} while (INB(nc_istat)& (INTF|SIP|DIP));  		n=
 literal|1
@@ -9388,9 +9394,9 @@ literal|"%s: ?ITSDONE?\n"
 argument|, ncr_name (np)); 		xp->flags&= ~ITSDONE; 	};  	if (xp->bp) 		flags |= (SCSI_NOSLEEP);
 comment|/* just to be sure */
 comment|/*--------------------------------------------------- 	** 	**	Assign a ccb / bind xp 	** 	**---------------------------------------------------- 	*/
-argument|if (!(cp=ncr_get_ccb (np, flags, xp->TARGET, xp->LUN))) { 		printf (
+argument|oldspl = splbio();  	if (!(cp=ncr_get_ccb (np, flags, xp->TARGET, xp->LUN))) { 		printf (
 literal|"%s: no ccb.\n"
-argument|, ncr_name (np)); 		xp->error = XS_DRIVER_STUFFUP; 		return(TRY_AGAIN_LATER); 	}; 	cp->xfer = xp;
+argument|, ncr_name (np)); 		xp->error = XS_DRIVER_STUFFUP; 		splx(oldspl); 		return(TRY_AGAIN_LATER); 	}; 	cp->xfer = xp;
 comment|/*--------------------------------------------------- 	** 	**	timestamp 	** 	**---------------------------------------------------- 	*/
 argument|bzero (&cp->phys.header.stamp, sizeof (struct tstamp)); 	cp->phys.header.stamp.start = time;
 comment|/*---------------------------------------------------- 	** 	**	Get device quirks from a speciality table. 	** 	**	@GENSCSI@ 	**	This should be a part of the device table 	**	in "scsi_conf.c". 	** 	**---------------------------------------------------- 	*/
@@ -9529,7 +9535,7 @@ argument|;
 comment|/*---------------------------------------------------- 	** 	**	Build the data descriptors 	** 	**---------------------------------------------------- 	*/
 argument|segments = ncr_scatter (&cp->phys, (vm_offset_t) xp->data, 					(vm_size_t) xp->datalen);  	if (segments<
 literal|0
-argument|) { 		xp->error = XS_DRIVER_STUFFUP; 		ncr_free_ccb(np, cp, flags); 		return(HAD_ERROR); 	};
+argument|) { 		xp->error = XS_DRIVER_STUFFUP; 		ncr_free_ccb(np, cp, flags); 		splx(oldspl); 		return(HAD_ERROR); 	};
 comment|/*---------------------------------------------------- 	** 	**	Set the SAVED_POINTER. 	** 	**---------------------------------------------------- 	*/
 argument|if (flags& SCSI_DATA_IN) { 		cp->phys.header.savep = vtophys (&np->script->data_in); 		cp->phys.header.goalp = cp->phys.header.savep +
 literal|20
@@ -9568,11 +9574,6 @@ argument|cp->actualquirks		= tp->quirks; 	cp->host_status			= nego ? HS_NEGOTIAT
 literal|0
 argument|;  	cp->xerr_status			= XE_OK; 	cp->sync_status			= tp->sval; 	cp->nego_status			= nego; 	cp->wide_status			= tp->wval;
 comment|/*---------------------------------------------------- 	** 	**	Critical region: starting this job. 	** 	**---------------------------------------------------- 	*/
-argument|oldspl =
-literal|0
-argument|;
-comment|/* for the sake of gcc */
-argument|if (!(flags& SCSI_NOMASK)) oldspl = splbio(); 	np->lock++;
 comment|/* 	**	reselect pattern and activate this job. 	*/
 argument|cp->jump_ccb.l_cmd	= (SCR_JUMP ^ IFFALSE (DATA (cp->tag))); 	cp->tlimit		= time.tv_sec + xp->timeout /
 literal|1000
@@ -9591,8 +9592,10 @@ literal|0
 argument|]- 			(vtophys(&np->script->tryloop))));
 comment|/* 	**	Script processor may be waiting for reconnect. 	**	Wake it up. 	*/
 argument|OUTB (nc_istat, SIGP);
+comment|/* 	**	and reenable interupts 	*/
+argument|splx (oldspl);
 comment|/* 	**	If interrupts are enabled, return now. 	**	Command is successfully queued. 	*/
-argument|np->lock--; 	if (!(flags& SCSI_NOMASK)) { 		splx (oldspl); 		if (np->lasttime) { 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
+argument|if (!(flags& SCSI_NOMASK)) { 		if (np->lasttime) { 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"Q"
 argument|); 			return(SUCCESSFULLY_QUEUED); 		}; 	};
 comment|/*---------------------------------------------------- 	** 	**	Interrupts not yet enabled - have to poll. 	** 	**---------------------------------------------------- 	*/
@@ -9784,13 +9787,13 @@ argument|}
 comment|/*========================================================== ** ** **	Signal all (or one) control block done. ** ** **========================================================== */
 argument|void ncr_wakeup (ncb_p np, u_long code) {
 comment|/* 	**	Starting at the default ccb and following 	**	the links, complete all jobs with a 	**	host_status greater than "disconnect". 	** 	**	If the "code" parameter is not zero, 	**	complete all jobs that are not IDLE. 	*/
-argument|int s=splbio();  	ccb_p cp =&np->ccb; 	while (cp) { 		switch (cp->host_status) {  		case HS_IDLE: 			break;  		case HS_DISCONNECT: 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
+argument|ccb_p cp =&np->ccb; 	while (cp) { 		switch (cp->host_status) {  		case HS_IDLE: 			break;  		case HS_DISCONNECT: 			if(DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"D"
 argument|);
 comment|/* fall through */
 argument|case HS_BUSY: 		case HS_NEGOTIATE: 			if (!code) break; 			cp->host_status = code;
 comment|/* fall through */
-argument|default: 			ncr_complete (np, cp); 			break; 		}; 		cp = cp -> link_ccb; 	}; 	splx (s); }
+argument|default: 			ncr_complete (np, cp); 			break; 		}; 		cp = cp -> link_ccb; 	}; }
 comment|/*========================================================== ** ** **	Start NCR chip. ** ** **========================================================== */
 argument|void ncr_init (ncb_p np, char * msg, u_long code) { 	int	i; 	u_long	usrsync; 	u_char	usrwide;
 comment|/* 	**	Reset chip. 	*/
@@ -10087,7 +10090,7 @@ comment|/* 			**	wakeup this ccb. 			*/
 argument|ncr_complete (np, cp); 		}; 		splx (oldspl); 	}
 argument|timeout (TIMEOUT ncr_timeout, (caddr_t) np, step ? step :
 literal|1
-argument|);  	if ((INB(nc_istat)& (INTF|SIP|DIP))&& !np->lock) {
+argument|);  	if (INB(nc_istat)& (INTF|SIP|DIP)) {
 comment|/* 		**	Process pending interrupts. 		*/
 argument|int	oldspl	= splbio (); 		if (DEBUG_FLAGS& DEBUG_TINY) printf (
 literal|"{"
