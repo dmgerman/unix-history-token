@@ -296,6 +296,8 @@ name|p
 operator|->
 name|name
 argument_list|,
+name|Directory
+argument_list|,
 name|last_file
 argument_list|)
 condition|)
