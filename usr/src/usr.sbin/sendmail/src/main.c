@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.18 (Berkeley) %G%"
+literal|"@(#)main.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1680,21 +1680,19 @@ argument_list|(
 name|jbuf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ConfigLevel
-operator|<
-literal|5
-condition|)
 name|define
 argument_list|(
 literal|'w'
 argument_list|,
-name|p
+name|newstr
+argument_list|(
+name|jbuf
+argument_list|)
 argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+comment|/* must be new string */
 name|define
 argument_list|(
 literal|'j'
@@ -1760,24 +1758,6 @@ name|jbuf
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ConfigLevel
-operator|>=
-literal|5
-condition|)
-name|define
-argument_list|(
-literal|'w'
-argument_list|,
-name|newstr
-argument_list|(
-name|jbuf
-argument_list|)
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uname
@@ -2800,6 +2780,73 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SYSTEM IDENTITY (after readcf):\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t    (short domain name) $w = %s\n"
+argument_list|,
+name|macvalue
+argument_list|(
+literal|'w'
+argument_list|,
+name|CurEnv
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t(canonical domain name) $j = %s\n"
+argument_list|,
+name|macvalue
+argument_list|(
+literal|'j'
+argument_list|,
+name|CurEnv
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t       (subdomain name) $m = %s\n"
+argument_list|,
+name|macvalue
+argument_list|(
+literal|'m'
+argument_list|,
+name|CurEnv
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t            (node name) $k = %s\n"
+argument_list|,
+name|macvalue
+argument_list|(
+literal|'k'
+argument_list|,
+name|CurEnv
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_comment

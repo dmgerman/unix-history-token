@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.9 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1754,6 +1754,48 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ConfigLevel
+operator|>=
+literal|5
+condition|)
+block|{
+comment|/* level 5 configs have short name in $w */
+name|p
+operator|=
+name|macvalue
+argument_list|(
+literal|'w'
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'K'
