@@ -97,7 +97,8 @@ expr|struct
 name|mbuf
 operator|*
 operator|,
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|,
 name|size_t
 operator|,
