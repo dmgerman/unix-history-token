@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpcinfo.c,v 1.2 1995/05/30 06:33:23 rgrimes Exp $"
+literal|"$Id: rpcinfo.c,v 1.2.6.1 1997/08/07 06:40:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +382,8 @@ literal|"ptubdn:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

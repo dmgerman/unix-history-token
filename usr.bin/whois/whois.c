@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: whois.c,v 1.2.2.1 1997/08/27 06:20:34 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +223,8 @@ literal|"h:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

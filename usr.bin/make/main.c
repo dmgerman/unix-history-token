@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.14.2.1 1997/07/28 06:47:29 charnier Exp $"
+literal|"$Id: main.c,v 1.14.2.2 1997/08/27 06:32:03 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -630,7 +630,8 @@ name|OPTFLAGS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

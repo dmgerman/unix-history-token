@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: uudecode.c,v 1.4.2.1 1997/08/25 06:27:29 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +208,8 @@ literal|"cp"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

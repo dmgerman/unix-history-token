@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strip.c,v 1.6 1996/03/11 03:36:10 mpp Exp $"
+literal|"$Id: strip.c,v 1.6.2.1 1997/08/13 06:37:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -298,7 +298,8 @@ literal|"dx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

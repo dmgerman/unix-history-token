@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wc.c,v 1.4 1996/04/13 11:35:54 bde Exp $"
+literal|"$Id: wc.c,v 1.4.2.1 1997/08/26 06:52:01 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,7 +228,8 @@ literal|"lwc"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

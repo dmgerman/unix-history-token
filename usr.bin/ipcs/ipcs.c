@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ipcs.c,v 1.6.2.1 1997/07/16 06:44:27 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,7 +691,8 @@ literal|"MmQqSsabC:cN:optT"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

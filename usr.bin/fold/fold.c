@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fold.c,v 1.1.1.1.8.1 1997/07/10 06:31:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +186,8 @@ literal|"0123456789w:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

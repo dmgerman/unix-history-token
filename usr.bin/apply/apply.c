@@ -186,7 +186,8 @@ literal|"a:d0123456789"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

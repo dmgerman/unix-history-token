@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: script.c,v 1.3.2.1 1997/08/11 07:17:45 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,7 +345,8 @@ literal|"a"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -361,7 +361,8 @@ literal|"8EKLS:X:acde:fFk:l:n:rt:x"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tcopy.c,v 1.2.2.1 1997/08/18 07:03:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,7 +338,8 @@ literal|"cs:vx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lastcomm.c,v 1.4.2.1 1997/07/22 07:16:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,7 +365,8 @@ literal|"f:usecSE"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kdump.c,v 1.7.2.3 1997/07/17 06:37:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,7 +284,8 @@ literal|"f:dlm:nRTt:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

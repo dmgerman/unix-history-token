@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: odsyntax.c,v 1.2.6.1 1997/07/11 06:25:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,7 +174,8 @@ literal|"aBbcDdeFfHhIiLlOoPpswvXx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

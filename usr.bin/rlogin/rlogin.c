@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rlogin.c,v 1.13.2.1 1997/08/06 06:43:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -928,7 +928,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

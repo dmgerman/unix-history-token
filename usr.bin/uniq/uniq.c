@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: uniq.c,v 1.1.1.1.8.1 1997/08/22 06:41:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,7 +263,8 @@ literal|"-cdf:s:u"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

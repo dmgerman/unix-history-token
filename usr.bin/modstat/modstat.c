@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: modstat.c,v 1.4.2.1 1997/07/30 06:42:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,7 +387,8 @@ literal|"i:n:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

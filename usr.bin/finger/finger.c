@@ -57,7 +57,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: finger.c,v 1.9.2.1 1997/07/03 07:12:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,8 @@ literal|"lmpshoT"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.8 1996/09/06 05:24:05 jkh Exp $"
+literal|"$Id: rsh.c,v 1.8.2.1 1997/08/08 12:02:48 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kzip.c,v 1.5.2.1 1997/07/21 11:56:35 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,7 +233,8 @@ literal|"l:v"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

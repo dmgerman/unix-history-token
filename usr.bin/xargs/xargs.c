@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xargs.c,v 1.3.2.1 1997/08/28 06:22:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,7 +303,8 @@ literal|"0n:s:tx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: option.c,v 1.1.1.1.8.1 1997/07/30 06:43:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,7 +285,8 @@ literal|"0123456789/:ceinst:ux:f"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

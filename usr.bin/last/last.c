@@ -434,7 +434,8 @@ literal|"0123456789f:h:t:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: strings.c,v 1.4.2.1 1997/08/12 06:42:27 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -335,7 +335,8 @@ literal|"-0123456789an:of"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vmstat.c,v 1.15.2.1 1997/08/26 06:35:18 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,7 +758,8 @@ literal|"c:fiM:mN:stw:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ktrace.c,v 1.6.2.1 1997/03/15 10:40:15 joerg Exp $"
+literal|"$Id: ktrace.c,v 1.6.2.2 1997/07/18 06:37:20 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,7 +256,8 @@ literal|"aCcdf:g:ip:t:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

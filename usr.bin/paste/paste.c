@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: paste.c,v 1.1.1.1.8.1 1997/08/01 06:44:23 charnier Exp $"
+literal|"$Id: paste.c,v 1.1.1.1.8.2 1997/08/05 03:40:23 asami Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +223,8 @@ literal|"d:s"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

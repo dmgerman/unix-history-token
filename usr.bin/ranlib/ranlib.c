@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ranlib.c,v 1.2.2.1 1997/08/05 06:39:14 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,7 +212,8 @@ literal|"t"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

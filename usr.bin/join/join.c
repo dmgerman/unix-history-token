@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: join.c,v 1.3.2.3 1997/08/21 02:59:40 jlemon Exp $"
+literal|"$Id: join.c,v 1.3.2.4 1997/08/21 15:04:29 jlemon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -558,7 +558,8 @@ literal|"\01a:e:j:1:2:o:t:v:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

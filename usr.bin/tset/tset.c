@@ -54,7 +54,7 @@ name|char
 name|rcdif
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tset.c,v 1.10.2.1 1997/08/20 07:19:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,7 +408,8 @@ literal|"-a:d:e:Ii:k:m:np:QSrs"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

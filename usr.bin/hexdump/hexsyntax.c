@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: hexsyntax.c,v 1.4.2.1 1997/07/11 06:25:55 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,7 +195,8 @@ literal|"bcCde:f:n:os:vx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

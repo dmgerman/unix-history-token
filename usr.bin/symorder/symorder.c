@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: symorder.c,v 1.12.2.1 1997/08/13 06:39:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,8 @@ literal|"cmtx:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lock.c,v 1.2.2.1 1997/07/22 07:28:27 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,7 +336,8 @@ literal|"npt:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
