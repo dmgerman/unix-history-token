@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.25 1999/07/05 20:24:46 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.26 1999/07/05 22:01:48 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -444,7 +444,7 @@ name|ISP2200_CODE_LENGTH
 block|,
 name|ISP2100_CODE_ORG
 block|,
-name|ISP2200_RISC_CODE
+name|ISP2200_CODE_VERSION
 block|,
 literal|0
 block|,
