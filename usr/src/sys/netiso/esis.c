@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.9 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.10 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1888,7 +1888,7 @@ begin_decl_stmt
 name|int
 name|ESHonly
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2387,6 +2387,8 @@ argument_list|)
 decl_stmt|;
 name|u_short
 name|ht
+decl_stmt|,
+name|newct
 decl_stmt|;
 comment|/* holding time */
 name|struct
@@ -2512,9 +2514,31 @@ index|[
 literal|3
 index|]
 argument_list|,
-name|esis_config_time
+name|newct
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|esis_config_time
+operator|!=
+name|newct
+condition|)
+block|{
+name|untimeout
+argument_list|(
+name|esis_config
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|esis_config_time
+operator|=
+name|newct
+expr_stmt|;
+name|esis_config
+argument_list|()
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|printf
