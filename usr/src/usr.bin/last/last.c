@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.18 (Berkeley) %G%"
+literal|"@(#)last.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -83,19 +83,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<utmp.h>
 end_include
 
 begin_include
@@ -268,7 +286,104 @@ begin_comment
 comment|/* wtmp file */
 end_comment
 
+begin_decl_stmt
+name|void
+name|addarg
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|TTY
+modifier|*
+name|addtty
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|hostconv
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|onintr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ttyconv
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|want
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|utmp
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|wtmp
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -296,17 +411,9 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|long
-name|atol
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|ttyconv
-argument_list|()
 decl_stmt|;
 name|maxrec
 operator|=
@@ -564,12 +671,10 @@ begin_comment
 comment|/*  * wtmp --  *	read through the wtmp file  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|wtmp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -593,14 +698,8 @@ name|long
 name|bl
 decl_stmt|,
 name|delta
-decl_stmt|,
-comment|/* time difference */
-name|lseek
-argument_list|()
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
+comment|/* time difference */
 name|int
 name|bytes
 decl_stmt|,
@@ -612,28 +711,7 @@ name|ct
 decl_stmt|,
 modifier|*
 name|crmsg
-decl_stmt|,
-modifier|*
-name|asctime
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
 decl_stmt|;
-name|TTY
-modifier|*
-name|addtty
-parameter_list|()
-function_decl|;
-name|void
-name|onintr
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -1345,34 +1423,29 @@ literal|11
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * want --  *	see if want this entry  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|want
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|,
+parameter_list|,
 name|check
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|utmp
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|check
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|ARG
@@ -1554,46 +1627,33 @@ name|NO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * addarg --  *	add an entry to a linked list of arguments  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|addarg
-argument_list|(
-argument|type
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|type
+parameter_list|,
+name|arg
+parameter_list|)
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|ARG
 modifier|*
 name|cur
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -1653,7 +1713,7 @@ operator|=
 name|cur
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * addtty --  *	add an entry to a linked list of ttys  */
@@ -1676,11 +1736,6 @@ name|TTY
 modifier|*
 name|cur
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|!
@@ -1754,21 +1809,16 @@ begin_comment
 comment|/*  * hostconv --  *	convert the hostname to search pattern; if the supplied host name  *	has a domain attached that is the same as the current domain, rip  *	off the domain suffix since that's what login(1) does.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|hostconv
-argument_list|(
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arg
+parameter_list|)
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|int
@@ -1870,7 +1920,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ttyconv --  *	convert tty to correct name.  */
@@ -1891,14 +1941,6 @@ block|{
 name|char
 modifier|*
 name|mval
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
 decl_stmt|;
 comment|/* 	 * kludge -- we assume that all tty's end with 	 * a two character suffix. 	 */
 if|if
