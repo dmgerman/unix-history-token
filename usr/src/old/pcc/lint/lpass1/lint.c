@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.4	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1180,7 +1180,7 @@ name|FLEXNAMES
 argument|if( strncmp( s, fsname.f.fn, LFNM ) ){
 else|#
 directive|else
-argument|if( strcmp(s, fsname.f.fn)) {
+argument|if (fsname.f.fn == NULL || strcmp(s, fsname.f.fn)) {
 endif|#
 directive|endif
 comment|/* new one */
