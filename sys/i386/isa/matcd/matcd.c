@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.14 1995/12/10 19:52:36 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.15 1996/03/28 14:29:52 scrappy Exp $ */
 end_comment
 
 begin_comment
@@ -49,19 +49,11 @@ directive|include
 file|"matcd.h"
 end_include
 
-begin_comment
-comment|/*<26>*/
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
 
 begin_include
 include|#
@@ -69,19 +61,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_comment
-comment|/*<16>*/
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/buf.h>
 end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
 
 begin_include
 include|#
@@ -89,19 +73,11 @@ directive|include
 file|<sys/dkbad.h>
 end_include
 
-begin_comment
-comment|/*<16>*/
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/cdio.h>
 end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
 
 begin_include
 include|#
@@ -109,19 +85,11 @@ directive|include
 file|<sys/disklabel.h>
 end_include
 
-begin_comment
-comment|/*<16>*/
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
 
 begin_include
 include|#
@@ -129,19 +97,11 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_comment
-comment|/*<16>*/
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/proc.h>
 end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
 
 begin_include
 include|#
@@ -173,21 +133,11 @@ begin_comment
 comment|/*Host interface related defs*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREE2
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/devconf.h>
 end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
 
 begin_include
 include|#
@@ -222,44 +172,6 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*FREE2*/
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_comment
-comment|/*<16>*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*FREE2*/
-end_comment
-
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	Defines and structures ---------------------------------------------------------------------------*/
 end_comment
@@ -284,92 +196,6 @@ end_define
 
 begin_comment
 comment|/*Max possible drives*/
-end_comment
-
-begin_if
-if|#
-directive|if
-name|DIAGPORT
-operator|>
-literal|0xff
-end_if
-
-begin_comment
-comment|/*<10>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIAGOUT
-value|outw
-end_define
-
-begin_comment
-comment|/*<10>*/
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*DIAGPORT*/
-end_comment
-
-begin_comment
-comment|/*<10>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIAGOUT
-value|outb
-end_define
-
-begin_comment
-comment|/*<10>*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DIAGPORT*/
-end_comment
-
-begin_comment
-comment|/*<10>*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|diagloop
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*<18>Used to show looping*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DIAGPORT*/
 end_comment
 
 begin_define
@@ -403,32 +229,6 @@ end_define
 
 begin_comment
 comment|/*Maximum possible tracks*/
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FREE2
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RAW_PART
-value|2
-end_define
-
-begin_comment
-comment|/*Needs to be defined in 1.1.5.1*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*FREE2*/
 end_comment
 
 begin_define
@@ -580,7 +380,6 @@ specifier|static
 struct|struct
 name|matcd_data
 block|{
-comment|/*<18>*/
 name|short
 name|drivemode
 decl_stmt|;
@@ -601,7 +400,6 @@ decl_stmt|;
 name|short
 name|iobase
 decl_stmt|;
-comment|/*<20>*/
 name|short
 name|iftype
 decl_stmt|;
@@ -780,7 +578,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|buf
+name|buf_queue_head
 name|request_head
 index|[
 name|NUMCTRLRS
@@ -895,12 +693,6 @@ begin_comment
 comment|/*	This mystery structure is supposed to make dynamic driver 	loading possible. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREE2
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -912,7 +704,6 @@ index|]
 init|=
 block|{
 block|{
-comment|/*<12>*/
 literal|0
 block|,
 literal|0
@@ -932,7 +723,6 @@ block|,
 literal|"bio"
 block|}
 block|,
-comment|/*<20>*/
 name|isa_generic_externalize
 block|,
 literal|0
@@ -941,7 +731,6 @@ literal|0
 block|,
 name|ISA_EXTERNALLEN
 block|,
-comment|/*<12>*/
 operator|&
 name|kdc_isa0
 block|,
@@ -958,19 +747,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*<12>*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*FREE2*/
-end_comment
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	These macros take apart the minor number and yield the 	partition, drive on controller, and controller. 	This must match the settings in /dev/MAKEDEV. ---------------------------------------------------------------------------*/
@@ -1022,10 +798,6 @@ directive|ifdef
 name|LOCKDRIVE
 end_ifdef
 
-begin_comment
-comment|/*<15>*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1036,10 +808,6 @@ parameter_list|)
 value|(((minor(dev))& 0x80)>> 5)
 end_define
 
-begin_comment
-comment|/*<24>*/
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -1047,95 +815,6 @@ end_endif
 
 begin_comment
 comment|/*LOCKDRIVE*/
-end_comment
-
-begin_comment
-comment|/*<15>*/
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FREE2
-end_ifndef
-
-begin_comment
-comment|/*--------------------------------------------------------------------------- 	This makes the long function names shorter for systems 	using the older kernel config program ---------------------------------------------------------------------------*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|matcdopen
-value|matopen
-end_define
-
-begin_comment
-comment|/*<8>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|matcdclose
-value|matclose
-end_define
-
-begin_comment
-comment|/*<8>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|matcdstrategy
-value|matstrategy
-end_define
-
-begin_comment
-comment|/*<8>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|matcdioctl
-value|matioctl
-end_define
-
-begin_comment
-comment|/*<8>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|matcdsize
-value|matsize
-end_define
-
-begin_comment
-comment|/*<8>*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|matcddriver
-value|matdriver
-end_define
-
-begin_comment
-comment|/*<10>*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*FREE2*/
 end_comment
 
 begin_comment
@@ -1178,21 +857,10 @@ name|matcd_probe
 block|,
 name|matcd_attach
 block|,
-comment|/*<16>*/
 literal|"matcdc"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*<20>*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREE2
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1212,13 +880,6 @@ begin_decl_stmt
 specifier|static
 name|d_ioctl_t
 name|matcdioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_dump_t
-name|matcddump
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,27 +994,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREE2 */
-end_comment
-
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	Internal function declarations ---------------------------------------------------------------------------*/
 end_comment
@@ -1375,10 +1015,8 @@ specifier|static
 name|void
 name|matcd_start
 parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|dp
+name|int
+name|controller
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1677,10 +1315,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*<12>*/
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -1712,7 +1346,6 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-comment|/*<12>*/
 name|struct
 name|ioc_vol
 modifier|*
@@ -1723,10 +1356,6 @@ name|action
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<12>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1742,7 +1371,6 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-comment|/*<12>*/
 name|struct
 name|ioc_patch
 modifier|*
@@ -1750,10 +1378,6 @@ name|routing
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<12>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1769,16 +1393,11 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-comment|/*<12>*/
 name|int
 name|command
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<12>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1794,7 +1413,6 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-comment|/*<12>*/
 name|struct
 name|ioc_pitch
 modifier|*
@@ -1802,10 +1420,6 @@ name|speed
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<12>*/
-end_comment
 
 begin_endif
 endif|#
@@ -1830,7 +1444,6 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-comment|/*<13>*/
 name|struct
 name|ioc_toc_header
 modifier|*
@@ -1838,10 +1451,6 @@ name|toc
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<13>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1854,11 +1463,9 @@ parameter_list|,
 name|int
 name|cdrive
 parameter_list|,
-comment|/*<13>*/
 name|int
 name|controller
 parameter_list|,
-comment|/*<13>*/
 name|struct
 name|ioc_read_toc_entry
 modifier|*
@@ -1866,10 +1473,6 @@ name|ioc_entry
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<13>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1885,7 +1488,6 @@ parameter_list|,
 name|int
 name|controller
 parameter_list|,
-comment|/*<14>*/
 name|struct
 name|ioc_read_subchannel
 modifier|*
@@ -1893,10 +1495,6 @@ name|sqp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<14>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1910,10 +1508,6 @@ name|sqp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<26>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1936,10 +1530,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*<14>*/
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -1953,10 +1543,6 @@ name|ldrive
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<14>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1980,10 +1566,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*<14>*/
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -2000,10 +1582,6 @@ name|controller
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<14>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -2022,10 +1600,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*<16>*/
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -2037,7 +1611,6 @@ parameter_list|,
 name|int
 name|cdrive
 parameter_list|,
-comment|/*<23>*/
 name|int
 name|controller
 parameter_list|,
@@ -2046,10 +1619,6 @@ name|action
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<23>*/
-end_comment
 
 begin_function_decl
 specifier|static
@@ -2066,7 +1635,6 @@ parameter_list|,
 name|int
 name|cdrive
 parameter_list|,
-comment|/*<14>*/
 name|int
 name|controller
 parameter_list|,
@@ -2075,10 +1643,6 @@ name|port
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*<14>*/
-end_comment
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	matcdopen - Open the device  	This routine actually gets called every time anybody opens 	any partition on a drive.  But the first call is the one that 	does all the work.<15>	If LOCKDRIVE is enabled, additional minor number devices allow<15>	the drive to be locked while being accessed. ---------------------------------------------------------------------------*/
@@ -2097,13 +1661,11 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-comment|/*<22>*/
 name|struct
 name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*<22>*/
 block|{
 name|int
 name|cdrive
@@ -2116,7 +1678,6 @@ name|controller
 decl_stmt|,
 name|lock
 decl_stmt|;
-comment|/*<24>*/
 name|struct
 name|matcd_data
 modifier|*
@@ -2129,7 +1690,6 @@ name|z
 decl_stmt|,
 name|port
 decl_stmt|;
-comment|/*<14>*/
 name|unsigned
 name|char
 name|cmd
@@ -2137,37 +1697,6 @@ index|[
 name|MAXCMDSIZ
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|DIAGPORT
-operator|==
-literal|0x302
-comment|/*<10>*/
-name|DIAGOUT
-argument_list|(
-literal|0x300
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/*<10>Init diag board in case some 					  other device probe scrambled it*/
-endif|#
-directive|endif
-comment|/*<10>DIAGPORT*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x10
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|ldrive
 operator|=
 name|matcd_ldrive
@@ -2203,7 +1732,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*<24>*/
 name|cd
 operator|=
 operator|&
@@ -2375,7 +1903,6 @@ argument_list|,
 name|z
 argument_list|)
 expr_stmt|;
-comment|/*<16>*/
 endif|#
 directive|endif
 comment|/*DEBUGOPEN*/
@@ -2624,7 +2151,6 @@ argument_list|,
 name|ldrive
 argument_list|)
 expr_stmt|;
-comment|/*<18>*/
 endif|#
 directive|endif
 comment|/*DEBUGOPEN*/
@@ -2884,7 +2410,6 @@ comment|/*DEBUGOPEN*/
 ifdef|#
 directive|ifdef
 name|LOCKDRIVE
-comment|/*<15>*/
 if|if
 condition|(
 name|cd
@@ -2896,7 +2421,6 @@ operator|&&
 name|lock
 condition|)
 block|{
-comment|/*<24>*/
 name|zero_cmd
 argument_list|(
 name|cmd
@@ -3074,13 +2598,11 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-comment|/*<22>*/
 name|struct
 name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*<22>*/
 block|{
 name|int
 name|ldrive
@@ -3095,7 +2617,6 @@ name|controller
 decl_stmt|,
 name|lock
 decl_stmt|;
-comment|/*<24>*/
 name|struct
 name|matcd_data
 modifier|*
@@ -3135,7 +2656,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*<24>*/
 name|cd
 operator|=
 name|matcd_data
@@ -3149,20 +2669,6 @@ operator|->
 name|iobase
 expr_stmt|;
 comment|/*and port#*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x20
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 if|if
 condition|(
 name|ldrive
@@ -3328,7 +2834,6 @@ operator||
 name|MATCDLOCK
 operator|)
 expr_stmt|;
-comment|/*<15>*/
 comment|/*<15>Clear warning flag*/
 block|}
 return|return
@@ -3358,11 +2863,6 @@ name|matcd_data
 modifier|*
 name|cd
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|dp
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -3371,20 +2871,6 @@ name|ldrive
 decl_stmt|,
 name|controller
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x30
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|ldrive
 operator|=
 name|matcd_ldrive
@@ -3581,85 +3067,21 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/*Make sure we don't get intr'ed*/
-name|dp
-operator|=
+name|tqdisksort
+argument_list|(
 operator|&
 name|request_head
 index|[
 name|controller
 index|]
-expr_stmt|;
-comment|/*Pointer to controller queue*/
-name|disksort
-argument_list|(
-name|dp
 argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
 comment|/*Add new request (bp) to queue (dp 					  and sort the requests in a way that 					  may not be ideal for CD-ROM media*/
-ifdef|#
-directive|ifdef
-name|DEBUGQUEUE
-name|printf
-argument_list|(
-literal|"matcd%d: Dump BP chain:  -------\n"
-argument_list|,
-name|ldrive
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|bp
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Block %d\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|bp
-operator|->
-name|b_pblkno
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREE2
-name|bp
-operator|=
-name|bp
-operator|->
-name|b_actf
-expr_stmt|;
-else|#
-directive|else
-comment|/*FREE2*/
-name|bp
-operator|=
-name|bp
-operator|->
-name|av_forw
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*FREE2*/
-block|}
-name|printf
-argument_list|(
-literal|"matcd%d: ---------------------\n"
-argument_list|,
-name|ldrive
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*DEBUGQUEUE*/
 name|matcd_start
 argument_list|(
-name|dp
+name|controller
 argument_list|)
 expr_stmt|;
 comment|/*Ok, with our newly sorted queue, 					  see if we can start an I/O operation 					  right now*/
@@ -3710,10 +3132,8 @@ specifier|static
 name|void
 name|matcd_start
 parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|dp
+name|int
+name|controller
 parameter_list|)
 block|{
 name|struct
@@ -3735,36 +3155,21 @@ name|int
 name|part
 decl_stmt|,
 name|ldrive
-decl_stmt|,
-name|controller
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x40
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-name|diagloop
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
-if|if
-condition|(
-operator|(
 name|bp
 operator|=
-name|dp
-operator|->
-name|b_actf
-operator|)
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|request_head
+index|[
+name|controller
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
 operator|==
 name|NULL
 condition|)
@@ -3804,16 +3209,6 @@ name|ldrive
 index|]
 expr_stmt|;
 comment|/*Get pointer to data for this drive*/
-name|controller
-operator|=
-name|matcd_controller
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-expr_stmt|;
-comment|/*Also get interface #*/
 ifdef|#
 directive|ifdef
 name|DEBUGIO
@@ -3839,7 +3234,6 @@ operator|&
 name|BUSBUSY
 condition|)
 block|{
-comment|/*<18>*/
 ifdef|#
 directive|ifdef
 name|DEBUGIO
@@ -3858,32 +3252,19 @@ comment|/*DEBUGIO*/
 return|return;
 block|}
 comment|/*	Ok, the controller is idle (not necessarily the drive) and so 	get the command to do and issue it */
-ifdef|#
-directive|ifdef
-name|FREE2
-name|dp
-operator|->
-name|b_actf
-operator|=
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|request_head
+index|[
+name|controller
+index|]
+argument_list|,
 name|bp
-operator|->
-name|b_actf
+argument_list|,
+name|b_act
+argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/*FREE2*/
-name|dp
-operator|->
-name|b_actf
-operator|=
-name|bp
-operator|->
-name|av_forw
-expr_stmt|;
-comment|/*Get next request from queue*/
-endif|#
-directive|endif
-comment|/*FREE2*/
 name|part
 operator|=
 name|matcd_partition
@@ -4019,7 +3400,6 @@ parameter_list|,
 name|caddr_t
 name|addr
 parameter_list|,
-comment|/*<22>*/
 name|int
 name|flags
 parameter_list|,
@@ -4028,7 +3408,6 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-comment|/*<22>*/
 block|{
 name|struct
 name|matcd_data
@@ -4056,20 +3435,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGIOCTL*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x50
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|ldrive
 operator|=
 name|matcd_ldrive
@@ -4185,7 +3550,6 @@ name|controller
 argument_list|)
 operator|)
 return|;
-comment|/*<16>*/
 if|if
 condition|(
 operator|!
@@ -4212,17 +3576,14 @@ block|{
 case|case
 name|DIOCSBAD
 case|:
-comment|/*<9>*/
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*<9>*/
 case|case
 name|DIOCGDINFO
 case|:
-comment|/*<9>*/
 operator|*
 operator|(
 expr|struct
@@ -4235,17 +3596,14 @@ name|cd
 operator|->
 name|dlabel
 expr_stmt|;
-comment|/*<9>*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*<9>*/
 case|case
 name|DIOCGPART
 case|:
-comment|/*<9>*/
 operator|(
 operator|(
 expr|struct
@@ -4262,7 +3620,6 @@ name|cd
 operator|->
 name|dlabel
 expr_stmt|;
-comment|/*<9>*/
 operator|(
 operator|(
 expr|struct
@@ -4274,7 +3631,6 @@ operator|)
 operator|->
 name|part
 operator|=
-comment|/*<9>*/
 operator|&
 name|cd
 operator|->
@@ -4288,25 +3644,17 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-comment|/*<9>*/
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/*<9>*/
 case|case
 name|DIOCWDINFO
 case|:
-comment|/*<9>*/
 case|case
 name|DIOCSDINFO
 case|:
-comment|/*<9>*/
-ifdef|#
-directive|ifdef
-name|FREE2
-comment|/*<10>*/
 if|if
 condition|(
 operator|(
@@ -4318,18 +3666,14 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*<9>*/
 return|return
 operator|(
 name|EBADF
 operator|)
 return|;
-comment|/*<9>*/
 block|}
-comment|/*<9>*/
 else|else
 block|{
-comment|/*<9>*/
 return|return
 name|setdisklabel
 argument_list|(
@@ -4338,7 +3682,6 @@ name|cd
 operator|->
 name|dlabel
 argument_list|,
-comment|/*<9>*/
 operator|(
 expr|struct
 name|disklabel
@@ -4349,22 +3692,15 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|/*<9>*/
 block|}
-comment|/*<9>*/
-endif|#
-directive|endif
-comment|/*<10>FREE2*/
 case|case
 name|DIOCWLABEL
 case|:
-comment|/*<9>*/
 return|return
 operator|(
 name|EBADF
 operator|)
 return|;
-comment|/*<9>*/
 case|case
 name|CDIOCEJECT
 case|:
@@ -4383,7 +3719,6 @@ return|;
 case|case
 name|CDIOCALLOW
 case|:
-comment|/*<23>*/
 return|return
 operator|(
 name|matcd_dlock
@@ -4392,18 +3727,15 @@ name|ldrive
 argument_list|,
 name|cdrive
 argument_list|,
-comment|/*<23>*/
 name|controller
 argument_list|,
 literal|0
 argument_list|)
 operator|)
 return|;
-comment|/*<23>*/
 case|case
 name|CDIOCPREVENT
 case|:
-comment|/*<23>*/
 return|return
 operator|(
 name|matcd_dlock
@@ -4412,14 +3744,12 @@ name|ldrive
 argument_list|,
 name|cdrive
 argument_list|,
-comment|/*<23>*/
 name|controller
 argument_list|,
 name|MATCDLOCK
 argument_list|)
 operator|)
 return|;
-comment|/*<23>*/
 ifdef|#
 directive|ifdef
 name|FULLDRIVER
@@ -4484,7 +3814,6 @@ name|RESUME
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCPAUSE
 case|:
@@ -4502,7 +3831,6 @@ literal|0
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCSTOP
 case|:
@@ -4518,7 +3846,6 @@ name|controller
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCGETVOL
 case|:
@@ -4535,7 +3862,6 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<12>*/
 operator|(
 expr|struct
 name|ioc_vol
@@ -4547,7 +3873,6 @@ name|command
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCSETMONO
 case|:
@@ -4586,12 +3911,10 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<12>*/
 name|command
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCSETPATCH
 case|:
@@ -4606,7 +3929,6 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<12>*/
 operator|(
 expr|struct
 name|ioc_patch
@@ -4616,7 +3938,6 @@ name|addr
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCPITCH
 case|:
@@ -4631,7 +3952,6 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<12>*/
 operator|(
 expr|struct
 name|ioc_pitch
@@ -4641,7 +3961,6 @@ name|addr
 argument_list|)
 operator|)
 return|;
-comment|/*<12>*/
 case|case
 name|CDIOCSTART
 case|:
@@ -4669,7 +3988,6 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<13>*/
 operator|(
 expr|struct
 name|ioc_toc_header
@@ -4679,7 +3997,6 @@ name|addr
 argument_list|)
 operator|)
 return|;
-comment|/*<13>*/
 case|case
 name|CDIOREADTOCENTRYS
 case|:
@@ -4693,7 +4010,6 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<13>*/
 operator|(
 expr|struct
 name|ioc_read_toc_entry
@@ -4703,7 +4019,6 @@ name|addr
 argument_list|)
 operator|)
 return|;
-comment|/*<13>*/
 case|case
 name|CDIOCREADSUBCHANNEL
 case|:
@@ -4717,7 +4032,6 @@ name|cdrive
 argument_list|,
 name|controller
 argument_list|,
-comment|/*<14>*/
 operator|(
 expr|struct
 name|ioc_read_subchannel
@@ -4727,7 +4041,6 @@ name|addr
 argument_list|)
 operator|)
 return|;
-comment|/*<14>*/
 case|case
 name|CDIOCCAPABILITY
 case|:
@@ -4745,7 +4058,6 @@ name|addr
 argument_list|)
 operator|)
 return|;
-comment|/*<16>*/
 case|case
 name|CDIOCRESET
 case|:
@@ -4943,37 +4255,6 @@ operator|=
 name|nextcontroller
 expr_stmt|;
 comment|/*Controller defined by pass for now*/
-if|#
-directive|if
-name|DIAGPORT
-operator|==
-literal|0x302
-comment|/*<10>*/
-name|DIAGOUT
-argument_list|(
-literal|0x300
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-comment|/*<10>Init diag board in case some 					  other device probe scrambled it*/
-endif|#
-directive|endif
-comment|/*<10>DIAGPORT*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x60
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 if|if
 condition|(
 name|nextcontroller
@@ -5394,7 +4675,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*<20>*/
 ifdef|#
 directive|ifdef
 name|RESETONBOOT
@@ -5460,7 +4740,6 @@ name|STEN
 operator|)
 operator|)
 operator|||
-comment|/*<16>*/
 operator|(
 name|inb
 argument_list|(
@@ -5472,7 +4751,6 @@ operator|!=
 literal|0xff
 operator|)
 condition|)
-comment|/*<16>*/
 return|return
 operator|(
 operator|-
@@ -5568,7 +4846,6 @@ name|iftype
 operator|=
 literal|0
 expr_stmt|;
-comment|/*<20>*/
 name|inb
 argument_list|(
 name|port
@@ -5659,12 +4936,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREE2
-end_ifdef
-
 begin_comment
 comment|/*---------------------------------------------------------------------------<12>	matcd_register - Something to handle dynamic driver loading. 		Sorry for the lousy description but no one could point 		me to anything that explained what it is for either. 		Added in Edit 12. ---------------------------------------------------------------------------*/
 end_comment
@@ -5740,15 +5011,6 @@ return|return;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*FREE2*/
-end_comment
-
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	matcd_attach - Locates drives on the adapters that were located. 		If we got here, we located an interface and at least one 		drive.  Now we figure out how many drives are under that 		interface.  The Panasonic interface is too simple to call 		it a controller, but in the existing PDP model, that is 		what it would be. ---------------------------------------------------------------------------*/
 end_comment
@@ -5802,20 +5064,6 @@ decl_stmt|;
 comment|/*Take port ID selected in probe()*/
 ifdef|#
 directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x70
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
-ifdef|#
-directive|ifdef
 name|DEBUGPROBE
 name|printf
 argument_list|(
@@ -5839,13 +5087,11 @@ name|printf
 argument_list|(
 literal|"matcdc%d Host interface type %d\n"
 argument_list|,
-comment|/*<20>*/
 name|nextcontroller
 argument_list|,
 name|iftype
 argument_list|)
 expr_stmt|;
-comment|/*<20>*/
 for|for
 control|(
 name|cdrive
@@ -6068,7 +5314,6 @@ name|iftype
 operator|=
 name|iftype
 expr_stmt|;
-comment|/*<20>*/
 name|cd
 operator|->
 name|openflags
@@ -6091,7 +5336,6 @@ index|]
 operator|=
 name|DEFVOL
 expr_stmt|;
-comment|/*<12>*/
 comment|/*<12>Match volume drive resets to*/
 name|cd
 operator|->
@@ -6119,7 +5363,6 @@ name|status
 operator|=
 name|CD_AS_NO_STATUS
 expr_stmt|;
-comment|/*<14>*/
 for|for
 control|(
 name|i
@@ -6333,20 +5576,6 @@ name|i
 decl_stmt|,
 name|z
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x80
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|outb
 argument_list|(
 name|port
@@ -6467,20 +5696,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGCMD*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0x90
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|draincmd
 argument_list|(
 name|port
@@ -6740,20 +5955,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGCMD*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xa0
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|draincmd
 argument_list|(
 name|port
@@ -6940,7 +6141,6 @@ name|STEN
 operator|)
 condition|)
 return|return;
-comment|/*<19>*/
 name|printf
 argument_list|(
 literal|"matcd%d: in draincmd: bus not idle %x - trying to fix\n"
@@ -7046,7 +6246,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*<16>*/
 ifdef|#
 directive|ifdef
 name|DEBUGCMD
@@ -7128,12 +6327,10 @@ name|STEN
 operator|)
 condition|)
 block|{
-comment|/*<19>*/
 name|printf
 argument_list|(
 literal|"matcd%d: Bus not idle %x - resetting\n"
 argument_list|,
-comment|/*<18>*/
 name|cdrive
 argument_list|,
 name|inb
@@ -7614,20 +6811,6 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xB0
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|zero_cmd
 argument_list|(
 name|cmd
@@ -7836,7 +7019,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 if|if
 condition|(
 operator|(
@@ -8133,20 +7315,16 @@ name|cdrive
 decl_stmt|;
 name|int
 name|port
+decl_stmt|,
+name|controller
 decl_stmt|;
 name|short
 name|iftype
 decl_stmt|;
-comment|/*<20>*/
 name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|dp
 decl_stmt|;
 name|struct
 name|matcd_data
@@ -8182,26 +7360,6 @@ index|[
 name|MAXCMDSIZ
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xC0
-operator|+
-operator|(
-name|diagloop
-operator|*
-literal|0x100
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|mbx
 operator|=
 operator|&
@@ -8241,7 +7399,6 @@ name|mbx
 operator|->
 name|iftype
 expr_stmt|;
-comment|/*<20>*/
 name|bp
 operator|=
 name|mbx
@@ -8256,15 +7413,13 @@ index|[
 name|ldrive
 index|]
 expr_stmt|;
-name|dp
-operator|=
-operator|&
-name|request_head
-index|[
-name|mbx
-operator|->
 name|controller
-index|]
+operator|=
+name|cd
+operator|->
+name|mbx
+operator|.
+name|controller
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -8308,26 +7463,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGIO*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xCF
-operator|+
-operator|(
-name|diagloop
-operator|*
-literal|0x100
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 switch|switch
 condition|(
 name|state
@@ -8355,24 +7490,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGIO*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|diagloop
-operator|=
-literal|0
-expr_stmt|;
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xC1
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 comment|/* to check for raw/cooked mode */
 if|if
 condition|(
@@ -8690,27 +7807,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGIO*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xC2
-operator|+
-operator|(
-name|diagloop
-operator|++
-operator|*
-literal|0x100
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 switch|switch
 condition|(
 name|phase
@@ -8856,7 +7952,6 @@ operator|==
 name|STEN
 condition|)
 block|{
-comment|/*<19>*/
 operator|*
 name|addr
 operator|++
@@ -8902,7 +7997,6 @@ operator|+
 name|STATUS
 argument_list|)
 operator|&
-comment|/*<20>*/
 operator|(
 name|DTEN
 operator||
@@ -8913,7 +8007,6 @@ operator|==
 name|STEN
 condition|)
 block|{
-comment|/*<20>*/
 operator|*
 name|addr
 operator|++
@@ -8925,21 +8018,17 @@ operator|+
 name|ALTDATA
 argument_list|)
 expr_stmt|;
-comment|/*<20>*/
 ifdef|#
 directive|ifdef
 name|DEBUGIO
 name|i
 operator|++
 expr_stmt|;
-comment|/*<20>*/
 endif|#
 directive|endif
 comment|/*DEBUGIO*/
 block|}
-comment|/*<20>*/
 block|}
-comment|/*<20>*/
 ifdef|#
 directive|ifdef
 name|DEBUGIO
@@ -9100,7 +8189,7 @@ expr_stmt|;
 comment|/*Release bus lock*/
 name|matcd_start
 argument_list|(
-name|dp
+name|controller
 argument_list|)
 expr_stmt|;
 comment|/*See if other drives have work*/
@@ -9235,26 +8324,6 @@ block|}
 block|}
 block|}
 comment|/*<14>	The other error types are either something very bad or the media<14>	has been removed by the user.  In both cases there is no retry<14>	for this call.  We will invalidate the label in both cases. */
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xCE
-operator|+
-operator|(
-name|diagloop
-operator|*
-literal|0x100
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|bp
 operator|->
 name|b_flags
@@ -9285,7 +8354,7 @@ argument_list|)
 expr_stmt|;
 name|matcd_start
 argument_list|(
-name|dp
+name|controller
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9346,20 +8415,6 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xD0
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|matcd_slowcmd
 argument_list|(
 name|port
@@ -9386,7 +8441,6 @@ argument_list|,
 literal|"matcmd"
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 name|z
 operator|=
 name|get_stat
@@ -9703,7 +8757,6 @@ name|status
 decl_stmt|,
 name|busstat
 decl_stmt|;
-comment|/*<16>*/
 name|status
 operator|=
 name|inb
@@ -9743,7 +8796,6 @@ name|STEN
 operator|)
 condition|)
 block|{
-comment|/*<19>*/
 name|printf
 argument_list|(
 literal|"matcd%d: get_stat: After reading status byte, bus didn't go idle %x %x %x\n"
@@ -9757,7 +8809,6 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-comment|/*<16>*/
 if|if
 condition|(
 operator|(
@@ -9773,7 +8824,6 @@ operator|==
 name|STEN
 condition|)
 block|{
-comment|/*<16>*/
 name|int
 name|k
 decl_stmt|;
@@ -9838,7 +8888,6 @@ operator|+
 name|ALTDATA
 argument_list|)
 expr_stmt|;
-comment|/*<21>*/
 comment|/*				printf("%2x ",inb(port+DATA));*/
 name|k
 operator|++
@@ -9903,7 +8952,6 @@ operator|+
 name|STATUS
 argument_list|)
 expr_stmt|;
-comment|/*<16>*/
 block|}
 return|return
 operator|(
@@ -9946,24 +8994,6 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xE0
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-name|diagloop
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 ifdef|#
 directive|ifdef
 name|DEBUGCMD
@@ -10032,31 +9062,9 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 name|i
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xE1
-operator|+
-operator|(
-name|diagloop
-operator|++
-operator|*
-literal|0x100
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 block|}
 ifdef|#
 directive|ifdef
@@ -10130,7 +9138,6 @@ name|BUSBUSY
 operator|)
 condition|)
 block|{
-comment|/*<18>*/
 ifdef|#
 directive|ifdef
 name|DEBUGSLEEP
@@ -10144,20 +9151,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*DEBUGSLEEP*/
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xF1
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|tsleep
 argument_list|(
 operator|(
@@ -10175,7 +9168,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 block|}
 name|if_state
 index|[
@@ -10187,20 +9179,6 @@ expr_stmt|;
 comment|/*<18>It's ours NOW*/
 ifdef|#
 directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xF2
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
-ifdef|#
-directive|ifdef
 name|DEBUGSLEEP
 name|printf
 argument_list|(
@@ -10209,7 +9187,6 @@ argument_list|,
 name|ldrive
 argument_list|)
 expr_stmt|;
-comment|/*<18>*/
 endif|#
 directive|endif
 comment|/*DEBUGSLEEP*/
@@ -10231,20 +9208,6 @@ name|int
 name|ldrive
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGPORT
-name|DIAGOUT
-argument_list|(
-name|DIAGPORT
-argument_list|,
-literal|0xF4
-argument_list|)
-expr_stmt|;
-comment|/*Show where we are*/
-endif|#
-directive|endif
-comment|/*DIAGPORT*/
 name|if_state
 index|[
 name|controller
@@ -10253,7 +9216,6 @@ operator|&=
 operator|~
 name|BUSBUSY
 expr_stmt|;
-comment|/*<18>*/
 ifdef|#
 directive|ifdef
 name|DEBUGSLEEP
@@ -10264,7 +9226,6 @@ argument_list|,
 name|ldrive
 argument_list|)
 expr_stmt|;
-comment|/*<18>*/
 endif|#
 directive|endif
 comment|/*DEBUGSLEEP*/
@@ -10282,11 +9243,7 @@ expr_stmt|;
 comment|/*Wakeup other users*/
 name|matcd_start
 argument_list|(
-operator|&
-name|request_head
-index|[
 name|controller
-index|]
 argument_list|)
 expr_stmt|;
 comment|/*Wake up any block I/O*/
@@ -10663,7 +9620,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 return|return
 operator|(
 name|i
@@ -10699,13 +9655,11 @@ name|i
 decl_stmt|,
 name|port
 decl_stmt|;
-comment|/*<23>*/
 name|struct
 name|matcd_data
 modifier|*
 name|cd
 decl_stmt|;
-comment|/*<23>*/
 name|unsigned
 name|char
 name|cmd
@@ -10713,7 +9667,6 @@ index|[
 name|MAXCMDSIZ
 index|]
 decl_stmt|;
-comment|/*<23>*/
 name|cd
 operator|=
 operator|&
@@ -10722,7 +9675,6 @@ index|[
 name|ldrive
 index|]
 expr_stmt|;
-comment|/*<23>*/
 name|port
 operator|=
 name|cd
@@ -10768,7 +9720,6 @@ comment|/*<23>Lock Door command*/
 block|}
 else|else
 block|{
-comment|/*<23>*/
 name|cd
 operator|->
 name|flags
@@ -10779,7 +9730,6 @@ expr_stmt|;
 comment|/*<23>Remember we did this*/
 comment|/*<23>Unlock Door command*/
 block|}
-comment|/*<23>*/
 name|i
 operator|=
 name|docmd
@@ -10804,10 +9754,6 @@ return|;
 comment|/*<23>Return result we got*/
 block|}
 end_function
-
-begin_comment
-comment|/*<23>*/
-end_comment
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	matcd_toc_header - Return Table of Contents header to caller<13>	New for Edit 13 ---------------------------------------------------------------------------*/
@@ -10949,13 +9895,11 @@ name|cd_toc_entry
 modifier|*
 name|from
 decl_stmt|;
-comment|/*<17>*/
 name|struct
 name|cd_toc_entry
 modifier|*
 name|to
 decl_stmt|;
-comment|/*<17>*/
 name|int
 name|len
 decl_stmt|,
@@ -10967,7 +9911,6 @@ name|z
 decl_stmt|,
 name|port
 decl_stmt|;
-comment|/*<17>*/
 name|unsigned
 name|char
 name|cmd
@@ -11093,7 +10036,6 @@ argument_list|,
 literal|"mats1"
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 name|matcd_pread
 argument_list|(
 name|port
@@ -11414,7 +10356,6 @@ name|ioc_entry
 operator|->
 name|data_len
 expr_stmt|;
-comment|/*<17>*/
 name|i
 operator|=
 name|ioc_entry
@@ -11453,14 +10394,12 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/*<17>*/
 name|to
 operator|=
 name|ioc_entry
 operator|->
 name|data
 expr_stmt|;
-comment|/*<17>*/
 while|while
 condition|(
 name|i
@@ -11476,7 +10415,6 @@ name|cd_toc_entry
 argument_list|)
 condition|)
 block|{
-comment|/*<17>*/
 if|if
 condition|(
 name|copyout
@@ -11491,24 +10429,19 @@ expr|struct
 name|cd_toc_entry
 argument_list|)
 argument_list|)
-comment|/*<17>*/
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/*<17>*/
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/*<17>*/
 block|}
-comment|/*<17>*/
 name|i
 operator|++
 expr_stmt|;
-comment|/*<17>*/
 name|len
 operator|-=
 sizeof|sizeof
@@ -11517,17 +10450,13 @@ expr|struct
 name|cd_toc_entry
 argument_list|)
 expr_stmt|;
-comment|/*<17>*/
 name|from
 operator|++
 expr_stmt|;
-comment|/*<17>*/
 name|to
 operator|++
 expr_stmt|;
-comment|/*<17>*/
 block|}
-comment|/*<17>*/
 return|return
 operator|(
 literal|0
@@ -11730,7 +10659,6 @@ argument_list|,
 literal|"mats2"
 argument_list|)
 expr_stmt|;
-comment|/*<25>*/
 name|matcd_pread
 argument_list|(
 name|port
@@ -12250,12 +11178,6 @@ begin_comment
 comment|/*FULLDRIVER*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREE2
-end_ifdef
-
 begin_expr_stmt
 specifier|static
 name|matcd_devsw_installed
@@ -12345,15 +11267,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREE2 */
-end_comment
 
 begin_comment
 comment|/*End of matcd.c*/
