@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.29 1996/07/10 19:44:07 julian Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.30 1996/08/05 02:38:51 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -2596,6 +2596,8 @@ name|arg
 argument_list|)
 else|:
 literal|0x0000
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
 name|arg
@@ -2638,6 +2640,8 @@ name|arg
 argument_list|)
 else|:
 literal|0xffff
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
 name|arg
