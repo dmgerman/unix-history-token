@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* db1.c-  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines for database manipulation for the  * gremlin picture editor.  */
+comment|/* @(#)db1.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines for database manipulation for the  * gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -272,9 +269,6 @@ begin_comment
 comment|/* end CreateElt */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|DBDelete
 argument_list|(
@@ -384,9 +378,6 @@ begin_comment
 unit|}
 comment|/* end DBDelete */
 end_comment
-
-begin_escape
-end_escape
 
 begin_define
 define|#
@@ -615,9 +606,6 @@ begin_comment
 comment|/* end Gravitate */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|DBSetGravitate
 argument_list|(
@@ -837,9 +825,6 @@ begin_comment
 comment|/* end Gravitate */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|DBClearElt
 argument_list|(
@@ -927,9 +912,6 @@ end_block
 begin_comment
 comment|/* end DBClearElt */
 end_comment
-
-begin_escape
-end_escape
 
 begin_function
 name|ELT
@@ -1364,9 +1346,6 @@ end_function
 begin_comment
 comment|/* end DBRead */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|DBBounded
