@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Based heavily on /sys/kern/imgact_aout.c which is:  * Copyright (c) 1993, David Greenman  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_linux.c,v 1.7 1996/01/19 22:59:23 dyson Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Based heavily on /sys/kern/imgact_aout.c which is:  * Copyright (c) 1993, David Greenman  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_linux.c,v 1.8 1996/02/16 18:40:48 peter Exp $  */
 end_comment
 
 begin_include
@@ -108,7 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/linux/sysproto.h>
+file|<i386/linux/linux.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/linux/linux_proto.h>
 end_include
 
 begin_decl_stmt
@@ -257,6 +263,26 @@ operator|->
 name|a_bss
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"imgact: text: %08x, data: %08x, bss: %08x\n"
+argument_list|,
+name|a_out
+operator|->
+name|a_text
+argument_list|,
+name|a_out
+operator|->
+name|a_data
+argument_list|,
+name|bss_size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Check various fields in header for validity/bounds.      */
 if|if
 condition|(
@@ -646,6 +672,26 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"imgact: startaddr=%08x, length=%08x\n"
+argument_list|,
+name|vmaddr
+argument_list|,
+name|a_out
+operator|->
+name|a_text
+operator|+
+name|a_out
+operator|->
+name|a_data
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * allow read/write of data 	 */
 name|error
 operator|=
@@ -742,6 +788,20 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"imgact: bssaddr=%08x, length=%08x\n"
+argument_list|,
+name|vmaddr
+argument_list|,
+name|bss_size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Indicate that this file should not be modified */
 name|imgp

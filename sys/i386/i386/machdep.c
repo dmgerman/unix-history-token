@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.174 1996/02/13 10:30:36 phk Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.175 1996/03/02 18:24:00 peter Exp $  */
 end_comment
 
 begin_include
@@ -3003,7 +3003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * in u. to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
+comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * at top to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
 end_comment
 
 begin_function
@@ -3081,9 +3081,9 @@ name|ps_sigstk
 operator|.
 name|ss_flags
 operator|&
-name|SA_ONSTACK
+name|SS_ONSTACK
 expr_stmt|;
-comment|/* 	 * Allocate and validate space for the signal handler 	 * context. Note that if the stack is in P0 space, the 	 * call to grow() is a nop, and the useracc() check 	 * will fail if the process has not already allocated 	 * the space with a `brk'. 	 */
+comment|/* 	 * Allocate and validate space for the signal handler context. 	 */
 if|if
 condition|(
 operator|(
@@ -3094,17 +3094,8 @@ operator|&
 name|SAS_ALTSTACK
 operator|)
 operator|&&
-operator|(
-name|psp
-operator|->
-name|ps_sigstk
-operator|.
-name|ss_flags
-operator|&
-name|SA_ONSTACK
-operator|)
-operator|==
-literal|0
+operator|!
+name|oonstack
 operator|&&
 operator|(
 name|psp
@@ -3151,7 +3142,7 @@ name|ps_sigstk
 operator|.
 name|ss_flags
 operator||=
-name|SA_ONSTACK
+name|SS_ONSTACK
 expr_stmt|;
 block|}
 else|else
@@ -3163,18 +3154,12 @@ expr|struct
 name|sigframe
 operator|*
 operator|)
-operator|(
 name|regs
 index|[
 name|tESP
 index|]
 operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sigframe
-argument_list|)
-operator|)
+literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * grow() will return FALSE if the fp will not fit inside the stack 	 *	and the stack can not be grown. useracc will return FALSE 	 *	if access is denied. 	 */
@@ -3578,14 +3563,22 @@ name|int
 call|)
 argument_list|(
 operator|(
-expr|struct
-name|pcb
+operator|(
+name|char
 operator|*
 operator|)
-name|kstack
-argument_list|)
+name|PS_STRINGS
+operator|)
+operator|-
+operator|*
+operator|(
+name|p
 operator|->
-name|pcb_sigc
+name|p_sysent
+operator|->
+name|sv_szsigcode
+operator|)
+argument_list|)
 expr_stmt|;
 name|regs
 index|[
@@ -3980,7 +3973,7 @@ name|ps_sigstk
 operator|.
 name|ss_flags
 operator||=
-name|SA_ONSTACK
+name|SS_ONSTACK
 expr_stmt|;
 else|else
 name|p
@@ -3992,7 +3985,7 @@ operator|.
 name|ss_flags
 operator|&=
 operator|~
-name|SA_ONSTACK
+name|SS_ONSTACK
 expr_stmt|;
 name|p
 operator|->
@@ -5784,37 +5777,13 @@ name|IDTVEC
 argument_list|(
 name|syscall
 argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|int0x80_syscall
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_LINUX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LINUX
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|extern
-name|inthand_t
-name|IDTVEC
-parameter_list|(
-name|linux_syscall
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -6521,17 +6490,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_LINUX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LINUX
-argument_list|)
 name|setidt
 argument_list|(
 literal|0x80
@@ -6539,7 +6497,7 @@ argument_list|,
 operator|&
 name|IDTVEC
 argument_list|(
-name|linux_syscall
+name|int0x80_syscall
 argument_list|)
 argument_list|,
 name|SDT_SYS386TGT
@@ -6554,8 +6512,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 include|#
 directive|include
 file|"isa.h"
@@ -7552,22 +7508,6 @@ name|SEL_UPL
 argument_list|)
 expr_stmt|;
 comment|/* setup proc 0's pcb */
-name|bcopy
-argument_list|(
-operator|&
-name|sigcode
-argument_list|,
-name|proc0
-operator|.
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
-name|pcb_sigc
-argument_list|,
-name|szsigcode
-argument_list|)
-expr_stmt|;
 name|proc0
 operator|.
 name|p_addr
