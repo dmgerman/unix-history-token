@@ -225,7 +225,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* used to store type of stmt for if (...), 				 * for (...), etc */
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1162,14 +1161,12 @@ name|semicolon
 argument_list|)
 expr_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 init|=
 name|buf_ptr
 decl_stmt|;
-specifier|register
 name|int
 name|col
 init|=
@@ -5014,7 +5011,6 @@ condition|(
 name|blanklines_around_conditional_compilation
 condition|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;

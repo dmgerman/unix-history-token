@@ -118,7 +118,6 @@ name|void
 parameter_list|)
 block|{
 comment|/* dump_line is the routine that actually 				 * effects the printing of the new source. It 				 * prints the label section, followed by the 				 * code section with the appropriate nesting 				 * level, followed by any comments */
-specifier|register
 name|int
 name|cur_col
 decl_stmt|,
@@ -424,7 +423,6 @@ literal|0
 operator|)
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|s
@@ -582,7 +580,6 @@ name|e_code
 condition|)
 block|{
 comment|/* print code section, if any */
-specifier|register
 name|char
 modifier|*
 name|p
@@ -610,7 +607,6 @@ name|compute_code_target
 argument_list|()
 expr_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -739,7 +735,6 @@ name|all_here
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -936,7 +931,6 @@ operator|==
 literal|2
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|follow
@@ -1083,7 +1077,6 @@ block|}
 else|else
 block|{
 comment|/* print comment, if any */
-specifier|register
 name|int
 name|target
 init|=
@@ -1091,7 +1084,6 @@ name|ps
 operator|.
 name|com_col
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|com_st
@@ -1515,7 +1507,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|target_col
 init|=
@@ -1550,11 +1541,9 @@ name|paren_level
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|w
 decl_stmt|;
-specifier|register
 name|int
 name|t
 init|=
@@ -1688,16 +1677,13 @@ name|void
 parameter_list|)
 block|{
 comment|/* this routine reads stuff from the input */
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|f
@@ -1752,7 +1738,6 @@ operator|>=
 name|in_buffer_limit
 condition|)
 block|{
-specifier|register
 name|int
 name|size
 init|=
@@ -1766,7 +1751,6 @@ literal|2
 operator|+
 literal|10
 decl_stmt|;
-specifier|register
 name|int
 name|offset
 init|=
@@ -2231,12 +2215,10 @@ comment|/* writes tabs and blanks (if necessary) to 				 * get the current outpu
 comment|/* current: the current column value */
 comment|/* target: position we want it at */
 block|{
-specifier|register
 name|int
 name|curr
 decl_stmt|;
 comment|/* internal column pointer */
-specifier|register
 name|int
 name|tcur
 decl_stmt|;
@@ -2353,13 +2335,11 @@ name|buffer
 parameter_list|)
 comment|/*  * this routine figures out where the character position will be after  * printing the text in buffer starting at column "current"  */
 block|{
-specifier|register
 name|char
 modifier|*
 name|buf
 decl_stmt|;
 comment|/* used to look thru buffer */
-specifier|register
 name|int
 name|cur
 decl_stmt|;

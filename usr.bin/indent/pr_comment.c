@@ -270,7 +270,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|int
 name|target_col
 decl_stmt|;

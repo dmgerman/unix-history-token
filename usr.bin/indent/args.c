@@ -1184,7 +1184,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|f
@@ -1292,17 +1291,14 @@ specifier|static
 name|void
 name|scan_profile
 parameter_list|(
-specifier|register
 name|FILE
 modifier|*
 name|f
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1459,7 +1455,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pro
 modifier|*
@@ -1521,7 +1516,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|pro
 modifier|*
@@ -1663,7 +1657,6 @@ goto|goto
 name|need_param
 goto|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|str

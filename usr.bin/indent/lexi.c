@@ -705,7 +705,6 @@ modifier|*
 name|j
 decl_stmt|;
 comment|/* used for searching thru list of 				 * 				 * reserved words */
-specifier|register
 name|struct
 name|templ
 modifier|*
@@ -1432,7 +1431,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|tp
@@ -2565,7 +2563,6 @@ name|int
 name|val
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|templ
 modifier|*
