@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: md.h,v 1.3 1993/11/22 19:05:31 jkh Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: md.h,v 1.5 1993/12/02 01:03:47 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -47,6 +47,40 @@ parameter_list|(
 name|ex
 parameter_list|)
 value|((N_GETFLAG(ex)& EX_DYNAMIC))
+end_define
+
+begin_comment
+comment|/*  * Should be handled by a.out.h ?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_ADJUST
+parameter_list|(
+name|ex
+parameter_list|)
+value|(((ex).a_entry< PAGSIZ) ? -PAGSIZ : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEXT_START
+parameter_list|(
+name|ex
+parameter_list|)
+value|(N_TXTADDR(ex) + N_ADJUST(ex))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_START
+parameter_list|(
+name|ex
+parameter_list|)
+value|(N_DATADDR(ex) + N_ADJUST(ex))
 end_define
 
 begin_else
@@ -115,6 +149,17 @@ end_endif
 begin_comment
 comment|/* NetBSD */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|N_BADMID
+parameter_list|(
+name|ex
+parameter_list|)
+define|\
+value|(N_GETMID(ex) != 0&& N_GETMID(ex) != MID_MACHINE&& \ 						!md_midcompat(&(ex)))
+end_define
 
 begin_comment
 comment|/* Sparc (Sun 4) macros */
@@ -600,7 +645,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapin_link_dynamic
+name|md_swapin__dynamic
 parameter_list|(
 name|l
 parameter_list|)
@@ -609,7 +654,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapout_link_dynamic
+name|md_swapout__dynamic
 parameter_list|(
 name|l
 parameter_list|)
@@ -618,7 +663,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapin_link_dynamic_2
+name|md_swapin_section_dispatch_table
 parameter_list|(
 name|l
 parameter_list|)
@@ -627,7 +672,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapout_link_dynamic_2
+name|md_swapout_section_dispatch_table
 parameter_list|(
 name|l
 parameter_list|)
@@ -636,7 +681,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapin_ld_debug
+name|md_swapin_so_debug
 parameter_list|(
 name|d
 parameter_list|)
@@ -645,7 +690,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapout_ld_debug
+name|md_swapout_so_debug
 parameter_list|(
 name|d
 parameter_list|)
@@ -676,7 +721,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapin_link_object
+name|md_swapin_sod
 parameter_list|(
 name|l
 parameter_list|,
@@ -687,7 +732,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapout_link_object
+name|md_swapout_sod
 parameter_list|(
 name|l
 parameter_list|,
@@ -890,61 +935,61 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapin_link_dynamic
+name|md_swapin__dynamic
 parameter_list|(
 name|l
 parameter_list|)
-value|swap_link_dynamic(l)
+value|swap__dynamic(l)
 end_define
 
 begin_define
 define|#
 directive|define
-name|md_swapout_link_dynamic
+name|md_swapout__dynamic
 parameter_list|(
 name|l
 parameter_list|)
-value|swap_link_dynamic(l)
+value|swap__dynamic(l)
 end_define
 
 begin_define
 define|#
 directive|define
-name|md_swapin_link_dynamic_2
+name|md_swapin_section_dispatch_table
 parameter_list|(
 name|l
 parameter_list|)
-value|swap_link_dynamic_2(l)
+value|swap_section_dispatch_table(l)
 end_define
 
 begin_define
 define|#
 directive|define
-name|md_swapout_link_dynamic_2
+name|md_swapout_section_dispatch_table
 parameter_list|(
 name|l
 parameter_list|)
-value|swap_link_dynamic_2(l)
+value|swap_section_dispatch_table(l)
 end_define
 
 begin_define
 define|#
 directive|define
-name|md_swapin_ld_debug
+name|md_swapin_so_debug
 parameter_list|(
 name|d
 parameter_list|)
-value|swap_ld_debug(d)
+value|swap_so_debug(d)
 end_define
 
 begin_define
 define|#
 directive|define
-name|md_swapout_ld_debug
+name|md_swapout_so_debug
 parameter_list|(
 name|d
 parameter_list|)
-value|swap_ld_debug(d)
+value|swap_so_debug(d)
 end_define
 
 begin_define
@@ -974,25 +1019,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_swapin_link_object
+name|md_swapin_sod
 parameter_list|(
 name|l
 parameter_list|,
 name|n
 parameter_list|)
-value|swapin_link_object(l,n)
+value|swapin_sod(l,n)
 end_define
 
 begin_define
 define|#
 directive|define
-name|md_swapout_link_object
+name|md_swapout_sod
 parameter_list|(
 name|l
 parameter_list|,
 name|n
 parameter_list|)
-value|swapout_link_object(l,n)
+value|swapout_sod(l,n)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.4 1993/12/22 23:28:12 jkh Exp $  */
+comment|/*  * $Id: warnings.c,v 1.5 1994/01/12 23:14:07 jkh Exp $  */
 end_comment
 
 begin_include
@@ -185,6 +185,21 @@ block|{
 if|if
 condition|(
 name|entry
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"NULL"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|entry
 operator|->
 name|superfile
 condition|)
@@ -258,11 +273,13 @@ condition|)
 block|{
 return|return
 operator|(
-name|xmalloc
+name|char
+operator|*
+operator|)
+name|strdup
 argument_list|(
 literal|"NULL"
 argument_list|)
-operator|)
 return|;
 block|}
 if|if
@@ -640,10 +657,6 @@ modifier|*
 name|outfile
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|outfile
@@ -665,42 +678,12 @@ argument_list|,
 literal|"\nGlobal symbols:\n\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TABSIZE
-condition|;
-name|i
-operator|++
-control|)
-block|{
-specifier|register
-name|symbol
-modifier|*
-name|sp
-decl_stmt|;
-for|for
-control|(
-name|sp
-operator|=
-name|symtab
-index|[
-name|i
-index|]
-init|;
-name|sp
-condition|;
-name|sp
-operator|=
-name|sp
-operator|->
-name|link
-control|)
+name|FOR_EACH_SYMBOL
+argument_list|(
+argument|i
+argument_list|,
+argument|sp
+argument_list|)
 block|{
 if|if
 condition|(
@@ -726,21 +709,43 @@ name|name
 argument_list|,
 name|sp
 operator|->
-name|max_common_size
+name|common_size
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|sp
 operator|->
-name|referenced
+name|flags
+operator|&
+name|GS_REFERENCED
+operator|)
 condition|)
 name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
 literal|"  %s: unreferenced\n"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|so_defined
+condition|)
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"  %s: sodefined\n"
 argument_list|,
 name|sp
 operator|->
@@ -787,7 +792,8 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|END_EACH_SYMBOL
+expr_stmt|;
 name|each_file
 argument_list|(
 name|list_file_locals
@@ -835,11 +841,13 @@ if|if
 condition|(
 name|entry
 operator|->
-name|just_syms_flag
-operator|||
-name|entry
-operator|->
-name|is_dynamic
+name|flags
+operator|&
+operator|(
+name|E_JUST_SYMS
+operator||
+name|E_DYNAMIC
+operator|)
 condition|)
 name|fprintf
 argument_list|(
@@ -2584,9 +2592,13 @@ block|}
 if|if
 condition|(
 operator|!
+operator|(
 name|entry
 operator|->
-name|is_dynamic
+name|flags
+operator|&
+name|E_DYNAMIC
+operator|)
 condition|)
 block|{
 comment|/* Do text warnings based on a scan through the relocation info. */
@@ -2652,8 +2664,7 @@ name|nlist
 modifier|*
 name|s
 decl_stmt|;
-name|struct
-name|glosym
+name|symbol
 modifier|*
 name|g
 decl_stmt|;
@@ -2697,16 +2708,20 @@ continue|continue;
 if|if
 condition|(
 operator|!
+operator|(
 name|g
 operator|->
-name|referenced
+name|flags
+operator|&
+name|GS_REFERENCED
+operator|)
 condition|)
 block|{
 if|#
 directive|if
 literal|0
 comment|/* Check for undefined shobj symbols */
-block|struct localsymbol	*lsp; 			register int		type;  			for (lsp = g->dynrefs; lsp; lsp = lsp->next) { 				type = lsp->nlist.n_type; 				if ((type& N_EXT)&& 						type != (N_UNDF | N_EXT)) { 					break; 				} 			} 			if (type == (N_UNDF | N_EXT)) { 				fprintf(stderr, 					"Undefined symbol %s referenced from %s\n", 					g->name, 					get_file_name(entry)); 			}
+block|struct localsymbol	*lsp; 			register int		type;  			for (lsp = g->sorefs; lsp; lsp = lsp->next) { 				type = lsp->nzlist.nz_type; 				if ((type& N_EXT)&& 						type != (N_UNDF | N_EXT)) { 					break; 				} 			} 			if (type == (N_UNDF | N_EXT)) { 				fprintf(stderr, 					"Undefined symbol %s referenced from %s\n", 					g->name, 					get_file_name(entry)); 			}
 endif|#
 directive|endif
 continue|continue;
@@ -2721,7 +2736,7 @@ name|list_multiple_defs
 operator|&&
 name|g
 operator|->
-name|multiply_defined
+name|mult_defs
 condition|)
 block|{
 name|errfmt
@@ -2811,7 +2826,7 @@ if|if
 condition|(
 name|g
 operator|->
-name|multiply_defined
+name|mult_defs
 operator|==
 literal|2
 condition|)
@@ -2824,7 +2839,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Multiple def: %s, type %#x\n"
+literal|"multiply defined: %s, type %#x\n"
 argument_list|,
 name|g
 operator|->

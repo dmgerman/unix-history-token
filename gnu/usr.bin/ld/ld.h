@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ld.h,v 1.8 1993/12/11 11:58:26 jkh Exp $	*/
+comment|/*  *	$Id: ld.h,v 1.8 1994/01/28 20:56:24 pk Exp $  */
 end_comment
 
 begin_comment
@@ -131,6 +131,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FreeBSD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -185,16 +202,6 @@ value|PALIGN(x,MAX_ALIGNMENT)
 end_define
 
 begin_comment
-comment|/* Size of a page; obtained from the operating system.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|page_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Name this program was invoked by.  */
 end_comment
 
@@ -204,9 +211,6 @@ modifier|*
 name|progname
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* System dependencies */
@@ -222,6 +226,12 @@ directive|ifndef
 name|DEFAULT_MAGIC
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FreeBSD
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -229,14 +239,34 @@ name|DEFAULT_MAGIC
 value|QMAGIC
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|netzmagic
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MAGIC
+value|ZMAGIC
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_extern
-extern|extern netzmagic;
-end_extern
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Ok.  Following are the relocation information macros.  If your  * system should not be able to use the default set (below), you must  * define the following:   *   relocation_info: This must be typedef'd (or #define'd) to the type  * of structure that is stored in the relocation info section of your  * a.out files.  Often this is defined in the a.out.h for your system.  *  *   RELOC_ADDRESS (rval): Offset into the current section of the  *<whatever> to be relocated.  *Must be an lvalue*.  *  *   RELOC_EXTERN_P (rval):  Is this relocation entry based on an  * external symbol (1), or was it fully resolved upon entering the  * loader (0) in which case some combination of the value in memory  * (if RELOC_MEMORY_ADD_P) and the extra (if RELOC_ADD_EXTRA) contains  * what the value of the relocation actually was.  *Must be an lvalue*.  *  *   RELOC_TYPE (rval): If this entry was fully resolved upon  * entering the loader, what type should it be relocated as?  *  *   RELOC_SYMBOL (rval): If this entry was not fully resolved upon  * entering the loader, what is the index of it's symbol in the symbol  * table?  *Must be a lvalue*.  *  *   RELOC_MEMORY_ADD_P (rval): This should return true if the final  * relocation value output here should be added to memory, or if the  * section of memory described should simply be set to the relocation  * value.  *  *   RELOC_ADD_EXTRA (rval): (Optional) This macro, if defined, gives  * an extra value to be added to the relocation value based on the  * individual relocation entry.  *Must be an lvalue if defined*.  *  *   RELOC_PCREL_P (rval): True if the relocation value described is  * pc relative.  *  *   RELOC_VALUE_RIGHTSHIFT (rval): Number of bits right to shift the  * final relocation value before putting it where it belongs.  *  *   RELOC_TARGET_SIZE (rval): log to the base 2 of the number of  * bytes of size this relocation entry describes; 1 byte == 0; 2 bytes  * == 1; 4 bytes == 2, and etc.  This is somewhat redundant (we could  * do everything in terms of the bit operators below), but having this  * macro could end up producing better code on machines without fancy  * bit twiddling.  Also, it's easier to understand/code big/little  * endian distinctions with this macro.  *  *   RELOC_TARGET_BITPOS (rval): The starting bit position within the  * object described in RELOC_TARGET_SIZE in which the relocation value  * will go.  *  *   RELOC_TARGET_BITSIZE (rval): How many bits are to be replaced  * with the bits of the relocation value.  It may be assumed by the  * code that the relocation value will fit into this many bits.  This  * may be larger than RELOC_TARGET_SIZE if such be useful.  *  *  *		Things I haven't implemented  *		----------------------------  *  *    Values for RELOC_TARGET_SIZE other than 0, 1, or 2.  *  *    Pc relative relocation for External references.  *  *  */
@@ -582,9 +612,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* If a this type of symbol is encountered, its name is a warning    message to print each time the symbol referenced by the next symbol    table entry is referenced.     This feature may be used to allow backwards compatibility with    certain functions (eg. gets) but to discourage programmers from    their use.     So if, for example, you wanted to have ld print a warning whenever    the function "gets" was used in their C program, you would add the    following to the assembler file in which gets is defined:  	.stabs "Obsolete function \"gets\" referenced",30,0,0,0 	.stabs "_gets",1,0,0,0     These .stabs do not necessarily have to be in the same file as the    gets function, they simply must exist somewhere in the compilation.  */
 end_comment
@@ -861,6 +888,70 @@ end_comment
 begin_escape
 end_escape
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|localsymbol
+block|{
+name|struct
+name|nzlist
+name|nzlist
+decl_stmt|;
+comment|/* n[z]list from file */
+name|struct
+name|glosym
+modifier|*
+name|symbol
+decl_stmt|;
+comment|/* Corresponding global symbol, 						   if any */
+name|struct
+name|localsymbol
+modifier|*
+name|next
+decl_stmt|;
+comment|/* List of definitions */
+name|struct
+name|file_entry
+modifier|*
+name|entry
+decl_stmt|;
+comment|/* Backpointer to file */
+name|long
+name|gotslot_offset
+decl_stmt|;
+comment|/* Position in GOT, if any */
+name|int
+name|symbolnum
+decl_stmt|;
+comment|/* Position in output nlist */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|LS_L_SYMBOL
+value|1
+comment|/* Local symbol starts with an `L' */
+define|#
+directive|define
+name|LS_WRITE
+value|2
+comment|/* Symbol goes in output symtable */
+define|#
+directive|define
+name|LS_RENAME
+value|4
+comment|/* xlat name to `<file>.<name>' */
+define|#
+directive|define
+name|LS_GOTSLOTCLAIMED
+value|8
+comment|/* This symbol has a GOT entry */
+block|}
+name|localsymbol_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Symbol table */
 end_comment
@@ -874,124 +965,133 @@ typedef|typedef
 struct|struct
 name|glosym
 block|{
-comment|/* Pointer to next symbol in this symbol's hash bucket.  */
 name|struct
 name|glosym
 modifier|*
 name|link
 decl_stmt|;
-comment|/* Name of this symbol.  */
+comment|/* Next symbol hash bucket. */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Value of this symbol as a global symbol.  */
+comment|/* Name of this symbol.  */
 name|long
 name|value
 decl_stmt|;
-comment|/* 	 * Chain of external 'nlist's in files for this symbol, both defs and 	 * refs. 	 */
-name|struct
-name|localsymbol
+comment|/* Value of this symbol */
+name|localsymbol_t
 modifier|*
 name|refs
 decl_stmt|;
-comment|/* 	 * Any warning message that might be associated with this symbol from 	 * an N_WARNING symbol encountered. 	 */
+comment|/* Chain of local symbols from object 				   files pertaining to this global 				   symbol */
+name|localsymbol_t
+modifier|*
+name|sorefs
+decl_stmt|;
+comment|/* Same for local symbols from shared 				   object files. */
 name|char
 modifier|*
 name|warning
 decl_stmt|;
-comment|/* 	 * Nonzero means definitions of this symbol as common have been seen, 	 * and the value here is the largest size specified by any of them. 	 */
+comment|/* message, from N_WARNING nlists */
 name|int
-name|max_common_size
+name|common_size
 decl_stmt|;
-comment|/* 	 * For relocatable_output, records the index of this global sym in 	 * the symbol table to be written, with the first global sym given 	 * index 0. 	 */
+comment|/* Common size */
 name|int
 name|symbolnum
 decl_stmt|;
-comment|/* 	 * For dynamically linked output, records the index in the RRS 	 * symbol table. 	 */
+comment|/* Symbol index in output symbol table */
 name|int
 name|rrs_symbolnum
 decl_stmt|;
-comment|/* 	 * Nonzero means a definition of this global symbol is known to 	 * exist. Library members should not be loaded on its account. 	 */
-name|char
-name|defined
-decl_stmt|;
-comment|/* 	 * Nonzero means a reference to this global symbol has been seen in a 	 * file that is surely being loaded. A value higher than 1 is the 	 * n_type code for the symbol's definition. 	 */
-name|char
-name|referenced
-decl_stmt|;
-comment|/* 	 * A count of the number of undefined references printed for a 	 * specific symbol.  If a symbol is unresolved at the end of 	 * digest_symbols (and the loading run is supposed to produce 	 * relocatable output) do_file_warnings keeps track of how many 	 * unresolved reference error messages have been printed for each 	 * symbol here.  When the number hits MAX_UREFS_PRINTED, messages 	 * stop. 	 */
-name|unsigned
-name|char
-name|undef_refs
-decl_stmt|;
-comment|/* 	 * 1 means that this symbol has multiple definitions.  2 means that 	 * it has multiple definitions, and some of them are set elements, 	 * one of which has been printed out already. 	 */
-name|unsigned
-name|char
-name|multiply_defined
-decl_stmt|;
-comment|/* Nonzero means print a message at all refs or defs of this symbol */
-name|char
-name|trace
-decl_stmt|;
-comment|/* 	 * For symbols of type N_INDR, this points at the real symbol. 	 */
-name|struct
-name|glosym
-modifier|*
-name|alias
-decl_stmt|;
-comment|/* 	 * Count number of elements in set vector if symbol is of type N_SETV 	 */
-name|int
-name|setv_count
-decl_stmt|;
-comment|/* Dynamic lib support */
-comment|/* 	 * Nonzero means a definition of this global symbol has been found 	 * in a shared object. These symbols do not go into the symbol 	 * section of the resulting a.out file. They *do* go into the 	 * dynamic link information segment. 	 */
-name|char
-name|so_defined
-decl_stmt|;
-comment|/* Size of symbol as determined by N_SIZE symbols in object files */
-name|int
-name|size
-decl_stmt|;
-comment|/* Auxialiary info to put in the `nz_other' field of the 	 * RRS symbol table. Used by the run-time linker to resolve 	 * references to function addresses from within shared objects. 	 */
-name|int
-name|aux
-decl_stmt|;
-define|#
-directive|define
-name|RRS_FUNC
-value|2
-comment|/* 	 * Chain of external 'nlist's in shared objects for this symbol, both 	 * defs and refs. 	 */
-name|struct
-name|localsymbol
-modifier|*
-name|sorefs
-decl_stmt|;
-comment|/* The offset into one of the RRS tables, -1 if not used */
-name|long
-name|jmpslot_offset
-decl_stmt|;
-name|char
-name|jmpslot_claimed
-decl_stmt|;
-name|long
-name|gotslot_offset
-decl_stmt|;
-name|char
-name|gotslot_claimed
-decl_stmt|;
-name|char
-name|cpyreloc_reserved
-decl_stmt|;
-name|char
-name|cpyreloc_claimed
-decl_stmt|;
-comment|/* The local symbol that gave this global symbol its definition */
+comment|/* Symbol index in RRS symbol table */
 name|struct
 name|nlist
 modifier|*
 name|def_nlist
 decl_stmt|;
+comment|/* The local symbol that gave this 					   global symbol its definition */
+name|char
+name|defined
+decl_stmt|;
+comment|/* Definition of this symbol */
+name|char
+name|so_defined
+decl_stmt|;
+comment|/* Definition of this symbol in a shared 				   object. These go into the RRS symbol table */
+name|u_char
+name|undef_refs
+decl_stmt|;
+comment|/* Count of number of "undefined" 				   messages printed for this symbol */
+name|u_char
+name|mult_defs
+decl_stmt|;
+comment|/* Same for "multiply defined" symbols */
+name|struct
+name|glosym
+modifier|*
+name|alias
+decl_stmt|;
+comment|/* For symbols of type N_INDR, this 				   points at the real symbol. */
+name|int
+name|setv_count
+decl_stmt|;
+comment|/* Number of elements in N_SETV symbols */
+name|int
+name|size
+decl_stmt|;
+comment|/* Size of this symbol (either from N_SIZE 				   symbols or a from shared object's RRS */
+name|int
+name|aux
+decl_stmt|;
+comment|/* Auxiliary type information conveyed in 				   the `n_other' field of nlists */
+comment|/* The offset into one of the RRS tables, -1 if not used */
+name|long
+name|jmpslot_offset
+decl_stmt|;
+name|long
+name|gotslot_offset
+decl_stmt|;
+name|long
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|GS_DEFINED
+value|1
+comment|/* Symbol has definition (notyetused)*/
+define|#
+directive|define
+name|GS_REFERENCED
+value|2
+comment|/* Symbol is referred to by something 					   interesting */
+define|#
+directive|define
+name|GS_TRACE
+value|4
+comment|/* Symbol will be traced */
+define|#
+directive|define
+name|GS_JMPSLOTCLAIMED
+value|8
+comment|/*				 */
+define|#
+directive|define
+name|GS_GOTSLOTCLAIMED
+value|0x10
+comment|/* Some state bits concerning    */
+define|#
+directive|define
+name|GS_CPYRELOCRESERVED
+value|0x20
+comment|/* entries in GOT and PLT tables */
+define|#
+directive|define
+name|GS_CPYRELOCCLAIMED
+value|0x40
+comment|/*				 */
 block|}
 name|symbol
 typedef|;
@@ -1004,21 +1104,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TABSIZE
+name|SYMTABSIZE
 value|1009
 end_define
 
 begin_comment
-comment|/* The symbol hash table: a vector of TABSIZE pointers to struct glosym. */
+comment|/* The symbol hash table: a vector of SYMTABSIZE pointers to struct glosym. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|symtab
-index|[
-name|TABSIZE
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1031,7 +1130,7 @@ name|i
 parameter_list|,
 name|sp
 parameter_list|)
-value|{					\ 	int i;							\ 	for (i = 0; i< TABSIZE; i++) {				\ 		register symbol *sp;				\ 		for (sp = symtab[i]; sp; sp = sp->link)
+value|{					\ 	int i;							\ 	for (i = 0; i< SYMTABSIZE; i++) {				\ 		register symbol *sp;				\ 		for (sp = symtab[i]; sp; sp = sp->link)
 end_define
 
 begin_define
@@ -1042,153 +1141,62 @@ value|}}
 end_define
 
 begin_comment
-comment|/* Number of symbols in symbol hash table. */
+comment|/* # of global symbols referenced and not defined.  */
 end_comment
 
 begin_decl_stmt
-name|int
-name|num_hash_tab_syms
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count number of nlist entries for global symbols */
-end_comment
-
-begin_decl_stmt
-name|int
-name|global_sym_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count number of N_SIZE nlist entries for output (relocatable_output only) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|size_sym_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count the number of nlist entries that are for local symbols.    This count and the three following counts    are incremented as as symbols are entered in the symbol table.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|local_sym_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count number of nlist entries that are for local symbols    whose names don't start with L. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|non_L_local_sym_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count the number of nlist entries for debugger info.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|debugger_sym_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count the number of global symbols referenced and not defined.  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|int
 name|undefined_global_sym_count
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Count the number of symbols referenced from shared objects and not defined */
+comment|/* # of undefined symbols referenced by shared objects */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|undefined_shobj_sym_count
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Count the number of global symbols multiply defined.  */
+comment|/* # of multiply defined symbols. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|multiple_def_count
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Count the number of defined global symbols.    Each symbol is counted only once    regardless of how many different nlist entries refer to it,    since the output file will need only one nlist entry for it.    This count is computed by `digest_symbols';    it is undefined while symbols are being loaded. */
+comment|/* # of common symbols. */
 end_comment
 
 begin_decl_stmt
-name|int
-name|defined_global_sym_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count the number of symbols defined through common declarations.    This count is kept in symdef_library, linear_library, and    enter_global_ref.  It is incremented when the defined flag is set    in a symbol because of a common definition, and decremented when    the symbol is defined "for real" (ie. by something besides a common    definition).  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|int
 name|common_defined_global_count
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Count the number of linker defined symbols.    XXX - Currently, only __DYNAMIC and _G_O_T_ go here if required,    perhaps _etext, _edata and _end should go here too */
+comment|/* # of warning symbols encountered. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|special_sym_count
+name|warning_count
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Count number of aliased symbols */
-end_comment
-
-begin_decl_stmt
-name|int
-name|global_alias_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count number of set element type symbols and the number of separate    vectors which these symbols will fit into */
-end_comment
-
-begin_decl_stmt
-name|int
-name|set_symbol_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|set_vector_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Define a linked list of strings which define symbols which should    be treated as set elements even though they aren't.  Any symbol    with a prefix matching one of these should be treated as a set    element.     This is to make up for deficiencies in many assemblers which aren't    willing to pass any stabs through to the loader which they don't    understand.  */
+comment|/*  * Define a linked list of strings which define symbols which should be  * treated as set elements even though they aren't.  Any symbol with a prefix  * matching one of these should be treated as a set element.  *   * This is to make up for deficiencies in many assemblers which aren't willing  * to pass any stabs through to the loader which they don't understand.  */
 end_comment
 
 begin_struct
@@ -1209,55 +1217,19 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|struct
-name|string_list_element
-modifier|*
-name|set_element_prefixes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Count the number of warning symbols encountered. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|warning_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => write load map.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|write_map
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => write relocation into output file so can re-input it later.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|relocatable_output
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means ptr to symbol entry for symbol to use as start addr.    -e sets this.  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|entry_symbol
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the entry symbol, if any */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|edata_symbol
@@ -1269,6 +1241,7 @@ comment|/* the symbol _edata */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|etext_symbol
@@ -1280,6 +1253,7 @@ comment|/* the symbol _etext */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|end_symbol
@@ -1291,6 +1265,7 @@ comment|/* the symbol _end */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|got_symbol
@@ -1302,6 +1277,7 @@ comment|/* the symbol __GLOBAL_OFFSET_TABLE_ */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|symbol
 modifier|*
 name|dynamic_symbol
@@ -1312,9 +1288,6 @@ begin_comment
 comment|/* the symbol __DYNAMIC */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*  * Each input file, and each library member ("subfile") being loaded, has a  * `file_entry' structure for it.  *   * For files specified by command args, these are contained in the vector which  * `file_table' points to.  *   * For library members, they are dynamically allocated, and chained through the  * `chain' field. The chain is found in the `subfiles' field of the  * `file_entry'. The `file_entry' objects for the members have `superfile'  * fields pointing to the one for the library.  */
 end_comment
@@ -1323,236 +1296,422 @@ begin_struct
 struct|struct
 name|file_entry
 block|{
-comment|/* Name of this file.  */
 name|char
 modifier|*
 name|filename
 decl_stmt|;
+comment|/* Name of this file.  */
 comment|/* 	 * Name to use for the symbol giving address of text start Usually 	 * the same as filename, but for a file spec'd with -l this is the -l 	 * switch itself rather than the filename. 	 */
 name|char
 modifier|*
 name|local_sym_name
 decl_stmt|;
-comment|/* Describe the layout of the contents of the file */
-comment|/* The file's a.out header.  */
 name|struct
 name|exec
 name|header
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Offset in file of GDB symbol segment, or 0 if there is none.  */
-block|int             symseg_offset;
-endif|#
-directive|endif
-comment|/* Describe data from the file loaded into core */
-comment|/* 	 * Symbol table of the file. 	 * We need access to the global symbol early, ie. before 	 * symbols are asssigned there final values. gotslot_offset is 	 * here because GOT entries may be generated for local symbols. 	 */
-struct|struct
-name|localsymbol
-block|{
-name|struct
-name|nzlist
-name|nzlist
-decl_stmt|;
-name|struct
-name|glosym
-modifier|*
-name|symbol
-decl_stmt|;
-name|struct
-name|localsymbol
-modifier|*
-name|next
-decl_stmt|;
-name|long
-name|gotslot_offset
-decl_stmt|;
-name|char
-name|gotslot_claimed
-decl_stmt|;
-name|char
-name|write
-decl_stmt|;
-name|char
-name|is_L_symbol
-decl_stmt|;
-name|char
-name|rename
-decl_stmt|;
-name|int
-name|symbolnum
-decl_stmt|;
-block|}
+comment|/* The file's a.out header.  */
+name|localsymbol_t
 modifier|*
 name|symbols
-struct|;
-comment|/* Number of symbols in above array. */
+decl_stmt|;
+comment|/* Symbol table of the file. */
 name|int
 name|nsymbols
 decl_stmt|;
-comment|/* Size in bytes of string table.  */
+comment|/* Number of symbols in above array. */
 name|int
 name|string_size
 decl_stmt|;
-comment|/* 	 * Pointer to the string table. The string table is not kept in core 	 * all the time, but when it is in core, its address is here. 	 */
+comment|/* Size in bytes of string table. */
 name|char
 modifier|*
 name|strings
 decl_stmt|;
-comment|/* Offset of string table (normally N_STROFF() + 4) */
+comment|/* Pointer to the string table when 					   in core, NULL otherwise */
 name|int
 name|strings_offset
 decl_stmt|;
-comment|/* Next two used only if `relocatable_output' or if needed for */
-comment|/* output of undefined reference line numbers. */
-comment|/* Text reloc info saved by `write_text' for `coptxtrel'.  */
+comment|/* Offset of string table, 					   (normally N_STROFF() + 4) */
+comment|/* 	 * Next two used only if `relocatable_output' or if needed for 	 * output of undefined reference line numbers. 	 */
 name|struct
 name|relocation_info
 modifier|*
 name|textrel
 decl_stmt|;
+comment|/* Text relocations */
 name|int
 name|ntextrel
 decl_stmt|;
-comment|/* Data reloc info saved by `write_data' for `copdatrel'.  */
+comment|/* # of text relocations */
 name|struct
 name|relocation_info
 modifier|*
 name|datarel
 decl_stmt|;
+comment|/* Data relocations */
 name|int
 name|ndatarel
 decl_stmt|;
-comment|/* Relation of this file's segments to the output file */
-comment|/* Start of this file's text seg in the output file core image.  */
+comment|/* # of data relocations */
+comment|/* 	 * Relation of this file's segments to the output file. 	 */
 name|int
 name|text_start_address
 decl_stmt|;
-comment|/* Start of this file's data seg in the output file core image.  */
+comment|/* Start of this file's text segment 					   in the output file core image. */
 name|int
 name|data_start_address
 decl_stmt|;
-comment|/* Start of this file's bss seg in the output file core image.  */
+comment|/* Start of this file's data segment 					   in the output file core image. */
 name|int
 name|bss_start_address
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Offset in bytes in the output file symbol table of the first local 	 * symbol for this file. Set by `write_file_symbols'. 	 */
-block|int             local_syms_offset;
-endif|#
-directive|endif
-comment|/* For library members only */
-comment|/* For a library, points to chain of entries for the library members. */
+comment|/* Start of this file's bss segment 					   in the output file core image. */
 name|struct
 name|file_entry
 modifier|*
 name|subfiles
 decl_stmt|;
-comment|/* 	 * For a library member, offset of the member within the archive. 	 * Zero for files that are not library members. 	 */
-name|int
-name|starting_offset
-decl_stmt|;
-comment|/* Size of contents of this file, if library member.  */
-name|int
-name|total_size
-decl_stmt|;
-comment|/* For library member, points to the library's own entry.  */
+comment|/* For a library, points to chain of 					   entries for the library members. */
 name|struct
 name|file_entry
 modifier|*
 name|superfile
 decl_stmt|;
-comment|/* For library member, points to next entry for next member.  */
+comment|/* For library member, points to the 					   library's own entry.  */
 name|struct
 name|file_entry
 modifier|*
 name|chain
 decl_stmt|;
+comment|/* For library member, points to next 					   entry for next member.  */
+name|int
+name|starting_offset
+decl_stmt|;
+comment|/* For a library member, offset of the 					   member within the archive. Zero for 					   files that are not library members.*/
+name|int
+name|total_size
+decl_stmt|;
+comment|/* Size of contents of this file, 					   if library member. */
 ifdef|#
 directive|ifdef
 name|SUN_COMPAT
-comment|/* For shared libraries which have a .sa companion */
 name|struct
 name|file_entry
 modifier|*
 name|silly_archive
 decl_stmt|;
+comment|/* For shared libraries which have 					    a .sa companion */
 endif|#
 directive|endif
-comment|/* 1 if file is a library. */
-name|char
-name|library_flag
-decl_stmt|;
-comment|/* 1 if file's header has been read into this structure.  */
-name|char
-name|header_read_flag
-decl_stmt|;
-comment|/* 1 means search a set of directories for this file.  */
-name|char
-name|search_dirs_flag
-decl_stmt|;
-comment|/* 	 * 1 means this is base file of incremental load. Do not load this 	 * file's text or data. Also default text_start to after this file's 	 * bss. 	 */
-name|char
-name|just_syms_flag
-decl_stmt|;
-comment|/* 1 means search for dynamic libraries (dependent on -B switch) */
-name|char
-name|search_dynamic_flag
-decl_stmt|;
-comment|/* version numbers of selected shared library */
 name|int
 name|lib_major
 decl_stmt|,
 name|lib_minor
 decl_stmt|;
-comment|/* This entry is a shared object */
-name|char
-name|is_dynamic
+comment|/* Version numbers of a shared object */
+name|int
+name|flags
 decl_stmt|;
-comment|/* 1 if this entry is not a major player anymore */
-name|char
-name|scrapped
-decl_stmt|;
+define|#
+directive|define
+name|E_IS_LIBRARY
+value|1
+comment|/* File is a an archive */
+define|#
+directive|define
+name|E_HEADER_VALID
+value|2
+comment|/* File's header has been read */
+define|#
+directive|define
+name|E_SEARCH_DIRS
+value|4
+comment|/* Search directories for file */
+define|#
+directive|define
+name|E_SEARCH_DYNAMIC
+value|8
+comment|/* Search for shared libs allowed */
+define|#
+directive|define
+name|E_JUST_SYMS
+value|0x10
+comment|/* File is used for incremental load */
+define|#
+directive|define
+name|E_DYNAMIC
+value|0x20
+comment|/* File is a shared object */
+define|#
+directive|define
+name|E_SCRAPPED
+value|0x40
+comment|/* Ignore this file */
+define|#
+directive|define
+name|E_SYMBOLS_USED
+value|0x80
+comment|/* Symbols from this entry were used */
 block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|struct
-name|localsymbol
-name|localsymbol_t
-typedef|;
-end_typedef
-
 begin_comment
-comment|/* Vector of entries for input files specified by arguments.    These are all the input files except for members of specified libraries.  */
+comment|/*  * Section start addresses.  */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|file_entry
-modifier|*
-name|file_table
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Length of that vector.  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|int
-name|number_of_files
+name|text_size
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* total size of text. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|text_start
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start of text */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|text_pad
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* clear space between text and data */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|data_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total size of data. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|data_start
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start of data */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|data_pad
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* part of bss segment within data */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bss_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total size of bss. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bss_start
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start of bss */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|text_reloc_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total size of text relocation. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|data_reloc_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total size of data relocation. */
+end_comment
+
+begin_comment
+comment|/*  * Runtime Relocation Section (RRS).  * This describes the data structures that go into the output text and data  * segments to support the run-time linker. The RRS can be empty (plain old  * static linking), or can just exist of GOT and PLT entries (in case of  * statically linked PIC code).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rrs_section_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* What's in the RRS section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RRS_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RRS_PARTIAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RRS_FULL
+value|2
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rrs_text_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Size of RRS text additions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rrs_text_start
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Location of above */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rrs_data_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Size of RRS data additions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rrs_data_start
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Location of above */
+end_comment
+
+begin_comment
+comment|/* Version number to put in __DYNAMIC (set by -V) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|soversion
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEFAULT_SOVERSION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_SOVERSION
+value|LD_VERSION_BSD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pc_relocation
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current PC reloc value */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|number_of_shobjs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of shared objects linked in */
+end_comment
 
 begin_comment
 comment|/* Current link mode */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|link_mode
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1610,120 +1769,18 @@ comment|/* Process .sa companions, if any */
 end_comment
 
 begin_decl_stmt
-name|int
-name|link_mode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Runtime Relocation Section (RRS).  * This describes the data structures that go into the output text and data  * segments to support the run-time linker. The RRS can be empty (plain old  * static linking), or can just exist of GOT and PLT entries (in case of  * statically linked PIC code).  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rrs_section_type
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|RRS_NONE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RRS_PARTIAL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RRS_FULL
-value|2
-end_define
-
-begin_decl_stmt
-name|int
-name|rrs_text_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rrs_data_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rrs_text_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rrs_data_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Version number to put in __DYNAMIC (set by -V) */
-end_comment
-
-begin_decl_stmt
-name|int
-name|soversion
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* When loading the text and data, we can avoid doing a close    and another open between members of the same library.     These two variables remember the file that is currently open.    Both are zero if no file is open.     See `each_file' and `file_close'.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|file_entry
-modifier|*
-name|input_file
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|input_desc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The name of the file to write; "a.out" by default.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|output_filename
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Descriptor for writing that file with `mywrite'.  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|int
 name|outdesc
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Header for that file (filled in by `write_header').  */
+comment|/* Output file descriptor. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|exec
 name|outheader
@@ -1731,187 +1788,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The following are computed by `digest_symbols'.  */
+comment|/* Output file header. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|text_size
+name|magic
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* total size of text of all input files. */
+comment|/* Output file magic. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|data_size
+name|oldmagic
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|relocatable_output
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* total size of data of all input files. */
+comment|/* Size of a page. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|bss_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total size of bss of all input files. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|text_reloc_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total size of text relocation of all input files. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|data_reloc_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total size of data relocation of all input files. */
-end_comment
-
-begin_comment
-comment|/* Relocation offsets set by perform_relocation(). Defined globaly here    because some of the RRS routines need access to them */
-end_comment
-
-begin_decl_stmt
-name|int
-name|text_relocation
+name|page_size
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|data_relocation
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|bss_relocation
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|pc_relocation
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Specifications of start and length of the area reserved at the end    of the data segment for the set vectors.  Computed in 'digest_symbols' */
-end_comment
-
-begin_decl_stmt
-name|int
-name|set_sect_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|set_sect_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Amount of cleared space to leave between the text and data segments.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|text_pad
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Amount of bss segment to include as part of the data segment.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|data_pad
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Record most of the command options.  */
-end_comment
-
-begin_comment
-comment|/* Address we assume the text section will be loaded at.    We relocate symbols and text and data for this, but we do not    write any padding in the output file for it.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|text_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Offset of default entry-pc within the text section.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|entry_offset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Address we decide the data section will be loaded at.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|data_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|bss_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Keep a list of any symbols referenced from the command line (so    that error messages for these guys can be generated). This list is    zero terminated. */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|glosym
-modifier|*
-modifier|*
-name|cmdline_references
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|cl_refs_allocated
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Actual vector of directories to search; this contains those specified with  * -L plus the standard ones.  */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 modifier|*
@@ -1920,26 +1837,45 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Length of the vector `search_dirs'.  */
+comment|/* Directories to search for libraries. */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|n_search_dirs
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Length of above. */
+end_comment
+
 begin_decl_stmt
-name|void
-name|load_symbols
+specifier|extern
+name|int
+name|write_map
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* write a load map (`-M') */
+end_comment
+
+begin_extern
+extern|extern void	(*fatal_cleanup_hook
+end_extern
+
+begin_expr_stmt
+unit|)
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|void
@@ -2035,94 +1971,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|write_output
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|write_header
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|write_text
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|write_data
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|write_rel
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|write_syms
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|write_symsegs
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
 name|mywrite
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* In warnings.c: */
@@ -3088,7 +2952,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|swap_link_dynamic
+name|swap__dynamic
 name|__P
 argument_list|(
 operator|(
@@ -3102,12 +2966,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|swap_link_dynamic_2
+name|swap_section_dispatch_table
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|link_dynamic_2
+name|section_dispatch_table
 operator|*
 operator|)
 argument_list|)
@@ -3116,12 +2980,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|swap_ld_debug
+name|swap_so_debug
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ld_debug
+name|so_debug
 operator|*
 operator|)
 argument_list|)
@@ -3130,12 +2994,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|swapin_link_object
+name|swapin_sod
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|link_object
+name|sod
 operator|*
 operator|,
 name|int
@@ -3146,12 +3010,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|swapout_link_object
+name|swapout_sod
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|link_object
+name|sod
 operator|*
 operator|,
 name|int
