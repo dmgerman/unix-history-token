@@ -2312,8 +2312,12 @@ name|ida
 operator|->
 name|dev
 argument_list|,
-literal|"ignoring completion %x\n"
+literal|"ignoring completion %llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|completed
 argument_list|)
 expr_stmt|;
