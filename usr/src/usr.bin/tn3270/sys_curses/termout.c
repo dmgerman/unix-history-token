@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.4 (Berkeley) %G%"
+literal|"@(#)termout.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,56 @@ include|#
 directive|include
 file|<curses.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Some version of this OS has a bad definition for nonl() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|nl
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|nonl
+end_undef
+
+begin_define
+define|#
+directive|define
+name|nl
+parameter_list|()
+value|(_tty.sg_flags |= CRMOD,_pfast = _rawmode,stty(_tty_ch,&_tty))
+end_define
+
+begin_define
+define|#
+directive|define
+name|nonl
+parameter_list|()
+value|(_tty.sg_flags&= ~CRMOD, _pfast = TRUE, stty(_tty_ch,&_tty))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(ultrix) */
+end_comment
 
 begin_include
 include|#
