@@ -1543,6 +1543,9 @@ name|pgeflag
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|#
 directive|if
 operator|!
@@ -1562,6 +1565,8 @@ operator|=
 name|PG_G
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/*  * Initialize the 4MB page size flag  */
@@ -1977,6 +1982,9 @@ name|pdir4mb
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|pgeflag
@@ -2030,6 +2038,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
