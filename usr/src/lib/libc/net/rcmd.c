@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.14 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1801,12 +1801,8 @@ operator|-
 literal|1
 condition|)
 block|{
-name|domainp
+name|nodomain
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 literal|1
 expr_stmt|;
 return|return
