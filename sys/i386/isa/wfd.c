@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997,1998  Junichi Satoh<junichi@astec.co.jp>  *   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Junichi Satoh ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL Junichi Satoh BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: wfd.c,v 1.3 1998/01/27 16:49:35 msmith Exp $  */
+comment|/*  * Copyright (c) 1997,1998  Junichi Satoh<junichi@astec.co.jp>  *   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Junichi Satoh ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL Junichi Satoh BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: wfd.c,v 1.4 1998/01/29 06:42:12 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -2231,23 +2231,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Process transfer request. */
-name|bp
-operator|->
-name|b_pblkno
-operator|=
-name|bp
-operator|->
-name|b_blkno
-expr_stmt|;
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
 comment|/* 	 * Do bounds checking, adjust transfer, and set b_pblkno.          */
 if|if
 condition|(
@@ -2270,14 +2253,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bp
-operator|->
-name|b_blkno
-operator|=
-name|bp
-operator|->
-name|b_pblkno
-expr_stmt|;
 name|x
 operator|=
 name|splbio
@@ -2374,12 +2349,12 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* We have a buf, now we should make a command 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device. 	 * What if something asks for 512 bytes not on a 2k boundary? */
+comment|/* We have a buf, now we should make a command 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device. */
 name|blkno
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 operator|/
 operator|(
 name|t
