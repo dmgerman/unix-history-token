@@ -243,6 +243,13 @@ argument_list|,
 name|psf
 argument_list|)
 expr_stmt|;
+comment|/* The signal mask was restored; check for any pending signals: */
+name|_thread_run
+operator|->
+name|check_pending
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Switch to the thread scheduler: */
 name|___longjmp
 argument_list|(
