@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  @(#)error.h	1.2 (Berkeley) %G%  */
+comment|/*  *  @(#)error.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -173,6 +173,13 @@ define|#
 directive|define
 name|INRI
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTROFF
+value|18
 end_define
 
 begin_decl_stmt
@@ -712,6 +719,20 @@ define|#
 directive|define
 name|RIOUTCOMMENT
 value|COUTCOMMENT
+end_define
+
+begin_define
+define|#
+directive|define
+name|TROFFINCOMMENT
+value|".\\\"###"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TROFFOUTCOMMENT
+value|NEWLINE
 end_define
 
 begin_comment

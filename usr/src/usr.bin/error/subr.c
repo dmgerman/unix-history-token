@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)subr.c	1.3 (Berkeley) %G%"
+literal|"@(#)subr.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,6 +1175,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+name|troffincomment
+index|[]
+init|=
+name|TROFFINCOMMENT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|troffoutcomment
+index|[]
+init|=
+name|TROFFOUTCOMMENT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|lang_desc
 name|lang_table
@@ -1306,6 +1326,13 @@ block|,
 name|riincomment
 block|,
 name|rioutcomment
+block|,
+comment|/*INTROFF	18*/
+literal|"troff"
+block|,
+name|troffincomment
+block|,
+name|troffoutcomment
 block|,
 literal|0
 block|,
