@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$	*/
+comment|/*	$Id: main.c,v 1.16 1997/12/13 20:38:19 pst Exp $	*/
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id$"
+literal|"$Id: main.c,v 1.16 1997/12/13 20:38:19 pst Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -230,6 +230,9 @@ name|homedir
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|,
+modifier|*
+name|s
 decl_stmt|;
 name|int
 name|dumbterm
@@ -512,11 +515,32 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|s
+operator|=
 name|getenv
 argument_list|(
 literal|"FTP_PASSIVE_MODE"
 argument_list|)
-operator|||
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|s
+argument_list|,
+literal|"yes"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|passivemode
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|cp
