@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.3 (Berkeley) %G%"
+literal|"@(#)exec.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,23 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -57,36 +68,23 @@ literal|"/bin/sh"
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_extern
-extern|extern	errno;
-end_extern
-
-begin_macro
+begin_function
+name|int
 name|execlp
-argument_list|(
-argument|name
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|argv
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|,
-modifier|*
+decl|*
 name|argv
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -104,27 +102,25 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|execvp
-argument_list|(
-argument|name
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|argv
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
+specifier|const
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -359,7 +355,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
