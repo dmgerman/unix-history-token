@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)errno.h	7.3 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Error codes  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)errno.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -15,7 +11,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Not owner */
+comment|/* Operation not permitted */
 end_comment
 
 begin_define
@@ -48,7 +44,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Interrupted system call */
+comment|/* Interrupted function call */
 end_comment
 
 begin_define
@@ -59,7 +55,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* I/O error */
+comment|/* Input/output error */
 end_comment
 
 begin_define
@@ -103,7 +99,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* Bad file number */
+comment|/* Bad file descriptor */
 end_comment
 
 begin_define
@@ -114,7 +110,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* No children */
+comment|/* No child processes */
 end_comment
 
 begin_comment
@@ -129,7 +125,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* Not enough core */
+comment|/* Not enough space */
 end_comment
 
 begin_define
@@ -154,6 +150,12 @@ begin_comment
 comment|/* Bad address */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -165,6 +167,11 @@ begin_comment
 comment|/* Block device required */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -173,7 +180,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Mount device busy */
+comment|/* Resource busy */
 end_comment
 
 begin_define
@@ -195,7 +202,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* Cross-device link */
+comment|/* Improper link */
 end_comment
 
 begin_define
@@ -217,7 +224,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Not a directory*/
+comment|/* Not a directory */
 end_comment
 
 begin_define
@@ -250,7 +257,7 @@ value|23
 end_define
 
 begin_comment
-comment|/* File table overflow */
+comment|/* Too many open files in system */
 end_comment
 
 begin_define
@@ -272,8 +279,14 @@ value|25
 end_define
 
 begin_comment
-comment|/* Not a typewriter */
+comment|/* Inappropriate I/O control op. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -285,6 +298,11 @@ end_define
 begin_comment
 comment|/* Text file busy */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -316,7 +334,7 @@ value|29
 end_define
 
 begin_comment
-comment|/* Illegal seek */
+comment|/* Invalid seek */
 end_comment
 
 begin_define
@@ -364,7 +382,7 @@ value|33
 end_define
 
 begin_comment
-comment|/* Argument too large */
+comment|/* Domain error */
 end_comment
 
 begin_define
@@ -382,6 +400,12 @@ begin_comment
 comment|/* non-blocking and interrupt i/o */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -393,6 +417,11 @@ begin_comment
 comment|/* Operation would block */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -401,7 +430,7 @@ value|EWOULDBLOCK
 end_define
 
 begin_comment
-comment|/* ditto */
+comment|/* Resource deadlock avoided */
 end_comment
 
 begin_define
@@ -412,8 +441,14 @@ value|EWOULDBLOCK
 end_define
 
 begin_comment
-comment|/* or No Resources (fork failed) */
+comment|/* Resource temporarily unavailable */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -728,6 +763,11 @@ begin_comment
 comment|/* Too many levels of symbolic links */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -736,12 +776,18 @@ value|63
 end_define
 
 begin_comment
-comment|/* File name too long */
+comment|/* Filename too long */
 end_comment
 
 begin_comment
 comment|/* should be rearranged */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -765,6 +811,11 @@ begin_comment
 comment|/* No route to host */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -779,6 +830,12 @@ end_comment
 begin_comment
 comment|/* quotas& mush */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -892,6 +949,33 @@ end_define
 
 begin_comment
 comment|/* Bad procedure for program */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ENOLCK
+value|77
+end_define
+
+begin_comment
+comment|/* No locks available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENOSYS
+value|78
+end_define
+
+begin_comment
+comment|/* Function not implemented */
 end_comment
 
 begin_comment
