@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* session.c -- user windowing interface to Info.    $Id: session.c,v 1.45 2002/03/02 15:05:04 karl Exp $     Copyright (C) 1993, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* session.c -- user windowing interface to Info.    $Id: session.c,v 1.3 2003/01/24 19:05:53 karl Exp $     Copyright (C) 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free    Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -15579,6 +15579,13 @@ condition|(
 name|key
 operator|==
 name|DEL
+operator|||
+name|key
+operator|==
+name|Control
+argument_list|(
+literal|'h'
+argument_list|)
 condition|)
 block|{
 comment|/* User wants to delete one level of search? */
@@ -15683,8 +15690,25 @@ operator|>
 literal|32
 condition|)
 block|{
+comment|/* If this key is not a keymap, get its associated function,              if any.  If it is a keymap, then it's probably ESC from an              arrow key, and we handle that case below.  */
+name|char
+name|type
+init|=
+name|window
+operator|->
+name|keymap
+index|[
+name|key
+index|]
+operator|.
+name|type
+decl_stmt|;
 name|func
 operator|=
+name|type
+operator|==
+name|ISFUNC
+condition|?
 name|InfoFunction
 argument_list|(
 name|window
@@ -15696,7 +15720,10 @@ index|]
 operator|.
 name|function
 argument_list|)
+else|:
+name|NULL
 expr_stmt|;
+comment|/* function member is a Keymap if ISKMAP */
 if|if
 condition|(
 name|isprint
@@ -15704,13 +15731,15 @@ argument_list|(
 name|key
 argument_list|)
 operator|||
+operator|(
+name|type
+operator|==
+name|ISFUNC
+operator|&&
 name|func
 operator|==
-operator|(
-name|VFunction
-operator|*
-operator|)
 name|NULL
+operator|)
 condition|)
 block|{
 name|insert_and_search

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* html.h -- declarations for html-related utilities.    $Id: html.h,v 1.4 2002/03/18 19:45:18 karl Exp $     Copyright (C) 1999, 2000, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* html.h -- declarations for html-related utilities.    $Id: html.h,v 1.4 2002/10/31 22:08:23 karl Exp $     Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,6 +16,29 @@ name|HTML_H
 end_define
 
 begin_comment
+comment|/* A stack of font tags.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|hstack
+block|{
+name|struct
+name|hstack
+modifier|*
+name|next
+decl_stmt|;
+name|char
+modifier|*
+name|tag
+decl_stmt|;
+block|}
+name|HSTACK
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Nonzero if we have output the<head>.  */
 end_comment
 
@@ -23,6 +46,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|html_output_head_p
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we have output a title, from @titlefont or @settitle.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|html_title_written
 decl_stmt|;
 end_decl_stmt
 

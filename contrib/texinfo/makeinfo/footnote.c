@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* footnote.c -- footnotes for Texinfo.    $Id: footnote.c,v 1.13 2002/03/02 15:05:21 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* footnote.c -- footnotes for Texinfo.    $Id: footnote.c,v 1.4 2002/11/05 03:04:26 karl Exp $     Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -756,7 +756,7 @@ condition|)
 block|{
 name|add_html_elt
 argument_list|(
-literal|"<a rel=footnote href="
+literal|"<a rel=\"footnote\" href="
 argument_list|)
 expr_stmt|;
 name|add_word_args
@@ -932,7 +932,7 @@ block|{
 comment|/* The type= attribute is used just in case some weirdo browser          out there doesn't use numbers by default.  Since we rely on the          browser to produce the footnote numbers, we need to make sure          they ARE indeed numbers.  Pre-HTML4 browsers seem to not care.  */
 name|add_word
 argument_list|(
-literal|"<hr><h4>"
+literal|"<div class=\"footnote\">\n<hr>\n<h4>"
 argument_list|)
 expr_stmt|;
 name|add_word
@@ -1203,7 +1203,7 @@ name|html
 condition|)
 name|add_word
 argument_list|(
-literal|"</ol><hr>"
+literal|"</ol><hr></div>"
 argument_list|)
 expr_stmt|;
 name|close_paragraph

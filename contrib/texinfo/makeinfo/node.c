@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* node.c -- nodes for Texinfo.    $Id: node.c,v 1.34 2002/03/26 16:16:29 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* node.c -- nodes for Texinfo.    $Id: node.c,v 1.6 2003/01/18 17:16:17 karl Exp $     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1068,11 +1068,29 @@ operator|=
 name|node_number
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fname
+condition|)
 name|new
 operator|->
 name|html_fname
 operator|=
 name|fname
+expr_stmt|;
+else|else
+comment|/* This happens for Top node under split-HTML, for example.  */
+name|new
+operator|->
+name|html_fname
+operator|=
+name|normalize_filename
+argument_list|(
+name|filename_part
+argument_list|(
+name|current_output_filename
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|new
 operator|->
@@ -1748,7 +1766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The order is: nodename, nextnode, prevnode, upnode.    If all of the NEXT, PREV, and UP fields are empty, they are defaulted.    You must follow a node command which has those fields defaulted    with a sectioning command (e.g. @chapter) giving the "level" of that node.    It is an error not to do so.    The defaults come from the menu in this node's parent. */
+comment|/* The order is: nodename, nextnode, prevnode, upnode.    If all of the NEXT, PREV, and UP fields are empty, they are defaulted.    You must follow a node command which has those fields defaulted    with a sectioning command (e.g., @chapter) giving the "level" of that node.    It is an error not to do so.    The defaults come from the menu in this node's parent. */
 end_comment
 
 begin_function
@@ -2366,7 +2384,7 @@ name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"Node `%s' requires a sectioning command (e.g. %c%s)"
+literal|"Node `%s' requires a sectioning command (e.g., %c%s)"
 argument_list|)
 argument_list|,
 name|node
@@ -3453,7 +3471,13 @@ operator|!
 name|no_headers
 condition|)
 block|{
-comment|/* Navigation bar.   The<p> avoids the links area running              on with old Lynxen.  */
+comment|/* Navigation bar. */
+name|add_word
+argument_list|(
+literal|"<div class=\"node\">\n"
+argument_list|)
+expr_stmt|;
+comment|/* The<p> avoids the links area running on with old Lynxen. */
 name|add_word_args
 argument_list|(
 literal|"<p>%s\n"
@@ -3530,7 +3554,7 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<a rel=next accesskey=n href=\""
+literal|"<a rel=\"next\" accesskey=\"n\" href=\""
 argument_list|)
 expr_stmt|;
 name|add_anchor_name
@@ -3582,7 +3606,7 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<a rel=previous accesskey=p href=\""
+literal|"<a rel=\"previous\" accesskey=\"p\" href=\""
 argument_list|)
 expr_stmt|;
 name|add_anchor_name
@@ -3634,7 +3658,7 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<a rel=up accesskey=u href=\""
+literal|"<a rel=\"up\" accesskey=\"u\" href=\""
 argument_list|)
 expr_stmt|;
 name|add_anchor_name
@@ -3667,6 +3691,11 @@ condition|?
 literal|"<hr>"
 else|:
 literal|""
+argument_list|)
+expr_stmt|;
+name|add_word
+argument_list|(
+literal|"</div>\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4808,7 +4837,7 @@ name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"%s reference to nonexistent node `%s'"
+literal|"%s reference to nonexistent node `%s' (perhaps incorrect sectioning?)"
 argument_list|)
 argument_list|,
 name|label
@@ -5141,7 +5170,7 @@ name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"Next field of node `%s' not pointed to"
+literal|"Next field of node `%s' not pointed to (perhaps incorrect sectioning?)"
 argument_list|)
 argument_list|,
 name|tags
@@ -5478,7 +5507,7 @@ name|line_error
 argument_list|(
 name|_
 argument_list|(
-literal|"`%s' has no Up field"
+literal|"`%s' has no Up field (perhaps incorrect sectioning?)"
 argument_list|)
 argument_list|,
 name|tags

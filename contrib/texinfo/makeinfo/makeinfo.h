@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.37 2002/03/28 16:33:48 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.3 2003/01/17 17:14:34 karl Exp $     Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -933,6 +933,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Nonzero means that we process @xml and @ifxml.  (--ifxml) */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|process_xml
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Maximum number of references to a single node before complaining.    (--reference-limit) */
 end_comment
 
@@ -1303,16 +1319,6 @@ end_expr_stmt
 begin_comment
 comment|/* Defaults to true for now. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|command_char
-parameter_list|(
-name|c
-parameter_list|)
-value|(!cr_or_whitespace(c) \&& (c) != '{' \&& (c) != '}' \&& (c) != '=')
-end_define
 
 begin_define
 define|#

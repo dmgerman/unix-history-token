@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* toc.c -- table of contents handling.    $Id: toc.c,v 1.22 2002/04/01 14:07:11 karl Exp $     Copyright (C) 1999, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* toc.c -- table of contents handling.    $Id: toc.c,v 1.3 2002/11/07 16:13:59 karl Exp $     Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_include
@@ -706,7 +706,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\n<h2>%s</h2>\n<ul>\n"
+literal|"\n<div class=\"contents\">\n<h2>%s</h2>\n<ul>\n"
 argument_list|,
 name|_
 argument_list|(
@@ -818,7 +818,7 @@ operator|++
 control|)
 name|fputs
 argument_list|(
-literal|"</ul>\n"
+literal|"</li></ul>\n"
 argument_list|,
 name|fp
 argument_list|)
@@ -860,6 +860,14 @@ argument_list|(
 literal|"<li>"
 argument_list|,
 name|fp
+argument_list|)
+expr_stmt|;
+comment|/* Insert link -- to an external file if splitting, or              within the current document if not splitting.  */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"<a "
 argument_list|)
 expr_stmt|;
 comment|/* For chapters (only), insert an anchor that the short contents              will link to.  */
@@ -904,7 +912,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"<a name=\"toc_%.*s\"></a>\n    "
+literal|"name=\"toc_%.*s\" "
 argument_list|,
 name|p
 operator|-
@@ -924,12 +932,11 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Insert link -- to an external file if splitting, or              within the current document if not splitting.  */
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"<a href=\"%s#%s</a>\n"
+literal|"href=\"%s#%s</a>\n"
 argument_list|,
 name|splitting
 condition|?
@@ -997,14 +1004,14 @@ operator|++
 control|)
 name|fputs
 argument_list|(
-literal|"</ul>\n"
+literal|"</li></ul>\n"
 argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"</ul>\n\n"
+literal|"</li></ul>\n</div>\n\n"
 argument_list|,
 name|fp
 argument_list|)
@@ -1190,7 +1197,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\n<h2>%s</h2>\n<ul>\n"
+literal|"\n<div class=\"shortcontents\">\n<h2>%s</h2>\n<ul>\n"
 argument_list|,
 name|_
 argument_list|(
@@ -1254,7 +1261,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"<li><a href=\"%s#toc_%s</a>\n"
+literal|"<li><a href=\"%s#toc_%s</a></li>\n"
 argument_list|,
 name|splitting
 condition|?
@@ -1290,7 +1297,7 @@ block|}
 block|}
 name|fputs
 argument_list|(
-literal|"</ul>\n\n"
+literal|"</ul>\n</div>\n\n"
 argument_list|,
 name|fp
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.60 2002/03/11 19:54:29 karl Exp $     Copyright (C) 1993, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* info.c -- Display nodes of Info files in multiple windows.    $Id: info.c,v 1.2 2003/01/19 18:45:59 karl Exp $     Copyright (C) 1993, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -1013,7 +1013,7 @@ argument_list|(
 literal|"Copyright (C) %s Free Software Foundation, Inc.\n\ There is NO warranty.  You may redistribute this software\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the files named COPYING.\n"
 argument_list|)
 argument_list|,
-literal|"2002"
+literal|"2003"
 argument_list|)
 expr_stmt|;
 name|xexit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.25 2002/03/19 14:43:04 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.4 2002/11/26 22:54:31 karl Exp $     Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1232,6 +1232,15 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|name_index_alist
+index|[
+name|i
+index|]
+condition|)
+block|{
+comment|/* Suppose we're called with two input files, and the first              does a @synindex pg cp.  Then, when we get here to start              the second file, the "pg" element won't get freed by              undefindex (because it's pointing to "cp").  So free it              here; otherwise, when we try to define the pg index again              just below, it will still point to cp.  */
 name|undefindex
 argument_list|(
 name|name_index_alist
@@ -1242,15 +1251,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|name_index_alist
-index|[
-name|i
-index|]
-condition|)
-block|{
-comment|/* Suppose we're called with two input files, and the first              does a @synindex pg cp.  Then, when we get here to start              the second file, the "pg" element won't get freed by              undefindex (because it's pointing to "cp").  So free it              here; otherwise, when we try to define the pg index again              just below, it will still point to cp.  */
 name|free
 argument_list|(
 name|name_index_alist
@@ -2539,7 +2539,7 @@ condition|)
 name|xml_begin_index
 argument_list|()
 expr_stmt|;
-comment|/* Do this before sorting, so execute_string in index_element_compare 	 will give the same results as when we actually print.  */
+comment|/* Do this before sorting, so execute_string in index_element_compare          will give the same results as when we actually print.  */
 name|printing_index
 operator|=
 literal|1
@@ -2574,9 +2574,11 @@ if|if
 condition|(
 name|html
 condition|)
-name|add_word
+name|add_word_args
 argument_list|(
-literal|"<ul compact>"
+literal|"<ul class=\"index-%s\" compact>"
+argument_list|,
+name|index_name
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2627,7 +2629,7 @@ name|item
 operator|++
 control|)
 block|{
-comment|/* A pathological document might have an index entry outside of any 	     node.  Don't crash; try using the section name instead.  */
+comment|/* A pathological document might have an index entry outside of any              node.  Don't crash; try using the section name instead.  */
 name|char
 modifier|*
 name|index_node
@@ -2732,7 +2734,7 @@ expr_stmt|;
 comment|/* Don't repeat the previous entry. */
 else|else
 block|{
-comment|/* In the HTML case, the expanded index entry is not 		     good for us, since it was expanded for non-HTML mode 		     inside sort_index.  So we need to HTML-escape and 		     expand the original entry text here.  */
+comment|/* In the HTML case, the expanded index entry is not                      good for us, since it was expanded for non-HTML mode                      inside sort_index.  So we need to HTML-escape and                      expand the original entry text here.  */
 name|char
 modifier|*
 name|escaped_entry
@@ -2748,7 +2750,7 @@ name|char
 modifier|*
 name|expanded_entry
 decl_stmt|;
-comment|/* expansion() doesn't HTML-escape the argument, so need 		     to do it separately.  */
+comment|/* expansion() doesn't HTML-escape the argument, so need                      to do it separately.  */
 name|escaped_entry
 operator|=
 name|escape_string
@@ -2868,7 +2870,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* If we use the section instead of the (missing) node, then 		   index_node already includes all we need except the #.  */
+comment|/* If we use the section instead of the (missing) node, then                    index_node already includes all we need except the #.  */
 name|add_word_args
 argument_list|(
 literal|"#%s</a>"
@@ -2885,11 +2887,12 @@ operator|&&
 name|docbook
 condition|)
 block|{
+comment|/* In the DocBook case, the expanded index entry is not                  good for us, since it was expanded for non-DocBook mode                  inside sort_index.  So we send the original entry text                  to be used with execute_string.  */
 name|xml_insert_indexentry
 argument_list|(
 name|index
 operator|->
-name|entry
+name|entry_text
 argument_list|,
 name|index_node
 argument_list|)
@@ -2949,7 +2952,7 @@ name|line_length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Print the entry, nicely formatted.  We've already 		 expanded any commands in index->entry, including any 		 implicit @code.  Thus, can't call execute_string, since 		 @@ has turned into @. */
+comment|/* Print the entry, nicely formatted.  We've already                  expanded any commands in index->entry, including any                  implicit @code.  Thus, can't call execute_string, since                  @@ has turned into @. */
 if|if
 condition|(
 operator|!
@@ -3003,7 +3006,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* With --no-headers, the @node lines are gone, so 		     there's little sense in referring to them in the 		     index.  Instead, output the number or name of the 		     section that corresponds to that node.  */
+comment|/* With --no-headers, the @node lines are gone, so                      there's little sense in referring to them in the                      index.  Instead, output the number or name of the                      section that corresponds to that node.  */
 name|char
 modifier|*
 name|section_name
@@ -3174,7 +3177,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Prevent `output_paragraph' from growing to the size of the 	     whole index.  */
+comment|/* Prevent `output_paragraph' from growing to the size of the              whole index.  */
 name|flush_output
 argument_list|()
 expr_stmt|;
