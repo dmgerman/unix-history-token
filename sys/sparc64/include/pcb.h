@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/fp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
@@ -35,16 +29,18 @@ value|8
 end_define
 
 begin_comment
-comment|/* NOTE: pcb_fpstate must be aligned on a 64 byte boundary. */
+comment|/* NOTE: pcb_ufp must be aligned on a 64 byte boundary. */
 end_comment
 
 begin_struct
 struct|struct
 name|pcb
 block|{
-name|struct
-name|fpstate
-name|pcb_fpstate
+name|uint32_t
+name|pcb_ufp
+index|[
+literal|64
+index|]
 decl_stmt|;
 name|u_long
 name|pcb_sp

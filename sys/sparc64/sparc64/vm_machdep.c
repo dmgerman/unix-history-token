@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/fsr.h>
 end_include
 
@@ -660,6 +666,9 @@ operator|=
 name|pcb2
 expr_stmt|;
 comment|/* 	 * Ensure that p1's pcb is up to date. 	 */
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -674,28 +683,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|savefpctx
 argument_list|(
-operator|&
 name|pcb1
 operator|->
-name|pcb_fpstate
+name|pcb_ufp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
-block|}
 comment|/* Make sure the copied windows are spilled. */
 name|flushw
 argument_list|()
