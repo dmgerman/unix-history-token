@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)sprite.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)sprite.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|NIL
-value|(~0)
+value|~0
 end_define
 
 begin_define
@@ -147,39 +147,25 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * ClientData is an uninterpreted word.  It is defined as an int so that  * kdbx will not interpret client data as a string.  Unlike an "Address",  * client data will generally not be used in arithmetic.  */
+comment|/*  * ClientData is an uninterpreted word.  It is defined as an int so that  * kdbx will not interpret client data as a string.  Unlike an "Address",  * client data will generally not be used in arithmetic.  * But we don't have kdbx anymore so we define it as void (christos)  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|void
 modifier|*
 name|ClientData
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"status.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-endif|_SPRITE
-end_endif
+begin_comment
+comment|/* _SPRITE */
+end_comment
 
 end_unit
 

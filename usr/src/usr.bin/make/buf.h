@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -27,7 +27,6 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|unsigned
 name|char
 name|Byte
 typedef|;
@@ -93,6 +92,20 @@ end_define
 
 begin_decl_stmt
 name|void
+name|Buf_OvAddByte
+name|__P
+argument_list|(
+operator|(
+name|Buffer
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|Buf_AddBytes
 name|__P
 argument_list|(
@@ -110,13 +123,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|Buf_Destroy
+name|Buf_UngetByte
 name|__P
 argument_list|(
 operator|(
 name|Buffer
 operator|,
-name|Boolean
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -124,28 +137,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|Buf_Discard
+name|Buf_UngetBytes
 name|__P
 argument_list|(
 operator|(
 name|Buffer
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+operator|,
 name|Byte
-modifier|*
-name|Buf_GetAll
-name|__P
-argument_list|(
-operator|(
-name|Buffer
-operator|,
-name|int
 operator|*
 operator|)
 argument_list|)
@@ -182,12 +182,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Buffer
-name|Buf_Init
+name|Byte
+modifier|*
+name|Buf_GetAll
 name|__P
 argument_list|(
 operator|(
+name|Buffer
+operator|,
 name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -195,7 +199,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|Buf_OvAddByte
+name|Buf_Discard
 name|__P
 argument_list|(
 operator|(
@@ -220,13 +224,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|Buf_UngetByte
+name|Buffer
+name|Buf_Init
 name|__P
 argument_list|(
 operator|(
-name|Buffer
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -235,16 +237,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|Buf_UngetBytes
+name|Buf_Destroy
 name|__P
 argument_list|(
 operator|(
 name|Buffer
 operator|,
-name|int
-operator|,
-name|Byte
-operator|*
+name|Boolean
 operator|)
 argument_list|)
 decl_stmt|;
