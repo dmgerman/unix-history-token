@@ -1848,6 +1848,17 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
