@@ -720,7 +720,13 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/* 	signal(SIGQUIT, SIG_DFL); */
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 name|openlog
 argument_list|(
 literal|"getty"
@@ -1238,9 +1244,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|oflush
-argument_list|()
-expr_stmt|;
 name|alarm
 argument_list|(
 literal|0
@@ -1252,6 +1255,9 @@ name|SIGALRM
 argument_list|,
 name|SIG_DFL
 argument_list|)
+expr_stmt|;
+name|oflush
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1295,13 +1301,6 @@ name|TIOCSLTC
 argument_list|,
 operator|&
 name|ltc
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_DFL
 argument_list|)
 expr_stmt|;
 for|for
@@ -1377,6 +1376,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|alarm
 argument_list|(
 literal|0
@@ -1387,13 +1393,6 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|SIG_DFL
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
 if|if
