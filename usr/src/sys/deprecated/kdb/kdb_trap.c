@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_trap.c	7.1	86/11/20	*/
+comment|/*	kdb_trap.c	7.2	86/11/20	*/
 end_comment
 
 begin_comment
@@ -34,20 +34,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|maxpos
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|lastc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|eof
 decl_stmt|;
 end_decl_stmt
 
@@ -256,15 +244,6 @@ expr_stmt|;
 name|lp
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|eof
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 name|command
 argument_list|(
 literal|0
@@ -340,7 +319,7 @@ name|n
 expr_stmt|;
 name|reset
 argument_list|(
-literal|1
+name|ERROR
 argument_list|)
 expr_stmt|;
 block|}
