@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_message.c	7.1	86/11/20	*/
+comment|/*	kdb_message.c	7.2	86/11/20	*/
 end_comment
 
 begin_include
@@ -168,6 +168,15 @@ modifier|*
 name|BADMOD
 init|=
 literal|"bad modifier"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|BADRAD
+init|=
+literal|"invalid radix"
 decl_stmt|;
 end_decl_stmt
 
