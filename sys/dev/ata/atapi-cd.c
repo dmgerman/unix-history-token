@@ -3340,6 +3340,24 @@ condition|)
 return|return
 name|ENOMEM
 return|;
+comment|/* wait if drive is not finished loading the medium */
+while|while
+condition|(
+name|timeout
+operator|--
+condition|)
+block|{
+name|bzero
+argument_list|(
+name|request
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ata_request
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|request
 operator|->
 name|device
@@ -3381,13 +3399,6 @@ name|timeout
 operator|=
 literal|5
 expr_stmt|;
-comment|/* wait if drive is not finished loading the medium */
-while|while
-condition|(
-name|timeout
-operator|--
-condition|)
-block|{
 name|ata_queue_request
 argument_list|(
 name|request
@@ -3400,6 +3411,7 @@ name|request
 operator|->
 name|error
 operator|&&
+operator|(
 name|request
 operator|->
 name|u
@@ -3411,6 +3423,19 @@ operator|.
 name|sense_key
 operator|==
 literal|2
+operator|||
+name|request
+operator|->
+name|u
+operator|.
+name|atapi
+operator|.
+name|sense_data
+operator|.
+name|sense_key
+operator|==
+literal|7
+operator|)
 operator|&&
 name|request
 operator|->
