@@ -297,6 +297,9 @@ name|struct
 name|tty
 modifier|*
 name|tp
+parameter_list|,
+name|dev_t
+name|dev
 parameter_list|)
 block|{
 return|return
@@ -313,9 +316,7 @@ operator|.
 name|l_open
 operator|)
 operator|(
-name|tp
-operator|->
-name|t_dev
+name|dev
 operator|,
 name|tp
 operator|)
