@@ -182,6 +182,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__sparc64__
 argument_list|)
 end_if
@@ -196,24 +201,6 @@ end_define
 begin_comment
 comment|/* the correct size for kinfo_proc */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KINFO_PROC_SIZE
-value|888
-end_define
 
 begin_endif
 endif|#
