@@ -1112,7 +1112,7 @@ return|;
 comment|/* now start the requests if we can */
 block|}
 else|else
-comment|/* 	 * This is a write operation.  We write to all 	 * plexes.  If this is a RAID 5 plex, we must also 	 * update the parity stripe. 	 */
+comment|/* 	 * This is a write operation.  We write to all plexes.  If this is 	 * a RAID-4 or RAID-5 plex, we must also update the parity stripe. 	 */
 block|{
 if|if
 condition|(
@@ -1812,6 +1812,8 @@ operator|&
 name|launch_requests
 argument_list|,
 name|PRIBIO
+operator||
+name|PCATCH
 argument_list|,
 literal|"vinbuf"
 argument_list|,
@@ -1956,31 +1958,6 @@ if|if
 condition|(
 name|debug
 operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  vinumstart sd %d numoutput %ld\n"
-argument_list|,
-name|rqe
-operator|->
-name|sdno
-argument_list|,
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
 name|DEBUG_LASTREQS
 condition|)
 name|logrq
@@ -2000,30 +1977,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-operator|==
-literal|0
-condition|)
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 name|rqe
 operator|->
 name|b
@@ -3019,7 +2972,10 @@ block|}
 block|}
 block|}
 break|break;
-comment|/* 	 * RAID5 is complicated enough to have 	 * its own function 	 */
+comment|/* 	 * RAID-4 and RAID-5 are complicated enough to have their own 	 * function. 	 */
+case|case
+name|plex_raid4
+case|:
 case|case
 name|plex_raid5
 case|:
@@ -3682,25 +3638,9 @@ operator|->
 name|driveno
 index|]
 operator|.
-name|vp
-operator|->
-name|v_rdev
+name|dev
 expr_stmt|;
 comment|/* drive device */
-name|bp
-operator|->
-name|b_vp
-operator|=
-name|DRIVE
-index|[
-name|rqe
-operator|->
-name|driveno
-index|]
-operator|.
-name|vp
-expr_stmt|;
-comment|/* drive vnode */
 block|}
 name|bp
 operator|->
@@ -4055,6 +3995,76 @@ operator|->
 name|driveno
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|!=
+name|drive_up
+condition|)
+block|{
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|>=
+name|sd_crashed
+condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_WRITE
+condition|)
+comment|/* writing, */
+name|set_sd_state
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|,
+name|sd_stale
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+else|else
+name|set_sd_state
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|,
+name|sd_crashed
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+block|}
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/*      * We allow access to any kind of subdisk as long as we can expect      * to get the I/O performed.      */
 if|if
 condition|(
@@ -4199,9 +4209,7 @@ operator|->
 name|driveno
 index|]
 operator|.
-name|vp
-operator|->
-name|v_rdev
+name|dev
 expr_stmt|;
 comment|/* device */
 name|sbp
@@ -4258,22 +4266,6 @@ name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|=
-name|DRIVE
-index|[
-name|sd
-operator|->
-name|driveno
-index|]
-operator|.
-name|vp
-expr_stmt|;
-comment|/* vnode */
 name|sbp
 operator|->
 name|bp
@@ -4374,31 +4366,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|if
-condition|(
-operator|(
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* write */
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
-operator|++
-expr_stmt|;
-comment|/* one more output going */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -4482,31 +4449,6 @@ operator|->
 name|b
 operator|.
 name|b_bcount
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|debug
-operator|&
-name|DEBUG_NUMOUTPUT
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"  vinumstart sd %d numoutput %ld\n"
-argument_list|,
-name|sbp
-operator|->
-name|sdno
-argument_list|,
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_vp
-operator|->
-name|v_numoutput
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4644,16 +4586,6 @@ name|VF_RAW
 operator|)
 operator|)
 comment|/* and it's not raw */
-operator|&&
-name|major
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|==
-name|BDEV_MAJOR
-comment|/* and it's the block device */
 operator|&&
 operator|(
 name|bp
