@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * %sccs.include.redist.c%  *  * from: vfs_cache.c,v 1.11 1995/03/12 02:01:20 phk Exp $  *  *	@(#)vfs_cache.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Poul-Henning Kamp of the FreeBSD Project.  *  * %sccs.include.redist.c%  *  * from: vfs_cache.c,v 1.11 1995/03/12 02:01:20 phk Exp $  *  *	@(#)vfs_cache.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -491,7 +491,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* We found a "negative" match, ENOENT notifies client of this match */
+comment|/* 	 * We found a "negative" match, ENOENT notifies client of this match. 	 * The nc_vpid field records whether this is a whiteout. 	 */
 name|nchstats
 operator|.
 name|ncs_neghits
@@ -501,6 +501,14 @@ name|TOUCH
 argument_list|(
 name|ncp
 argument_list|)
+expr_stmt|;
+name|cnp
+operator|->
+name|cn_flags
+operator||=
+name|ncp
+operator|->
+name|nc_vpid
 expr_stmt|;
 return|return
 operator|(
@@ -697,7 +705,7 @@ block|{
 comment|/* give up */
 return|return;
 block|}
-comment|/* fill in cache info, if vp is NULL this is a "negative" cache entry */
+comment|/* 	 * Fill in cache info, if vp is NULL this is a "negative" cache entry. 	 * For negative entries, we have to record whether it is a whiteout. 	 * the whiteout flag is stored in the nc_vpid field which is 	 * otherwise unused. 	 */
 name|ncp
 operator|->
 name|nc_vp
@@ -721,7 +729,11 @@ name|ncp
 operator|->
 name|nc_vpid
 operator|=
-literal|0
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|ISWHITEOUT
 expr_stmt|;
 name|ncp
 operator|->
