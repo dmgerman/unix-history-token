@@ -849,9 +849,14 @@ goto|goto
 name|done
 goto|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 literal|"%s%d"
 argument_list|,
