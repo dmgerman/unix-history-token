@@ -280,10 +280,6 @@ modifier|*
 name|gsp
 decl_stmt|;
 name|struct
-name|partinfo
-name|pi
-decl_stmt|;
-name|struct
 name|g_ioctl
 modifier|*
 name|gio
@@ -308,12 +304,6 @@ name|gsp
 operator|->
 name|softc
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (g_haveattr(bp, "IOCTL::DIOCGDINFO",&ms->inram, 	    sizeof ms->inram)) 		return (1); 	else if (!strcmp(bp->bio_attribute, "IOCTL::DIOCGPART")) { 		pi.disklab =&ms->inram; 		pi.part =&ms->inram.d_partitions[bp->bio_to->index]; 		if (g_haveattr(bp, "IOCTL::DIOCGPART",&pi, sizeof pi)) 			return (1); 	}
-endif|#
-directive|endif
 if|if
 condition|(
 name|strcmp
@@ -400,6 +390,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|_KERNEL
 if|if
 condition|(
 name|gio
@@ -409,6 +402,10 @@ operator|==
 name|DIOCGPART
 condition|)
 block|{
+name|struct
+name|partinfo
+name|pi
+decl_stmt|;
 name|pi
 operator|.
 name|disklab
@@ -466,6 +463,8 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
