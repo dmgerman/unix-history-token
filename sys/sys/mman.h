@@ -18,8 +18,20 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_posix.h>
+file|<sys/cdefs.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Inheritance for minherit()  */
@@ -45,6 +57,11 @@ directive|define
 name|INHERIT_NONE
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Protections are chosen from these bits, or-ed together  */
@@ -130,6 +147,12 @@ end_define
 begin_comment
 comment|/* Obsolete */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Other flags  */
@@ -224,6 +247,32 @@ comment|/* page to but do not sync underlying file */
 end_comment
 
 begin_comment
+comment|/*  * Mapping type  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* map from file (default) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_ANON
+value|0x1000
+end_define
+
+begin_comment
+comment|/* allocated from memory, swap space */
+end_comment
+
+begin_comment
 comment|/*  * Extended flags  */
 end_comment
 
@@ -238,11 +287,22 @@ begin_comment
 comment|/* dont include these pages in a coredump */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_P1003_1B_VISIBLE
-end_ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+end_if
 
 begin_comment
 comment|/*  * Process memory locking  */
@@ -274,10 +334,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _P1003_1B_VISIBLE */
-end_comment
 
 begin_comment
 comment|/*  * Error return from mmap()  */
@@ -327,31 +383,11 @@ begin_comment
 comment|/* invalidate all cached data */
 end_comment
 
-begin_comment
-comment|/*  * Mapping type  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAP_FILE
-value|0x0000
-end_define
-
-begin_comment
-comment|/* map from file (default) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAP_ANON
-value|0x1000
-end_define
-
-begin_comment
-comment|/* allocated from memory, swap space */
-end_comment
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Advice to madvise  */
@@ -526,62 +562,142 @@ begin_comment
 comment|/* Page has been modified */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_comment
+comment|/*  * XXX missing POSIX_MADV_* macros, POSIX_TYPED_MEM_* macros, and  * posix_typed_mem_info structure.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MODE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__mode_t
+name|mode_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_MODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OFF_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__off_t
+name|off_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_OFF_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_function_decl
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
-name|_P1003_1B_VISIBLE
+comment|/*  * XXX not yet implemented: posix_madvise(), posix_mem_offset(),  * posix_typed_mem_get_info(), posix_typed_mem_open().  */
+if|#
+directive|if
+name|__BSD_VISIBLE
 name|int
-name|mlockall
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|munlockall
+name|madvise
 parameter_list|(
 name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|shm_open
+name|mincore
 parameter_list|(
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
-name|mode_t
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|shm_unlink
+name|minherit
 parameter_list|(
-specifier|const
-name|char
+name|void
 modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -590,10 +706,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _P1003_1B_VISIBLE */
-end_comment
 
 begin_function_decl
 name|int
@@ -607,6 +719,28 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+end_if
+
+begin_function_decl
+name|int
+name|mlockall
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -688,6 +822,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+end_if
+
+begin_function_decl
+name|int
+name|munlockall
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|munmap
@@ -700,52 +856,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+end_if
 
 begin_function_decl
 name|int
-name|madvise
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mincore
+name|shm_open
 parameter_list|(
 specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|mode_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|minherit
+name|shm_unlink
 parameter_list|(
-name|void
+specifier|const
+name|char
 modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -772,6 +912,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_SYS_MMAN_H_ */
+end_comment
 
 end_unit
 

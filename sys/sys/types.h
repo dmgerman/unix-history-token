@@ -525,9 +525,15 @@ begin_comment
 comment|/* IPC key (for Sys V IPC) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MODE_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
-name|u_int16_t
+name|__mode_t
 name|mode_t
 typedef|;
 end_typedef
@@ -535,6 +541,17 @@ end_typedef
 begin_comment
 comment|/* permissions */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_MODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -547,6 +564,12 @@ begin_comment
 comment|/* link count */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OFF_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|__off_t
@@ -557,6 +580,17 @@ end_typedef
 begin_comment
 comment|/* file offset */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_OFF_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

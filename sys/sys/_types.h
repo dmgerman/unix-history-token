@@ -83,6 +83,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|__uint16_t
+name|__mode_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* permissions */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__int64_t
 name|__off_t
 typedef|;
