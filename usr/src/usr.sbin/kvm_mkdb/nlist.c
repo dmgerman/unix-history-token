@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.4 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -613,49 +613,22 @@ decl_stmt|,
 name|vers_off
 decl_stmt|;
 comment|/* Offset relative to start of text image in VM. */
-ifdef|#
-directive|ifdef
-name|hp300
 name|rel_off
 operator|=
 name|nbuf
 operator|.
 name|n_value
+operator|&
+operator|~
+name|KERNBASE
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|tahoe
 comment|/* 			 * On tahoe, first 0x800 is reserved for communication 			 * with the console processor. 			 */
 name|rel_off
-operator|=
-operator|(
-operator|(
-name|nbuf
-operator|.
-name|n_value
-operator|&
-operator|~
-name|KERNBASE
-operator|)
-operator|-
+operator|-=
 literal|0x800
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|vax
-name|rel_off
-operator|=
-name|nbuf
-operator|.
-name|n_value
-operator|&
-operator|~
-name|KERNBASE
 expr_stmt|;
 endif|#
 directive|endif
@@ -912,7 +885,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"symorder: %s: %s: %s\n"
+literal|"kvm_mkdb: %s: %s: %s\n"
 argument_list|,
 name|kfile
 argument_list|,
