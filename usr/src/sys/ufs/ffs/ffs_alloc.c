@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1544,6 +1544,34 @@ begin_comment
 comment|/*  * Reallocate a sequence of blocks into a contiguous sequence of blocks.  *  * The vnode and an array of buffer pointers for a range of sequential  * logical blocks to be made contiguous is given. The allocator attempts  * to find a range of sequential blocks starting as close as possible to  * an fs_rotdelay offset from the end of the allocation for the logical  * block immediately preceeding the current range. If successful, the  * physical block numbers in the buffer pointers and in the inode are  * changed to reflect the new allocation. If unsuccessful, the allocation  * is left unchanged. The success in doing the reallocation is returned.  * Note that the error return is not reflected back to the user. Rather  * the previous block allocation will be used.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|doasyncfree
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug14
+init|=
+block|{
+literal|"doasyncfree"
+block|,
+operator|&
+name|doasyncfree
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|ffs_reallocblks
@@ -2150,7 +2178,7 @@ operator|=
 name|blkno
 expr_stmt|;
 block|}
-comment|/* 	 * Next we must write out the modified inode and indirect blocks. 	 * The writes are synchronous since the old block values may have 	 * been written to disk. 	 * 	 * These writes should be changed to be bdwrites (and the VOP_UPDATE 	 * dropped) when a flag has been added to the buffers and inodes 	 * to detect when they have been written. It should be set when the 	 * cluster is started and cleared whenever the buffer or inode is 	 * flushed. We can then check below to see if it is set, and do 	 * the synchronous write only when it has been cleared. 	 */
+comment|/* 	 * Next we must write out the modified inode and indirect blocks. 	 * For strict correctness, the writes should be synchronous since 	 * the old block values may have been written to disk. In practise 	 * they are almost never written, but if we are concerned about  	 * strict correctness, the `doasyncfree' flag should be set to zero. 	 * 	 * The test on `doasyncfree' should be changed to test a flag 	 * that shows whether the associated buffers and inodes have 	 * been written. The flag should be set when the cluster is 	 * started and cleared whenever the buffer or inode is flushed. 	 * We can then check below to see if it is set, and do the 	 * synchronous write only when it has been cleared. 	 */
 if|if
 condition|(
 name|sbap
@@ -2164,6 +2192,16 @@ literal|0
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|doasyncfree
+condition|)
+name|bdwrite
+argument_list|(
+name|sbp
+argument_list|)
+expr_stmt|;
+else|else
 name|bwrite
 argument_list|(
 name|sbp
@@ -2180,6 +2218,11 @@ name|IN_CHANGE
 operator||
 name|IN_UPDATE
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|doasyncfree
+condition|)
 name|VOP_UPDATE
 argument_list|(
 name|vp
@@ -2200,6 +2243,16 @@ name|ssize
 operator|<
 name|len
 condition|)
+if|if
+condition|(
+name|doasyncfree
+condition|)
+name|bdwrite
+argument_list|(
+name|ebp
+argument_list|)
+expr_stmt|;
+else|else
 name|bwrite
 argument_list|(
 name|ebp
