@@ -15672,8 +15672,12 @@ name|hisaddr
 operator|||
 operator|(
 name|hisaddr
-operator|==
+operator|>=
 literal|1
+operator|&&
+name|hisaddr
+operator|<=
+literal|254
 operator|&&
 name|desiredaddr
 operator|!=
@@ -15681,7 +15685,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 				 * Peer's address is same as our value, 				 * or we have set it to 0.0.0.1 to 				 * indicate that we do not really care, 				 * this is agreeable.  Gonna conf-ack 				 * it. 				 */
+comment|/* 				 * Peer's address is same as our value, 				 * or we have set it to 0.0.0.* to 				 * indicate that we do not really care, 				 * this is agreeable.  Gonna conf-ack 				 * it. 				 */
 if|if
 condition|(
 name|debug
