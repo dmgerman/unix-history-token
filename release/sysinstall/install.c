@@ -2063,7 +2063,7 @@ expr_stmt|;
 comment|/* Set default security level */
 name|configSecurityModerate
 argument_list|(
-name|self
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Give user the option of one last configuration spree */
@@ -2663,7 +2663,7 @@ block|{
 comment|/* Set default security level */
 name|configSecurityModerate
 argument_list|(
-name|self
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Give user the option of one last configuration spree */

@@ -2330,6 +2330,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* More fascist stuff should go here */
+if|if
+condition|(
+name|self
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"High security settings have been selected.\n\n"
@@ -2442,6 +2446,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|self
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"Moderate security settings have been selected.\n\n"
@@ -2517,6 +2525,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|self
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"Liberal security settings have been selected.\n\n"
