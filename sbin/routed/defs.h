@@ -10,7 +10,7 @@ name|__NetBSD__
 end_ifndef
 
 begin_empty
-empty|#ident "$Revision: 1.16 $"
+empty|#ident "$Revision: 1.17 $"
 end_empty
 
 begin_endif
@@ -200,6 +200,23 @@ directive|include
 file|<protocols/routed.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_PASSIFNAME
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Type of an IP address.  *	Some systems do not like to pass structures, so do not use in_addr.  *	Some systems think a long has 64 bits, which would be a gross waste.  * So define it here so it can be changed for the target system.  * It should be defined somewhere netinet/in.h, but it is not.  */
 end_comment
@@ -349,6 +366,17 @@ value|((s).tv_sec = MIN((s).tv_sec, (l)))
 end_define
 
 begin_comment
+comment|/* Metric used for fake default routes.  It ought to be 15, but when  * processing advertised routes, previous versions of `routed` added  * to the received metric and discarded the route if the total was 16  * or larger.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAKE_METRIC
+value|(HOPCNT_INFINITY-2)
+end_define
+
+begin_comment
 comment|/* Router Discovery parameters */
 end_comment
 
@@ -452,6 +480,17 @@ value|3
 end_define
 
 begin_comment
+comment|/* Bloated packet size for systems that simply add authentication to  * full-sized packets  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OVER_MAXPACKETSIZE
+value|(MAXPACKETSIZE+sizeof(struct netinfo)*2)
+end_define
+
+begin_comment
 comment|/* typical packet buffers */
 end_comment
 
@@ -462,9 +501,9 @@ block|{
 name|char
 name|packet
 index|[
-name|MAXPACKETSIZE
-operator|+
-literal|1
+name|OVER_MAXPACKETSIZE
+operator|*
+literal|2
 index|]
 decl_stmt|;
 name|struct
@@ -476,7 +515,7 @@ union|;
 end_union
 
 begin_comment
-comment|/* no more routes than this, to protect ourself in case something goes  * whacko and starts broadcast zillions of bogus routes.  */
+comment|/* No more routes than this, to protect ourself in case something goes  * whacko and starts broadcasting zillions of bogus routes.  */
 end_comment
 
 begin_define
@@ -729,7 +768,44 @@ modifier|*
 name|int_next
 decl_stmt|,
 modifier|*
+modifier|*
 name|int_prev
+decl_stmt|;
+name|struct
+name|interface
+modifier|*
+name|int_ahash
+decl_stmt|,
+modifier|*
+modifier|*
+name|int_ahash_prev
+decl_stmt|;
+name|struct
+name|interface
+modifier|*
+name|int_bhash
+decl_stmt|,
+modifier|*
+modifier|*
+name|int_bhash_prev
+decl_stmt|;
+name|struct
+name|interface
+modifier|*
+name|int_rlink
+decl_stmt|,
+modifier|*
+modifier|*
+name|int_rlink_prev
+decl_stmt|;
+name|struct
+name|interface
+modifier|*
+name|int_nhash
+decl_stmt|,
+modifier|*
+modifier|*
+name|int_nhash_prev
 decl_stmt|;
 name|char
 name|int_name
@@ -796,6 +872,9 @@ name|time_t
 name|int_act_time
 decl_stmt|;
 comment|/* last thought healthy */
+name|time_t
+name|int_query_time
+decl_stmt|;
 name|u_short
 name|int_transitions
 decl_stmt|;
@@ -838,13 +917,43 @@ comment|/* timestamp on network stats */
 block|}
 name|int_data
 struct|;
-name|char
-name|int_passwd
+struct|struct
+name|auth
+block|{
+comment|/* authentication info */
+name|u_char
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|MAX_AUTH_KEYS
+value|3
+struct|struct
+name|auth_key
+block|{
+name|u_char
+name|key
 index|[
 name|RIP_AUTH_PW_LEN
 index|]
 decl_stmt|;
-comment|/* RIPv2 password */
+name|u_char
+name|keyid
+decl_stmt|;
+name|time_t
+name|start
+decl_stmt|,
+name|end
+decl_stmt|;
+block|}
+name|keys
+index|[
+name|MAX_AUTH_KEYS
+index|]
+struct|;
+block|}
+name|int_auth
+struct|;
 name|int
 name|int_rdisc_pref
 decl_stmt|;
@@ -959,12 +1068,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_RIP_QUERIED
+name|IS_DISTRUST
 value|0x0000100
 end_define
 
 begin_comment
-comment|/* query broadcast */
+comment|/* ignore untrusted routers */
 end_comment
 
 begin_define
@@ -1000,15 +1109,8 @@ begin_comment
 comment|/* has a duplicate address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IS_ACTIVE
-value|0x0001000
-end_define
-
 begin_comment
-comment|/* heard from it at least once */
+comment|/*			    0x0001000      spare */
 end_comment
 
 begin_define
@@ -1418,7 +1520,7 @@ literal|1
 index|]
 decl_stmt|;
 name|naddr
-name|parm_addr_h
+name|parm_net
 decl_stmt|;
 name|naddr
 name|parm_mask
@@ -1435,13 +1537,9 @@ decl_stmt|;
 name|int
 name|parm_rdisc_int
 decl_stmt|;
-name|char
-name|parm_passwd
-index|[
-name|RIP_AUTH_PW_LEN
-operator|+
-literal|1
-index|]
+name|struct
+name|auth
+name|parm_auth
 decl_stmt|;
 block|}
 modifier|*
@@ -1475,6 +1573,88 @@ decl_stmt|;
 block|}
 modifier|*
 name|intnets
+struct|;
+end_struct
+
+begin_comment
+comment|/* trusted routers */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|tgate
+block|{
+name|struct
+name|tgate
+modifier|*
+name|tgate_next
+decl_stmt|;
+name|naddr
+name|tgate_addr
+decl_stmt|;
+block|}
+modifier|*
+name|tgates
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|output_type
+block|{
+name|OUT_QUERY
+block|,
+name|OUT_UNICAST
+block|,
+name|OUT_BROADCAST
+block|,
+name|OUT_MULTICAST
+block|,
+name|NO_OUT_MULTICAST
+block|,
+name|NO_OUT_RIPV2
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* common output buffers */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|ws_buf
+block|{
+name|struct
+name|rip
+modifier|*
+name|buf
+decl_stmt|;
+name|struct
+name|netinfo
+modifier|*
+name|n
+decl_stmt|;
+name|struct
+name|netinfo
+modifier|*
+name|base
+decl_stmt|;
+name|struct
+name|netinfo
+modifier|*
+name|lim
+decl_stmt|;
+name|enum
+name|output_type
+name|type
+decl_stmt|;
+block|}
+name|v12buf
+struct|,
+name|v2buf
 struct|;
 end_struct
 
@@ -1659,12 +1839,24 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|timeval
+name|clk
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system clock's idea of time */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timeval
 name|epoch
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* when started */
+comment|/* system clock when started */
 end_comment
 
 begin_decl_stmt
@@ -1815,6 +2007,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* all interfaces */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|interface
+modifier|*
+name|remote_if
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* remote interfaces */
 end_comment
 
 begin_decl_stmt
@@ -2022,24 +2227,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_enum
-enum|enum
-name|output_type
-block|{
-name|OUT_QUERY
-block|,
-name|OUT_UNICAST
-block|,
-name|OUT_BROADCAST
-block|,
-name|OUT_MULTICAST
-block|,
-name|NO_OUT_MULTICAST
-block|,
-name|NO_OUT_RIPV2
-block|}
-enum|;
-end_enum
+begin_function_decl
+specifier|extern
+name|void
+name|bufinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -2062,6 +2258,26 @@ name|rip
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|clr_ws_buf
+parameter_list|(
+name|struct
+name|ws_buf
+modifier|*
+parameter_list|,
+name|struct
+name|auth_key
+modifier|*
+parameter_list|,
+name|struct
+name|interface
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2105,6 +2321,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2114,6 +2332,39 @@ specifier|extern
 name|void
 name|msglog
 parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|msg_limit
+block|{
+name|naddr
+name|addr
+decl_stmt|;
+name|time_t
+name|until
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|void
+name|msglim
+parameter_list|(
+name|struct
+name|msg_limit
+modifier|*
+parameter_list|,
+name|naddr
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -2398,7 +2649,7 @@ specifier|extern
 name|void
 name|set_tracelevel
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3143,7 +3394,37 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|struct
+name|interface
+modifier|*
+name|check_dup
+parameter_list|(
+name|naddr
+parameter_list|,
+name|naddr
+parameter_list|,
+name|naddr
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|check_remote
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|addrouteforif
 parameter_list|(
 specifier|register
@@ -3221,6 +3502,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|if_link
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|interface
 modifier|*
@@ -3273,6 +3566,42 @@ name|naddr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|auth_key
+modifier|*
+name|find_auth
+parameter_list|(
+name|struct
+name|interface
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|end_md5_auth
+parameter_list|(
+name|struct
+name|ws_buf
+modifier|*
+parameter_list|,
+name|struct
+name|auth_key
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_include
+include|#
+directive|include
+file|<md5.h>
+end_include
 
 end_unit
 
