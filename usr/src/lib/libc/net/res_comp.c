@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.1 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,7 +423,7 @@ name|comp_dn
 expr_stmt|;
 name|eob
 operator|=
-name|comp_dn
+name|cp
 operator|+
 name|length
 expr_stmt|;
@@ -1086,10 +1086,22 @@ operator|*
 operator|)
 name|msgp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* 	 * vax compiler doesn't put shorts in registers 	 */
+specifier|register
+name|u_long
+name|u
+decl_stmt|;
+else|#
+directive|else
 specifier|register
 name|u_short
 name|u
 decl_stmt|;
+endif|#
+directive|endif
 name|u
 operator|=
 operator|*
@@ -1100,10 +1112,15 @@ literal|8
 expr_stmt|;
 return|return
 operator|(
+call|(
+name|u_short
+call|)
+argument_list|(
 name|u
 operator||
 operator|*
 name|p
+argument_list|)
 operator|)
 return|;
 block|}
