@@ -594,7 +594,7 @@ argument_list|(
 literal|"hw.cs.recv_delay"
 argument_list|,
 operator|&
-name|cs_ignore_cksum_failure
+name|cs_recv_delay
 argument_list|)
 expr_stmt|;
 end_expr_stmt
