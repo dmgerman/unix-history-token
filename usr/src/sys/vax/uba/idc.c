@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	idc.c	4.14	83/05/18	*/
+comment|/*	idc.c	4.15	83/05/27	*/
 end_comment
 
 begin_include
@@ -4769,7 +4769,7 @@ name|idcst
 modifier|*
 name|st
 decl_stmt|;
-name|struct
+name|union
 name|idc_dar
 name|dar
 decl_stmt|;

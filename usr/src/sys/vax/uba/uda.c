@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.23	83/05/18	*/
+comment|/*	uda.c	4.24	83/05/27	*/
 end_comment
 
 begin_include
@@ -701,16 +701,6 @@ expr_stmt|;
 name|reg
 operator|=
 name|reg
-expr_stmt|;
-name|udread
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|udwrite
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 name|udreset
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.25	83/02/21	*/
+comment|/*	if_dmc.c	4.26	83/05/27	*/
 end_comment
 
 begin_include
@@ -1144,16 +1144,6 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|struct
-name|uba_device
-modifier|*
-name|ui
-init|=
-name|dmcinfo
-index|[
-name|unit
-index|]
 decl_stmt|;
 specifier|register
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      if_css.c     4.7     82/12/22     */
+comment|/*      if_css.c     4.8     83/05/27     */
 end_comment
 
 begin_include
@@ -1404,12 +1404,6 @@ name|struct
 name|cssdevice
 modifier|*
 name|addr
-decl_stmt|;
-specifier|register
-name|struct
-name|ifqueue
-modifier|*
-name|inq
 decl_stmt|;
 name|struct
 name|mbuf

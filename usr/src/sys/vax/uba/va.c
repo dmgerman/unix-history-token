@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.21	83/03/10	*/
+comment|/*	va.c	4.22	83/05/27	*/
 end_comment
 
 begin_include
@@ -1509,10 +1509,6 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|vcmd
-decl_stmt|;
-specifier|register
 name|struct
 name|va_softc
 modifier|*
@@ -1565,7 +1561,6 @@ name|data
 argument_list|)
 operator|)
 return|;
-break|break;
 default|default:
 return|return
 operator|(

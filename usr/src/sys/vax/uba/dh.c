@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.57	82/12/30	*/
+comment|/*	dh.c	4.58	83/05/27	*/
 end_comment
 
 begin_include
@@ -3733,7 +3733,7 @@ name|dmlstat
 operator|=
 literal|0
 expr_stmt|;
-name|flushtty
+name|ttyflush
 argument_list|(
 name|tp
 argument_list|,

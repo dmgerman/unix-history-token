@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hy.c	4.3	83/02/21	*/
+comment|/*	if_hy.c	4.4	83/05/27	*/
 end_comment
 
 begin_include
@@ -1047,12 +1047,6 @@ name|hyinfo
 index|[
 name|unit
 index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|hy_softc
-modifier|*
-name|is
 decl_stmt|;
 if|if
 condition|(
@@ -2792,6 +2786,9 @@ name|hyh_from
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ifp
 operator|->
 name|if_host
@@ -3038,6 +3035,9 @@ name|hyh_to
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|dhost
 argument_list|)
 expr_stmt|;
@@ -3075,8 +3075,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|headerexists
-label|:
 if|if
 condition|(
 name|hym
@@ -3942,6 +3940,10 @@ name|hystart
 argument_list|(
 name|ui
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|HYF_MARKP0
 operator||
 operator|(
@@ -3955,6 +3957,7 @@ argument_list|)
 operator|<<
 literal|2
 operator|)
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -4188,6 +4191,9 @@ name|ifu_r
 operator|.
 name|ifrw_addr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|is
 operator|->
@@ -4878,6 +4884,10 @@ name|ui
 argument_list|,
 name|HYF_INPUTDATA
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|HYMTU
 operator|-
 name|len
@@ -4887,7 +4897,12 @@ argument_list|(
 expr|struct
 name|hy_hdr
 argument_list|)
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|is
 operator|->
 name|hy_ifuba
@@ -4897,6 +4912,7 @@ operator|.
 name|ifrw_info
 operator|+
 name|len
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4908,6 +4924,9 @@ name|ui
 argument_list|,
 name|hyh
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -5037,11 +5056,16 @@ name|ui
 argument_list|,
 name|hyh
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|len
 operator|+
 name|is
 operator|->
 name|hy_ilen
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|is
@@ -5300,11 +5324,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -6301,13 +6320,21 @@ condition|)
 block|{
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|hy_log
 operator|.
 name|hyl_eptr
 operator|-
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -6383,8 +6410,14 @@ name|bcopy
 argument_list|(
 name|ptr
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -6410,6 +6443,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|hyioctl
@@ -6571,6 +6614,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.50	83/02/10	*/
+comment|/*	dz.c	4.51	83/05/27	*/
 end_comment
 
 begin_include
@@ -1485,7 +1485,7 @@ operator|&
 literal|7
 operator|)
 expr_stmt|;
-name|flushtty
+name|ttyflush
 argument_list|(
 name|tp
 argument_list|,
@@ -3639,7 +3639,7 @@ operator|&=
 operator|~
 name|bit
 expr_stmt|;
-name|flushtty
+name|ttyflush
 argument_list|(
 name|tp
 argument_list|,

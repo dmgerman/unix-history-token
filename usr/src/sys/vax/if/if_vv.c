@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.19	83/05/10	*/
+comment|/*	if_vv.c	4.20	83/05/27	*/
 end_comment
 
 begin_include
@@ -633,6 +633,11 @@ expr_stmt|;
 name|br
 operator|=
 name|cvec
+expr_stmt|;
+name|vvrint
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1470,13 +1475,9 @@ decl_stmt|;
 name|int
 name|ubainfo
 decl_stmt|,
-name|retrying
-decl_stmt|,
 name|attempts
 decl_stmt|,
 name|waitcount
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/* 	 * Build a multicast message to identify our address 	 */
 name|addr
@@ -1495,11 +1496,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* total attempts, including bad msg type */
-name|retrying
-operator|=
-literal|0
-expr_stmt|;
-comment|/* first time through */
 name|m
 operator|=
 name|m_get
@@ -1513,7 +1509,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1852,7 +1848,11 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 goto|goto
 name|retry
@@ -2001,6 +2001,10 @@ begin_comment
 comment|/*  * vvtimeout() - called by timer flywheel to monitor input packet  * discard rate.  Interfaces getting too many errors are shut  * down for a while.  If the condition persists, the interface  * is marked down.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|vvtimeout
 argument_list|(
@@ -2085,6 +2089,7 @@ name|ui_addr
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|vs
 operator|->
 name|vs_if
@@ -2092,6 +2097,7 @@ operator|.
 name|if_flags
 operator|&
 name|IFF_UP
+operator|)
 operator|==
 literal|0
 condition|)
@@ -4520,6 +4526,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * print "l" hex bytes starting at "s"  */
 end_comment
@@ -4612,6 +4624,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
