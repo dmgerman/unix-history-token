@@ -1114,8 +1114,8 @@ name|exitonsig
 argument_list|,
 name|SIG_DFL
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|perror
 argument_list|(
