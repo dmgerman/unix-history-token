@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.108 (Berkeley) %G%"
+literal|"@(#)conf.c	8.109 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1863,6 +1863,21 @@ argument_list|()
 operator||
 name|COMPAT_BSDPROT
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VENDOR_DEFAULT
+name|VendorCode
+operator|=
+name|VENDOR_DEFAULT
+expr_stmt|;
+else|#
+directive|else
+name|VendorCode
+operator|=
+name|VENDOR_BERKELEY
 expr_stmt|;
 endif|#
 directive|endif
@@ -7983,10 +7998,41 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|VendorCode
+operator|=
+name|VENDOR_BERKELEY
+expr_stmt|;
 return|return
 name|TRUE
 return|;
+block|}
 comment|/* add vendor extensions here */
+ifdef|#
+directive|ifdef
+name|SUN_EXTENSIONS
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|vendor
+argument_list|,
+literal|"Sun"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|VendorCode
+operator|=
+name|VENDOR_SUN
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+endif|#
+directive|endif
 return|return
 name|FALSE
 return|;
