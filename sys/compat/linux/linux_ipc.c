@@ -1571,9 +1571,10 @@ name|bsd_args
 operator|.
 name|msgtyp
 operator|=
-literal|0
+name|args
+operator|->
+name|msgtyp
 expr_stmt|;
-comment|/* XXX - args->msgtyp; */
 name|bsd_args
 operator|.
 name|msgflg
