@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan2.c 4.13 %G%"
+literal|"@(#)asscan2.c 4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|scannerhadeof
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|fillinbuffer
 argument_list|()
@@ -91,10 +97,6 @@ begin_block
 block|{
 name|int
 name|nread
-decl_stmt|;
-specifier|static
-name|int
-name|hadeof
 decl_stmt|;
 name|int
 name|goal
@@ -108,7 +110,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|hadeof
+name|scannerhadeof
 operator|==
 literal|0
 condition|)
@@ -143,7 +145,7 @@ name|got
 operator|==
 literal|0
 condition|)
-name|hadeof
+name|scannerhadeof
 operator|=
 literal|1
 expr_stmt|;
@@ -168,6 +170,13 @@ condition|(
 name|goal
 condition|)
 do|;
+block|}
+else|else
+block|{
+name|scannerhadeof
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* 	 *	getchar assumes that Ginbufcnt and Ginbufptr 	 *	are adjusted as if one character has been removed 	 *	from the input. 	 */
 if|if
