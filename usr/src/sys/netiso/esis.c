@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.15 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.16 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -4431,9 +4431,9 @@ name|ifa_ifp
 expr_stmt|;
 name|sn_len
 operator|=
-name|ifp
+name|sdl
 operator|->
-name|if_addrlen
+name|sdl_alen
 expr_stmt|;
 name|IFDEBUG
 argument_list|(
