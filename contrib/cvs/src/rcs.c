@@ -15761,6 +15761,7 @@ argument_list|)
 operator|<
 literal|0
 operator|&&
+operator|!
 name|existence_error
 argument_list|(
 name|errno
