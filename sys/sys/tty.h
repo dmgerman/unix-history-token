@@ -119,12 +119,12 @@ comment|/* Device. */
 name|udev_t
 name|t_udev
 decl_stmt|;
-comment|/* Userland (sysctl) instance */
+comment|/* Userland (sysctl) instance. */
 name|void
 modifier|*
 name|t_devp
 decl_stmt|;
-comment|/* Keep user/kernel size in sync */
+comment|/* Keep user/kernel size in sync. */
 block|}
 name|ttyu
 union|;
@@ -287,13 +287,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|t_dev
-value|ttyu.t_kdev
-end_define
-
-begin_define
-define|#
-directive|define
 name|t_cc
 value|t_termios.c_cc
 end_define
@@ -303,6 +296,13 @@ define|#
 directive|define
 name|t_cflag
 value|t_termios.c_cflag
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_dev
+value|ttyu.t_kdev
 end_define
 
 begin_define
