@@ -254,14 +254,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Physical addresses of first and last available physical page.  */
+comment|/*  * Physical address of the last available physical page.  */
 end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|vm_paddr_t
@@ -1866,14 +1860,7 @@ operator||
 name|TD_W
 expr_stmt|;
 block|}
-comment|/* 	 * Calculate the first and last available physical addresses. 	 */
-name|avail_start
-operator|=
-name|phys_avail
-index|[
-literal|0
-index|]
-expr_stmt|;
+comment|/* 	 * Calculate the last available physical address. 	 */
 for|for
 control|(
 name|i

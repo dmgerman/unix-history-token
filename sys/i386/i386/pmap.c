@@ -531,16 +531,6 @@ end_endif
 
 begin_decl_stmt
 name|vm_paddr_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of first available physical page */
-end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
@@ -1242,10 +1232,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|avail_start
-operator|=
-name|firstaddr
-expr_stmt|;
 comment|/* 	 * XXX The calculation of virtual_avail is wrong. It's NKPT*PAGE_SIZE too 	 * large. It should instead be correctly calculated in locore.s and 	 * not based on 'first' (which is a physical address, not a virtual 	 * address, for the start of unused physical memory). The kernel 	 * page tables are NOT double mapped and thus should not be included 	 * in this calculation. 	 */
 name|virtual_avail
 operator|=

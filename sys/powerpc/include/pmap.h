@@ -269,13 +269,6 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|vm_offset_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt

@@ -555,16 +555,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_offset_t
-name|avail_start
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* PA of first available physical page */
-end_comment
-
-begin_decl_stmt
-name|vm_offset_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
@@ -1542,13 +1532,6 @@ operator|=
 name|newpte
 expr_stmt|;
 block|}
-name|avail_start
-operator|=
-name|phys_avail
-index|[
-literal|0
-index|]
-expr_stmt|;
 for|for
 control|(
 name|i
