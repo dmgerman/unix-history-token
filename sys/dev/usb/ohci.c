@@ -9212,7 +9212,7 @@ operator|=
 name|head
 init|;
 name|p
-operator|==
+operator|!=
 name|NULL
 operator|&&
 name|p
