@@ -2084,6 +2084,15 @@ break|break;
 case|case
 name|SIOCGIFSTAT_IN6
 case|:
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+return|return
+name|EINVAL
+return|;
 name|bzero
 argument_list|(
 operator|&
