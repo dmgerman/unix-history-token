@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.38 (Berkeley) %G%"
+literal|"@(#)w.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -950,7 +950,8 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|size
 decl_stmt|;
 name|mib
@@ -1867,7 +1868,8 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|size
 decl_stmt|;
 name|char

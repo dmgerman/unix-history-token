@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.26 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1992,7 +1992,8 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|size
 decl_stmt|;
 name|struct
