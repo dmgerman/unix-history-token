@@ -2076,6 +2076,31 @@ name|th_sum
 operator|^=
 literal|0xffff
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
+name|ipov
+operator|->
+name|ih_len
+operator|=
+operator|(
+name|u_short
+operator|)
+name|tlen
+expr_stmt|;
+name|ipov
+operator|->
+name|ih_len
+operator|=
+name|htons
+argument_list|(
+name|ipov
+operator|->
+name|ih_len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -3743,6 +3768,39 @@ operator|->
 name|so_qlimit
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+condition|)
+name|tcp_trace
+argument_list|(
+name|TA_INPUT
+argument_list|,
+name|ostate
+argument_list|,
+name|tp
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|tcp_saveipgen
+argument_list|,
+operator|&
+name|tcp_savetcp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|tcp_dooptions
 argument_list|(
 operator|&
@@ -4558,7 +4616,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 comment|/* some progress has been done */
-comment|/* 				 * If all outstanding data are acked, stop 				 * retransmit timer, otherwise restart timer 				 * using current (possibly backed-off) value. 				 * If process is waiting for space, 				 * wakeup/selwakeup/signal.  If data 				 * are ready to send, let tcp_output 				 * decide between more output or persist. 				 */
+comment|/* 				 * If all outstanding data are acked, stop 				 * retransmit timer, otherwise restart timer 				 * using current (possibly backed-off) value. 				 * If process is waiting for space, 				 * wakeup/selwakeup/signal.  If data 				 * are ready to send, let tcp_output 				 * decide between more output or persist.  #ifdef TCPDEBUG 				if (so->so_options& SO_DEBUG) 					tcp_trace(TA_INPUT, ostate, tp, 					    (void *)tcp_saveipgen,&tcp_savetcp, 0); #endif 				 */
 if|if
 condition|(
 name|tp
@@ -4720,7 +4778,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 comment|/* some progress has been done */
-comment|/* 			 * Add data to socket buffer. 			 */
+comment|/* #ifdef TCPDEBUG 			if (so->so_options& SO_DEBUG) 				tcp_trace(TA_INPUT, ostate, tp, 				    (void *)tcp_saveipgen,&tcp_savetcp, 0); #endif 			 * Add data to socket buffer. 			 */
 if|if
 condition|(
 name|so
