@@ -3043,7 +3043,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"console=\"serial\"\n"
+literal|"console=\"comconsole\"\n"
 argument_list|)
 expr_stmt|;
 name|fclose
