@@ -1786,6 +1786,9 @@ if|if
 condition|(
 name|nflag
 operator|&&
+operator|*
+name|p
+operator|&&
 name|strcmp
 argument_list|(
 name|p
