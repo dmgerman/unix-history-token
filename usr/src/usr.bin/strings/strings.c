@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)strings.c	4.1 (Berkeley) %G%"
+literal|"@(#)strings.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -25,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_function_decl
@@ -334,7 +351,7 @@ name|long
 operator|)
 literal|0
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -375,7 +392,7 @@ name|long
 operator|)
 literal|0
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|find
@@ -404,7 +421,7 @@ name|header
 operator|.
 name|a_text
 argument_list|,
-literal|1
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|find
