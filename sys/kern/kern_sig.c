@@ -9515,18 +9515,17 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
+name|stop
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|stop
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* uses schedlock too eventually */
 name|thread_suspend_one
 argument_list|(
 name|td
@@ -10193,7 +10192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with the proc p locked and the scheduler  * lock held.  */
+comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with the proc p locked.  */
 end_comment
 
 begin_function
