@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.6	%G%	*/
+comment|/*	saio.h	4.7	%G%	*/
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ begin_struct
 struct|struct
 name|iob
 block|{
-name|char
+name|int
 name|i_flgs
 decl_stmt|;
 name|struct
@@ -43,6 +43,15 @@ name|i_ma
 decl_stmt|;
 name|int
 name|i_cc
+decl_stmt|;
+name|int
+name|i_error
+decl_stmt|;
+name|int
+name|i_errcnt
+decl_stmt|;
+name|int
+name|i_active
 decl_stmt|;
 name|char
 name|i_buf
@@ -80,28 +89,110 @@ begin_define
 define|#
 directive|define
 name|F_READ
-value|01
+value|0x1
 end_define
+
+begin_comment
+comment|/* file opened for reading */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|F_WRITE
-value|02
+value|0x2
 end_define
+
+begin_comment
+comment|/* file opened for writing */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|F_ALLOC
-value|04
+value|0x4
 end_define
+
+begin_comment
+comment|/* buffer allocated */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|F_FILE
-value|010
+value|0x8
+end_define
+
+begin_comment
+comment|/* file instead of device */
+end_comment
+
+begin_comment
+comment|/* io types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_RDDATA
+value|0x0100
+end_define
+
+begin_comment
+comment|/* read data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_WRDATA
+value|0x0200
+end_define
+
+begin_comment
+comment|/* write data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_HDR
+value|0x0400
+end_define
+
+begin_comment
+comment|/* include header on next i/o */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_CHECK
+value|0x0800
+end_define
+
+begin_comment
+comment|/* perform check of data read/write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_HCHECK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* perform check of header and data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_TYPEMASK
+value|0xff00
 end_define
 
 begin_comment
@@ -134,6 +225,13 @@ name|int
 function_decl|(
 modifier|*
 name|dv_close
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|dv_ioctl
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -239,6 +337,190 @@ directive|define
 name|PHYSUMEM
 value|0x2013e000
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* just like unix */
+end_comment
+
+begin_comment
+comment|/* error codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EBADF
+value|1
+end_define
+
+begin_comment
+comment|/* bad file descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EOFFSET
+value|2
+end_define
+
+begin_comment
+comment|/* relative seek not supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EDEV
+value|3
+end_define
+
+begin_comment
+comment|/* improper device specification on open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENXIO
+value|4
+end_define
+
+begin_comment
+comment|/* unknown device specified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EUNIT
+value|5
+end_define
+
+begin_comment
+comment|/* improper unit specification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESRCH
+value|6
+end_define
+
+begin_comment
+comment|/* directory search for file failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EIO
+value|7
+end_define
+
+begin_comment
+comment|/* generic error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ECMD
+value|10
+end_define
+
+begin_comment
+comment|/* undefined driver command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EBSE
+value|11
+end_define
+
+begin_comment
+comment|/* bad sector error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EWCK
+value|12
+end_define
+
+begin_comment
+comment|/* write check error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHER
+value|13
+end_define
+
+begin_comment
+comment|/* hard error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EECC
+value|14
+end_define
+
+begin_comment
+comment|/* severe ecc error, sector recorded as bad*/
+end_comment
+
+begin_comment
+comment|/* ioctl's -- for disks just now */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOHDR
+value|(('d'<<8)|1)
+end_define
+
+begin_comment
+comment|/* next i/o includes header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOCHECK
+value|(('d'<<8)|2)
+end_define
+
+begin_comment
+comment|/* next i/o checks data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOHCHECK
+value|(('d'<<8)|3)
+end_define
+
+begin_comment
+comment|/* next i/o checks header& data */
+end_comment
 
 end_unit
 
