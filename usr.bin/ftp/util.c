@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: util.c,v 1.3 1997/12/13 20:38:21 pst Exp $	*/
+comment|/*	$Id: util.c,v 1.4 1997/12/16 08:17:26 ache Exp $	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.3 1997/12/13 20:38:21 pst Exp $"
+literal|"$Id: util.c,v 1.4 1997/12/16 08:17:26 ache Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1062,9 +1062,8 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|tmp
@@ -1078,7 +1077,14 @@ literal|1
 argument_list|,
 name|stdin
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|tmp
 index|[
 name|strlen
