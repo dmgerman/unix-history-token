@@ -132,6 +132,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Recognized schemes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHEME_FTP
+value|"ftp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHEME_HTTP
+value|"http"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHEME_FILE
+value|"file"
+end_define
+
+begin_comment
 comment|/* Error codes */
 end_comment
 
