@@ -627,7 +627,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"can't find package `%s' installed or in a file!"
+literal|"can't find package '%s' installed or in a file!"
 argument_list|,
 name|pkg
 argument_list|)

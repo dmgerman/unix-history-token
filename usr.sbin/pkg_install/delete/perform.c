@@ -525,7 +525,7 @@ index|]
 decl_stmt|;
 name|warnx
 argument_list|(
-literal|"package `%s' is required by these other packages\n"
+literal|"package '%s' is required by these other packages\n"
 literal|"and may not be deinstalled%s:"
 argument_list|,
 name|pkg
@@ -583,7 +583,7 @@ block|}
 else|else
 name|warnx
 argument_list|(
-literal|"cannot open requirements file `%s'"
+literal|"cannot open requirements file '%s'"
 argument_list|,
 name|REQUIRED_BY_FNAME
 argument_list|)
@@ -1113,7 +1113,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Attempting to remove dependency on package `%s'\n"
+literal|"Attempting to remove dependency on package '%s'\n"
 argument_list|,
 name|p
 operator|->
@@ -1287,7 +1287,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"couldn't open dependency file `%s'"
+literal|"couldn't open dependency file '%s'"
 argument_list|,
 name|fname
 argument_list|)
@@ -1325,7 +1325,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"couldn't open temp file `%s'"
+literal|"couldn't open temp file '%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -1360,7 +1360,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"couldn't fdopen temp file `%s'"
+literal|"couldn't fdopen temp file '%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -1462,7 +1462,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"error changing permission of temp file `%s'"
+literal|"error changing permission of temp file '%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -1491,7 +1491,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"error closing temp file `%s'"
+literal|"error closing temp file '%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -1517,7 +1517,7 @@ literal|1
 condition|)
 name|warnx
 argument_list|(
-literal|"error renaming `%s' to `%s'"
+literal|"error renaming '%s' to '%s'"
 argument_list|,
 name|ftmp
 argument_list|,

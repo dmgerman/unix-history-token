@@ -404,7 +404,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unable to fetch `%s' by URL"
+literal|"unable to fetch '%s' by URL"
 argument_list|,
 name|pkg
 argument_list|)
@@ -441,7 +441,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unable to open table of contents file `%s' - not a package?"
+literal|"unable to open table of contents file '%s' - not a package?"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -601,7 +601,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unable to extract table of contents file from `%s' - not a package?"
+literal|"unable to extract table of contents file from '%s' - not a package?"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -627,7 +627,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unable to open table of contents file `%s' - not a package?"
+literal|"unable to open table of contents file '%s' - not a package?"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -738,7 +738,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"unable to change directory to `%s'"
+literal|"unable to change directory to '%s'"
 argument_list|,
 name|p
 operator|->
@@ -765,7 +765,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"no prefix specified in `%s' - this is a bad package!"
+literal|"no prefix specified in '%s' - this is a bad package!"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -842,7 +842,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unable to extract `%s'!"
+literal|"unable to extract '%s'!"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -1003,7 +1003,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"package `%s' already recorded as installed"
+literal|"package '%s' already recorded as installed"
 argument_list|,
 name|PkgName
 argument_list|)
@@ -1050,7 +1050,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Package `%s' depends on `%s'.\n"
+literal|"Package '%s' depends on '%s'.\n"
 argument_list|,
 name|PkgName
 argument_list|,
@@ -1178,7 +1178,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"autoload of dependency `%s' failed%s"
+literal|"autoload of dependency '%s' failed%s"
 argument_list|,
 name|cp
 argument_list|,
@@ -1302,7 +1302,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"pkg_add of dependency `%s' failed%s"
+literal|"pkg_add of dependency '%s' failed%s"
 argument_list|,
 name|p
 operator|->
@@ -1331,7 +1331,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\t`%s' loaded successfully.\n"
+literal|"\t'%s' loaded successfully.\n"
 argument_list|,
 name|p
 operator|->
@@ -2108,7 +2108,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Attempting to record dependency on package `%s'\n"
+literal|"Attempting to record dependency on package '%s'\n"
 argument_list|,
 name|p
 operator|->

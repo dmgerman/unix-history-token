@@ -1658,7 +1658,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Execute `%s'\n"
+literal|"Execute '%s'\n"
 argument_list|,
 name|tmp
 argument_list|)
@@ -1676,7 +1676,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"unexec command for `%s' failed"
+literal|"unexec command for '%s' failed"
 argument_list|,
 name|tmp
 argument_list|)
@@ -1730,7 +1730,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"cannot delete specified file `%s' - it is a directory!\n"
+literal|"cannot delete specified file '%s' - it is a directory!\n"
 literal|"this packing list is incorrect - ignoring delete request"
 argument_list|,
 name|tmp
@@ -1812,7 +1812,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"`%s' fails original MD5 checksum - %s"
+literal|"'%s' fails original MD5 checksum - %s"
 argument_list|,
 name|tmp
 argument_list|,
@@ -1961,7 +1961,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"cannot delete specified directory `%s' - it is a file!\n"
+literal|"cannot delete specified directory '%s' - it is a file!\n"
 literal|"this packing list is incorrect - ignoring delete request"
 argument_list|,
 name|tmp
@@ -2131,7 +2131,7 @@ name|ign_err
 condition|)
 name|warnx
 argument_list|(
-literal|"%s `%s' doesn't really exist"
+literal|"%s '%s' doesn't really exist"
 argument_list|,
 name|isdir
 argument_list|(
@@ -2288,7 +2288,7 @@ argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"directory `%s' doesn't really exist"
+literal|"directory '%s' doesn't really exist"
 argument_list|,
 name|dir
 argument_list|)
