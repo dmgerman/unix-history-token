@@ -154,6 +154,14 @@ name|struct
 name|mtx
 name|mymutex
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -273,6 +281,14 @@ name|struct
 name|mtx
 name|mymutex
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -388,6 +404,14 @@ argument_list|(
 name|p
 argument_list|)
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|td_base_pri
@@ -815,7 +839,7 @@ literal|0
 argument_list|,
 name|sysctl_kern_geom_confxml
 argument_list|,
-literal|"A"
+literal|""
 argument_list|,
 literal|"Dump the GEOM config in XML"
 argument_list|)
@@ -841,7 +865,7 @@ literal|0
 argument_list|,
 name|sysctl_kern_geom_confdot
 argument_list|,
-literal|"A"
+literal|""
 argument_list|,
 literal|"Dump the GEOM config in dot"
 argument_list|)
@@ -867,7 +891,7 @@ literal|0
 argument_list|,
 name|sysctl_kern_geom_conftxt
 argument_list|,
-literal|"A"
+literal|""
 argument_list|,
 literal|"Dump the GEOM config in txt"
 argument_list|)
