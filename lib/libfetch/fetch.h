@@ -300,11 +300,9 @@ name|FETCH_VERBOSE
 value|19
 end_define
 
-begin_comment
-comment|/* FILE-specific functions */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/* FILE-specific functions */
 name|FILE
 modifier|*
 name|fetchXGetFile
@@ -814,6 +812,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_comment
 comment|/* Authentication */
