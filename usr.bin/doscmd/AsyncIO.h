@@ -30,6 +30,9 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|regcontext_t
+modifier|*
 parameter_list|)
 parameter_list|,
 name|void
@@ -39,7 +42,10 @@ name|void
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 name|void

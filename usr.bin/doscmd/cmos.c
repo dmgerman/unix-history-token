@@ -340,8 +340,10 @@ specifier|inline
 name|int
 name|day_in_mon_year
 parameter_list|(
+name|int
 name|mon
 parameter_list|,
+name|int
 name|year
 parameter_list|)
 block|{

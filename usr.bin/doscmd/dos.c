@@ -263,21 +263,6 @@ begin_comment
 comment|/* exports */
 end_comment
 
-begin_function_decl
-name|void
-name|encode_dos_file_time
-parameter_list|(
-name|time_t
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|diskdrive
@@ -294,13 +279,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|InDOS
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|long
-name|disk_transfer_addr
 decl_stmt|;
 end_decl_stmt
 

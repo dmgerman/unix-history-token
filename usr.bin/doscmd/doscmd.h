@@ -1069,12 +1069,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|u_long
-name|ems_frame_addr
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* emuint.c */
 end_comment

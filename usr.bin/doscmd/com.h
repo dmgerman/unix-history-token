@@ -698,22 +698,10 @@ value|0x03
 end_define
 
 begin_comment
-comment|/* variable declarations */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* routine declarations */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|int14
 parameter_list|(
@@ -725,7 +713,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|com_set_line
 parameter_list|(
@@ -743,7 +730,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|init_com
 parameter_list|(
@@ -761,7 +747,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|u_char
 name|com_port_in
 parameter_list|(
@@ -771,7 +756,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|com_port_out
 parameter_list|(

@@ -258,20 +258,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tty_flush
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|tty_index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|tty_pause
 parameter_list|(
 name|void

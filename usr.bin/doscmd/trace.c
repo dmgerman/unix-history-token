@@ -16,14 +16,6 @@ file|"trap.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|debugf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|tmode
 init|=

@@ -3647,36 +3647,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* from setver.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|setver
-parameter_list|(
-name|char
-modifier|*
-name|cmd
-parameter_list|,
-name|short
-name|version
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|short
-name|getver
-parameter_list|(
-name|char
-modifier|*
-name|cmd
-parameter_list|)
-function_decl|;
-end_function_decl
-
 end_unit
 

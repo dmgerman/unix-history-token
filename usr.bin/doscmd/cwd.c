@@ -228,13 +228,6 @@ name|names
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|diskdrive
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Initialize the drive to be based at 'base' in the BSD filesystem  */
 end_comment

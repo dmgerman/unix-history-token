@@ -131,7 +131,8 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|REGISTERS
+name|regcontext_t
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Function to call on data arrival */
@@ -178,6 +179,25 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|in_handler
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|CleanIO
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|static
 name|void
@@ -190,15 +210,6 @@ name|sf
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|int
-name|in_handler
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -223,7 +234,13 @@ function_decl|(
 modifier|*
 name|func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|regcontext_t
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -240,7 +257,10 @@ function_decl|(
 modifier|*
 name|failure
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -562,7 +582,10 @@ function_decl|(
 modifier|*
 name|f
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 function_decl|;
 name|void
 modifier|*
