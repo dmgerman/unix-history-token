@@ -4587,7 +4587,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_dispose_proc: kstack already missing?"
+literal|"pmap_dispose_thread: kstack already missing?"
 argument_list|)
 expr_stmt|;
 name|vm_page_busy
@@ -4847,7 +4847,7 @@ name|VM_PAGER_OK
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_swapin_proc: cannot get kstack"
+literal|"pmap_swapin_thread: cannot get kstack"
 argument_list|)
 expr_stmt|;
 name|m
