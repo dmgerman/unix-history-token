@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.24 2001/11/28 08:33:12 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.25 2001/12/12 20:05:48 imp Exp   */
 end_comment
 
 begin_comment
@@ -477,6 +477,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_LINKSYS2
+value|0x0274
+end_define
+
+begin_comment
+comment|/* The Linksys Group */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_IODATA2
 value|0x028a
 end_define
@@ -516,6 +527,17 @@ end_define
 
 begin_comment
 comment|/* Lasat Communications A/S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_BONDWELL
+value|0x3b01
+end_define
+
+begin_comment
+comment|/* Bondwell */
 end_comment
 
 begin_define
@@ -670,17 +692,6 @@ end_define
 
 begin_comment
 comment|/* EMTAC Technology Corporation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_LINKSYS2
-value|0x0274
-end_define
-
-begin_comment
-comment|/* The Linksys Group */
 end_comment
 
 begin_define
@@ -1140,6 +1151,31 @@ define|#
 directive|define
 name|PCMCIA_STR_BAY_STACK_660
 value|"BayStack 660 Wireless LAN"
+end_define
+
+begin_comment
+comment|/* Bondwell */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BONDWELL_B236
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BONDWELL_B236
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BONDWELL_B236
+value|"Game Card Joystick"
 end_define
 
 begin_comment
