@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)pccons.c	5.11 (Berkeley) 5/21/91  *	from: @(#)syscons.c	1.1 931021  *	$Id: syscons.c,v 1.18 1993/10/31 00:19:01 jkh Exp $  *  * Heavily modified by Søren Schmidt (sos@login.dkuug.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation ....  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)pccons.c	5.11 (Berkeley) 5/21/91  *	from: @(#)syscons.c	1.1 931021  *	$Id: syscons.c,v 1.19 1993/11/23 18:20:52 chmr Exp $  *  * Heavily modified by Søren Schmidt (sos@login.dkuug.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation ....  */
 end_comment
 
 begin_include
@@ -1255,7 +1255,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pcxint
 parameter_list|(
 name|dev_t
@@ -1265,7 +1265,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pcstart
 parameter_list|(
 name|struct
@@ -1301,7 +1301,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pccnputc
 parameter_list|(
 name|dev_t
@@ -1324,7 +1324,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|scintr
 parameter_list|(
 name|dev_t
@@ -1464,7 +1464,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cursor_pos
 parameter_list|(
 name|void
@@ -1626,14 +1626,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|update_leds
-argument_list|(
-argument|int which
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|int
+name|which
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1679,18 +1681,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|load_font
-argument_list|(
-argument|int segment
-argument_list|,
-argument|int size
-argument_list|,
-argument|char* font
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|int
+name|segment
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|char
+modifier|*
+name|font
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1712,18 +1719,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|change_winsize
-argument_list|(
-argument|struct tty *tp
-argument_list|,
-argument|int x
-argument_list|,
-argument|int y
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -2259,6 +2272,11 @@ directive|endif
 name|cursor_pos
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 specifier|static
 name|struct
@@ -2411,16 +2429,23 @@ return|return
 name|i
 return|;
 block|}
+name|int
 name|pcopen
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|int flag
-argument_list|,
-argument|int mode
-argument_list|,
-argument|struct proc *p
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -2592,20 +2617,29 @@ operator|(
 name|dev
 operator|,
 name|tp
+operator|,
+literal|0
 operator|)
 operator|)
 return|;
 block|}
+name|int
 name|pcclose
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|int flag
-argument_list|,
-argument|int mode
-argument_list|,
-argument|struct proc *p
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -2689,14 +2723,20 @@ literal|0
 operator|)
 return|;
 block|}
+name|int
 name|pcread
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|struct uio *uio
-argument_list|,
-argument|int flag
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -2741,14 +2781,20 @@ operator|)
 operator|)
 return|;
 block|}
+name|int
 name|pcwrite
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|struct uio *uio
-argument_list|,
-argument|int flag
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
 block|{
 name|struct
 name|tty
@@ -2794,14 +2840,18 @@ operator|)
 return|;
 block|}
 comment|/*  * Got a console interrupt, keyboard action !  * Catch the character, and see who it goes to.  */
+name|void
 name|scintr
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|int irq
-argument_list|,
-argument|int cpl
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|irq
+parameter_list|,
+name|int
+name|cpl
+parameter_list|)
 block|{
 name|int
 name|c
@@ -2990,12 +3040,19 @@ break|break;
 block|}
 block|}
 comment|/*  * Set line parameters  */
+name|int
 name|pcparam
-argument_list|(
-argument|struct tty *tp
-argument_list|,
-argument|struct termios *t
-argument_list|)
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|t
+parameter_list|)
 block|{
 name|int
 name|cflag
@@ -3059,18 +3116,26 @@ name|eflags
 value|sf_eflags
 endif|#
 directive|endif
+name|int
 name|pcioctl
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|int cmd
-argument_list|,
-argument|caddr_t data
-argument_list|,
-argument|int flag
-argument_list|,
-argument|struct proc *p
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|caddr_t
+name|data
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|int
 name|i
@@ -5262,10 +5327,12 @@ name|ENOTTY
 operator|)
 return|;
 block|}
+name|void
 name|pcxint
-argument_list|(
-argument|dev_t dev
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
 block|{
 name|int
 name|unit
@@ -5395,10 +5462,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|void
 name|pcstart
-argument_list|(
-argument|struct tty *tp
-argument_list|)
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5813,10 +5884,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|int
 name|pccnprobe
-argument_list|(
-argument|struct consdev *cp
-argument_list|)
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
 block|{
 name|int
 name|maj
@@ -5837,6 +5912,10 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
+name|void
+operator|*
+operator|)
 name|cdevsw
 index|[
 name|maj
@@ -5844,6 +5923,10 @@ index|]
 operator|.
 name|d_open
 operator|==
+operator|(
+name|void
+operator|*
+operator|)
 name|pcopen
 condition|)
 break|break;
@@ -5884,22 +5967,39 @@ name|cn_pri
 operator|=
 name|CN_INTERNAL
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
+name|int
 name|pccninit
-argument_list|(
-argument|struct consdev *cp
-argument_list|)
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
 block|{
 name|scinit
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
+name|void
 name|pccnputc
-argument_list|(
-argument|dev_t dev
-argument_list|,
-argument|char c
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|char
+name|c
+parameter_list|)
 block|{
 name|int
 name|pos
@@ -5988,10 +6088,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|int
 name|pccngetc
-argument_list|(
-argument|dev_t dev
-argument_list|)
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
 block|{
 name|int
 name|c
@@ -6154,8 +6256,9 @@ init|=
 literal|1
 decl_stmt|;
 specifier|static
+name|int
 name|rand
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -7176,8 +7279,7 @@ operator|&
 literal|0x1F
 expr_stmt|;
 block|}
-specifier|static
-name|void
+name|int
 name|cursor_pos
 parameter_list|(
 name|void
@@ -7194,7 +7296,11 @@ name|status
 operator|&
 name|UNKNOWN_MODE
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|scrn_blank_time
@@ -7278,7 +7384,7 @@ block|}
 name|timeout
 argument_list|(
 operator|(
-name|timeout_t
+name|timeout_func_t
 operator|)
 name|cursor_pos
 argument_list|,
@@ -7289,6 +7395,11 @@ operator|/
 literal|20
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 specifier|static
 name|void
@@ -7336,10 +7447,12 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
+name|int
 name|switch_scr
-argument_list|(
-argument|u_int next_scr
-argument_list|)
+parameter_list|(
+name|u_int
+name|next_scr
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -11896,17 +12009,19 @@ operator|)
 return|;
 block|}
 specifier|static
+name|void
 name|update_leds
-argument_list|(
-argument|int which
-argument_list|)
+parameter_list|(
+name|int
+name|which
+parameter_list|)
 block|{
 name|u_char
 name|xlate_leds
 index|[
 literal|8
 index|]
-operator|=
+init|=
 block|{
 literal|0
 block|,
@@ -11924,12 +12039,12 @@ literal|3
 block|,
 literal|7
 block|}
-block|;
+decl_stmt|;
 name|kbd_cmd
 argument_list|(
 name|KB_SETLEDS
 argument_list|)
-block|;
+expr_stmt|;
 comment|/* LED Command */
 name|kbd_cmd
 argument_list|(
@@ -11940,17 +12055,18 @@ operator|&
 name|LED_MASK
 index|]
 argument_list|)
-block|;
+expr_stmt|;
 name|kbd_wait
 argument_list|()
-block|; }
+expr_stmt|;
+block|}
 specifier|static
 specifier|volatile
 name|void
 name|reset_cpu
-argument_list|(
-argument|void
-argument_list|)
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -11976,13 +12092,7 @@ expr_stmt|;
 comment|/* Keyboard Reset Command */
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * sgetc(noblock) : get a character from the keyboard.   * If noblock = 0 wait until a key is gotten.  Otherwise return NOKEY.  */
-end_comment
-
-begin_function
 name|u_int
 name|sgetc
 parameter_list|(
@@ -13225,16 +13335,13 @@ goto|goto
 name|next_code
 goto|;
 block|}
-end_function
-
-begin_function
 name|int
 name|getchar
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|char
+name|u_char
 name|thechar
 decl_stmt|;
 name|int
@@ -13257,7 +13364,7 @@ expr_stmt|;
 name|thechar
 operator|=
 operator|(
-name|char
+name|u_char
 operator|)
 name|sgetc
 argument_list|(
@@ -13378,9 +13485,6 @@ operator|)
 return|;
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|pcmmap
 parameter_list|(
@@ -13414,9 +13518,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|kbd_wait
@@ -13455,9 +13556,6 @@ literal|0
 condition|)
 break|break;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|kbd_cmd
@@ -13477,9 +13575,6 @@ name|command
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|set_mode
@@ -13692,9 +13787,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|set_border
@@ -13742,43 +13834,45 @@ argument_list|)
 expr_stmt|;
 comment|/* enable Palette */
 block|}
-end_function
-
-begin_expr_stmt
 specifier|static
+name|void
 name|load_font
-argument_list|(
-argument|int segment
-argument_list|,
-argument|int size
-argument_list|,
-argument|char* font
-argument_list|)
+parameter_list|(
+name|int
+name|segment
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|char
+modifier|*
+name|font
+parameter_list|)
 block|{
 name|int
 name|ch
-block|,
+decl_stmt|,
 name|line
-block|,
+decl_stmt|,
 name|s
-block|;
+decl_stmt|;
 name|u_char
 name|val
-block|;
+decl_stmt|;
 name|outb
 argument_list|(
 name|TSIDX
 argument_list|,
 literal|0x01
 argument_list|)
-block|;
+expr_stmt|;
 name|val
 operator|=
 name|inb
 argument_list|(
 name|TSREG
 argument_list|)
-block|;
+expr_stmt|;
 comment|/* blank screen */
 name|outb
 argument_list|(
@@ -13786,7 +13880,7 @@ name|TSIDX
 argument_list|,
 literal|0x01
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|TSREG
@@ -13795,20 +13889,20 @@ name|val
 operator||
 literal|0x20
 argument_list|)
-block|;
+expr_stmt|;
 comment|/* setup vga for loading fonts (graphics plane mode) */
 name|s
 operator|=
 name|splhigh
 argument_list|()
-block|;
+expr_stmt|;
 name|inb
 argument_list|(
 name|crtc_addr
 operator|+
 literal|6
 argument_list|)
-block|;
+expr_stmt|;
 comment|/* reset flip/flop */
 name|outb
 argument_list|(
@@ -13816,90 +13910,90 @@ name|ATC
 argument_list|,
 literal|0x30
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|ATC
 argument_list|,
 literal|0x01
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|TSIDX
 argument_list|,
 literal|0x02
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|TSREG
 argument_list|,
 literal|0x04
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|TSIDX
 argument_list|,
 literal|0x04
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|TSREG
 argument_list|,
 literal|0x06
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|GDCIDX
 argument_list|,
 literal|0x04
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|GDCREG
 argument_list|,
 literal|0x02
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|GDCIDX
 argument_list|,
 literal|0x05
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|GDCREG
 argument_list|,
 literal|0x00
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|GDCIDX
 argument_list|,
 literal|0x06
 argument_list|)
-block|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|GDCREG
 argument_list|,
 literal|0x05
 argument_list|)
-block|;
+expr_stmt|;
 comment|/* addr = a0000, 64kb */
 name|splx
 argument_list|(
 name|s
 argument_list|)
-block|;
+expr_stmt|;
 for|for
 control|(
 name|ch
@@ -13966,9 +14060,6 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|inb
 argument_list|(
 name|crtc_addr
@@ -13976,13 +14067,7 @@ operator|+
 literal|6
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* reset flip/flop */
-end_comment
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|ATC
@@ -13990,9 +14075,6 @@ argument_list|,
 literal|0x30
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|ATC
@@ -14000,9 +14082,6 @@ argument_list|,
 literal|0x0C
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSIDX
@@ -14010,9 +14089,6 @@ argument_list|,
 literal|0x02
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSREG
@@ -14020,9 +14096,6 @@ argument_list|,
 literal|0x03
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSIDX
@@ -14030,9 +14103,6 @@ argument_list|,
 literal|0x04
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSREG
@@ -14040,9 +14110,6 @@ argument_list|,
 literal|0x02
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|GDCIDX
@@ -14050,9 +14117,6 @@ argument_list|,
 literal|0x04
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|GDCREG
@@ -14060,9 +14124,6 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|GDCIDX
@@ -14070,9 +14131,6 @@ argument_list|,
 literal|0x05
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|GDCREG
@@ -14080,9 +14138,6 @@ argument_list|,
 literal|0x10
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|crtc_addr
@@ -14124,17 +14179,11 @@ argument_list|)
 expr_stmt|;
 comment|/* addr = b8000, 32kb */
 block|}
-end_if
-
-begin_expr_stmt
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSIDX
@@ -14142,9 +14191,6 @@ argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|val
 operator|=
 name|inb
@@ -14152,13 +14198,7 @@ argument_list|(
 name|TSREG
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* unblank screen */
-end_comment
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSIDX
@@ -14166,9 +14206,6 @@ argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|outb
 argument_list|(
 name|TSREG
@@ -14178,10 +14215,8 @@ operator|&
 literal|0xDF
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
-unit|}   static
+block|}
+specifier|static
 name|void
 name|load_palette
 parameter_list|(
@@ -14246,9 +14281,6 @@ argument_list|)
 expr_stmt|;
 comment|/* enable palette */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|save_palette
@@ -14298,18 +14330,21 @@ argument_list|)
 expr_stmt|;
 comment|/* reset flip/flop */
 block|}
-end_function
-
-begin_expr_stmt
 specifier|static
+name|void
 name|change_winsize
-argument_list|(
-argument|struct tty *tp
-argument_list|,
-argument|int x
-argument_list|,
-argument|int y
-argument_list|)
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+name|int
+name|y
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14358,10 +14393,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
