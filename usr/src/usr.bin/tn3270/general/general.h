@@ -142,9 +142,17 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|if (c == 0) { \ 				    bzero(s,n); \ 				} else { \ 				    char buffer[100]; \ 				    \ 				    sprintf( \ 				    "
+value|if (c == 0) { \ 				    bzero(s,n); \ 				} else { \ 				    char buffer[100]; \ 				    \ 				    sprintf( \ 				"Attempt to use memchr(, != 0,) in %s, %s.\n", \ 						__FILE__, __LINE__); \ 				    ExitString(stderr, buffer, 1); \ 				}
 end_define
 
-unit|Attempt to use memchr(, != 0,) in %s, %s.\n, \ 						__FILE__, __LINE__); \ 				    ExitString(stderr, buffer, 1); \ 				} #endif	/* defined(unix) */
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(unix) */
+end_comment
+
 end_unit
 
