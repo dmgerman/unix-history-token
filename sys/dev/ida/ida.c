@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Generic driver for Compaq SMART RAID adapters.  *  * Specific probe routines are in:  *	pci/ida_pci.c		  *	i386/eisa/ida_eisa.c  */
+comment|/*  * Generic driver for Compaq SMART RAID adapters.  */
 end_comment
 
 begin_include
