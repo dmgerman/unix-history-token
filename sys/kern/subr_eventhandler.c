@@ -387,6 +387,12 @@ operator|=
 name|EHE_INITTED
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|eventhandler_mutex
+argument_list|)
+expr_stmt|;
 comment|/* allocate an entry for this handler, populate it */
 if|if
 condition|(
@@ -410,12 +416,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|eventhandler_mutex
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -528,12 +528,6 @@ expr_stmt|;
 name|EHE_UNLOCK
 argument_list|(
 name|list
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|eventhandler_mutex
 argument_list|)
 expr_stmt|;
 return|return
