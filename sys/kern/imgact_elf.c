@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995-1996 Søren Schmidt  * Copyright (c) 1996 Peter Wemm  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_elf.c,v 1.56 1999/05/09 16:04:08 peter Exp $  */
+comment|/*-  * Copyright (c) 1995-1996 Søren Schmidt  * Copyright (c) 1996 Peter Wemm  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: imgact_elf.c,v 1.57 1999/05/14 23:09:00 alc Exp $  */
 end_comment
 
 begin_include
@@ -893,6 +893,8 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|MAP_COPY_ON_WRITE
+operator||
+name|MAP_PREFAULT
 argument_list|)
 expr_stmt|;
 name|vm_map_unlock
@@ -912,31 +914,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-comment|/* prefault the page tables */
-name|pmap_object_init_pt
-argument_list|(
-name|vmspace_pmap
-argument_list|(
-name|vmspace
-argument_list|)
-argument_list|,
-name|map_addr
-argument_list|,
-name|object
-argument_list|,
-operator|(
-name|vm_pindex_t
-operator|)
-name|OFF_TO_IDX
-argument_list|(
-name|file_addr
-argument_list|)
-argument_list|,
-name|map_len
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* we can stop now if we've covered it all */
 if|if
 condition|(
@@ -1089,6 +1066,8 @@ argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|MAP_COPY_ON_WRITE
+operator||
+name|MAP_PREFAULT_PARTIAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1107,34 +1086,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|pmap_object_init_pt
-argument_list|(
-name|exec_map
-operator|->
-name|pmap
-argument_list|,
-name|data_buf
-argument_list|,
-name|object
-argument_list|,
-operator|(
-name|vm_pindex_t
-operator|)
-name|OFF_TO_IDX
-argument_list|(
-name|trunc_page
-argument_list|(
-name|offset
-operator|+
-name|filsz
-argument_list|)
-argument_list|)
-argument_list|,
-name|PAGE_SIZE
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* send the page fragment to user space */
 name|error
 operator|=
