@@ -113,6 +113,12 @@ name|configRouter
 block|}
 block|,
 block|{
+literal|"configInetd"
+block|,
+name|configInetd
+block|}
+block|,
+block|{
 literal|"configNFSServer"
 block|,
 name|configNFSServer

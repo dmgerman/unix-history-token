@@ -1008,6 +1008,20 @@ name|docBrowser
 block|}
 block|,
 block|{
+literal|" inetd Configuration"
+block|,
+literal|"Configure inetd and simple internet services."
+block|,
+name|dmenuVarCheck
+block|,
+name|configInetd
+block|,
+name|NULL
+block|,
+literal|"inetd_enable=YES"
+block|}
+block|,
+block|{
 literal|" Install, Standard"
 block|,
 literal|"A standard system installation."
@@ -8295,7 +8309,7 @@ literal|"This machine wants to run the inet daemon"
 block|,
 name|dmenuVarCheck
 block|,
-name|dmenuToggleVariable
+name|configInetd
 block|,
 name|NULL
 block|,
