@@ -3401,7 +3401,7 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|PIPE_NODIRECT
-comment|/* 		 * If the transfer is large, we can gain performance if 		 * we do process-to-process copies directly. 		 * If the write is non-blocking, we don't use the 		 * direct write mechanism. 		 */
+comment|/* 		 * If the transfer is large, we can gain performance if 		 * we do process-to-process copies directly. 		 * If the write is non-blocking, we don't use the 		 * direct write mechanism. 		 * 		 * The direct write mechanism will detect the reader going 		 * away on us. 		 */
 if|if
 condition|(
 operator|(
@@ -3469,7 +3469,7 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * Pipe buffered writes cannot be coincidental with 		 * direct writes.  We wait until the currently executing 		 * direct write is completed before we start filling the 		 * pipe buffer. 		 */
+comment|/* 		 * Pipe buffered writes cannot be coincidental with 		 * direct writes.  We wait until the currently executing 		 * direct write is completed before we start filling the 		 * pipe buffer.  We break out if a signal occurs or the 		 * reader goes away. 		 */
 name|retrywrite
 label|:
 while|while
@@ -3520,8 +3520,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|wpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_EOF
+condition|)
+break|break;
+if|if
+condition|(
 name|error
 condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|wpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_EOF
+condition|)
+block|{
+name|error
+operator|=
+name|EPIPE
+expr_stmt|;
 break|break;
 block|}
 name|space
@@ -3619,7 +3643,7 @@ goto|goto
 name|retrywrite
 goto|;
 block|}
-comment|/*  				 * If a process blocked in uiomove, our 				 * value for space might be bad. 				 */
+comment|/*  				 * If a process blocked in uiomove, our 				 * value for space might be bad. 				 * 				 * XXX will we be ok if the reader has gone 				 * away here? 				 */
 if|if
 condition|(
 name|space
