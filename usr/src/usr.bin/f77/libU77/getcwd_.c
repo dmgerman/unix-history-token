@@ -34,6 +34,16 @@ end_include
 begin_decl_stmt
 specifier|static
 name|char
+name|slash
+index|[]
+init|=
+literal|"/"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|dot
 index|[]
 init|=
@@ -112,7 +122,7 @@ literal|'\0'
 expr_stmt|;
 name|stat
 argument_list|(
-literal|"/"
+name|slash
 argument_list|,
 operator|&
 name|d
@@ -159,6 +169,23 @@ operator|==
 name|rdev
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|namep
+operator|==
+literal|'\0'
+condition|)
+comment|/* rootdir is a special case */
+name|namep
+operator|=
+name|prepend
+argument_list|(
+name|namep
+argument_list|,
+name|slash
+argument_list|)
+expr_stmt|;
 name|chdir
 argument_list|(
 name|namep
@@ -244,6 +271,23 @@ block|{
 name|close
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|namep
+operator|==
+literal|'\0'
+condition|)
+comment|/* root is a special case */
+name|namep
+operator|=
+name|prepend
+argument_list|(
+name|namep
+argument_list|,
+name|slash
 argument_list|)
 expr_stmt|;
 name|chdir
@@ -423,7 +467,7 @@ operator|.
 name|d_name
 argument_list|)
 argument_list|,
-literal|"/"
+name|slash
 argument_list|)
 expr_stmt|;
 block|}
@@ -492,7 +536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.2";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
+comment|/* char id_getcwd[] = "@(#)getcwd_.c	1.3";  * Get pathname of current working directory.  *  * calling sequence:  *	character*128 path  *	ierr = getcwd(path)  * where:  *	path will receive the pathname of the current working directory.  *	ierr will be 0 if successful, a system error code otherwise.  */
 end_comment
 
 begin_decl_stmt
