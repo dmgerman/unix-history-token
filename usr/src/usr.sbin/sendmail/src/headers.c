@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.46 (Berkeley) %G%"
+literal|"@(#)headers.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4120,6 +4120,42 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_STRIPVAL
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+block|{
+comment|/* empty field */
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|obuf
+argument_list|,
+literal|"%s:"
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|obuf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|bitset

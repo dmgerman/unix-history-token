@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.133 (Berkeley) %G%"
+literal|"@(#)conf.c	8.134 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,13 +154,13 @@ literal|"bcc"
 block|,
 name|H_RCPT
 operator||
-name|H_ACHECK
+name|H_STRIPVAL
 block|,
 literal|"resent-bcc"
 block|,
 name|H_RCPT
 operator||
-name|H_ACHECK
+name|H_STRIPVAL
 operator||
 name|H_RESENT
 block|,
