@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.c	7.9 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.c	7.10 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -788,7 +788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  *	If dequeue is TRUE, pages are removed from any paging queue  *	they were on, otherwise they are left on whatever queue they  *	were on before the cleaning operation began.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  *	If de_queue is TRUE, pages are removed from any paging queue  *	they were on, otherwise they are left on whatever queue they  *	were on before the cleaning operation began.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
 end_comment
 
 begin_expr_stmt
@@ -800,7 +800,7 @@ name|start
 argument_list|,
 name|end
 argument_list|,
-name|dequeue
+name|de_queue
 argument_list|)
 specifier|register
 name|vm_object_t
@@ -824,7 +824,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|boolean_t
-name|dequeue
+name|de_queue
 decl_stmt|;
 end_decl_stmt
 
@@ -947,7 +947,7 @@ expr_stmt|;
 comment|/* 			 * Remove the page from any paging queue. 			 * This needs to be done if either we have been 			 * explicitly asked to do so or it is about to 			 * be cleaned (see comment below). 			 */
 if|if
 condition|(
-name|dequeue
+name|de_queue
 operator|||
 operator|!
 name|p
@@ -1101,7 +1101,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|dequeue
+name|de_queue
 operator|&&
 name|onqueue
 condition|)
