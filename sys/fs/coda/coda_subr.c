@@ -1438,8 +1438,8 @@ argument_list|(
 argument|CODA_ZAPFILE
 argument_list|,
 argument|myprintf((
-literal|"zapfile: fid = (%lx.%lx.%lx),                                                refcnt = %d, error = %d\n"
-argument|, 					      cp->c_fid.Volume,  					      cp->c_fid.Vnode,  					      cp->c_fid.Unique,  					      CTOV(cp)->v_usecount -
+literal|"zapfile: fid = (%lx.%lx.%lx), refcnt = %d, error = %d\n"
+argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  CTOV(cp)->v_usecount -
 literal|1
 argument|, error));
 argument_list|)
@@ -1551,8 +1551,8 @@ argument_list|(
 argument|CODA_ZAPDIR
 argument_list|,
 argument|myprintf((
-literal|"zapdir: fid = (%lx.%lx.%lx),                                            refcnt = %d\n"
-argument|,cp->c_fid.Volume,  					     cp->c_fid.Vnode,  					     cp->c_fid.Unique,  					     CTOV(cp)->v_usecount -
+literal|"zapdir: fid = (%lx.%lx.%lx), refcnt = %d\n"
+argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  CTOV(cp)->v_usecount -
 literal|1
 argument|));
 argument_list|)
