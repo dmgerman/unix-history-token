@@ -1646,6 +1646,9 @@ name|a_p
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* nothing special */
+break|break;
 block|}
 return|return
 operator|(
