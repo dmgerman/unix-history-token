@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.16	81/05/10	*/
+comment|/*	ts.c	4.17	81/07/09	*/
 end_comment
 
 begin_include
@@ -519,6 +519,11 @@ name|br
 operator|=
 literal|0x15
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
