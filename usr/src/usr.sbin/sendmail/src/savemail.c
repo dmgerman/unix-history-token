@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.34 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1336,7 +1336,7 @@ name|fp
 argument_list|,
 literal|"savemail"
 argument_list|,
-literal|"/usr/tmp/dead.letter"
+name|buf
 argument_list|)
 expr_stmt|;
 break|break;
