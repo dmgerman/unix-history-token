@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pathnames.h,v 1.14 2004/01/30 09:48:57 markus Exp $	*/
+comment|/*	$OpenBSD: pathnames.h,v 1.15 2004/07/11 17:48:47 deraadt Exp $	*/
 end_comment
 
 begin_comment

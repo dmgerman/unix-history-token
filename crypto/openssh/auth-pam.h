@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: auth-pam.h,v 1.25 2004/03/08 12:04:07 dtucker Exp $ */
+comment|/* $Id: auth-pam.h,v 1.26 2004/05/30 10:43:59 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -171,6 +171,20 @@ name|void
 name|sshpam_cleanup
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sshpam_auth_passwd
+parameter_list|(
+name|Authctxt
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

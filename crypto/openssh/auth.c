@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth.c,v 1.51 2003/11/21 11:57:02 djm Exp $"
+literal|"$OpenBSD: auth.c,v 1.56 2004/07/28 09:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -140,12 +140,6 @@ begin_include
 include|#
 directive|include
 file|"uidswap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tildexpand.h"
 end_include
 
 begin_include
@@ -824,120 +818,20 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|WITH_AIXAUTHENTICATE
-comment|/* 	 * Don't check loginrestrictions() for root account (use 	 * PermitRootLogin to control logins via ssh), or if running as 	 * non-root user (since loginrestrictions will always fail). 	 */
-if|if
-condition|(
-operator|(
-name|pw
-operator|->
-name|pw_uid
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|geteuid
-argument_list|()
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-if|if
-condition|(
-name|loginrestrictions
-argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|S_RLOGIN
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|msg
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|int
-name|loginrestrict_errno
-init|=
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|msg
-operator|&&
-operator|*
-name|msg
-condition|)
-block|{
-name|buffer_append
-argument_list|(
-operator|&
-name|loginmsg
-argument_list|,
-name|msg
-argument_list|,
-name|strlen
-argument_list|(
-name|msg
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|aix_remove_embedded_newlines
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-name|logit
-argument_list|(
-literal|"Login restricted for %s: %.100s"
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Don't fail if /etc/nologin  set */
+name|CUSTOM_SYS_AUTH_ALLOWED_USER
 if|if
 condition|(
 operator|!
-operator|(
-name|loginrestrict_errno
-operator|==
-name|EPERM
-operator|&&
-name|stat
+name|sys_auth_allowed_user
 argument_list|(
-name|_PATH_NOLOGIN
-argument_list|,
-operator|&
-name|st
+name|pw
 argument_list|)
-operator|==
-literal|0
-operator|)
 condition|)
 return|return
 literal|0
 return|;
-block|}
-block|}
 endif|#
 directive|endif
-comment|/* WITH_AIXAUTHENTICATE */
 comment|/* We found no reason not to let this user try to log on... */
 return|return
 literal|1
@@ -1001,7 +895,11 @@ name|authctxt
 operator|->
 name|failures
 operator|>=
-name|AUTH_FAIL_LOG
+name|options
+operator|.
+name|max_authtries
+operator|/
+literal|2
 operator|||
 name|strcmp
 argument_list|(
@@ -1049,7 +947,7 @@ name|valid
 condition|?
 literal|""
 else|:
-literal|"illegal user "
+literal|"invalid user "
 argument_list|,
 name|authctxt
 operator|->
@@ -2062,7 +1960,7 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"Illegal user %.100s from %.100s"
+literal|"Invalid user %.100s from %.100s"
 argument_list|,
 name|user
 argument_list|,
@@ -2417,6 +2315,9 @@ name|fake
 operator|.
 name|pw_uid
 operator|=
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -2424,6 +2325,9 @@ name|fake
 operator|.
 name|pw_gid
 operator|=
+operator|(
+name|gid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;

@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.177 2004/04/15 23:22:40 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.180 2004/08/16 13:12:06 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -260,6 +260,14 @@ end_comment
 
 begin_comment
 comment|/* #undef PAM_TTY_KLUDGE */
+end_comment
+
+begin_comment
+comment|/* Define if pam_chauthtok wants real uid set to the unpriv'ed user */
+end_comment
+
+begin_comment
+comment|/* #undef SSHPAM_CHAUTHTOK_NEEDS_RUID */
 end_comment
 
 begin_comment
@@ -1324,6 +1332,14 @@ comment|/* #undef BROKEN_CMSG_TYPE */
 end_comment
 
 begin_comment
+comment|/*  * Define to whatever link() returns for "not supported" if it doesn't  * return EOPNOTSUPP.  */
+end_comment
+
+begin_comment
+comment|/* #undef LINK_OPNOTSUPP_ERRNO */
+end_comment
+
+begin_comment
 comment|/* Strings used in /etc/passwd to denote locked account */
 end_comment
 
@@ -1364,6 +1380,14 @@ end_comment
 
 begin_comment
 comment|/* #undef BIND_8_COMPAT */
+end_comment
+
+begin_comment
+comment|/* Define if you have /proc/$pid/fd */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PROC_PID */
 end_comment
 
 begin_comment
@@ -1446,6 +1470,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `closefrom' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CLOSEFROM */
+end_comment
+
+begin_comment
 comment|/* Define if gai_strerror() returns const char * */
 end_comment
 
@@ -1459,6 +1491,36 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_CRYPT_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `h_errno', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_H_ERRNO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<dirent.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DIRENT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `dirfd' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DIRFD */
 end_comment
 
 begin_comment
@@ -2110,6 +2172,14 @@ directive|define
 name|HAVE_MMAP
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<ndir.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NDIR_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<netdb.h> header file. */
@@ -2824,6 +2894,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/dir.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_DIR_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/mman.h> header file. */
 end_comment
 
@@ -2833,6 +2914,14 @@ directive|define
 name|HAVE_SYS_MMAN_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/ndir.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_NDIR_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/prctl.h> header file. */

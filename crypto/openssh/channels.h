@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.71 2003/09/23 20:41:11 markus Exp $	*/
+comment|/*	$OpenBSD: channels.h,v 1.74 2004/08/11 21:43:04 avsm Exp $	*/
 end_comment
 
 begin_comment
@@ -282,6 +282,10 @@ name|sock
 decl_stmt|;
 comment|/* sock fd */
 name|int
+name|ctl_fd
+decl_stmt|;
+comment|/* control fd (client sharing) */
+name|int
 name|isatty
 decl_stmt|;
 comment|/* rfd is a tty */
@@ -365,6 +369,10 @@ decl_stmt|;
 name|channel_callback_fn
 modifier|*
 name|detach_user
+decl_stmt|;
+name|void
+modifier|*
+name|confirm_ctx
 decl_stmt|;
 comment|/* filter */
 name|channel_filter_fn
@@ -696,6 +704,9 @@ name|int
 parameter_list|,
 name|channel_callback_fn
 modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -727,6 +738,15 @@ name|channel_close_fd
 parameter_list|(
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|channel_send_window_changes
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -894,7 +914,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 parameter_list|,
 name|int
@@ -1063,6 +1083,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|channel_request_rforward_cancel
+parameter_list|(
+name|u_short
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|channel_setup_local_fwd_listener
 parameter_list|(
@@ -1090,6 +1120,19 @@ parameter_list|,
 name|u_short
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|channel_cancel_rport_listener
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl

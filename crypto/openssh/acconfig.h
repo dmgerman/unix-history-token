@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.177 2004/04/15 23:22:40 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.180 2004/08/16 13:12:06 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -132,6 +132,10 @@ comment|/* Work around problematic Linux PAM modules handling of PAM_TTY */
 undef|#
 directive|undef
 name|PAM_TTY_KLUDGE
+comment|/* Define if pam_chauthtok wants real uid set to the unpriv'ed user */
+undef|#
+directive|undef
+name|SSHPAM_CHAUTHTOK_NEEDS_RUID
 comment|/* Use PIPES instead of a socketpair() */
 undef|#
 directive|undef
@@ -629,6 +633,10 @@ comment|/* Define if cmsg_type is not passed correctly */
 undef|#
 directive|undef
 name|BROKEN_CMSG_TYPE
+comment|/*  * Define to whatever link() returns for "not supported" if it doesn't  * return EOPNOTSUPP.  */
+undef|#
+directive|undef
+name|LINK_OPNOTSUPP_ERRNO
 comment|/* Strings used in /etc/passwd to denote locked account */
 undef|#
 directive|undef
@@ -651,6 +659,10 @@ comment|/* Define if your resolver libs need this for getrrsetbyname */
 undef|#
 directive|undef
 name|BIND_8_COMPAT
+comment|/* Define if you have /proc/$pid/fd */
+undef|#
+directive|undef
+name|HAVE_PROC_PID
 expr|@
 name|BOTTOM
 expr|@

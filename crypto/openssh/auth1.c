@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth1.c,v 1.55 2003/11/08 16:02:40 jakob Exp $"
+literal|"$OpenBSD: auth1.c,v 1.59 2004/07/28 09:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -53,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mpaux.h"
 end_include
 
 begin_include
@@ -254,15 +248,6 @@ name|type
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pw
-init|=
-name|authctxt
-operator|->
-name|pw
-decl_stmt|;
 name|debug
 argument_list|(
 literal|"Attempting authentication for %s%.100s."
@@ -273,7 +258,7 @@ name|valid
 condition|?
 literal|""
 else|:
-literal|"illegal user "
+literal|"invalid user "
 argument_list|,
 name|authctxt
 operator|->
@@ -314,6 +299,26 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_PAM
+if|if
+condition|(
+name|options
+operator|.
+name|use_pam
+operator|&&
+operator|(
+name|PRIVSEP
+argument_list|(
+name|do_pam_account
+argument_list|()
+argument_list|)
+operator|)
+condition|)
+endif|#
+directive|endif
+block|{
 name|auth_log
 argument_list|(
 name|authctxt
@@ -326,6 +331,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* Indicate that authentication is needed. */
 name|packet_start
@@ -853,6 +859,8 @@ name|type
 operator|==
 name|SSH_CMSG_AUTH_PASSWORD
 argument_list|,
+name|authctxt
+operator|->
 name|pw
 argument_list|)
 condition|)
@@ -861,6 +869,8 @@ name|packet_disconnect
 argument_list|(
 literal|"Authentication rejected for uid %d."
 argument_list|,
+name|authctxt
+operator|->
 name|pw
 operator|==
 name|NULL
@@ -868,6 +878,8 @@ condition|?
 operator|-
 literal|1
 else|:
+name|authctxt
+operator|->
 name|pw
 operator|->
 name|pw_uid
@@ -976,7 +988,9 @@ operator|->
 name|failures
 operator|++
 operator|>
-name|AUTH_FAIL_MAX
+name|options
+operator|.
+name|max_authtries
 condition|)
 name|packet_disconnect
 argument_list|(
@@ -1107,7 +1121,7 @@ else|else
 block|{
 name|debug
 argument_list|(
-literal|"do_authentication: illegal user %s"
+literal|"do_authentication: invalid user %s"
 argument_list|,
 name|user
 argument_list|)
@@ -1126,7 +1140,7 @@ literal|"%s%s"
 argument_list|,
 name|authctxt
 operator|->
-name|pw
+name|valid
 condition|?
 name|user
 else|:

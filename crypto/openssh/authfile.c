@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.55 2003/09/18 07:56:05 markus Exp $"
+literal|"$OpenBSD: authfile.c,v 1.57 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -162,7 +162,7 @@ modifier|*
 name|cipher
 decl_stmt|;
 name|u_int32_t
-name|rand
+name|rnd
 decl_stmt|;
 comment|/* 	 * If the passphrase is empty, use SSH_CIPHER_NONE to ease converting 	 * to another cipher; otherwise use SSH_AUTHFILE_CIPHER. 	 */
 name|cipher_num
@@ -208,7 +208,7 @@ name|buffer
 argument_list|)
 expr_stmt|;
 comment|/* Put checkbytes for checking passphrase validity. */
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
@@ -218,7 +218,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|rand
+name|rnd
 operator|&
 literal|0xff
 expr_stmt|;
@@ -228,7 +228,7 @@ literal|1
 index|]
 operator|=
 operator|(
-name|rand
+name|rnd
 operator|>>
 literal|8
 operator|)
@@ -1023,7 +1023,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|off_t
+name|size_t
 name|len
 decl_stmt|;
 if|if
@@ -1055,12 +1055,33 @@ return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|>
+literal|1
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
+operator|(
+name|size_t
+operator|)
 name|st
 operator|.
 name|st_size
 expr_stmt|;
+comment|/* truncated */
 name|buffer_init
 argument_list|(
 operator|&
@@ -1404,7 +1425,7 @@ name|check2
 decl_stmt|,
 name|cipher_type
 decl_stmt|;
-name|off_t
+name|size_t
 name|len
 decl_stmt|;
 name|Buffer
@@ -1467,12 +1488,40 @@ return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|>
+literal|1
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|len
 operator|=
+operator|(
+name|size_t
+operator|)
 name|st
 operator|.
 name|st_size
 expr_stmt|;
+comment|/* truncated */
 name|buffer_init
 argument_list|(
 operator|&

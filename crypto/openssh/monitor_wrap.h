@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor_wrap.h,v 1.13 2003/11/17 11:06:07 markus Exp $	*/
+comment|/*	$OpenBSD: monitor_wrap.h,v 1.14 2004/06/21 17:36:31 avsm Exp $	*/
 end_comment
 
 begin_comment
@@ -345,10 +345,8 @@ parameter_list|(
 name|Gssctxt
 modifier|*
 modifier|*
-name|ctxt
 parameter_list|,
 name|gss_OID
-name|oid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -359,19 +357,15 @@ name|mm_ssh_gssapi_accept_ctx
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctxt
 parameter_list|,
 name|gss_buffer_desc
 modifier|*
-name|recv
 parameter_list|,
 name|gss_buffer_desc
 modifier|*
-name|send
 parameter_list|,
 name|OM_uint32
 modifier|*
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2.c,v 1.104 2003/11/04 08:54:09 djm Exp $"
+literal|"$OpenBSD: auth2.c,v 1.107 2004/07/28 09:40:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -735,7 +735,7 @@ else|else
 block|{
 name|logit
 argument_list|(
-literal|"input_userauth_request: illegal user %s"
+literal|"input_userauth_request: invalid user %s"
 argument_list|,
 name|user
 argument_list|)
@@ -773,7 +773,7 @@ literal|"%s%s"
 argument_list|,
 name|authctxt
 operator|->
-name|pw
+name|valid
 condition|?
 name|user
 else|:
@@ -1254,7 +1254,9 @@ operator|->
 name|failures
 operator|++
 operator|>
-name|AUTH_FAIL_MAX
+name|options
+operator|.
+name|max_authtries
 condition|)
 name|packet_disconnect
 argument_list|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.38 2003/09/23 20:17:11 markus Exp $"
+literal|"$OpenBSD: canohost.c,v 1.41 2004/07/21 11:51:29 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -80,7 +80,7 @@ modifier|*
 name|get_remote_hostname
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|int
 name|use_dns
@@ -147,7 +147,7 @@ if|if
 condition|(
 name|getpeername
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|(
 expr|struct
@@ -190,7 +190,7 @@ name|AF_INET
 condition|)
 name|check_ip_options
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|ntop
 argument_list|)
@@ -588,7 +588,7 @@ name|void
 name|check_ip_options
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|char
 modifier|*
@@ -665,7 +665,7 @@ if|if
 condition|(
 name|getsockopt
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|ipproto
 argument_list|,
@@ -1002,7 +1002,7 @@ modifier|*
 name|get_socket_address
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|int
 name|remote
@@ -1054,7 +1054,7 @@ if|if
 condition|(
 name|getpeername
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|(
 expr|struct
@@ -1080,7 +1080,7 @@ if|if
 condition|(
 name|getsockname
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 operator|(
 expr|struct
@@ -1175,7 +1175,7 @@ modifier|*
 name|get_peer_ipaddr
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|)
 block|{
 name|char
@@ -1189,7 +1189,7 @@ name|p
 operator|=
 name|get_socket_address
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 literal|1
 argument_list|,
@@ -1217,7 +1217,7 @@ modifier|*
 name|get_local_ipaddr
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|)
 block|{
 name|char
@@ -1231,7 +1231,7 @@ name|p
 operator|=
 name|get_socket_address
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 literal|0
 argument_list|,
@@ -1259,13 +1259,13 @@ modifier|*
 name|get_local_name
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|)
 block|{
 return|return
 name|get_socket_address
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 literal|0
 argument_list|,
@@ -1660,11 +1660,30 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
+specifier|static
+name|int
+name|port
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|/* Cache to avoid getpeername() on a dead connection */
+if|if
+condition|(
+name|port
+operator|==
+operator|-
+literal|1
+condition|)
+name|port
+operator|=
 name|get_port
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+return|return
+name|port
 return|;
 block|}
 end_function

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-chall.c,v 1.20 2002/06/30 21:59:45 deraadt Exp $"
+literal|"$OpenBSD: auth2-chall.c,v 1.21 2004/06/01 14:20:45 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"dispatch.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"auth.h"
 end_include
 
 begin_include

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.47 2004/03/08 09:38:05 djm Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.50 2004/08/11 21:44:32 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -204,12 +204,6 @@ name|MAXCON
 value|(maxfd - 10)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -217,23 +211,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|fd_set
@@ -1623,6 +1600,17 @@ name|c_kex
 operator|->
 name|kex
 index|[
+name|KEX_DH_GRP14_SHA1
+index|]
+operator|=
+name|kexdh_client
+expr_stmt|;
+name|c
+operator|->
+name|c_kex
+operator|->
+name|kex
+index|[
 name|KEX_DH_GEX_SHA1
 index|]
 operator|=
@@ -1927,25 +1915,21 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|fcntl
+name|set_nonblock
 argument_list|(
 name|s
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"F_SETFL: %s"
+literal|"%s: set_nonblock(%d)"
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|__func__
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2585,8 +2569,10 @@ operator|&&
 operator|(
 name|n
 operator|=
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|s
 argument_list|,
 name|cp
@@ -2965,8 +2951,10 @@ return|return;
 block|}
 name|n
 operator|=
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|s
 argument_list|,
 name|c

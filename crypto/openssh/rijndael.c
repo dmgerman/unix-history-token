@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: rijndael.c,v 1.15 2003/11/21 11:57:03 djm Exp $ */
+comment|/*	$OpenBSD: rijndael.c,v 1.16 2004/06/23 00:39:38 mouring Exp $ */
 end_comment
 
 begin_comment
@@ -12815,7 +12815,7 @@ name|int
 name|bits
 parameter_list|,
 name|int
-name|encrypt
+name|do_encrypt
 parameter_list|)
 block|{
 name|ctx
@@ -12835,7 +12835,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|encrypt
+name|do_encrypt
 condition|)
 block|{
 name|ctx

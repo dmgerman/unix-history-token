@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scp.c,v 1.113 2003/11/23 23:21:21 djm Exp $"
+literal|"$OpenBSD: scp.c,v 1.117 2004/08/11 21:44:32 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -61,12 +61,6 @@ directive|include
 file|"progressmeter.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -74,23 +68,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -3435,7 +3412,7 @@ init|=
 literal|16384
 decl_stmt|;
 name|u_int64_t
-name|wait
+name|waitlen
 decl_stmt|;
 name|struct
 name|timespec
@@ -3508,7 +3485,7 @@ name|lamt
 operator|*=
 literal|8
 expr_stmt|;
-name|wait
+name|waitlen
 operator|=
 operator|(
 name|double
@@ -3523,7 +3500,7 @@ name|bwstart
 operator|.
 name|tv_sec
 operator|=
-name|wait
+name|waitlen
 operator|/
 literal|1000000L
 expr_stmt|;
@@ -3531,7 +3508,7 @@ name|bwstart
 operator|.
 name|tv_usec
 operator|=
-name|wait
+name|waitlen
 operator|%
 literal|1000000L
 expr_stmt|;
@@ -3983,6 +3960,19 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|verbose_mode
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Sink: %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|buf
 index|[
 literal|0
@@ -4381,6 +4371,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|".."
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|run_err
+argument_list|(
+literal|"error: unexpected filename: %s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|targisdir
 condition|)
 block|{
@@ -4506,6 +4534,16 @@ name|mod_flag
 init|=
 name|pflag
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|iamrecursive
+condition|)
+name|SCREWUP
+argument_list|(
+literal|"received directory without -r"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|exists
@@ -4817,8 +4855,10 @@ do|do
 block|{
 name|j
 operator|=
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|remin
 argument_list|,
 name|cp
@@ -4826,27 +4866,6 @@ argument_list|,
 name|amt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|j
-operator|==
-operator|-
-literal|1
-operator|&&
-operator|(
-name|errno
-operator|==
-name|EINTR
-operator|||
-name|errno
-operator|==
-name|EAGAIN
-operator|)
-condition|)
-block|{
-continue|continue;
-block|}
-elseif|else
 if|if
 condition|(
 name|j
@@ -5080,6 +5099,7 @@ argument_list|,
 name|omode
 argument_list|)
 condition|)
+block|{
 else|#
 directive|else
 comment|/* HAVE_FCHMOD */
@@ -5092,6 +5112,7 @@ argument_list|,
 name|omode
 argument_list|)
 condition|)
+block|{
 endif|#
 directive|endif
 comment|/* HAVE_FCHMOD */
@@ -5107,6 +5128,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|wrerr
+operator|=
+name|DISPLAYED
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5134,6 +5160,7 @@ operator|~
 name|mask
 argument_list|)
 condition|)
+block|{
 else|#
 directive|else
 comment|/* HAVE_FCHMOD */
@@ -5149,6 +5176,7 @@ operator|~
 name|mask
 argument_list|)
 condition|)
+block|{
 endif|#
 directive|endif
 comment|/* HAVE_FCHMOD */
@@ -5164,6 +5192,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|wrerr
+operator|=
+name|DISPLAYED
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -5294,9 +5327,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|response
 parameter_list|(
@@ -5477,9 +5507,6 @@ expr_stmt|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_function
-
-begin_function
 name|void
 name|usage
 parameter_list|(
@@ -5504,9 +5531,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|run_err
 parameter_list|(
@@ -5648,9 +5672,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|verifydir
 parameter_list|(
@@ -5708,9 +5729,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|okname
 parameter_list|(
@@ -5821,9 +5839,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|BUF
 modifier|*
 name|allocbuf
@@ -5976,9 +5991,6 @@ name|bp
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|lostconn
 parameter_list|(

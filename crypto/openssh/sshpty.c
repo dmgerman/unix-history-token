@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshpty.c,v 1.11 2004/01/11 21:55:06 deraadt Exp $"
+literal|"$OpenBSD: sshpty.c,v 1.12 2004/06/21 17:36:31 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -204,14 +204,14 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|tty
 parameter_list|)
 block|{
 if|if
 condition|(
 name|chown
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 operator|(
 name|uid_t
@@ -230,7 +230,7 @@ name|error
 argument_list|(
 literal|"chown %.100s 0 0 failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 name|strerror
 argument_list|(
@@ -242,7 +242,7 @@ if|if
 condition|(
 name|chmod
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 operator|(
 name|mode_t
@@ -256,7 +256,7 @@ name|error
 argument_list|(
 literal|"chmod %.100s 0666 failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 name|strerror
 argument_list|(
@@ -282,7 +282,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|tty
 parameter_list|)
 block|{
 name|int
@@ -322,7 +322,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 name|O_RDWR
 operator||
@@ -419,7 +419,7 @@ name|error
 argument_list|(
 literal|"%.100s: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 name|strerror
 argument_list|(
@@ -623,7 +623,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -639,7 +639,7 @@ name|error
 argument_list|(
 literal|"%.100s: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 name|strerror
 argument_list|(
@@ -794,7 +794,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|ttyname
+name|tty
 parameter_list|)
 block|{
 name|struct
@@ -864,7 +864,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 operator|&
 name|st
@@ -874,7 +874,7 @@ name|fatal
 argument_list|(
 literal|"stat(%.100s) failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 name|strerror
 argument_list|(
@@ -903,7 +903,7 @@ if|if
 condition|(
 name|chown
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 name|pw
 operator|->
@@ -941,7 +941,7 @@ name|debug
 argument_list|(
 literal|"chown(%.100s, %u, %u) failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 operator|(
 name|u_int
@@ -966,7 +966,7 @@ name|fatal
 argument_list|(
 literal|"chown(%.100s, %u, %u) failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 operator|(
 name|u_int
@@ -1011,7 +1011,7 @@ if|if
 condition|(
 name|chmod
 argument_list|(
-name|ttyname
+name|tty
 argument_list|,
 name|mode
 argument_list|)
@@ -1043,7 +1043,7 @@ name|debug
 argument_list|(
 literal|"chmod(%.100s, 0%o) failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 operator|(
 name|u_int
@@ -1061,7 +1061,7 @@ name|fatal
 argument_list|(
 literal|"chmod(%.100s, 0%o) failed: %.100s"
 argument_list|,
-name|ttyname
+name|tty
 argument_list|,
 operator|(
 name|u_int

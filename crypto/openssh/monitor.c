@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor.c,v 1.55 2004/02/05 05:37:17 dtucker Exp $"
+literal|"$OpenBSD: monitor.c,v 1.61 2004/07/17 05:31:41 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -296,12 +296,6 @@ directive|include
 file|"ssh2.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"mpaux.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -398,6 +392,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|auth_debug_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Buffer
+name|loginmsg
 decl_stmt|;
 end_decl_stmt
 
@@ -1982,14 +1983,14 @@ name|void
 name|monitor_child_handler
 parameter_list|(
 name|int
-name|signal
+name|sig
 parameter_list|)
 block|{
 name|kill
 argument_list|(
 name|monitor_child_pid
 argument_list|,
-name|signal
+name|sig
 argument_list|)
 expr_stmt|;
 block|}
@@ -2477,7 +2478,7 @@ name|int
 name|mm_answer_moduli
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -2629,7 +2630,7 @@ expr_stmt|;
 block|}
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_MODULI
 argument_list|,
@@ -2649,7 +2650,7 @@ name|int
 name|mm_answer_sign
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -2829,7 +2830,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_SIGN
 argument_list|,
@@ -2863,7 +2864,7 @@ name|int
 name|mm_answer_pwnamallow
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -2872,7 +2873,7 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|login
+name|username
 decl_stmt|;
 name|struct
 name|passwd
@@ -2907,7 +2908,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|login
+name|username
 operator|=
 name|buffer_get_string
 argument_list|(
@@ -2920,7 +2921,7 @@ name|pwent
 operator|=
 name|getpwnamallow
 argument_list|(
-name|login
+name|username
 argument_list|)
 expr_stmt|;
 name|authctxt
@@ -2929,7 +2930,7 @@ name|user
 operator|=
 name|xstrdup
 argument_list|(
-name|login
+name|username
 argument_list|)
 expr_stmt|;
 name|setproctitle
@@ -2938,14 +2939,14 @@ literal|"%s [priv]"
 argument_list|,
 name|pwent
 condition|?
-name|login
+name|username
 else|:
 literal|"unknown"
 argument_list|)
 expr_stmt|;
 name|xfree
 argument_list|(
-name|login
+name|username
 argument_list|)
 expr_stmt|;
 name|buffer_clear
@@ -3084,7 +3085,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PWNAM
 argument_list|,
@@ -3157,7 +3158,7 @@ name|int
 name|mm_answer_auth2_read_banner
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3193,7 +3194,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_AUTH2_READ_BANNER
 argument_list|,
@@ -3224,7 +3225,7 @@ name|int
 name|mm_answer_authserv
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3312,7 +3313,7 @@ name|int
 name|mm_answer_authpassword
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3397,7 +3398,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_AUTHPASSWORD
 argument_list|,
@@ -3446,7 +3447,7 @@ name|int
 name|mm_answer_bsdauthquery
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3540,7 +3541,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_BSDAUTHQUERY
 argument_list|,
@@ -3586,7 +3587,7 @@ name|int
 name|mm_answer_bsdauthrespond
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3686,7 +3687,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_BSDAUTHRESPOND
 argument_list|,
@@ -3723,7 +3724,7 @@ name|int
 name|mm_answer_skeyquery
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3802,7 +3803,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_SKEYQUERY
 argument_list|,
@@ -3822,7 +3823,7 @@ name|int
 name|mm_answer_skeyrespond
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3910,7 +3911,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_SKEYRESPOND
 argument_list|,
@@ -3947,7 +3948,7 @@ name|int
 name|mm_answer_pam_start
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -3995,7 +3996,7 @@ name|int
 name|mm_answer_pam_account
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -4033,7 +4034,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PAM_ACCOUNT
 argument_list|,
@@ -4071,7 +4072,7 @@ name|int
 name|mm_answer_pam_init_ctx
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -4152,7 +4153,7 @@ expr_stmt|;
 block|}
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PAM_INIT_CTX
 argument_list|,
@@ -4172,7 +4173,7 @@ name|int
 name|mm_answer_pam_query
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -4381,7 +4382,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PAM_QUERY
 argument_list|,
@@ -4401,7 +4402,7 @@ name|int
 name|mm_answer_pam_respond
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -4558,7 +4559,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PAM_RESPOND
 argument_list|,
@@ -4592,7 +4593,7 @@ name|int
 name|mm_answer_pam_free_ctx
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -4622,7 +4623,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PAM_FREE_CTX
 argument_list|,
@@ -4704,7 +4705,7 @@ name|int
 name|mm_answer_keyallowed
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -5012,7 +5013,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_KEYALLOWED
 argument_list|,
@@ -5697,7 +5698,7 @@ name|int
 name|mm_answer_keyverify
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -5943,7 +5944,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_KEYVERIFY
 argument_list|,
@@ -6161,7 +6162,7 @@ name|int
 name|mm_answer_pty
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -6293,33 +6294,6 @@ operator|->
 name|tty
 argument_list|)
 expr_stmt|;
-name|mm_request_send
-argument_list|(
-name|socket
-argument_list|,
-name|MONITOR_ANS_PTY
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|mm_send_fd
-argument_list|(
-name|socket
-argument_list|,
-name|s
-operator|->
-name|ptyfd
-argument_list|)
-expr_stmt|;
-name|mm_send_fd
-argument_list|(
-name|socket
-argument_list|,
-name|s
-operator|->
-name|ttyfd
-argument_list|)
-expr_stmt|;
 comment|/* We need to trick ttyslot */
 if|if
 condition|(
@@ -6355,6 +6329,57 @@ comment|/* Now we can close the file descriptor again */
 name|close
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* send messages generated by record_login */
+name|buffer_put_string
+argument_list|(
+name|m
+argument_list|,
+name|buffer_ptr
+argument_list|(
+operator|&
+name|loginmsg
+argument_list|)
+argument_list|,
+name|buffer_len
+argument_list|(
+operator|&
+name|loginmsg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_clear
+argument_list|(
+operator|&
+name|loginmsg
+argument_list|)
+expr_stmt|;
+name|mm_request_send
+argument_list|(
+name|sock
+argument_list|,
+name|MONITOR_ANS_PTY
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|mm_send_fd
+argument_list|(
+name|sock
+argument_list|,
+name|s
+operator|->
+name|ptyfd
+argument_list|)
+expr_stmt|;
+name|mm_send_fd
+argument_list|(
+name|sock
+argument_list|,
+name|s
+operator|->
+name|ttyfd
 argument_list|)
 expr_stmt|;
 comment|/* make sure nothing uses fd 0 */
@@ -6467,7 +6492,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_PTY
 argument_list|,
@@ -6487,7 +6512,7 @@ name|int
 name|mm_answer_pty_cleanup
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -6559,7 +6584,7 @@ name|int
 name|mm_answer_sesskey
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -6641,7 +6666,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_SESSKEY
 argument_list|,
@@ -6671,7 +6696,7 @@ name|int
 name|mm_answer_sessid
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -6750,7 +6775,7 @@ name|int
 name|mm_answer_rsa_keyallowed
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -6950,7 +6975,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_RSAKEYALLOWED
 argument_list|,
@@ -6988,7 +7013,7 @@ name|int
 name|mm_answer_rsa_challenge
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -7132,7 +7157,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_RSACHALLENGE
 argument_list|,
@@ -7171,7 +7196,7 @@ name|int
 name|mm_answer_rsa_response
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -7387,7 +7412,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_RSARESPONSE
 argument_list|,
@@ -7407,7 +7432,7 @@ name|int
 name|mm_answer_term
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -7861,6 +7886,15 @@ operator|->
 name|kex
 index|[
 name|KEX_DH_GRP1_SHA1
+index|]
+operator|=
+name|kexdh_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_DH_GRP14_SHA1
 index|]
 operator|=
 name|kexdh_server
@@ -8912,7 +8946,7 @@ name|int
 name|mm_answer_gss_setup_ctx
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -8920,7 +8954,7 @@ name|m
 parameter_list|)
 block|{
 name|gss_OID_desc
-name|oid
+name|goid
 decl_stmt|;
 name|OM_uint32
 name|major
@@ -8928,7 +8962,7 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
-name|oid
+name|goid
 operator|.
 name|elements
 operator|=
@@ -8940,7 +8974,7 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-name|oid
+name|goid
 operator|.
 name|length
 operator|=
@@ -8954,12 +8988,12 @@ operator|&
 name|gsscontext
 argument_list|,
 operator|&
-name|oid
+name|goid
 argument_list|)
 expr_stmt|;
 name|xfree
 argument_list|(
-name|oid
+name|goid
 operator|.
 name|elements
 argument_list|)
@@ -8978,7 +9012,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_GSSSETUP
 argument_list|,
@@ -9008,7 +9042,7 @@ name|int
 name|mm_answer_gss_accept_ctx
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -9112,7 +9146,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_GSSSTEP
 argument_list|,
@@ -9176,7 +9210,7 @@ name|int
 name|mm_answer_gss_checkmic
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -9271,7 +9305,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_GSSCHECKMIC
 argument_list|,
@@ -9308,7 +9342,7 @@ name|int
 name|mm_answer_gss_userok
 parameter_list|(
 name|int
-name|socket
+name|sock
 parameter_list|,
 name|Buffer
 modifier|*
@@ -9354,7 +9388,7 @@ argument_list|)
 expr_stmt|;
 name|mm_request_send
 argument_list|(
-name|socket
+name|sock
 argument_list|,
 name|MONITOR_ANS_GSSUSEROK
 argument_list|,

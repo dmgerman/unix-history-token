@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.10 2003/09/23 20:17:11 markus Exp $	*/
+comment|/*	$OpenBSD: log.h,v 1.11 2004/06/21 22:02:58 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -193,31 +193,32 @@ name|debug3
 value|ssh_debug3
 end_define
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|fatal
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__dead
+name|__attribute__
+argument_list|(
+operator|(
+name|format
+argument_list|(
 name|printf
-parameter_list|,
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -390,14 +391,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|cleanup_exit
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

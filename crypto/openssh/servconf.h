@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.67 2003/12/23 16:12:10 jakob Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.70 2004/06/24 19:30:54 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ define|#
 directive|define
 name|SERVCONF_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
+end_include
 
 begin_define
 define|#
@@ -100,6 +106,17 @@ begin_comment
 comment|/* Max # hostkeys. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_ACCEPT_ENV
+value|256
+end_define
+
+begin_comment
+comment|/* Max # of env vars. */
+end_comment
+
 begin_comment
 comment|/* permit_root_login */
 end_comment
@@ -138,6 +155,17 @@ directive|define
 name|PERMIT_YES
 value|3
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_AUTH_FAIL_MAX
+value|6
+end_define
+
+begin_comment
+comment|/* Default for MaxAuthTries */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -398,6 +426,16 @@ index|[
 name|MAX_SUBSYSTEMS
 index|]
 decl_stmt|;
+name|u_int
+name|num_accept_env
+decl_stmt|;
+name|char
+modifier|*
+name|accept_env
+index|[
+name|MAX_ACCEPT_ENV
+index|]
+decl_stmt|;
 name|int
 name|max_startups_begin
 decl_stmt|;
@@ -406,6 +444,9 @@ name|max_startups_rate
 decl_stmt|;
 name|int
 name|max_startups
+decl_stmt|;
+name|int
+name|max_authtries
 decl_stmt|;
 name|char
 modifier|*
@@ -453,20 +494,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|read_server_config
-parameter_list|(
-name|ServerOptions
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|fill_default_server_options
 parameter_list|(
 name|ServerOptions
@@ -490,6 +517,37 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|load_server_config
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parse_server_config
+parameter_list|(
+name|ServerOptions
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Buffer
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
