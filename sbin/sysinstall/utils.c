@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.18 1994/11/02 08:52:15 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.19 1994/11/02 22:06:24 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -152,6 +152,7 @@ begin_function
 name|int
 name|strwidth
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -164,6 +165,7 @@ literal|0
 decl_stmt|,
 name|len
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|start
@@ -198,22 +200,11 @@ operator|++
 name|s
 control|)
 block|{
-operator|*
-name|s
-operator|=
-literal|'\0'
-expr_stmt|;
 name|len
 operator|=
-name|strlen
-argument_list|(
-name|start
-argument_list|)
-expr_stmt|;
-operator|*
 name|s
-operator|=
-literal|'\n'
+operator|-
+name|start
 expr_stmt|;
 if|if
 condition|(
@@ -253,6 +244,7 @@ begin_function
 name|int
 name|strheight
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -263,6 +255,7 @@ name|i
 init|=
 literal|1
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s
