@@ -1203,7 +1203,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sokqfilter
+name|soo_kqfilter
 parameter_list|(
 name|struct
 name|file

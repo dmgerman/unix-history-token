@@ -8484,7 +8484,7 @@ end_function
 
 begin_function
 name|int
-name|sokqfilter
+name|soo_kqfilter
 parameter_list|(
 name|struct
 name|file

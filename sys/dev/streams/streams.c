@@ -354,7 +354,7 @@ name|soo_ioctl
 block|,
 name|soo_poll
 block|,
-name|sokqfilter
+name|soo_kqfilter
 block|,
 name|soo_stat
 block|,
