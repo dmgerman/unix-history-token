@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mult.c	5.3 (Berkeley) %G%"
+literal|"@(#)mult.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,21 @@ return|return;
 block|}
 end_block
 
+begin_union
+union|union
+name|g
+block|{
+name|long
+name|xx
+decl_stmt|;
+name|struct
+name|half
+name|yy
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_macro
 name|tradd
 argument_list|(
@@ -581,22 +596,13 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
-begin_union
-union|union
+begin_decl_stmt
+name|union
 name|g
-block|{
-name|long
-name|xx
-decl_stmt|;
-name|struct
-name|half
-name|yy
-decl_stmt|;
-block|}
 modifier|*
 name|b
-union|;
-end_union
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
