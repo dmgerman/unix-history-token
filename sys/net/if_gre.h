@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_gre.h,v 1.10 2002/02/24 17:22:20 martin Exp $ */
 end_comment
 
 begin_comment
-comment|/*	 $FreeBSD$ */
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment

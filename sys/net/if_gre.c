@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_gre.c,v 1.42 2002/08/14 00:23:27 itojun Exp $ */
 end_comment
 
 begin_comment
-comment|/*	 $FreeBSD$ */
+comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
