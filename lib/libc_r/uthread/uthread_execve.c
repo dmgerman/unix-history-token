@@ -41,7 +41,7 @@ end_include
 
 begin_function
 name|int
-name|execve
+name|_libc_execve
 parameter_list|(
 specifier|const
 name|char
@@ -356,6 +356,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_execve
+argument_list|,
+name|execve
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

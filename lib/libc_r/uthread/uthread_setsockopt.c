@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|setsockopt
+name|_libc_setsockopt
 parameter_list|(
 name|int
 name|fd
@@ -104,6 +104,16 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_setsockopt
+argument_list|,
+name|setsockopt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|pid_t
-name|wait4
+name|_libc_wait4
 parameter_list|(
 name|pid_t
 name|pid
@@ -143,6 +143,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_wait4
+argument_list|,
+name|wait4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -77,7 +77,7 @@ end_include
 
 begin_function
 name|int
-name|select
+name|_libc_select
 parameter_list|(
 name|int
 name|numfds
@@ -902,6 +902,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_select
+argument_list|,
+name|select
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

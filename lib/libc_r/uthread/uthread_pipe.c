@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|pipe
+name|_libc_pipe
 parameter_list|(
 name|int
 name|fds
@@ -114,6 +114,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_pipe
+argument_list|,
+name|pipe
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

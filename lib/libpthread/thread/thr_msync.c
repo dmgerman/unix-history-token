@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|msync
+name|_libc_msync
 parameter_list|(
 name|addr
 parameter_list|,
@@ -84,6 +84,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_msync
+argument_list|,
+name|msync
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

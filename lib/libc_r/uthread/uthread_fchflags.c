@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|fchflags
+name|_libc_fchflags
 parameter_list|(
 name|int
 name|fd
@@ -89,6 +89,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_fchflags
+argument_list|,
+name|fchflags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

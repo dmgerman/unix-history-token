@@ -47,7 +47,7 @@ end_include
 
 begin_function
 name|ssize_t
-name|recvfrom
+name|_libc_recvfrom
 parameter_list|(
 name|int
 name|fd
@@ -223,6 +223,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_recvfrom
+argument_list|,
+name|recvfrom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

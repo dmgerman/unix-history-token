@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|int
-name|close
+name|_libc_close
 parameter_list|(
 name|int
 name|fd
@@ -246,6 +246,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_close
+argument_list|,
+name|close
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|pid_t
-name|fork
+name|_libc_fork
 parameter_list|(
 name|void
 parameter_list|)
@@ -690,6 +690,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_fork
+argument_list|,
+name|fork
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|int
-name|sigprocmask
+name|_libc_sigprocmask
 parameter_list|(
 name|int
 name|how
@@ -176,6 +176,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_sigprocmask
+argument_list|,
+name|sigprocmask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

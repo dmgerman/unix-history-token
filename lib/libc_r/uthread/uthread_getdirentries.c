@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|getdirentries
+name|_libc_getdirentries
 parameter_list|(
 name|int
 name|fd
@@ -101,6 +101,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_getdirentries
+argument_list|,
+name|getdirentries
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

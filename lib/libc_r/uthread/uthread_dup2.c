@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|dup2
+name|_libc_dup2
 parameter_list|(
 name|int
 name|fd
@@ -216,6 +216,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_dup2
+argument_list|,
+name|dup2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

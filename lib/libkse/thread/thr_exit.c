@@ -59,7 +59,7 @@ end_include
 
 begin_function
 name|void
-name|_exit
+name|_libc__exit
 parameter_list|(
 name|int
 name|status
@@ -208,6 +208,16 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc__exit
+argument_list|,
+name|_exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|getsockname
+name|_libc_getsockname
 parameter_list|(
 name|int
 name|s
@@ -95,6 +95,16 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_getsockname
+argument_list|,
+name|getsockname
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

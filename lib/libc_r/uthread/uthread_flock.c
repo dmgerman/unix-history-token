@@ -29,7 +29,7 @@ end_include
 
 begin_function
 name|int
-name|flock
+name|_libc_flock
 parameter_list|(
 name|int
 name|fd
@@ -83,6 +83,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_flock
+argument_list|,
+name|flock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

@@ -47,7 +47,7 @@ end_include
 
 begin_function
 name|int
-name|socketpair
+name|_libc_socketpair
 parameter_list|(
 name|int
 name|af
@@ -142,6 +142,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_socketpair
+argument_list|,
+name|socketpair
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

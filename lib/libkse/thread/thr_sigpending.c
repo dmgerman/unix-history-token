@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|sigpending
+name|_libc_sigpending
 parameter_list|(
 name|sigset_t
 modifier|*
@@ -79,6 +79,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_sigpending
+argument_list|,
+name|sigpending
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
