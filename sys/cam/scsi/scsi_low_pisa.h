@@ -35,7 +35,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|scsi_low_activate
+name|scsi_low_activate_pisa
 name|__P
 argument_list|(
 operator|(
@@ -47,7 +47,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|scsi_low_deactivate
+name|scsi_low_deactivate_pisa
 name|__P
 argument_list|(
 operator|(
@@ -59,7 +59,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|scsi_low_notify
+name|scsi_low_notify_pisa
 name|__P
 argument_list|(
 operator|(
@@ -76,6 +76,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __NetBSD__ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -84,7 +88,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|scsi_low_activate
+name|scsi_low_activate_pisa
 name|__P
 argument_list|(
 operator|(
@@ -100,7 +104,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|scsi_low_deactivate
+name|scsi_low_deactivate_pisa
 name|__P
 argument_list|(
 operator|(
@@ -116,6 +120,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_endif
 endif|#

@@ -22,26 +22,41 @@ name|ncv_hw
 name|ncv_template
 init|=
 block|{
-name|NCV_HOSTID
+literal|0
 block|,
+comment|/* CFG1 img */
 name|C2_FE
 operator||
 name|C2_SCSI2
 block|,
-name|C3_FCLK
+comment|/* CFG2 img */
+literal|0
 block|,
+comment|/* CFG3 img */
 name|C4_ANE
 block|,
+comment|/* CFG4 img */
 literal|0x80
 block|,
+comment|/* CFG5 img */
 name|CLK_40M_F
 block|,
+comment|/* clock */
 literal|200
 operator|/
 literal|4
 block|,
+comment|/* max period */
 literal|15
-block|, }
+block|,
+comment|/* max offset */
+literal|0x10
+block|,
+comment|/* CFG3_FSCSI bit */
+literal|0x08
+block|,
+comment|/* CFG3_FCLK bit */
+block|}
 decl_stmt|;
 end_decl_stmt
 

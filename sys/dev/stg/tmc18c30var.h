@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$NecBSD: tmc18c30var.h,v 1.12 1998/11/30 00:08:30 honda Exp $	*/
+comment|/*	$NecBSD: tmc18c30var.h,v 1.12.18.2 2001/06/13 05:51:23 honda Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*	$NetBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1996, 1997, 1998  *	NetBSD/pc98 porting staff. All rights reserved.  *  Copyright (c) 1996, 1997, 1998  *	Naofumi HONDA. All rights reserved.  *  Copyright (c) 1996, 1997, 1998  *	Kouichi Matsuda. All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1996, 1997, 1998, 1999, 2000, 2001  *	NetBSD/pc98 porting staff. All rights reserved.  *  Copyright (c) 1996, 1997, 1998, 1999, 2000, 2001  *	Naofumi HONDA. All rights reserved.  *  Copyright (c) 1996, 1997, 1998  *	Kouichi Matsuda. All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,9 @@ name|scsi_low_softc
 name|sc_sclow
 decl_stmt|;
 comment|/* generic data */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|bus_space_tag_t
 name|sc_iot
 decl_stmt|;
@@ -53,61 +56,23 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-name|int
-name|sc_wc
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|bus_space_tag_t
+name|sc_iot
 decl_stmt|;
-comment|/* weight counter */
-name|u_int
-name|sc_chip
+name|bus_space_tag_t
+name|sc_memt
 decl_stmt|;
-comment|/* chip type */
-name|u_int
-name|sc_fsz
+name|bus_space_handle_t
+name|sc_ioh
 decl_stmt|;
-comment|/* fifo size */
-name|u_int
-name|sc_idbit
-decl_stmt|;
-comment|/* host id bit */
-name|u_int8_t
-name|sc_fcb
-decl_stmt|;
-comment|/* fifo intr thread */
-name|u_int8_t
-name|sc_fcWinit
-decl_stmt|;
-comment|/* write flags */
-name|u_int8_t
-name|sc_fcRinit
-decl_stmt|;
-comment|/* read flags */
-name|u_int8_t
-name|sc_fcsp
-decl_stmt|;
-comment|/* special control flags */
-name|u_int8_t
-name|sc_icinit
-decl_stmt|;
-comment|/* interrupt masks */
-name|u_int8_t
-name|sc_busc
-decl_stmt|;
-comment|/* default bus control register */
-name|u_int8_t
-name|sc_imsg
-decl_stmt|;
-comment|/* identify msg required */
-name|u_int8_t
-name|sc_busimg
-decl_stmt|;
-comment|/* bus control register image */
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|400001
@@ -141,12 +106,75 @@ name|stg_intrhand
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* __FreeBSD_version */
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
+name|int
+name|sc_tmaxcnt
+decl_stmt|;
+name|u_int
+name|sc_chip
+decl_stmt|;
+comment|/* chip type */
+name|u_int
+name|sc_fsz
+decl_stmt|;
+comment|/* fifo size */
+name|u_int
+name|sc_idbit
+decl_stmt|;
+comment|/* host id bit */
+name|u_int
+name|sc_wthold
+decl_stmt|;
+comment|/* write thread */
+name|u_int
+name|sc_rthold
+decl_stmt|;
+comment|/* read thread */
+name|u_int
+name|sc_maxwsize
+decl_stmt|;
+comment|/* max write size */
+name|int
+name|sc_dataout_timeout
+decl_stmt|;
+comment|/* data out timeout counter */
+name|int
+name|sc_ubf_timeout
+decl_stmt|;
+comment|/* unexpected bus free timeout */
+name|u_int8_t
+name|sc_fcWinit
+decl_stmt|;
+comment|/* write flags */
+name|u_int8_t
+name|sc_fcRinit
+decl_stmt|;
+comment|/* read flags */
+name|u_int8_t
+name|sc_icinit
+decl_stmt|;
+comment|/* interrupt masks */
+name|u_int8_t
+name|sc_busc
+decl_stmt|;
+comment|/* default bus control register */
+name|u_int8_t
+name|sc_imsg
+decl_stmt|;
+comment|/* identify msg required */
+name|u_int8_t
+name|sc_busimg
+decl_stmt|;
+comment|/* bus control register image */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*****************************************************************  * Target information   *****************************************************************/
+comment|/*****************************************************************  * Lun information   *****************************************************************/
 end_comment
 
 begin_struct
@@ -161,7 +189,7 @@ comment|/* generic data */
 name|u_int8_t
 name|sti_reg_synch
 decl_stmt|;
-comment|/* synch register per target */
+comment|/* synch register per lun */
 block|}
 struct|;
 end_struct

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$NecBSD: ncr53c500var.h,v 1.11 1998/11/28 18:42:42 honda Exp $	*/
+comment|/*	$NecBSD: ncr53c500var.h,v 1.11.18.1 2001/06/08 06:27:45 honda Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*	$NetBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1995, 1996, 1997, 1998  *	NetBSD/pc98 porting staff. All rights reserved.  *  Copyright (c) 1995, 1996, 1997, 1998  *	Naofumi HONDA. All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * [NetBSD for NEC PC-98 series]  *  Copyright (c) 1995, 1996, 1997, 1998, 1999, 2000, 2001  *	NetBSD/pc98 porting staff. All rights reserved.  *  Copyright (c) 1995, 1996, 1997, 1998, 1999, 2000, 2001  *	Naofumi HONDA. All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *  3. The name of the author may not be used to endorse or promote products  *     derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,9 @@ name|scsi_low_softc
 name|sc_sclow
 decl_stmt|;
 comment|/* generic data */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|bus_space_tag_t
 name|sc_iot
 decl_stmt|;
@@ -53,34 +56,23 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-name|int
-name|sc_wc
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|bus_space_tag_t
+name|sc_iot
 decl_stmt|;
-comment|/* weight counter */
-name|int
-name|sc_selstop
+name|bus_space_tag_t
+name|sc_memt
 decl_stmt|;
-comment|/* sel atn stop asserted */
-name|int
-name|sc_compseq
+name|bus_space_handle_t
+name|sc_ioh
 decl_stmt|;
-comment|/* completion seq cmd asserted */
-name|int
-name|sc_tdatalen
-decl_stmt|;
-comment|/* temp xfer data len */
-name|struct
-name|ncv_hw
-name|sc_hw
-decl_stmt|;
-comment|/* hardware register images */
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
 name|__FreeBSD_version
 operator|>=
 literal|400001
@@ -122,12 +114,40 @@ name|ncv_intrhand
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* __FreeBSD_version__ */
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
+name|int
+name|sc_tmaxcnt
+decl_stmt|;
+name|int
+name|sc_selstop
+decl_stmt|;
+comment|/* sel atn stop asserted */
+name|int
+name|sc_compseq
+decl_stmt|;
+comment|/* completion seq cmd asserted */
+name|int
+name|sc_sdatalen
+decl_stmt|;
+comment|/* start datalen */
+name|int
+name|sc_tdatalen
+decl_stmt|;
+comment|/* temp xfer data len */
+name|struct
+name|ncv_hw
+name|sc_hw
+decl_stmt|;
+comment|/* hardware register images */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*****************************************************************  * Target information   *****************************************************************/
+comment|/*****************************************************************  * Lun information   *****************************************************************/
 end_comment
 
 begin_struct
@@ -141,15 +161,15 @@ decl_stmt|;
 name|u_int8_t
 name|nti_reg_cfg3
 decl_stmt|;
-comment|/* cfg3 images per target */
+comment|/* cfg3 images per lun */
 name|u_int8_t
 name|nti_reg_offset
 decl_stmt|;
-comment|/* synch offset register per target */
+comment|/* synch offset register per lun */
 name|u_int8_t
 name|nti_reg_period
 decl_stmt|;
-comment|/* synch period register per target */
+comment|/* synch period register per lun */
 block|}
 struct|;
 end_struct

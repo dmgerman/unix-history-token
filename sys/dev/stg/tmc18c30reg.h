@@ -170,13 +170,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BSTAT_PHMASK
-value|(BSTAT_MSG | BSTAT_IO | BSTAT_CMD)
-end_define
-
-begin_define
-define|#
-directive|define
 name|tmc_ictl
 value|0x02
 end_define
@@ -213,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|ICTL_ALLINT
-value|(ICTL_ARBIT | ICTL_CD | ICTL_SEL)
+value|(ICTL_ARBIT | ICTL_CD | ICTL_SEL | ICTL_FIFO)
 end_define
 
 begin_define
@@ -485,6 +478,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOCTL_IO32
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
 name|tmc_cfg2
 value|0x0b
 end_define
@@ -573,15 +573,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|BSTAT_PHMASK
+value|(BSTAT_MSG | BSTAT_IO | BSTAT_CMD)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PHASE_MASK
-value|0x2f
+value|(BSTAT_SEL | BSTAT_BSY | BSTAT_PHMASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RESEL_PHASE_MASK
-value|0x2e
+value|(BSTAT_SEL | BSTAT_PHMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STG_IS_PHASE_DATA
+parameter_list|(
+name|st
+parameter_list|)
+define|\
+value|((((st)& PHASE_MASK)& ~BSTAT_IO) == BSTAT_BSY)
 end_define
 
 begin_comment

@@ -428,39 +428,6 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* cfg3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C3_NULL
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|C3_FCLK
-value|0x08
-end_define
-
-begin_comment
-comment|/* Fast SCSI		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C3_FSCSI
-value|0x10
-end_define
-
-begin_comment
-comment|/* Fast Clock (>25Mhz)	*/
-end_comment
-
-begin_comment
 comment|/* cfg2 */
 end_comment
 

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$NecBSD: nspreg.h,v 1.4 1999/04/15 01:35:55 kmatsuda Exp $	*/
+comment|/*	$NecBSD: nspreg.h,v 1.4.3 2001/06/29 06:27:53 honda Exp $	*/
 end_comment
 
 begin_comment
@@ -367,6 +367,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IRQPHS_PHMASK
+value|(IRQPHS_LCD | IRQPHS_LMSG | IRQPHS_LIO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NSPR_TIMERCNT
 value|0x17
 end_define
@@ -560,6 +567,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PARITYR_ENABLE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PARITYR_CLEAR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PARITYR_PE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|NSPR_CMDCR
 value|0x1C
 end_define
@@ -648,6 +676,27 @@ define|#
 directive|define
 name|PTCLRR_RSS
 value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTCLRR_RSS_ACK
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTCLRR_RSS_REQ
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTCLRR_RSS_HOST
+value|0x20
 end_define
 
 begin_define
@@ -877,6 +926,32 @@ value|(SCBUSMON_SEL | SCBUSMON_CD | SCBUSMON_MSG | SCBUSMON_IO)
 end_define
 
 begin_comment
+comment|/* Data phase */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSP_IS_PHASE_DATA
+parameter_list|(
+name|ph
+parameter_list|)
+define|\
+value|((((ph)& SCBUSMON_PHMASK)& ~SCBUSMON_IO) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSP_IS_IRQPHS_DATA
+parameter_list|(
+name|ph
+parameter_list|)
+define|\
+value|((((ph)& IRQPHS_PHMASK)& ~SCBUSMON_IO) == 0)
+end_define
+
+begin_comment
 comment|/* SCSI phase */
 end_comment
 
@@ -927,6 +1002,48 @@ define|#
 directive|define
 name|PHASE_SEL
 value|(SCBUSMON_SEL | SCBUSMON_IO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQPHS_CMD
+value|(IRQPHS_LCD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQPHS_DATAIN
+value|(IRQPHS_LIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQPHS_DATAOUT
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQPHS_STATUS
+value|(IRQPHS_LCD | IRQPHS_LIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQPHS_MSGIN
+value|(IRQPHS_LCD | IRQPHS_LMSG | IRQPHS_LIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQPHS_MSGOUT
+value|(IRQPHS_LCD | IRQPHS_LMSG)
 end_define
 
 begin_comment

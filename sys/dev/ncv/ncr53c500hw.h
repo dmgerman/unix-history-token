@@ -60,29 +60,36 @@ name|ncv_hw
 block|{
 comment|/* configuration images */
 name|u_int8_t
-name|cfg1
+name|hw_cfg1
 decl_stmt|;
 name|u_int8_t
-name|cfg2
+name|hw_cfg2
 decl_stmt|;
 name|u_int8_t
-name|cfg3
+name|hw_cfg3
 decl_stmt|;
 name|u_int8_t
-name|cfg4
+name|hw_cfg4
 decl_stmt|;
 name|u_int8_t
-name|cfg5
+name|hw_cfg5
 decl_stmt|;
 comment|/* synch */
 name|u_int8_t
-name|clk
+name|hw_clk
 decl_stmt|;
 name|u_int8_t
-name|mperiod
+name|hw_mperiod
 decl_stmt|;
 name|u_int8_t
-name|moffset
+name|hw_moffset
+decl_stmt|;
+comment|/* cfg3 quirks */
+name|u_int8_t
+name|hw_cfg3_fscsi
+decl_stmt|;
+name|u_int8_t
+name|hw_cfg3_fclk
 decl_stmt|;
 block|}
 struct|;
