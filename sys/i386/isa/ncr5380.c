@@ -2927,6 +2927,11 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|struct
+name|scsibus_data
+modifier|*
+name|scbus
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|nca_description
@@ -2998,6 +3003,29 @@ operator|=
 operator|&
 name|nca_dev
 expr_stmt|;
+comment|/* 	 * Prepare the scsibus_data area for the upperlevel 	 * scsi code. 	 */
+name|scbus
+operator|=
+name|scsi_alloc_bus
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|scbus
+condition|)
+return|return
+literal|0
+return|;
+name|scbus
+operator|->
+name|adapter_link
+operator|=
+operator|&
+name|z
+operator|->
+name|sc_link
+expr_stmt|;
 comment|/* ask the adapter what subunits are present */
 name|nca_kdc
 index|[
@@ -3010,12 +3038,7 @@ name|DC_BUSY
 expr_stmt|;
 name|scsi_attachdevs
 argument_list|(
-operator|&
-operator|(
-name|z
-operator|->
-name|sc_link
-operator|)
+name|scbus
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.26 1995/05/30 08:13:47 rgrimes Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.26.4.1 1995/07/22 04:25:08 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -1133,6 +1133,12 @@ begin_struct
 struct|struct
 name|scsibus_data
 block|{
+name|u_char
+name|maxtarg
+decl_stmt|;
+name|u_char
+name|maxlun
+decl_stmt|;
 name|struct
 name|scsi_link
 modifier|*
@@ -1142,14 +1148,13 @@ comment|/* prototype supplied by adapter */
 name|struct
 name|scsi_link
 modifier|*
+argument_list|(
+operator|*
 name|sc_link
-index|[
-literal|16
-index|]
-index|[
-literal|8
-index|]
+argument_list|)
+decl|[][8]
 decl_stmt|;
+comment|/* dynamically allocated */
 block|}
 struct|;
 end_struct
@@ -1601,9 +1606,9 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|scsi_link
+name|scsibus_data
 operator|*
-name|sc_link_proto
+name|scbus
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1668,20 +1673,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|errval
 name|scsi_test_unit_ready
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_link
-modifier|*
+operator|*
 name|sc_link
-parameter_list|,
+operator|,
 name|u_int32
 name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|errval
@@ -1763,6 +1771,15 @@ parameter_list|,
 name|u_int32
 name|flags
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|scsibus_data
+modifier|*
+name|scsi_alloc_bus
+parameter_list|()
 function_decl|;
 end_function_decl
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.8 1995/04/12 20:47:35 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.9 1995/05/30 08:01:12 rgrimes Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -4998,6 +4998,11 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|struct
+name|scsibus_data
+modifier|*
+name|scbus
+decl_stmt|;
 else|#
 directive|else
 name|struct
@@ -5097,6 +5102,29 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+comment|/* 	 * Prepare the scsibus_data area for the upperlevel 	 * scsi code. 	 */
+name|scbus
+operator|=
+name|scsi_alloc_bus
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|scbus
+condition|)
+return|return
+literal|0
+return|;
+name|scbus
+operator|->
+name|adapter_link
+operator|=
+operator|&
+name|aic
+operator|->
+name|sc_link
+expr_stmt|;
 comment|/* 	 * ask the adapter what subunits are present 	 */
 name|kdc_aic
 index|[
@@ -5110,12 +5138,7 @@ expr_stmt|;
 comment|/* host adapters are always busy */
 name|scsi_attachdevs
 argument_list|(
-operator|&
-operator|(
-name|aic
-operator|->
-name|sc_link
-operator|)
+name|scbus
 argument_list|)
 expr_stmt|;
 return|return
