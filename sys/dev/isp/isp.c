@@ -3606,7 +3606,12 @@ name|isp
 operator|->
 name|isp_residx
 operator|=
-literal|0
+name|mbs
+operator|.
+name|param
+index|[
+literal|5
+index|]
 expr_stmt|;
 name|mbs
 operator|.
@@ -3666,15 +3671,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|mbs
-operator|.
-name|param
-index|[
-literal|5
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|isp_mboxcmd
 argument_list|(
 name|isp
@@ -3707,7 +3703,12 @@ name|isp
 operator|->
 name|isp_reqodx
 operator|=
-literal|0
+name|mbs
+operator|.
+name|param
+index|[
+literal|4
+index|]
 expr_stmt|;
 comment|/* 	 * Turn on Fast Posting, LVD transitions 	 * 	 * Ultra2 F/W always has had fast posting (and LVD transitions) 	 * 	 * Ultra and older (i.e., SBus) cards may not. It's just safer 	 * to assume not for them. 	 */
 name|mbs
@@ -3921,6 +3922,19 @@ condition|)
 block|{
 return|return;
 block|}
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Initiator ID is %d"
+argument_list|,
+name|sdp
+operator|->
+name|isp_initiator_id
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set current per-target parameters to a safe minimum. 	 */
 for|for
 control|(
