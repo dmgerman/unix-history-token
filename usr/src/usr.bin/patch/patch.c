@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)patch.c	5.3 (Berkeley) %G%"
+literal|"@(#)patch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7841,6 +7841,38 @@ literal|"  \n"
 argument_list|)
 expr_stmt|;
 comment|/* assume blank lines got chopped */
+elseif|else
+if|if
+condition|(
+name|p_end
+operator|==
+name|repl_beginning
+condition|)
+block|{
+comment|/* redundant 'new' context lines were omitted - set up */
+comment|/* to fill them in from the the old file's context */
+name|fillsrc
+operator|=
+literal|1
+expr_stmt|;
+name|filldst
+operator|=
+name|p_end
+operator|+
+literal|1
+expr_stmt|;
+name|fillcnt
+operator|=
+name|p_max
+operator|-
+name|repl_beginning
+expr_stmt|;
+name|p_end
+operator|=
+name|p_max
+expr_stmt|;
+break|break;
+block|}
 else|else
 name|fatal
 argument_list|(
