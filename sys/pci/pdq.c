@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pdq.c,v 1.4 1995/04/01 01:43:56 davidg Exp $  *  * $Log: pdq.c,v $  * Revision 1.4  1995/04/01  01:43:56  davidg  * Patch from Matt Thomas to fix mbuf leak in FDDI driver.  *  * Revision 1.3  1995/03/25  22:40:48  bde  * Remove wrong redeclarations of printf() and bzero().  Include the correct  * header to declare DELAY().  *  * Revision 1.2  1995/03/21  22:43:04  se  * Silence "gcc -Wall".  *  * Submitted by:	Wolfgang Stanglmeier<wolf@kintaro.cologne.de>  *  * Revision 1.1  1995/03/14  09:16:06  davidg  * Added support for generic FDDI and the DEC DEFEA and DEFPA FDDI adapters.  *  * Submitted by:	Matt Thomas  *  * Revision 1.8  1995/03/14  01:52:52  thomas  * Update for new FreeBSD PCI Interrupt interface  *  * Revision 1.7  1995/03/07  23:03:16  thomas  * Fix SMT queue processing  *  * Revision 1.6  1995/03/06  18:03:47  thomas  * restart trasmitter once link is available  *  * Revision 1.5  1995/03/06  17:07:56  thomas  * Add copyright/disclaimer  * Add error recovery code.  * Add BPF SMT support  *  * Revision 1.3  1995/03/03  13:48:35  thomas  * more fixes  *  *  */
+comment|/*-  * Copyright (c) 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pdq.c,v 1.5 1995/05/30 08:13:13 rgrimes Exp $  *  * $Log: pdq.c,v $  * Revision 1.5  1995/05/30  08:13:13  rgrimes  * Remove trailing whitespace.  *  * Revision 1.4  1995/04/01  01:43:56  davidg  * Patch from Matt Thomas to fix mbuf leak in FDDI driver.  *  * Revision 1.3  1995/03/25  22:40:48  bde  * Remove wrong redeclarations of printf() and bzero().  Include the correct  * header to declare DELAY().  *  * Revision 1.2  1995/03/21  22:43:04  se  * Silence "gcc -Wall".  *  * Submitted by:	Wolfgang Stanglmeier<wolf@kintaro.cologne.de>  *  * Revision 1.1  1995/03/14  09:16:06  davidg  * Added support for generic FDDI and the DEC DEFEA and DEFPA FDDI adapters.  *  * Submitted by:	Matt Thomas  *  * Revision 1.8  1995/03/14  01:52:52  thomas  * Update for new FreeBSD PCI Interrupt interface  *  * Revision 1.7  1995/03/07  23:03:16  thomas  * Fix SMT queue processing  *  * Revision 1.6  1995/03/06  18:03:47  thomas  * restart trasmitter once link is available  *  * Revision 1.5  1995/03/06  17:07:56  thomas  * Add copyright/disclaimer  * Add error recovery code.  * Add BPF SMT support  *  * Revision 1.3  1995/03/03  13:48:35  thomas  * more fixes  *  *  */
 end_comment
 
 begin_comment
@@ -82,7 +82,244 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|pdq_process_transmitted_data
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_flush_transmitter
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_print_fddi_chars
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|,
+specifier|const
+name|pdq_response_status_chars_get_t
+modifier|*
+name|rsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_init_csrs
+parameter_list|(
+name|pdq_csrs_t
+modifier|*
+name|csrs
+parameter_list|,
+name|void
+modifier|*
+name|csrs_va
+parameter_list|,
+name|size_t
+name|csr_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_init_pci_csrs
+parameter_list|(
+name|pdq_pci_csrs_t
+modifier|*
+name|csrs
+parameter_list|,
+name|void
+modifier|*
+name|csrs_va
+parameter_list|,
+name|size_t
+name|csr_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_flush_databuf_queue
+parameter_list|(
+name|pdq_databuf_queue_t
+modifier|*
+name|q
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|pdq_boolean_t
+name|pdq_do_port_control
+parameter_list|(
+specifier|const
+name|pdq_csrs_t
+modifier|*
+specifier|const
+name|csrs
+parameter_list|,
+name|pdq_uint32_t
+name|cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_read_mla
+parameter_list|(
+specifier|const
+name|pdq_csrs_t
+modifier|*
+specifier|const
+name|csrs
+parameter_list|,
+name|pdq_lanaddr_t
+modifier|*
+name|hwaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_read_fwrev
+parameter_list|(
+specifier|const
+name|pdq_csrs_t
+modifier|*
+specifier|const
+name|csrs
+parameter_list|,
+name|pdq_fwrev_t
+modifier|*
+name|fwrev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|pdq_boolean_t
+name|pdq_read_error_log
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|,
+name|pdq_response_error_log_get_t
+modifier|*
+name|log_entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|pdq_chip_rev_t
+name|pdq_read_chiprev
+parameter_list|(
+specifier|const
+name|pdq_csrs_t
+modifier|*
+specifier|const
+name|csrs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_queue_commands
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_process_command_responses
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_process_unsolicited_events
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pdq_process_received_data
+parameter_list|(
+name|pdq_t
+modifier|*
+name|pdq
+parameter_list|,
+name|pdq_rx_info_t
+modifier|*
+name|rx
+parameter_list|,
+name|pdq_rxdesc_t
+modifier|*
+name|receives
+parameter_list|,
+name|pdq_uint32_t
+name|completion_goal
+parameter_list|,
+name|pdq_uint32_t
+name|ring_mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -113,6 +350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -145,6 +383,7 @@ comment|/*  * The following are used in conjunction with  * unsolicited events  
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -163,6 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -177,6 +417,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -191,6 +432,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -241,6 +483,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -261,6 +504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -279,6 +523,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -293,6 +538,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -313,6 +559,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -336,6 +583,7 @@ begin_escape
 end_escape
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -358,6 +606,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -376,6 +625,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|pdq_phy_types
@@ -386,6 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -406,6 +657,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -426,6 +678,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -444,6 +697,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -460,6 +714,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|pdq_print_fddi_chars
 parameter_list|(
@@ -879,6 +1134,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|pdq_init_csrs
 parameter_list|(
@@ -1066,6 +1322,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pdq_init_pci_csrs
 parameter_list|(
@@ -1148,6 +1405,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|pdq_flush_databuf_queue
 parameter_list|(
@@ -1193,6 +1451,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|pdq_boolean_t
 name|pdq_do_port_control
 parameter_list|(
@@ -1301,6 +1560,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pdq_read_mla
 parameter_list|(
@@ -1454,6 +1714,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pdq_read_fwrev
 parameter_list|(
@@ -1549,6 +1810,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|pdq_boolean_t
 name|pdq_read_error_log
 parameter_list|(
@@ -1651,6 +1913,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|pdq_chip_rev_t
 name|pdq_read_chiprev
 parameter_list|(
@@ -1878,6 +2141,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|pdq_queue_commands
 parameter_list|(
@@ -2685,6 +2949,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|pdq_process_command_responses
 parameter_list|(
@@ -3002,6 +3267,7 @@ comment|/*  * This following routine processes unsolicited events.  * In additio
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pdq_process_unsolicited_events
 parameter_list|(
@@ -3241,6 +3507,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|pdq_process_received_data
 parameter_list|(
@@ -4502,6 +4769,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|pdq_process_transmitted_data
 parameter_list|(
@@ -4681,6 +4949,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|pdq_flush_transmitter
 parameter_list|(

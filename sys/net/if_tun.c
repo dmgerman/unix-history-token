@@ -477,11 +477,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
 comment|/* 	 * In case we are an LKM, set up device switch. 	 */
 name|cdevsw
 index|[
@@ -1198,19 +1193,6 @@ name|ifreq
 operator|*
 operator|)
 name|data
-decl_stmt|;
-name|struct
-name|tun_softc
-modifier|*
-name|tp
-init|=
-operator|&
-name|tunctl
-index|[
-name|ifp
-operator|->
-name|if_unit
-index|]
 decl_stmt|;
 name|int
 name|error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) 2/10/94  * $Id: kernfs_vnops.c,v 1.9 1995/07/31 08:52:02 mpp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) 2/10/94  * $Id: kernfs_vnops.c,v 1.10 1995/07/31 09:52:21 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -143,6 +143,7 @@ value|(S_IRUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|kern_target
 block|{
@@ -845,6 +846,7 @@ comment|/*  * vp is the current namei directory  * ndp is the name to locate in 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kernfs_lookup
 parameter_list|(
@@ -1319,6 +1321,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kernfs_open
 parameter_list|(
@@ -1562,6 +1565,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kernfs_getattr
 parameter_list|(
@@ -1904,6 +1908,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kernfs_setattr
 parameter_list|(
@@ -2234,6 +2239,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kernfs_readdir
 parameter_list|(
@@ -2440,6 +2446,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kernfs_inactive
 parameter_list|(
@@ -2489,6 +2496,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|kernfs_reclaim
 parameter_list|(
@@ -2558,6 +2566,7 @@ comment|/*  * Return POSIX pathconf information applicable to special devices.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kernfs_pathconf
 parameter_list|(
@@ -2687,6 +2696,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kernfs_print
 parameter_list|(
@@ -2717,6 +2727,7 @@ comment|/*void*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kernfs_vfree
 parameter_list|(
@@ -2742,6 +2753,7 @@ comment|/*  * Kernfs vnode unsupported operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kernfs_enotsupp
 parameter_list|()
@@ -2759,6 +2771,7 @@ comment|/*  * Kernfs "should never get here" operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|kernfs_badop
 parameter_list|()
@@ -2766,23 +2779,6 @@ block|{
 return|return
 operator|(
 name|EIO
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * kernfs vnode null operation  */
-end_comment
-
-begin_function
-name|int
-name|kernfs_nullop
-parameter_list|()
-block|{
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -2992,6 +2988,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|kernfs_vnodeop_entries
@@ -3347,6 +3344,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|kernfs_vnodeop_opv_desc

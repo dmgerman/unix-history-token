@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/include/linux/math_emu.h  *  * (C) 1991 Linus Torvalds  *  *	$Id$  */
+comment|/*  * linux/include/linux/math_emu.h  *  * (C) 1991 Linus Torvalds  *  *	$Id: math_emu.h,v 1.2 1993/10/16 14:15:02 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -437,6 +437,7 @@ comment|/* ea.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|ea
@@ -456,6 +457,7 @@ comment|/* convert.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|frndint
 parameter_list|(
@@ -472,6 +474,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|Fscale
 parameter_list|(
@@ -490,6 +493,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|short_to_temp
 parameter_list|(
@@ -506,6 +510,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|long_to_temp
 parameter_list|(
@@ -522,6 +527,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|temp_to_short
 parameter_list|(
@@ -538,6 +544,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|temp_to_long
 parameter_list|(
@@ -554,6 +561,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|real_to_int
 parameter_list|(
@@ -570,6 +578,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|int_to_real
 parameter_list|(
@@ -590,6 +599,7 @@ comment|/* get_put.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|get_short_real
 parameter_list|(
@@ -607,6 +617,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_long_real
 parameter_list|(
@@ -624,6 +635,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_temp_real
 parameter_list|(
@@ -641,6 +653,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_short_int
 parameter_list|(
@@ -658,6 +671,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_long_int
 parameter_list|(
@@ -675,6 +689,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_longlong_int
 parameter_list|(
@@ -692,6 +707,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_BCD
 parameter_list|(
@@ -709,6 +725,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_short_real
 parameter_list|(
@@ -727,6 +744,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_long_real
 parameter_list|(
@@ -745,6 +763,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_temp_real
 parameter_list|(
@@ -763,6 +782,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_short_int
 parameter_list|(
@@ -781,6 +801,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_long_int
 parameter_list|(
@@ -799,6 +820,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_longlong_int
 parameter_list|(
@@ -817,6 +839,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|put_BCD
 parameter_list|(
@@ -839,6 +862,7 @@ comment|/* add.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|fadd
 parameter_list|(
@@ -861,6 +885,7 @@ comment|/* mul.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|fmul
 parameter_list|(
@@ -883,6 +908,7 @@ comment|/* div.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|fdiv
 parameter_list|(
@@ -905,6 +931,7 @@ comment|/* compare.c */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|fcom
 parameter_list|(
@@ -920,6 +947,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fucom
 parameter_list|(
@@ -935,6 +963,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ftst
 parameter_list|(

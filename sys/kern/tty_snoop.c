@@ -922,11 +922,6 @@ name|char
 modifier|*
 name|nbuf
 decl_stmt|;
-name|struct
-name|tty
-modifier|*
-name|tp
-decl_stmt|;
 if|if
 condition|(
 name|n
@@ -2231,8 +2226,6 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|snoop

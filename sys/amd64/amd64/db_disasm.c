@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_disasm.c,v 1.8 1995/01/29 02:38:15 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_disasm.c,v 1.9 1995/05/30 07:59:20 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -489,6 +489,7 @@ comment|/* for 'fstcw %ax' */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|inst
 block|{
@@ -555,6 +556,7 @@ value|((x)|((y)<<8)|((z)<<16))
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|finst
 block|{
@@ -581,6 +583,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Grp6
@@ -607,6 +610,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Grp7
@@ -633,6 +637,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Grp8
@@ -659,6 +664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0f0x
@@ -901,6 +907,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0f2x
@@ -1151,6 +1158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0f8x
@@ -1417,6 +1425,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0f9x
@@ -1683,6 +1692,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0fax
@@ -1956,6 +1966,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0fbx
@@ -2238,6 +2249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0fcx
@@ -2490,6 +2502,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_0fdx
@@ -2718,6 +2731,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 modifier|*
@@ -2761,6 +2775,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esc92
@@ -2787,6 +2802,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esc93
@@ -2813,6 +2829,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esc94
@@ -2839,6 +2856,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esc95
@@ -2865,6 +2883,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esc96
@@ -2891,6 +2910,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esc97
@@ -2917,6 +2937,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esca4
@@ -2943,6 +2964,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Escb4
@@ -2969,6 +2991,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Esce3
@@ -2995,6 +3018,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Escf4
@@ -3021,6 +3045,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Esc8
@@ -3159,6 +3184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Esc9
@@ -3305,6 +3331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Esca
@@ -3410,6 +3437,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Escb
@@ -3515,6 +3543,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Escc
@@ -3653,6 +3682,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Escd
@@ -3766,6 +3796,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Esce
@@ -3901,6 +3932,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 name|db_Escf
@@ -4006,6 +4038,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|finst
 modifier|*
@@ -4033,6 +4066,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Grp1
@@ -4059,6 +4093,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_Grp2
@@ -4085,6 +4120,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_Grp3
@@ -4227,6 +4263,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_Grp4
@@ -4339,6 +4376,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_Grp5
@@ -4466,6 +4504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_inst_table
@@ -8749,6 +8788,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|inst
 name|db_bad_inst
@@ -8828,6 +8868,7 @@ value|((byte)&0x7)
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|i_addr
 block|{
@@ -8854,6 +8895,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_index_reg_16
@@ -8882,6 +8924,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_reg
@@ -8945,6 +8988,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|db_seg_reg
@@ -8977,6 +9021,7 @@ comment|/*  * lengths for size attributes  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|db_lengths
 index|[]
@@ -9029,6 +9074,7 @@ comment|/*  * Read address at location and return updated location.  */
 end_comment
 
 begin_function
+specifier|static
 name|db_addr_t
 name|db_read_address
 parameter_list|(
@@ -9455,6 +9501,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|db_print_address
 parameter_list|(
@@ -9596,6 +9643,7 @@ comment|/*  * Disassemble floating-point ("escape") instruction  * and return up
 end_comment
 
 begin_function
+specifier|static
 name|db_addr_t
 name|db_disasm_esc
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.66 1995/10/08 00:06:08 swallace Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.67 1995/10/19 23:48:25 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -2899,11 +2899,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|int
-name|firstbp
-init|=
-literal|1
-decl_stmt|;
 name|s
 operator|=
 name|splbio
@@ -3630,9 +3625,6 @@ operator|+=
 name|tinc
 control|)
 block|{
-name|int
-name|mask
-decl_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -3959,12 +3951,6 @@ name|struct
 name|bufhashhdr
 modifier|*
 name|bh
-decl_stmt|;
-name|vm_offset_t
-name|off
-decl_stmt|;
-name|int
-name|nleft
 decl_stmt|;
 name|s
 operator|=
@@ -4996,9 +4982,6 @@ name|tinc
 control|)
 block|{
 name|int
-name|mask
-decl_stmt|;
-name|int
 name|bytesinpage
 decl_stmt|;
 name|pageindex
@@ -5023,9 +5006,6 @@ operator|<
 name|curbpnpages
 condition|)
 block|{
-name|int
-name|pb
-decl_stmt|;
 name|m
 operator|=
 name|bp
@@ -5284,9 +5264,6 @@ goto|;
 block|}
 else|else
 block|{
-name|int
-name|pb
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -5712,15 +5689,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|bp
-operator|->
-name|b_vp
-decl_stmt|;
 name|vwakeup
 argument_list|(
 name|bp

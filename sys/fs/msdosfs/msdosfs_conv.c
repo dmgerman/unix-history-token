@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.4 1995/03/29 18:48:06 ache Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.5 1995/05/30 08:07:36 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -492,13 +492,9 @@ name|u_long
 name|seconds
 decl_stmt|;
 name|u_long
-name|m
-decl_stmt|,
 name|month
 decl_stmt|;
 name|u_long
-name|y
-decl_stmt|,
 name|year
 decl_stmt|;
 name|u_long

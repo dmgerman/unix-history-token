@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.6 1995/04/11 16:43:20 bde Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.7 1995/05/30 08:07:40 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -1004,6 +1004,7 @@ comment|/*  * Update all copies of the fat. The first copy is updated last.  *  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|updatefats
 parameter_list|(

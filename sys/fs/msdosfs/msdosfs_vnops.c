@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.24 1995/10/07 10:14:12 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.25 1995/10/22 09:32:37 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -162,6 +162,475 @@ file|<msdosfs/fat.h>
 end_include
 
 begin_comment
+comment|/*  * Prototypes for MSDOSFS vnode operations  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_create
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_create_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_mknod
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mknod_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_open_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_access
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_access_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_getattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_getattr_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_setattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_setattr_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_ioctl_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_select
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_select_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_mmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_fsync
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_fsync_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_seek
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_seek_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_remove
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_remove_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_link
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_link_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_rename
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_rename_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_mkdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mkdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_rmdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_rmdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_symlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_symlink_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_readdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_readlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readlink_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_abortop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_abortop_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_lock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_unlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_unlock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_strategy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_strategy_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_print
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_print_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_islocked
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_islocked_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_advlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_advlock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|msdosfs_reallocblks
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_reallocblks_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Some general notes:  *  * In the ufs filesystem the inodes, superblocks, and indirect blocks are  * read/written using the vnode for the filesystem. Blocks that represent  * the contents of a file are read/written using the vnode for the file  * (including directories when they are read/written as files). This  * presents problems for the dos filesystem because data that should be in  * an inode (if dos had them) resides in the directory itself.  Since we  * must update directory entries without the benefit of having the vnode  * for the directory we must use the vnode for the filesystem.  This means  * that when a directory is actually read/written (via read, write, or  * readdir, or seek) we must use the vnode for the filesystem instead of  * the vnode for the directory as would happen in ufs. This is to insure we  * retreive the correct block from the buffer cache since the hash value is  * based upon the vnode address and the desired block number.  */
 end_comment
 
@@ -170,6 +639,7 @@ comment|/*  * Create a regular file. On entry the directory to contain the file 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_create
 parameter_list|(
@@ -440,6 +910,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_mknod
 parameter_list|(
@@ -528,6 +999,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_open
 parameter_list|(
@@ -547,6 +1019,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_close
 parameter_list|(
@@ -610,6 +1083,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_access
 parameter_list|(
@@ -965,6 +1439,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_getattr
 parameter_list|(
@@ -1314,6 +1789,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_setattr
 parameter_list|(
@@ -1991,6 +2467,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_read
 parameter_list|(
@@ -2406,6 +2883,7 @@ comment|/*  * Write data to a file or directory.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_write
 parameter_list|(
@@ -3339,6 +3817,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_ioctl
 parameter_list|(
@@ -3358,6 +3837,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_select
 parameter_list|(
@@ -3378,6 +3858,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_mmap
 parameter_list|(
@@ -3401,6 +3882,7 @@ comment|/*  * Flush the blocks of a file to disk.  *  * This function is worthle
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_fsync
 parameter_list|(
@@ -3636,6 +4118,7 @@ comment|/*  * Now the whole work of extending a file is done in the write functi
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_seek
 parameter_list|(
@@ -3655,6 +4138,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_remove
 parameter_list|(
@@ -3761,6 +4245,7 @@ comment|/*  * DOS filesystems don't know what links are. But since we already ca
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_link
 parameter_list|(
@@ -3802,6 +4287,7 @@ comment|/*  * Renames on files require moving the denode to a new hash queue sin
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_rename
 parameter_list|(
@@ -4855,6 +5341,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|struct
@@ -5003,6 +5490,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_mkdir
 parameter_list|(
@@ -5509,6 +5997,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_rmdir
 parameter_list|(
@@ -5701,6 +6190,7 @@ comment|/*  * DOS filesystems don't know what symlinks are.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_symlink
 parameter_list|(
@@ -5742,6 +6232,7 @@ comment|/*  * Dummy dirents to simulate the "." and ".." entries of the root dir
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|dos_dirent
 block|{
@@ -5816,6 +6307,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_readdir
 parameter_list|(
@@ -7030,6 +7522,7 @@ comment|/*  * DOS filesystems don't know what symlinks are.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_readlink
 parameter_list|(
@@ -7049,6 +7542,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_abortop
 parameter_list|(
@@ -7097,6 +7591,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_lock
 parameter_list|(
@@ -7204,6 +7699,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_unlock
 parameter_list|(
@@ -7289,6 +7785,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_islocked
 parameter_list|(
@@ -7325,6 +7822,7 @@ comment|/*  * vp  - address of vnode file the file  * bn  - which cluster we are
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_bmap
 parameter_list|(
@@ -7428,6 +7926,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_reallocblks
 parameter_list|(
@@ -7449,6 +7948,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_strategy
 parameter_list|(
@@ -7631,6 +8131,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_print
 parameter_list|(
@@ -7751,6 +8252,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_advlock
 parameter_list|(
@@ -7771,6 +8273,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|msdosfs_pathconf
 parameter_list|(
@@ -7880,6 +8383,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|msdosfs_vnodeop_entries
@@ -8202,6 +8706,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|msdosfs_vnodeop_opv_desc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.22 1995/08/23 18:20:15 wollman Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.23 1995/10/06 19:30:43 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2252,9 +2252,6 @@ name|int
 modifier|*
 name|v
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|mrtdebug
@@ -2435,11 +2432,6 @@ name|struct
 name|mbuf
 modifier|*
 name|mb_rt
-decl_stmt|;
-name|struct
-name|mfc
-modifier|*
-name|rt
 decl_stmt|;
 name|struct
 name|mbuf
@@ -4813,8 +4805,6 @@ name|hash
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|i
 decl_stmt|;
 name|origin
 operator|=
@@ -5136,17 +5126,6 @@ specifier|register
 name|u_char
 modifier|*
 name|ipoptions
-decl_stmt|;
-specifier|static
-name|struct
-name|sockproto
-name|k_igmpproto
-init|=
-block|{
-name|AF_INET
-block|,
-name|IPPROTO_IGMP
-block|}
 decl_stmt|;
 specifier|static
 name|struct
@@ -6564,12 +6543,6 @@ modifier|*
 name|vifp
 decl_stmt|;
 specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|tmp
-decl_stmt|;
-specifier|register
 name|int
 name|plen
 init|=
@@ -7311,15 +7284,6 @@ name|struct
 name|ip
 modifier|*
 name|ip_copy
-decl_stmt|;
-name|int
-name|hlen
-init|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
 decl_stmt|;
 specifier|register
 name|int
@@ -8556,10 +8520,6 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 specifier|register
 name|int
 name|s

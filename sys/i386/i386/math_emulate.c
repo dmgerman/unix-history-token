@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.12 1995/05/30 07:59:35 rgrimes Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.13 1995/06/14 05:06:51 bde Exp $  */
 end_comment
 
 begin_comment
@@ -179,6 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|get_fs_byte
@@ -200,6 +201,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|short
 name|get_fs_word
@@ -222,6 +224,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|get_fs_long
@@ -244,6 +247,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_fs_byte
 parameter_list|(
@@ -270,6 +274,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_fs_word
 parameter_list|(
@@ -296,6 +301,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_fs_long
 parameter_list|(
@@ -3856,6 +3862,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|ea
@@ -4103,6 +4110,7 @@ comment|/*  * This file handles all accesses to user memory: getting and putting
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_short_real
 parameter_list|(
@@ -4160,6 +4168,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_long_real
 parameter_list|(
@@ -4235,6 +4244,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_temp_real
 parameter_list|(
@@ -4315,6 +4325,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_short_int
 parameter_list|(
@@ -4407,6 +4418,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_long_int
 parameter_list|(
@@ -4495,6 +4507,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_longlong_int
 parameter_list|(
@@ -4613,6 +4626,7 @@ value|__asm__("addl %4,%0 ; adcl $0,%1":"=r" (low),"=r" (high) \ :"0" (low),"1" 
 end_define
 
 begin_function
+specifier|static
 name|void
 name|get_BCD
 parameter_list|(
@@ -4770,6 +4784,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_short_real
 parameter_list|(
@@ -4829,6 +4844,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_long_real
 parameter_list|(
@@ -4906,6 +4922,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_temp_real
 parameter_list|(
@@ -4987,6 +5004,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_short_int
 parameter_list|(
@@ -5062,6 +5080,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_long_int
 parameter_list|(
@@ -5138,6 +5157,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_longlong_int
 parameter_list|(
@@ -5237,6 +5257,7 @@ value|__asm__("divl %6 ; xchgl %1,%2 ; divl %6" \ 	:"=d" (rem),"=a" (low),"=r" (
 end_define
 
 begin_function
+specifier|static
 name|void
 name|put_BCD
 parameter_list|(
@@ -5423,6 +5444,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fmul
 parameter_list|(
@@ -5860,6 +5882,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fdiv
 parameter_list|(
@@ -6333,6 +6356,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fadd
 parameter_list|(
@@ -6584,6 +6608,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ftst
 parameter_list|(
@@ -6645,6 +6670,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fcom
 parameter_list|(
@@ -6694,6 +6720,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fucom
 parameter_list|(
@@ -6727,6 +6754,7 @@ comment|/*  * NOTE!!! There is some "non-obvious" optimisations in the temp_to_l
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|short_to_temp
 parameter_list|(
@@ -6836,6 +6864,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|long_to_temp
 parameter_list|(
@@ -6973,6 +7002,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|temp_to_short
 parameter_list|(
@@ -7149,6 +7179,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|temp_to_long
 parameter_list|(
@@ -7352,6 +7383,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|frndint
 parameter_list|(
@@ -7616,6 +7648,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|Fscale
 parameter_list|(
@@ -7700,6 +7733,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|real_to_int
 parameter_list|(
@@ -7897,6 +7931,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|int_to_real
 parameter_list|(
