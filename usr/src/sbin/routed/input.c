@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.6 (Berkeley) %G%"
+literal|"@(#)input.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,7 +361,7 @@ case|:
 case|case
 name|RIPCMD_TRACEOFF
 case|:
-comment|/* verify message came from a priviledged port */
+comment|/* verify message came from a privileged port */
 if|if
 condition|(
 call|(
@@ -458,6 +458,16 @@ condition|(
 name|rt
 operator|==
 literal|0
+operator|||
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+operator|)
+operator|==
+literal|0
 condition|)
 name|addrouteforif
 argument_list|(
@@ -473,6 +483,32 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+comment|/* update timer for interface on which the packet arrived */
+if|if
+condition|(
+operator|(
+name|rt
+operator|=
+name|rtfind
+argument_list|(
+name|from
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+operator|)
+condition|)
+name|rt
+operator|->
+name|rt_timer
+operator|=
+literal|0
+expr_stmt|;
 name|size
 operator|-=
 literal|4
@@ -634,12 +670,14 @@ operator|->
 name|rt_router
 argument_list|)
 operator|||
-operator|(
+call|(
 name|unsigned
-operator|)
+call|)
+argument_list|(
 name|n
 operator|->
 name|rip_metric
+argument_list|)
 operator|<
 name|rt
 operator|->

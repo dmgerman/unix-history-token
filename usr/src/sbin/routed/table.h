@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	table.h	4.1	83/01/11	*/
+comment|/*	table.h	4.2	84/04/09	*/
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|RTS_PASSIVE
-value|0x20
+value|IFF_PASSIVE
 end_define
 
 begin_comment
@@ -225,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|RTS_INTERFACE
-value|0x40
+value|IFF_INTERFACE
 end_define
 
 begin_comment
@@ -236,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|RTS_REMOTE
-value|0x80
+value|IFF_REMOTE
 end_define
 
 begin_comment

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.8 (Berkeley) %G%"
+literal|"@(#)main.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,13 @@ operator|)
 name|packet
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|hup
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -605,6 +612,13 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|timer
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|hup
 argument_list|)
 expr_stmt|;
 name|timer

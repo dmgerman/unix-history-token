@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.3	83/05/25	*/
+comment|/*	trace.h	4.4	84/04/09	*/
 end_comment
 
 begin_comment
@@ -61,6 +61,10 @@ modifier|*
 name|ifd_front
 decl_stmt|;
 comment|/* next empty trace record */
+name|int
+name|ifd_count
+decl_stmt|;
+comment|/* number of unprinted records */
 name|struct
 name|interface
 modifier|*
