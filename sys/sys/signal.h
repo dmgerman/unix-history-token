@@ -942,6 +942,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|sa_handler
+value|__sigaction_u.__sa_handler
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -954,15 +961,8 @@ name|__XSI_VISIBLE
 end_if
 
 begin_comment
-comment|/* if SA_SIGINFO is set, sa_sigaction is to be used instead of sa_handler. */
+comment|/* If SA_SIGINFO is set, sa_sigaction must be used instead of sa_handler. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|sa_handler
-value|__sigaction_u.__sa_handler
-end_define
 
 begin_define
 define|#
