@@ -86,6 +86,13 @@ begin_comment
 comment|/* data transfer (drive) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CHET_MAX
+value|CHET_DT
+end_define
+
 begin_comment
 comment|/*  * Maximum length of a volume identification string  */
 end_comment

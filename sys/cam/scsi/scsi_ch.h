@@ -863,16 +863,12 @@ name|reserved0
 decl_stmt|;
 comment|/* 	 * The MOVE_TO_yy bits indicate the changer supports 	 * moving a unit of medium from an element of a given type to an 	 * element of type yy.  This is used to determine if a given 	 * MOVE MEDIUM command is legal.  The top four bits of each 	 * of these values are reserved. 	 */
 name|u_int8_t
-name|move_from_mt
-decl_stmt|;
-name|u_int8_t
-name|move_from_st
-decl_stmt|;
-name|u_int8_t
-name|move_from_ie
-decl_stmt|;
-name|u_int8_t
-name|move_from_dt
+name|move_from
+index|[
+name|CHET_MAX
+operator|+
+literal|1
+index|]
 decl_stmt|;
 define|#
 directive|define
@@ -898,16 +894,12 @@ index|]
 decl_stmt|;
 comment|/* 	 * Similar to above, but for EXCHANGE MEDIUM. 	 */
 name|u_int8_t
-name|exchange_with_mt
-decl_stmt|;
-name|u_int8_t
-name|exchange_with_st
-decl_stmt|;
-name|u_int8_t
-name|exchange_with_ie
-decl_stmt|;
-name|u_int8_t
-name|exchange_with_dt
+name|exchange_with
+index|[
+name|CHET_MAX
+operator|+
+literal|1
+index|]
 decl_stmt|;
 define|#
 directive|define

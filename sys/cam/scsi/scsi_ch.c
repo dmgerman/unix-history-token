@@ -335,29 +335,37 @@ comment|/* 	 * The following information is obtained from the 	 * element addres
 name|int
 name|sc_firsts
 index|[
-literal|4
+name|CHET_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
-comment|/* firsts, indexed by CHET_* */
+comment|/* firsts */
 name|int
 name|sc_counts
 index|[
-literal|4
+name|CHET_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
-comment|/* counts, indexed by CHET_* */
+comment|/* counts */
 comment|/* 	 * The following mask defines the legal combinations 	 * of elements for the MOVE MEDIUM command. 	 */
 name|u_int8_t
 name|sc_movemask
 index|[
-literal|4
+name|CHET_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * As above, but for EXCHANGE MEDIUM. 	 */
 name|u_int8_t
 name|sc_exchangemask
 index|[
-literal|4
+name|CHET_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * Quirks; see below.  XXX KDM not implemented yet 	 */
@@ -6104,17 +6112,15 @@ argument_list|)
 expr_stmt|;
 name|moves
 operator|=
-operator|&
 name|cap
 operator|->
-name|move_from_mt
+name|move_from
 expr_stmt|;
 name|exchanges
 operator|=
-operator|&
 name|cap
 operator|->
-name|exchange_with_mt
+name|exchange_with
 expr_stmt|;
 for|for
 control|(
@@ -6124,7 +6130,7 @@ name|CHET_MT
 init|;
 name|from
 operator|<=
-name|CHET_DT
+name|CHET_MAX
 condition|;
 operator|++
 name|from
