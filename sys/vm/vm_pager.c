@@ -1206,8 +1206,6 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1463,12 +1461,6 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|pbuf_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1529,6 +1521,12 @@ expr_stmt|;
 name|BUF_UNLOCK
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|pbuf_mtx
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
