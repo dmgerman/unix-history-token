@@ -1420,7 +1420,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MTRR Set Type Uncacheable 					%x\n"
+literal|"MTRR Set Type Uncacheable %x\n"
 argument_list|,
 operator|(
 name|u_int32_t
