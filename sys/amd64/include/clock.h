@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.14 1996/06/14 11:00:56 asami Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.15 1996/07/30 19:26:55 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -43,7 +43,7 @@ parameter_list|,
 name|ntime
 parameter_list|)
 define|\
-value|do { \ 	if(i586_ctr_rate) { \ 		disable_intr(); \ 		i586_ctr_bias = i586_last_tick; \ 		*(otime) = *(ntime); \ 		enable_intr(); \ 	} else { \ 		*(otime) = *(ntime); \ 	} \ 	} while(0)
+value|do { \ 	if (i586_ctr_freq != 0) { \ 		disable_intr(); \ 		i586_ctr_bias = i586_last_tick; \ 		*(otime) = *(ntime); \ 		enable_intr(); \ 	} else { \ 		*(otime) = *(ntime); \ 	} \ 	} while(0)
 end_define
 
 begin_define
@@ -101,13 +101,6 @@ define|#
 directive|define
 name|I586_CTR_MULTIPLIER_SHIFT
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|I586_CTR_RATE_SHIFT
-value|8
 end_define
 
 begin_if
@@ -186,6 +179,13 @@ end_if
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|i586_ctr_bias
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|i586_ctr_comultiplier
 decl_stmt|;
 end_decl_stmt
@@ -206,28 +206,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|i586_ctr_rate
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* fixed point */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|long
 name|long
 name|i586_last_tick
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|long
-name|i586_ctr_bias
 decl_stmt|;
 end_decl_stmt
 
@@ -298,7 +279,9 @@ name|len
 decl_stmt|;
 if|if
 condition|(
-name|i586_ctr_rate
+name|i586_ctr_freq
+operator|!=
+literal|0
 condition|)
 block|{
 name|old
@@ -318,11 +301,11 @@ name|i586_last_tick
 operator|-
 name|old
 operator|)
-operator|<<
-name|I586_CTR_RATE_SHIFT
+operator|*
+name|i586_ctr_multiplier
 operator|)
-operator|/
-name|i586_ctr_rate
+operator|>>
+name|I586_CTR_MULTIPLIER_SHIFT
 expr_stmt|;
 name|i586_avg_tick
 operator|=
