@@ -1,14 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Pager: Routines to create a "more" running out of a particular file  * descriptor.  *  * Copyright 1987, 1988 by MIT Student Information Processing Board  *  * For copyright information, see copyright.h.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* not lint */
 end_comment
 
 begin_include

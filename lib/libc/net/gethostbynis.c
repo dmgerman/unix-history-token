@@ -20,16 +20,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
