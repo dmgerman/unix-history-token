@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ugidfw.h>
+file|"ugidfw.h"
 end_include
 
 begin_comment
