@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1226,6 +1226,21 @@ argument_list|,
 name|M_UFSMNT
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ump
+argument_list|,
+sizeof|sizeof
+expr|*
+name|ump
 argument_list|)
 expr_stmt|;
 end_expr_stmt
