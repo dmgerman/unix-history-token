@@ -369,6 +369,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 operator|(
@@ -473,6 +474,7 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+block|}
 name|argc
 operator|-=
 name|optind
@@ -486,9 +488,11 @@ condition|(
 operator|!
 name|argc
 condition|)
+block|{
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -532,6 +536,7 @@ name|sp
 operator|==
 name|NULL
 condition|)
+block|{
 name|sin
 operator|.
 name|sin_port
@@ -541,7 +546,9 @@ argument_list|(
 name|WHOIS_PORT
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|sin
 operator|.
 name|sin_port
@@ -550,6 +557,7 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+block|}
 comment|/* 	 * If no nic host is specified, use whois-servers.net 	 * if there is a '.' in the name, else fall back to NICHOST. 	 */
 if|if
 condition|(
@@ -575,12 +583,14 @@ operator|&
 name|WHOIS_QUICK
 operator|)
 condition|)
+block|{
 name|flags
 operator||=
 name|WHOIS_INIC_FALLBACK
 operator||
 name|WHOIS_RECURSE
 expr_stmt|;
+block|}
 block|}
 while|while
 condition|(
@@ -627,6 +637,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -639,10 +650,13 @@ index|]
 operator|==
 literal|'.'
 condition|)
+block|{
 name|j
 operator|=
 name|i
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|j
@@ -680,6 +694,7 @@ condition|(
 operator|!
 name|qnichost
 condition|)
+block|{
 name|err
 argument_list|(
 literal|1
@@ -687,6 +702,7 @@ argument_list|,
 literal|"calloc"
 argument_list|)
 expr_stmt|;
+block|}
 name|strcpy
 argument_list|(
 name|qnichost
@@ -803,6 +819,7 @@ name|hp
 operator|==
 name|NULL
 condition|)
+block|{
 name|errx
 argument_list|(
 name|EX_NOHOST
@@ -817,6 +834,7 @@ name|h_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|host
 operator|=
 name|hp
@@ -928,6 +946,7 @@ name|s
 operator|<
 literal|0
 condition|)
+block|{
 name|err
 argument_list|(
 name|EX_OSERR
@@ -935,6 +954,7 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|connect
@@ -957,6 +977,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|err
 argument_list|(
 name|EX_OSERR
@@ -964,6 +985,7 @@ argument_list|,
 literal|"connect"
 argument_list|)
 expr_stmt|;
+block|}
 name|sfi
 operator|=
 name|fdopen
@@ -992,6 +1014,7 @@ name|sfo
 operator|==
 name|NULL
 condition|)
+block|{
 name|err
 argument_list|(
 name|EX_OSERR
@@ -999,6 +1022,7 @@ argument_list|,
 literal|"fdopen"
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1053,6 +1077,7 @@ index|]
 operator|==
 literal|'\r'
 condition|)
+block|{
 name|buf
 index|[
 name|len
@@ -1062,7 +1087,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 else|else
+block|{
 name|buf
 index|[
 name|len
@@ -1072,6 +1099,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1133,6 +1161,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|err
 argument_list|(
 literal|1
@@ -1140,6 +1169,7 @@ argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
+block|}
 name|memcpy
 argument_list|(
 name|nhost
@@ -1233,10 +1263,12 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|nomatch
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -1311,7 +1343,9 @@ name|hp
 operator|==
 name|NULL
 condition|)
+block|{
 return|return;
+block|}
 name|sinp
 operator|->
 name|sin_addr
@@ -1335,11 +1369,13 @@ condition|(
 operator|!
 name|nomatch
 condition|)
+block|{
 name|free
 argument_list|(
 name|nhost
 argument_list|)
 expr_stmt|;
+block|}
 name|whois
 argument_list|(
 name|name
