@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)modes.c	5.5 (Berkeley) %G%"
+literal|"@(#)modes.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,6 +280,18 @@ block|,
 literal|0
 block|,
 name|CRTSCTS
+block|,
+literal|"mdmbuf"
+block|,
+name|MDMBUF
+block|,
+literal|0
+block|,
+literal|"-mdmbuf"
+block|,
+literal|0
+block|,
+name|MDMBUF
 block|,
 name|NULL
 block|}
@@ -713,18 +725,6 @@ block|,
 literal|0
 block|,
 name|TOSTOP
-block|,
-literal|"mdmbuf"
-block|,
-name|MDMBUF
-block|,
-literal|0
-block|,
-literal|"-mdmbuf"
-block|,
-literal|0
-block|,
-name|MDMBUF
 block|,
 literal|"flusho"
 block|,
