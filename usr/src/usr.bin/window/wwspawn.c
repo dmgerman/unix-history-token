@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	1.5 83/07/22"
+literal|"@(#)wwspawn.c	1.6 83/07/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|_wwdtablesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|_wwtermcap
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -143,10 +151,7 @@ specifier|static
 name|char
 name|buf
 index|[
-sizeof|sizeof
-name|TERMCAP
-operator|+
-literal|10
+literal|1024
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -157,6 +162,14 @@ name|char
 modifier|*
 modifier|*
 name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|_wwkeys
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +387,13 @@ operator|->
 name|ww_i
 operator|.
 name|nrow
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|_wwkeys
 argument_list|)
 expr_stmt|;
 name|environ
