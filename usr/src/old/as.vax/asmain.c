@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.13 %G%"
+literal|"@(#)asmain.c 4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.13"
+value|"VAX/UNIX Assembler V%G% 4.14"
 end_define
 
 begin_comment
@@ -159,6 +159,18 @@ end_decl_stmt
 
 begin_comment
 comment|/*default allocate 4 bytes for unknown pointers*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxalign
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*default .align maximum*/
 end_comment
 
 begin_decl_stmt
@@ -996,6 +1008,61 @@ block|{
 name|yyerror
 argument_list|(
 literal|"-d[124] only"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'a'
+case|:
+name|maxalign
+operator|=
+name|atoi
+argument_list|(
+name|cp
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|cp
+operator|++
+init|;
+name|isdigit
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|;
+name|cp
+operator|++
+control|)
+comment|/*VOID*/
+empty_stmt|;
+if|if
+condition|(
+operator|(
+name|maxalign
+operator|>
+literal|16
+operator|)
+operator|||
+operator|(
+name|maxalign
+operator|<
+literal|0
+operator|)
+condition|)
+block|{
+name|yyerror
+argument_list|(
+literal|"-a: 0<=align<=16"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.9 %G%"
+literal|"@(#)asjxxx.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,7 @@ name|noname
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 *	Problem with .align 	 * 	 *	When the loader constructs an executable file from 	 *	a number of objects, it effectively concatnates 	 *	together all of the text segments from all objects, 	 *	and then all of the data segments. 	 * 	 *	If we do an align by a large value, we can align 	 *	within the a.out this assembly produces, but 	 *	after the loader concatnates, the alignment can't 	 *	be guaranteed if the objects preceding this one 	 *	in the load are also aligned to the same size. 	 * 	 *	Currently, the loader guarantees full word alignment. 	 *	So, ridiculous aligns are caught here and converted 	 *	to a .align 2, if possible. 	 */
+comment|/* 	 *	Problem with .align 	 * 	 *	When the loader constructs an executable file from 	 *	a number of objects, it effectively concatnates 	 *	together all of the text segments from all objects, 	 *	and then all of the data segments. 	 * 	 *	If we do an align by a large value, we can align 	 *	within the a.out this assembly produces, but 	 *	after the loader concatnates, the alignment can't 	 *	be guaranteed if the objects preceding this one 	 *	in the load are also aligned to the same size. 	 * 	 *	Currently, the loader guarantees full word alignment. 	 *	So, ridiculous aligns are caught here and converted 	 *	to a .align (maxalign), if possible, where maxalign 	 *	is set in the command line, and defaults to 2. 	 */
 if|if
 condition|(
 operator|(
@@ -633,7 +633,7 @@ name|xp
 operator|->
 name|e_xvalue
 operator|>
-literal|2
+name|maxalign
 condition|)
 block|{
 if|if
@@ -654,11 +654,13 @@ argument_list|)
 expr_stmt|;
 name|yywarning
 argument_list|(
-literal|".align %d converted to .align 2"
+literal|".align %d converted to .align %d"
 argument_list|,
 name|xp
 operator|->
 name|e_xvalue
+argument_list|,
+name|maxalign
 argument_list|)
 expr_stmt|;
 block|}
@@ -666,7 +668,7 @@ name|xp
 operator|->
 name|e_xvalue
 operator|=
-literal|2
+name|maxalign
 expr_stmt|;
 block|}
 name|flushfield

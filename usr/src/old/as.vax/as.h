@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.20 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.21 %G%  */
 end_comment
 
 begin_define
@@ -1758,6 +1758,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*current pointer storage size*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|maxalign
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*maximum .align allowed*/
 end_comment
 
 begin_function_decl
