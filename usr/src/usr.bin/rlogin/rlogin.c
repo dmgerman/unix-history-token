@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.38 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4010,16 +4010,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fmt
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
 name|vfprintf
 argument_list|(
 name|stderr
