@@ -123,6 +123,12 @@ directive|include
 file|<vm/vm_pager.h>
 end_include
 
+begin_error
+error|#
+directive|error
+literal|"DEVFS doesn't work"
+end_error
+
 begin_comment
 comment|/*  * Insert description here  */
 end_comment
