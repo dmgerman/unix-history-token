@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/sio.c,v 1.4 1993/07/20 00:22:30 jkh Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.5 1993/07/20 02:06:49 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1703,7 +1703,7 @@ name|id_iobase
 expr_stmt|;
 name|result
 operator|=
-literal|1
+name|IO_COMSIZE
 expr_stmt|;
 comment|/* 	 * We don't want to get actual interrupts, just masked ones. 	 * Interrupts from this line should already be masked in the ICU, 	 * but mask them in the processor as well in case there are some 	 * (misconfigured) shared interrupts. 	 */
 name|disable_intr
