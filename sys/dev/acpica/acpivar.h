@@ -21,6 +21,31 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -158,8 +183,101 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
 begin_comment
-comment|/*  * The ACPI subsystem lives under a single mutex.  You *must*  * acquire this mutex before calling any of the acpi_ or Acpi* functions.  *  * XXX the ACPI_MSLEEP macro should go away once locking is resolved  */
+comment|/*  * In 4.x, ACPI is protected by splhigh().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK
+value|s = splhigh()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UNLOCK
+value|splx(s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ASSERTLOCK
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSLEEP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|tsleep(a, c, d, e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK_DECL
+value|int s
+end_define
+
+begin_define
+define|#
+directive|define
+name|kthread_create
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|)
+value|kthread_create(a, b, c, f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tc_init
+parameter_list|(
+name|a
+parameter_list|)
+value|init_timecounter(a)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+literal|0
+end_elif
+
+begin_comment
+comment|/*  * The ACPI subsystem lives under a single mutex.  You *must*  * acquire this mutex before calling any of the acpi_ or Acpi* functions.  */
 end_comment
 
 begin_decl_stmt
@@ -169,12 +287,6 @@ name|mtx
 name|acpi_mutex
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_define
 define|#
@@ -213,6 +325,12 @@ parameter_list|,
 name|e
 parameter_list|)
 value|msleep(a, b, c, d, e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK_DECL
 end_define
 
 begin_else
@@ -254,6 +372,12 @@ parameter_list|,
 name|e
 parameter_list|)
 value|tsleep(a, c, d, e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK_DECL
 end_define
 
 begin_endif
