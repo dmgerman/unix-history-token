@@ -2351,6 +2351,17 @@ name|CPUID_APIC
 operator|)
 condition|)
 return|return;
+comment|/* Don't probe if APIC mode is disabled. */
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"apic"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return;
 comment|/* First, probe all the enumerators to find the best match. */
 name|best_enum
 operator|=
