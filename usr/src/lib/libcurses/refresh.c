@@ -28,47 +28,21 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * make the current screen look like "win" over the area coverd by  * win.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STATIC
-value|static
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+name|int
+name|curwin
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|short
 name|ly
 decl_stmt|,
@@ -77,84 +51,106 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
-name|bool
-name|curwin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|WINDOW
 modifier|*
 name|_win
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
-name|int
+specifier|static
+name|void
 name|domvcur
-argument_list|()
-decl_stmt|,
-name|makech
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|wrefresh
-argument_list|(
-argument|win
-argument_list|)
-end_macro
-
 begin_decl_stmt
-name|reg
+specifier|static
+name|int
+name|makech
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * wrefresh --  *	Make the current screen look like "win" over the area coverd by  *	win.  */
+end_comment
+
+begin_function
+name|int
+name|wrefresh
+parameter_list|(
+name|win
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|reg
-name|short
-name|wy
-decl_stmt|;
-name|reg
-name|int
-name|retval
-decl_stmt|;
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|orig
 decl_stmt|;
-comment|/* 	 * make sure were in visual state 	 */
+specifier|register
+name|int
+name|retval
+decl_stmt|;
+specifier|register
+name|short
+name|wy
+decl_stmt|;
+comment|/* Make sure were in visual state. */
 if|if
 condition|(
-name|_endwin
+name|__endwin
 condition|)
 block|{
-name|_puts
+name|tputs
 argument_list|(
 name|VS
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
-name|_puts
+name|tputs
 argument_list|(
 name|TI
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
-name|_endwin
+name|__endwin
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * initialize loop parameters 	 */
+comment|/* Initialize loop parameters. */
 name|ly
 operator|=
 name|curscr
@@ -211,9 +207,13 @@ operator|->
 name|_clear
 condition|)
 block|{
-name|_puts
+name|tputs
 argument_list|(
 name|CL
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|ly
@@ -234,7 +234,7 @@ name|curscr
 operator|->
 name|_clear
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 name|curscr
 operator|->
@@ -264,7 +264,7 @@ name|win
 operator|->
 name|_clear
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -281,7 +281,7 @@ name|_curx
 operator|!=
 literal|0
 condition|)
-name|_putchar
+name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -300,22 +300,18 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"REFRESH(%0.2o): curwin = %d\n"
+literal|"wrefresh: (%0.2o): curwin = %d\n"
 argument_list|,
 name|win
 argument_list|,
 name|curwin
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"REFRESH:\n\tfirstch\tlastch\n"
+literal|"wrefresh: \tfirstch\tlastch\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -339,10 +335,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"%d\t%d\t%d\n"
 argument_list|,
 name|wy
@@ -387,7 +381,9 @@ operator|==
 name|ERR
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 else|else
 block|{
@@ -476,10 +472,8 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"\t%d\t%d\n"
 argument_list|,
 name|win
@@ -663,39 +657,60 @@ name|_win
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * make a change on the screen  */
+comment|/*  * makech --  *	Make a change on the screen.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
+name|int
 name|makech
 parameter_list|(
 name|win
 parameter_list|,
 name|wy
 parameter_list|)
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|short
+name|int
 name|wy
 decl_stmt|;
 block|{
-name|reg
+specifier|register
+name|int
+name|nlsp
+decl_stmt|,
+name|clsp
+decl_stmt|;
+comment|/* Last space in lines. */
+specifier|register
+name|short
+name|wx
+decl_stmt|,
+name|lch
+decl_stmt|,
+name|y
+decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|nsp
@@ -706,21 +721,6 @@ decl_stmt|,
 modifier|*
 name|ce
 decl_stmt|;
-name|reg
-name|short
-name|wx
-decl_stmt|,
-name|lch
-decl_stmt|,
-name|y
-decl_stmt|;
-name|reg
-name|int
-name|nlsp
-decl_stmt|,
-name|clsp
-decl_stmt|;
-comment|/* last space in lines		*/
 name|wx
 operator|=
 name|win
@@ -743,7 +743,9 @@ operator|->
 name|_maxx
 condition|)
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 elseif|else
 if|if
@@ -776,7 +778,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 elseif|else
 if|if
@@ -954,11 +958,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKECH: 1: wx = %d, lx = %d\n"
+literal|"makech: 1: wx = %d, lx = %d\n"
 argument_list|,
 name|wx
 argument_list|,
@@ -1008,7 +1010,7 @@ operator|==
 literal|' '
 condition|)
 block|{
-comment|/* 					 * check for clear to end-of-line 					 */
+comment|/* Check for clear to end-of-line. */
 name|ce
 operator|=
 operator|&
@@ -1057,11 +1059,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKECH: clsp = %d, nlsp = %d\n"
+literal|"makech: clsp = %d, nlsp = %d\n"
 argument_list|,
 name|clsp
 argument_list|,
@@ -1091,18 +1091,20 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKECH: using CE\n"
+literal|"makech: using CE\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|_puts
+name|tputs
 argument_list|(
 name|CE
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|lx
@@ -1127,7 +1129,9 @@ operator|=
 literal|' '
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
 name|ce
@@ -1135,7 +1139,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 				 * enter/exit standout mode as appropriate 				 */
+comment|/* Enter/exit standout mode as appropriate. */
 if|if
 condition|(
 name|SO
@@ -1164,9 +1168,13 @@ operator|&
 name|_STANDOUT
 condition|)
 block|{
-name|_puts
+name|tputs
 argument_list|(
 name|SO
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|curscr
@@ -1178,9 +1186,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|_puts
+name|tputs
 argument_list|(
 name|SE
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|curscr
@@ -1220,21 +1232,17 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|curscr
 operator|->
 name|_flags
 operator|&
 name|_STANDOUT
-operator|)
 operator|&&
-operator|(
 name|win
 operator|->
 name|_flags
 operator|&
 name|_ENDLINE
-operator|)
 condition|)
 if|if
 condition|(
@@ -1242,9 +1250,13 @@ operator|!
 name|MS
 condition|)
 block|{
-name|_puts
+name|tputs
 argument_list|(
 name|SE
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|curscr
@@ -1260,7 +1272,7 @@ condition|(
 operator|!
 name|curwin
 condition|)
-name|_putchar
+name|putchar
 argument_list|(
 operator|(
 operator|*
@@ -1274,7 +1286,7 @@ literal|0177
 argument_list|)
 expr_stmt|;
 else|else
-name|_putchar
+name|putchar
 argument_list|(
 operator|*
 name|nsp
@@ -1319,7 +1331,9 @@ operator|->
 name|_curx
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
 elseif|else
@@ -1338,7 +1352,9 @@ operator|--
 name|wx
 expr_stmt|;
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 block|}
 if|if
@@ -1346,7 +1362,7 @@ condition|(
 operator|!
 name|curwin
 condition|)
-name|_putchar
+name|putchar
 argument_list|(
 operator|(
 operator|*
@@ -1361,7 +1377,7 @@ literal|0177
 argument_list|)
 expr_stmt|;
 else|else
-name|_putchar
+name|putchar
 argument_list|(
 operator|*
 name|nsp
@@ -1371,12 +1387,10 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FULLDEBUG
-name|fprintf
+name|DEBUG
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKECH:putchar(%c)\n"
+literal|"makech: putchar(%c)\n"
 argument_list|,
 operator|*
 name|nsp
@@ -1398,14 +1412,18 @@ name|_STANDOUT
 operator|)
 condition|)
 block|{
-name|_putchar
+name|putchar
 argument_list|(
 literal|'\b'
 argument_list|)
 expr_stmt|;
-name|_puts
+name|tputs
 argument_list|(
 name|UC
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 block|}
@@ -1416,11 +1434,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKECH: 2: wx = %d, lx = %d\n"
+literal|"makech: 2: wx = %d, lx = %d\n"
 argument_list|,
 name|wx
 argument_list|,
@@ -1439,7 +1455,7 @@ name|win
 operator|->
 name|_begx
 condition|)
-comment|/* if no change */
+comment|/* If no change. */
 break|break;
 name|lx
 operator|=
@@ -1471,12 +1487,12 @@ condition|(
 name|XN
 condition|)
 block|{
-name|_putchar
+name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|_putchar
+name|putchar
 argument_list|(
 literal|'\r'
 argument_list|)
@@ -1524,11 +1540,9 @@ break|break;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"MAKECH: 3: wx = %d, lx = %d\n"
+literal|"makech: 3: wx = %d, lx = %d\n"
 argument_list|,
 name|wx
 argument_list|,
@@ -1539,17 +1553,20 @@ endif|#
 directive|endif
 block|}
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * perform a mvcur, leaving standout mode if necessary  */
+comment|/*  * domvcur --  *	Do a mvcur, leaving standout mode if necessary.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
+name|void
 name|domvcur
 parameter_list|(
 name|oy
@@ -1582,9 +1599,13 @@ operator|!
 name|MS
 condition|)
 block|{
-name|_puts
+name|tputs
 argument_list|(
 name|SE
+argument_list|,
+literal|0
+argument_list|,
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|curscr

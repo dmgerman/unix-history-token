@@ -29,8 +29,14 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * scanw and friends  *  */
+comment|/*  * scanw and friends.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
 
 begin_if
 if|#
@@ -60,14 +66,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"curses.ext"
-end_include
-
 begin_comment
-comment|/*  *	This routine implements a scanf on the standard screen.  */
+comment|/*  * scanw --  *	Implement a scanf on the standard screen.  */
 end_comment
 
 begin_if
@@ -144,7 +144,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|_sscans
+name|__sscans
 argument_list|(
 name|stdscr
 argument_list|,
@@ -159,13 +159,15 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  *	This routine implements a scanf on the given window.  */
+comment|/*  * wscanw --  *	Implements a scanf on the given window.  */
 end_comment
 
 begin_if
@@ -253,7 +255,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|_sscans
+name|__sscans
 argument_list|(
 name|win
 argument_list|,
@@ -268,17 +270,19 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  *	This routine actually executes the scanf from the window.  *	THIS SHOULD BE RENAMED vwscanw AND EXPORTED  */
+comment|/*  * __sscans --  *	This routine actually executes the scanf from the window.  *	THIS SHOULD BE RENAMED vwscanw AND EXPORTED  */
 end_comment
 
 begin_macro
-name|_sscans
+name|__sscans
 argument_list|(
 argument|win
 argument_list|,
@@ -337,10 +341,11 @@ block|{
 name|char
 name|buf
 index|[
-literal|100
+literal|1024
 index|]
 decl_stmt|;
 return|return
+operator|(
 name|wgetstr
 argument_list|(
 name|win
@@ -360,6 +365,7 @@ name|ap
 argument_list|)
 else|:
 name|ERR
+operator|)
 return|;
 block|}
 end_block

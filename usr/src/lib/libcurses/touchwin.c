@@ -31,26 +31,24 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * make it look like the whole window has been changed.  *  */
+comment|/*  * touchwin --  *	Make it look like the whole window has been changed.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|touchwin
-argument_list|(
+parameter_list|(
 name|win
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -61,11 +59,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHWIN(%0.2o)\n"
+literal|"touchwin: (%0.2o)\n"
 argument_list|,
 name|win
 argument_list|)
@@ -106,32 +102,35 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * touch a given line  */
+comment|/*  * touchline --  *	Touch a given line.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|touchline
-argument_list|(
+parameter_list|(
 name|win
-argument_list|,
+parameter_list|,
 name|y
-argument_list|,
+parameter_list|,
 name|sx
-argument_list|,
+parameter_list|,
 name|ex
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|y
@@ -140,18 +139,13 @@ name|sx
 decl_stmt|,
 name|ex
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHLINE(%0.2o, %d, %d, %d)\n"
+literal|"touchline: (%0.2o, %d, %d, %d)\n"
 argument_list|,
 name|win
 argument_list|,
@@ -162,11 +156,9 @@ argument_list|,
 name|ex
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHLINE:first = %d, last = %d\n"
+literal|"touchline: first = %d, last = %d\n"
 argument_list|,
 name|win
 operator|->
@@ -274,11 +266,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHLINE:first = %d, last = %d\n"
+literal|"touchline: first = %d, last = %d\n"
 argument_list|,
 name|win
 operator|->
@@ -297,8 +287,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

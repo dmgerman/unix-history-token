@@ -31,26 +31,24 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine scrolls the window up a line.  *  */
+comment|/*  * scroll --  *	Scroll the window up a line.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|scroll
-argument_list|(
+parameter_list|(
 name|win
-argument_list|)
+parameter_list|)
 specifier|register
 name|WINDOW
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -61,11 +59,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"SCROLL(%0.2o)\n"
+literal|"scroll: (%0.2o)\n"
 argument_list|,
 name|win
 argument_list|)
@@ -80,7 +76,9 @@ operator|->
 name|_scroll
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 name|getyx
 argument_list|(
@@ -121,7 +119,7 @@ operator|==
 name|curscr
 condition|)
 block|{
-name|_putchar
+name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -140,18 +138,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"SCROLL: win == curscr\n"
+literal|"scroll: win == curscr\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 block|}
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

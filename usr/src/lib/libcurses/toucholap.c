@@ -31,60 +31,34 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a< b ? a : b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|max
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a> b ? a : b)
-end_define
-
 begin_comment
-comment|/*  *	Touch, on win2, the part that overlaps with win1.  *  */
+comment|/*  * touchoverlap --  *	Touch, on win2, the part that overlaps with win1.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|touchoverlap
-argument_list|(
-argument|win1
-argument_list|,
-argument|win2
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win1
+parameter_list|,
+name|win2
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win1
 decl_stmt|,
-modifier|*
+decl|*
 name|win2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
-name|reg
+specifier|register
 name|int
 name|x
 decl_stmt|,
@@ -101,11 +75,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHOVERLAP(%0.2o, %0.2o);\n"
+literal|"touchoverlap: (%0.2o, %0.2o);\n"
 argument_list|,
 name|win1
 argument_list|,
@@ -185,11 +157,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHOVERLAP:from (%d,%d) to (%d,%d)\n"
+literal|"touchoverlap: from (%d,%d) to (%d,%d)\n"
 argument_list|,
 name|starty
 argument_list|,
@@ -200,11 +170,9 @@ argument_list|,
 name|endx
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHOVERLAP:win1 (%d,%d) to (%d,%d)\n"
+literal|"touchoverlap: win1 (%d,%d) to (%d,%d)\n"
 argument_list|,
 name|win1
 operator|->
@@ -231,11 +199,9 @@ operator|->
 name|_maxx
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"TOUCHOVERLAP:win2 (%d,%d) to (%d,%d)\n"
+literal|"touchoverlap: win2 (%d,%d) to (%d,%d)\n"
 argument_list|,
 name|win2
 operator|->
@@ -274,7 +240,11 @@ name|startx
 operator|>=
 name|endx
 condition|)
-return|return;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 name|starty
 operator|-=
 name|win2
@@ -299,11 +269,11 @@ name|win2
 operator|->
 name|_begx
 expr_stmt|;
-name|endx
-operator|--
-expr_stmt|;
 for|for
 control|(
+operator|--
+name|endx
+operator|,
 name|y
 operator|=
 name|starty
@@ -326,6 +296,11 @@ argument_list|,
 name|endx
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
 end_block
 

@@ -28,18 +28,14 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * routines dealing with entering and exiting standout mode  *  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * enter standout mode  */
+comment|/*  * wstandout  *	Enter standout mode.  */
 end_comment
 
 begin_function
@@ -49,7 +45,7 @@ name|wstandout
 parameter_list|(
 name|win
 parameter_list|)
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
@@ -64,7 +60,9 @@ operator|!
 name|UC
 condition|)
 return|return
-name|FALSE
+operator|(
+literal|0
+operator|)
 return|;
 name|win
 operator|->
@@ -85,7 +83,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * exit standout mode  */
+comment|/*  * wstandend --  *	Exit standout mode.  */
 end_comment
 
 begin_function
@@ -95,7 +93,7 @@ name|wstandend
 parameter_list|(
 name|win
 parameter_list|)
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
@@ -110,7 +108,9 @@ operator|!
 name|UC
 condition|)
 return|return
-name|FALSE
+operator|(
+literal|0
+operator|)
 return|;
 name|win
 operator|->
