@@ -2531,7 +2531,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-literal|"received len %d< sizeof(struct carp_header)"
+literal|"received len %zd< sizeof(struct carp_header)"
 operator|,
 name|m
 operator|->
