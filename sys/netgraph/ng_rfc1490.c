@@ -1068,10 +1068,6 @@ name|ptr
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|m
-operator|||
-operator|(
 name|m
 operator|->
 name|m_len
@@ -1088,7 +1084,6 @@ name|m
 argument_list|,
 name|MAX_ENCAPS_HDR
 argument_list|)
-operator|)
 operator|)
 condition|)
 name|ERROUT

@@ -2243,24 +2243,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ng_eiface: mbuf is null.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-if|if
-condition|(
 operator|(
 name|ifp
 operator|->

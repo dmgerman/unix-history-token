@@ -3087,17 +3087,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
 operator|(
 name|ifp
 operator|->

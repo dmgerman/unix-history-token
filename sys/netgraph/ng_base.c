@@ -7369,6 +7369,18 @@ case|case
 name|NGQF_DATA
 case|:
 comment|/* 		 * DATA MESSAGE 		 * Delivered to a node via a non-optional hook. 		 * Both should be present in the item even though 		 * the node is derivable from the hook. 		 * References are held on both by the item. 		 */
+comment|/* Protect nodes from sending NULL pointers 		 * to each other 		 */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|CHECK_DATA_MBUF
 argument_list|(
 name|NGI_M
