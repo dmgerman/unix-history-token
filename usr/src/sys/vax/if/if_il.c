@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_il.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_il.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -292,6 +292,14 @@ argument_list|()
 decl_stmt|,
 name|ilwatch
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ildebug
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -693,9 +701,10 @@ operator|->
 name|is_ubaddr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
+if|if
+condition|(
+name|ildebug
+condition|)
 name|printf
 argument_list|(
 literal|"il%d: module=%s firmware=%s\n"
@@ -717,8 +726,6 @@ operator|.
 name|ils_firmware
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -793,19 +800,6 @@ name|ifu_flags
 operator|=
 name|UBA_CANTWAIT
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-name|is
-operator|->
-name|is_ifuba
-operator|.
-name|ifu_flags
-operator||=
-name|UBA_NEEDBDP
-expr_stmt|;
-endif|#
-directive|endif
 name|if_attach
 argument_list|(
 name|ifp
