@@ -89,7 +89,7 @@ value|off_t
 end_define
 
 begin_comment
-comment|/* the Linux implementation of EXT2 stores some information about  * an inode in a ext2_inode_info structure which is part of the incore  * inode in Linux  * I decided to use the i_spare[11] fields instead - we'll see how this  * works out  */
+comment|/* the Linux implementation of EXT2 stores some information about  * an inode in a ext2_inode_info structure which is part of the incore  * inode in Linux  * I decided to use the "spare" fields instead - we'll see how this  * works out  */
 end_comment
 
 begin_define
@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|i_prealloc_count
-value|i_spare[4]
+value|i_din.di_spare[0]
 end_define
 
 begin_comment

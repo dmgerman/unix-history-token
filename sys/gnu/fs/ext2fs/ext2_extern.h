@@ -572,11 +572,11 @@ name|unsigned
 name|long
 name|goal
 operator|,
-name|int
+name|u_int32_t
 operator|*
 name|prealloc_count
 operator|,
-name|int
+name|u_int32_t
 operator|*
 name|prealloc_block
 operator|)

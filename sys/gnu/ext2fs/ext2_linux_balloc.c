@@ -1072,11 +1072,11 @@ name|unsigned
 name|long
 name|goal
 parameter_list|,
-name|int
+name|u_int32_t
 modifier|*
 name|prealloc_count
 parameter_list|,
-name|int
+name|u_int32_t
 modifier|*
 name|prealloc_block
 parameter_list|)
