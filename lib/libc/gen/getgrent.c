@@ -67,6 +67,12 @@ directive|include
 file|<grp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|FILE
@@ -972,7 +978,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-break|break;
+block|{
+comment|/* this may be benign - eg. empty line at end of file */
+comment|/*	syslog(LOG_ALERT, "/etc/group is corrupt: group field is empty"); */
+continue|continue;
+block|}
 ifdef|#
 directive|ifdef
 name|YP
@@ -1166,7 +1176,16 @@ literal|1
 operator|)
 return|;
 else|else
-break|break;
+block|{
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"/etc/group corrupt: invalid field"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|strlen
@@ -1203,7 +1222,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-break|break;
+block|{
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"/etc/group corrupt: invalid field"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 endif|#
 directive|endif
 if|if
@@ -1282,8 +1310,10 @@ name|bp
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* !!! Must check for this! */
-break|break;
+continue|continue;
+block|}
 ifdef|#
 directive|ifdef
 name|YP
@@ -1303,7 +1333,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
 operator|!
