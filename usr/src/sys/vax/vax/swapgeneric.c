@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	6.1	83/07/29	*/
+comment|/*	swapgeneric.c	4.8	83/08/05	*/
 end_comment
 
 begin_include
@@ -186,6 +186,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|uba_driver
+name|hldriver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uba_driver
 name|udadriver
 decl_stmt|;
 end_decl_stmt
@@ -282,13 +290,13 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|idcdriver
+name|hldriver
 block|,
 literal|"rl"
 block|,
 name|makedev
 argument_list|(
-literal|11
+literal|14
 argument_list|,
 literal|0
 argument_list|)
