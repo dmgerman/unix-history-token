@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -97,33 +97,14 @@ name|mclrefcnt
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|mbinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|s
 decl_stmt|;
-if|#
-directive|if
-name|CLBYTES
-operator|<
-literal|4096
-define|#
-directive|define
-name|NCL_INIT
-value|(4096/CLBYTES)
-else|#
-directive|else
-define|#
-directive|define
-name|NCL_INIT
-value|1
-endif|#
-directive|endif
 name|s
 operator|=
 name|splimp
@@ -133,7 +114,14 @@ if|if
 condition|(
 name|m_clalloc
 argument_list|(
-name|NCL_INIT
+name|max
+argument_list|(
+literal|4096
+operator|/
+name|CLBYTES
+argument_list|,
+literal|1
+argument_list|)
 argument_list|,
 name|M_DONTWAIT
 argument_list|)
@@ -157,7 +145,7 @@ literal|"mbinit"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Allocate some number of mbuf clusters  * and place on cluster free list.  * Must be called at splimp.  */
@@ -167,26 +155,21 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|m_clalloc
-argument_list|(
+parameter_list|(
 name|ncl
-argument_list|,
+parameter_list|,
 name|nowait
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|ncl
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|nowait
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|int
@@ -324,7 +307,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When MGET failes, ask protocols to free space when short of memory,  * then re-attempt to allocate an mbuf.  */
@@ -442,12 +425,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|m_reclaim
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -523,7 +504,7 @@ name|m_drain
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Space allocation routines.  * These are also available as macros  * for critical paths.  */
@@ -1280,46 +1261,35 @@ begin_comment
 comment|/*  * Copy data from an mbuf chain starting "off" bytes from the beginning,  * continuing for "len" bytes, into the indicated buffer.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|m_copydata
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|off
-argument_list|,
+parameter_list|,
 name|len
-argument_list|,
+parameter_list|,
 name|cp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|unsigned
@@ -1447,29 +1417,30 @@ name|m_next
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Concatenate mbuf chain n to m.  * Both chains must be of the same type (e.g. MT_DATA).  * Any m_pkthdr is not updated.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|m_cat
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|n
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -2724,6 +2695,7 @@ condition|(
 name|off
 condition|)
 block|{
+comment|/* 		 * If 'off' is non-zero, packet is trailer-encapsulated, 		 * so we have to skip the type and length fields. 		 */
 name|cp
 operator|+=
 name|off
@@ -2732,7 +2704,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|totlen
@@ -2741,7 +2713,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 block|}
