@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,9 +208,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|local
-argument_list|()
-decl_stmt|,
 name|folders
 argument_list|()
 decl_stmt|,
@@ -500,36 +497,6 @@ block|,
 name|MMNDEL
 block|,
 literal|"unread"
-block|,
-name|unread
-block|,
-name|MSGLIST
-block|,
-literal|0
-block|,
-name|MMNDEL
-block|,
-literal|"Unread"
-block|,
-name|unread
-block|,
-name|MSGLIST
-block|,
-literal|0
-block|,
-name|MMNDEL
-block|,
-literal|"new"
-block|,
-name|unread
-block|,
-name|MSGLIST
-block|,
-literal|0
-block|,
-name|MMNDEL
-block|,
-literal|"New"
 block|,
 name|unread
 block|,
@@ -876,18 +843,6 @@ block|,
 literal|0
 block|,
 literal|0
-block|,
-literal|"local"
-block|,
-name|local
-block|,
-name|M
-operator||
-name|RAWLIST
-block|,
-literal|0
-block|,
-literal|1000
 block|,
 literal|"xit"
 block|,
