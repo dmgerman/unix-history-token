@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprint.c	5.6 (Berkeley) %G%"
+literal|"@(#)lprint.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,10 +1202,19 @@ operator|||
 operator|!
 name|meta
 operator|&&
-name|isspace
-argument_list|(
+operator|(
 name|ch
-argument_list|)
+operator|==
+literal|' '
+operator|||
+name|ch
+operator|==
+literal|'\t'
+operator|||
+name|ch
+operator|==
+literal|'\n'
+operator|)
 condition|)
 operator|(
 name|void
