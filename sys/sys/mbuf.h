@@ -851,6 +851,17 @@ begin_comment
 comment|/* expedited data  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MT_NTYPES
+value|16
+end_define
+
+begin_comment
+comment|/* number of mbuf types for mbtypes[] */
+end_comment
+
 begin_comment
 comment|/*  * mbuf statistics  */
 end_comment
@@ -887,13 +898,6 @@ name|u_long
 name|m_drain
 decl_stmt|;
 comment|/* times drained protocols for space */
-name|u_short
-name|m_mtypes
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* type specific mbuf allocations */
 name|u_long
 name|m_mcfail
 decl_stmt|;
@@ -1038,7 +1042,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		_mm->m_type = _mtype;					\ 		mbstat.m_mtypes[_mtype]++;				\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_dat;				\ 		_mm->m_flags = 0;					\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retry(_mhow, _mtype);				\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGET_C, _mtype);		\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
+value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbtypes[MT_FREE]--;					\ 		_mm->m_type = _mtype;					\ 		mbtypes[_mtype]++;					\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_dat;				\ 		_mm->m_flags = 0;					\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retry(_mhow, _mtype);				\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGET_C, _mtype);		\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1052,7 +1056,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		_mm->m_type = _mtype;					\ 		mbstat.m_mtypes[_mtype]++;				\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		_mm->m_pkthdr.csum_flags = 0;				\ 		_mm->m_pkthdr.aux = (struct mbuf *)NULL;		\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, _mtype);	\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbtypes[MT_FREE]--;					\ 		_mm->m_type = _mtype;					\ 		mbtypes[_mtype]++;					\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		_mm->m_pkthdr.csum_flags = 0;				\ 		_mm->m_pkthdr.aux = (struct mbuf *)NULL;		\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, _mtype);	\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1136,7 +1140,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	mbstat.m_mtypes[_mm->m_type]--;					\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbstat.m_mtypes[MT_FREE]++;					\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
+value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	mbtypes[_mm->m_type]--;						\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
 end_define
 
 begin_comment
@@ -1250,7 +1254,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 	int _mt = (t);							\ 	int _ms = splimp();						\ 									\ 	mbstat.m_mtypes[_mm->m_type]--;					\ 	mbstat.m_mtypes[_mt]++;						\ 	splx(_ms);							\ 	_mm->m_type = (_mt);						\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 	int _mt = (t);							\ 	int _ms = splimp();						\ 									\ 	mbtypes[_mm->m_type]--;						\ 	mbtypes[_mt]++;							\ 	splx(_ms);							\ 	_mm->m_type = (_mt);						\ } while (0)
 end_define
 
 begin_comment
@@ -1379,6 +1383,20 @@ name|mbstat
 name|mbstat
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|mbtypes
+index|[
+name|MT_NTYPES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* per-type mbuf allocations */
+end_comment
 
 begin_decl_stmt
 specifier|extern
