@@ -9585,7 +9585,6 @@ operator|.
 name|bv_hd
 argument_list|)
 condition|)
-empty_stmt|;
 operator|(
 name|void
 operator|)
