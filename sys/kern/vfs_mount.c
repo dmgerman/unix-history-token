@@ -511,7 +511,7 @@ name|sprintf
 argument_list|(
 name|patt
 argument_list|,
-literal|"%%%d[a-z]:%%%ds"
+literal|"%%%d[a-z0-9]:%%%ds"
 argument_list|,
 name|MFSNAMELEN
 argument_list|,
