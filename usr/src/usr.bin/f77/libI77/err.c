@@ -578,7 +578,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"lately: %s %s %s %s IO\n"
+literal|"lately: %s %s %s %s I/O\n"
 argument_list|,
 name|reading
 condition|?
@@ -654,41 +654,10 @@ expr_stmt|;
 comment|/* print internal array */
 block|}
 block|}
-name|f_exit
-argument_list|()
-expr_stmt|;
-name|_cleanup
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-name|vax
-name|signal
+name|f77_abort
 argument_list|(
-name|SIGILL
-argument_list|,
-name|SIG_DFL
+name|n
 argument_list|)
-expr_stmt|;
-name|sigsetmask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-else|pdp11
-name|signal
-argument_list|(
-name|SIGIOT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 end_block
