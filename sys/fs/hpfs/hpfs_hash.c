@@ -155,13 +155,11 @@ argument_list|)
 expr_stmt|;
 name|hpfs_hphashtbl
 operator|=
-name|HASHINIT
+name|hashinit
 argument_list|(
 name|desiredvnodes
 argument_list|,
 name|M_HPFSHASH
-argument_list|,
-name|M_WAITOK
 argument_list|,
 operator|&
 name|hpfs_hphash

@@ -932,7 +932,7 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -3100,7 +3100,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -3161,7 +3161,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|VN_LOCK
+name|vn_lock
 argument_list|(
 name|dvp
 argument_list|,
@@ -3204,7 +3204,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|VN_LOCK
+name|vn_lock
 argument_list|(
 name|dvp
 argument_list|,
@@ -3313,7 +3313,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,

@@ -3182,7 +3182,7 @@ operator|&
 name|H_INVAL
 condition|)
 block|{
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -3210,7 +3210,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -5508,7 +5508,7 @@ name|fn_parent
 operator|)
 argument_list|)
 expr_stmt|;
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -5543,7 +5543,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|VOP__LOCK
+name|VOP_LOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -5573,7 +5573,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|VOP__LOCK
+name|VOP_LOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -5681,7 +5681,7 @@ condition|(
 operator|!
 name|lockparent
 condition|)
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -5935,7 +5935,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|VOP__UNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,

@@ -165,13 +165,11 @@ argument_list|)
 expr_stmt|;
 name|ntfs_nthashtbl
 operator|=
-name|HASHINIT
+name|hashinit
 argument_list|(
 name|desiredvnodes
 argument_list|,
 name|M_NTFSNTHASH
-argument_list|,
-name|M_WAITOK
 argument_list|,
 operator|&
 name|ntfs_nthash

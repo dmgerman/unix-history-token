@@ -1173,64 +1173,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|HASHINIT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|hashinit((a), (b), (d))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP__UNLOCK
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|VOP_UNLOCK((a), (b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VGET
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|vget((a), (b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VN_LOCK
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|vn_lock((a), (b), (c))
-end_define
-
 begin_if
 if|#
 directive|if
