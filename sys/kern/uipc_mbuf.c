@@ -971,7 +971,7 @@ name|dofree
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * This is tricky.  We need to make sure to decrement the 	 * refcount in a safe way but to also clean up if we're the 	 * last reference.  This method seems to do it without race. 	 */
+comment|/* 	 * This is tricky.  We need to make sure to decrement the 	 * refcount in a safe way but to also clean up if we're the 	 * last reference.  This method seems to do it without race. 	 * The volatile cast is required to emit the proper load  	 * instructions. Otherwise gcc will optimize the read outside 	 * of the while loop. 	 */
 while|while
 condition|(
 name|dofree
@@ -982,6 +982,11 @@ block|{
 name|cnt
 operator|=
 operator|*
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
 operator|(
 name|m
 operator|->
