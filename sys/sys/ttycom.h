@@ -809,6 +809,17 @@ begin_comment
 comment|/* PPP discipline */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETGRAPHDISC
+value|6
+end_define
+
+begin_comment
+comment|/* Netgraph tty node discipline */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
