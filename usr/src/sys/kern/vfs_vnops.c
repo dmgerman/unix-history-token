@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.4	%G%	*/
+comment|/*	vfs_vnops.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -418,11 +418,7 @@ name|file
 init|;
 name|fp
 operator|<
-operator|&
-name|file
-index|[
-name|NFILE
-index|]
+name|fileNFILE
 condition|;
 name|fp
 operator|++
@@ -1050,11 +1046,7 @@ name|lastf
 init|;
 name|fp
 operator|<
-operator|&
-name|file
-index|[
-name|NFILE
-index|]
+name|fileNFILE
 condition|;
 name|fp
 operator|++
