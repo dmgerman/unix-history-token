@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980,1986 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)halt.c	5.3 (Berkeley) %G%"
+literal|"@(#)halt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,11 @@ name|qflag
 operator|=
 literal|0
 expr_stmt|;
+name|int
+name|needlog
+init|=
+literal|1
+decl_stmt|;
 name|char
 modifier|*
 name|user
@@ -227,6 +232,22 @@ condition|)
 name|qflag
 operator|++
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-l"
+argument_list|)
+condition|)
+name|needlog
+operator|=
+literal|0
+expr_stmt|;
 else|else
 block|{
 name|fprintf
@@ -279,6 +300,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|needlog
+condition|)
+block|{
 name|user
 operator|=
 name|getlogin
@@ -333,6 +359,7 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+block|}
 name|signal
 argument_list|(
 name|SIGHUP
@@ -370,6 +397,23 @@ block|}
 name|sleep
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+comment|/* one chance to catch it */
+name|sleep
+argument_list|(
+literal|5
 argument_list|)
 expr_stmt|;
 if|if

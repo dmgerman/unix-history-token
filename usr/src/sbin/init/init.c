@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.5 (Berkeley) %G%"
+literal|"@(#)init.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -666,6 +666,23 @@ argument_list|(
 name|SIGALRM
 argument_list|,
 name|shutreset
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+comment|/* one chance to catch it */
+name|sleep
+argument_list|(
+literal|5
 argument_list|)
 expr_stmt|;
 name|alarm

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983,1986 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.5 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -91,7 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -174,7 +180,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -578,6 +584,15 @@ name|FILE
 modifier|*
 name|termf
 decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|,
+modifier|*
+name|getpwuid
+argument_list|()
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -593,6 +608,28 @@ name|shutter
 operator|=
 name|getlogin
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|shutter
+operator|==
+literal|0
+operator|&&
+operator|(
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+operator|)
+condition|)
+name|shutter
+operator|=
+name|pw
+operator|->
+name|pw_name
 expr_stmt|;
 if|if
 condition|(
@@ -1476,13 +1513,26 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s!%s: %s"
+literal|"%s by %s: %s"
 argument_list|,
-name|hostname
+name|doreboot
+condition|?
+literal|"reboot"
+else|:
+name|halt
+condition|?
+literal|"halt"
+else|:
+literal|"shutdown"
 argument_list|,
 name|shutter
 argument_list|,
 name|nolog2
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1518,24 +1568,6 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DEBUG
-operator|(
-name|void
-operator|)
-name|kill
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|SIGTERM
-argument_list|)
-expr_stmt|;
-comment|/* terminate everyone */
-name|sleep
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-comment|/*& wait while they die */
 if|if
 condition|(
 name|doreboot
@@ -1545,6 +1577,8 @@ argument_list|(
 name|REBOOT
 argument_list|,
 literal|"reboot"
+argument_list|,
+literal|"-l"
 argument_list|,
 name|nosync
 argument_list|,
@@ -1563,6 +1597,8 @@ name|HALT
 argument_list|,
 literal|"halt"
 argument_list|,
+literal|"-l"
+argument_list|,
 name|nosync
 argument_list|,
 literal|0
@@ -1580,30 +1616,9 @@ argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-comment|/* sync */
-operator|(
-name|void
-operator|)
-name|kill
-argument_list|(
-literal|1
-argument_list|,
-name|SIGTERM
-argument_list|)
-expr_stmt|;
-comment|/* sync */
-name|sleep
-argument_list|(
-literal|20
-argument_list|)
-expr_stmt|;
+comment|/* to single user */
 else|#
 directive|else
-name|printf
-argument_list|(
-literal|"EXTERMINATE EXTERMINATE\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|doreboot
@@ -1628,7 +1643,7 @@ name|fast
 condition|)
 name|printf
 argument_list|(
-literal|" %s (without fsck's)\n"
+literal|" -l %s (without fsck's)\n"
 argument_list|,
 name|nosync
 argument_list|)
@@ -1636,9 +1651,15 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %s\n"
+literal|" -l %s\n"
 argument_list|,
 name|nosync
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"kill -HUP 1\n"
 argument_list|)
 expr_stmt|;
 endif|#
