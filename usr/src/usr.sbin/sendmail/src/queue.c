@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -1828,18 +1828,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syserr
-argument_list|(
-literal|"dowork: link(%s, %s)"
-argument_list|,
-name|w
-operator|->
-name|w_name
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-comment|/* it's ok to lie -- it will be run later */
+comment|/* this can happen normally; another queuer sneaks in */
+comment|/* syserr("dowork: link(%s, %s)", w->w_name, buf); */
 name|exit
 argument_list|(
 name|EX_OK
