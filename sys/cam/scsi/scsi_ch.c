@@ -347,6 +347,9 @@ name|struct
 name|devstat
 name|device_stats
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
 name|int
 name|sc_picker
 decl_stmt|;
@@ -883,16 +886,6 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* If we were successfull, register our devsw */
-name|cdevsw_add
-argument_list|(
-operator|&
-name|ch_cdevsw
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1034,6 +1027,13 @@ operator|&
 name|softc
 operator|->
 name|device_stats
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|softc
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 name|cam_extend_release
@@ -1385,6 +1385,37 @@ operator||
 name|DEVSTAT_TYPE_IF_SCSI
 argument_list|,
 name|DEVSTAT_PRIORITY_OTHER
+argument_list|)
+expr_stmt|;
+comment|/* Register the device */
+name|softc
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|ch_cdevsw
+argument_list|,
+name|periph
+operator|->
+name|unit_number
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_OPERATOR
+argument_list|,
+literal|0600
+argument_list|,
+literal|"%s%d"
+argument_list|,
+name|periph
+operator|->
+name|periph_name
+argument_list|,
+name|periph
+operator|->
+name|unit_number
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add an async callback so that we get 	 * notified if this device goes away. 	 */
