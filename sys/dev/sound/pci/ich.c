@@ -1884,7 +1884,7 @@ name|ICH_REG_GLOB_STA
 argument_list|,
 literal|4
 argument_list|)
-operator||
+operator|&
 name|ICH_GLOB_STA_IMASK
 expr_stmt|;
 if|if
