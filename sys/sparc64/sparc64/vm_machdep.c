@@ -122,7 +122,12 @@ decl_stmt|;
 name|struct
 name|frame
 modifier|*
-name|fp
+name|fp1
+decl_stmt|;
+name|struct
+name|frame
+modifier|*
+name|fp2
 decl_stmt|;
 name|struct
 name|pcb
@@ -207,11 +212,12 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|tf
+comment|/* The initial window for the process. */
+name|fp1
 operator|=
 operator|(
 expr|struct
-name|trapframe
+name|frame
 operator|*
 operator|)
 operator|(
@@ -224,6 +230,18 @@ name|UPAGES
 operator|*
 name|PAGE_SIZE
 operator|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* The trap frame. */
+name|tf
+operator|=
+operator|(
+expr|struct
+name|trapframe
+operator|*
+operator|)
+name|fp1
 operator|-
 literal|1
 expr_stmt|;
@@ -240,6 +258,12 @@ argument_list|(
 operator|*
 name|tf
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|fp1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p2
@@ -248,7 +272,8 @@ name|p_frame
 operator|=
 name|tf
 expr_stmt|;
-name|fp
+comment|/* The window cpu_switch will load. */
+name|fp2
 operator|=
 operator|(
 expr|struct
@@ -259,7 +284,7 @@ name|tf
 operator|-
 literal|1
 expr_stmt|;
-name|fp
+name|fp2
 operator|->
 name|f_local
 index|[
@@ -271,7 +296,7 @@ name|u_long
 operator|)
 name|fork_return
 expr_stmt|;
-name|fp
+name|fp2
 operator|->
 name|f_local
 index|[
@@ -283,7 +308,7 @@ name|u_long
 operator|)
 name|p2
 expr_stmt|;
-name|fp
+name|fp2
 operator|->
 name|f_local
 index|[
@@ -295,6 +320,18 @@ name|u_long
 operator|)
 name|tf
 expr_stmt|;
+comment|/* 	 * Fake the frame pointer of the window to point to the initial window 	 * on the stack. The initial window's stack pointer will later be 	 * restored from the trap frame. 	 */
+name|fp2
+operator|->
+name|f_fp
+operator|=
+operator|(
+name|u_long
+operator|)
+name|fp1
+operator|-
+name|SPOFF
+expr_stmt|;
 name|pcb
 operator|->
 name|pcb_fp
@@ -302,7 +339,7 @@ operator|=
 operator|(
 name|u_long
 operator|)
-name|fp
+name|fp2
 operator|-
 name|SPOFF
 expr_stmt|;
