@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)putenv.c	5.2 (Berkeley) %G%"
+literal|"@(#)putenv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,24 +43,28 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_macro
-name|putenv
-argument_list|(
-argument|str
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_decl_stmt
+begin_function
+name|int
+name|putenv
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
+modifier|*
+name|p
+decl_stmt|,
 modifier|*
 name|equal
 decl_stmt|;
@@ -71,13 +75,11 @@ if|if
 condition|(
 operator|!
 operator|(
-name|equal
+name|p
 operator|=
-name|index
+name|strdup
 argument_list|(
 name|str
-argument_list|,
-literal|'='
 argument_list|)
 operator|)
 condition|)
@@ -86,6 +88,35 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+operator|(
+name|equal
+operator|=
+name|index
+argument_list|(
+name|p
+argument_list|,
+literal|'='
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 operator|*
 name|equal
 operator|=
@@ -95,7 +126,7 @@ name|rval
 operator|=
 name|setenv
 argument_list|(
-name|str
+name|p
 argument_list|,
 name|equal
 operator|+
@@ -104,10 +135,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|*
-name|equal
-operator|=
-literal|'='
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -115,7 +149,7 @@ name|rval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
