@@ -19,9 +19,19 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|RCSID
+name|ORCSID
 init|=
 literal|"$Header: pscomm.bsd,v 2.1 85/11/24 11:50:16 shore Rel $"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|RCSID
+init|=
+literal|"$Header: pscomm.c,v 1.4 87/10/31 20:42:02 cuong Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +41,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* pscomm.c  *  * Copyright (C) 1985 Adobe Systems Incorporated  *  * 4.2BSD lpr/lpd communications filter for PostScript printers  * (formerly "psif" in TranScript release 1.0)  *  * pscomm is the general communications filter for  * sending files to a PostScript printer (e.g., an Apple LaserWriter,  * QMS PostScript printer, or Linotype PostScript typesetter)  * via RS232 lines.  It does page accounting, error handling/reporting,  * job logging, banner page printing, etc.  * It observes (parts of) the PostScript file structuring conventions.  * In particular, it distinguishes between PostScript files (beginning  * with the "%!" magic number) -- which are shipped to the printer --  * and text files (no magic number) which are formatted and listed  * on the printer.  Files which begin with "%!PS-Adobe-" may be  * page-reversed if the target printer has that option specified.  *  * depending on the values of BANNERFIRST and BANNERLAST,   * pscomm looks for a file named ".banner", (created by the "of" filter)  * in the current working directory and ships it to the printer also.  *  * pscomm gets called with:  *	stdin	== the file to print (may be a pipe!)  *	stdout	== the printer  *	stderr	== the printer log file  *	cwd	== the spool directory  *	argv	== set up by interface shell script:  *	  filtername	-P printer  *			-p filtername  *			[-r]		(don't ever reverse)  *			-n login  *			-h host  *			[accntfile]  *  *	environ	== various environment variable effect behavior  *		VERBOSELOG	- do verbose log file output  *		BANNERFIRST	- print .banner before job  *		BANNERLAST	- print .banner after job  *		REVERSE		- page reversal filter program  *				  (no reversal if null or missing)  *		PSLIBDIR	- transcript library directory  *		PSTEXT		- simple text formatting filter  *		JOBOUTPUT	- file for actual printer stream  *				  output (if defined)  *  * pscomm depends on certain additional features of the 4.2BSD spooling  * architecture.  In particular it assumes that the printer status file  * has the default name (./status) and it uses this file to communicate  * printer error status information to the user -- the contents of the  * status file gets incorporated in "lpq" and "lpc status" messages.  *  * Edit History:  * Andrew Shore: Sat Nov 16 11:59:58 1985  * End Edit History.  *  * RCSLOG:  * $Log:	pscomm.bsd,v $  * Revision 2.1  85/11/24  11:50:16  shore  * Product Release 2.0  *   * Revision 1.1  85/11/20  00:35:21  shore  * Initial revision  *   * Revision 1.2  85/05/14  11:25:29  shore  * better support for BANNERLAST, still buggy though  *   *  */
+comment|/* pscomm.c  *  * Copyright (C) 1985 Adobe Systems Incorporated  *  * 4.2BSD lpr/lpd communications filter for PostScript printers  * (formerly "psif" in TranScript release 1.0)  *  * pscomm is the general communications filter for  * sending files to a PostScript printer (e.g., an Apple LaserWriter,  * QMS PostScript printer, or Linotype PostScript typesetter)  * via RS232 lines.  It does page accounting, error handling/reporting,  * job logging, banner page printing, etc.  * It observes (parts of) the PostScript file structuring conventions.  * In particular, it distinguishes between PostScript files (beginning  * with the "%!" magic number) -- which are shipped to the printer --  * and text files (no magic number) which are formatted and listed  * on the printer.  Files which begin with "%!PS-Adobe-" may be  * page-reversed if the target printer has that option specified.  *  * depending on the values of BANNERFIRST and BANNERLAST,   * pscomm looks for a file named ".banner", (created by the "of" filter)  * in the current working directory and ships it to the printer also.  *  * pscomm gets called with:  *	stdin	== the file to print (may be a pipe!)  *	stdout	== the printer  *	stderr	== the printer log file  *	cwd	== the spool directory  *	argv	== set up by interface shell script:  *	  filtername	-P printer  *			-p filtername  *			[-r]		(don't ever reverse)  *			-n login  *			-h host  *			[accntfile]  *  *	environ	== various environment variable effect behavior  *		VERBOSELOG	- do verbose log file output  *		BANNERFIRST	- print .banner before job  *		BANNERLAST	- print .banner after job  *		REVERSE		- page reversal filter program  *				  (no reversal if null or missing)  *		PSLIBDIR	- transcript library directory  *		PSTEXT		- simple text formatting filter  *		JOBOUTPUT	- file for actual printer stream  *				  output (if defined)  *  * pscomm depends on certain additional features of the 4.2BSD spooling  * architecture.  In particular it assumes that the printer status file  * has the default name (./status) and it uses this file to communicate  * printer error status information to the user -- the contents of the  * status file gets incorporated in "lpq" and "lpc status" messages.  *  * Edit History:  * Andrew Shore: Sat Nov 16 11:59:58 1985  * End Edit History.  *  * RCSLOG:  * $Log:	pscomm.c,v $  * Revision 1.4  87/10/31  20:42:02  cuong  * Two changes:  *     1. Make sender wait for listener's signal when requesting initial  *        pagecount.  The problem is with short jobs& fast machines;  *        the sender will merrily finish the job and send an asynchronous  *        status request the response to which will clobber the listener's  *        input stream.  *     2. Make sender sleep(1) just after sending the job-finish EOF to give  *        the LaserWriter a chance to update its status.  *   * Revision 1.3  87/10/03  16:42:47  cuong  * Takes care of improper handling of abnormal exits when  * accounting is turned on.  Pagecount information was again  * waited on abortively.  Now, it's fixed, no?  *   * Revision 1.2  87/09/20  19:03:25  cuong  * Fixed bug:  * Symptom: pagecount accounting turned on, then pscomms will hang.  * Reason: old pscomm listener assumed the final pagecount information  *         will come after the ctrl-d; this is not true.  Hence it  * 	hangs waiting after the ctrl-d is received.  * Fix:    while waiting for ctrl-d, the pscomm listener must also  *         scan for the pattern %%[ pagecount: %d ]%%, and save  *         this in the pbuf[] array if found.    * Cuong  *   * Revision 1.1  87/06/13  19:26:31  cuong  * Initial revision  *   * Revision 2.1  85/11/24  11:50:16  shore  * Product Release 2.0  *   * Revision 1.1  85/11/20  00:35:21  shore  * Initial revision  *   * Revision 1.2  85/05/14  11:25:29  shore  * better support for BANNERLAST, still buggy though  *   *  */
 end_comment
 
 begin_include
@@ -137,7 +147,8 @@ name|debugp
 parameter_list|(
 name|x
 parameter_list|)
-value|{fprintf x ; (void) fflush(stderr);}
+define|\
+value|{ \    fprintf(stderr, "(pid %d) ", getpid()); \    fprintf x; \    (void) fflush(stderr); \ }
 end_define
 
 begin_else
@@ -2200,10 +2211,198 @@ name|mybuf
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: sent pagecount request\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
 name|progress
 operator|++
 expr_stmt|;
+comment|/* Sat Oct 31 17:51:45 PST 1987              * loop, waiting for the listener to signal initial pagecount is              * received.  The problem is with fast machines and short jobs;              * if we don't loop here, we may finish the job and send another              * CTRL-T before the initial pagecount ever came back.  The way              * the laserwriter behaves, this may result in a mix of pagecount              * data and status information like this:              * %%[ pagecount: %%[ status: busy; source: serial 25 ]%% 24418 ]%%              *              * That is really silly - Cuong              */
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|intsend
+argument_list|)
+decl_stmt|;
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|intsend
+argument_list|)
+decl_stmt|;
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|intsend
+argument_list|)
+decl_stmt|;
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|intsend
+argument_list|)
+decl_stmt|;
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|readynow
+argument_list|)
+decl_stmt|;
+name|progress
+operator|=
+name|oldprogress
+operator|=
+literal|0
+expr_stmt|;
+comment|/* finite progress on sender */
+name|getstatus
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* prime the pump for fun FALSE; */
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|salarm
+argument_list|)
+decl_stmt|;
+comment|/* sending phase alarm */
+name|VOIDC
+name|alarm
+argument_list|(
+name|SENDALARM
+argument_list|)
+decl_stmt|;
+comment|/* schedule an alarm/timeout */
+name|cnt
+operator|=
+literal|1
+expr_stmt|;
+name|goahead
+operator|=
+name|FALSE
+expr_stmt|;
+name|VOIDC
+name|setjmp
+argument_list|(
+name|startstatus
+argument_list|)
+decl_stmt|;
+while|while
+condition|(
+name|TRUE
+condition|)
+block|{
+if|if
+condition|(
+name|goahead
+condition|)
+break|break;
+name|pause
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|goahead
+condition|)
+break|break;
+comment|/* if we get here, we got an alarm */
+name|ioctl
+argument_list|(
+name|fdsend
+argument_list|,
+name|TIOCFLUSH
+argument_list|,
+operator|&
+name|flg
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|fdsend
+argument_list|,
+name|TIOCSTART
+argument_list|,
+operator|&
+name|flg
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|mybuf
+argument_list|,
+literal|"Not Responding for %d minutes"
+argument_list|,
+operator|(
+name|cnt
+operator|*
+name|SENDALARM
+operator|+
+literal|30
+operator|)
+operator|/
+literal|60
+argument_list|)
+expr_stmt|;
+name|Status
+argument_list|(
+name|mybuf
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|SENDALARM
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|++
+expr_stmt|;
 block|}
+name|VOIDC
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|emtdead
+argument_list|)
+decl_stmt|;
+comment|/* now EMTs mean printer died */
+name|RestoreStatus
+argument_list|()
+expr_stmt|;
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: sender received EMT (goahead) from listener\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* if (doactng) */
 comment|/* initial break page ? */
 if|if
 condition|(
@@ -2286,6 +2485,17 @@ condition|(
 name|getstatus
 condition|)
 block|{
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: get periodic status\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
 name|VOIDC
 name|write
 argument_list|(
@@ -2422,6 +2632,29 @@ argument_list|)
 expr_stmt|;
 comment|/* kill the listener? */
 block|}
+comment|/* final break page ? */
+if|if
+condition|(
+name|BannerLast
+condition|)
+block|{
+name|SendBanner
+argument_list|()
+expr_stmt|;
+name|progress
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|BannerFirst
+condition|)
+name|VOIDC
+name|unlink
+argument_list|(
+literal|".banner"
+argument_list|)
+decl_stmt|;
 name|donefile
 label|:
 empty_stmt|;
@@ -2463,6 +2696,17 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* now send the PostScript EOF character */
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: sending PostScript EOF\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
 name|VOIDC
 name|write
 argument_list|(
@@ -2531,6 +2775,12 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+comment|/* for very short jobs and very fast machines, 	 * we've experienced that the whole job is sent 	 * before the LaserWriter has a chance to update 	 * its status.  Hence we may get a false idle 	 * status if we immediately send the statusbuf. 	 * 	 * Keep in mind that the LaserWriter status response 	 * is asynchronous to the datastream. 	 */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* wait to sync with listener EMT signal 	 * to indicate it got an EOF from the printer 	 */
 while|while
 condition|(
@@ -2547,6 +2797,17 @@ condition|(
 name|getstatus
 condition|)
 block|{
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: get final status\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
 name|VOIDC
 name|write
 argument_list|(
@@ -2596,43 +2857,6 @@ literal|1
 condition|)
 break|break;
 block|}
-name|VOIDC
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|falarm
-argument_list|)
-decl_stmt|;
-name|VOIDC
-name|alarm
-argument_list|(
-name|WAITALARM
-argument_list|)
-decl_stmt|;
-comment|/* final break page ? */
-if|if
-condition|(
-name|BannerLast
-condition|)
-block|{
-name|SendBanner
-argument_list|()
-expr_stmt|;
-name|progress
-operator|++
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|BannerFirst
-condition|)
-name|VOIDC
-name|unlink
-argument_list|(
-literal|".banner"
-argument_list|)
-decl_stmt|;
 comment|/* final page accounting */
 if|if
 condition|(
@@ -2645,7 +2869,7 @@ name|mybuf
 argument_list|,
 name|getpages
 argument_list|,
-literal|""
+literal|"\004"
 argument_list|)
 expr_stmt|;
 name|VOIDC
@@ -2661,28 +2885,17 @@ name|mybuf
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|progress
-operator|++
-expr_stmt|;
-block|}
-comment|/* if we sent anything, finish it off */
-if|if
-condition|(
-name|BannerLast
-operator|||
-name|doactng
-condition|)
-block|{
-name|VOIDC
-name|write
+name|debugp
 argument_list|(
-name|fdsend
-argument_list|,
-name|eofbuf
-argument_list|,
-literal|1
+operator|(
+name|stderr
+operator|,
+literal|"%s: sent pagecount request\n"
+operator|,
+name|prog
+operator|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|progress
 operator|++
 expr_stmt|;
@@ -3065,6 +3278,19 @@ name|pb
 operator|=
 literal|0
 expr_stmt|;
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: initial status - %s\n"
+operator|,
+name|prog
+operator|,
+name|pbuf
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -3277,6 +3503,33 @@ name|pbuf
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* flush input state and signal sender that we heard something */
+name|ioctl
+argument_list|(
+name|fdlisten
+argument_list|,
+name|TIOCFLUSH
+argument_list|,
+operator|&
+name|flg
+argument_list|)
+expr_stmt|;
+name|VOIDC
+name|kill
+argument_list|(
+name|ppid
+argument_list|,
+name|SIGEMT
+argument_list|)
+decl_stmt|;
+comment|/* 	    Sun Sep 20 18:32:28 PDT 1987 	    The previous bug was that it was assumed the ctrl-d comes 	    before the final pagecount.  This doesn't happen, and the 	    listener waits forever after a ctrl-d for a pagecount. 	    The fix is to clear out the pbuf[] buffer, then check for it 	    when we get to looking for the final pagecount.  If it is 	    non-empty, we know we *already* read the final pagecount 	    *before* the ctrl-d, and use it, without waiting for 	    anything to come back from the printer. 	*/
+name|pbuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 comment|/* listen for the user job */
 while|while
@@ -3289,6 +3542,21 @@ operator|=
 name|getc
 argument_list|(
 name|psin
+argument_list|)
+expr_stmt|;
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: listener got character \\%o '%c'\n"
+operator|,
+name|prog
+operator|,
+name|r
+operator|,
+name|r
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3351,9 +3619,12 @@ name|THROW_AWAY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*     Sun Sep 20 18:37:01 PDT 1987     GotChar() takes an addition argument: the pointer to the     pbuf[] buffer, and fills it with the final pagecount     information if that is received from the printer. */
 name|GotChar
 argument_list|(
 name|r
+argument_list|,
+name|pbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -3384,6 +3655,28 @@ condition|(
 name|doactng
 condition|)
 block|{
+comment|/*     Sun Sep 20 18:48:35 PDT 1987     We attempt to wait for the final pagecount only if it has *not*     been sent by the printer.  It is the case that the final pagecount     is sent before the ctrl-d above, hence if we wait, it'll be forever.     Final pagecount information 'prematurely' received has already     been stored in pbuf[] iff pbuf[0] is non-null. */
+if|if
+condition|(
+name|pbuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: waiting for pagecount\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
 name|pb
 operator|=
 name|pbuf
@@ -3469,6 +3762,21 @@ name|pb
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+else|else
+block|{
+name|pb
+operator|=
+name|pbuf
+operator|+
+name|strlen
+argument_list|(
+name|pbuf
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|debugp
 argument_list|(
 operator|(
@@ -3623,6 +3931,26 @@ argument_list|(
 name|stdout
 argument_list|)
 decl_stmt|;
+comment|/*     Sun Sep 20 18:55:32 PDT 1987     File append failure report added for future use. */
+block|}
+else|else
+block|{
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: can't append accounting file\n"
+operator|,
+name|prog
+operator|)
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|accountingfile
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* all done -- let sender know */
@@ -3823,10 +4151,16 @@ name|private
 name|GotChar
 parameter_list|(
 name|c
+parameter_list|,
+name|pbuf
 parameter_list|)
 specifier|register
 name|int
 name|c
+decl_stmt|;
+name|char
+modifier|*
+name|pbuf
 decl_stmt|;
 block|{
 specifier|static
@@ -4391,6 +4725,44 @@ name|RestoreStatus
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+comment|/*     Sun Sep 20 18:39:40 PDT 1987     Additional else necessary: if we get the final pagecount     information here from the printer, store it in the given     array pbuf[]. */
+elseif|else
+if|if
+condition|(
+name|match
+operator|=
+name|FindPattern
+argument_list|(
+name|cp
+argument_list|,
+name|linebuf
+argument_list|,
+literal|"%%[ pagecount: "
+argument_list|)
+condition|)
+block|{
+comment|/* fill pbuf */
+name|strcpy
+argument_list|(
+name|pbuf
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
+name|debugp
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%s: 'premature' final pagecount read = '%s'\n"
+operator|,
+name|prog
+operator|,
+name|pbuf
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
