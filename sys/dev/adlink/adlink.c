@@ -1348,7 +1348,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Divide clock by ten */
+comment|/* Divide clock by four */
 name|bus_space_write_4
 argument_list|(
 name|sc
