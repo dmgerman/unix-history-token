@@ -3171,6 +3171,22 @@ endif|#
 directive|endif
 name|execv
 argument_list|(
+name|_PATH_RUNCOM
+argument_list|,
+name|argv
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|warning
+argument_list|(
+literal|"can't exec %s: %m"
+argument_list|,
+name|_PATH_RUNCOM
+argument_list|)
+expr_stmt|;
+name|execv
+argument_list|(
 name|_PATH_BSHELL
 argument_list|,
 name|argv
@@ -6631,6 +6647,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|execv
+argument_list|(
+name|_PATH_RUNDOWN
+argument_list|,
+name|argv
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|warning
+argument_list|(
+literal|"can't exec %s: %m"
+argument_list|,
+name|_PATH_RUNDOWN
+argument_list|)
+expr_stmt|;
 name|execv
 argument_list|(
 name|_PATH_BSHELL
