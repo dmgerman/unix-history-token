@@ -285,7 +285,6 @@ name|krb5_mk_rep
 argument_list|(
 name|ssh_context
 argument_list|,
-operator|&
 name|auth_context
 argument_list|,
 operator|&
@@ -462,7 +461,7 @@ goto|;
 block|}
 name|problem
 operator|=
-name|krb5_rd_cred
+name|krb5_rd_cred2
 argument_list|(
 name|ssh_context
 argument_list|,
