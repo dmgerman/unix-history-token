@@ -73,10 +73,26 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_THREAD_SAFE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_NANOSLEEP
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -119,6 +135,19 @@ name|int
 name|ringring
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|sleephandler
+parameter_list|()
+block|{
+name|ringring
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
@@ -494,30 +523,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
-begin_function
-specifier|static
-name|void
-name|sleephandler
-parameter_list|()
-block|{
-name|ringring
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
