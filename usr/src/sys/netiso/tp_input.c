@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.27 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3355,6 +3355,14 @@ block|}
 end_if
 
 begin_expr_stmt
+name|LOCAL_CREDIT
+argument_list|(
+name|tpcb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|IncStat
 argument_list|(
 name|ts_CR_rcvd
@@ -3386,11 +3394,6 @@ operator|.
 name|cs_size
 operator|=
 literal|0
-expr_stmt|;
-name|LOCAL_CREDIT
-argument_list|(
-name|tpcb
-argument_list|)
 expr_stmt|;
 name|CONG_INIT_SAMPLE
 argument_list|(
