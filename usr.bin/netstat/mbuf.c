@@ -342,9 +342,13 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u mbufs in use:\n"
+literal|"%u/%u mbufs in use:\n"
 argument_list|,
 name|totmbufs
+argument_list|,
+name|mbstat
+operator|.
+name|m_mbufs
 argument_list|)
 expr_stmt|;
 for|for
@@ -470,7 +474,9 @@ argument_list|)
 expr_stmt|;
 name|totmem
 operator|=
-name|totmbufs
+name|mbstat
+operator|.
+name|m_mbufs
 operator|*
 name|MSIZE
 operator|+
@@ -487,6 +493,16 @@ operator|.
 name|m_clfree
 operator|*
 name|MCLBYTES
+operator|+
+name|MSIZE
+operator|*
+operator|(
+name|mbstat
+operator|.
+name|m_mbufs
+operator|-
+name|totmbufs
+operator|)
 expr_stmt|;
 name|printf
 argument_list|(
