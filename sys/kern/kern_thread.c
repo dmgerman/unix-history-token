@@ -5207,12 +5207,12 @@ name|td_state
 operator|=
 name|TDS_INACTIVE
 expr_stmt|;
-name|td
-operator|->
-name|td_proc
-operator|=
-name|NULL
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|td->td_proc	= NULL;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_ksegrp
@@ -5963,34 +5963,6 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* Setup PCB and fork address */
-name|cpu_set_upcall
-argument_list|(
-name|spare
-argument_list|,
-name|td
-operator|->
-name|td_pcb
-argument_list|)
-expr_stmt|;
-comment|/* 	 * XXXKSE do we really need this? (default values for the 	 * frame). 	 */
-name|bcopy
-argument_list|(
-name|td
-operator|->
-name|td_frame
-argument_list|,
-name|spare
-operator|->
-name|td_frame
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|trapframe
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|spare
 operator|->
 name|td_ucred
@@ -6142,6 +6114,33 @@ argument_list|,
 name|ku
 operator|->
 name|ku_ksegrp
+argument_list|)
+expr_stmt|;
+comment|/* inherit blocked thread's context */
+name|bcopy
+argument_list|(
+name|td
+operator|->
+name|td_frame
+argument_list|,
+name|td2
+operator|->
+name|td_frame
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|trapframe
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cpu_set_upcall
+argument_list|(
+name|td2
+argument_list|,
+name|td
+operator|->
+name|td_pcb
 argument_list|)
 expr_stmt|;
 comment|/* Let the new thread become owner of the upcall */
