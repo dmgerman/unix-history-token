@@ -170,9 +170,6 @@ modifier|*
 name|oli
 decl_stmt|;
 comment|/* option letter list index */
-name|int
-name|ret
-decl_stmt|;
 if|if
 condition|(
 name|optreset
@@ -395,15 +392,11 @@ name|ostr
 operator|==
 literal|':'
 condition|)
-name|ret
-operator|=
+return|return
+operator|(
 name|BADARG
-expr_stmt|;
-else|else
-name|ret
-operator|=
-name|BADCH
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|opterr
@@ -424,7 +417,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|BADCH
 operator|)
 return|;
 block|}
