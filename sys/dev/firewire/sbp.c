@@ -6635,6 +6635,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 block|}
 name|ocb
@@ -8477,7 +8478,9 @@ comment|/*untagged*/
 literal|1
 argument|,
 comment|/*tagged*/
-argument|SBP_QUEUE_LEN, 				 devq);  	if (sbp->sim == NULL) { 		cam_simq_free(devq); 		return (ENXIO); 	}   	if (xpt_bus_register(sbp->sim,
+argument|SBP_QUEUE_LEN -
+literal|1
+argument|, 				 devq);  	if (sbp->sim == NULL) { 		cam_simq_free(devq); 		return (ENXIO); 	}   	if (xpt_bus_register(sbp->sim,
 comment|/*bus*/
 literal|0
 argument|) != CAM_SUCCESS) 		goto fail;  	if (xpt_create_path(&sbp->path, xpt_periph, cam_sim_path(sbp->sim), 	    CAM_TARGET_WILDCARD, CAM_LUN_WILDCARD) != CAM_REQ_CMP) { 		xpt_bus_deregister(cam_sim_path(sbp->sim)); 		goto fail; 	}
@@ -8682,7 +8685,7 @@ comment|/* if we are in probe stage, pass only probe commands */
 argument|if (sdev->status == SBP_DEV_PROBE) { 			char *name; 			name = xpt_path_periph(ccb->ccb_h.path)->periph_name; 			printf("probe stage, periph name: %s\n", name); 			if (strcmp(name, "probe") != 0) { 				ccb->ccb_h.status = CAM_REQUEUE_REQ; 				xpt_done(ccb); 				return; 			} 		}
 endif|#
 directive|endif
-argument|if ((ocb = sbp_get_ocb(sdev)) == NULL) 			return;  		ocb->flags = OCB_ACT_CMD; 		ocb->sdev = sdev; 		ocb->ccb = ccb; 		ccb->ccb_h.ccb_sdev_ptr = sdev; 		ocb->orb[
+argument|if ((ocb = sbp_get_ocb(sdev)) == NULL) { 			ccb->ccb_h.status = CAM_REQUEUE_REQ; 			xpt_done(ccb); 			return; 		}  		ocb->flags = OCB_ACT_CMD; 		ocb->sdev = sdev; 		ocb->ccb = ccb; 		ccb->ccb_h.ccb_sdev_ptr = sdev; 		ocb->orb[
 literal|0
 argument|] = htonl(
 literal|1
