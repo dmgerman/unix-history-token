@@ -1,0 +1,56 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_expr_stmt
+operator|.
+operator|\
+literal|" Copyright (c) 1986 Regents of the University of California. .\" All rights reserved.  The Berkeley software License Agreement .\" specifies the terms and conditions for redistribution. .\" .\"	@(#)strchkread.c	6.1 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<netinet/in.h> #include<netdb.h> #include<stdio.h> #define TRUE 1  /*  * This program uses select() to check that someone is trying to connect  * before calling accept().   */  main() { 	int             sock, length; 	struct sockaddr_in server; 	int             msgsock; 	char            buf[1024]; 	int             rval; 	int             i; 	int             ready; 	struct timeval  to;  	/* Create socket */ 	sock = socket(AF_INET, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
+name|opening
+name|stream
+name|socket
+literal|"); 		exit(0); 	} 	/* Name socket using wildcards */ 	server.sin_family = AF_INET; 	server.sin_addr.s_addr = INADDR_ANY; 	server.sin_port = 0; 	if (bind(sock,&server, sizeof(server))) { 		perror("
+name|binding
+name|stream
+name|socket
+literal|"); 	} 	/* Find out assigned port number and print it out */ 	length = sizeof(server); 	if (getsockname(sock,&server,&length)) { 		perror("
+name|getting
+name|socket
+name|name
+literal|"); 		exit(0); 	} 	printf("
+name|Socket
+name|has
+name|port
+operator|#
+operator|%
+name|d
+operator|\
+name|en
+literal|", ntohs(server.sin_port));  	/* Start accepting connections */ 	listen(sock, 5); 	do { 		ready = 1<< sock; 		to.tv_sec = 5; 		select(20,&ready, 0, 0,&to); 		if (ready) { 			msgsock = accept(sock, 0, 0); 			do { 				for (i = 0; i< 1024; i++) 					buf[i] = '\e0'; 				if ((rval = read(msgsock, buf, 1024))< 0) 					perror("
+name|reading
+name|stream
+name|message
+literal|"); 				i = 0; 				if (rval == 0) 					printf("
+name|Ending
+name|connection
+operator|\
+name|en
+literal|"); 				else 					printf("
+operator|--
+operator|>
+operator|%
+name|s
+operator|\
+name|en
+literal|", buf); 			} while (rval != 0); 			close(msgsock); 		} else 			printf("
+name|Do
+name|something
+end_expr_stmt
+
+begin_else
+else|else
+operator|\
+name|en
+literal|"
+end_else
+
+unit|); 	} while (TRUE); }
+end_unit
+
