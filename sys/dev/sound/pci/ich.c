@@ -1203,6 +1203,12 @@ name|num
 operator|*
 name|ICH_DTBL_LENGTH
 operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ich_desc
+argument_list|)
 expr_stmt|;
 name|ch
 operator|->
@@ -2248,7 +2254,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Sysctl to control ac97 speed (some boards overclocked ac97). */
+comment|/* Sysctl to control ac97 speed (some boards appear to end up using   * XTAL_IN rather than BIT_CLK for link timing).   */
 end_comment
 
 begin_function
@@ -2314,7 +2320,7 @@ comment|/* -------------------------------------------------------------------- 
 end_comment
 
 begin_comment
-comment|/* Calibrate card (some boards are overclocked and need scaling) */
+comment|/* Calibrate card to determine the clock source.  The source maybe a   * function of the ac97 codec initialization code (to be investigated).  */
 end_comment
 
 begin_function
