@@ -6044,6 +6044,10 @@ expr_stmt|;
 comment|/* XXX */
 if|if
 condition|(
+name|error
+operator|==
+literal|0
+operator|&&
 name|m
 condition|)
 name|m_freem
