@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.6	82/05/07	*/
+comment|/*	if_ec.c	4.7	82/05/07	*/
 end_comment
 
 begin_include
@@ -2008,6 +2008,10 @@ name|addr
 operator|->
 name|ec_xcr
 operator|=
+name|EC_JINTEN
+operator||
+name|EC_XINTEN
+operator||
 name|EC_JCLR
 expr_stmt|;
 block|}
