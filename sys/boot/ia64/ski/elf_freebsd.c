@@ -611,33 +611,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static struct bootinfo_v1	bootinfo_v1;     struct file_metadata	*md;     Elf_Ehdr			*hdr;     int				err;      if ((md = file_findmetadata(fp, MODINFOMD_ELFHDR)) == NULL) 	return(EFTYPE);
-comment|/* XXX actually EFUCKUP */
-end_comment
-
-begin_comment
-unit|hdr = (Elf_Ehdr *)&(md->md_data);
-comment|/* XXX ffp_save does not appear to be used in the kernel.. */
-end_comment
-
-begin_comment
-unit|bzero(&bootinfo_v1, sizeof(bootinfo_v1));     err = bi_load(&bootinfo_v1,&ffp_save, fp);     if (err) 	return(err);
-comment|/*      * Fill in the bootinfo for the kernel.      */
-end_comment
-
-begin_endif
-unit|strncpy(bootinfo_v1.booted_kernel, fp->f_name, 	    sizeof(bootinfo_v1.booted_kernel));     prom_getenv(PROM_E_BOOTED_OSFLAGS, bootinfo_v1.boot_flags, 		sizeof(bootinfo_v1.boot_flags));     bootinfo_v1.hwrpb = (void *)HWRPB_ADDR;     bootinfo_v1.hwrpbsize = ((struct rpb *)HWRPB_ADDR)->rpb_size;     bootinfo_v1.cngetc = NULL;     bootinfo_v1.cnputc = NULL;     bootinfo_v1.cnpollc = NULL;      printf("Entering %s at 0x%lx...\n", fp->f_name, hdr->e_entry);     exit(0);     closeall();     alpha_pal_imb();     (*(void (*)())hdr->e_entry)(ffp_save, ptbr_save, 			       BOOTINFO_MAGIC,&bootinfo_v1, 1, 0);
-endif|#
-directive|endif
-end_endif
-
 unit|}
 end_unit
 
