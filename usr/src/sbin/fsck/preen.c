@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	8.1 (Berkeley) %G%"
+literal|"@(#)preen.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1786,16 +1786,10 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|printf
-argument_list|(
-literal|"Can't make sense out of name %s\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Not a block or character device, just return name and 	 * let the user decide whether to use it. 	 */
 return|return
 operator|(
-literal|0
+name|name
 operator|)
 return|;
 block|}
