@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.2 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,11 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 goto|goto
 name|again
 goto|;
@@ -699,7 +704,8 @@ index|]
 operator|.
 name|n_value
 operator|&=
-literal|0x7fffffff
+operator|~
+name|KERNBASE
 expr_stmt|;
 name|nl
 index|[
@@ -708,7 +714,8 @@ index|]
 operator|.
 name|n_value
 operator|&=
-literal|0x7fffffff
+operator|~
+name|KERNBASE
 expr_stmt|;
 block|}
 operator|(
