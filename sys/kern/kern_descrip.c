@@ -9054,6 +9054,12 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* We have the last ref so we can proceed without the file lock. */
+name|FILE_UNLOCK
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -9120,11 +9126,6 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
-name|FILE_UNLOCK
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -9146,12 +9147,6 @@ name|F_FLOCK
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|FILE_UNLOCK
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fp
