@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pppctl.c,v 1.16 1998/03/22 00:43:04 brian Exp $  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pppctl.c,v 1.16.2.1 1999/01/31 12:25:39 brian Exp $  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -124,14 +130,14 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|Usage
+name|usage
 parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: pppctl [-v] [ -t n ] [ -p passwd ] "
+literal|"usage: pppctl [-v] [-t n] [-p passwd] "
 literal|"Port|LocalSock [command[;command]...]\n"
 argument_list|)
 expr_stmt|;
@@ -158,9 +164,11 @@ argument_list|,
 literal|"              -p passwd specifies your password\n"
 argument_list|)
 expr_stmt|;
-return|return
+name|exit
+argument_list|(
 literal|1
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -926,7 +934,7 @@ name|len
 decl_stmt|,
 name|verbose
 decl_stmt|,
-name|err
+name|save_errno
 decl_stmt|;
 name|unsigned
 name|TimeoutVal
@@ -1071,10 +1079,9 @@ name|DoneWord
 expr_stmt|;
 break|break;
 default|default:
-return|return
-name|Usage
+name|usage
 argument_list|()
-return|;
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1087,10 +1094,9 @@ name|arg
 operator|+
 literal|1
 condition|)
-return|return
-name|Usage
+name|usage
 argument_list|()
-return|;
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1154,11 +1160,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Path too long\n"
+literal|"%s: path too long"
 argument_list|,
 name|argv
 index|[
@@ -1206,11 +1210,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot create local domain socket\n"
+literal|"cannot create local domain socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1342,11 +1344,9 @@ name|sin_addr
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot translate %s\n"
+literal|"cannot translate %s"
 argument_list|,
 name|host
 argument_list|)
@@ -1371,11 +1371,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot resolve %s\n"
+literal|"cannot resolve %s"
 argument_list|,
 name|host
 argument_list|)
@@ -1454,19 +1452,16 @@ operator|!
 name|s
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s isn't a valid port or service!\n"
+literal|"%s isn't a valid port or service!"
 argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-return|return
-name|Usage
+name|usage
 argument_list|()
-return|;
+expr_stmt|;
 block|}
 else|else
 name|ifsin
@@ -1510,11 +1505,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot create internet socket\n"
+literal|"cannot create internet socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1582,15 +1575,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
-operator|=
-name|errno
-expr_stmt|;
 if|if
 condition|(
 name|TimeoutVal
 condition|)
 block|{
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|alarm
 argument_list|(
 literal|0
@@ -1606,29 +1599,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|TimedOut
 condition|)
-block|{
-name|fputs
+name|warnx
 argument_list|(
-literal|"Timeout: "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot connect to socket %s"
+literal|"timeout: cannot connect to socket %s"
 argument_list|,
 name|argv
 index|[
@@ -1636,29 +1618,34 @@ name|arg
 index|]
 argument_list|)
 expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
-name|err
+name|errno
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"cannot connect to socket %s"
 argument_list|,
-literal|": %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|err
-argument_list|)
+name|argv
+index|[
+name|arg
+index|]
 argument_list|)
 expr_stmt|;
-name|fputc
+else|else
+name|warnx
 argument_list|(
-literal|'\n'
+literal|"cannot connect to socket %s"
 argument_list|,
-name|stderr
+name|argv
+index|[
+name|arg
+index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd
@@ -1864,6 +1851,22 @@ name|size
 operator|=
 literal|20
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|history
+argument_list|(
+name|hist
+argument_list|,
+name|NULL
+argument_list|,
+name|H_SETSIZE
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|history
 argument_list|(
 name|hist
@@ -1873,6 +1876,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|edit
 operator|=
 name|el_init
@@ -2000,6 +2005,22 @@ name|len
 operator|>
 literal|1
 condition|)
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|history
+argument_list|(
+name|hist
+argument_list|,
+name|NULL
+argument_list|,
+name|H_ENTER
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|history
 argument_list|(
 name|hist
@@ -2009,6 +2030,8 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|fd
@@ -2197,11 +2220,9 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ppp is not responding\n"
+literal|"ppp is not responding"
 argument_list|)
 expr_stmt|;
 break|break;
