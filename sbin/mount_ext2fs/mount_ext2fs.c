@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_ext2fs.c,v 1.4 1996/09/14 02:57:56 bde Exp $"
+literal|"$Id: mount_ext2fs.c,v 1.4.2.1 1997/12/04 07:36:11 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,7 +362,7 @@ name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ext2fs filesystem not available"
+literal|"ext2fs filesystem is not available"
 argument_list|)
 expr_stmt|;
 if|if
