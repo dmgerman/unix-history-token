@@ -637,6 +637,7 @@ specifier|const
 name|char
 modifier|*
 name|sname
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1853,6 +1854,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|Print_Chunk
 parameter_list|(

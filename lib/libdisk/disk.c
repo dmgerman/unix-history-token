@@ -1889,7 +1889,6 @@ parameter_list|,
 name|XMLToken
 name|t
 parameter_list|,
-specifier|const
 name|u_int
 modifier|*
 name|slice
