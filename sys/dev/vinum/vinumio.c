@@ -1070,6 +1070,24 @@ init|=
 name|VINUM_NOMAGIC
 decl_stmt|;
 comment|/* no magic number */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_referenced
+condition|)
+block|{
+comment|/* real drive */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|==
+name|drive_up
+condition|)
 name|write_drive
 argument_list|(
 name|drive
@@ -1097,6 +1115,7 @@ name|save_config
 argument_list|()
 expr_stmt|;
 comment|/* and save the updated configuration */
+block|}
 block|}
 end_function
 
@@ -2776,7 +2795,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|i
 operator|++
@@ -2803,8 +2822,8 @@ operator|(
 name|vol
 operator|->
 name|state
-operator|!=
-name|volume_unallocated
+operator|>
+name|volume_uninit
 operator|)
 operator|&&
 operator|(
@@ -2931,7 +2950,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|i
 operator|++
@@ -2959,7 +2978,7 @@ name|plex
 operator|->
 name|state
 operator|!=
-name|plex_unallocated
+name|plex_referenced
 operator|)
 operator|&&
 operator|(
@@ -3170,7 +3189,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|i
 operator|++
@@ -3180,16 +3199,15 @@ name|struct
 name|sd
 modifier|*
 name|sd
-init|=
-operator|&
-name|vinum_conf
-operator|.
+decl_stmt|;
 name|sd
+operator|=
+operator|&
+name|SD
 index|[
 name|i
 index|]
-decl_stmt|;
-comment|/* XXX */
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3197,7 +3215,7 @@ name|sd
 operator|->
 name|state
 operator|!=
-name|sd_unallocated
+name|sd_referenced
 operator|)
 operator|&&
 operator|(
@@ -3505,7 +3523,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|driveno
 operator|++
@@ -3522,13 +3540,22 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* point to drive */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_referenced
+condition|)
+block|{
 name|lockdrive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
 comment|/* don't let it change */
-comment|/* 	 * First, do some drive consistency checks.  Some 	 * of these are kludges, others require a process 	 * context and couldn't be done before  	 */
+comment|/* 	     * First, do some drive consistency checks.  Some 	     * of these are kludges, others require a process 	     * context and couldn't be done before  	     */
 if|if
 condition|(
 operator|(
@@ -3900,6 +3927,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* we've written it on at least one drive */
+block|}
 block|}
 block|}
 block|}
@@ -4331,7 +4359,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 comment|/* invalid volume */
 return|return
@@ -4351,13 +4379,27 @@ condition|(
 name|vol
 operator|->
 name|state
-operator|==
-name|volume_unallocated
+operator|<=
+name|volume_uninit
 condition|)
 comment|/* nothing there */
 return|return
-name|ENOENT
+name|ENXIO
 return|;
+elseif|else
+if|if
+condition|(
+name|vol
+operator|->
+name|state
+operator|<
+name|volume_up
+condition|)
+comment|/* not accessible */
+return|return
+name|EIO
+return|;
+comment|/* I/O error */
 name|get_volume_label
 argument_list|(
 name|vol
@@ -5031,6 +5073,12 @@ block|}
 comment|/* 	 * XXX At this point, check that the two copies are the same, and do something useful if not. 	 * In particular, consider which is newer, and what this means for the integrity of the 	 * data on the drive  	 */
 else|else
 block|{
+name|vinum_conf
+operator|.
+name|drives_used
+operator|++
+expr_stmt|;
+comment|/* another drive in use */
 comment|/* Parse the configuration, and add it to the global configuration */
 for|for
 control|(
