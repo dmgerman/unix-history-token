@@ -2592,6 +2592,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* slave on line 2 */
+ifdef|#
+directive|ifdef
+name|AUTO_EOI_1
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -2603,7 +2606,21 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* (master) auto EOI, 8086 mode */
+comment|/* auto EOI, 8086 mode */
+else|#
+directive|else
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 8086 mode */
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -3799,7 +3816,7 @@ block|{
 comment|/* DON'T BOTHER FOR NOW! */
 comment|/* for some reason, we get bursts of intr #7, even if not enabled! */
 comment|/* 	 * Well the reason you got bursts of intr #7 is because someone 	 * raised an interrupt line and dropped it before the 8259 could 	 * prioritize it.  This is documented in the intel data book.  This 	 * means you have BAD hardware!  I have changed this so that only 	 * the first 5 get logged, then it quits logging them, and puts 	 * out a special message. rgrimes 3/25/1993 	 */
-comment|/* 	 * XXX TODO print a different message for #7 if it is for a 	 * glitch.  Glitches can be distinguished from real #7's by 	 * testing that the in-service bit is _not_ set.  The test 	 * must be done before sending an EOI so it can't be done if 	 * we are using AUTO_EOI_1. 	 * 	 * XXX AUTO_EOI_1 is now standard. 	 */
+comment|/* 	 * XXX TODO print a different message for #7 if it is for a 	 * glitch.  Glitches can be distinguished from real #7's by 	 * testing that the in-service bit is _not_ set.  The test 	 * must be done before sending an EOI so it can't be done if 	 * we are using AUTO_EOI_1. 	 */
 if|if
 condition|(
 name|intrcnt
