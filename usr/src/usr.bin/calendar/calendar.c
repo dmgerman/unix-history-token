@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	4.7 (Berkeley) %G%"
+literal|"@(#)calendar.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,14 +433,12 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|!
-name|isspace
-argument_list|(
 name|buf
 index|[
 literal|0
 index|]
-argument_list|)
+operator|!=
+literal|'\t'
 condition|)
 name|printing
 operator|=
