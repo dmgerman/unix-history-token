@@ -1167,6 +1167,17 @@ name|NUMCDEVSW
 value|256
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAJOR_AUTO
+value|-1
+end_define
+
+begin_comment
+comment|/* XXX: Not GM */
+end_comment
+
 begin_comment
 comment|/*  * nopsize is little used, so not worth having dummy functions for.  */
 end_comment
