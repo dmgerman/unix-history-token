@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rl.c	6.2	84/08/29	*/
+comment|/*	rl.c	6.3	84/11/27	*/
 end_comment
 
 begin_include
@@ -252,6 +252,11 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* E= Not Defined     */
+literal|0
+block|,
+literal|0
+block|,
 comment|/* F= Not Defined     */
 literal|20440
 block|,
@@ -337,6 +342,8 @@ index|[]
 init|=
 block|{
 literal|0174400
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -664,14 +671,16 @@ condition|(
 operator|(
 name|rladdr
 operator|->
-name|rlmp
-operator|.
-name|getstat
+name|rlcs
 operator|&
-name|RLMP_STATUS
+operator|(
+name|RL_CRDY
+operator||
+name|RL_ERR
+operator|)
 operator|)
 operator|!=
-name|RLMP_STATOK
+name|RL_CRDY
 operator|&&
 operator|++
 name|ctr
