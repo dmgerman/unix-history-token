@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispmbox.h,v 1.11 1999/07/02 22:31:11 mjacob Exp $ */
-end_comment
-
-begin_comment
-comment|/* release_6_5_99 */
+comment|/* $Id: ispmbox.h,v 1.12 1999/07/05 20:42:07 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -2030,12 +2026,13 @@ comment|/*  * FC (ISP2100) specific data structures  */
 end_comment
 
 begin_comment
-comment|/*  * Initialization Control Block  *  * Version One format.  */
+comment|/*  * Initialization Control Block  *  * Version One (prime) format.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
+name|isp_icb
 block|{
 name|u_int8_t
 name|icb_version
@@ -2062,7 +2059,7 @@ name|u_int8_t
 name|icb_retry_delay
 decl_stmt|;
 name|u_int8_t
-name|icb_nodename
+name|icb_portname
 index|[
 literal|8
 index|]
@@ -2074,10 +2071,10 @@ name|u_int8_t
 name|icb_iqdevtype
 decl_stmt|;
 name|u_int8_t
-name|_reserved1
+name|icb_logintime
 decl_stmt|;
 name|u_int8_t
-name|icb_portname
+name|icb_nodename
 index|[
 literal|8
 index|]
@@ -2104,6 +2101,39 @@ name|u_int16_t
 name|icb_respaddr
 index|[
 literal|4
+index|]
+decl_stmt|;
+name|u_int16_t
+name|icb_lunenables
+decl_stmt|;
+name|u_int8_t
+name|icb_ccnt
+decl_stmt|;
+name|u_int8_t
+name|icb_icnt
+decl_stmt|;
+name|u_int16_t
+name|icb_lunetimeout
+decl_stmt|;
+name|u_int16_t
+name|_reserved1
+decl_stmt|;
+name|u_int16_t
+name|icb_xfwoptions
+decl_stmt|;
+name|u_int8_t
+name|icb_racctimer
+decl_stmt|;
+name|u_int8_t
+name|icb_idelaytimer
+decl_stmt|;
+name|u_int16_t
+name|icb_zfwoptions
+decl_stmt|;
+name|u_int16_t
+name|_reserved2
+index|[
+literal|13
 index|]
 decl_stmt|;
 block|}
@@ -2221,6 +2251,13 @@ define|#
 directive|define
 name|ICBOPT_USE_PORTNAME
 value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICBOPT_EXTENDED
+value|0x8000
 end_define
 
 begin_define
