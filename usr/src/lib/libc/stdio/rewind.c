@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rewind.c	5.5 (Berkeley) %G%"
+literal|"@(#)rewind.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -55,93 +49,42 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_expr_stmt
+begin_function
+name|void
 name|rewind
-argument_list|(
-name|iop
-argument_list|)
+parameter_list|(
+name|fp
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
-name|iop
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+modifier|*
+name|fp
+decl_stmt|;
 block|{
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
-name|fflush
+name|fseek
 argument_list|(
-name|iop
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|lseek
-argument_list|(
-name|fileno
-argument_list|(
-name|iop
-argument_list|)
+name|fp
 argument_list|,
 literal|0L
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|iop
-operator|->
-name|_cnt
+name|clearerr
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|iop
-operator|->
-name|_ptr
-operator|=
-name|iop
-operator|->
-name|_base
-expr_stmt|;
-name|iop
-operator|->
-name|_flag
-operator|&=
-operator|~
-operator|(
-name|_IOERR
-operator||
-name|_IOEOF
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|iop
-operator|->
-name|_flag
-operator|&
-name|_IORW
-condition|)
-name|iop
-operator|->
-name|_flag
-operator|&=
-operator|~
-operator|(
-name|_IOREAD
-operator||
-name|_IOWRT
-operator|)
-expr_stmt|;
+comment|/* not required, but seems reasonable */
 block|}
-end_block
+end_function
 
 end_unit
 
