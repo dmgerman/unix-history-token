@@ -11374,6 +11374,14 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Loop over all current mappings setting/clearing as appropos If 	 * setting RO do we need to clear the VAC? 	 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -11702,6 +11710,14 @@ name|s
 operator|=
 name|splvm
 argument_list|()
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
