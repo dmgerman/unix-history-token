@@ -534,18 +534,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void g_enc_dos_partition(u_char *ptr, struct dos_partition *d) {  	ptr[0] = d->dp_flag; 	ptr[1] = d->dp_shd; 	ptr[2] = d->dp_ssect; 	ptr[3] = d->dp_scyl; 	ptr[4] = d->dp_typ; 	ptr[5] = d->dp_ehd; 	ptr[6] = d->dp_esect; 	ptr[7] = d->dp_ecyl; 	g_enc_le4(ptr + 8, d->dp_start); 	g_enc_le4(ptr + 12, d->dp_size); }
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|g_mbr_softc
