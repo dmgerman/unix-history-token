@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.6 (Berkeley) %G%"
+literal|"@(#)wall.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -89,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -116,6 +110,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -123,22 +123,13 @@ name|IGNOREUSER
 value|"sleeper"
 end_define
 
-begin_define
-define|#
-directive|define
-name|UTMP
-value|"/etc/utmp"
-end_define
-
 begin_decl_stmt
-specifier|static
 name|int
 name|mbufsize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|mbuf
@@ -206,7 +197,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|UTMP
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -217,7 +208,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"wall: cannot read /etc/utmp.\n"
+literal|"wall: cannot read %s.\n"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -280,6 +273,10 @@ argument_list|(
 name|utmp
 operator|.
 name|ut_line
+argument_list|,
+literal|1
+argument_list|,
+name|mbufsize
 argument_list|)
 expr_stmt|;
 name|exit
@@ -390,7 +387,7 @@ name|strcpy
 argument_list|(
 name|tmpname
 argument_list|,
-literal|"/tmp/wall.XXX"
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 if|if
@@ -497,7 +494,7 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-comment|/* 	 * all this stuff is to blank out a square for the message; we 	 * limit message lines to 75 characters, and blank out to 79. 	 * Not 80 'cause some terminals do weird stuff then. 	 */
+comment|/* 	 * all this stuff is to blank out a square for the message; we 	 * wrap message lines at column 79, not 80, because some terminals 	 * wrap after 79, some do not, and we can't tell. 	 */
 name|fprintf
 argument_list|(
 name|fp
@@ -642,34 +639,18 @@ operator|,
 operator|++
 name|cnt
 control|)
+block|{
 if|if
 condition|(
 name|cnt
 operator|==
-literal|75
+literal|79
 operator|||
 name|ch
 operator|==
 literal|'\n'
 condition|)
 block|{
-for|for
-control|(
-init|;
-name|cnt
-operator|<
-literal|79
-condition|;
-operator|++
-name|cnt
-control|)
-name|putc
-argument_list|(
-literal|' '
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
 name|putc
 argument_list|(
 literal|'\r'
@@ -686,7 +667,7 @@ argument_list|)
 expr_stmt|;
 name|cnt
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -697,6 +678,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -818,6 +800,10 @@ begin_macro
 name|sendmsg
 argument_list|(
 argument|line
+argument_list|,
+argument|nonblock
+argument_list|,
+argument|left
 argument_list|)
 end_macro
 
@@ -841,15 +827,11 @@ index|[
 name|MAXNAMLEN
 index|]
 init|=
-literal|"/dev/"
+name|_PATH_DEV
 decl_stmt|;
 specifier|register
 name|int
 name|fd
-decl_stmt|,
-name|flags
-decl_stmt|,
-name|left
 decl_stmt|,
 name|wret
 decl_stmt|;
@@ -859,6 +841,10 @@ name|lp
 decl_stmt|,
 modifier|*
 name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
 argument_list|()
 decl_stmt|;
 operator|(
@@ -873,6 +859,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+comment|/* 	 * open will fail on slip lines or exclusive-use lines 	 * if not running as root 	 */
 if|if
 condition|(
 operator|(
@@ -883,6 +870,14 @@ argument_list|(
 name|device
 argument_list|,
 name|O_WRONLY
+operator||
+operator|(
+name|nonblock
+condition|?
+name|O_NONBLOCK
+else|:
+literal|0
+operator|)
 argument_list|,
 literal|0
 argument_list|)
@@ -891,89 +886,48 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EBUSY
+operator|&&
+name|errno
+operator|!=
+name|EPERM
+condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"wall: %s: "
+literal|"wall: %s: %s\n"
 argument_list|,
 name|device
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-name|flags
-operator|=
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|FNDELAY
-operator|)
-condition|)
-block|{
-comment|/* NDELAY bit not set; if can't set, fork instead */
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|flags
-operator||
-name|FNDELAY
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|forkit
-goto|;
-block|}
-block|}
-else|else
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 name|lp
 operator|=
 name|mbuf
-expr_stmt|;
-name|left
-operator|=
+operator|+
 name|mbufsize
+operator|-
+name|left
 expr_stmt|;
 while|while
 condition|(
-operator|(
+name|left
+condition|)
+block|{
 name|wret
 operator|=
 name|write
@@ -984,11 +938,7 @@ name|lp
 argument_list|,
 name|left
 argument_list|)
-operator|)
-operator|!=
-name|left
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|wret
@@ -1013,9 +963,6 @@ operator|==
 name|EWOULDBLOCK
 condition|)
 block|{
-comment|/* child resets FNDELAY if necessary; parent leaves */
-name|forkit
-label|:
 if|if
 condition|(
 name|fork
@@ -1032,23 +979,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|flags
-condition|)
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-comment|/* wait 5 minutes and then quit */
+comment|/* wait at most 5 minutes */
 operator|(
 name|void
 operator|)
@@ -1064,16 +995,13 @@ literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
+name|sendmsg
 argument_list|(
-name|fd
+name|line
 argument_list|,
-name|mbuf
+literal|0
 argument_list|,
-name|mbufsize
+name|left
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1082,46 +1010,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENODEV
+condition|)
 block|{
+comment|/* 			 * We get ENODEV on a slip line 			 * if we're running as root 			 */
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"wall: %s: "
+literal|"wall: %s: %s\n"
 argument_list|,
 name|device
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* write was successful, or error != EWOULDBLOCK; cleanup */
-if|if
-condition|(
-name|flags
-condition|)
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
