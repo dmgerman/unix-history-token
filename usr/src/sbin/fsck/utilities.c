@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.6 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,9 +769,7 @@ name|sblk
 operator|.
 name|b_bno
 operator|!=
-name|SBLOCK
-operator|*
-name|DEV_BSIZE
+name|SBOFF
 operator|/
 name|dev_bsize
 operator|&&
@@ -788,9 +786,7 @@ name|sblk
 operator|.
 name|b_bno
 operator|=
-name|SBLOCK
-operator|*
-name|DEV_BSIZE
+name|SBOFF
 operator|/
 name|dev_bsize
 expr_stmt|;

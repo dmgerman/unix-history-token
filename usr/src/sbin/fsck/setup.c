@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.7 (Berkeley) %G%"
+literal|"@(#)setup.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,8 +1016,10 @@ init|=
 name|bflag
 condition|?
 name|bflag
+operator|*
+name|DEV_BSIZE
 else|:
-name|SBLOCK
+name|SBOFF
 decl_stmt|;
 name|initbarea
 argument_list|(
@@ -1027,7 +1029,7 @@ argument_list|)
 expr_stmt|;
 name|dev_bsize
 operator|=
-name|DEV_BSIZE
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1231,8 +1233,6 @@ operator|=
 name|sblk
 operator|.
 name|b_bno
-operator|*
-name|DEV_BSIZE
 operator|/
 name|dev_bsize
 expr_stmt|;
