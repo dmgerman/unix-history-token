@@ -257,7 +257,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* use LBA adressing */
+comment|/* use LBA addressing */
 end_comment
 
 begin_define

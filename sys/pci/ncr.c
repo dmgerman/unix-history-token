@@ -17032,7 +17032,7 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-comment|/*========================================================== ** **	log message for real hard errors ** **	"ncr0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ name (dsp:dbc)." **	"	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf." ** **	exception register: **		ds:	dstat **		si:	sist ** **	SCSI bus lines: **		so:	control lines as driver by NCR. **		si:	control lines as seen by NCR. **		sd:	scsi data lines as seen by NCR. ** **	wide/fastmode: **		sxfer:	(see the manual) **		scntl3:	(see the manual) ** **	current script command: **		dsp:	script adress (relative to start of script). **		dbc:	first word of script command. ** **	First 16 register of the chip: **		r0..rf ** **========================================================== */
+comment|/*========================================================== ** **	log message for real hard errors ** **	"ncr0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ name (dsp:dbc)." **	"	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf." ** **	exception register: **		ds:	dstat **		si:	sist ** **	SCSI bus lines: **		so:	control lines as driver by NCR. **		si:	control lines as seen by NCR. **		sd:	scsi data lines as seen by NCR. ** **	wide/fastmode: **		sxfer:	(see the manual) **		scntl3:	(see the manual) ** **	current script command: **		dsp:	script address (relative to start of script). **		dbc:	first word of script command. ** **	First 16 register of the chip: **		r0..rf ** **========================================================== */
 specifier|static
 name|void
 name|ncr_log_hard_error

@@ -16421,7 +16421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  log message for real hard errors  *  *  sym0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ name (dsp:dbc).  *  	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf.  *  *  exception register:  *  	ds:	dstat  *  	si:	sist  *  *  SCSI bus lines:  *  	so:	control lines as driven by chip.  *  	si:	control lines as seen by chip.  *  	sd:	scsi data lines as seen by chip.  *  *  wide/fastmode:  *  	sxfer:	(see the manual)  *  	scntl3:	(see the manual)  *  *  current script command:  *  	dsp:	script adress (relative to start of script).  *  	dbc:	first word of script command.  *  *  First 24 register of the chip:  *  	r0..rf  */
+comment|/*  *  log message for real hard errors  *  *  sym0 targ 0?: ERROR (ds:si) (so-si-sd) (sxfer/scntl3) @ name (dsp:dbc).  *  	      reg: r0 r1 r2 r3 r4 r5 r6 ..... rf.  *  *  exception register:  *  	ds:	dstat  *  	si:	sist  *  *  SCSI bus lines:  *  	so:	control lines as driven by chip.  *  	si:	control lines as seen by chip.  *  	sd:	scsi data lines as seen by chip.  *  *  wide/fastmode:  *  	sxfer:	(see the manual)  *  	scntl3:	(see the manual)  *  *  current script command:  *  	dsp:	script address (relative to start of script).  *  	dbc:	first word of script command.  *  *  First 24 register of the chip:  *  	r0..rf  */
 end_comment
 
 begin_function

@@ -450,7 +450,7 @@ goto|goto
 name|tunc_return
 goto|;
 block|}
-comment|/*    *  Delete (previous) adresses for interface    *    *  !!!!    *  On FreeBSD this ioctl returns error    *  when tunN have no addresses, so - log and ignore it.    *    */
+comment|/*    *  Delete (previous) addresses for interface    *    *  !!!!    *  On FreeBSD this ioctl returns error    *  when tunN have no addresses, so - log and ignore it.    *    */
 if|if
 condition|(
 name|ioctl
@@ -793,7 +793,7 @@ goto|goto
 name|closing_fds
 goto|;
 block|}
-comment|/*    *  Delete adresses for interface    */
+comment|/*    *  Delete addresses for interface    */
 name|bzero
 argument_list|(
 operator|&

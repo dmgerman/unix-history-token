@@ -9113,7 +9113,7 @@ index|]
 operator|&=
 literal|0xbf
 expr_stmt|;
-comment|/* turn off word adressing */
+comment|/* turn off word addressing */
 name|params
 operator|.
 name|regs
