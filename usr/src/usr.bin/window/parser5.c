@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser5.c	3.4 84/05/06"
+literal|"@(#)parser5.c	3.5 84/05/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,6 +247,7 @@ operator|.
 name|x_arg
 operator|==
 literal|0
+operator|||
 name|v
 operator|->
 name|v_num
