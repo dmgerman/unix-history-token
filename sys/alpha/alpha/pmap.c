@@ -3848,11 +3848,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_flash
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|m
