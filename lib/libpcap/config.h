@@ -199,7 +199,7 @@ comment|/* IPv6 */
 end_comment
 
 begin_comment
-comment|/* XXX Handled by Makefile, to handle NOINET6 */
+comment|/* XXX Handled by Makefile, to handle NO_INET6 */
 end_comment
 
 begin_comment
