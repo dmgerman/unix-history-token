@@ -2129,6 +2129,7 @@ expr_stmt|;
 comment|/* 	 * Set the LED modes on the LinkSys adapter. 	 * This turns on the 'dual link LED' bin in the auxmode 	 * register of the Broadcom PHY. 	 */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|aue_info
@@ -2144,6 +2145,25 @@ operator|->
 name|aue_did
 operator|==
 name|USB_PRODUCT_LINKSYS_USB100TX
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|aue_info
+operator|->
+name|aue_vid
+operator|==
+name|USB_VENDOR_DLINK
+operator|&&
+name|sc
+operator|->
+name|aue_info
+operator|->
+name|aue_did
+operator|==
+name|USB_PRODUCT_DLINK_DSB650TX
+operator|)
 condition|)
 block|{
 name|u_int16_t
@@ -2574,6 +2594,7 @@ expr_stmt|;
 comment|/* Grrr. LinkSys has to be different from everyone else. */
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|aue_info
@@ -2589,6 +2610,25 @@ operator|->
 name|aue_did
 operator|==
 name|USB_PRODUCT_LINKSYS_USB100TX
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|aue_info
+operator|->
+name|aue_vid
+operator|==
+name|USB_VENDOR_DLINK
+operator|&&
+name|sc
+operator|->
+name|aue_info
+operator|->
+name|aue_did
+operator|==
+name|USB_PRODUCT_DLINK_DSB650TX
+operator|)
 condition|)
 block|{
 name|csr_write_1
