@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyname.c	5.12 (Berkeley) %G%"
+literal|"@(#)ttyname.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,12 +361,9 @@ name|dsb
 decl_stmt|;
 name|char
 modifier|*
-name|rval
-decl_stmt|,
-modifier|*
 name|strcpy
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(
@@ -385,20 +382,15 @@ operator|(
 name|NULL
 operator|)
 return|;
-for|for
-control|(
-name|rval
-operator|=
-name|NULL
-init|;
+while|while
+condition|(
 name|dirp
 operator|=
 name|readdir
 argument_list|(
 name|dp
 argument_list|)
-condition|;
-control|)
+condition|)
 block|{
 if|if
 condition|(
@@ -468,11 +460,11 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-name|rval
-operator|=
+return|return
+operator|(
 name|buf
-expr_stmt|;
-break|break;
+operator|)
+return|;
 block|}
 operator|(
 name|void
@@ -484,7 +476,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rval
+name|NULL
 operator|)
 return|;
 block|}
