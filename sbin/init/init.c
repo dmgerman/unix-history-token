@@ -1264,7 +1264,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sf"
+literal|"dsf"
 argument_list|)
 operator|)
 operator|!=
@@ -1276,6 +1276,11 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+comment|/* We don't support DEVFS. */
+break|break;
 case|case
 literal|'s'
 case|:
