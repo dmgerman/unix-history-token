@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lgamma.c	5.10 (Berkeley) %G%"
+literal|"@(#)lgamma.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1787,25 +1787,9 @@ name|x
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|x
-operator|>
-literal|6.
-operator|+
-name|RIGHT
-condition|)
 name|y
 operator|=
 name|large_lgam
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-else|else
-name|y
-operator|=
-name|small_lgam
 argument_list|(
 name|x
 argument_list|)
