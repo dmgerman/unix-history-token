@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.7 1995/05/07 03:38:03 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.8 1995/05/08 06:06:29 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -252,9 +252,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|msgInfo
+name|printf
 argument_list|(
-literal|"%s running as init"
+literal|"%s running as init\n"
 argument_list|,
 name|argv
 index|[
@@ -310,11 +310,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|msgFatal
+block|{
+name|printf
 argument_list|(
-literal|"Can't find terminal entry"
+literal|"Can't find terminal entry\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* XXX - libdialog has particularly bad return value checking */
 name|init_dialog
 argument_list|()
