@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.11 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,9 +108,9 @@ end_include
 
 begin_decl_stmt
 name|int
-name|fflag
-decl_stmt|,
 name|tflag
+decl_stmt|,
+name|rval
 decl_stmt|;
 end_decl_stmt
 
@@ -133,10 +133,26 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|run
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|usage
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -156,15 +172,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 specifier|register
 name|int
 name|ch
@@ -245,7 +252,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fn:s:tx"
+literal|"n:s:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -256,14 +263,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'f'
-case|:
-name|fflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 case|case
 literal|'n'
 case|:
@@ -533,7 +532,7 @@ name|bbp
 condition|)
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 comment|/* Nothing since end of last argument. */
@@ -556,7 +555,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -671,7 +670,7 @@ name|EOF
 condition|)
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 name|p
@@ -854,6 +853,10 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|volatile
+name|int
+name|noinvoke
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -862,10 +865,6 @@ name|p
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|;
-specifier|volatile
-name|int
-name|noinvoke
 decl_stmt|;
 name|int
 name|status
@@ -980,7 +979,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: %s: %s.\n"
+literal|"xargs: %s: %s\n"
 argument_list|,
 name|argv
 index|[
@@ -1032,44 +1031,46 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we couldn't invoke the utility or the utility didn't exit 	 * properly, quit with 127. 	 * Otherwise, if not specified otherwise, and the utility exits 	 * non-zero, exit with that value. 	 */
+comment|/* If we couldn't invoke the utility, exit 127. */
 if|if
 condition|(
 name|noinvoke
-operator|||
-operator|!
-name|WIFEXITED
-argument_list|(
-name|status
-argument_list|)
-operator|||
-name|WIFSIGNALED
-argument_list|(
-name|status
-argument_list|)
 condition|)
 name|exit
 argument_list|(
 literal|127
 argument_list|)
 expr_stmt|;
+comment|/* If utility signaled or exited with a value of 255, exit 1-125. */
 if|if
 condition|(
-operator|!
-name|fflag
-operator|&&
+name|WIFSIGNALED
+argument_list|(
+name|status
+argument_list|)
+operator|||
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
+operator|==
+literal|255
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|WEXITSTATUS
 argument_list|(
 name|status
 argument_list|)
 condition|)
-name|exit
-argument_list|(
-name|WEXITSTATUS
-argument_list|(
-name|status
-argument_list|)
-argument_list|)
+name|rval
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1086,7 +1087,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: xargs [-ft] [[-x] -n number] [-s size] [utility [argument ...]]\n"
+literal|"usage: xargs [-t] [-n number [-x]] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
