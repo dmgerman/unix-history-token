@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c	1.7 (Berkeley) %G%"
+literal|"@(#)operators.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,7 +1094,7 @@ literal|2
 block|,
 name|UNARY
 block|,
-literal|"traceoff"
+literal|"typerename"
 block|,
 comment|/* O_RERUN */
 literal|0
