@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.18 (Berkeley) %G%"
+literal|"@(#)util.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,24 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-comment|/* why do we skip asterisks!?!? */
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|user
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * XXX 	 * Why do we skip asterisks!?!? 	 */
 operator|(
 name|void
 operator|)
@@ -216,10 +233,9 @@ condition|)
 operator|++
 name|p
 expr_stmt|;
-comment|/* ampersands get replaced by the login name */
+comment|/* Ampersands get replaced by the login name. */
 if|if
 condition|(
-operator|!
 operator|(
 name|p
 operator|=
@@ -230,6 +246,8 @@ argument_list|,
 literal|","
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -300,10 +318,6 @@ argument_list|)
 condition|;
 name|t
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 control|)
 if|if

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.24 (Berkeley) %G%"
+literal|"@(#)finger.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,22 +881,6 @@ name|ip
 control|)
 if|if
 condition|(
-operator|!
-operator|*
-name|ip
-operator|&&
-operator|(
-operator|!
-name|strcasecmp
-argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-operator|*
-name|p
-argument_list|)
-operator|||
 name|match
 argument_list|(
 name|pw
@@ -904,7 +888,6 @@ argument_list|,
 operator|*
 name|p
 argument_list|)
-operator|)
 condition|)
 block|{
 name|enter_person
