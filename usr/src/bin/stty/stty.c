@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.32 (Berkeley) %G%"
+literal|"@(#)stty.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -73,19 +79,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"stty.h"
 end_include
 
@@ -112,16 +118,8 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|usage
-init|=
-literal|"usage: stty: [-a|-e|-g] [-f file] [options]"
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -247,14 +245,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -304,12 +299,9 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"TIOCGETD: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"TIOCGETD"
 argument_list|)
 expr_stmt|;
 if|if
@@ -330,12 +322,9 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"tcgetattr: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"tcgetattr"
 argument_list|)
 expr_stmt|;
 if|if
@@ -576,15 +565,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|err
+name|warnx
 argument_list|(
-literal|"illegal option -- %s\n%s"
+literal|"illegal option -- %s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|usage
 argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -611,12 +601,9 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"tcsetattr: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"tcsetattr"
 argument_list|)
 expr_stmt|;
 if|if
@@ -643,17 +630,35 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"TIOCSWINSZ: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"TIOCSWINSZ"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: stty: [-a|-e|-g] [-f file] [options]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
