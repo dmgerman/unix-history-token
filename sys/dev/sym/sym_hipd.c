@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.4.1-20000326"
+value|"sym-1.4.2-20000415"
 end_define
 
 begin_include
@@ -51,21 +51,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|400000
-end_if
 
 begin_define
 define|#
@@ -99,7 +86,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 end_ifdef
 
 begin_include
@@ -164,7 +151,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 end_ifdef
 
 begin_include
@@ -4846,8 +4833,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIR_DATA_OVERRUN
+value|(21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIR_BAD_PHASE
+value|(22)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIR_MAX
-value|(20)
+value|(22)
 end_define
 
 begin_comment
@@ -5469,7 +5470,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Status are used by the host and the script processor.  *  *  The last four bytes (status[4]) are copied to the   *  scratchb register (declared as scr0..scr3) just after the   *  select/reselect, and copied back just after disconnecting.  *  Inside the script the XX_REG are used.  *  *  The first four bytes (scr_st[4]) are used inside the   *  script by "LOAD/STORE" commands.  *  Because source and destination must have the same alignment  *  in a DWORD, the fields HAVE to be at the choosen offsets.  *  	xerr_st		0	(0x34)	scratcha  *  	nego_st		2  */
+comment|/*  *  Status are used by the host and the script processor.  *  *  The last four bytes (status[4]) are copied to the   *  scratchb register (declared as scr0..scr3) just after the   *  select/reselect, and copied back just after disconnecting.  *  Inside the script the XX_REG are used.  */
 end_comment
 
 begin_comment
@@ -5629,42 +5630,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  First four bytes (script)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|xerr_st
-value|scr_st[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|nego_st
-value|scr_st[2]
-end_define
-
-begin_comment
-comment|/*  *  First four bytes (host)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|xerr_status
-value|phys.xerr_st
-end_define
-
-begin_define
-define|#
-directive|define
-name|nego_status
-value|phys.nego_st
-end_define
-
-begin_comment
 comment|/*  *  Data Structure Block  *  *  During execution of a ccb by the script processor, the   *  DSA (data structure address) register points to this   *  substructure of the ccb.  */
 end_comment
 
@@ -5693,19 +5658,11 @@ decl_stmt|;
 comment|/* Not used for now			*/
 comment|/* 	 *  Status fields. 	 */
 name|u8
-name|scr_st
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* script status		*/
-name|u8
 name|status
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* host status			*/
 comment|/* 	 *  Table data for Script 	 */
 name|struct
 name|sym_tblsel
@@ -5746,10 +5703,6 @@ decl_stmt|;
 name|struct
 name|sym_pmc
 name|pm1
-decl_stmt|;
-comment|/* 	 *  Extra bytes count transferred in case of data overrun. 	 */
-name|u32
-name|extra_bytes
 decl_stmt|;
 block|}
 struct|;
@@ -5799,6 +5752,19 @@ name|int
 name|segments
 decl_stmt|;
 comment|/* Number of SG segments	*/
+comment|/* 	 *  Miscellaneous status'. 	 */
+name|u_char
+name|nego_status
+decl_stmt|;
+comment|/* Negotiation status		*/
+name|u_char
+name|xerr_status
+decl_stmt|;
+comment|/* Extended error flags		*/
+name|u32
+name|extra_bytes
+decl_stmt|;
+comment|/* Extraneous bytes transferred	*/
 comment|/* 	 *  Message areas. 	 *  We prepare a message to be sent after selection. 	 *  We may use a second one if the command is rescheduled  	 *  due to CHECK_CONDITION or COMMAND TERMINATED. 	 *  Contents are IDENTIFY and SIMPLE_TAG. 	 *  While negotiating sync or wide transfer, 	 *  a SDTR or WDTR message is appended. 	 */
 name|u_char
 name|scsi_smsg
@@ -5967,7 +5933,7 @@ decl_stmt|;
 comment|/* 	 *  Chip and controller indentification. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|device_t
 name|device
 decl_stmt|;
@@ -6064,7 +6030,7 @@ decl_stmt|;
 comment|/* 	 *  Allocated hardware resources. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|struct
 name|resource
 modifier|*
@@ -6097,7 +6063,7 @@ directive|endif
 comment|/* 	 *  Bus stuff. 	 * 	 *  My understanding of PCI is that all agents must share the  	 *  same addressing range and model. 	 *  But some hardware architecture guys provide complex and   	 *  brain-deaded stuff that makes shit. 	 *  This driver only support PCI compliant implementations and  	 *  deals with part of the BUS stuff complexity only to fit O/S  	 *  requirements. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|bus_space_handle_t
 name|io_bsh
 decl_stmt|;
@@ -6513,7 +6479,7 @@ decl_stmt|;
 name|u32
 name|dispatch
 index|[
-literal|30
+literal|28
 index|]
 decl_stmt|;
 name|u32
@@ -6854,18 +6820,6 @@ literal|2
 index|]
 decl_stmt|;
 name|u32
-name|select_no_atn
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|u32
-name|wf_sel_done_no_atn
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|u32
 name|msg_in_etc
 index|[
 literal|14
@@ -6964,13 +6918,19 @@ decl_stmt|;
 name|u32
 name|data_ovrun
 index|[
-literal|18
+literal|2
 index|]
 decl_stmt|;
 name|u32
 name|data_ovrun1
 index|[
-literal|20
+literal|22
+index|]
+decl_stmt|;
+name|u32
+name|data_ovrun2
+index|[
+literal|8
 index|]
 decl_stmt|;
 name|u32
@@ -8325,7 +8285,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 end_ifdef
 
 begin_function_decl
@@ -8562,24 +8522,6 @@ name|RELOC_REGISTER
 value|0x60000000
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|RELOC_KVAR
-value|0x70000000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -8649,73 +8591,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|KVAR
-parameter_list|(
-name|which
-parameter_list|)
-value|(RELOC_KVAR | (which))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCR_DATA_ZERO
 value|0xf00ff00f
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RELOC_KVAR
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SCRIPT_KVAR_JIFFIES
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCRIPT_KVAR_FIRST
-value|SCRIPT_KVAR_XXXXXXX
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCRIPT_KVAR_LAST
-value|SCRIPT_KVAR_XXXXXXX
-end_define
-
-begin_comment
-comment|/*  * Kernel variables referenced in the scripts.  * THESE MUST ALL BE ALIGNED TO A 4-BYTE BOUNDARY.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|script_kvars
-index|[]
-init|=
-block|{
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|xxxxxxx
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -8724,10 +8602,17 @@ name|sym_scr
 name|script0
 init|=
 block|{
-comment|/*--------------------------< START>-----------------------*/
+comment|/*--------------------------< START>----------------------------*/
 block|{
-comment|/* 	 *  This NOP will be patched with LED ON 	 *  SCR_REG_REG (gpreg, SCR_AND, 0xfe) 	 */
-name|SCR_NO_OP
+comment|/* 	 *  Switch the LED on. 	 *  Will be patched with a NO_OP if LED 	 *  not needed or not desired. 	 */
+name|SCR_REG_REG
+argument_list|(
+name|gpreg
+argument_list|,
+name|SCR_AND
+argument_list|,
+literal|0xfe
+argument_list|)
 block|,
 literal|0
 block|,
@@ -8774,7 +8659,7 @@ argument_list|)
 block|,
 name|SIR_SCRIPT_STOPPED
 block|,
-comment|/* 	 *  Start the next job. 	 * 	 *  @DSA	 = start point for this job. 	 *  SCRATCHA = address of this job in the start queue. 	 * 	 *  We will restore startpos with SCRATCHA if we fails the  	 *  arbitration or if it is the idle job. 	 * 	 *  The below GETJOB_BEGIN to GETJOB_END section of SCRIPTS  	 *  is a critical path. If it is partially executed, it then  	 *  may happen that the job address is not yet in the DSA  	 *  and the the next queue position points to the next JOB. 	 */
+comment|/* 	 *  Start the next job. 	 * 	 *  @DSA     = start point for this job. 	 *  SCRATCHA = address of this job in the start queue. 	 * 	 *  We will restore startpos with SCRATCHA if we fails the  	 *  arbitration or if it is the idle job. 	 * 	 *  The below GETJOB_BEGIN to GETJOB_END section of SCRIPTS  	 *  is a critical path. If it is partially executed, it then  	 *  may happen that the job address is not yet in the DSA  	 *  and the the next queue position points to the next JOB. 	 */
 name|SCR_LOAD_ABS
 argument_list|(
 name|dsa
@@ -8796,7 +8681,7 @@ argument_list|)
 block|,
 literal|4
 block|, }
-comment|/*-------------------------< GETJOB_BEGIN>------------------*/
+comment|/*-------------------------< GETJOB_BEGIN>---------------------*/
 block|,
 block|{
 name|SCR_STORE_ABS
@@ -8820,7 +8705,7 @@ argument_list|)
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< GETJOB_END>--------------------*/
+comment|/*-------------------------< GETJOB_END>-----------------------*/
 block|,
 block|{
 name|SCR_LOAD_REL
@@ -8836,7 +8721,7 @@ name|SCR_RETURN
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< SELECT>----------------------*/
+comment|/*-------------------------< SELECT>---------------------------*/
 block|,
 block|{
 comment|/* 	 *  DSA	contains the address of a scheduled 	 *  	data structure. 	 * 	 *  SCRATCHA contains the address of the start queue   	 *  	entry which points to the next job. 	 * 	 *  Set Initiator mode. 	 * 	 *  (Target mode is left as an exercise for the reader) 	 */
@@ -8915,7 +8800,7 @@ argument_list|)
 block|,
 name|SIR_SEL_ATN_NO_MSG_OUT
 block|, }
-comment|/*-------------------------< SEND_IDENT>----------------------*/
+comment|/*-------------------------< SEND_IDENT>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  Selection complete. 	 *  Send the IDENTIFY and possibly the TAG message  	 *  and negotiation message if present. 	 */
@@ -8931,7 +8816,7 @@ argument_list|,
 name|smsg
 argument_list|)
 block|, }
-comment|/*-------------------------< SELECT2>----------------------*/
+comment|/*-------------------------< SELECT2>--------------------------*/
 block|,
 block|{
 ifdef|#
@@ -8988,7 +8873,7 @@ argument_list|(
 name|sel_no_cmd
 argument_list|)
 block|, }
-comment|/*-------------------------< COMMAND>--------------------*/
+comment|/*-------------------------< COMMAND>--------------------------*/
 block|,
 block|{
 comment|/* 	 *  ... and send the command 	 */
@@ -9004,7 +8889,7 @@ argument_list|,
 name|cmd
 argument_list|)
 block|, }
-comment|/*-----------------------< DISPATCH>----------------------*/
+comment|/*-------------------------< DISPATCH>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  MSG_IN is the only phase that shall be  	 *  entered at least once for each (re)selection. 	 *  So we test it first. 	 */
@@ -9098,71 +8983,18 @@ argument_list|(
 name|msg_out
 argument_list|)
 block|,
-comment|/* 	 *  Set the extended error flag. 	 */
-name|SCR_REG_REG
-argument_list|(
-name|HF_REG
-argument_list|,
-name|SCR_OR
-argument_list|,
-name|HF_EXT_ERR
-argument_list|)
-block|,
-literal|0
-block|,
-comment|/* 	 *  Discard one illegal phase byte, if required. 	 */
-name|SCR_LOAD_REL
-argument_list|(
-name|scratcha
-argument_list|,
-literal|1
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|xerr_status
-argument_list|)
-block|,
-name|SCR_REG_REG
-argument_list|(
-name|scratcha
-argument_list|,
-name|SCR_OR
-argument_list|,
-name|XE_BAD_PHASE
-argument_list|)
-block|,
-literal|0
-block|,
-name|SCR_STORE_REL
-argument_list|(
-name|scratcha
-argument_list|,
-literal|1
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|xerr_status
-argument_list|)
-block|,
+comment|/* 	 *  Discard as many illegal phases as  	 *  required and tell the C code about. 	 */
 name|SCR_JUMPR
 operator|^
 name|IFFALSE
 argument_list|(
-name|IF
+name|WHEN
 argument_list|(
 name|SCR_ILG_OUT
 argument_list|)
 argument_list|)
 block|,
-literal|8
+literal|16
 block|,
 name|SCR_MOVE_ABS
 argument_list|(
@@ -9178,15 +9010,28 @@ argument_list|)
 block|,
 name|SCR_JUMPR
 operator|^
+name|IFTRUE
+argument_list|(
+name|WHEN
+argument_list|(
+name|SCR_ILG_OUT
+argument_list|)
+argument_list|)
+block|,
+operator|-
+literal|16
+block|,
+name|SCR_JUMPR
+operator|^
 name|IFFALSE
 argument_list|(
-name|IF
+name|WHEN
 argument_list|(
 name|SCR_ILG_IN
 argument_list|)
 argument_list|)
 block|,
-literal|8
+literal|16
 block|,
 name|SCR_MOVE_ABS
 argument_list|(
@@ -9199,6 +9044,23 @@ name|NADDR
 argument_list|(
 name|scratch
 argument_list|)
+block|,
+name|SCR_JUMPR
+operator|^
+name|IFTRUE
+argument_list|(
+name|WHEN
+argument_list|(
+name|SCR_ILG_IN
+argument_list|)
+argument_list|)
+block|,
+operator|-
+literal|16
+block|,
+name|SCR_INT
+block|,
+name|SIR_BAD_PHASE
 block|,
 name|SCR_JUMP
 block|,
@@ -9207,7 +9069,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*---------------------< SEL_NO_CMD>----------------------*/
+comment|/*-------------------------< SEL_NO_CMD>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  The target does not switch to command  	 *  phase after IDENTIFY has been sent. 	 * 	 *  If it stays in MSG OUT phase send it  	 *  the IDENTIFY again. 	 */
@@ -9269,7 +9131,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< INIT>------------------------*/
+comment|/*-------------------------< INIT>-----------------------------*/
 block|,
 block|{
 comment|/* 	 *  Wait for the SCSI RESET signal to be  	 *  inactive before restarting operations,  	 *  since the chip may hang on SEL_ATN  	 *  if SCSI RESET is active. 	 */
@@ -9302,7 +9164,7 @@ argument_list|(
 name|start
 argument_list|)
 block|, }
-comment|/*-------------------------< CLRACK>----------------------*/
+comment|/*-------------------------< CLRACK>---------------------------*/
 block|,
 block|{
 comment|/* 	 *  Terminate possible pending message phase. 	 */
@@ -9346,7 +9208,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< DATAI_DONE>-------------------*/
+comment|/*-------------------------< DATAI_DONE>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  If the device still wants to send us data, 	 *  we must count the extra bytes. 	 */
@@ -9510,7 +9372,7 @@ argument_list|(
 name|disp_status
 argument_list|)
 block|, }
-comment|/*-------------------------< DATAO_DONE>-------------------*/
+comment|/*-------------------------< DATAO_DONE>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  If the device wants us to send more data, 	 *  we must count the extra bytes. 	 */
@@ -9578,21 +9440,21 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< DATAI_PHASE>------------------*/
+comment|/*-------------------------< DATAI_PHASE>----------------------*/
 block|,
 block|{
 name|SCR_RETURN
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< DATAO_PHASE>------------------*/
+comment|/*-------------------------< DATAO_PHASE>----------------------*/
 block|,
 block|{
 name|SCR_RETURN
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< MSG_IN>--------------------*/
+comment|/*-------------------------< MSG_IN>---------------------------*/
 block|,
 block|{
 comment|/* 	 *  Get the first byte of the message. 	 * 	 *  The script processor doesn't negate the 	 *  ACK signal after this transfer. 	 */
@@ -9611,7 +9473,7 @@ literal|0
 index|]
 argument_list|)
 block|, }
-comment|/*-------------------------< MSG_IN2>--------------------*/
+comment|/*-------------------------< MSG_IN2>--------------------------*/
 block|,
 block|{
 comment|/* 	 *  Check first against 1 byte messages  	 *  that we handle from SCRIPTS. 	 */
@@ -9683,7 +9545,7 @@ argument_list|(
 name|msg_in_etc
 argument_list|)
 block|, }
-comment|/*-------------------------< STATUS>--------------------*/
+comment|/*-------------------------< STATUS>---------------------------*/
 block|,
 block|{
 comment|/* 	 *  get the status 	 */
@@ -9769,7 +9631,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< COMPLETE>-----------------*/
+comment|/*-------------------------< COMPLETE>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  Complete message. 	 * 	 *  Copy the data pointer to LASTP. 	 */
@@ -9817,7 +9679,7 @@ name|SCR_WAIT_DISC
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< COMPLETE2>-----------------*/
+comment|/*-------------------------< COMPLETE2>------------------------*/
 block|,
 block|{
 comment|/* 	 *  Save host status. 	 */
@@ -9906,7 +9768,7 @@ argument_list|)
 block|,
 literal|16
 block|, }
-comment|/*-------------------------< COMPLETE_ERROR>-----------------*/
+comment|/*-------------------------< COMPLETE_ERROR>-------------------*/
 block|,
 block|{
 name|SCR_LOAD_ABS
@@ -9925,7 +9787,7 @@ name|SCR_INT
 block|,
 name|SIR_COMPLETE_ERROR
 block|, }
-comment|/*------------------------< DONE>-----------------*/
+comment|/*-------------------------< DONE>-----------------------------*/
 block|,
 block|{
 comment|/* 	 *  Copy the DSA to the DONE QUEUE and  	 *  signal completion to the host. 	 *  If we are interrupted between DONE  	 *  and DONE_END, we must reset, otherwise  	 *  the completed CCB may be lost. 	 */
@@ -10000,7 +9862,7 @@ argument_list|(
 name|done_pos
 argument_list|)
 block|, }
-comment|/*------------------------< DONE_END>-----------------*/
+comment|/*-------------------------< DONE_END>-------------------------*/
 block|,
 block|{
 name|SCR_JUMP
@@ -10010,7 +9872,7 @@ argument_list|(
 name|start
 argument_list|)
 block|, }
-comment|/*-------------------------< SAVE_DP>------------------*/
+comment|/*-------------------------< SAVE_DP>--------------------------*/
 block|,
 block|{
 comment|/* 	 *  Clear ACK immediately. 	 *  No need to delay it. 	 */
@@ -10058,7 +9920,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< RESTORE_DP>---------------*/
+comment|/*-------------------------< RESTORE_DP>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  RESTORE_DP message: 	 *  Copy SAVEP to actual data pointer. 	 */
@@ -10086,7 +9948,7 @@ argument_list|(
 name|clrack
 argument_list|)
 block|, }
-comment|/*-------------------------< DISCONNECT>---------------*/
+comment|/*-------------------------< DISCONNECT>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  DISCONNECTing  ... 	 * 	 *  disable the "unexpected disconnect" feature, 	 *  and remove the ACK signal. 	 */
@@ -10204,11 +10066,18 @@ argument_list|(
 name|start
 argument_list|)
 block|, }
-comment|/*-------------------------< IDLE>------------------------*/
+comment|/*-------------------------< IDLE>-----------------------------*/
 block|,
 block|{
-comment|/* 	 *  Nothing to do? 	 *  Wait for reselect. 	 *  This NOP will be patched with LED OFF 	 *  SCR_REG_REG (gpreg, SCR_OR, 0x01) 	 */
-name|SCR_NO_OP
+comment|/* 	 *  Nothing to do? 	 *  Switch the LED off and wait for reselect. 	 *  Will be patched with a NO_OP if LED 	 *  not needed or not desired. 	 */
+name|SCR_REG_REG
+argument_list|(
+name|gpreg
+argument_list|,
+name|SCR_OR
+argument_list|,
+literal|0x01
+argument_list|)
 block|,
 literal|0
 block|,
@@ -10222,7 +10091,7 @@ block|,
 endif|#
 directive|endif
 block|}
-comment|/*-------------------------< UNGETJOB>-----------------*/
+comment|/*-------------------------< UNGETJOB>-------------------------*/
 block|,
 block|{
 ifdef|#
@@ -10264,7 +10133,7 @@ argument_list|(
 name|startpos
 argument_list|)
 block|, }
-comment|/*-------------------------< RESELECT>--------------------*/
+comment|/*-------------------------< RESELECT>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  Make sure we are in initiator mode. 	 */
@@ -10283,11 +10152,18 @@ argument_list|(
 name|start
 argument_list|)
 block|, }
-comment|/*-------------------------< RESELECTED>------------------*/
+comment|/*-------------------------< RESELECTED>-----------------------*/
 block|,
 block|{
-comment|/* 	 *  This NOP will be patched with LED ON 	 *  SCR_REG_REG (gpreg, SCR_AND, 0xfe) 	 */
-name|SCR_NO_OP
+comment|/* 	 *  Switch the LED on. 	 *  Will be patched with a NO_OP if LED 	 *  not needed or not desired. 	 */
+name|SCR_REG_REG
+argument_list|(
+name|gpreg
+argument_list|,
+name|SCR_AND
+argument_list|,
+literal|0xfe
+argument_list|)
 block|,
 literal|0
 block|,
@@ -10396,13 +10272,24 @@ argument_list|,
 name|sval
 argument_list|)
 block|, }
-comment|/*-------------------------< RESEL_SCNTL4>------------------*/
+comment|/*-------------------------< RESEL_SCNTL4>---------------------*/
 block|,
 block|{
-comment|/* 	 *  If C1010, patched with the load of SCNTL4 that 	 *  allows a new synchronous timing scheme. 	 * 	 *	SCR_LOAD_REL (scntl4, 1), 	 * 		offsetof(struct tcb, uval), 	 */
-name|SCR_NO_OP
+comment|/* 	 *  The C1010 uses a new synchronous timing scheme. 	 *  Will be patched with a NO_OP if not a C1010. 	 */
+name|SCR_LOAD_REL
+argument_list|(
+name|scntl4
+argument_list|,
+literal|1
+argument_list|)
 block|,
-literal|0
+name|offsetof
+argument_list|(
+expr|struct
+name|sym_tcb
+argument_list|,
+name|uval
+argument_list|)
 block|,
 comment|/* 	 *  We expect MESSAGE IN phase. 	 *  If not, get help from the C code. 	 */
 name|SCR_INT
@@ -10559,7 +10446,7 @@ literal|0
 block|,
 comment|/* In normal situations, we jump to RESEL_TAG or RESEL_NO_TAG */
 block|}
-comment|/*-------------------------< RESEL_TAG>-------------------*/
+comment|/*-------------------------< RESEL_TAG>------------------------*/
 block|,
 block|{
 comment|/* 	 *  ACK the IDENTIFY or TAG previously received. 	 */
@@ -10744,7 +10631,7 @@ literal|0
 block|,
 comment|/* In normal situations we branch to RESEL_DSA */
 block|}
-comment|/*-------------------------< RESEL_DSA>-------------------*/
+comment|/*-------------------------< RESEL_DSA>------------------------*/
 block|,
 block|{
 comment|/* 	 *  ACK the IDENTIFY or TAG previously received. 	 */
@@ -10755,7 +10642,7 @@ argument_list|)
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< RESEL_DSA1>------------------*/
+comment|/*-------------------------< RESEL_DSA1>-----------------------*/
 block|,
 block|{
 comment|/* 	 *      load the savep (saved pointer) into 	 *      the actual data pointer. 	 */
@@ -10802,7 +10689,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< RESEL_NO_TAG>-------------------*/
+comment|/*-------------------------< RESEL_NO_TAG>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Load the DSA with the unique ITL task. 	 */
@@ -10847,13 +10734,13 @@ literal|0
 block|,
 comment|/* In normal situations we branch to RESEL_DSA */
 block|}
-comment|/*-------------------------< DATA_IN>--------------------*/
+comment|/*-------------------------< DATA_IN>--------------------------*/
 block|,
 block|{
 comment|/*  *  Because the size depends on the  *  #define SYM_CONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYM_CONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DATA_IN,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
 literal|0
 block|}
-comment|/*-------------------------< DATA_IN2>-------------------*/
+comment|/*-------------------------< DATA_IN2>-------------------------*/
 block|,
 block|{
 name|SCR_CALL
@@ -10870,13 +10757,13 @@ argument_list|(
 name|data_ovrun
 argument_list|)
 block|, }
-comment|/*-------------------------< DATA_OUT>--------------------*/
+comment|/*-------------------------< DATA_OUT>-------------------------*/
 block|,
 block|{
 comment|/*  *  Because the size depends on the  *  #define SYM_CONF_MAX_SG parameter,  *  it is filled in at runtime.  *  *  ##===========< i=0; i<SYM_CONF_MAX_SG>=========  *  ||	SCR_CHMOV_TBL ^ SCR_DATA_OUT,  *  ||		offsetof (struct dsb, data[ i]),  *  ##==========================================  */
 literal|0
 block|}
-comment|/*-------------------------< DATA_OUT2>-------------------*/
+comment|/*-------------------------< DATA_OUT2>------------------------*/
 block|,
 block|{
 name|SCR_CALL
@@ -10892,8 +10779,8 @@ name|PADDRH
 argument_list|(
 name|data_ovrun
 argument_list|)
-block|,  }
-comment|/*-------------------------< PM0_DATA>--------------------*/
+block|, }
+comment|/*-------------------------< PM0_DATA>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  Read our host flags to SFBR, so we will be able  	 *  to check against the data direction we expect. 	 */
@@ -10974,7 +10861,7 @@ argument_list|(
 name|pm0_data_end
 argument_list|)
 block|, }
-comment|/*-------------------------< PM0_DATA_OUT>----------------*/
+comment|/*-------------------------< PM0_DATA_OUT>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Actual phase is DATA OUT. 	 *  Check against expected direction. 	 */
@@ -11024,7 +10911,7 @@ operator|.
 name|sg
 argument_list|)
 block|, }
-comment|/*-------------------------< PM0_DATA_END>----------------*/
+comment|/*-------------------------< PM0_DATA_END>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Clear the flag that told we were moving   	 *  data from the PM0 DATA mini-script. 	 */
@@ -11066,7 +10953,7 @@ name|SCR_RETURN
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< PM1_DATA>--------------------*/
+comment|/*-------------------------< PM1_DATA>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  Read our host flags to SFBR, so we will be able  	 *  to check against the data direction we expect. 	 */
@@ -11147,7 +11034,7 @@ argument_list|(
 name|pm1_data_end
 argument_list|)
 block|, }
-comment|/*-------------------------< PM1_DATA_OUT>----------------*/
+comment|/*-------------------------< PM1_DATA_OUT>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Actual phase is DATA OUT. 	 *  Check against expected direction. 	 */
@@ -11197,7 +11084,7 @@ operator|.
 name|sg
 argument_list|)
 block|, }
-comment|/*-------------------------< PM1_DATA_END>----------------*/
+comment|/*-------------------------< PM1_DATA_END>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Clear the flag that told we were moving   	 *  data from the PM1 DATA mini-script. 	 */
@@ -11239,7 +11126,7 @@ name|SCR_RETURN
 block|,
 literal|0
 block|, }
-comment|/*---------------------------------------------------------*/
+comment|/*-------------------------<>-----------------------------------*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -11251,7 +11138,7 @@ name|sym_scrh
 name|scripth0
 init|=
 block|{
-comment|/*------------------------< START64>-----------------------*/
+comment|/*--------------------------< START64>--------------------------*/
 block|{
 comment|/* 	 *  SCRIPT entry point for the 895A, 896 and 1010. 	 *  For now, there is no specific stuff for those  	 *  chips at this point, but this may come. 	 */
 name|SCR_JUMP
@@ -11261,7 +11148,7 @@ argument_list|(
 name|init
 argument_list|)
 block|, }
-comment|/*-------------------------< NO_DATA>-------------------*/
+comment|/*-------------------------< NO_DATA>--------------------------*/
 block|,
 block|{
 name|SCR_JUMP
@@ -11271,7 +11158,7 @@ argument_list|(
 name|data_ovrun
 argument_list|)
 block|, }
-comment|/*-----------------------< SEL_FOR_ABORT>------------------*/
+comment|/*-------------------------< SEL_FOR_ABORT>--------------------*/
 block|,
 block|{
 comment|/* 	 *  We are jumped here by the C code, if we have  	 *  some target to reset or some disconnected  	 *  job to abort. Since error recovery is a serious  	 *  busyness, we will really reset the SCSI BUS, if  	 *  case of a SCSI interrupt occuring in this path. 	 */
@@ -11360,7 +11247,7 @@ name|SCR_INT
 block|,
 name|SIR_ABORT_SENT
 block|, }
-comment|/*-----------------------< SEL_FOR_ABORT_1>--------------*/
+comment|/*-------------------------< SEL_FOR_ABORT_1>------------------*/
 block|,
 block|{
 comment|/* 	 *  Jump at scheduler. 	 */
@@ -11370,93 +11257,8 @@ name|PADDR
 argument_list|(
 name|start
 argument_list|)
-block|,  }
-comment|/*------------------------< SELECT_NO_ATN>-----------------*/
-block|,
-block|{
-comment|/* 	 *  Set Initiator mode. 	 *  And try to select this target without ATN. 	 */
-name|SCR_CLR
-argument_list|(
-name|SCR_TRG
-argument_list|)
-block|,
-literal|0
-block|,
-name|SCR_SEL_TBL
-operator|^
-name|offsetof
-argument_list|(
-expr|struct
-name|dsb
-argument_list|,
-name|select
-argument_list|)
-block|,
-name|PADDR
-argument_list|(
-name|ungetjob
-argument_list|)
-block|,
-comment|/* 	 *  load the savep (saved pointer) into 	 *  the actual data pointer. 	 */
-name|SCR_LOAD_REL
-argument_list|(
-name|temp
-argument_list|,
-literal|4
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|phys
-operator|.
-name|savep
-argument_list|)
-block|,
-comment|/* 	 *  Initialize the status registers 	 */
-name|SCR_LOAD_REL
-argument_list|(
-name|scr0
-argument_list|,
-literal|4
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|phys
-operator|.
-name|status
-argument_list|)
 block|, }
-comment|/*------------------------< WF_SEL_DONE_NO_ATN>-----------------*/
-block|,
-block|{
-comment|/* 	 *  Wait immediately for the next phase or  	 *  the selection to complete or time-out. 	 */
-name|SCR_JUMPR
-operator|^
-name|IFFALSE
-argument_list|(
-name|WHEN
-argument_list|(
-name|SCR_MSG_OUT
-argument_list|)
-argument_list|)
-block|,
-literal|0
-block|,
-name|SCR_JUMP
-block|,
-name|PADDR
-argument_list|(
-name|select2
-argument_list|)
-block|, }
-comment|/*-------------------------< MSG_IN_ETC>--------------------*/
+comment|/*-------------------------< MSG_IN_ETC>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  If it is an EXTENDED (variable size message) 	 *  Handle it. 	 */
@@ -11544,8 +11346,8 @@ block|,
 name|SCR_INT
 block|,
 name|SIR_MSG_RECEIVED
-block|,  }
-comment|/*-------------------------< MSG_RECEIVED>--------------------*/
+block|, }
+comment|/*-------------------------< MSG_RECEIVED>---------------------*/
 block|,
 block|{
 name|SCR_LOAD_REL
@@ -11561,8 +11363,8 @@ block|,
 name|SCR_INT
 block|,
 name|SIR_MSG_RECEIVED
-block|,  }
-comment|/*-------------------------< MSG_WEIRD_SEEN>------------------*/
+block|, }
+comment|/*-------------------------< MSG_WEIRD_SEEN>-------------------*/
 block|,
 block|{
 name|SCR_LOAD_REL
@@ -11578,8 +11380,8 @@ block|,
 name|SCR_INT
 block|,
 name|SIR_MSG_WEIRD
-block|,  }
-comment|/*-------------------------< MSG_EXTENDED>--------------------*/
+block|, }
+comment|/*-------------------------< MSG_EXTENDED>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Clear ACK and get the next byte  	 *  assumed to be the message length. 	 */
@@ -11698,8 +11500,8 @@ name|PADDRH
 argument_list|(
 name|msg_received
 argument_list|)
-block|,  }
-comment|/*-------------------------< MSG_BAD>------------------*/
+block|, }
+comment|/*-------------------------< MSG_BAD>--------------------------*/
 block|,
 block|{
 comment|/* 	 *  unimplemented message - reject it. 	 */
@@ -11721,7 +11523,7 @@ argument_list|(
 name|clrack
 argument_list|)
 block|, }
-comment|/*-------------------------< MSG_WEIRD>--------------------*/
+comment|/*-------------------------< MSG_WEIRD>------------------------*/
 block|,
 block|{
 comment|/* 	 *  weird message received 	 *  ignore all MSG IN phases and reject it. 	 */
@@ -11736,7 +11538,7 @@ argument_list|)
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< MSG_WEIRD1>--------------------*/
+comment|/*-------------------------< MSG_WEIRD1>-----------------------*/
 block|,
 block|{
 name|SCR_CLR
@@ -11780,7 +11582,7 @@ argument_list|(
 name|msg_weird1
 argument_list|)
 block|, }
-comment|/*-------------------------< WDTR_RESP>----------------*/
+comment|/*-------------------------< WDTR_RESP>------------------------*/
 block|,
 block|{
 comment|/* 	 *  let the target fetch our answer. 	 */
@@ -11813,7 +11615,7 @@ argument_list|(
 name|nego_bad_phase
 argument_list|)
 block|, }
-comment|/*-------------------------< SEND_WDTR>----------------*/
+comment|/*-------------------------< SEND_WDTR>------------------------*/
 block|,
 block|{
 comment|/* 	 *  Send the M_X_WIDE_REQ 	 */
@@ -11836,7 +11638,7 @@ argument_list|(
 name|msg_out_done
 argument_list|)
 block|, }
-comment|/*-------------------------< SDTR_RESP>-------------*/
+comment|/*-------------------------< SDTR_RESP>------------------------*/
 block|,
 block|{
 comment|/* 	 *  let the target fetch our answer. 	 */
@@ -11869,7 +11671,7 @@ argument_list|(
 name|nego_bad_phase
 argument_list|)
 block|, }
-comment|/*-------------------------< SEND_SDTR>-------------*/
+comment|/*-------------------------< SEND_SDTR>------------------------*/
 block|,
 block|{
 comment|/* 	 *  Send the M_X_SYNC_REQ 	 */
@@ -11892,7 +11694,7 @@ argument_list|(
 name|msg_out_done
 argument_list|)
 block|, }
-comment|/*-------------------------< PPR_RESP>-------------*/
+comment|/*-------------------------< PPR_RESP>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  let the target fetch our answer. 	 */
@@ -11925,7 +11727,7 @@ argument_list|(
 name|nego_bad_phase
 argument_list|)
 block|, }
-comment|/*-------------------------< SEND_PPR>-------------*/
+comment|/*-------------------------< SEND_PPR>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  Send the M_X_PPR_REQ 	 */
@@ -11948,7 +11750,7 @@ argument_list|(
 name|msg_out_done
 argument_list|)
 block|, }
-comment|/*-------------------------< NEGO_BAD_PHASE>------------*/
+comment|/*-------------------------< NEGO_BAD_PHASE>-------------------*/
 block|,
 block|{
 name|SCR_INT
@@ -11962,7 +11764,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< MSG_OUT>-------------------*/
+comment|/*-------------------------< MSG_OUT>--------------------------*/
 block|,
 block|{
 comment|/* 	 *  The target requests a message. 	 *  We donnot send messages that may  	 *  require the device to go to bus free. 	 */
@@ -11994,7 +11796,7 @@ argument_list|(
 name|msg_out
 argument_list|)
 block|, }
-comment|/*-------------------------< MSG_OUT_DONE>--------------*/
+comment|/*-------------------------< MSG_OUT_DONE>---------------------*/
 block|,
 block|{
 comment|/* 	 *  Let the C code be aware of the  	 *  sent message and clear the message. 	 */
@@ -12009,8 +11811,24 @@ name|PADDR
 argument_list|(
 name|dispatch
 argument_list|)
-block|,  }
-comment|/*-------------------------< DATA_OVRUN>--------------------*/
+block|, }
+comment|/*-------------------------< DATA_OVRUN>-----------------------*/
+block|,
+block|{
+comment|/* 	 *  Use scratcha to count the extra bytes. 	 */
+name|SCR_LOAD_ABS
+argument_list|(
+name|scratcha
+argument_list|,
+literal|4
+argument_list|)
+block|,
+name|PADDRH
+argument_list|(
+name|zero
+argument_list|)
+block|, }
+comment|/*-------------------------< DATA_OVRUN1>----------------------*/
 block|,
 block|{
 comment|/* 	 *  The target may want to transfer too much data. 	 * 	 *  If phase is DATA OUT write 1 byte and count it. 	 */
@@ -12042,7 +11860,7 @@ name|SCR_JUMP
 block|,
 name|PADDRH
 argument_list|(
-name|data_ovrun1
+name|data_ovrun2
 argument_list|)
 block|,
 comment|/* 	 *  If WSR is set, clear this condition, and  	 *  count this byte. 	 */
@@ -12082,19 +11900,27 @@ name|SCR_JUMP
 block|,
 name|PADDRH
 argument_list|(
-name|data_ovrun1
+name|data_ovrun2
 argument_list|)
 block|,
-comment|/* 	 *  Finally check against DATA IN phase. 	 *  Jump to dispatcher if not so. 	 *  Read 1 byte otherwise and count it. 	 */
-name|SCR_JUMP
+comment|/* 	 *  Finally check against DATA IN phase. 	 *  Signal data overrun to the C code  	 *  and jump to dispatcher if not so. 	 *  Read 1 byte otherwise and count it. 	 */
+name|SCR_JUMPR
 operator|^
-name|IFFALSE
+name|IFTRUE
 argument_list|(
-name|IF
+name|WHEN
 argument_list|(
 name|SCR_DATA_IN
 argument_list|)
 argument_list|)
+block|,
+literal|16
+block|,
+name|SCR_INT
+block|,
+name|SIR_DATA_OVERRUN
+block|,
+name|SCR_JUMP
 block|,
 name|PADDR
 argument_list|(
@@ -12113,80 +11939,10 @@ argument_list|(
 name|scratch
 argument_list|)
 block|, }
-comment|/*-------------------------< DATA_OVRUN1>--------------------*/
+comment|/*-------------------------< DATA_OVRUN2>----------------------*/
 block|,
 block|{
-comment|/* 	 *  Set the extended error flag. 	 */
-name|SCR_REG_REG
-argument_list|(
-name|HF_REG
-argument_list|,
-name|SCR_OR
-argument_list|,
-name|HF_EXT_ERR
-argument_list|)
-block|,
-literal|0
-block|,
-name|SCR_LOAD_REL
-argument_list|(
-name|scratcha
-argument_list|,
-literal|1
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|xerr_status
-argument_list|)
-block|,
-name|SCR_REG_REG
-argument_list|(
-name|scratcha
-argument_list|,
-name|SCR_OR
-argument_list|,
-name|XE_EXTRA_DATA
-argument_list|)
-block|,
-literal|0
-block|,
-name|SCR_STORE_REL
-argument_list|(
-name|scratcha
-argument_list|,
-literal|1
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|xerr_status
-argument_list|)
-block|,
 comment|/* 	 *  Count this byte. 	 *  This will allow to return a negative  	 *  residual to user. 	 */
-name|SCR_LOAD_REL
-argument_list|(
-name|scratcha
-argument_list|,
-literal|4
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|phys
-operator|.
-name|extra_bytes
-argument_list|)
-block|,
 name|SCR_REG_REG
 argument_list|(
 name|scratcha
@@ -12220,32 +11976,15 @@ argument_list|)
 block|,
 literal|0
 block|,
-name|SCR_STORE_REL
-argument_list|(
-name|scratcha
-argument_list|,
-literal|4
-argument_list|)
-block|,
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_ccb
-argument_list|,
-name|phys
-operator|.
-name|extra_bytes
-argument_list|)
-block|,
 comment|/* 	 *  .. and repeat as required. 	 */
 name|SCR_JUMP
 block|,
 name|PADDRH
 argument_list|(
-name|data_ovrun
+name|data_ovrun1
 argument_list|)
-block|,  }
-comment|/*-------------------------< ABORT_RESEL>----------------*/
+block|, }
+comment|/*-------------------------< ABORT_RESEL>----------------------*/
 block|,
 block|{
 name|SCR_SET
@@ -12310,7 +12049,7 @@ argument_list|(
 name|start
 argument_list|)
 block|, }
-comment|/*-------------------------< RESEND_IDENT>-------------------*/
+comment|/*-------------------------< RESEND_IDENT>---------------------*/
 block|,
 block|{
 comment|/* 	 *  The target stays in MSG OUT phase after having acked  	 *  Identify [+ Tag [+ Extended message ]]. Targets shall 	 *  behave this way on parity error. 	 *  We must send it again all the messages. 	 */
@@ -12330,7 +12069,7 @@ argument_list|(
 name|send_ident
 argument_list|)
 block|, }
-comment|/*-------------------------< IDENT_BREAK>-------------------*/
+comment|/*-------------------------< IDENT_BREAK>----------------------*/
 block|,
 block|{
 name|SCR_CLR
@@ -12347,7 +12086,7 @@ argument_list|(
 name|select2
 argument_list|)
 block|, }
-comment|/*-------------------------< IDENT_BREAK_ATN>----------------*/
+comment|/*-------------------------< IDENT_BREAK_ATN>------------------*/
 block|,
 block|{
 name|SCR_SET
@@ -12364,7 +12103,7 @@ argument_list|(
 name|select2
 argument_list|)
 block|, }
-comment|/*-------------------------< SDATA_IN>-------------------*/
+comment|/*-------------------------< SDATA_IN>-------------------------*/
 block|,
 block|{
 name|SCR_CHMOV_TBL
@@ -12392,8 +12131,8 @@ name|PADDRH
 argument_list|(
 name|data_ovrun
 argument_list|)
-block|,  }
-comment|/*-------------------------< RESEL_BAD_LUN>---------------*/
+block|, }
+comment|/*-------------------------< RESEL_BAD_LUN>--------------------*/
 block|,
 block|{
 comment|/* 	 *  Message is an IDENTIFY, but lun is unknown. 	 *  Signal problem to C code for logging the event. 	 *  Send a M_ABORT to clear all pending tasks. 	 */
@@ -12408,7 +12147,7 @@ argument_list|(
 name|abort_resel
 argument_list|)
 block|, }
-comment|/*-------------------------< BAD_I_T_L>------------------*/
+comment|/*-------------------------< BAD_I_T_L>------------------------*/
 block|,
 block|{
 comment|/* 	 *  We donnot have a task for that I_T_L. 	 *  Signal problem to C code for logging the event. 	 *  Send a M_ABORT message. 	 */
@@ -12423,7 +12162,7 @@ argument_list|(
 name|abort_resel
 argument_list|)
 block|, }
-comment|/*-------------------------< BAD_I_T_L_Q>----------------*/
+comment|/*-------------------------< BAD_I_T_L_Q>----------------------*/
 block|,
 block|{
 comment|/* 	 *  We donnot have a task that matches the tag. 	 *  Signal problem to C code for logging the event. 	 *  Send a M_ABORTTAG message. 	 */
@@ -12438,7 +12177,7 @@ argument_list|(
 name|abort_resel
 argument_list|)
 block|, }
-comment|/*-------------------------< BAD_STATUS>-----------------*/
+comment|/*-------------------------< BAD_STATUS>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  Anything different from INTERMEDIATE  	 *  CONDITION MET should be a bad SCSI status,  	 *  given that GOOD status has already been tested. 	 *  Call the C code. 	 */
@@ -12469,8 +12208,8 @@ block|,
 name|SCR_RETURN
 block|,
 literal|0
-block|,  }
-comment|/*-------------------------< PM_HANDLE>------------------*/
+block|, }
+comment|/*-------------------------< PM_HANDLE>------------------------*/
 block|,
 block|{
 comment|/* 	 *  Phase mismatch handling. 	 * 	 *  Since we have to deal with 2 SCSI data pointers   	 *  (current and saved), we need at least 2 contexts. 	 *  Each context (pm0 and pm1) has a saved area, a  	 *  SAVE mini-script and a DATA phase mini-script. 	 */
@@ -12620,7 +12359,7 @@ argument_list|(
 name|pm_save
 argument_list|)
 block|, }
-comment|/*-------------------------< PM_HANDLE1>-----------------*/
+comment|/*-------------------------< PM_HANDLE1>-----------------------*/
 block|,
 block|{
 comment|/* 	 *  Normal case. 	 *  Update the return address so that it  	 *  will point after the interrupted MOVE. 	 */
@@ -12646,7 +12385,7 @@ argument_list|)
 block|,
 literal|0
 block|, }
-comment|/*-------------------------< PM_SAVE>--------------------*/
+comment|/*-------------------------< PM_SAVE>--------------------------*/
 block|,
 block|{
 comment|/* 	 *  Clear all the flags that told us if we were  	 *  interrupted in a PM DATA mini-script and/or  	 *  we received a SAVE DP. 	 */
@@ -12688,7 +12427,7 @@ argument_list|(
 name|pm1_save
 argument_list|)
 block|, }
-comment|/*-------------------------< PM0_SAVE>-------------------*/
+comment|/*-------------------------< PM0_SAVE>-------------------------*/
 block|,
 block|{
 name|SCR_STORE_REL
@@ -12798,7 +12537,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*-------------------------< PM1_SAVE>-------------------*/
+comment|/*-------------------------< PM1_SAVE>-------------------------*/
 block|,
 block|{
 name|SCR_STORE_REL
@@ -12907,8 +12646,8 @@ name|PADDR
 argument_list|(
 name|dispatch
 argument_list|)
-block|,  }
-comment|/*--------------------------< PM_WSR_HANDLE>-----------------------*/
+block|, }
+comment|/*-------------------------< PM_WSR_HANDLE>--------------------*/
 block|,
 block|{
 comment|/* 	 *  Phase mismatch handling from SCRIPT with WSR set. 	 *  Such a condition can occur if the chip wants to  	 *  execute a CHMOV(size> 1) when the WSR bit is  	 *  set and the target changes PHASE. 	 * 	 *  We must move the residual byte to memory. 	 * 	 *  UA contains bit 0..31 of the address to  	 *  move the residual byte. 	 *  Move it to the table indirect. 	 */
@@ -13152,7 +12891,7 @@ argument_list|(
 name|dispatch
 argument_list|)
 block|, }
-comment|/*--------------------------< WSR_MA_HELPER>-----------------------*/
+comment|/*-------------------------< WSR_MA_HELPER>--------------------*/
 block|,
 block|{
 comment|/* 	 *  Helper for the C code when WSR bit is set. 	 *  Perform the move of the residual byte. 	 */
@@ -13176,56 +12915,56 @@ name|PADDR
 argument_list|(
 name|dispatch
 argument_list|)
+block|, }
+comment|/*-------------------------< ZERO>-----------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< SCRATCH>--------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< PM0_DATA_ADDR>--------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< PM1_DATA_ADDR>--------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< SAVED_DSA>------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< SAVED_DRS>------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< DONE_POS>-------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< STARTPOS>-------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
+block|, }
+comment|/*-------------------------< TARGTBL>--------------------------*/
+block|,
+block|{
+name|SCR_DATA_ZERO
 block|,  }
-comment|/*-------------------------< ZERO>------------------------*/
+comment|/*-------------------------< SNOOPTEST>------------------------*/
 block|,
 block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< SCRATCH>---------------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< PM0_DATA_ADDR>---------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< PM1_DATA_ADDR>---------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< SAVED_DSA>-------------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< SAVED_DRS>-------------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< DONE_POS>--------------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< STARTPOS>--------------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|, }
-comment|/*-------------------------< TARGTBL>---------------------*/
-block|,
-block|{
-name|SCR_DATA_ZERO
-block|,  }
-comment|/*-------------------------< SNOOPTEST>-------------------*/
-block|,
-block|{
-comment|/* 	 *  Read the variable. 	 */
+comment|/* 	 *  Read the variable from memory. 	 */
 name|SCR_LOAD_REL
 argument_list|(
 name|scratcha
@@ -13241,6 +12980,7 @@ argument_list|,
 name|cache
 argument_list|)
 block|,
+comment|/* 	 *  Write the variable to memory. 	 */
 name|SCR_STORE_REL
 argument_list|(
 name|temp
@@ -13256,6 +12996,7 @@ argument_list|,
 name|cache
 argument_list|)
 block|,
+comment|/* 	 *  Read back the variable from memory. 	 */
 name|SCR_LOAD_REL
 argument_list|(
 name|temp
@@ -13271,7 +13012,7 @@ argument_list|,
 name|cache
 argument_list|)
 block|, }
-comment|/*-------------------------< SNOOPEND>-------------------*/
+comment|/*-------------------------< SNOOPEND>-------------------------*/
 block|,
 block|{
 comment|/* 	 *  And stop. 	 */
@@ -13279,7 +13020,7 @@ name|SCR_INT
 block|,
 literal|99
 block|, }
-comment|/*--------------------------------------------------------*/
+comment|/*-------------------------<>-----------------------------------*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -13655,39 +13396,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RELOC_KVAR
-if|if
-condition|(
-operator|(
-name|tmp1
-operator|&
-name|RELOC_MASK
-operator|)
-operator|==
-name|RELOC_KVAR
-condition|)
-name|tmp1
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tmp2
-operator|&
-name|RELOC_MASK
-operator|)
-operator|==
-name|RELOC_KVAR
-condition|)
-name|tmp2
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -13996,57 +13704,6 @@ name|np
 operator|->
 name|hcb_ba
 expr_stmt|;
-break|break;
-ifdef|#
-directive|ifdef
-name|RELOC_KVAR
-case|case
-name|RELOC_KVAR
-case|:
-if|if
-condition|(
-operator|(
-operator|(
-name|old
-operator|&
-operator|~
-name|RELOC_MASK
-operator|)
-operator|<
-name|SCRIPT_KVAR_FIRST
-operator|)
-operator|||
-operator|(
-operator|(
-name|old
-operator|&
-operator|~
-name|RELOC_MASK
-operator|)
-operator|>
-name|SCRIPT_KVAR_LAST
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"KVAR out of range"
-argument_list|)
-expr_stmt|;
-name|new
-operator|=
-name|vtobus
-argument_list|(
-name|script_kvars
-index|[
-name|old
-operator|&
-operator|~
-name|RELOC_MASK
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|0
@@ -20383,7 +20040,7 @@ name|pci_sts
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|pci_sts
 operator|=
 name|pci_read_config
@@ -20423,7 +20080,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|pci_write_config
 argument_list|(
 name|np
@@ -24055,8 +23712,6 @@ literal|0
 expr_stmt|;
 name|cp
 operator|->
-name|phys
-operator|.
 name|extra_bytes
 operator|=
 literal|0
@@ -26273,14 +25928,9 @@ name|XE_EXTRA_DATA
 condition|)
 name|resid
 operator|-=
-name|scr_to_cpu
-argument_list|(
 name|cp
 operator|->
-name|phys
-operator|.
 name|extra_bytes
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -28803,6 +28453,67 @@ operator|->
 name|xerr_status
 operator||=
 name|XE_SODL_UNRUN
+expr_stmt|;
+block|}
+goto|goto
+name|out
+goto|;
+comment|/* 	 *  The device wants us to tranfer more data than  	 *  expected or in the wrong direction. 	 *  The number of extra bytes is in scratcha. 	 *  It is a data overrun condition. 	 */
+case|case
+name|SIR_DATA_OVERRUN
+case|:
+if|if
+condition|(
+name|cp
+condition|)
+block|{
+name|OUTONB
+argument_list|(
+name|HF_PRT
+argument_list|,
+name|HF_EXT_ERR
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|xerr_status
+operator||=
+name|XE_EXTRA_DATA
+expr_stmt|;
+name|cp
+operator|->
+name|extra_bytes
+operator|+=
+name|INL
+argument_list|(
+name|nc_scratcha
+argument_list|)
+expr_stmt|;
+block|}
+goto|goto
+name|out
+goto|;
+comment|/* 	 *  The device switched to an illegal phase (4/5). 	 */
+case|case
+name|SIR_BAD_PHASE
+case|:
+if|if
+condition|(
+name|cp
+condition|)
+block|{
+name|OUTONB
+argument_list|(
+name|HF_PRT
+argument_list|,
+name|HF_EXT_ERR
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|xerr_status
+operator||=
+name|XE_BAD_PHASE
 expr_stmt|;
 block|}
 goto|goto
@@ -34120,8 +33831,6 @@ literal|0
 expr_stmt|;
 name|cp
 operator|->
-name|phys
-operator|.
 name|extra_bytes
 operator|=
 literal|0
@@ -37452,7 +37161,7 @@ block|}
 comment|/*============= DRIVER INITIALISATION ==================*/
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 specifier|static
 name|device_method_t
 name|sym_pci_methods
@@ -37517,7 +37226,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* Pre-FreeBSD_4_Bus */
+comment|/* Pre-FreeBSD_Bus_Io_Abstraction */
 specifier|static
 name|u_long
 name|sym_unit
@@ -37565,7 +37274,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* FreeBSD_4_Bus */
+comment|/* FreeBSD_Bus_Io_Abstraction */
 specifier|static
 name|struct
 name|sym_pci_chip
@@ -38174,7 +37883,7 @@ name|sym_pci_chip
 modifier|*
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|sym_find_pci_chip
 parameter_list|(
 name|device_t
@@ -38206,7 +37915,7 @@ name|revision
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 if|if
 condition|(
 name|pci_get_vendor
@@ -38335,7 +38044,7 @@ block|}
 comment|/*  *  Tell upper layer if the chip is supported.  */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 specifier|static
 name|int
 name|sym_pci_probe
@@ -38391,7 +38100,7 @@ return|;
 block|}
 else|#
 directive|else
-comment|/* Pre-FreeBSD_4_Bus */
+comment|/* Pre-FreeBSD_Bus_Io_Abstraction */
 specifier|static
 specifier|const
 name|char
@@ -38458,7 +38167,7 @@ directive|endif
 comment|/*  *  Attach a sym53c8xx device.  */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 specifier|static
 name|int
 name|sym_pci_attach
@@ -38557,7 +38266,7 @@ directive|endif
 comment|/* 	 *  Only probed devices should be attached. 	 *  We just enjoy being paranoid. :) 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|chip
 operator|=
 name|sym_find_pci_chip
@@ -38663,7 +38372,7 @@ name|bootverbose
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|np
 operator|->
 name|device
@@ -38855,7 +38564,7 @@ directive|endif
 comment|/* 	 *  Read and apply some fix-ups to the PCI COMMAND  	 *  register. We want the chip to be enabled for: 	 *  - BUS mastering 	 *  - PCI parity checking (reporting would also be fine) 	 *  - Write And Invalidate. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|command
 operator|=
 name|pci_read_config
@@ -38897,7 +38606,7 @@ literal|0x0010
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|pci_write_config
 argument_list|(
 name|dev
@@ -38927,7 +38636,7 @@ directive|endif
 comment|/* 	 *  Let the device know about the cache line size,  	 *  if it doesn't yet. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|cachelnsz
 operator|=
 name|pci_read_config
@@ -38966,7 +38675,7 @@ literal|8
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|pci_write_config
 argument_list|(
 name|dev
@@ -38997,7 +38706,7 @@ block|}
 comment|/* 	 *  Alloc/get/map/retrieve everything that deals with MMIO. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 if|if
 condition|(
 operator|(
@@ -39185,7 +38894,7 @@ directive|endif
 comment|/* 	 *  Allocate the IRQ. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|i
 operator|=
 literal|0
@@ -39242,7 +38951,7 @@ name|SYM_CONF_IOMAPPED
 comment|/* 	 *  User want us to use normal IO with PCI. 	 *  Alloc/get/map/retrieve everything that deals with IO. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 if|if
 condition|(
 operator|(
@@ -39417,7 +39126,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|int
 name|regs_id
 init|=
@@ -39666,7 +39375,7 @@ literal|37000
 condition|)
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|device_printf
 argument_list|(
 name|dev
@@ -40102,14 +39811,17 @@ name|pm1_data
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Still some for LED support. 	 */
+comment|/* 	 *  Still some for removing LED support. 	 */
 if|if
 condition|(
+operator|!
+operator|(
 name|np
 operator|->
 name|features
 operator|&
 name|FE_LED0
+operator|)
 condition|)
 block|{
 name|np
@@ -40123,14 +39835,7 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCR_REG_REG
-argument_list|(
-name|gpreg
-argument_list|,
-name|SCR_OR
-argument_list|,
-literal|0x01
-argument_list|)
+name|SCR_NO_OP
 argument_list|)
 expr_stmt|;
 name|np
@@ -40144,14 +39849,7 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCR_REG_REG
-argument_list|(
-name|gpreg
-argument_list|,
-name|SCR_AND
-argument_list|,
-literal|0xfe
-argument_list|)
+name|SCR_NO_OP
 argument_list|)
 expr_stmt|;
 name|np
@@ -40165,25 +39863,21 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCR_REG_REG
-argument_list|(
-name|gpreg
-argument_list|,
-name|SCR_AND
-argument_list|,
-literal|0xfe
-argument_list|)
+name|SCR_NO_OP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Load SCNTL4 on reselection for the C10. 	 */
+comment|/* 	 *  Remove the load of SCNTL4 on reselection if not a C10. 	 */
 if|if
 condition|(
+operator|!
+operator|(
 name|np
 operator|->
 name|features
 operator|&
 name|FE_C10
+operator|)
 condition|)
 block|{
 name|np
@@ -40197,12 +39891,7 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|SCR_LOAD_REL
-argument_list|(
-name|scntl4
-argument_list|,
-literal|1
-argument_list|)
+name|SCR_NO_OP
 argument_list|)
 expr_stmt|;
 name|np
@@ -40216,13 +39905,7 @@ index|]
 operator|=
 name|cpu_to_scr
 argument_list|(
-name|offsetof
-argument_list|(
-expr|struct
-name|sym_tcb
-argument_list|,
-name|uval
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -40622,7 +40305,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|device_printf
 argument_list|(
 name|dev
@@ -40730,7 +40413,7 @@ expr_stmt|;
 comment|/* 	 *  Now every should be quiet for us to  	 *  free other resources. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 if|if
 condition|(
 name|np
@@ -41229,7 +40912,7 @@ expr_stmt|;
 comment|/* 	 *  Establish our interrupt handler. 	 */
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|err
 operator|=
 name|bus_setup_intr
@@ -41435,7 +41118,7 @@ directive|ifdef
 name|__alpha__
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 name|alpha_register_pci_scsi
 argument_list|(
 name|pci_get_bus
@@ -41549,7 +41232,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|FreeBSD_4_Bus
+name|FreeBSD_Bus_Io_Abstraction
 if|if
 condition|(
 name|np
