@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lockf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -112,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lockf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -179,6 +179,18 @@ end_define
 begin_comment
 comment|/*  * Prototypes for MSDOSFS vnode operations  */
 end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|msdosfs_advlock
+parameter_list|(
+name|struct
+name|vop_advlock_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -417,18 +429,6 @@ name|struct
 name|vop_pathconf_args
 modifier|*
 name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|msdosfs_advlock
-parameter_list|(
-name|struct
-name|vop_advlock_args
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8067,10 +8067,6 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_comment
-comment|/*  * Advisory record locking support  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -8080,7 +8076,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_advlock_args
-comment|/* { 		struct vnode *a_vp; 		u_char  a_id; 		int  a_op; 		struct flock *a_fl; 		int  a_flags; 	} */
+comment|/* { 		struct vnode *a_vp; 		u_char a_id; 		int a_op; 		struct flock *a_fl; 		int a_flags; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -8088,7 +8084,7 @@ block|{
 name|struct
 name|denode
 modifier|*
-name|ip
+name|dep
 init|=
 name|VTODE
 argument_list|(
@@ -8104,13 +8100,11 @@ argument_list|(
 name|ap
 argument_list|,
 operator|&
-operator|(
-name|ip
+name|dep
 operator|->
 name|de_lockf
-operator|)
 argument_list|,
-name|ip
+name|dep
 operator|->
 name|de_FileSize
 argument_list|)
@@ -8159,6 +8153,17 @@ name|vop_t
 operator|*
 operator|)
 name|msdosfs_access
+block|}
+block|,
+block|{
+operator|&
+name|vop_advlock_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|msdosfs_advlock
 block|}
 block|,
 block|{
@@ -8412,17 +8417,6 @@ name|vop_t
 operator|*
 operator|)
 name|msdosfs_write
-block|}
-block|,
-block|{
-operator|&
-name|vop_advlock_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|msdosfs_advlock
 block|}
 block|,
 block|{
