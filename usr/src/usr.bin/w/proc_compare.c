@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_compare.c	5.3 (Berkeley) %G%"
+literal|"@(#)proc_compare.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,21 +76,21 @@ begin_define
 define|#
 directive|define
 name|ONLYA
-value|0x10
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|ONLYB
-value|0x01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|BOTH
-value|0x11
+value|3
 end_define
 
 begin_expr_stmt
@@ -146,7 +146,7 @@ name|ONLYA
 case|:
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 case|case
@@ -154,7 +154,7 @@ name|ONLYB
 case|:
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 case|case
