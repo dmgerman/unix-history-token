@@ -1502,7 +1502,7 @@ argument_list|(
 operator|&
 name|roundrobin_callout
 argument_list|,
-literal|0
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 comment|/* Kick off timeout driven events by calling first time. */
