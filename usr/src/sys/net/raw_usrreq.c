@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_usrreq.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_usrreq.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -73,12 +73,10 @@ begin_comment
 comment|/*  * Initialize raw connection block q.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|raw_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|rawcb
 operator|.
@@ -92,7 +90,7 @@ operator|&
 name|rawcb
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Raw protocol input routine.  Find the socket  * associated with the packet(s) and move them over.  If  * nothing exists for this packet, drop it.  */
@@ -102,46 +100,38 @@ begin_comment
 comment|/*  * Raw protocol interface.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|raw_input
-argument_list|(
-argument|m0
-argument_list|,
-argument|proto
-argument_list|,
-argument|src
-argument_list|,
-argument|dst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m0
+parameter_list|,
+name|proto
+parameter_list|,
+name|src
+parameter_list|,
+name|dst
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|sockproto
 modifier|*
 name|proto
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|src
 decl_stmt|,
-modifier|*
+decl|*
 name|dst
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -398,11 +388,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|sockets
-operator|)
-return|;
 block|}
 end_block
 
@@ -410,30 +395,22 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|raw_ctlinput
-argument_list|(
-argument|cmd
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|arg
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -448,54 +425,46 @@ condition|)
 return|return;
 comment|/* INCOMPLETE */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|raw_usrreq
-argument_list|(
-argument|so
-argument_list|,
-argument|req
-argument_list|,
-argument|m
-argument_list|,
-argument|nam
-argument_list|,
-argument|control
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|,
+name|req
+parameter_list|,
+name|m
+parameter_list|,
+name|nam
+parameter_list|,
+name|control
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|req
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|,
-modifier|*
+decl|*
 name|nam
 decl_stmt|,
 modifier|*
 name|control
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
