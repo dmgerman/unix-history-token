@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $Id: names.h,v 1.19 2002/05/16 15:01:41 christos Exp $  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Ian F. Darwin and others.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in MAGIC must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * $Id: names.h,v 1.24 2004/03/22 19:09:12 christos Exp $  */
 end_comment
 
 begin_comment
@@ -165,15 +169,28 @@ begin_comment
 comment|/* M4 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|L_PO
+value|14
+end_define
+
+begin_comment
+comment|/* PO */
+end_comment
+
 begin_struct
 specifier|static
 specifier|const
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|human
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mime
@@ -222,7 +239,7 @@ block|,
 block|{
 literal|"English"
 block|,
-literal|"text/plain, English"
+literal|"text/plain"
 block|}
 block|,
 block|{
@@ -268,7 +285,13 @@ literal|"text/x-m4"
 block|}
 block|,
 block|{
-literal|"can't happen error on names.h/types"
+literal|"PO (gettext message catalogue)"
+block|,
+literal|"text/x-po"
+block|}
+block|,
+block|{
+literal|"cannot happen error on names.h/types"
 block|,
 literal|"error/x-error"
 block|}
@@ -306,6 +329,12 @@ init|=
 block|{
 comment|/* These must be sorted by eye for optimal hit rate */
 comment|/* Add to this list only after substantial meditation */
+block|{
+literal|"msgid"
+block|,
+name|L_PO
+block|}
+block|,
 block|{
 literal|"dnl"
 block|,
@@ -616,6 +645,18 @@ block|}
 block|,
 block|{
 literal|"<BODY"
+block|,
+name|L_HTML
+block|}
+block|,
+block|{
+literal|"<html"
+block|,
+name|L_HTML
+block|}
+block|,
+block|{
+literal|"<HTML"
 block|,
 name|L_HTML
 block|}

@@ -1,12 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.17 2002/07/03 18:26:38 christos Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Ian F. Darwin and others.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"magic.h"
 end_include
 
 begin_include
@@ -42,7 +52,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: is_tar.c,v 1.17 2002/07/03 18:26:38 christos Exp $"
+literal|"@(#)$Id: is_tar.c,v 1.24 2003/11/11 20:01:46 christos Exp $"
 argument_list|)
 end_macro
 
@@ -62,12 +72,28 @@ value|( ((c)>= '0')&& ((c)<= '7') )
 end_define
 
 begin_function_decl
-specifier|static
+name|private
+name|int
+name|is_tar
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|private
 name|int
 name|from_oct
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -78,31 +104,143 @@ begin_comment
 comment|/* Decode octal number */
 end_comment
 
-begin_comment
-comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file.  */
-end_comment
-
 begin_function
+name|protected
 name|int
-name|is_tar
+name|file_is_tar
 parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+name|ms
+parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|size_t
 name|nbytes
 parameter_list|)
 block|{
+comment|/* 	 * Do the tar test first, because if the first file in the tar 	 * archive starts with a dot, we can confuse it with an nroff file. 	 */
+switch|switch
+condition|(
+name|is_tar
+argument_list|(
+name|buf
+argument_list|,
+name|nbytes
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
+case|:
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_MIME
+operator|)
+condition|?
+literal|"application/x-tar"
+else|:
+literal|"tar archive"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|1
+return|;
+case|case
+literal|2
+case|:
+if|if
+condition|(
+name|file_printf
+argument_list|(
+name|ms
+argument_list|,
+operator|(
+name|ms
+operator|->
+name|flags
+operator|&
+name|MAGIC_MIME
+operator|)
+condition|?
+literal|"application/x-tar, POSIX"
+else|:
+literal|"POSIX tar archive"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|1
+return|;
+default|default:
+return|return
+literal|0
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file.  */
+end_comment
+
+begin_function
+name|private
+name|int
+name|is_tar
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|nbytes
+parameter_list|)
+block|{
+specifier|const
 name|union
 name|record
 modifier|*
 name|header
 init|=
 operator|(
+specifier|const
 expr|union
 name|record
+operator|*
+operator|)
+operator|(
+specifier|const
+name|void
 operator|*
 operator|)
 name|buf
@@ -115,6 +253,7 @@ name|sum
 decl_stmt|,
 name|recsum
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -172,7 +311,7 @@ literal|0
 condition|;
 control|)
 block|{
-comment|/* 		 * We can't use unsigned char here because of old compilers, 		 * e.g. V7. 		 */
+comment|/* 		 * We cannot use unsigned char here because of old compilers, 		 * e.g. V7. 		 */
 name|sum
 operator|+=
 literal|0xFF
@@ -267,13 +406,14 @@ comment|/*  * Quick and dirty octal conversion.  *  * Result is -1 if the field 
 end_comment
 
 begin_function
-specifier|static
+name|private
 name|int
 name|from_oct
 parameter_list|(
 name|int
 name|digs
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|where
