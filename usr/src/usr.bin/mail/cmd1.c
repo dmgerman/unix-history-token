@@ -25,12 +25,12 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	1.4 %G%"
+literal|"@(#)cmd1.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Print the current active headings.  */
+comment|/*  * Print the current active headings.  * Don't change dot if invoker didn't give an argument.  */
 end_comment
 
 begin_decl_stmt
@@ -165,6 +165,18 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|dot
+operator|!=
+operator|&
+name|message
+index|[
+name|n
+operator|-
+literal|1
+index|]
+condition|)
 name|dot
 operator|=
 name|mp
@@ -485,6 +497,8 @@ modifier|*
 name|subjline
 decl_stmt|,
 name|dispc
+decl_stmt|,
+name|curind
 decl_stmt|;
 name|char
 name|pbuf
@@ -572,6 +586,16 @@ literal|29
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|curind
+operator|=
+name|dot
+operator|==
+name|mp
+condition|?
+literal|'>'
+else|:
+literal|' '
 expr_stmt|;
 name|dispc
 operator|=
@@ -707,7 +731,9 @@ name|NOSTR
 condition|)
 name|printf
 argument_list|(
-literal|"%c%3d %-8s %16.16s %s \"%s\"\n"
+literal|"%c%c%3d %-8s %16.16s %s \"%s\"\n"
+argument_list|,
+name|curind
 argument_list|,
 name|dispc
 argument_list|,
@@ -730,7 +756,9 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%c%3d %-8s %16.16s %s\n"
+literal|"%c%c%3d %-8s %16.16s %s\n"
+argument_list|,
+name|curind
 argument_list|,
 name|dispc
 argument_list|,
