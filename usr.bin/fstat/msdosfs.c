@@ -424,9 +424,7 @@ name|fsp
 operator|->
 name|rdev
 operator|=
-name|denode
-operator|.
-name|de_dev
+literal|0
 expr_stmt|;
 comment|/* 	 * XXX - 	 * Culled from msdosfs_vnops.c. There appears to be a problem 	 * here, in that a directory has the same inode number as the first 	 * file in the directory. stat(2) suffers from this problem also, so 	 * I won't try to fix it here. 	 *  	 * The following computation of the fileid must be the same as that 	 * used in msdosfs_readdir() to compute d_fileno. If not, pwd 	 * doesn't work. 	 */
 name|dirsperblk

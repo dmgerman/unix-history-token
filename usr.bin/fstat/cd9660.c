@@ -170,7 +170,9 @@ name|rdev
 operator|=
 name|isonode
 operator|.
-name|i_dev
+name|inode
+operator|.
+name|iso_rdev
 expr_stmt|;
 name|fsp
 operator|->
