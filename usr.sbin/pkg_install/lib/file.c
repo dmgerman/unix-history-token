@@ -123,7 +123,7 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|fname
 argument_list|,
