@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.1 82/04/02"
+literal|"@(#)rcp.c	4.2 82/05/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,7 +626,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"rsh %s -l %s %s %s '%s:%s'</dev/null"
+literal|"rsh %s -L %s %s %s '%s:%s'</dev/null"
 argument_list|,
 name|argv
 index|[
@@ -1339,7 +1339,8 @@ decl_stmt|,
 name|sizerr
 decl_stmt|,
 name|f
-decl_stmt|,
+decl_stmt|;
+name|off_t
 name|i
 decl_stmt|;
 for|for
@@ -1511,7 +1512,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"C%04o %d %s\n"
+literal|"C%04o %D %s\n"
 argument_list|,
 name|stb
 operator|.
@@ -2191,13 +2192,14 @@ name|of
 decl_stmt|,
 name|mode
 decl_stmt|,
-name|i
-decl_stmt|,
-name|size
-decl_stmt|,
 name|wrerr
 decl_stmt|,
 name|exists
+decl_stmt|;
+name|off_t
+name|i
+decl_stmt|,
+name|size
 decl_stmt|;
 name|char
 modifier|*
