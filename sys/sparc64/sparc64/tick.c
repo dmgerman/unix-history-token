@@ -105,9 +105,6 @@ modifier|*
 name|cf
 parameter_list|)
 block|{
-name|critical_t
-name|c
-decl_stmt|;
 name|int
 name|missed
 decl_stmt|;
@@ -133,8 +130,6 @@ argument_list|)
 operator|+
 name|tick_increment
 expr_stmt|;
-name|c
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -176,9 +171,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|c
-argument_list|)
+argument_list|()
 expr_stmt|;
 for|for
 control|(

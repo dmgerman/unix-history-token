@@ -258,6 +258,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/metadata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ofw_machdep.h>
 end_include
 
@@ -2922,9 +2928,6 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-name|critical_t
-name|c
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"Debugger(\"%s\")\n"
@@ -2932,8 +2935,6 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|c
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -2941,9 +2942,7 @@ name|breakpoint
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|c
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
