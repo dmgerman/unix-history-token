@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993, 1994, 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 1.1.1.2 1997/04/03 10:11:06 darrenr Exp $  */
+comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.0.2.7 1997/05/08 10:10:18 darrenr Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__IP_FRAG_H_
+name|__IP_FRAG_H__
 end_ifndef
 
 begin_define
@@ -34,6 +34,10 @@ name|ipfr_next
 decl_stmt|,
 modifier|*
 name|ipfr_prev
+decl_stmt|;
+name|void
+modifier|*
+name|ipfr_data
 decl_stmt|;
 name|struct
 name|in_addr
@@ -96,6 +100,12 @@ modifier|*
 modifier|*
 name|ifs_table
 decl_stmt|;
+name|struct
+name|ipfr
+modifier|*
+modifier|*
+name|ifs_nattab
+decl_stmt|;
 block|}
 name|ipfrstat_t
 typedef|;
@@ -136,6 +146,47 @@ name|fr_info_t
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipfr_nat_newfrag
+name|__P
+argument_list|(
+operator|(
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|nat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|nat_t
+modifier|*
+name|ipfr_nat_knownfrag
+name|__P
+argument_list|(
+operator|(
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
