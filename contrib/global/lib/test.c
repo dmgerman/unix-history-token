@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -18,7 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"test.h"
 end_include
 
 begin_comment
@@ -66,11 +72,15 @@ literal|0
 return|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|flags
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 switch|switch

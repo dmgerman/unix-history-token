@@ -123,7 +123,9 @@ end_function
 begin_function
 name|void
 name|lookupclose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|db_close
 argument_list|(

@@ -308,7 +308,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|de_del
+name|db_del
 name|__P
 argument_list|(
 operator|(

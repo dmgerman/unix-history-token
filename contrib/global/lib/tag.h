@@ -117,6 +117,7 @@ name|tagclose
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

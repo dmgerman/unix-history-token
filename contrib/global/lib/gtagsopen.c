@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -24,7 +24,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dbio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dbname.h"
 end_include
 
 begin_include
@@ -36,13 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"makepath.h"
+file|"gtagsopen.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dbname.h"
+file|"makepath.h"
 end_include
 
 begin_define
@@ -182,6 +200,7 @@ block|{
 comment|/* 		 * recognize format version of GTAGS. 'format version record' 		 * is saved as a META record in GTAGS and GRTAGS. 		 * if 'format version record' is not found, it's assumed 		 * version 1. 		 */
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|db_get
@@ -190,6 +209,9 @@ name|dbio
 argument_list|,
 name|VERSIONKEY
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for

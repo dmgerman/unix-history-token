@@ -12,7 +12,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dbio.h"
 end_include
 
 begin_include
@@ -319,6 +343,8 @@ name|NULL
 decl_stmt|;
 name|int
 name|mode
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -688,6 +714,7 @@ expr_stmt|;
 comment|/* 	 * Input file format: 	 * +-------------------------------------------------- 	 * |Primary-key	secondary-key-1 secondary-key-2 Data\n 	 * |Primary-key	secondary-key-1 secondary-key-2 Data\n 	 * 	. 	 * 	. 	 * - Keys and Data are separated by blank('\t' or ' ').  	 * - Keys cannot include blank. 	 * - Data can include blank. 	 * - Null record not allowed. 	 * - Secondary-key is assumed as a part of data by db(3). 	 * 	 * META record: 	 * You can write meta record by making key start with a ' '. 	 * You can read this record only by indexed read ('-K' option). 	 * +------------------ 	 * | __.VERSION 2 	 */
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|mgets
@@ -698,6 +725,9 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if

@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -18,7 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -119,6 +137,7 @@ name|current
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -142,20 +161,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|Dflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|Rflag
 decl_stmt|;
 end_decl_stmt
 
@@ -217,14 +222,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|path
-decl_stmt|,
-modifier|*
 name|p
-decl_stmt|;
-name|FILE
-modifier|*
-name|ip
 decl_stmt|;
 name|int
 name|db
@@ -640,12 +638,16 @@ control|(
 name|findopen
 argument_list|()
 init|;
+operator|(
 name|path
 operator|=
 name|findread
 argument_list|(
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 block|{
@@ -982,6 +984,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|tagline
 operator|=
 name|mgets
@@ -992,6 +995,9 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|p
@@ -1093,12 +1099,16 @@ control|(
 name|findopen
 argument_list|()
 init|;
+operator|(
 name|path
 operator|=
 name|findread
 argument_list|(
 name|NULL
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|;
 control|)
 block|{
@@ -1191,17 +1201,13 @@ begin_comment
 comment|/*  * current: current date and time  *  *	r)		date and time  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
 begin_function
 name|char
 modifier|*
 name|current
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char

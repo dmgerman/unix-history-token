@@ -6,13 +6,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"strop.h"
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"die.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"strop.h"
 end_include
 
 begin_comment
@@ -67,7 +79,9 @@ end_decl_stmt
 begin_function
 name|void
 name|stropen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -347,7 +361,9 @@ begin_function
 name|char
 modifier|*
 name|strclose
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|opened
 operator|=
