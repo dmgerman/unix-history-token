@@ -63,6 +63,19 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"--> Press a key on the console to reboot<--\n"
+argument_list|)
+expr_stmt|;
+name|getchar
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Rebooting...\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
