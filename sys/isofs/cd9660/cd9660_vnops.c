@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $Id: cd9660_vnops.c,v 1.16 1995/09/04 00:20:05 dyson Exp $  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) 1/23/94  * $Id: cd9660_vnops.c,v 1.17 1995/10/23 02:22:34 dyson Exp $  */
 end_comment
 
 begin_include
@@ -117,6 +117,246 @@ directive|include
 file|<isofs/cd9660/iso_rrip.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_open_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_access
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_access_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_getattr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_getattr_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_ioctl_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_select
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_select_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_mmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_mmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_seek
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_seek_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_readdir
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_readdir_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_abortop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_abortop_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_lock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_lock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_unlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_unlock_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_strategy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_strategy_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_print
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_print_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cd9660_islocked
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_islocked_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -176,6 +416,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_open
 parameter_list|(
@@ -205,6 +446,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_close
 parameter_list|(
@@ -234,6 +476,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_access
 parameter_list|(
@@ -255,6 +498,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cd9660_getattr
 parameter_list|(
@@ -523,6 +767,7 @@ comment|/*  * Vnode op for reading.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_read
 parameter_list|(
@@ -959,6 +1204,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_ioctl
 parameter_list|(
@@ -989,6 +1235,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_select
 parameter_list|(
@@ -1019,6 +1266,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_mmap
 parameter_list|(
@@ -1048,6 +1296,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_seek
 parameter_list|(
@@ -1591,6 +1840,7 @@ comment|/*  * Vnode op for readdir  * XXX make sure everything still works now t
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_readdir
 parameter_list|(
@@ -2502,6 +2752,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|int
 name|cd9660_readlink
 parameter_list|(
@@ -2812,6 +3063,7 @@ comment|/*  * Ufs abort op, called after namei() when a CREATE/DELETE isn't actu
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_abortop
 parameter_list|(
@@ -2864,6 +3116,7 @@ comment|/*  * Lock an inode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_lock
 parameter_list|(
@@ -2905,6 +3158,7 @@ comment|/*  * Unlock an inode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_unlock
 parameter_list|(
@@ -2962,6 +3216,7 @@ comment|/*  * Check for a locked inode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_islocked
 parameter_list|(
@@ -3001,6 +3256,7 @@ comment|/*  * Calculate the logical to physical mapping if not done already,  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_strategy
 parameter_list|(
@@ -3212,6 +3468,7 @@ comment|/*  * Print out the contents of an inode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_print
 parameter_list|(
@@ -3240,6 +3497,7 @@ comment|/*  * Unsupported operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cd9660_enotsupp
 parameter_list|()
@@ -3416,6 +3674,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|cd9660_vnodeop_entries
@@ -3770,6 +4029,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|cd9660_vnodeop_opv_desc
@@ -3807,6 +4067,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|cd9660_specop_entries
@@ -4168,6 +4429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|cd9660_specop_opv_desc
@@ -4201,6 +4463,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|cd9660_fifoop_entries
@@ -4555,6 +4818,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|cd9660_fifoop_opv_desc
