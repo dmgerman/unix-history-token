@@ -1186,7 +1186,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%lld,%ld,%lld,%d) "
+literal|"(%jd,%jd,%jd,%jd) "
 argument_list|,
 operator|(
 name|intmax_t
@@ -1195,6 +1195,9 @@ name|rbp
 operator|->
 name|b_lblkno
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rbp
 operator|->
 name|b_bcount
@@ -1210,6 +1213,9 @@ operator|-
 name|origblkno
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|seqcount
 argument_list|)
 expr_stmt|;
