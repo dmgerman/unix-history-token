@@ -125,6 +125,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|devstat_add_entry
+parameter_list|(
+name|struct
+name|devstat
+modifier|*
+name|ds
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dev_name
+parameter_list|,
+name|int
+name|unit_number
+parameter_list|,
+name|u_int32_t
+name|block_size
+parameter_list|,
+name|devstat_support_flags
+name|flags
+parameter_list|,
+name|devstat_type_flags
+name|device_type
+parameter_list|,
+name|devstat_priority
+name|priority
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Allocate a devstat and initialize it  */
 end_comment
@@ -196,6 +229,7 @@ comment|/*  * Take a malloced and zeroed devstat structure given to us, fill it 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|devstat_add_entry
 parameter_list|(
