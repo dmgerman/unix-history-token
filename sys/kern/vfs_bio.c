@@ -10360,6 +10360,11 @@ name|bp
 operator|->
 name|b_object
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|bp
@@ -10437,7 +10442,17 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|VM_WAIT
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -10577,6 +10592,11 @@ operator|->
 name|b_npages
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Step 2.  We've loaded the pages into the buffer, 			 * we have to figure out if we can still have B_CACHE 			 * set.  Note that B_CACHE is set according to the 			 * byte-granular range ( bcount and size ), new the 			 * aligned range ( newbsize ). 			 * 			 * The VM test is against m->valid, which is DEV_BSIZE 			 * aligned.  Needless to say, the validity of the data 			 * needs to also be DEV_BSIZE aligned.  Note that this 			 * fails with NFS if the server or some other client 			 * extends the file's EOF.  If our buffer is resized,  			 * B_CACHE may remain set! XXX 			 */
 name|toff
 operator|=
