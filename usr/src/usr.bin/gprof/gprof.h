@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.11 (Berkeley) %G% */
+comment|/* sccsid:  @(#)gprof.h	1.12 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -49,6 +49,42 @@ modifier|*
 name|whoami
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*      * booleans      */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|bool
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_comment
+comment|/*      *	opcode of the `calls' instruction      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLS
+value|0xfb
+end_define
 
 begin_comment
 comment|/*      *	ticks per second      */
@@ -208,6 +244,10 @@ name|long
 name|selfcalls
 decl_stmt|;
 comment|/* how many calls to self */
+name|bool
+name|printflag
+decl_stmt|;
+comment|/* should this be printed? */
 name|int
 name|index
 decl_stmt|;
@@ -446,6 +486,16 @@ end_comment
 
 begin_decl_stmt
 name|double
+name|printtime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total of time being printed */
+end_comment
+
+begin_decl_stmt
+name|double
 name|scale
 decl_stmt|;
 end_decl_stmt
@@ -503,17 +553,17 @@ comment|/*      *	option flags, from a to z.      */
 end_comment
 
 begin_decl_stmt
-name|int
+name|bool
 name|aflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static functions, too */
+comment|/* suppress static functions */
 end_comment
 
 begin_decl_stmt
-name|int
+name|bool
 name|bflag
 decl_stmt|;
 end_decl_stmt
@@ -523,7 +573,7 @@ comment|/* blurbs, too */
 end_comment
 
 begin_decl_stmt
-name|int
+name|bool
 name|cflag
 decl_stmt|;
 end_decl_stmt
@@ -533,7 +583,37 @@ comment|/* discovered call graph, too */
 end_comment
 
 begin_decl_stmt
-name|int
+name|bool
+name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* debugging options */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* specific functions excluded */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* specific functions requested */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|sflag
 decl_stmt|;
 end_decl_stmt
@@ -543,7 +623,7 @@ comment|/* sum multiple gmon.out files */
 end_comment
 
 begin_decl_stmt
-name|int
+name|bool
 name|zflag
 decl_stmt|;
 end_decl_stmt
@@ -551,42 +631,6 @@ end_decl_stmt
 begin_comment
 comment|/* zero time/called functions, too */
 end_comment
-
-begin_comment
-comment|/*      * booleans      */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|bool
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_comment
-comment|/*      *	opcode of the `calls' instruction      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CALLS
-value|0xfb
-end_define
 
 begin_comment
 comment|/*      *	register for pc relative addressing      */

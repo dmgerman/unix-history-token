@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.8 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,11 @@ operator|(
 name|long
 operator|)
 name|scale
+operator|*
+sizeof|sizeof
+argument_list|(
+name|UNIT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -480,6 +485,34 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
+literal|"\ngranularity: each sample hit covers %d byte(s)"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|scale
+operator|*
+sizeof|sizeof
+argument_list|(
+name|UNIT
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" for %.2f%% of %.2f seconds\n\n"
+argument_list|,
+literal|100.0
+operator|/
+name|printtime
+argument_list|,
+name|printtime
+operator|/
+name|HZ
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%6.6s %5.5s %7.7s %11.11s %7.7s/%-7.7s     %-8.8s\n"
 argument_list|,
 literal|""
@@ -598,7 +631,7 @@ operator|->
 name|childtime
 operator|)
 operator|/
-name|totime
+name|printtime
 argument_list|,
 name|np
 operator|->
@@ -916,6 +949,16 @@ operator|->
 name|childtime
 operator|==
 literal|0
+condition|)
+block|{
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|parentp
+operator|->
+name|printflag
 condition|)
 block|{
 continue|continue;
@@ -1642,6 +1685,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|selfp
+operator|->
+name|printflag
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" [%d]"
@@ -1651,6 +1701,19 @@ operator|->
 name|index
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" (%d)"
+argument_list|,
+name|selfp
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -1966,7 +2029,7 @@ operator|->
 name|childtime
 operator|)
 operator|/
-name|totime
+name|printtime
 argument_list|,
 name|cyclep
 operator|->

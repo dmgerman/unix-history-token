@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vax.c	1.1 (Berkeley) %G%"
+literal|"@(#)vax.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,12 @@ operator|)
 literal|0
 block|,
 comment|/* how many calls to self */
+operator|(
+name|bool
+operator|)
+literal|0
+block|,
+comment|/* print flag */
 operator|(
 name|int
 operator|)
