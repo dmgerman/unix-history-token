@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.51 1996/01/03 06:32:10 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.52 1996/01/05 16:13:44 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -133,17 +133,6 @@ directive|define
 name|ALL_TARGETS
 value|-1
 end_define
-
-begin_decl_stmt
-name|struct
-name|ahc_data
-modifier|*
-name|ahcdata
-index|[
-name|NAHC
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|u_long
@@ -1126,7 +1115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Allocate a controller structures for a new device and initialize it.  * ahc_reset should be called before now since we assume that the card  * is paused.  *  * Sticking the ahc structure into the ahcdata array is an artifact of the  * need to index by unit.  As soon as the upper level scsi code passes  * pointers instead of units down to us, this will go away.  */
+comment|/*  * Allocate a controller structures for a new device and initialize it.  * ahc_reset should be called before now since we assume that the card  * is paused.  *  */
 end_comment
 
 begin_function
@@ -1162,44 +1151,7 @@ name|ahc_data
 modifier|*
 name|ahc
 decl_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NAHC
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ahc: unit number (%d) too high\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 comment|/* 	 * Allocate a storage area for us 	 */
-if|if
-condition|(
-name|ahcdata
-index|[
-name|unit
-index|]
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ahc%d: memory already allocated\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|ahc
 operator|=
 name|malloc
@@ -1242,13 +1194,6 @@ expr|struct
 name|ahc_data
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ahcdata
-index|[
-name|unit
-index|]
-operator|=
-name|ahc
 expr_stmt|;
 name|ahc
 operator|->
@@ -1321,15 +1266,6 @@ modifier|*
 name|ahc
 decl_stmt|;
 block|{
-name|ahcdata
-index|[
-name|ahc
-operator|->
-name|unit
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 name|free
 argument_list|(
 name|ahc
@@ -1700,6 +1636,14 @@ operator|=
 name|ahc
 operator|->
 name|our_id
+expr_stmt|;
+name|ahc
+operator|->
+name|sc_link
+operator|.
+name|adapter_softc
+operator|=
+name|ahc
 expr_stmt|;
 name|ahc
 operator|->
@@ -6266,8 +6210,6 @@ name|struct
 name|scb
 modifier|*
 name|scb
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ahc_dma_seg
@@ -6287,17 +6229,40 @@ decl_stmt|,
 name|nextphys
 decl_stmt|;
 name|int
-name|unit
-init|=
+name|bytes_this_seg
+decl_stmt|,
+name|bytes_this_page
+decl_stmt|,
+name|datalen
+decl_stmt|,
+name|flags
+decl_stmt|;
+name|struct
+name|ahc_data
+modifier|*
+name|ahc
+decl_stmt|;
+name|u_short
+name|mask
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|ahc
+operator|=
+operator|(
+expr|struct
+name|ahc_data
+operator|*
+operator|)
 name|xs
 operator|->
 name|sc_link
 operator|->
-name|adapter_unit
-decl_stmt|;
-name|u_short
+name|adapter_softc
+expr_stmt|;
 name|mask
-init|=
+operator|=
 operator|(
 literal|0x01
 operator|<<
@@ -6322,29 +6287,7 @@ literal|0x08
 operator|)
 operator|)
 operator|)
-decl_stmt|;
-name|int
-name|bytes_this_seg
-decl_stmt|,
-name|bytes_this_page
-decl_stmt|,
-name|datalen
-decl_stmt|,
-name|flags
-decl_stmt|;
-name|struct
-name|ahc_data
-modifier|*
-name|ahc
-init|=
-name|ahcdata
-index|[
-name|unit
-index|]
-decl_stmt|;
-name|int
-name|s
-decl_stmt|;
+expr_stmt|;
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -6376,6 +6319,8 @@ name|printf
 argument_list|(
 literal|"ahc%d: Already done?"
 argument_list|,
+name|ahc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6401,6 +6346,8 @@ name|printf
 argument_list|(
 literal|"ahc%d: Not in use?"
 argument_list|,
+name|ahc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6926,6 +6873,8 @@ name|printf
 argument_list|(
 literal|"ahc_scsi_cmd%d: more than %d DMA segs\n"
 argument_list|,
+name|ahc
+operator|->
 name|unit
 argument_list|,
 name|AHC_NSEG
@@ -6981,7 +6930,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*          * Usually return SUCCESSFULLY QUEUED          */
 ifdef|#
 directive|ifdef
 name|AHC_DEBUG
@@ -8227,9 +8175,6 @@ operator|*
 operator|)
 name|arg1
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
 name|struct
 name|ahc_data
 modifier|*
@@ -8263,27 +8208,27 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|unit
+name|ahc
 operator|=
+operator|(
+expr|struct
+name|ahc_data
+operator|*
+operator|)
 name|scb
 operator|->
 name|xs
 operator|->
 name|sc_link
 operator|->
-name|adapter_unit
-expr_stmt|;
-name|ahc
-operator|=
-name|ahcdata
-index|[
-name|unit
-index|]
+name|adapter_softc
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"ahc%d: target %d, lun %d (%s%d) timed out\n"
 argument_list|,
+name|ahc
+operator|->
 name|unit
 argument_list|,
 name|scb
