@@ -587,6 +587,34 @@ asm|asm("movl a6@(4),%0" : "=r" (selfpc));
 asm|asm("movl a6@(0)@(4),%0" : "=r" (frompcindex));
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+comment|/*          * selfpc = pc pushed by mcount call          */
+asm|asm("movl 4(%%ebp),%0" : "=r" (selfpc));
+comment|/*          * frompcindex = pc pushed by jsr into self.          * in GCC, the caller's stack frame has already been built, so we          * have to chase the base pointer to find caller's raddr.          */
+asm|asm("movl (%%ebp),%0" : "=r" (frompcindex));
+name|frompcindex
+operator|=
+operator|(
+operator|(
+name|unsigned
+name|short
+operator|*
+operator|*
+operator|)
+name|frompcindex
+operator|)
+index|[
+literal|1
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* i386 */
 else|#
 directive|else
 if|#
@@ -607,25 +635,10 @@ name|defined
 argument_list|(
 name|i386
 argument_list|)
-comment|/* 	 * selfpc = pc pushed by mcount call 	 */
-asm|asm("movl 4(%%ebp),%0" : "=r" (selfpc));
-comment|/* 	 * frompcindex = pc pushed by jsr into self. 	 * in GCC, the caller's stack frame has already been built, so we 	 * have to chase the base pointer to find caller's raddr. 	 */
-asm|asm("movl (%%ebp),%0" : "=r" (frompcindex));
-name|frompcindex
-operator|=
-operator|(
-operator|(
-name|unsigned
-name|short
-operator|*
-operator|*
-operator|)
-name|frompcindex
-operator|)
-index|[
-literal|1
-index|]
-expr_stmt|;
+name|Fix
+name|Me
+operator|!
+operator|!
 endif|#
 directive|endif
 comment|/* i386 */

@@ -636,6 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bcmp
 name|__P
@@ -657,6 +658,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|size_t
 name|strlen
 name|__P
@@ -988,6 +990,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ffs
 name|__P

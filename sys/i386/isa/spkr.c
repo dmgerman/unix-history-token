@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"kernel.h"
 end_include
 

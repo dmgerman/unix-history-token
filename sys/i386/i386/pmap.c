@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/src/sys.386bsd/i386/i386/RCS/pmap.c,v 1.3 92/01/21 14:26:44 william Exp Locker: root $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/pmap.c,v 1.1.1.1 1993/06/12 14:58:06 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1549,7 +1549,7 @@ argument_list|)
 operator||
 name|PG_V
 operator||
-name|PG_URKW
+name|PG_KW
 expr_stmt|;
 name|pmap
 operator|->

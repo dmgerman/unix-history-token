@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/vfs__bio.c,v 1.2 1993/07/18 11:27:45 paul Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/kern/vfs__bio.c,v 1.3 1993/07/18 17:15:09 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

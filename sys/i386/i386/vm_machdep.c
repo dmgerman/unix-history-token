@@ -13,7 +13,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/i386/vm_machdep.c,v 1.1.1.1 1993/06/12 14:58:05 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/vm_machdep.c,v 1.2 1993/07/18 20:56:17 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,9 +262,12 @@ operator|*
 name|NBPG
 argument_list|)
 argument_list|,
+comment|/* 			    * The user area has to be mapped writable because 			    * it contains the kernel stack (when CR0_WP is on 			    * on a 486 there is no user-read/kernel-write 			    * mode).  It is protected from user mode access 			    * by the segment limits. 			    */
 name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
 argument_list|,
-literal|1
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|pmap_activate

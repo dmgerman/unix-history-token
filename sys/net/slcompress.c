@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: slcompress.c,v 1.22 92/05/24 11:48:20 van Exp $ (LBL)"
+literal|"@(#) $Header: /a/cvs/386BSD/src/sys.386bsd/net/slcompress.c,v 1.1.1.1 1993/06/12 14:57:51 rgrimes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

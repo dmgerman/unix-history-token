@@ -3477,6 +3477,10 @@ do|;
 if|if
 condition|(
 name|error
+operator|==
+name|EFAULT
+operator|||
+name|error
 operator|&&
 operator|(
 name|ioflag

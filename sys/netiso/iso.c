@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: /a/cvs/386BSD/src/sys/netiso/iso.c,v 1.1.1.1 1993/06/12 14:57:20 rgrimes Exp $   * $Source: /a/cvs/386BSD/src/sys/netiso/iso.c,v $   *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
