@@ -935,9 +935,14 @@ operator|*
 name|ptr
 expr_stmt|;
 comment|/* Generate command string */
-name|sprintf
+name|snprintf
 argument_list|(
 name|stemp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stemp
+argument_list|)
 argument_list|,
 literal|"PORT %d,%d,%d,%d,%d,%d\r\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.10 1996/12/12 14:39:44 jkh Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.9.2.2 1996/12/23 18:13:33 jkh Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -1302,9 +1302,14 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuff
+argument_list|)
 argument_list|,
 literal|"myaddr = %s "
 argument_list|,
@@ -1590,6 +1595,12 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+name|char
+name|tbuff2
+index|[
+literal|100
+index|]
+decl_stmt|;
 name|ackp
 operator|=
 name|AckBuff
@@ -1638,9 +1649,14 @@ name|type
 operator|<=
 name|TY_IPADDR
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuff
+argument_list|)
 argument_list|,
 literal|" %s[%d] "
 argument_list|,
@@ -1653,9 +1669,14 @@ name|length
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuff
+argument_list|)
 argument_list|,
 literal|" "
 argument_list|)
@@ -1789,11 +1810,14 @@ argument_list|)
 condition|)
 block|{
 comment|/*            * Use address suggested by peer.            */
-name|sprintf
+name|snprintf
 argument_list|(
-name|tbuff
-operator|+
-literal|50
+name|tbuff2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuff2
+argument_list|)
 argument_list|,
 literal|"%s changing address: %s "
 argument_list|,
@@ -1813,9 +1837,7 @@ name|LOG_LCP_BIT
 argument_list|,
 literal|"%s --> %s\n"
 argument_list|,
-name|tbuff
-operator|+
-literal|50
+name|tbuff2
 argument_list|,
 name|inet_ntoa
 argument_list|(
