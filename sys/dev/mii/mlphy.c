@@ -347,7 +347,7 @@ name|mii_id2
 argument_list|)
 operator|!=
 literal|0
-operator|&&
+operator|||
 name|MII_MODEL
 argument_list|(
 name|ma
