@@ -10315,7 +10315,7 @@ name|sc
 operator|->
 name|debug
 argument_list|,
-literal|0
+name|HATM_DEBUG
 argument_list|,
 literal|1
 argument_list|)
