@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.7	84/11/01	*/
+comment|/*	tcp_input.c	6.8	84/11/14	*/
 end_comment
 
 begin_include
@@ -2254,6 +2254,30 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 		 * When new data is acked, open the congestion window a bit. 		 */
+if|if
+condition|(
+name|acked
+operator|>
+literal|0
+condition|)
+name|tp
+operator|->
+name|snd_cwnd
+operator|=
+name|MIN
+argument_list|(
+literal|11
+operator|*
+name|tp
+operator|->
+name|snd_cwnd
+operator|/
+literal|10
+argument_list|,
+literal|65535
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|acked
@@ -2621,15 +2645,19 @@ condition|(
 name|ti
 operator|->
 name|ti_urp
-operator|>
-name|tp
-operator|->
-name|rcv_wnd
 operator|+
-literal|1
+operator|(
+name|unsigned
+operator|)
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_cc
+operator|>
+literal|32767
 condition|)
 block|{
-comment|/* XXX */
 name|ti
 operator|->
 name|ti_urp
@@ -2761,18 +2789,6 @@ comment|/* XXX */
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
 if|if
 condition|(
-operator|(
-name|ti
-operator|->
-name|ti_len
-operator|||
-operator|(
-name|tiflags
-operator|&
-name|TH_FIN
-operator|)
-operator|)
-operator|&&
 name|TCPS_HAVERCVDFIN
 argument_list|(
 name|tp
@@ -2783,6 +2799,18 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|ti
+operator|->
+name|ti_len
+operator|||
+operator|(
+name|tiflags
+operator|&
+name|TH_FIN
+operator|)
+condition|)
 name|tiflags
 operator|=
 name|tcp_reass
@@ -2790,6 +2818,12 @@ argument_list|(
 name|tp
 argument_list|,
 name|ti
+argument_list|)
+expr_stmt|;
+else|else
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 if|if
