@@ -32,13 +32,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
+file|<machine/cpufunc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/timerreg.h>
+file|<machine/joystick.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa.h>
 end_include
 
 begin_include
@@ -50,13 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/joystick.h>
+file|<i386/isa/timerreg.h>
 end_include
 
 begin_comment

@@ -24,85 +24,73 @@ end_if
 begin_include
 include|#
 directive|include
-file|<param.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kernel.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<systm.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<buf.h>
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<malloc.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ioctl.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<tty.h>
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<file.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<proc.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vnode.h>
+file|<sys/vnode.h>
 end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_include
 include|#
 directive|include
-file|<i386/include/mouse.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|0
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_comment
@@ -113,6 +101,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/mouse.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
 
 begin_define
 define|#

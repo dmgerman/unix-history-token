@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.10 1995/01/23 18:02:32 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.11 1995/02/17 02:22:51 phk Exp $  */
 end_comment
 
 begin_include
@@ -38,67 +38,67 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_dl.h"
+file|<net/if_dl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_types.h"
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/netisr.h"
+file|<net/netisr.h>
 end_include
 
 begin_ifdef
@@ -110,31 +110,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/if_ether.h"
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -151,13 +151,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netns/ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netns/ns_if.h"
+file|<netns/ns_if.h>
 end_include
 
 begin_endif
@@ -176,13 +176,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"net/bpf.h"
+file|<net/bpf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/bpfdesc.h"
+file|<net/bpfdesc.h>
 end_include
 
 begin_endif
@@ -193,31 +193,31 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa.h"
+file|<i386/isa/isa.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/icu.h"
+file|<i386/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/if_zereg.h"
+file|<i386/isa/if_zereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/pcic.h"
+file|<i386/isa/pcic.h>
 end_include
 
 begin_include
@@ -237,7 +237,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"i386/include/apm_bios.h"
+file|<machine/apm_bios.h>
 end_include
 
 begin_endif
