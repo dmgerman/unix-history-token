@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.29 (Berkeley) %G%"
+literal|"@(#)conf.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5781,11 +5781,13 @@ operator|)
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot lockf(%s%s, %o)"
+literal|"cannot lockf(%s%s, fd=%d, type=%o)"
 argument_list|,
 name|filename
 argument_list|,
 name|ext
+argument_list|,
+name|fd
 argument_list|,
 name|type
 argument_list|)
@@ -5887,11 +5889,13 @@ name|EWOULDBLOCK
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot flock(%s%s, %o)"
+literal|"cannot flock(%s%s, fd=%d, type=%o)"
 argument_list|,
 name|filename
 argument_list|,
 name|ext
+argument_list|,
+name|fd
 argument_list|,
 name|type
 argument_list|)
