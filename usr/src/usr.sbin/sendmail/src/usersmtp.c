@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -409,7 +409,7 @@ name|CurEnv
 operator|->
 name|e_xfp
 argument_list|,
-literal|"421 %s.%s... Deferred: %s"
+literal|"421 %s.%s... Deferred: %s\n"
 argument_list|,
 name|pvp
 index|[
