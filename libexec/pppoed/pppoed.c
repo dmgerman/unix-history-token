@@ -253,7 +253,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-Fd] [-P pidfile] [-a name] [-e exec | -l label]"
+literal|"usage: %s [-Fd] [-P pidfile] [-a name] [-e exec | -l label]"
 literal|" [-p provider] interface\n"
 argument_list|,
 name|prog

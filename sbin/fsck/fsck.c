@@ -2771,7 +2771,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s %s [special|node]...\n"
+literal|"usage: %s %s [special|node]...\n"
 argument_list|,
 name|getprogname
 argument_list|()

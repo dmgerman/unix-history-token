@@ -122,7 +122,7 @@ name|descr
 index|[]
 init|=
 block|{
-literal|"Usage:  backgammon [-h n r w b pr pw pb tterm sfile]\n"
+literal|"usage: backgammon [-h n r w b pr pw pb tterm sfile]\n"
 block|,
 literal|"\t-h\tgets this list\n\t-n\tdon't ask for rules or instructions"
 block|,

@@ -375,7 +375,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s -f device [-l] [-n] [-r] [-t tablefile] [-v] name ...\n"
+literal|"usage: %s -f device [-l] [-n] [-r] [-t tablefile] [-v] name ...\n"
 argument_list|,
 name|__progname
 argument_list|)

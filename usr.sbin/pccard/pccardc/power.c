@@ -201,7 +201,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s power slot newstat"
+literal|"usage: %s power slot newstat"
 argument_list|,
 name|argv
 index|[

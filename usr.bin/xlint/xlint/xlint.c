@@ -1450,7 +1450,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: lint [-abceghprvwxzHF] [-s|-t] [-i|-nu] [-Dname[=def]]"
+literal|"usage: lint [-abceghprvwxzHF] [-s|-t] [-i|-nu] [-Dname[=def]]"
 literal|" [-Uname] [-X<id>[,<id>]...\n"
 argument_list|)
 expr_stmt|;

@@ -6271,7 +6271,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: battle [-s | -b] [-c]\n"
+literal|"usage: battle [-s | -b] [-c]\n"
 argument_list|)
 expr_stmt|;
 operator|(

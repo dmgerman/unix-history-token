@@ -349,7 +349,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s -[u?lstp] [-[gf] game_name] [-r random seed]\n"
+literal|"usage: %s -[u?lstp] [-[gf] game_name] [-r random seed]\n"
 argument_list|,
 name|name
 argument_list|)

@@ -1039,7 +1039,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: nat %s %s\n"
+literal|"usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -1090,7 +1090,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: nat %s %s\n"
+literal|"usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -1392,7 +1392,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: nat %s %s\n"
+literal|"usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -1471,7 +1471,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: nat %s %s\n"
+literal|"usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -1536,7 +1536,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: nat %s %s\n"
+literal|"usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->

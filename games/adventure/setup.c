@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: setup file> data.c (file is typically glorkz)"
+value|"usage: setup file> data.c (file is typically glorkz)"
 end_define
 
 begin_define

@@ -1804,7 +1804,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage:    %s\n"
+literal|"usage:    %s\n"
 argument_list|,
 name|cmd
 operator|->

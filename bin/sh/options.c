@@ -1583,7 +1583,7 @@ literal|3
 condition|)
 name|error
 argument_list|(
-literal|"Usage: getopts optstring var [arg]"
+literal|"usage: getopts optstring var [arg]"
 argument_list|)
 expr_stmt|;
 elseif|else

@@ -37,7 +37,7 @@ name|write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
-literal|"Usage: "
+literal|"usage: "
 argument_list|,
 literal|7
 argument_list|)

@@ -467,7 +467,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s {all | printer ...}\n"
+literal|"usage: %s {all | printer ...}\n"
 argument_list|,
 name|argv
 index|[
@@ -3122,7 +3122,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: down {all | printer} [message ...]\n"
+literal|"usage: down {all | printer} [message ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4544,7 +4544,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: topq printer [jobnum ...] [user ...]\n"
+literal|"usage: topq printer [jobnum ...] [user ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;

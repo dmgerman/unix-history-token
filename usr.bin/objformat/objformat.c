@@ -156,7 +156,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: objformat\n"
+literal|"usage: objformat\n"
 argument_list|)
 expr_stmt|;
 name|exit

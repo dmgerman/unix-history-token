@@ -3293,7 +3293,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-delmnpqtv] [-f device] [-s speed] [command]"
+literal|"usage: %s [-delmnpqtv] [-f device] [-s speed] [command]"
 literal|" [command file ...]\n"
 argument_list|,
 name|getprogname

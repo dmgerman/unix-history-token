@@ -783,7 +783,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Usage: !include filename\n"
+literal|"usage: !include filename\n"
 argument_list|)
 expr_stmt|;
 else|else

@@ -943,7 +943,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-d] [-v] [-t timeout] [-e] [-f dev]\n"
+literal|"usage: %s [-d] [-v] [-t timeout] [-e] [-f dev]\n"
 literal|"           [-n] [-c config]\n"
 argument_list|,
 name|__progname

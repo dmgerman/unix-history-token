@@ -5768,7 +5768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \tprintconfig [<outfile>]\n"
+literal|"usage: \tprintconfig [<outfile>]\n"
 argument_list|)
 expr_stmt|;
 return|return;

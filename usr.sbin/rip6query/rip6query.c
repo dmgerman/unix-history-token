@@ -914,7 +914,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rip6query [-I iface] address\n"
+literal|"usage: rip6query [-I iface] address\n"
 argument_list|)
 expr_stmt|;
 block|}

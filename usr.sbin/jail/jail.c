@@ -91,7 +91,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s path hostname ip-number command ...\n"
+literal|"usage: %s path hostname ip-number command ...\n"
 argument_list|,
 name|argv
 index|[

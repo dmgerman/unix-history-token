@@ -196,7 +196,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: cfscores [user]\n"
+literal|"usage: cfscores [user]\n"
 argument_list|)
 expr_stmt|;
 name|exit

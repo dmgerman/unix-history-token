@@ -87,7 +87,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s -a disable|enable|query device\n"
+literal|"usage: %s -a disable|enable|query device\n"
 argument_list|,
 name|prog
 argument_list|)

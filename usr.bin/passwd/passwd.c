@@ -101,7 +101,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: passwd [-ly] [-d domain] [-h host] [user]\n"
+literal|"usage: passwd [-ly] [-d domain] [-h host] [user]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -914,7 +914,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:   fmt [-cmps] [-d chars] [-l num] [-t num]\n"
+literal|"usage:   fmt [-cmps] [-d chars] [-l num] [-t num]\n"
 literal|"             [-w width | -width | goal [maximum]] [file ...]\n"
 literal|"Options: -c     center each line instead of formatting\n"
 literal|"         -d<chars> double-space after<chars> at line end\n"

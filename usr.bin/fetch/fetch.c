@@ -3208,7 +3208,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"Usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]"
+literal|"usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]"
 argument_list|,
 literal|"             [-B bytes] [-T seconds] [-w seconds]"
 argument_list|,

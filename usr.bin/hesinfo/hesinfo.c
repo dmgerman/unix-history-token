@@ -98,14 +98,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
@@ -222,9 +214,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-bl] name type\n"
-argument_list|,
-name|__progname
+literal|"usage: hesinfo [-bl] name type\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -733,7 +733,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: read drive [drive ...]\n"
+literal|"usage: read drive [drive ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1117,7 +1117,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rm object [object...]\n"
+literal|"usage: rm object [object...]\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -4626,7 +4626,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \tattach<subdisk><plex> [rename] [<plexoffset>]\n"
+literal|"usage: \tattach<subdisk><plex> [rename] [<plexoffset>]\n"
 literal|"\tattach<plex><volume> [rename]\n"
 argument_list|)
 expr_stmt|;
@@ -5276,7 +5276,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \tdetach<subdisk> [rename]\n"
+literal|"usage: \tdetach<subdisk> [rename]\n"
 literal|"\tdetach<plex> [rename]\n"
 argument_list|)
 expr_stmt|;
@@ -6047,7 +6047,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \trename<object><new name>\n"
+literal|"usage: \trename<object><new name>\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6165,7 +6165,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \tmove<dest><src> ...\n"
+literal|"usage: \tmove<dest><src> ...\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6895,7 +6895,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \tsetdaemon [<bitmask>]\n"
+literal|"usage: \tsetdaemon [<bitmask>]\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6940,7 +6940,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: saveconfig\n"
+literal|"usage: saveconfig\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10901,7 +10901,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: readpol<volume><plex>|round\n"
+literal|"usage: readpol<volume><plex>|round\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11530,7 +11530,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: checkparity object [object...]\n"
+literal|"usage: checkparity object [object...]\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -11575,7 +11575,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rebuildparity object [object...]\n"
+literal|"usage: rebuildparity object [object...]\n"
 argument_list|)
 expr_stmt|;
 else|else

@@ -597,7 +597,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-cil] [keyname string keyname string...]\n\n"
+literal|"usage: %s [-cil] [keyname string keyname string...]\n\n"
 argument_list|,
 name|prog
 argument_list|)

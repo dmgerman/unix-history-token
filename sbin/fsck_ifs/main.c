@@ -1764,7 +1764,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dfnpy] [-B be|le] [-b block] [-c level] [-m mode] "
+literal|"usage: %s [-dfnpy] [-B be|le] [-b block] [-c level] [-m mode] "
 literal|"filesystem ...\n"
 argument_list|,
 name|getprogname

@@ -236,7 +236,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: prog [n_instances]\n"
+literal|"usage: prog [n_instances]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -180,7 +180,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s beep newstat"
+literal|"usage: %s beep newstat"
 argument_list|,
 name|argv
 index|[

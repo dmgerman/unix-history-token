@@ -209,7 +209,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s %s%s%s%s\n"
+literal|"usage: %s %s%s%s%s\n"
 argument_list|,
 name|prompt
 argument_list|,

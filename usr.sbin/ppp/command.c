@@ -7414,7 +7414,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Usage: %s\n"
+literal|"usage: %s\n"
 argument_list|,
 name|cmd
 operator|->
@@ -18327,7 +18327,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Usage: %s\n"
+literal|"usage: %s\n"
 argument_list|,
 name|arg
 operator|->

@@ -8112,7 +8112,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rpcinfo [-m | -s] [host]\n"
+literal|"usage: rpcinfo [-m | -s] [host]\n"
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -393,7 +393,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-a|-d] [-v|-r|-z] [-c count] [-w wait] [interface]\n"
+literal|"usage: %s [-a|-d] [-v|-r|-z] [-c count] [-w wait] [interface]\n"
 argument_list|,
 name|progname
 argument_list|)

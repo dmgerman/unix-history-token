@@ -381,7 +381,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: answer -D device -d destination -s source\n"
+literal|"usage: answer -D device -d destination -s source\n"
 argument_list|)
 expr_stmt|;
 name|exit

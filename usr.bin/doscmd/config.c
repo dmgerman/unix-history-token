@@ -370,7 +370,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign device ...\n"
+literal|"usage: assign device ...\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -486,7 +486,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign lptn: [direct] lpr-name [ time-out]\n"
+literal|"usage: assign lptn: [direct] lpr-name [ time-out]\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -622,7 +622,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign flop [-ro] file type\n"
+literal|"usage: assign flop [-ro] file type\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -857,7 +857,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign [A-Z]: [-ro] directory\n"
+literal|"usage: assign [A-Z]: [-ro] directory\n"
 literal|"       assign hard [-ro] file type [boot_sector]\n"
 literal|"       assign hard [-ro] file cylinders heads sectors/track [boot_sector]\n"
 argument_list|)
@@ -1048,7 +1048,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign [A-Z]: ...\n"
+literal|"usage: assign [A-Z]: ...\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1172,7 +1172,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign com[1-4] path addr irq\n"
+literal|"usage: assign com[1-4] path addr irq\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1220,7 +1220,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign com[1-4] path addr irq\n"
+literal|"usage: assign com[1-4] path addr irq\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1270,7 +1270,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign com[1-4] path addr irq\n"
+literal|"usage: assign com[1-4] path addr irq\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1327,7 +1327,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign com[1-4] path addr irq[2-7]\n"
+literal|"usage: assign com[1-4] path addr irq[2-7]\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1357,7 +1357,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: assign flop ...\n"
+literal|"usage: assign flop ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1434,7 +1434,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: boot [A: | C:]\n"
+literal|"usage: boot [A: | C:]\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1546,7 +1546,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: portmap port [count]\n"
+literal|"usage: portmap port [count]\n"
 argument_list|)
 expr_stmt|;
 name|quit
@@ -1670,7 +1670,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: setver command version\n"
+literal|"usage: setver command version\n"
 argument_list|)
 expr_stmt|;
 name|quit

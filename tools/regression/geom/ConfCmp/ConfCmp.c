@@ -1549,7 +1549,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s file1 file2"
+literal|"usage: %s file1 file2"
 argument_list|,
 name|argv
 index|[

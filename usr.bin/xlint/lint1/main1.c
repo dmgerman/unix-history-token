@@ -728,7 +728,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: lint1 [-abcdeghmprstuvwyzF] [-X<id>[,<id>]... src dest\n"
+literal|"usage: lint1 [-abcdeghmprstuvwyzF] [-X<id>[,<id>]... src dest\n"
 argument_list|)
 expr_stmt|;
 name|exit

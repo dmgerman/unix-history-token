@@ -4575,7 +4575,7 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|"Usage: read name ..."
+literal|"usage: read name ..."
 argument_list|)
 expr_stmt|;
 return|return

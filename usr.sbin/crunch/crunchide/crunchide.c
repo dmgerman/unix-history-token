@@ -325,7 +325,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-k<symbol-name>] [-f<keep-list-file>]<files> ...\n"
+literal|"usage: %s [-k<symbol-name>] [-f<keep-list-file>]<files> ...\n"
 argument_list|,
 name|pname
 argument_list|)
