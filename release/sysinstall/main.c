@@ -223,6 +223,10 @@ comment|/* Initialize PC-card */
 name|pccardInitialize
 argument_list|()
 expr_stmt|;
+comment|/* Initialize USB */
+name|usbInitialize
+argument_list|()
+expr_stmt|;
 comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()
