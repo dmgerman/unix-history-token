@@ -93,7 +93,7 @@ name|int
 name|generation
 decl_stmt|;
 comment|/* generation ID */
-name|vm_size_t
+name|vm_pindex_t
 name|size
 decl_stmt|;
 comment|/* Object size */
@@ -537,7 +537,7 @@ name|vm_object_allocate
 parameter_list|(
 name|objtype_t
 parameter_list|,
-name|vm_size_t
+name|vm_pindex_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -548,7 +548,7 @@ name|_vm_object_allocate
 parameter_list|(
 name|objtype_t
 parameter_list|,
-name|vm_size_t
+name|vm_pindex_t
 parameter_list|,
 name|vm_object_t
 parameter_list|)

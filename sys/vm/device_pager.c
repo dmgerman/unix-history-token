@@ -734,7 +734,7 @@ name|int
 name|reqpage
 decl_stmt|;
 block|{
-name|vm_offset_t
+name|vm_pindex_t
 name|offset
 decl_stmt|;
 name|vm_offset_t

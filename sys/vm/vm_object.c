@@ -525,7 +525,7 @@ parameter_list|(
 name|objtype_t
 name|type
 parameter_list|,
-name|vm_size_t
+name|vm_pindex_t
 name|size
 parameter_list|,
 name|vm_object_t
@@ -1160,7 +1160,7 @@ parameter_list|(
 name|objtype_t
 name|type
 parameter_list|,
-name|vm_size_t
+name|vm_pindex_t
 name|size
 parameter_list|)
 block|{
@@ -2083,7 +2083,7 @@ name|p
 decl_stmt|,
 name|np
 decl_stmt|;
-name|vm_offset_t
+name|vm_pindex_t
 name|tstart
 decl_stmt|,
 name|tend
@@ -5556,8 +5556,7 @@ name|p
 decl_stmt|,
 name|next
 decl_stmt|;
-name|unsigned
-name|int
+name|vm_pindex_t
 name|size
 decl_stmt|;
 name|int
