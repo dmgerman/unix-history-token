@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -798,11 +798,29 @@ literal|0
 argument_list|)
 operator|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|sp
+operator|->
+name|bpp
+argument_list|,
+name|M_SEGMENT
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sp
+argument_list|,
+name|M_SEGMENT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -813,6 +831,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX 	 * Should be writing a checkpoint? 	 */
 name|free
 argument_list|(
 name|sp
@@ -1271,11 +1290,29 @@ literal|0
 argument_list|)
 operator|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|sp
+operator|->
+name|bpp
+argument_list|,
+name|M_SEGMENT
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sp
+argument_list|,
+name|M_SEGMENT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|splx
 argument_list|(
 name|s
