@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.10 (Berkeley) %G%"
+literal|"@(#)tip.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2348,6 +2348,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|bits8
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Do a write to the remote machine with the correct parity.  * We are doing 8 bit wide output, so we just generate a character  * with the right parity and output it.  */
 end_comment
@@ -2402,6 +2409,12 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
+if|if
+condition|(
+name|bits8
+operator|==
+literal|0
+condition|)
 for|for
 control|(
 name|i
@@ -2524,6 +2537,27 @@ argument_list|(
 name|PARITY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|equal
+argument_list|(
+name|parity
+argument_list|,
+literal|"none"
+argument_list|)
+condition|)
+block|{
+name|bits8
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
+else|else
+name|bits8
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2592,13 +2626,6 @@ return|return;
 block|}
 if|if
 condition|(
-name|equal
-argument_list|(
-name|parity
-argument_list|,
-literal|"none"
-argument_list|)
-operator|||
 name|equal
 argument_list|(
 name|parity
