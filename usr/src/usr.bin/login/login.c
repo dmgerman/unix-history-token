@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.44 (Berkeley) %G%"
+literal|"@(#)login.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1629,11 +1629,6 @@ literal|"Logging in with home = \"/\".\n"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
 define|#
 directive|define
 name|TWOWEEKS
@@ -2012,8 +2007,6 @@ name|tm_year
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* nothing else left to fail -- really log in */
 block|{
 name|struct
@@ -2544,11 +2537,6 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
 if|if
 condition|(
 name|setlogname
@@ -2574,8 +2562,6 @@ argument_list|,
 literal|"setlogname() failure: %m"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* discard permissions last so can't get killed and drop core */
 operator|(
 name|void
