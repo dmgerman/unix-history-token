@@ -977,6 +977,14 @@ argument_list|,
 literal|';'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spec
+condition|)
+name|spec
+operator|++
+expr_stmt|;
+comment|/* skip over the leading ';' */
 name|try
 operator|--
 expr_stmt|;
