@@ -381,6 +381,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* Allow user override of PCI BIOS search */
 if|if
 condition|(
@@ -440,6 +443,8 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
