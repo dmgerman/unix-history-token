@@ -417,34 +417,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Used to maintain pending and active signals: */
-end_comment
-
-begin_struct
-struct|struct
-name|sigstatus
-block|{
-name|siginfo_t
-modifier|*
-name|info
-decl_stmt|;
-comment|/* arg 2 to signal handler */
-name|int
-name|pending
-decl_stmt|;
-comment|/* Is this a pending signal? */
-name|int
-name|blocked
-decl_stmt|;
-comment|/* 					 * This signal has occured and hasn't 					 * yet been handled; ignore subsequent 					 * signals until the handler is done. 					 */
-name|int
-name|signo
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|struct
