@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.10 (Berkeley) 82/06/27"
+literal|"@(#)arff.c	4.11 (Berkeley) 82/06/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -1447,6 +1447,7 @@ name|namc
 operator|==
 literal|0
 condition|)
+block|{
 for|for
 control|(
 name|segnum
@@ -1509,6 +1510,26 @@ name|de
 operator|+=
 name|rt_entsiz
 control|)
+switch|switch
+condition|(
+name|rt
+argument_list|(
+name|de
+argument_list|)
+operator|->
+name|rt_stat
+condition|)
+block|{
+case|case
+name|RT_ESEG
+case|:
+return|return;
+case|case
+name|RT_TEMP
+case|:
+case|case
+name|RT_FILE
+case|:
 name|sunrad50
 argument_list|(
 name|name
@@ -1520,12 +1541,18 @@ argument_list|)
 operator|->
 name|rt_name
 argument_list|)
-operator|,
+expr_stmt|;
 name|rtx
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+case|case
+name|RT_NULL
+case|:
+empty_stmt|;
+block|}
+block|}
 else|else
 for|for
 control|(
