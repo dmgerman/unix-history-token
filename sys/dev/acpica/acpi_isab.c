@@ -309,7 +309,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|==
-name|NULL
+name|dev
 operator|&&
 operator|(
 name|acpi_MatchHid
