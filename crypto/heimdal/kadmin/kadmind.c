@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadmind.c,v 1.28 2002/10/21 13:21:24 joda Exp $"
+literal|"$Id: kadmind.c,v 1.28.2.1 2004/04/29 12:30:32 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -109,7 +109,7 @@ begin_decl_stmt
 name|int
 name|do_kerberos4
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +242,7 @@ literal|"kerberos4"
 block|,
 literal|0
 block|,
-name|arg_negative_flag
+name|arg_flag
 block|,
 operator|&
 name|do_kerberos4

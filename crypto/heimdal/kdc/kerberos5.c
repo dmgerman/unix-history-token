@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c,v 1.145.2.3 2003/12/14 19:43:04 lha Exp $"
+literal|"$Id: kerberos5.c,v 1.145.2.4 2004/08/13 19:28:26 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1434,6 +1434,38 @@ literal|0
 init|;
 name|i
 operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|pa
+operator|.
+name|val
+index|[
+name|i
+index|]
+operator|.
+name|etype
+operator|==
+name|etypes
+index|[
+name|j
+index|]
+condition|)
+goto|goto
+name|skip1
+goto|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|client
 operator|->
 name|keys
@@ -1506,6 +1538,9 @@ name|ret
 return|;
 block|}
 block|}
+name|skip1
+label|:
+empty_stmt|;
 block|}
 for|for
 control|(
@@ -1560,7 +1595,7 @@ name|j
 index|]
 condition|)
 goto|goto
-name|skip
+name|skip2
 goto|;
 block|}
 if|if
@@ -1604,7 +1639,7 @@ return|return
 name|ret
 return|;
 block|}
-name|skip
+name|skip2
 label|:
 empty_stmt|;
 block|}

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get.c,v 1.22 2003/01/16 19:03:23 lha Exp $"
+literal|"$Id: get.c,v 1.22.2.1 2004/06/21 10:55:46 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -698,6 +698,27 @@ operator|&
 name|princ_ent
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|krb5_warn
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+literal|"can't parse principal %s"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|memset
 argument_list|(
 operator|&
