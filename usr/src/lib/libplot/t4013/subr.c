@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	1.1 (Berkeley) %G%"
+literal|"@(#)subr.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,35 +313,6 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|abs
-argument_list|(
-argument|a
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|a
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-name|a
-operator|)
-return|;
-return|return
-operator|(
-name|a
-operator|)
-return|;
 block|}
 end_block
 
