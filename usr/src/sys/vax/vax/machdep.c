@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.4	%G%	*/
+comment|/*	machdep.c	4.1	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.4) %H% \n"
+literal|"VM/UNIX (Berkeley Version 4.1) %G% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,11 @@ modifier|*
 name|pte
 decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
+name|tocons
+argument_list|(
+name|TXDB_CWSI
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 name|version
@@ -744,6 +749,16 @@ argument|n
 argument_list|)
 end_macro
 
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|p
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_block
 block|{
 specifier|register
@@ -807,8 +822,32 @@ argument_list|)
 expr_stmt|;
 empty_stmt|;
 comment|/* Avoid asm() label botch */
+ifndef|#
+directive|ifndef
+name|lint
 asm|asm("probew $3,$20,(r11)");
 asm|asm("beql bad");
+else|#
+directive|else
+if|if
+condition|(
+name|useracc
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|usp
+argument_list|,
+literal|0x20
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+endif|#
+directive|endif
 operator|*
 name|usp
 operator|++
@@ -833,6 +872,9 @@ operator|*
 name|usp
 operator|++
 operator|=
+operator|(
+name|int
+operator|)
 name|p
 expr_stmt|;
 operator|*
@@ -932,6 +974,9 @@ operator|)
 operator|--
 name|usp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 argument_list|)
 condition|)
@@ -1222,6 +1267,9 @@ index|]
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sp
 argument_list|)
 expr_stmt|;
@@ -1278,6 +1326,9 @@ operator|*
 operator|(
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sp
 argument_list|)
 operator|&
@@ -1294,6 +1345,9 @@ index|]
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sp
 argument_list|)
 expr_stmt|;
@@ -1310,6 +1364,9 @@ index|]
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sp
 argument_list|)
 expr_stmt|;
@@ -1712,9 +1769,67 @@ name|howto
 operator|&
 name|RB_HALT
 operator|)
-operator|==
-literal|0
 condition|)
+name|tocons
+argument_list|(
+name|TXDB_WSI
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|panic
+operator|==
+name|RB_PANIC
+condition|)
+empty_stmt|;
+comment|/* sent TXDB_CWSI at boot */
+else|else
+block|{
+name|tocons
+argument_list|(
+name|TXDB_WSI
+argument_list|)
+expr_stmt|;
+name|tocons
+argument_list|(
+name|TXDB_BOOT
+argument_list|)
+expr_stmt|;
+comment|/* defboo.cmd, not restar.cmd */
+block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+asm|asm("halt");
+ifdef|#
+directive|ifdef
+name|lint
+name|printf
+argument_list|(
+literal|"howto %d, devtype %d\n"
+argument_list|,
+name|howto
+argument_list|,
+name|devtype
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*NOTREACHED*/
+block|}
+end_block
+
+begin_macro
+name|tocons
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_block
 block|{
 while|while
 condition|(
@@ -1734,22 +1849,9 @@ name|mtpr
 argument_list|(
 name|TXDB
 argument_list|,
-name|panic
-operator|==
-name|RB_PANIC
-condition|?
-name|TXDB_AUTOR
-else|:
-name|TXDB_BOOT
+name|c
 argument_list|)
 expr_stmt|;
-block|}
-for|for
-control|(
-init|;
-condition|;
-control|)
-asm|asm("halt");
 block|}
 end_block
 
