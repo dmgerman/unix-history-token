@@ -1198,7 +1198,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|tmp
+name|c
 condition|)
 name|panic
 argument_list|(
@@ -1206,7 +1206,7 @@ literal|"feed_root: uiomove didn't"
 argument_list|)
 expr_stmt|;
 return|return
-name|tmp
+name|c
 return|;
 block|}
 end_function
