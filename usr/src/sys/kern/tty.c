@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.2	83/09/09	*/
+comment|/*	tty.c	6.3	83/09/25	*/
 end_comment
 
 begin_include
@@ -1640,6 +1640,13 @@ case|:
 case|case
 name|TIOCSTI
 case|:
+define|#
+directive|define
+name|bit
+parameter_list|(
+name|a
+parameter_list|)
+value|(1<<(a-1))
 while|while
 condition|(
 name|tp
@@ -1676,23 +1683,33 @@ operator|)
 operator|==
 literal|0
 operator|&&
+operator|!
+operator|(
 name|u
 operator|.
-name|u_signal
-index|[
+name|u_procp
+operator|->
+name|p_sigignore
+operator|&
+name|bit
+argument_list|(
 name|SIGTTOU
-index|]
-operator|!=
-name|SIG_IGN
+argument_list|)
+operator|)
 operator|&&
+operator|!
+operator|(
 name|u
 operator|.
-name|u_signal
-index|[
+name|u_procp
+operator|->
+name|p_sigmask
+operator|&
+name|bit
+argument_list|(
 name|SIGTTOU
-index|]
-operator|!=
-name|SIG_HOLD
+argument_list|)
+operator|)
 condition|)
 block|{
 name|gsignal
@@ -1720,6 +1737,9 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+undef|#
+directive|undef
+name|bit
 comment|/* 	 * Process the ioctl. 	 */
 switch|switch
 condition|(
@@ -1765,6 +1785,9 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|t
 operator|>=
 name|nldisp
