@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	1.6	%G%"
+literal|"@(#)parseaddr.c	1.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1020,8 +1020,6 @@ operator|=
 operator|*
 name|p
 operator|++
-operator|&
-literal|0177
 operator|)
 operator|!=
 literal|'\0'
@@ -1044,7 +1042,7 @@ operator||=
 literal|0200
 expr_stmt|;
 name|bslashmode
-operator|==
+operator|=
 name|FALSE
 expr_stmt|;
 block|}
