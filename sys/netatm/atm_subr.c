@@ -288,26 +288,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|atm_attributes_pool
-init|=
-block|{
-literal|"atm attributes pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-name|Atm_attributes
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|atm_attributes_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -435,6 +417,52 @@ expr_stmt|;
 name|atmintrq_present
 operator|=
 literal|1
+expr_stmt|;
+name|atm_attributes_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"atm attributes"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Atm_attributes
+argument_list|)
+argument_list|,
+operator|(
+name|uma_ctor
+operator|)
+operator|&
+name|atm_uma_ctor
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atm_attributes_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"atm_initialize: unable to allocate attributes pool"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|atm_attributes_zone
+argument_list|,
+literal|100
+argument_list|)
 expr_stmt|;
 name|register_netisr
 argument_list|(

@@ -25,6 +25,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_comment
 comment|/*  * Global variable declarations  */
 end_comment
@@ -168,9 +174,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|atm_attributes_pool
+name|uma_zone_t
+name|atm_attributes_zone
 decl_stmt|;
 end_decl_stmt
 
