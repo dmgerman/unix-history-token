@@ -1032,11 +1032,6 @@ name|pp
 parameter_list|)
 block|{
 name|struct
-name|g_mbr_softc
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
 name|g_slicer
 modifier|*
 name|gsp
@@ -1044,12 +1039,6 @@ decl_stmt|;
 name|gsp
 operator|=
 name|gp
-operator|->
-name|softc
-expr_stmt|;
-name|mp
-operator|=
-name|gsp
 operator|->
 name|softc
 expr_stmt|;
