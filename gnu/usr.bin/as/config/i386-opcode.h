@@ -368,6 +368,8 @@ name|_
 block|,
 name|NoModrm
 block|,
+name|Imm16
+operator||
 name|Imm32
 block|,
 literal|0
