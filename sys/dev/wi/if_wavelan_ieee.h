@@ -1306,7 +1306,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_RID_STA_IDENEITY
+name|WI_RID_STA_IDENTITY
 value|0xFD20
 end_define
 

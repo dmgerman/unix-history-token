@@ -415,7 +415,10 @@ name|int
 name|wi_prism2
 decl_stmt|;
 name|int
-name|wi_prism2_ver
+name|wi_firmware_ver
+decl_stmt|;
+name|int
+name|wi_nic_type
 decl_stmt|;
 name|int
 name|wi_bus_type
@@ -1721,13 +1724,6 @@ name|WI_RID_CARDID
 value|0xFD0B
 end_define
 
-begin_define
-define|#
-directive|define
-name|WI_RID_IDENT
-value|0xFD20
-end_define
-
 begin_struct
 struct|struct
 name|wi_ltv_ver
@@ -1744,6 +1740,16 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|WI_NIC_LUCENT
+value|0x0001
+comment|/* Emperically derived */
+define|#
+directive|define
+name|WI_NIC_LUCENT_ALT
+value|0x0005
+comment|/* Emperically derived */
 define|#
 directive|define
 name|WI_NIC_EVB2

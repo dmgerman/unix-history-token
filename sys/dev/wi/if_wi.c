@@ -337,20 +337,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * The following is for compatibility with NetBSD.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LE16TOH
-parameter_list|(
-name|a
-parameter_list|)
-value|((a) = le16toh((a)))
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -495,6 +481,10 @@ parameter_list|(
 name|struct
 name|wi_softc
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -3398,8 +3388,16 @@ argument_list|,
 literal|"using "
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
+name|sc
+operator|->
+name|wi_prism2
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|wi_nic_type
+operator|=
 name|le16toh
 argument_list|(
 name|ver
@@ -3409,6 +3407,12 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|sc
+operator|->
+name|wi_nic_type
 condition|)
 block|{
 case|case
@@ -3419,12 +3423,6 @@ argument_list|(
 literal|"RF:PRISM2 MAC:HFA3841"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|WI_NIC_HWB3763
@@ -3433,12 +3431,6 @@ name|printf
 argument_list|(
 literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3763 rev.B"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3449,12 +3441,6 @@ argument_list|(
 literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3163 rev.A"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|WI_NIC_HWB3163B
@@ -3463,12 +3449,6 @@ name|printf
 argument_list|(
 literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3163 rev.B"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3479,12 +3459,6 @@ argument_list|(
 literal|"RF:PRISM2 MAC:HFA3842"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|WI_NIC_HWB1153
@@ -3493,12 +3467,6 @@ name|printf
 argument_list|(
 literal|"RF:PRISM1 MAC:HFA3841 CARD:HWB1153"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3509,12 +3477,6 @@ argument_list|(
 literal|"RF:PRISM2 MAC:HFA3841 CARD:HWB3163-SST-flash"
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|WI_NIC_PRISM2_5
@@ -3523,12 +3485,6 @@ name|printf
 argument_list|(
 literal|"RF:PRISM2.5 MAC:ISL3873"
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|wi_prism2
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3539,17 +3495,36 @@ argument_list|(
 literal|"RF:PRISM2.5 MAC:ISL3874A(PCI)"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|WI_NIC_LUCENT
+case|:
+case|case
+name|WI_NIC_LUCENT_ALT
+case|:
+name|printf
+argument_list|(
+literal|"WaveLan/Lucent/Orinoco chip"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|wi_prism2
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Lucent chip or unknown chip\n"
+literal|"Lucent chip or unknown chip %04x"
+argument_list|,
+name|ver
+operator|.
+name|wi_ver
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3560,14 +3535,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|wi_prism2
-condition|)
-block|{
-comment|/* try to get prism2 firm version */
+comment|/* get firmware version */
 name|memset
 argument_list|(
 operator|&
@@ -3585,7 +3553,7 @@ name|ver
 operator|.
 name|wi_type
 operator|=
-name|WI_RID_IDENT
+name|WI_RID_STA_IDENTITY
 expr_stmt|;
 name|ver
 operator|.
@@ -3606,7 +3574,14 @@ operator|&
 name|ver
 argument_list|)
 expr_stmt|;
-name|LE16TOH
+name|ver
+operator|.
+name|wi_ver
+index|[
+literal|1
+index|]
+operator|=
+name|le16toh
 argument_list|(
 name|ver
 operator|.
@@ -3616,7 +3591,14 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|LE16TOH
+name|ver
+operator|.
+name|wi_ver
+index|[
+literal|2
+index|]
+operator|=
+name|le16toh
 argument_list|(
 name|ver
 operator|.
@@ -3626,45 +3608,26 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|LE16TOH
-argument_list|(
 name|ver
 operator|.
 name|wi_ver
 index|[
 literal|3
 index|]
-argument_list|)
-expr_stmt|;
-name|printf
+operator|=
+name|le16toh
 argument_list|(
-literal|", Firmware: %d.%d variant %d\n"
-argument_list|,
-name|ver
-operator|.
-name|wi_ver
-index|[
-literal|2
-index|]
-argument_list|,
 name|ver
 operator|.
 name|wi_ver
 index|[
 literal|3
-index|]
-argument_list|,
-name|ver
-operator|.
-name|wi_ver
-index|[
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|wi_prism2_ver
+name|wi_firmware_ver
 operator|=
 name|ver
 operator|.
@@ -3691,7 +3654,32 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-block|}
+name|printf
+argument_list|(
+literal|", Firmware: %d.%02d variant %d\n"
+argument_list|,
+name|ver
+operator|.
+name|wi_ver
+index|[
+literal|2
+index|]
+argument_list|,
+name|ver
+operator|.
+name|wi_ver
+index|[
+literal|3
+index|]
+argument_list|,
+name|ver
+operator|.
+name|wi_ver
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -4356,6 +4344,10 @@ argument_list|,
 name|WI_CMD_INQUIRE
 argument_list|,
 name|WI_INFO_COUNTERS
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4874,7 +4866,11 @@ name|sc
 parameter_list|,
 name|cmd
 parameter_list|,
-name|val
+name|val0
+parameter_list|,
+name|val1
+parameter_list|,
+name|val2
 parameter_list|)
 name|struct
 name|wi_softc
@@ -4885,7 +4881,13 @@ name|int
 name|cmd
 decl_stmt|;
 name|int
-name|val
+name|val0
+decl_stmt|;
+name|int
+name|val1
+decl_stmt|;
+name|int
+name|val2
 decl_stmt|;
 block|{
 name|int
@@ -4965,7 +4967,7 @@ name|sc
 argument_list|,
 name|WI_PARAM0
 argument_list|,
-name|val
+name|val0
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
@@ -4974,7 +4976,7 @@ name|sc
 argument_list|,
 name|WI_PARAM1
 argument_list|,
-literal|0
+name|val1
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
@@ -4983,7 +4985,7 @@ name|sc
 argument_list|,
 name|WI_PARAM2
 argument_list|,
-literal|0
+name|val2
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_2
@@ -5101,7 +5103,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"timeout in wi_cmd %x; event status %x\n"
+literal|"timeout in wi_cmd 0x%04x; event status 0x%04x\n"
 argument_list|,
 name|cmd
 argument_list|,
@@ -5163,6 +5165,10 @@ argument_list|(
 name|sc
 argument_list|,
 name|WI_CMD_INI
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -5341,6 +5347,10 @@ argument_list|,
 name|ltv
 operator|->
 name|wi_type
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -6192,6 +6202,10 @@ argument_list|,
 name|ltv
 operator|->
 name|wi_type
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -6737,6 +6751,10 @@ argument_list|,
 name|WI_CMD_ALLOC_MEM
 argument_list|,
 name|len
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -9571,7 +9589,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|wi_prism2_ver
+name|wi_firmware_ver
 operator|<
 literal|83
 condition|)
@@ -9640,6 +9658,10 @@ operator||
 name|sc
 operator|->
 name|wi_portnum
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -10274,6 +10296,10 @@ operator||
 name|WI_RECLAIM
 argument_list|,
 name|id
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|device_printf
@@ -10494,6 +10520,10 @@ operator||
 name|WI_RECLAIM
 argument_list|,
 name|id
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -10597,6 +10627,10 @@ operator||
 name|sc
 operator|->
 name|wi_portnum
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
