@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)i386-opcode.h	6.2 (Berkeley) %G%  Modified for Berkeley Unix by Donn Seeley, donn@okeeffe.berkeley.edu  */
+comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  *  *	@(#)i386-opcode.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
