@@ -2284,9 +2284,13 @@ operator|!=
 name|FXP_CHIP_82557
 condition|)
 block|{
-comment|/* 		 * If there is a valid cacheline size (8 or 16 dwords), 		 * then turn on MWI. 		 */
+comment|/* 		 * If MWI is enabled in the PCI configuration, and there 		 * is a valid cacheline size (8 or 16 dwords), then tell 		 * the board to turn on MWI. 		 */
 if|if
 condition|(
+name|val
+operator|&
+name|PCIM_CMD_MWRICEN
+operator|&&
 name|pci_read_config
 argument_list|(
 name|dev
@@ -4997,6 +5001,11 @@ name|sc
 operator|->
 name|miibus
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Schedule another timeout one second from now. 	 */
