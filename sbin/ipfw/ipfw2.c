@@ -6638,6 +6638,7 @@ name|ip
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" %s %s"
@@ -6649,8 +6650,8 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|O_IPID
 case|:
