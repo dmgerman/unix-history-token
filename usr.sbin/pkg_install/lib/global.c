@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: global.c,v 1.1.1.1 1993/08/26 01:19:55 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ file|"lib.h"
 end_include
 
 begin_comment
-comment|/* These two are global for all utils */
+comment|/* These are global for all utils */
 end_comment
 
 begin_decl_stmt
@@ -46,6 +46,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|Fake
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|AutoAnswer
 init|=
 name|FALSE
 decl_stmt|;

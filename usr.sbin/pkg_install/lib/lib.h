@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.3 1993/09/05 04:54:21 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.4 1993/09/18 03:39:49 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -136,6 +136,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|YES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO
+value|1
+end_define
 
 begin_comment
 comment|/* Usually "rm", but often "echo" during debugging! */
@@ -855,6 +869,13 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|Fake
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|AutoAnswer
 decl_stmt|;
 end_decl_stmt
 

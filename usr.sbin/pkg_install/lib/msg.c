@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: msg.c,v 1.3 1993/09/04 05:06:50 jkh Exp $"
+literal|"$Id: msg.c,v 1.2 1993/09/03 23:01:15 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,6 +282,34 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AutoAnswer
+condition|)
+block|{
+name|ch
+operator|=
+operator|(
+name|AutoAnswer
+operator|==
+name|YES
+operator|)
+condition|?
+literal|'Y'
+else|:
+literal|'N'
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%c\n"
+argument_list|,
+name|ch
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|ch
 operator|=
 name|toupper
