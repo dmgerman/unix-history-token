@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.9 1994/11/02 23:47:13 se Exp $ ** **  General subroutines for the PCI bus on 80*86 systems. **  pci_configure () ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 1.14 1995/02/14 23:33:38 se Exp $ ** **  General subroutines for the PCI bus on 80*86 systems. **  pci_configure () ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PATCHLEVEL
+value|"pl2 95/02/21"
+end_define
 
 begin_include
 include|#
@@ -244,33 +251,62 @@ comment|/*======================================================== ** **	Autocon
 end_comment
 
 begin_comment
-comment|/*-------------------------------------------------------- ** **	The pci devices can be mapped to any address. **	As default we start at the last gigabyte. ** **-------------------------------------------------------- */
+comment|/*-------------------------------------------------------- ** **	The pci devices can be mapped to any address. **	This is a list of possible starting addresses. **	It can be prepended by a config option. ** **-------------------------------------------------------- */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_decl_stmt
+specifier|static
+name|u_long
+name|pci_stable
+index|[]
+init|=
+block|{
+ifdef|#
+directive|ifdef
 name|PCI_PMEM_START
-end_ifndef
-
-begin_define
-define|#
-directive|define
+operator|(
 name|PCI_PMEM_START
-value|0xc0000000
-end_define
-
-begin_endif
+operator|)
+block|,
 endif|#
 directive|endif
-end_endif
+literal|0xf1000000
+block|,
+literal|0x53900000
+block|,
+literal|0xc0000000
+block|,
+literal|0x81000000
+block|,
+literal|0x0f000000
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|vm_offset_t
 name|pci_paddr
 init|=
-name|PCI_PMEM_START
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vm_offset_t
+name|pci_pold
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vm_offset_t
+name|pci_pidx
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -415,11 +451,6 @@ name|name
 init|=
 literal|0
 decl_stmt|;
-name|vm_offset_t
-name|old_addr
-init|=
-name|pci_paddr
-decl_stmt|;
 name|u_short
 name|old_ioaddr
 init|=
@@ -484,6 +515,10 @@ else|:
 literal|15
 expr_stmt|;
 comment|/* 	**	hello world .. 	*/
+name|pci_pold
+operator|=
+name|pci_paddr
+expr_stmt|;
 for|for
 control|(
 name|bus
@@ -1031,7 +1066,7 @@ if|if
 condition|(
 name|pci_paddr
 operator|!=
-name|old_addr
+name|pci_pold
 condition|)
 name|printf
 argument_list|(
@@ -1040,7 +1075,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|PCI_PMEM_START
+name|pci_pold
 argument_list|,
 operator|(
 name|u_long
@@ -1162,9 +1197,13 @@ parameter_list|)
 block|{
 name|u_long
 name|data
+decl_stmt|,
+name|oldmap
 decl_stmt|;
 name|u_short
 name|size
+decl_stmt|,
+name|ioaddr
 decl_stmt|;
 comment|/* 	**	sanity check 	*/
 if|if
@@ -1202,6 +1241,40 @@ return|;
 block|}
 empty_stmt|;
 comment|/* 	**	get size and type of port 	** 	**	type is in the lowest two bits. 	**	If device requires 2^n bytes, the next 	**	n-2 bits are hardwired as 0. 	*/
+ifdef|#
+directive|ifdef
+name|PCI_REMAP
+name|oldmap
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|oldmap
+operator|=
+name|pcibus
+operator|.
+name|pb_read
+argument_list|(
+name|tag
+argument_list|,
+name|reg
+argument_list|)
+operator|&
+literal|0xfffffffc
+expr_stmt|;
+if|if
+condition|(
+name|oldmap
+operator|==
+literal|0xfffffffc
+condition|)
+name|oldmap
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|pcibus
 operator|.
 name|pb_write
@@ -1274,7 +1347,19 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	**	align physical address to virtual size 	*/
+comment|/* 	**	align physical address to virtual size, 	**	set ioaddr, 	**	and don't forget to increment pci_ioaddr 	*/
+if|if
+condition|(
+name|oldmap
+condition|)
+block|{
+name|ioaddr
+operator|=
+name|oldmap
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -1291,6 +1376,16 @@ name|size
 operator|-
 name|data
 expr_stmt|;
+name|ioaddr
+operator|=
+name|pci_ioaddr
+expr_stmt|;
+name|pci_ioaddr
+operator|+=
+name|size
+expr_stmt|;
+block|}
+empty_stmt|;
 ifndef|#
 directive|ifndef
 name|PCI_QUIET
@@ -1307,7 +1402,7 @@ argument_list|,
 operator|(
 name|unsigned
 operator|)
-name|pci_ioaddr
+name|ioaddr
 argument_list|,
 operator|(
 name|unsigned
@@ -1329,7 +1424,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|pci_ioaddr
+name|ioaddr
 argument_list|)
 expr_stmt|;
 comment|/* 	**	return them to the driver 	*/
@@ -1337,11 +1432,6 @@ operator|*
 name|pa
 operator|=
 name|pci_ioaddr
-expr_stmt|;
-comment|/* 	**	and don't forget to increment pci_ioaddr 	*/
-name|pci_ioaddr
-operator|+=
-name|size
 expr_stmt|;
 return|return
 operator|(
@@ -1379,6 +1469,10 @@ parameter_list|)
 block|{
 name|u_long
 name|data
+decl_stmt|,
+name|oldmap
+decl_stmt|,
+name|paddr
 decl_stmt|;
 name|vm_size_t
 name|vsize
@@ -1424,7 +1518,41 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-comment|/* 	**	get size and type of memory 	** 	**	type is in the lowest four bits. 	**	If device requires 2^n bytes, the next 	**	n-4 bits are read as 0. 	*/
+comment|/* 	**	save old mapping, get size and type of memory 	** 	**	type is in the lowest four bits. 	**	If device requires 2^n bytes, the next 	**	n-4 bits are read as 0. 	*/
+ifdef|#
+directive|ifdef
+name|PCI_REMAP
+name|oldmap
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|oldmap
+operator|=
+name|pcibus
+operator|.
+name|pb_read
+argument_list|(
+name|tag
+argument_list|,
+name|reg
+argument_list|)
+operator|&
+literal|0xfffffff0
+expr_stmt|;
+if|if
+condition|(
+name|oldmap
+operator|==
+literal|0xfffffff0
+condition|)
+name|oldmap
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|pcibus
 operator|.
 name|pb_write
@@ -1501,6 +1629,86 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|oldmap
+condition|)
+block|{
+name|paddr
+operator|=
+name|oldmap
+expr_stmt|;
+goto|goto
+name|domap
+goto|;
+block|}
+empty_stmt|;
+name|next_try
+label|:
+if|if
+condition|(
+operator|!
+name|pci_paddr
+condition|)
+block|{
+comment|/* 		**	Get a starting address. 		*/
+if|if
+condition|(
+name|pci_pidx
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|pci_stable
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pci_map_mem: out of start addresses.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+empty_stmt|;
+name|pci_paddr
+operator|=
+name|pci_stable
+index|[
+name|pci_pidx
+operator|++
+index|]
+expr_stmt|;
+name|pci_pold
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|pci_pidx
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"\t(retry at 0x%x)\n"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|pci_paddr
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 	**	align physical address to virtual size 	*/
 if|if
 condition|(
@@ -1518,6 +1726,26 @@ name|vsize
 operator|-
 name|data
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pci_pold
+condition|)
+name|pci_pold
+operator|=
+name|pci_paddr
+expr_stmt|;
+comment|/* 	**	set physical mapping address, 	**	and reserve physical address range 	*/
+name|paddr
+operator|=
+name|pci_paddr
+expr_stmt|;
+name|pci_paddr
+operator|+=
+name|vsize
+expr_stmt|;
+name|domap
+label|:
 name|vaddr
 operator|=
 operator|(
@@ -1525,7 +1753,7 @@ name|vm_offset_t
 operator|)
 name|pmap_mapdev
 argument_list|(
-name|pci_paddr
+name|paddr
 argument_list|,
 name|vsize
 argument_list|)
@@ -1561,12 +1789,17 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|pci_paddr
+name|paddr
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	**	probe for already mapped device. 	*/
+if|if
+condition|(
+operator|!
+name|oldmap
+condition|)
 for|for
 control|(
 name|i
@@ -1610,13 +1843,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: possible address conflict "
-literal|"at 0x%08x (read: 0x%08x).\n"
+literal|"\t(possible address conflict: "
+literal|"at 0x%x read: 0x%x)\n"
 argument_list|,
 operator|(
 name|unsigned
 operator|)
-name|pci_paddr
+name|paddr
 operator|+
 name|i
 argument_list|,
@@ -1626,23 +1859,18 @@ operator|)
 name|data
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-empty_stmt|;
-block|}
-empty_stmt|;
-comment|/* 	**	return them to the driver 	*/
-operator|*
-name|va
-operator|=
-name|vaddr
-expr_stmt|;
-operator|*
-name|pa
-operator|=
 name|pci_paddr
+operator|=
+literal|0
 expr_stmt|;
-comment|/* 	**	set device address 	*/
+goto|goto
+name|next_try
+goto|;
+block|}
+empty_stmt|;
+block|}
+empty_stmt|;
+comment|/* 	**	Set device address 	*/
 name|pcibus
 operator|.
 name|pb_write
@@ -1651,13 +1879,90 @@ name|tag
 argument_list|,
 name|reg
 argument_list|,
-name|pci_paddr
+name|paddr
 argument_list|)
 expr_stmt|;
-comment|/* 	**	and don't forget to increment pci_paddr 	*/
-name|pci_paddr
-operator|+=
+comment|/* 	**	Check if correctly mapped. 	** 	**	W A R N I N G 	** 	**	This code assumes that the device will NOT return 	**	only ones (0xffffffff) from all offsets. 	*/
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|vsize
+condition|;
+name|i
+operator|+=
+literal|4
+control|)
+block|{
+name|u_long
+modifier|*
+name|addr
+init|=
+operator|(
+name|u_long
+operator|*
+operator|)
+operator|(
+name|vaddr
+operator|+
+name|i
+operator|)
+decl_stmt|;
+name|data
+operator|=
+operator|*
+name|addr
+expr_stmt|;
+if|if
+condition|(
+name|data
+operator|!=
+literal|0xffffffff
+condition|)
+break|break;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|data
+operator|==
+literal|0xffffffff
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\t(possible mapping problem: "
+literal|"at 0x%x read 0xffffffff)\n"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|paddr
+argument_list|)
+expr_stmt|;
+name|pci_paddr
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|next_try
+goto|;
+block|}
+empty_stmt|;
+comment|/* 	**	Return addresses to the driver 	*/
+operator|*
+name|va
+operator|=
+name|vaddr
+expr_stmt|;
+operator|*
+name|pa
+operator|=
+name|paddr
 expr_stmt|;
 return|return
 operator|(
