@@ -489,6 +489,8 @@ literal|'@'
 block|,
 literal|".--.-."
 block|}
+block|,
+comment|/* AC */
 comment|/* prosigns without already assigned values */
 block|{
 literal|'#'
