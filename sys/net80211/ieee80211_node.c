@@ -1768,6 +1768,26 @@ operator||=
 name|IEEE80211_CAPINFO_IBSS
 expr_stmt|;
 comment|/* XXX */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_DESBSSID
+condition|)
+name|IEEE80211_ADDR_COPY
+argument_list|(
+name|ni
+operator|->
+name|ni_bssid
+argument_list|,
+name|ic
+operator|->
+name|ic_des_bssid
+argument_list|)
+expr_stmt|;
+else|else
 name|ni
 operator|->
 name|ni_bssid
