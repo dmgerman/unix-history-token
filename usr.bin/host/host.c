@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.5 1995/06/29 09:26:32 vixie Exp $"
+literal|"$Id: host.c,v 8.7 1995/08/22 05:01:49 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,6 +357,9 @@ name|c
 parameter_list|,
 name|v
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -1019,6 +1022,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|strcat
+argument_list|(
+name|cname
+argument_list|,
+literal|"."
+argument_list|)
+expr_stmt|;
 name|oldcname
 operator|=
 name|cname
@@ -2662,6 +2672,12 @@ name|name
 decl_stmt|,
 modifier|*
 name|domain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|type
 decl_stmt|;
 end_decl_stmt
 
