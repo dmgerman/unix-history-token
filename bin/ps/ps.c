@@ -5671,7 +5671,7 @@ block|{
 define|#
 directive|define
 name|SINGLE_OPTS
-value|"[-aCc" OPT_LAZY_f "HhjlmrSTuvwXxZ]"
+value|"[-aCce" OPT_LAZY_f "HhjlmrSTuvwXxZ]"
 operator|(
 name|void
 operator|)
@@ -5683,11 +5683,11 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: ps "
 name|SINGLE_OPTS
-literal|" [-G gid[,gid]] [-O|o fmt]"
-argument_list|,
-literal|"          [-p pid[,pid]] [-t tty[,tty]] [-U user[,user]]"
+literal|" [-O fmt | -o fmt] [-G gid[,gid...]]"
 argument_list|,
 literal|"          [-M core] [-N system]"
+argument_list|,
+literal|"          [-p pid[,pid...]] [-t tty[,tty...]] [-U user[,user...]]"
 argument_list|,
 literal|"       ps [-L]"
 argument_list|)
