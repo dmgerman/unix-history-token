@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.31 1998/07/22 05:45:11 phk Exp $"
+literal|"$Id: init.c,v 1.32 1999/06/16 20:01:19 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1079,6 +1079,132 @@ argument_list|()
 operator|!=
 literal|1
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_SYSV_INIT
+comment|/* So give them what they want */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+specifier|register
+name|char
+name|runlevel
+init|=
+operator|*
+name|argv
+index|[
+literal|1
+index|]
+decl_stmt|;
+specifier|register
+name|int
+name|sig
+decl_stmt|;
+switch|switch
+condition|(
+name|runlevel
+condition|)
+block|{
+case|case
+literal|'0'
+case|:
+comment|/* halt + poweroff */
+name|sig
+operator|=
+name|SIGUSR2
+expr_stmt|;
+break|break;
+case|case
+literal|'1'
+case|:
+comment|/* single-user */
+name|sig
+operator|=
+name|SIGTERM
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+comment|/* reboot */
+name|sig
+operator|=
+name|SIGINT
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+comment|/* block further logins */
+name|sig
+operator|=
+name|SIGTSTP
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+comment|/* rescan /etc/ttys */
+name|sig
+operator|=
+name|SIGHUP
+expr_stmt|;
+break|break;
+default|default:
+goto|goto
+name|invalid
+goto|;
+block|}
+name|kill
+argument_list|(
+literal|1
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|invalid
+label|:
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid run-level ``%s''"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 name|errx
 argument_list|(
 literal|1
@@ -1086,6 +1212,7 @@ argument_list|,
 literal|"already running"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Note that this does NOT open a file... 	 * Does 'init' deserve its own facility number? 	 */
 name|openlog
 argument_list|(
