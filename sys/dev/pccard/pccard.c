@@ -2744,7 +2744,7 @@ argument_list|(
 operator|(
 name|bus
 operator|,
-literal|"Neither memory nor I/O mampped\n"
+literal|"Neither memory nor I/O mapped\n"
 operator|)
 argument_list|)
 expr_stmt|;
