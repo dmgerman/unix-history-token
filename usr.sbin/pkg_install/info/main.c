@@ -726,11 +726,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: pkg_info [-cdDfGiIkLmopqrRsvVx] [-e package] [-l prefix]"
 argument_list|,
-literal|"                [-t template] [-W filename] [pkg-name ...]"
+literal|"                [-t template] [pkg-name ...]"
+argument_list|,
+literal|"       pkg_info [-q] -W filename"
+argument_list|,
+literal|"       pkg_info [-q] -O origin"
 argument_list|,
 literal|"       pkg_info -a [flags]"
 argument_list|)
