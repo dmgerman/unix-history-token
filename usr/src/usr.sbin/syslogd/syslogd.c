@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.22 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5362,6 +5362,10 @@ block|,
 literal|"news"
 block|,
 name|LOG_NEWS
+block|,
+literal|"uucp"
+block|,
+name|LOG_UUCP
 block|,
 literal|"local0"
 block|,
