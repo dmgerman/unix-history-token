@@ -101,112 +101,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* cop-out function for files we can't handle */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|doByHand
-parameter_list|(
-name|HitList
-modifier|*
-name|h
-parameter_list|)
-block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|fp
-operator|=
-name|fopen
-argument_list|(
-literal|"/etc/update-by-hand"
-argument_list|,
-literal|"a"
-argument_list|)
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"/etc/%s is one of those files that this upgrade procedure just isn't\n"
-literal|"smart enough to deal with right now.  You'll need to merge the old and\n"
-literal|"new versions by hand when the option to do so manually is later\n"
-literal|"presented.  This has also been noted in the file /etc/update-by-hand."
-argument_list|,
-name|h
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"/etc/%s\n"
-argument_list|,
-name|h
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|yellSysconfig
-parameter_list|(
-name|HitList
-modifier|*
-name|h
-parameter_list|)
-block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|fp
-operator|=
-name|fopen
-argument_list|(
-literal|"/etc/update-by-hand"
-argument_list|,
-literal|"a"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"/etc/sysconfig\n"
-argument_list|)
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"/etc/sysconfig is one of those files that this upgrade procedure just isn't\n"
-literal|"smart enough to deal with right now.  Unfortunately, your system\n"
-literal|"will also come up with a very different \"personality\" than it had\n"
-literal|"before if you do not merge at LEAST the hostname and ifconfig lines\n"
-literal|"from the old one!  This is very important, so please do this merge\n"
-literal|"even if you do no others before the system is allowed to reboot."
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* These are the only meaningful files I know about */
 end_comment
 
@@ -358,13 +252,13 @@ name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
+name|JUST_COPY
 block|,
 literal|"fstab"
 block|,
 name|FALSE
 block|,
-name|doByHand
+name|NULL
 block|}
 block|,
 block|{
@@ -438,23 +332,23 @@ name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
+name|JUST_COPY
 block|,
 literal|"inetd.conf"
 block|,
-name|FALSE
+name|TRUE
 block|,
-name|doByHand
+name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
+name|JUST_COPY
 block|,
 literal|"kerberosIV"
 block|,
 name|TRUE
 block|,
-name|doByHand
+name|NULL
 block|}
 block|,
 block|{
@@ -568,16 +462,6 @@ name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
-block|,
-literal|"netstart"
-block|,
-name|FALSE
-block|,
-name|doByHand
-block|}
-block|,
-block|{
 name|JUST_COPY
 block|,
 literal|"networks"
@@ -658,26 +542,6 @@ name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
-block|,
-literal|"rc"
-block|,
-name|FALSE
-block|,
-name|doByHand
-block|}
-block|,
-block|{
-name|CALL_HANDLER
-block|,
-literal|"rc.i386"
-block|,
-name|TRUE
-block|,
-name|doByHand
-block|}
-block|,
-block|{
 name|JUST_COPY
 block|,
 literal|"rc.local"
@@ -685,16 +549,6 @@ block|,
 name|TRUE
 block|,
 name|NULL
-block|}
-block|,
-block|{
-name|CALL_HANDLER
-block|,
-literal|"rc.serial"
-block|,
-name|TRUE
-block|,
-name|doByHand
 block|}
 block|,
 block|{
@@ -748,13 +602,13 @@ name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
+name|JUST_COPY
 block|,
 literal|"services"
 block|,
 name|TRUE
 block|,
-name|doByHand
+name|NULL
 block|}
 block|,
 block|{
@@ -798,13 +652,13 @@ name|NULL
 block|}
 block|,
 block|{
-name|CALL_HANDLER
+name|JUST_COPY
 block|,
 literal|"sysconfig"
 block|,
 name|FALSE
 block|,
-name|yellSysconfig
+name|NULL
 block|}
 block|,
 block|{
@@ -902,6 +756,10 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to find an old /etc/%s file!  That is decidedly non-standard and\n"
 literal|"your upgraded system may function a little strangely as a result."
+argument_list|,
+name|h
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -916,10 +774,14 @@ operator|==
 name|JUST_COPY
 condition|)
 block|{
-comment|/* Nuke the just-loaded copy thoroughly */
+comment|/* Move the just-loaded copy aside */
 name|vsystem
 argument_list|(
-literal|"rm -rf /etc/%s"
+literal|"mv /etc/%s /etc/%s.upgrade"
+argument_list|,
+name|h
+operator|->
+name|name
 argument_list|,
 name|h
 operator|->
@@ -992,10 +854,6 @@ name|Boolean
 name|extractingBin
 init|=
 name|TRUE
-decl_stmt|;
-name|struct
-name|termios
-name|foo
 decl_stmt|;
 name|variable_set2
 argument_list|(
@@ -1277,11 +1135,11 @@ block|}
 name|msgConfirm
 argument_list|(
 literal|"OK.  First, we're going to go to the disk label editor.  In this editor\n"
-literal|"you will be expected to *Mount* any partitions you're interested in\n"
+literal|"you will be expected to Mount any partitions you're interested in\n"
 literal|"upgrading.  DO NOT set the Newfs flag to Y on anything in the label editor\n"
 literal|"unless you're absolutely sure you know what you're doing!  In this\n"
 literal|"instance, you'll be using the label editor as little more than a fancy\n"
-literal|"screen-oriented way of labeling existing partitions.\n\n"
+literal|"screen-oriented partition mounting tool.\n\n"
 literal|"Once you're done in the label editor, press Q to return here for the next\n"
 literal|"step."
 argument_list|)
@@ -1556,7 +1414,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|Dists
+condition|)
 block|{
 if|if
 condition|(
@@ -1570,7 +1432,7 @@ name|DIST_BIN
 operator|)
 condition|)
 block|{
-name|msgConfirm
+name|msgNotify
 argument_list|(
 literal|"The extraction process seems to have had some problems, but we got most\n"
 literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
@@ -1605,7 +1467,7 @@ block|{
 name|msgNotify
 argument_list|(
 literal|"OK, now it's time to go pound on your root a little bit to create all the\n"
-literal|"/dev entries and such that a 2.1 system expects to see.  I'll also perform a\n"
+literal|"/dev entries and such that a new system expects to see.  I'll also perform a\n"
 literal|"few \"fixup\" operations to repair the effects of splatting a bin distribution\n"
 literal|"on top of an existing system.."
 argument_list|)
@@ -1655,6 +1517,8 @@ literal|"Unable to go to your saved /etc directory in %s?!  Argh!\n"
 literal|"Something went seriously wrong!  It's quite possible that\n"
 literal|"your former /etc is toast.  I hope you didn't have any\n"
 literal|"important customizations you wanted to keep in there.. :("
+argument_list|,
+name|saved_etc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1670,121 +1534,17 @@ block|}
 name|msgConfirm
 argument_list|(
 literal|"OK!  At this stage, we've resurrected all the /etc files we could\n"
-literal|"(and you may have been warned about some that you'll have to merge\n"
-literal|"yourself by hand) and we're going to drop you into a shell to do\n"
-literal|"the rest yourself (sorry about this!).  Once the system looks good\n"
-literal|"to you, exit the shell to reboot the system."
+literal|"and moved the new copies over to<file>.update in case you want to\n"
+literal|"see what the new version looks like.  If you want to wander over\n"
+literal|"to the Emergency Holographic Shell [ALT-F4] at this point to check\n"
+literal|"on that, you may do so now.  When you're ready to reboot into\n"
+literal|"the new system, just exit the installation."
 argument_list|)
 expr_stmt|;
-name|chdir
-argument_list|(
-literal|"/"
-argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|end_dialog
-argument_list|()
-expr_stmt|;
-name|DialogActive
-operator|=
-name|FALSE
-expr_stmt|;
-name|endwin
-argument_list|()
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTTOU
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tcgetattr
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|foo
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|foo
-operator|.
-name|c_cc
-index|[
-name|VERASE
-index|]
-operator|=
-literal|'\010'
-expr_stmt|;
-if|if
-condition|(
-name|tcsetattr
-argument_list|(
-literal|0
-argument_list|,
-name|TCSANOW
-argument_list|,
-operator|&
-name|foo
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Unable to set the erase character.\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|msgDebug
-argument_list|(
-literal|"Unable to get the terminal attributes!\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Well, good luck!  When you're done, please type \"reboot\" or exit\n"
-literal|"the shell to reboot the new system.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Fake
-condition|)
-name|system
-argument_list|(
-literal|"/bin/sh"
-argument_list|)
-expr_stmt|;
-else|else
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|RunningAsInit
-condition|)
-name|reboot
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 return|return
-literal|0
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
 return|;
 block|}
 end_function
