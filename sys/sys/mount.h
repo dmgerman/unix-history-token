@@ -43,12 +43,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -71,6 +65,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|iovec
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
