@@ -18,13 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)gmon.c	5.3 (Berkeley) 5/22/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.3 (Berkeley) 5/22/91"
+literal|"$Id: gmon.c,v 1.2 1993/08/01 18:44:18 mycroft Exp $"
 decl_stmt|;
 end_decl_stmt
 
