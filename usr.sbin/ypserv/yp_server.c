@@ -87,7 +87,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.3 1996/02/26 02:23:39 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.6 1996/02/26 02:34:26 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2526,6 +2526,12 @@ name|key
 decl_stmt|,
 name|data
 decl_stmt|;
+name|result
+operator|.
+name|peer
+operator|=
+literal|""
+expr_stmt|;
 if|if
 condition|(
 name|yp_access
