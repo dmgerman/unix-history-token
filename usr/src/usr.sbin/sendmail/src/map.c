@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.24 (Berkeley) %G%"
+literal|"@(#)map.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2534,10 +2534,7 @@ expr_stmt|;
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
 name|OLD_NEWDB
-argument_list|)
 block|}
 else|else
 block|{
@@ -2669,10 +2666,7 @@ block|}
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
 name|OLD_NEWDB
-argument_list|)
 operator|&&
 name|HASFLOCK
 name|fd
@@ -2770,8 +2764,8 @@ name|mode
 operator|==
 name|O_RDWR
 condition|)
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|OLD_NEWDB
 operator|(
 name|void
@@ -2964,10 +2958,7 @@ expr_stmt|;
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
 name|OLD_NEWDB
-argument_list|)
 block|}
 else|else
 block|{
@@ -3099,10 +3090,7 @@ block|}
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
 name|OLD_NEWDB
-argument_list|)
 operator|&&
 name|HASFLOCK
 name|fd
@@ -3200,8 +3188,8 @@ name|mode
 operator|==
 name|O_RDWR
 condition|)
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|OLD_NEWDB
 operator|(
 name|void
@@ -3450,8 +3438,9 @@ argument_list|(
 name|keybuf
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|OLD_NEWDB
 name|fd
 operator|=
@@ -3604,8 +3593,9 @@ name|saveerrno
 operator|=
 name|errno
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|OLD_NEWDB
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.103 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.104 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1903,6 +1903,22 @@ begin_comment
 comment|/* has the setsid(2) POSIX syscall */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1913,6 +1929,24 @@ end_define
 begin_comment
 comment|/* use<sys/mount.h> statfs() impl */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1926,6 +1960,10 @@ name|_BSDI_VERSION
 operator|>=
 literal|199312
 end_if
+
+begin_comment
+comment|/* version 1.1 or later */
+end_comment
 
 begin_define
 define|#
@@ -1948,39 +1986,36 @@ begin_comment
 comment|/* so don't redefine it in conf.c */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|ERRLIST_PREDEFINED
-end_define
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
-comment|/* don't declare sys_errlist */
+comment|/* version 1.0 or earlier */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LA_TYPE
+name|OLD_NEWDB
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LA_TYPE
-value|LA_SUBR
+name|OLD_NEWDB
+value|1
 end_define
+
+begin_comment
+comment|/* old version of newdb library */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4774,6 +4809,28 @@ end_define
 
 begin_comment
 comment|/* assume no flock(2) support */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OLD_NEWDB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OLD_NEWDB
+value|0
+end_define
+
+begin_comment
+comment|/* assume newer version of newdb */
 end_comment
 
 begin_endif
