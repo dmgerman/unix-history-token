@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.3 (Berkeley) %G%"
+literal|"@(#)ld.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1062,6 +1062,17 @@ name|NDIRS
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDEFDIRS
+value|3
+end_define
+
+begin_comment
+comment|/* number of default directories in dirs[] */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -1274,6 +1285,8 @@ condition|(
 name|ndir
 operator|>=
 name|NDIRS
+operator|-
+name|NDEFDIRS
 condition|)
 name|error
 argument_list|(
