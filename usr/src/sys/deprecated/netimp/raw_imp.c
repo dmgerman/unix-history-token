@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.1	82/02/01	*/
+comment|/*	raw_imp.c	4.2	82/02/01	*/
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ specifier|register
 name|struct
 name|imp_leader
 modifier|*
-name|il
+name|ip
 decl_stmt|;
 specifier|register
 name|struct
@@ -209,7 +209,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|il
+name|ip
 operator|=
 name|mtod
 argument_list|(
@@ -222,7 +222,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|il
+name|ip
 operator|->
 name|il_format
 operator|!=
@@ -233,20 +233,20 @@ name|bad
 goto|;
 if|if
 condition|(
-name|il
+name|ip
 operator|->
 name|il_link
 operator|!=
 name|IMPLINK_IP
 operator|&&
 operator|(
-name|il
+name|ip
 operator|->
 name|il_link
 operator|<
 name|IMPLINK_LOWEXPER
 operator|||
-name|il
+name|ip
 operator|->
 name|il_link
 operator|>
@@ -281,7 +281,7 @@ name|n
 operator|->
 name|m_len
 expr_stmt|;
-name|il
+name|ip
 operator|->
 name|il_length
 operator|=
@@ -301,7 +301,7 @@ name|rp
 operator|->
 name|rcb_addr
 expr_stmt|;
-name|il
+name|ip
 operator|->
 name|il_network
 operator|=
@@ -311,7 +311,7 @@ name|sin_addr
 operator|.
 name|s_net
 expr_stmt|;
-name|il
+name|ip
 operator|->
 name|il_host
 operator|=
@@ -321,7 +321,7 @@ name|sin_addr
 operator|.
 name|s_host
 expr_stmt|;
-name|il
+name|ip
 operator|->
 name|il_imp
 operator|=

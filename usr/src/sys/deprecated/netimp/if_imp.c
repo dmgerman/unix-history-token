@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.2	82/02/01	*/
+comment|/*	if_imp.c	4.3	82/02/01	*/
 end_comment
 
 begin_include
@@ -469,6 +469,7 @@ name|m
 operator|=
 name|m0
 expr_stmt|;
+comment|/* 	 * We should generate a "bad leader" message 	 * to the IMP about messages too short. 	 */
 if|if
 condition|(
 name|m
@@ -508,7 +509,7 @@ name|imp_leader
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* check leader type. */
+comment|/* 	 * Check leader type -- should notify IMP 	 * in case of failure... 	 */
 if|if
 condition|(
 name|ip
@@ -554,6 +555,7 @@ operator|->
 name|il_host
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|hp
 operator|=
 name|h_lookup
@@ -570,7 +572,7 @@ operator|->
 name|il_mtype
 condition|)
 block|{
-comment|/* 	 * Data for a protocol.  Dispatch to the appropriate 	 * protocol routine (running at software interrupt). 	 * If this isn't a raw interface, advance pointer 	 * into mbuf past leader. 	 */
+comment|/* 	 * Data for a protocol.  Dispatch to the appropriate 	 * protocol routine (running at software interrupt). 	 * If this isn't a raw interface, advance pointer 	 * into mbuf past leader (done below). 	 */
 case|case
 name|IMPTYPE_DATA
 case|:
@@ -592,6 +594,16 @@ comment|/* 	 * IMP leader error.  Reset the IMP and discard the packet. 	 */
 case|case
 name|IMPTYPE_BADLEADER
 case|:
+comment|/* 		 * According to 1822 document, this message 		 * will be generated in response to the 		 * first noop sent to the IMP after 		 * the host resets the IMP interface. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|imp_state
+operator|!=
+name|IMPS_RESET
+condition|)
+block|{
 name|imperr
 argument_list|(
 name|sc
@@ -614,6 +626,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|drop
 goto|;
@@ -640,11 +653,18 @@ name|imp_state
 operator|=
 name|IMPS_GOINGDOWN
 expr_stmt|;
+name|timeout
+argument_list|(
+name|impdown
+argument_list|,
 name|sc
-operator|->
-name|imp_timer
-operator|=
-name|IMPTV_DOWN
+argument_list|,
+literal|30
+operator|*
+literal|60
+operator|*
+name|HZ
+argument_list|)
 expr_stmt|;
 block|}
 name|imperr
@@ -670,6 +690,28 @@ comment|/* 	 * A NOP usually seen during the initialization sequence. 	 * Compar
 case|case
 name|IMPTYPE_NOOP
 case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|imp_state
+operator|==
+name|IMPS_DOWN
+condition|)
+block|{
+name|sc
+operator|->
+name|imp_state
+operator|=
+name|IMPS_INIT
+expr_stmt|;
+name|sc
+operator|->
+name|imp_dropcnt
+operator|=
+name|IMP_DROPCNT
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -780,7 +822,7 @@ block|}
 goto|goto
 name|drop
 goto|;
-comment|/* 	 * RFNM or INCOMPLETE message, record in 	 * host table and prime output routine. 	 * 	 * SHOULD RETRANSMIT ON INCOMPLETE. 	 */
+comment|/* 	 * RFNM or INCOMPLETE message, record in 	 * host table and prime output routine. 	 * 	 * SHOULD NOTIFY PROTOCOL ABOUT INCOMPLETES. 	 */
 case|case
 name|IMPTYPE_RFNM
 case|:
@@ -908,30 +950,26 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * IMP reset complete. 	 */
+comment|/* 	 * Interface reset. 	 */
 case|case
 name|IMPTYPE_RESET
 case|:
-if|if
-condition|(
-name|sc
-operator|->
-name|imp_state
-operator|==
-name|IMPS_DOWN
-condition|)
-name|sc
-operator|->
-name|imp_state
-operator|=
-name|IMPS_UP
-expr_stmt|;
-else|else
 name|imperr
 argument_list|(
 name|sc
 argument_list|,
-literal|"unexpected reset"
+literal|"interface reset"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|imp_state
+operator|=
+name|IMPS_RESET
+expr_stmt|;
+name|impnoops
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1076,6 +1114,37 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Bring the IMP down after notification.  */
+end_comment
+
+begin_macro
+name|impdown
+argument_list|(
+argument|sc
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|imp_softc
+modifier|*
+name|sc
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|sc
+operator|->
+name|imp_state
+operator|=
+name|IMPS_DOWN
+expr_stmt|;
+comment|/* notify protocols with messages waiting? */
+block|}
+end_block
+
+begin_comment
 comment|/*VARARGS*/
 end_comment
 
@@ -1194,8 +1263,8 @@ decl_stmt|,
 name|len
 decl_stmt|;
 comment|/* 	 * Don't even try if the IMP is unavailable. 	 */
-if|if
-condition|(
+name|x
+operator|=
 name|imp_softc
 index|[
 name|ifp
@@ -1204,21 +1273,20 @@ name|if_unit
 index|]
 operator|.
 name|imp_state
+expr_stmt|;
+if|if
+condition|(
+name|x
 operator|==
 name|IMPS_DOWN
+operator|||
+name|x
+operator|==
+name|IMPS_GOINGDOWN
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+goto|goto
+name|drop
+goto|;
 switch|switch
 condition|(
 name|pf
@@ -1297,16 +1365,9 @@ argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|drop
+goto|;
 block|}
 comment|/* 	 * Add IMP leader.  If there's not enough space in the 	 * first mbuf, allocate another.  If that should fail, we 	 * drop this sucker. 	 */
 if|if
@@ -1343,18 +1404,9 @@ name|m
 operator|==
 literal|0
 condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+goto|goto
+name|drop
+goto|;
 name|m
 operator|->
 name|m_next
@@ -1463,6 +1515,18 @@ name|ifp
 argument_list|,
 name|m
 argument_list|)
+operator|)
+return|;
+name|drop
+label|:
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -1575,7 +1639,7 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If IMP would block, queue until rfnm 		 */
+comment|/* 		 * If IMP would block, queue until RFNM 		 */
 if|if
 condition|(
 name|hp
@@ -1649,6 +1713,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
+comment|/* 			 * Q is kept as circulare list with h_q 			 * (head) pointing to the last entry. 			 */
 if|if
 condition|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.1	82/02/01	*/
+comment|/*	if_acc.c	4.2	82/02/01	*/
 end_comment
 
 begin_include
@@ -252,10 +252,6 @@ name|char
 name|acc_flush
 decl_stmt|;
 comment|/* flush remainder of message */
-name|char
-name|acc_previous
-decl_stmt|;
-comment|/* something on input queue */
 block|}
 name|acc_softc
 index|[
@@ -745,7 +741,7 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-comment|/* reset the imp interface. */
+comment|/* 	 * Reset the imp interface. 	 * the delays are totally guesses 	 */
 name|x
 operator|=
 name|spl5
@@ -757,11 +753,21 @@ name|acc_icsr
 operator|=
 name|ACC_RESET
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 name|addr
 operator|->
 name|acc_ocsr
 operator|=
 name|ACC_RESET
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -770,6 +776,11 @@ operator|=
 name|OUT_BBACK
 expr_stmt|;
 comment|/* reset host master ready */
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|addr
 operator|->
 name|acc_ocsr
@@ -832,6 +843,7 @@ argument_list|,
 name|PZERO
 argument_list|)
 expr_stmt|;
+comment|/* ??? */
 block|}
 comment|/* 	 * Put up a read.  We can't restart any outstanding writes 	 * until we're back in synch with the IMP (i.e. we've flushed 	 * the NOOPs it throws at us). 	 */
 name|x
@@ -1192,7 +1204,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acc%d: stray output interrupt\n"
+literal|"acc%d: stray send interrupt\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1233,9 +1245,10 @@ name|acc_ocsr
 operator|&
 name|ACC_ERR
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"acc%d: output error, csr=%b\n"
+literal|"acc%d: send error, csr=%b\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1246,6 +1259,14 @@ argument_list|,
 name|ACC_OUTBITS
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|acc_if
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -1259,13 +1280,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sc
-operator|->
-name|acc_if
-operator|->
-name|if_oerrors
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1512,7 +1526,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|acc_previous
+name|acc_iq
 condition|)
 name|m_cat
 argument_list|(
@@ -1524,20 +1538,12 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|sc
 operator|->
 name|acc_iq
 operator|=
 name|m
 expr_stmt|;
-name|sc
-operator|->
-name|acc_previous
-operator|=
-literal|1
-expr_stmt|;
-block|}
 goto|goto
 name|setup
 goto|;
@@ -1553,7 +1559,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|acc_previous
+name|acc_iq
 condition|)
 block|{
 name|m_cat
@@ -1574,12 +1580,6 @@ expr_stmt|;
 name|sc
 operator|->
 name|acc_iq
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|acc_previous
 operator|=
 literal|0
 expr_stmt|;
