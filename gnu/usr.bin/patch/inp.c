@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/inp.c,v 1.3 1995/05/30 05:02:31 rgrimes Exp $  *  * Log: inp.c,v  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *  * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *  */
+comment|/* $Header: /home/ncvs/src/gnu/usr.bin/patch/inp.c,v 1.3.6.1 1997/03/17 22:32:26 jmg Exp $  *  * Log: inp.c,v  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *  * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *  */
 end_comment
 
 begin_include
@@ -1882,6 +1882,10 @@ argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|string
 index|[
 name|patlen
@@ -1908,6 +1912,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -1925,6 +1933,10 @@ argument_list|)
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|s
 index|[
 name|patlen
