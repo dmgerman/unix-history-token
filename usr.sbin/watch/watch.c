@@ -251,6 +251,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|tchars
+name|tco
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|tbuf
 index|[
@@ -397,13 +404,16 @@ argument_list|,
 name|TIOCGETC
 argument_list|,
 operator|&
-name|tc
+name|tco
 argument_list|)
 expr_stmt|;
-comment|/* bcopy(&sgn,&sgo, sizeof(struct sgttyb)); */
 name|sgn
 operator|=
 name|sgo
+expr_stmt|;
+name|tc
+operator|=
+name|tco
 expr_stmt|;
 name|sgn
 operator|.
@@ -474,6 +484,16 @@ name|TIOCSETP
 argument_list|,
 operator|&
 name|sgo
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|std_in
+argument_list|,
+name|TIOCSETC
+argument_list|,
+operator|&
+name|tco
 argument_list|)
 expr_stmt|;
 block|}
