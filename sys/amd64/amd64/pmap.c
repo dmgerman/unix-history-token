@@ -2147,16 +2147,6 @@ operator|->
 name|td_critnest
 operator|==
 literal|1
-operator|&&
-name|td
-operator|->
-name|td_savecrit
-operator|!=
-operator|(
-name|critical_t
-operator|)
-operator|-
-literal|1
 condition|)
 name|cpu_critical_exit
 argument_list|(
