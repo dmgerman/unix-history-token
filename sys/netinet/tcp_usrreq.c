@@ -1269,6 +1269,13 @@ operator|=
 name|ECONNRESET
 expr_stmt|;
 comment|/* XXX EPIPE? */
+name|tp
+operator|=
+name|NULL
+expr_stmt|;
+name|TCPDEBUG1
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out
 goto|;
