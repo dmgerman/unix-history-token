@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netatm/kern_include.h>
 end_include
 
@@ -400,6 +418,24 @@ comment|/* diagnostics */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_harp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|spans
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"spans"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Process a SPANS timeout  *  * Called when a previously scheduled spans control block timer expires.  * Processing will based on the current SPANS state.  *  * Called at splnet.  *  * Arguments:  *	tip	pointer to spans timer control block  *  * Returns:  *	none  *  */
