@@ -3951,7 +3951,7 @@ name|atrq
 operator|.
 name|ndesc
 operator|=
-literal|6
+literal|8
 expr_stmt|;
 comment|/* equal to maximum of mbuf chains */
 name|sc
@@ -3960,8 +3960,6 @@ name|atrs
 operator|.
 name|ndesc
 operator|=
-literal|6
-operator|/
 literal|2
 expr_stmt|;
 name|sc
