@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.27 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2184,6 +2184,32 @@ operator|.
 name|c_cc
 index|[
 name|VDSUSP
+index|]
+operator|=
+call|(
+name|cc_t
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_TERMIO
+comment|/*  * Disable VSTATUS (^T)  */
+ifdef|#
+directive|ifdef
+name|VSTATUS
+name|tmp_tc
+operator|.
+name|c_cc
+index|[
+name|VSTATUS
 index|]
 operator|=
 call|(
