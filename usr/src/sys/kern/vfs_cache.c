@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -364,12 +364,25 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|ndp
+operator|->
+name|ni_nameiop
+operator|&
+name|OPMASK
+operator|)
+operator|!=
+name|CREATE
+condition|)
+block|{
 name|nchstats
 operator|.
 name|ncs_neghits
 operator|++
 expr_stmt|;
-comment|/* 		 * move this slot to end of LRU chain, if not already there 		 */
+comment|/* 			 * Move this slot to end of LRU chain, 			 * if not already there. 			 */
 if|if
 condition|(
 name|ncp
@@ -428,6 +441,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+block|}
 block|}
 elseif|else
 if|if
