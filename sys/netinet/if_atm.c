@@ -370,7 +370,7 @@ break|break;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|rt
@@ -383,7 +383,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"atm null ioctl"
+literal|"atm_rtrequest: atm null ioctl"
 argument_list|)
 expr_stmt|;
 endif|#
