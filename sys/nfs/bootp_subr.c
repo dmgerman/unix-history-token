@@ -257,7 +257,7 @@ name|unsigned
 name|char
 name|vend
 index|[
-literal|256
+literal|1222
 index|]
 decl_stmt|;
 block|}
