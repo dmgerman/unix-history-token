@@ -1018,6 +1018,21 @@ name|EI_VERSION
 index|]
 operator|!=
 name|EV_CURRENT
+operator|||
+name|hdr
+operator|->
+name|e_phentsize
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|Elf_Phdr
+argument_list|)
+operator|||
+name|hdr
+operator|->
+name|e_version
+operator|!=
+name|ELF_TARG_VER
 condition|)
 return|return
 operator|(
@@ -1067,19 +1082,6 @@ condition|(
 name|i
 operator|==
 name|MAX_BRANDS
-condition|)
-return|return
-operator|(
-name|ENOEXEC
-operator|)
-return|;
-if|if
-condition|(
-name|hdr
-operator|->
-name|e_version
-operator|!=
-name|ELF_TARG_VER
 condition|)
 return|return
 operator|(
@@ -2688,7 +2690,8 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Only support headers that fit within first page for now */
+comment|/* Only support headers that fit within first page for now      */
+comment|/*    (multiplication of two Elf_Half fields will not overflow) */
 if|if
 condition|(
 operator|(
@@ -2702,10 +2705,6 @@ operator|||
 operator|(
 name|hdr
 operator|->
-name|e_phoff
-operator|+
-name|hdr
-operator|->
 name|e_phentsize
 operator|*
 name|hdr
@@ -2714,6 +2713,10 @@ name|e_phnum
 operator|)
 operator|>
 name|PAGE_SIZE
+operator|-
+name|hdr
+operator|->
+name|e_phoff
 condition|)
 block|{
 name|error
