@@ -8956,9 +8956,6 @@ decl_stmt|,
 modifier|*
 name|pde
 decl_stmt|;
-name|vm_pindex_t
-name|ptepindex
-decl_stmt|;
 if|if
 condition|(
 name|addr
@@ -9054,13 +9051,6 @@ operator|)
 operator|&
 operator|~
 name|PDRMASK
-expr_stmt|;
-name|ptepindex
-operator|=
-name|pmap_pde_pindex
-argument_list|(
-name|addr
-argument_list|)
 expr_stmt|;
 name|pde
 operator|=
