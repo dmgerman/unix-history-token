@@ -98,11 +98,13 @@ index|[
 sizeof|sizeof
 expr|"255.255.255.255"]
 expr_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|src
 init|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
