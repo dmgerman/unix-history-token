@@ -32,6 +32,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_atalk.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -74,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -111,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -135,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
 end_include
 
 begin_include
@@ -213,58 +195,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netns/ns.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netns/ns_if.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETATALK
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netatalk/at.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/at_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/at_extern.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -272,12 +202,6 @@ name|NBPF
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_include
 include|#
