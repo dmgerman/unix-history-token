@@ -547,6 +547,16 @@ block|{
 block|{
 name|USB_VENDOR_HP
 block|,
+name|USB_PRODUCT_HP_5400C
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_HP
+block|,
 name|USB_PRODUCT_HP_6200C
 block|}
 block|,
