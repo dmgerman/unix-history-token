@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xmalloc.h"
 end_include
 
@@ -414,13 +420,6 @@ name|pam_ctxt
 modifier|*
 name|ctxt
 decl_stmt|;
-name|char
-modifier|*
-name|line
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -653,10 +652,6 @@ decl_stmt|;
 name|pam_handle_t
 modifier|*
 name|pamh
-decl_stmt|;
-name|char
-modifier|*
-name|msg
 decl_stmt|;
 name|int
 name|pam_err
@@ -1411,7 +1406,7 @@ init|=
 name|ctxtp
 decl_stmt|;
 name|int
-name|i
+name|status
 decl_stmt|;
 name|close
 argument_list|(
@@ -1427,6 +1422,18 @@ operator|->
 name|pam_pid
 argument_list|,
 name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|waitpid
+argument_list|(
+name|ctxt
+operator|->
+name|pam_pid
+argument_list|,
+operator|&
+name|status
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|xfree
