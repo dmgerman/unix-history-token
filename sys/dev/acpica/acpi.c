@@ -1368,15 +1368,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUGGER
-name|char
-modifier|*
-name|debugpoint
-decl_stmt|;
-endif|#
-directive|endif
 specifier|static
 name|int
 name|started
