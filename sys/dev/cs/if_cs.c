@@ -2255,6 +2255,17 @@ operator|!
 name|error
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|CS_NO_IRQ
+operator|)
+condition|)
 name|cs_writereg
 argument_list|(
 name|sc
