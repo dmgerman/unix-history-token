@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.1 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,18 @@ name|getpwent
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|user_list
+index|[
+name|passwd
+operator|->
+name|pw_uid
+index|]
+index|[
+literal|0
+index|]
+condition|)
 name|move
 argument_list|(
 name|passwd
