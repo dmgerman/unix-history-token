@@ -748,7 +748,10 @@ literal|16
 index|]
 decl_stmt|;
 name|uint16_t
-name|_tagmask
+name|_tag_enable
+decl_stmt|;
+name|uint16_t
+name|_disc_enable
 decl_stmt|;
 name|uint16_t
 name|_update_params0
@@ -781,8 +784,12 @@ name|mpt_dev_page1
 value|cfg.spi._dev_page1
 define|#
 directive|define
-name|mpt_tagmask
-value|cfg.spi._tagmask
+name|mpt_tag_enable
+value|cfg.spi._tag_enable
+define|#
+directive|define
+name|mpt_disc_enable
+value|cfg.spi._disc_enable
 define|#
 directive|define
 name|mpt_update_params0

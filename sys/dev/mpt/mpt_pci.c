@@ -134,6 +134,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_LSI_FC909A
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_LSI_FC909A
+value|0x0621
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_LSI_FC929
 end_ifndef
 
@@ -547,6 +565,14 @@ case|:
 name|desc
 operator|=
 literal|"LSILogic FC909 FC Adapter"
+expr_stmt|;
+break|break;
+case|case
+name|PCI_PRODUCT_LSI_FC909A
+case|:
+name|desc
+operator|=
+literal|"LSILogic FC909A FC Adapter"
 expr_stmt|;
 break|break;
 case|case
@@ -998,6 +1024,9 @@ condition|)
 block|{
 case|case
 name|PCI_PRODUCT_LSI_FC909
+case|:
+case|case
+name|PCI_PRODUCT_LSI_FC909A
 case|:
 case|case
 name|PCI_PRODUCT_LSI_FC929
