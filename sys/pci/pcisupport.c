@@ -4945,6 +4945,55 @@ operator|(
 literal|"AMD-751 PCI-PCI (AGP) bridge"
 operator|)
 return|;
+comment|/* DEC -- vendor 0x1011 */
+case|case
+literal|0x00011011
+case|:
+return|return
+operator|(
+literal|"DEC 21050 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00211011
+case|:
+return|return
+operator|(
+literal|"DEC 21052 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00221011
+case|:
+return|return
+operator|(
+literal|"DEC 21150 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00241011
+case|:
+return|return
+operator|(
+literal|"DEC 21152 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00251011
+case|:
+return|return
+operator|(
+literal|"DEC 21153 PCI-PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x00261011
+case|:
+return|return
+operator|(
+literal|"DEC 21154 PCI-PCI bridge"
+operator|)
+return|;
 comment|/* Others */
 case|case
 literal|0x00221014
@@ -4952,14 +5001,6 @@ case|:
 return|return
 operator|(
 literal|"IBM 82351 PCI-PCI bridge"
-operator|)
-return|;
-case|case
-literal|0x00011011
-case|:
-return|return
-operator|(
-literal|"DEC 21050 PCI-PCI bridge"
 operator|)
 return|;
 block|}
@@ -5513,6 +5554,31 @@ case|:
 return|return
 operator|(
 literal|"NEC 003B PCI to PC-98 C-bus bridge"
+operator|)
+return|;
+comment|/* Cypress -- vendor 0x1080 */
+case|case
+literal|0xc6931080
+case|:
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_BRIDGE
+operator|&&
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_BRIDGE_ISA
+condition|)
+return|return
+operator|(
+literal|"Cypress 82C693 PCI-ISA bridge"
 operator|)
 return|;
 block|}
