@@ -229,10 +229,11 @@ include|#
 directive|include
 file|<capdefaults.c>
 comment|/* LINT_PREPRO #endif*/
+block|}
 ifdef|#
 directive|ifdef
 name|FREEBSD_NATIVE
-comment|/* 	 * This is a REALLY UGLY hack. Basically, if we originate with 	 * a termcap source, try and copy it out. 	 */
+comment|/*      * This is a REALLY UGLY hack. Basically, if we originate with      * a termcap source, try and copy it out.      */
 if|if
 condition|(
 name|bufp
@@ -253,7 +254,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|returnCode
 argument_list|(
 name|errcode
