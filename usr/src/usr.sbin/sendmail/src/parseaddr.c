@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.32 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2204,6 +2204,12 @@ comment|/* last token matched */
 name|char
 modifier|*
 modifier|*
+name|pattern
+decl_stmt|;
+comment|/* pointer to pattern */
+name|char
+modifier|*
+modifier|*
 name|source
 decl_stmt|;
 comment|/* left hand source operand */
@@ -2834,7 +2840,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rp="
+literal|"ADVANCE rp="
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -3067,47 +3073,6 @@ operator|*
 name|rp
 condition|)
 block|{
-specifier|register
-name|STAB
-modifier|*
-name|s
-decl_stmt|;
-case|case
-name|MATCHNCLASS
-case|:
-comment|/* match any single token not in a class */
-name|s
-operator|=
-name|stab
-argument_list|(
-name|ap
-argument_list|,
-name|ST_CLASS
-argument_list|,
-name|ST_FIND
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|!=
-name|NULL
-operator|&&
-name|bitnset
-argument_list|(
-name|rp
-index|[
-literal|1
-index|]
-argument_list|,
-name|s
-operator|->
-name|s_class
-argument_list|)
-condition|)
-goto|goto
-name|extendclass
-goto|;
 break|break;
 block|}
 name|avp
@@ -3455,6 +3420,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|rvp
+operator|=
+name|mlp
+operator|->
+name|pattern
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -6628,6 +6599,8 @@ comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
 name|cataddr
 argument_list|(
 name|pvp
+argument_list|,
+name|NULL
 argument_list|,
 name|lbuf
 argument_list|,
