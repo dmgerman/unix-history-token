@@ -809,6 +809,14 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX */
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_OWEPREEMPT
+expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
