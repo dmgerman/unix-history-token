@@ -3005,12 +3005,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|rxcycles
-operator|>
-literal|0
-operator|&&
 name|cmd
 operator|==
 name|POLL_AND_CHECK_STATUS
