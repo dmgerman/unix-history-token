@@ -1,14 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	  * $FreeBSD$  * From: $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
+comment|/*	  * $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 1997 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Gordon W. Ross.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * This module implements a "raw device" interface suitable for  * use by the stand-alone I/O library NFS code.  This interface  * does not support any "block" access, and exists only for the  * purpose of initializing the network interface, getting boot  * parameters, and performing the NFS mount.  *  * At open time, this does:  *  * find interface      - netif_open()  * RARP for IP address - rarp_getipaddress()  * RPC/bootparams      - callrpc(d, RPC_BOOTPARAMS, ...)  * RPC/mountd          - nfs_mount(sock, ip, path)  *  * the root file handle from mountd is saved in a global  * for use by the NFS open code (NFS/lookup).  */
+comment|/*-  * This module implements a "raw device" interface suitable for  * use by the stand-alone I/O library NFS code.  This interface  * does not support any "block" access, and exists only for the  * purpose of initializing the network interface, getting boot  * parameters, and performing the NFS mount.  *  * At open time, this does:  *  * find interface      - netif_open()  * RARP for IP address - rarp_getipaddress()  * RPC/bootparams      - callrpc(d, RPC_BOOTPARAMS, ...)  * RPC/mountd          - nfs_mount(sock, ip, path)  *  * the root file handle from mountd is saved in a global  * for use by the NFS open code (NFS/lookup).  */
 end_comment
 
 begin_include
