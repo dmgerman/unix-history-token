@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.48 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3019,7 +3019,7 @@ argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
-literal|"Content-Type: message/delivery-status"
+literal|"Content-Type: message/X-delivery-status-1"
 argument_list|,
 name|mci
 argument_list|)
