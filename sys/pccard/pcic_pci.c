@@ -761,6 +761,14 @@ literal|"TI PCI-1131 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_PCIC_TI1211
+case|:
+name|desc
+operator|=
+literal|"TI PCI-1211 PCI-CardBus Bridge"
+expr_stmt|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_PCIC_TI1220
 case|:
 name|desc
@@ -1008,10 +1016,16 @@ case|case
 name|PCI_DEVICE_ID_PCIC_TI1131
 case|:
 case|case
+name|PCI_DEVICE_ID_PCIC_TI1211
+case|:
+case|case
 name|PCI_DEVICE_ID_PCIC_TI1220
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1221
+case|:
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1225
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1250
@@ -1021,9 +1035,6 @@ name|PCI_DEVICE_ID_PCIC_TI1251
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1251B
-case|:
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1225
 case|:
 case|case
 name|PCI_DEVICE_ID_PCIC_TI1410
