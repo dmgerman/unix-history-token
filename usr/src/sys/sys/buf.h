@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.12	81/03/09	*/
+comment|/*	buf.h	4.13	81/05/09	*/
 end_comment
 
 begin_comment
@@ -362,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|B_WRITE
-value|0x00000
+value|0x000000
 end_define
 
 begin_comment
@@ -373,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|B_READ
-value|0x00001
+value|0x000001
 end_define
 
 begin_comment
@@ -384,7 +384,7 @@ begin_define
 define|#
 directive|define
 name|B_DONE
-value|0x00002
+value|0x000002
 end_define
 
 begin_comment
@@ -395,7 +395,7 @@ begin_define
 define|#
 directive|define
 name|B_ERROR
-value|0x00004
+value|0x000004
 end_define
 
 begin_comment
@@ -406,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|B_BUSY
-value|0x00008
+value|0x000008
 end_define
 
 begin_comment
@@ -417,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|B_PHYS
-value|0x00010
+value|0x000010
 end_define
 
 begin_comment
@@ -428,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|B_XXX
-value|0x00020
+value|0x000020
 end_define
 
 begin_comment
@@ -439,7 +439,7 @@ begin_define
 define|#
 directive|define
 name|B_WANTED
-value|0x00040
+value|0x000040
 end_define
 
 begin_comment
@@ -450,7 +450,7 @@ begin_define
 define|#
 directive|define
 name|B_AGE
-value|0x00080
+value|0x000080
 end_define
 
 begin_comment
@@ -461,7 +461,7 @@ begin_define
 define|#
 directive|define
 name|B_ASYNC
-value|0x00100
+value|0x000100
 end_define
 
 begin_comment
@@ -472,7 +472,7 @@ begin_define
 define|#
 directive|define
 name|B_DELWRI
-value|0x00200
+value|0x000200
 end_define
 
 begin_comment
@@ -483,7 +483,7 @@ begin_define
 define|#
 directive|define
 name|B_TAPE
-value|0x00400
+value|0x000400
 end_define
 
 begin_comment
@@ -494,7 +494,7 @@ begin_define
 define|#
 directive|define
 name|B_UAREA
-value|0x00800
+value|0x000800
 end_define
 
 begin_comment
@@ -505,7 +505,7 @@ begin_define
 define|#
 directive|define
 name|B_PAGET
-value|0x01000
+value|0x001000
 end_define
 
 begin_comment
@@ -516,7 +516,7 @@ begin_define
 define|#
 directive|define
 name|B_DIRTY
-value|0x02000
+value|0x002000
 end_define
 
 begin_comment
@@ -527,7 +527,7 @@ begin_define
 define|#
 directive|define
 name|B_PGIN
-value|0x04000
+value|0x004000
 end_define
 
 begin_comment
@@ -538,7 +538,7 @@ begin_define
 define|#
 directive|define
 name|B_CACHE
-value|0x08000
+value|0x008000
 end_define
 
 begin_comment
@@ -549,7 +549,7 @@ begin_define
 define|#
 directive|define
 name|B_INVAL
-value|0x10000
+value|0x010000
 end_define
 
 begin_comment
@@ -560,7 +560,7 @@ begin_define
 define|#
 directive|define
 name|B_LOCKED
-value|0x20000
+value|0x020000
 end_define
 
 begin_comment
@@ -571,11 +571,22 @@ begin_define
 define|#
 directive|define
 name|B_HEAD
-value|0x40000
+value|0x040000
 end_define
 
 begin_comment
 comment|/* a buffer header, not a buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_BAD
+value|0x100000
+end_define
+
+begin_comment
+comment|/* bad block revectoring in progress */
 end_comment
 
 end_unit
