@@ -533,7 +533,7 @@ directive|else
 end_else
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|void
 name|translate_bytes
