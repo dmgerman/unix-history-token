@@ -21,7 +21,7 @@ operator|)
 name|cmt
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -428,7 +428,7 @@ specifier|extern
 name|char
 name|Pgmr
 index|[
-literal|8
+name|SZLNAM
 index|]
 decl_stmt|;
 name|char

@@ -29,7 +29,7 @@ operator|)
 name|scv
 operator|.
 name|c
-literal|4.3
+literal|4.4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -152,7 +152,7 @@ decl_stmt|;
 name|char
 name|Dpgmr
 index|[
-literal|8
+name|SZLNAM
 index|]
 decl_stmt|;
 name|char
@@ -2029,7 +2029,7 @@ name|getlnam
 argument_list|(
 name|i
 operator|*
-literal|8
+name|SZLNAM
 operator|+
 name|j
 argument_list|)

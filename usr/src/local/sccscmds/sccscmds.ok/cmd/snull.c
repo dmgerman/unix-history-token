@@ -21,7 +21,7 @@ operator|)
 name|snull
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -114,7 +114,7 @@ decl_stmt|;
 name|char
 name|ds_pgmr
 index|[
-literal|8
+name|SZLNAM
 index|]
 decl_stmt|;
 name|char
@@ -1692,7 +1692,7 @@ name|ds_pgmr
 argument_list|,
 literal|0
 argument_list|,
-literal|7
+name|LNLNAM
 argument_list|)
 expr_stmt|;
 name|nulldel

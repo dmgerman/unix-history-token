@@ -21,7 +21,7 @@ operator|)
 name|delta
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1929,7 +1929,7 @@ name|d_pgmr
 argument_list|,
 literal|0
 argument_list|,
-literal|7
+name|LNLNAM
 argument_list|)
 expr_stmt|;
 name|dt
