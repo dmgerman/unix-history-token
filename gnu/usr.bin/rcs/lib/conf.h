@@ -4,7 +4,7 @@ comment|/* RCS compile-time configuration */
 end_comment
 
 begin_comment
-comment|/* $Id: conf.sh,v 5.25 1995/06/16 06:19:24 eggert Exp $ */
+comment|/* $Id: conf.h,v 1.4 1995/10/28 21:49:25 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1516,7 +1516,7 @@ begin_define
 define|#
 directive|define
 name|CO
-value|"/usr/local/bin/co"
+value|"/usr/bin/co"
 end_define
 
 begin_comment
@@ -1637,7 +1637,7 @@ begin_define
 define|#
 directive|define
 name|MERGE
-value|"/usr/local/bin/merge"
+value|"/usr/bin/merge"
 end_define
 
 begin_comment
