@@ -73,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -139,10 +139,17 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|getargs
-argument_list|()
+argument_list|(
+name|char
+operator|*
+index|[]
+argument_list|)
 decl_stmt|,
 name|order_unstr
-argument_list|()
+argument_list|(
+name|STRFILE
+operator|*
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -154,18 +161,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|STRFILE
@@ -255,7 +258,7 @@ name|tbl
 operator|.
 name|str_version
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|tbl
 operator|.
@@ -266,7 +269,7 @@ name|tbl
 operator|.
 name|str_numstr
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|tbl
 operator|.
@@ -277,7 +280,7 @@ name|tbl
 operator|.
 name|str_longlen
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|tbl
 operator|.
@@ -288,7 +291,7 @@ name|tbl
 operator|.
 name|str_shortlen
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|tbl
 operator|.
@@ -299,7 +302,7 @@ name|tbl
 operator|.
 name|str_flags
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|tbl
 operator|.
@@ -446,14 +449,14 @@ modifier|*
 name|tbl
 decl_stmt|;
 block|{
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-name|long
+name|off_t
 name|pos
 decl_stmt|;
 name|char
@@ -483,10 +486,6 @@ name|void
 operator|)
 name|fread
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|pos
 argument_list|,
@@ -501,11 +500,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|Inf
 argument_list|,
-name|ntohl
+name|be64toh
 argument_list|(
 name|pos
 argument_list|)

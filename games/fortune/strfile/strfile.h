@@ -7,6 +7,12 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -29,23 +35,19 @@ define|#
 directive|define
 name|VERSION
 value|1
-name|unsigned
-name|long
+name|uint32_t
 name|str_version
 decl_stmt|;
 comment|/* version number */
-name|unsigned
-name|long
+name|uint32_t
 name|str_numstr
 decl_stmt|;
 comment|/* # of strings in the file */
-name|unsigned
-name|long
+name|uint32_t
 name|str_longlen
 decl_stmt|;
 comment|/* length of longest string */
-name|unsigned
-name|long
+name|uint32_t
 name|str_shortlen
 decl_stmt|;
 comment|/* length of shortest string */
@@ -69,8 +71,7 @@ directive|define
 name|STR_COMMENTS
 value|0x8
 comment|/* embedded comments */
-name|unsigned
-name|long
+name|uint32_t
 name|str_flags
 decl_stmt|;
 comment|/* bit field for flags */
@@ -81,7 +82,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* long aligned space */
+comment|/* 64-bit aligned space */
 define|#
 directive|define
 name|str_delim

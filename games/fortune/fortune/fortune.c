@@ -69,7 +69,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -208,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|POS_UNKNOWN
-value|((long) -1)
+value|((uint32_t) -1)
 end_define
 
 begin_comment
@@ -291,7 +291,7 @@ name|fd
 decl_stmt|,
 name|datfd
 decl_stmt|;
-name|long
+name|uint32_t
 name|pos
 decl_stmt|;
 name|FILE
@@ -509,7 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|off_t
 name|Seekpts
 index|[
 literal|2
@@ -1219,7 +1219,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 operator|->
@@ -1465,7 +1465,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|Fortfile
 operator|->
@@ -4668,7 +4668,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"choice = %d (of %ld) \n"
+literal|"choice = %d (of %u) \n"
 operator|,
 name|choice
 operator|,
@@ -4710,7 +4710,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"    skip \"%s\", %ld (choice = %d)\n"
+literal|"    skip \"%s\", %u (choice = %d)\n"
 operator|,
 name|fp
 operator|->
@@ -4734,7 +4734,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"using \"%s\", %ld\n"
+literal|"using \"%s\", %u\n"
 operator|,
 name|fp
 operator|->
@@ -4846,7 +4846,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|ntohl
+name|be64toh
 argument_list|(
 name|Seekpts
 index|[
@@ -4859,7 +4859,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|ntohl
+name|be64toh
 argument_list|(
 name|Seekpts
 index|[
@@ -4986,7 +4986,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"    choice = %d (of %ld)\n"
+literal|"    choice = %d (of %u)\n"
 operator|,
 name|choice
 operator|,
@@ -5036,7 +5036,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"\tskip %s, %ld (choice = %d)\n"
+literal|"\tskip %s, %u (choice = %d)\n"
 operator|,
 name|fp
 operator|->
@@ -5060,7 +5060,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"    using %s, %ld\n"
+literal|"    using %s, %u\n"
 operator|,
 name|fp
 operator|->
@@ -5479,6 +5479,9 @@ name|fp
 operator|->
 name|name
 operator|,
+operator|(
+name|long
+operator|)
 name|fp
 operator|->
 name|pos
@@ -5605,14 +5608,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fp->tbl.str_version = ntohl(fp->tbl.str_version); */
+comment|/* fp->tbl.str_version = be32toh(fp->tbl.str_version); */
 name|fp
 operator|->
 name|tbl
 operator|.
 name|str_numstr
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|fp
 operator|->
@@ -5627,7 +5630,7 @@ name|tbl
 operator|.
 name|str_longlen
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|fp
 operator|->
@@ -5642,7 +5645,7 @@ name|tbl
 operator|.
 name|str_shortlen
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|fp
 operator|->
@@ -5657,7 +5660,7 @@ name|tbl
 operator|.
 name|str_flags
 operator|=
-name|ntohl
+name|be32toh
 argument_list|(
 name|fp
 operator|->
@@ -5765,13 +5768,7 @@ operator|->
 name|str_shortlen
 operator|=
 operator|~
-operator|(
-operator|(
-name|unsigned
-name|long
-operator|)
 literal|0
-operator|)
 expr_stmt|;
 block|}
 end_function

@@ -69,7 +69,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -161,7 +161,7 @@ name|ptr
 parameter_list|,
 name|sz
 parameter_list|)
-value|{ \ 			if (ptr == NULL) \ 				ptr = malloc((unsigned int) (CHUNKSIZE * sizeof *ptr)); \ 			else if (((sz) + 1) % CHUNKSIZE == 0) \ 				ptr = realloc((void *) ptr, ((unsigned int) ((sz) + CHUNKSIZE) * sizeof *ptr)); \ 			if (ptr == NULL) { \ 				fprintf(stderr, "out of space\n"); \ 				exit(1); \ 			} \ 		}
+value|{ \ 			if (ptr == NULL) \ 				ptr = malloc(CHUNKSIZE * sizeof *ptr); \ 			else if (((sz) + 1) % CHUNKSIZE == 0) \ 				ptr = realloc(ptr, ((sz) + CHUNKSIZE) * sizeof *ptr); \ 			if (ptr == NULL) { \ 				fprintf(stderr, "out of space\n"); \ 				exit(1); \ 			} \ 		}
 end_define
 
 begin_ifdef
@@ -189,7 +189,7 @@ block|{
 name|int
 name|first
 decl_stmt|;
-name|long
+name|off_t
 name|pos
 decl_stmt|;
 block|}
@@ -304,7 +304,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|long
+name|uint32_t
 name|Num_pts
 init|=
 literal|0
@@ -317,7 +317,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|long
+name|off_t
 modifier|*
 name|Seekpts
 decl_stmt|;
@@ -369,7 +369,7 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
-name|long
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -476,7 +476,7 @@ decl_stmt|,
 modifier|*
 name|outf
 decl_stmt|;
-name|long
+name|off_t
 name|last_off
 decl_stmt|,
 name|pos
@@ -484,13 +484,13 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|unsigned
-name|long
+name|size_t
 name|length
 decl_stmt|;
 name|int
 name|first
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|cnt
 decl_stmt|;
 name|char
@@ -616,14 +616,7 @@ name|Tbl
 operator|.
 name|str_shortlen
 operator|=
-operator|~
-operator|(
-operator|(
-name|unsigned
-name|long
-operator|)
-literal|0
-operator|)
+literal|0xffffffff
 expr_stmt|;
 name|Tbl
 operator|.
@@ -645,7 +638,7 @@ name|add_offset
 argument_list|(
 name|outf
 argument_list|,
-name|ftell
+name|ftello
 argument_list|(
 name|inf
 argument_list|)
@@ -693,19 +686,26 @@ condition|)
 block|{
 name|pos
 operator|=
-name|ftell
+name|ftello
 argument_list|(
 name|inf
 argument_list|)
 expr_stmt|;
 name|length
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|pos
 operator|-
 name|last_off
+argument_list|)
 operator|-
 operator|(
 name|sp
+operator|!=
+name|NULL
 condition|?
 name|strlen
 argument_list|(
@@ -721,8 +721,9 @@ name|pos
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|length
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|add_offset
@@ -734,6 +735,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|Tbl
 operator|.
 name|str_longlen
@@ -748,6 +752,9 @@ name|length
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|Tbl
 operator|.
 name|str_shortlen
@@ -948,7 +955,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"There were %ld strings\n"
+literal|"There were %u strings\n"
 argument_list|,
 name|Num_pts
 operator|-
@@ -957,7 +964,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Longest string: %lu byte%s\n"
+literal|"Longest string: %u byte%s\n"
 argument_list|,
 name|Tbl
 operator|.
@@ -976,7 +983,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Shortest string: %lu byte%s\n"
+literal|"Shortest string: %u byte%s\n"
 argument_list|,
 name|Tbl
 operator|.
@@ -1003,7 +1010,7 @@ name|Tbl
 operator|.
 name|str_version
 operator|=
-name|htonl
+name|htobe32
 argument_list|(
 name|Tbl
 operator|.
@@ -1014,7 +1021,7 @@ name|Tbl
 operator|.
 name|str_numstr
 operator|=
-name|htonl
+name|htobe32
 argument_list|(
 name|Tbl
 operator|.
@@ -1025,7 +1032,7 @@ name|Tbl
 operator|.
 name|str_longlen
 operator|=
-name|htonl
+name|htobe32
 argument_list|(
 name|Tbl
 operator|.
@@ -1036,7 +1043,7 @@ name|Tbl
 operator|.
 name|str_shortlen
 operator|=
-name|htonl
+name|htobe32
 argument_list|(
 name|Tbl
 operator|.
@@ -1047,7 +1054,7 @@ name|Tbl
 operator|.
 name|str_flags
 operator|=
-name|htonl
+name|htobe32
 argument_list|(
 name|Tbl
 operator|.
@@ -1098,7 +1105,7 @@ control|)
 operator|*
 name|p
 operator|=
-name|htonl
+name|htobe64
 argument_list|(
 operator|*
 name|p
@@ -1109,10 +1116,6 @@ name|void
 operator|)
 name|fwrite
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|Seekpts
 argument_list|,
 sizeof|sizeof
@@ -1120,7 +1123,7 @@ expr|*
 name|Seekpts
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|Num_pts
 argument_list|,
@@ -1396,12 +1399,12 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 block|{
-name|long
-name|net
+name|off_t
+name|beoff
 decl_stmt|;
 if|if
 condition|(
@@ -1409,9 +1412,9 @@ operator|!
 name|STORING_PTRS
 condition|)
 block|{
-name|net
+name|beoff
 operator|=
-name|htonl
+name|htobe64
 argument_list|(
 name|off
 argument_list|)
@@ -1419,12 +1422,12 @@ expr_stmt|;
 name|fwrite
 argument_list|(
 operator|&
-name|net
+name|beoff
 argument_list|,
 literal|1
 argument_list|,
 sizeof|sizeof
-name|net
+name|beoff
 argument_list|,
 name|fp
 argument_list|)
@@ -1464,10 +1467,10 @@ name|void
 name|do_order
 parameter_list|()
 block|{
-name|int
+name|uint32_t
 name|i
 decl_stmt|;
-name|long
+name|off_t
 modifier|*
 name|lp
 decl_stmt|;
@@ -1495,14 +1498,10 @@ argument_list|)
 expr_stmt|;
 name|qsort
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|Firstch
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|Tbl
 operator|.
@@ -1766,7 +1765,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|Sort_1
 argument_list|,
@@ -1780,7 +1779,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|Sort_2
 argument_list|,
@@ -2005,15 +2004,15 @@ name|void
 name|randomize
 parameter_list|()
 block|{
-name|int
+name|uint32_t
 name|cnt
 decl_stmt|,
 name|i
 decl_stmt|;
-name|long
+name|off_t
 name|tmp
 decl_stmt|;
-name|long
+name|off_t
 modifier|*
 name|sp
 decl_stmt|;
