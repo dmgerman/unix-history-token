@@ -312,8 +312,10 @@ name|icmp
 operator|->
 name|icmp_cksum
 operator|=
-name|PacketAliasInternetChecksum
+name|LibAliasInternetChecksum
 argument_list|(
+name|mla
+argument_list|,
 operator|(
 name|u_short
 operator|*
@@ -396,8 +398,10 @@ name|ip_src
 operator|=
 name|swap
 expr_stmt|;
-name|PacketAliasIn
+name|LibAliasIn
 argument_list|(
+name|mla
+argument_list|,
 operator|(
 name|char
 operator|*

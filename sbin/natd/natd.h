@@ -76,5 +76,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|libalias
+modifier|*
+name|mla
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
