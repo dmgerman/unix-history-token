@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.4	%G%"
+literal|"@(#)alias.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,6 +504,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+literal|"050"
+argument_list|,
+literal|"aliased to %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|q
 operator|->
 name|q_flags
@@ -578,6 +591,12 @@ operator|->
 name|q_next
 control|)
 block|{
+name|To
+operator|=
+name|q
+operator|->
+name|q_paddr
+expr_stmt|;
 comment|/* don't realias already aliased names */
 if|if
 condition|(
@@ -673,6 +692,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+literal|"050"
+argument_list|,
+literal|"aliased to %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|q
 operator|->
 name|q_flags

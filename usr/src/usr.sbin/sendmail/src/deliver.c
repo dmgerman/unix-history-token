@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.13	%G%"
+literal|"@(#)deliver.c	3.14	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1738,10 +1738,23 @@ name|stat
 operator|==
 literal|0
 condition|)
+block|{
 name|statmsg
 operator|=
 literal|"ok"
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+literal|"050"
+argument_list|,
+literal|"ok"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|Errors
@@ -1831,6 +1844,8 @@ name|m
 operator|->
 name|m_flags
 argument_list|)
+operator|||
+name|Verbose
 condition|)
 name|usrerr
 argument_list|(
@@ -2590,6 +2605,17 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+literal|"050"
+argument_list|,
+literal|"duplicate supressed"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
