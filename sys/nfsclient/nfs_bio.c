@@ -3851,11 +3851,13 @@ argument_list|)
 operator|==
 name|EINTR
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINTR
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 goto|goto
 name|again
 goto|;
