@@ -2349,6 +2349,9 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK
 argument_list|()
 argument_list|)
@@ -2406,6 +2409,9 @@ argument_list|()
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK2
 argument_list|()
 argument_list|)
@@ -2557,6 +2563,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK
 argument_list|()
 argument_list|)
@@ -2686,6 +2695,9 @@ argument_list|()
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK2
 argument_list|()
 argument_list|)
@@ -3001,10 +3013,6 @@ name|c
 operator|=
 name|BACKSL
 operator||
-operator|(
-name|unsigned
-name|char
-operator|)
 name|GETNEXT
 argument_list|()
 expr_stmt|;
@@ -3408,10 +3416,10 @@ name|ordinary
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|char
+operator|)
 name|c
-operator|&
-operator|~
-name|BACKSL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3488,6 +3496,9 @@ argument_list|()
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK
 argument_list|()
 argument_list|)
@@ -3588,10 +3599,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|unsigned
-name|char
-operator|)
 literal|'$'
 condition|)
 comment|/* $ (but not \$) ends it */
@@ -3646,6 +3653,9 @@ argument_list|()
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK
 argument_list|()
 argument_list|)
@@ -5435,8 +5445,7 @@ block|{
 name|ch
 operator|=
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|ch
 expr_stmt|;
@@ -5539,8 +5548,7 @@ decl_stmt|;
 name|ch
 operator|=
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|ch
 expr_stmt|;
@@ -5671,8 +5679,7 @@ operator|&&
 name|isalpha
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|ch
 argument_list|)
@@ -5698,8 +5705,7 @@ argument_list|(
 name|OCHAR
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|ch
 argument_list|)
@@ -7075,7 +7081,6 @@ condition|)
 return|return
 operator|(
 operator|(
-name|unsigned
 name|char
 operator|)
 name|i
@@ -7720,8 +7725,7 @@ name|unsigned
 name|uc
 init|=
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|c
 decl_stmt|;
@@ -7833,8 +7837,7 @@ name|unsigned
 name|uc1
 init|=
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|c1
 decl_stmt|;
@@ -7843,8 +7846,7 @@ name|unsigned
 name|uc2
 init|=
 operator|(
-name|unsigned
-name|char
+name|uch
 operator|)
 name|c2
 decl_stmt|;
