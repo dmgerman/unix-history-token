@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.8	(Berkeley)	83/03/27"
+literal|"@(#)symtab.c	3.9	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -1014,6 +1014,12 @@ name|panic
 argument_list|(
 literal|"link to non-existant name\n"
 argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|e_ino
+operator|=
+name|inum
 expr_stmt|;
 name|np
 operator|->
