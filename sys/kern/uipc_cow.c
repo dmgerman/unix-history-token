@@ -211,32 +211,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sf_buf
-modifier|*
-name|sf_bufs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|sf_base
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|dtosf
-parameter_list|(
-name|x
-parameter_list|)
-value|(&sf_bufs[((uintptr_t)(x) - (uintptr_t)sf_base)>> PAGE_SHIFT])
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -280,10 +254,7 @@ name|pp
 decl_stmt|;
 name|sf
 operator|=
-name|dtosf
-argument_list|(
-name|addr
-argument_list|)
+name|args
 expr_stmt|;
 name|pp
 operator|=
@@ -318,7 +289,7 @@ name|sf_buf_free
 argument_list|(
 name|addr
 argument_list|,
-name|NULL
+name|args
 argument_list|)
 expr_stmt|;
 name|socow_stats
@@ -523,7 +494,7 @@ name|PAGE_SIZE
 argument_list|,
 name|socow_iodone
 argument_list|,
-name|NULL
+name|sf
 argument_list|,
 literal|0
 argument_list|,

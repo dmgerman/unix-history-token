@@ -7891,16 +7891,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|dtosf
-parameter_list|(
-name|x
-parameter_list|)
-value|(&sf_bufs[((uintptr_t)(x) - (uintptr_t)sf_base)>> PAGE_SHIFT])
-end_define
-
 begin_comment
 comment|/*  * Detatch mapped page and release resources back to the system.  */
 end_comment
@@ -7930,10 +7920,7 @@ name|m
 decl_stmt|;
 name|sf
 operator|=
-name|dtosf
-argument_list|(
-name|addr
-argument_list|)
+name|args
 expr_stmt|;
 name|pmap_qremove
 argument_list|(
@@ -9095,7 +9082,7 @@ name|sf
 operator|->
 name|kva
 argument_list|,
-name|NULL
+name|sf
 argument_list|)
 expr_stmt|;
 name|sbunlock
@@ -9123,7 +9110,7 @@ name|PAGE_SIZE
 argument_list|,
 name|sf_buf_free
 argument_list|,
-name|NULL
+name|sf
 argument_list|,
 name|M_RDONLY
 argument_list|,
