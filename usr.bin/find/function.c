@@ -2336,6 +2336,23 @@ literal|';'
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|ap
+operator|==
+name|argv
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: no command specified"
+argument_list|,
+name|option
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|=
 name|ap
