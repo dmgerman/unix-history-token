@@ -9741,8 +9741,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|ifp
@@ -9767,7 +9766,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|error
 operator|=
