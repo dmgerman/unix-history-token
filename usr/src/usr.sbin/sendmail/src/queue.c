@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.47 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.48 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.47 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.48 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3836,6 +3836,33 @@ comment|/* LOG */
 operator|(
 name|void
 operator|)
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* must be a bogus file -- just remove it */
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|qf
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|qfp

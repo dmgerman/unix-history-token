@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.32 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,11 +215,23 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nsavemail, errormode = %c\n  e_from="
+literal|"\nsavemail, errormode = %c, id = %s\n  e_from="
 argument_list|,
 name|e
 operator|->
 name|e_errormode
+argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NONE"
+else|:
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -232,6 +244,18 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* can't return a message with no id */
+return|return;
 block|}
 name|e
 operator|->
