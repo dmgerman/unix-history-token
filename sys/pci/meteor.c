@@ -6087,11 +6087,14 @@ name|addr
 condition|)
 name|buf
 operator|=
+name|vtophys
+argument_list|(
 name|mtr
 operator|->
 name|video
 operator|.
 name|addr
+argument_list|)
 expr_stmt|;
 else|else
 endif|#
