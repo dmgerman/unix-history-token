@@ -2412,6 +2412,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|cmsghdr
 modifier|*
@@ -2421,6 +2422,7 @@ name|mtod
 argument_list|(
 name|control
 argument_list|,
+specifier|const
 expr|struct
 name|cmsghdr
 operator|*

@@ -553,6 +553,7 @@ comment|/* 0,1,2,4,8,16 etc. seconds */
 name|u_int
 name|numtags
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -912,6 +913,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -920,6 +922,7 @@ parameter_list|(
 name|sessp
 name|sp
 parameter_list|,
+specifier|const
 name|struct
 name|pppoe_hdr
 modifier|*
@@ -1077,16 +1080,18 @@ end_comment
 begin_expr_stmt
 specifier|static
 name|__inline
+specifier|const
 expr|struct
 name|pppoe_tag
 operator|*
 name|next_tag
 argument_list|(
-argument|struct pppoe_hdr* ph
+argument|const struct pppoe_hdr* ph
 argument_list|)
 block|{
 return|return
 operator|(
+specifier|const
 expr|struct
 name|pppoe_tag
 operator|*
@@ -1094,6 +1099,7 @@ operator|)
 operator|(
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1123,11 +1129,13 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
 name|get_tag
 parameter_list|(
+specifier|const
 name|struct
 name|pppoe_hdr
 modifier|*
@@ -1137,11 +1145,14 @@ name|u_int16_t
 name|idx
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|end
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1150,10 +1161,12 @@ argument_list|(
 name|ph
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ptn
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -1172,6 +1185,7 @@ name|AAA
 while|while
 condition|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1190,6 +1204,7 @@ operator|=
 operator|(
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1231,6 +1246,7 @@ return|;
 name|pt
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|pppoe_tag
 operator|*
@@ -1297,6 +1313,7 @@ parameter_list|(
 name|sessp
 name|sp
 parameter_list|,
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -1397,6 +1414,7 @@ name|pkt
 operator|->
 name|pkt_header
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -1555,10 +1573,6 @@ comment|/* XXX chop off what's too long */
 block|}
 name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|*
 name|tag
 argument_list|,
@@ -1658,6 +1672,7 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|svc_name
@@ -1851,6 +1866,7 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|,
+specifier|const
 name|struct
 name|pppoe_full_hdr
 modifier|*
@@ -2009,6 +2025,7 @@ parameter_list|(
 name|node_p
 name|node
 parameter_list|,
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -3561,6 +3578,7 @@ parameter_list|(
 name|sessp
 name|sp
 parameter_list|,
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -3798,11 +3816,13 @@ argument_list|(
 name|hook
 argument_list|)
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_full_hdr
 modifier|*
 name|wh
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_hdr
 modifier|*
@@ -3822,6 +3842,7 @@ decl_stmt|;
 name|u_int8_t
 name|code
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -6936,6 +6957,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -6944,17 +6966,21 @@ parameter_list|(
 name|sessp
 name|sp
 parameter_list|,
+specifier|const
 name|struct
 name|pppoe_hdr
 modifier|*
 name|ph
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|end
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -6963,10 +6989,12 @@ argument_list|(
 name|ph
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ptn
 decl_stmt|;
+specifier|const
 name|struct
 name|pppoe_tag
 modifier|*
@@ -6985,6 +7013,7 @@ name|AAA
 while|while
 condition|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -7003,6 +7032,7 @@ operator|=
 operator|(
 operator|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -7083,6 +7113,7 @@ block|}
 name|pt
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|pppoe_tag
 operator|*
