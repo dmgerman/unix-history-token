@@ -390,9 +390,6 @@ name|struct
 name|vnode
 modifier|*
 name|devvp
-decl_stmt|,
-modifier|*
-name|rootvp
 decl_stmt|;
 name|struct
 name|ntfs_args
@@ -402,72 +399,6 @@ name|struct
 name|nameidata
 name|ndp
 decl_stmt|;
-if|if
-condition|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_ROOTFS
-condition|)
-block|{
-comment|/* 		 *** 		 * Mounting root filesystem 		 *** 		 */
-comment|/* Get vnode for root device*/
-if|if
-condition|(
-name|bdevvp
-argument_list|(
-name|rootdev
-argument_list|,
-operator|&
-name|rootvp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"ntfs_mountroot: can't setup bdevvp for root"
-argument_list|)
-expr_stmt|;
-comment|/* 		 * FS specific handling 		 */
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_RDONLY
-expr_stmt|;
-comment|/* XXX globally applicable?*/
-comment|/* 		 * Attempt mount 		 */
-if|if
-condition|(
-operator|(
-name|err
-operator|=
-name|ntfs_mountfs
-argument_list|(
-name|rootvp
-argument_list|,
-name|mp
-argument_list|,
-operator|&
-name|args
-argument_list|,
-name|td
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* fs specific cleanup (if any)*/
-goto|goto
-name|error_1
-goto|;
-block|}
-goto|goto
-name|dostatfs
-goto|;
-comment|/* success*/
-block|}
 comment|/* 	 *** 	 * Mounting non-root filesystem or updating a filesystem 	 *** 	 */
 comment|/* copy in user arguments*/
 name|err
@@ -703,8 +634,6 @@ goto|goto
 name|error_2
 goto|;
 block|}
-name|dostatfs
-label|:
 comment|/* 	 * Initialize FS stat information in mount struct; uses both 	 * mp->mnt_stat.f_mntonname and mp->mnt_stat.f_mntfromname 	 * 	 * This code is common to root and non-root mounts 	 */
 operator|(
 name|void
