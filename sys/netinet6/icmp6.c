@@ -4620,9 +4620,6 @@ operator|.
 name|sin6_addr
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 if|if
 condition|(
 name|in6_embedscope
@@ -4655,8 +4652,6 @@ goto|goto
 name|freeit
 goto|;
 block|}
-endif|#
-directive|endif
 comment|/* 		 * retrieve parameters from the inner IPv6 header, and convert 		 * them into sockaddr structures. 		 */
 name|bzero
 argument_list|(
@@ -4711,9 +4706,6 @@ operator|.
 name|sin6_addr
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 if|if
 condition|(
 name|in6_embedscope
@@ -4746,8 +4738,6 @@ goto|goto
 name|freeit
 goto|;
 block|}
-endif|#
-directive|endif
 name|icmp6src
 operator|.
 name|sin6_flowinfo
@@ -5684,9 +5674,6 @@ operator|.
 name|sin6_addr
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 name|in6_embedscope
 argument_list|(
 operator|&
@@ -5702,8 +5689,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 operator|&
@@ -5758,9 +5743,6 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 name|in6_embedscope
 argument_list|(
 operator|&
@@ -5776,8 +5758,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|subj
 operator|=
 operator|(

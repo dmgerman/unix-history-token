@@ -1556,9 +1556,6 @@ name|ip6
 operator|->
 name|ip6_src
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 name|sin6
 operator|.
 name|sin6_scope_id
@@ -1566,8 +1563,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-endif|#
-directive|endif
 name|rt
 operator|=
 name|rtalloc1

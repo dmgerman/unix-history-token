@@ -135,12 +135,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -158,11 +152,6 @@ include|#
 directive|include
 file|<netinet/in_pcb.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -206,22 +195,11 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3187,9 +3165,6 @@ block|{
 name|int
 name|scopeid
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 if|if
 condition|(
 operator|(
@@ -3218,8 +3193,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
 name|scopeid
 operator|=
 name|in6_addr2scopeid
@@ -3262,9 +3235,6 @@ name|EINVAL
 operator|)
 return|;
 comment|/* scope ID mismatch. */
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 if|if
 condition|(
 operator|(
@@ -3300,8 +3270,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-endif|#
-directive|endif
 block|}
 comment|/* 	 * The destination address can be specified only for a p2p or a 	 * loopback interface.  If specified, the corresponding prefix length 	 * must be 128. 	 */
 if|if
@@ -6144,9 +6112,6 @@ name|candidate
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 comment|/* 			 * XXX: this is adhoc, but is necessary to allow 			 * a user to specify fe80::/64 (not /10) for a 			 * link-local address. 			 */
 if|if
 condition|(
@@ -6165,8 +6130,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|candidate
 operator|.
 name|s6_addr32
@@ -6258,16 +6221,11 @@ operator|==
 name|SIOCGLIFADDR
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 name|struct
 name|sockaddr_in6
 modifier|*
 name|s6
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* fill in the if_laddrreq structure */
 name|bcopy
 argument_list|(
@@ -6288,10 +6246,6 @@ operator|.
 name|sin6_len
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
-comment|/* XXX see above */
 name|s6
 operator|=
 operator|(
@@ -6341,8 +6295,6 @@ name|sin6_addr
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -6375,10 +6327,6 @@ operator|.
 name|sin6_len
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
-comment|/* XXX see above */
 name|s6
 operator|=
 operator|(
@@ -6428,8 +6376,6 @@ name|sin6_addr
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 name|bzero
@@ -7860,21 +7806,6 @@ operator|->
 name|sin6_addr
 argument_list|)
 operator|&&
-ifdef|#
-directive|ifdef
-name|SCOPEDROUTING
-name|ia
-operator|->
-name|ia_addr
-operator|.
-name|sin6_scope_id
-operator|==
-name|sa6
-operator|->
-name|sin6_scope_id
-operator|&&
-endif|#
-directive|endif
 operator|(
 name|ia
 operator|->

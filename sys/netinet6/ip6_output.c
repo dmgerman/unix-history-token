@@ -1988,38 +1988,6 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCOPEDROUTING
-comment|/* XXX: sin6_scope_id should already be fixed at this point */
-if|if
-condition|(
-name|IN6_IS_SCOPE_LINKLOCAL
-argument_list|(
-operator|&
-name|dst
-operator|->
-name|sin6_addr
-argument_list|)
-condition|)
-name|dst
-operator|->
-name|sin6_scope_id
-operator|=
-name|ntohs
-argument_list|(
-name|dst
-operator|->
-name|sin6_addr
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|#
 directive|if
@@ -3215,9 +3183,6 @@ name|origifp
 operator|=
 name|ifp
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 comment|/* 	 * clear embedded scope identifiers if necessary. 	 * in6_clearscope will touch the addresses only when necessary. 	 */
 name|in6_clearscope
 argument_list|(
@@ -3235,8 +3200,6 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
@@ -10314,9 +10277,6 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 comment|/* 	 * clear embedded scope identifiers if necessary. 	 * in6_clearscope will touch the addresses only when necessary. 	 */
 name|in6_clearscope
 argument_list|(
@@ -10334,8 +10294,6 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)

@@ -1717,9 +1717,6 @@ name|rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCOPEDROUTING
 comment|/* 	 * clear embedded scope identifiers if necessary. 	 * in6_clearscope will touch the addresses only when necessary. 	 */
 name|in6_clearscope
 argument_list|(
@@ -1737,8 +1734,6 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
