@@ -121,6 +121,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ssh_put_password
+parameter_list|(
+name|char
+modifier|*
+name|password
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -12,6 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
 literal|"$OpenBSD: serverloop.c,v 1.34 2000/10/27 07:32:18 markus Exp $"
 argument_list|)
 expr_stmt|;
@@ -251,6 +259,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* EOF encountered readung from fderr. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fdin_is_tty
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fdin points to a tty. */
 end_comment
 
 begin_decl_stmt
@@ -1254,6 +1275,10 @@ modifier|*
 name|writeset
 parameter_list|)
 block|{
+name|struct
+name|termios
+name|tio
+decl_stmt|;
 name|int
 name|len
 decl_stmt|;
@@ -1362,7 +1387,74 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Successful write.  Consume the data from the buffer. */
+comment|/* Successful write. */
+if|if
+condition|(
+name|fdin_is_tty
+operator|&&
+name|tcgetattr
+argument_list|(
+name|fdin
+argument_list|,
+operator|&
+name|tio
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|!
+operator|(
+name|tio
+operator|.
+name|c_lflag
+operator|&
+name|ECHO
+operator|)
+operator|&&
+operator|(
+name|tio
+operator|.
+name|c_lflag
+operator|&
+name|ICANON
+operator|)
+condition|)
+block|{
+comment|/* 				 * Simulate echo to reduce the impact of 				 * traffic analysis 				 */
+name|packet_start
+argument_list|(
+name|SSH_MSG_IGNORE
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|buffer_ptr
+argument_list|(
+operator|&
+name|stdin_buffer
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|packet_put_string
+argument_list|(
+name|buffer_ptr
+argument_list|(
+operator|&
+name|stdin_buffer
+argument_list|)
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* Consume the data from the buffer. */
 name|buffer_consume
 argument_list|(
 operator|&
@@ -1629,6 +1721,24 @@ name|set_nonblock
 argument_list|(
 name|fderr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_IGNOREMSG
+operator|)
+operator|&&
+name|isatty
+argument_list|(
+name|fdin
+argument_list|)
+condition|)
+name|fdin_is_tty
+operator|=
+literal|1
 expr_stmt|;
 name|connection_in
 operator|=

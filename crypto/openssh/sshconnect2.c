@@ -12,6 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
 literal|"$OpenBSD: sshconnect2.c,v 1.27 2000/10/19 16:45:16 provos Exp $"
 argument_list|)
 expr_stmt|;
@@ -3068,7 +3076,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|packet_put_cstring
+name|ssh_put_password
 argument_list|(
 name|password
 argument_list|)
@@ -4372,7 +4380,7 @@ argument_list|,
 name|echo
 argument_list|)
 expr_stmt|;
-name|packet_put_cstring
+name|ssh_put_password
 argument_list|(
 name|response
 argument_list|)

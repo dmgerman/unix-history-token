@@ -8,6 +8,10 @@ comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redi
 end_comment
 
 begin_comment
+comment|/* RCSID("$FreeBSD$"); */
+end_comment
+
+begin_comment
 comment|/* RCSID("$OpenBSD: channels.h,v 1.22 2000/10/27 07:48:22 markus Exp $"); */
 end_comment
 
@@ -253,6 +257,10 @@ name|int
 name|sock
 decl_stmt|;
 comment|/* sock fd */
+name|int
+name|isatty
+decl_stmt|;
+comment|/* rfd is a tty */
 name|Buffer
 name|input
 decl_stmt|;
