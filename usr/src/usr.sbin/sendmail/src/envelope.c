@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -2048,6 +2048,12 @@ name|printf
 argument_list|(
 literal|"setsender(%s)\n"
 argument_list|,
+name|from
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
 name|from
 argument_list|)
 expr_stmt|;
