@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.6		%G%"
+literal|"@(#)cpr.c	1.7		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,15 +61,33 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|SysLine
+name|SysLinePid
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* pid of sysline process */
+end_comment
 
 begin_decl_stmt
 name|bool
 name|FormFeedFollowing
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* print form feed following print */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|EchoDuringPrint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* echo on terminal while printing */
+end_comment
 
 begin_function
 name|main
@@ -127,7 +145,7 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|SysLine
+name|SysLinePid
 operator|=
 name|atoi
 argument_list|(
@@ -174,6 +192,14 @@ case|case
 literal|'f'
 case|:
 name|FormFeedFollowing
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|EchoDuringPrint
 operator|=
 name|TRUE
 expr_stmt|;
@@ -435,19 +461,6 @@ name|sg_flags
 operator|=
 name|oldflags
 expr_stmt|;
-if|if
-condition|(
-name|SysLine
-operator|>
-literal|0
-condition|)
-name|kill
-argument_list|(
-name|SysLine
-argument_list|,
-name|SIGSTOP
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -551,13 +564,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SysLine
+name|SysLinePid
 operator|>
 literal|0
 condition|)
 name|kill
 argument_list|(
-name|SysLine
+name|SysLinePid
 argument_list|,
 name|SIGCONT
 argument_list|)
