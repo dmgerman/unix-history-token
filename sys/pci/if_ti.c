@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vlan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -98,20 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/if_types.h>
 end_include
 
@@ -121,10 +101,11 @@ directive|include
 file|<net/if_vlan_var.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
 
 begin_include
 include|#
@@ -6562,19 +6543,12 @@ name|TI_RCB_FLAG_IP_CKSUM
 operator||
 name|TI_RCB_FLAG_NO_PHDR_CKSUM
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|rcb
 operator|->
 name|ti_flags
 operator||=
 name|TI_RCB_FLAG_VLAN_ASSIST
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Set up the jumbo receive ring. */
 name|rcb
 operator|=
@@ -6636,19 +6610,12 @@ name|TI_RCB_FLAG_IP_CKSUM
 operator||
 name|TI_RCB_FLAG_NO_PHDR_CKSUM
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|rcb
 operator|->
 name|ti_flags
 operator||=
 name|TI_RCB_FLAG_VLAN_ASSIST
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set up the mini ring. Only activated on the 	 * Tigon 2 but the slot in the config block is 	 * still there on the Tigon 1. 	 */
 name|rcb
 operator|=
@@ -6727,19 +6694,12 @@ name|TI_RCB_FLAG_IP_CKSUM
 operator||
 name|TI_RCB_FLAG_NO_PHDR_CKSUM
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|rcb
 operator|->
 name|ti_flags
 operator||=
 name|TI_RCB_FLAG_VLAN_ASSIST
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set up the receive return ring. 	 */
 name|rcb
 operator|=
@@ -6892,19 +6852,12 @@ name|ti_flags
 operator|=
 name|TI_RCB_FLAG_HOST_RING
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|rcb
 operator|->
 name|ti_flags
 operator||=
 name|TI_RCB_FLAG_VLAN_ASSIST
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -8626,11 +8579,6 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|u_int16_t
 name|vlan_tag
 init|=
@@ -8641,8 +8589,6 @@ name|have_tag
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 name|cur_rx
 operator|=
 operator|&
@@ -8672,11 +8618,6 @@ argument_list|,
 name|TI_RETURN_RING_CNT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 if|if
 condition|(
 name|cur_rx
@@ -8699,8 +8640,6 @@ operator|&
 literal|0xfff
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|cur_rx
@@ -9099,18 +9038,13 @@ operator|->
 name|ti_tcp_udp_cksum
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* 		 * If we received a packet with a vlan tag, pass it 		 * to vlan_input() instead of ether_input(). 		 */
 if|if
 condition|(
 name|have_tag
 condition|)
 block|{
-name|vlan_input_tag
+name|VLAN_INPUT_TAG
 argument_list|(
 name|eh
 argument_list|,
@@ -9127,8 +9061,6 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
 name|ether_input
 argument_list|(
 name|ifp
@@ -9704,11 +9636,6 @@ name|csum_flags
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|struct
 name|ifvlan
 modifier|*
@@ -9764,8 +9691,6 @@ name|rcvif
 operator|->
 name|if_softc
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|=
 name|m_head
@@ -10016,11 +9941,6 @@ name|ti_flags
 operator|=
 name|csum_flags
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 if|if
 condition|(
 name|ifv
@@ -10054,8 +9974,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 			 * Sanity check: avoid coming within 16 descriptors 			 * of the end of the ring. 			 */
 if|if
 condition|(

@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vlan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -101,14 +95,6 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -120,11 +106,6 @@ include|#
 directive|include
 file|<net/if_vlan_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -8722,11 +8703,6 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|u_int16_t
 name|vlan_tag
 init|=
@@ -8737,8 +8713,6 @@ name|have_tag
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 name|cur_rx
 operator|=
 operator|&
@@ -8768,11 +8742,6 @@ argument_list|,
 name|BGE_RETURN_RING_CNT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 if|if
 condition|(
 name|cur_rx
@@ -8793,8 +8762,6 @@ operator|->
 name|bge_vlan_tag
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|cur_rx
@@ -9112,18 +9079,13 @@ name|CSUM_DATA_VALID
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* 		 * If we received a packet with a vlan tag, pass it 		 * to vlan_input() instead of ether_input(). 		 */
 if|if
 condition|(
 name|have_tag
 condition|)
 block|{
-name|vlan_input_tag
+name|VLAN_INPUT_TAG
 argument_list|(
 name|eh
 argument_list|,
@@ -9140,8 +9102,6 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
 name|ether_input
 argument_list|(
 name|ifp
@@ -10003,11 +9963,6 @@ name|csum_flags
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|struct
 name|ifvlan
 modifier|*
@@ -10063,8 +10018,6 @@ name|rcvif
 operator|->
 name|if_softc
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|=
 name|m_head
@@ -10227,11 +10180,6 @@ name|bge_flags
 operator|=
 name|csum_flags
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 if|if
 condition|(
 name|ifv
@@ -10263,8 +10211,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 			 * Sanity check: avoid coming within 16 descriptors 			 * of the end of the ring. 			 */
 if|if
 condition|(

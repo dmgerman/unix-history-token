@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vlan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -230,22 +224,6 @@ include|#
 directive|include
 file|<dev/gx/if_gxvar.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|VLAN_INPUT_TAG
-parameter_list|(
-name|ifp
-parameter_list|,
-name|eh
-parameter_list|,
-name|m
-parameter_list|,
-name|tag
-parameter_list|)
-value|vlan_input_tag(eh, m, tag)
-end_define
 
 begin_expr_stmt
 name|MODULE_DEPEND
@@ -5844,11 +5822,6 @@ literal|0xffff
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* 		 * If we received a packet with a vlan tag, pass it 		 * to vlan_input() instead of ether_input(). 		 */
 if|if
 condition|(
@@ -5859,8 +5832,6 @@ condition|)
 block|{
 name|VLAN_INPUT_TAG
 argument_list|(
-name|ifp
-argument_list|,
 name|eh
 argument_list|,
 name|m
@@ -5872,8 +5843,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
 name|ether_input
 argument_list|(
 name|ifp

@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vlan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -178,14 +172,6 @@ begin_comment
 comment|/* for DELAY */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -197,11 +183,6 @@ include|#
 directive|include
 file|<net/if_vlan_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2837,11 +2818,6 @@ name|flags
 operator||=
 name|FXP_FLAG_EXT_TXCB
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* enable reception of long frames for VLAN */
 name|sc
 operator|->
@@ -2849,8 +2825,6 @@ name|flags
 operator||=
 name|FXP_FLAG_LONG_PKT_EN
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Read MAC address. 	 */
 name|fxp_read_eeprom
@@ -3134,11 +3108,6 @@ argument_list|,
 name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 name|ifp
 operator|->
@@ -3152,8 +3121,6 @@ expr|struct
 name|ether_vlan_header
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Let the system queue as many packets as we have available 	 * TX descriptors. 	 */
 name|ifp
 operator|->
@@ -5677,11 +5644,6 @@ goto|goto
 name|rcvloop
 goto|;
 block|}
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 comment|/* 					 * Drop the packet if it has CRC 					 * errors.  This test is only needed 					 * when doing 802.1q VLAN on the 82557 					 * chip. 					 */
 if|if
 condition|(
@@ -5701,8 +5663,6 @@ goto|goto
 name|rcvloop
 goto|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -6803,11 +6763,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* don't pass overrun frames to host */
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|cbp
 operator|->
 name|save_bf
@@ -6822,17 +6777,6 @@ literal|1
 else|:
 name|prm
 expr_stmt|;
-else|#
-directive|else
-name|cbp
-operator|->
-name|save_bf
-operator|=
-name|prm
-expr_stmt|;
-comment|/* save bad frames */
-endif|#
-directive|endif
 name|cbp
 operator|->
 name|disc_short_rx

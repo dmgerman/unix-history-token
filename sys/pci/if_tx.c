@@ -97,12 +97,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"vlan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -130,24 +124,11 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/if_vlan_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3017,11 +2998,6 @@ argument_list|,
 name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NVLAN
-operator|>
-literal|0
 name|ifp
 operator|->
 name|if_hdrlen
@@ -3032,8 +3008,6 @@ expr|struct
 name|ether_vlan_header
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|callout_handle_init
 argument_list|(
 operator|&

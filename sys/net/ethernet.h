@@ -401,6 +401,111 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|vlan_input_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ether_header
+modifier|*
+name|eh
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|vlan_input_tag_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ether_header
+modifier|*
+name|eh
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|u_int16_t
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|_VLAN_INPUT
+parameter_list|(
+name|eh
+parameter_list|,
+name|m
+parameter_list|)
+value|do {					\ 	if (vlan_input_p != NULL) {				\ 		if ((*vlan_input_p)(eh, m) == -1)		\ 			(m)->m_pkthdr.rcvif->if_noproto++;	\ 	} else {						\ 		m_free(m);					\ 		(m)->m_pkthdr.rcvif->if_noproto++;		\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLAN_INPUT
+parameter_list|(
+name|eh
+parameter_list|,
+name|m
+parameter_list|)
+value|do {					\
+comment|/* XXX: lock */
+value|\ 	_VLAN_INPUT(eh, m);					\
+comment|/* XXX: unlock */
+value|\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_VLAN_INPUT_TAG
+parameter_list|(
+name|eh
+parameter_list|,
+name|m
+parameter_list|,
+name|t
+parameter_list|)
+value|do {			\ 	if (vlan_input_tag_p != NULL) { 			\ 		if ((*vlan_input_tag_p)(eh, m, t) == -1)	\ 			(m)->m_pkthdr.rcvif->if_noproto++;	\ 	} else {						\ 		m_free(m);					\ 		(m)->m_pkthdr.rcvif->if_noproto++;		\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLAN_INPUT_TAG
+parameter_list|(
+name|eh
+parameter_list|,
+name|m
+parameter_list|,
+name|t
+parameter_list|)
+value|do {				\
+comment|/* XXX: lock */
+value|\ 	_VLAN_INPUT_TAG(eh, m, t);				\
+comment|/* XXX: unlock */
+value|\ } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
