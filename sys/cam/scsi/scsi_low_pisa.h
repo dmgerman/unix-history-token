@@ -92,9 +92,7 @@ expr|struct
 name|scsi_low_softc
 operator|*
 operator|,
-expr|struct
-name|isa_device
-operator|*
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
