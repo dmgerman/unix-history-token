@@ -153,6 +153,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
@@ -1926,10 +1932,7 @@ endif|#
 directive|endif
 name|bsd_to_linux_sigset
 argument_list|(
-operator|&
-name|p
-operator|->
-name|p_sigmask
+name|mask
 argument_list|,
 operator|&
 name|frame
@@ -3343,15 +3346,17 @@ operator|&=
 operator|~
 name|SS_ONSTACK
 expr_stmt|;
-name|SIGSETOLD
+name|linux_to_bsd_sigset
 argument_list|(
+operator|&
+name|uc
+operator|.
+name|uc_sigmask
+argument_list|,
+operator|&
 name|p
 operator|->
 name|p_sigmask
-argument_list|,
-name|context
-operator|->
-name|sc_mask
 argument_list|)
 expr_stmt|;
 name|SIG_CANTMASK
