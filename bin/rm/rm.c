@@ -261,6 +261,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+name|argv
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * rm --  *	This rm is different from historic rm's, but is expected to match  *	POSIX 1003.2 behavior.  The most visible difference is that -f  *	has two specific effects now, ignore non-existent files and force  * 	file removal.  */
 end_comment

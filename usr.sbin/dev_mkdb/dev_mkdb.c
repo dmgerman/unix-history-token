@@ -158,6 +158,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+name|argv
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
