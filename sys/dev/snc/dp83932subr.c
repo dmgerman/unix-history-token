@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -51,18 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -81,18 +63,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
 end_include
 
 begin_include
@@ -145,31 +115,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_memio.h>
 end_include
 
 begin_include

@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -76,25 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_mib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pccard/pccardvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/snc/dp83932var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/snc/dp83932reg.h>
 end_include
 
 begin_include
