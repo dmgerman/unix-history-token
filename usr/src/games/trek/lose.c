@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lose.c	5.2 (Berkeley) %G%"
+literal|"@(#)lose.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,9 +61,7 @@ literal|"You just suffocated in outer space"
 block|,
 literal|"You could not be rematerialized"
 block|,
-literal|"\n\032\014 ***
-literal|Ship's hull has imploded
-literal|***"
+literal|"\n\032\014 ***\07 Ship's hull has imploded\07 ***"
 block|,
 literal|"You have burned up in a star"
 block|,

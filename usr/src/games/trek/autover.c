@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)autover.c	5.2 (Berkeley) %G%"
+literal|"@(#)autover.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,8 +54,7 @@ name|course
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"
-literal|RED ALERT:  The %s is in a supernova quadrant\n"
+literal|"\07RED ALERT:  The %s is in a supernova quadrant\n"
 argument_list|,
 name|Ship
 operator|.

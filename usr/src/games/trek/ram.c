@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ram.c	5.2 (Berkeley) %G%"
+literal|"@(#)ram.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,9 +67,7 @@ name|c
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"
-literal|RED ALERT
-literal|: collision imminent\n"
+literal|"\07RED ALERT\07: collision imminent\n"
 argument_list|)
 expr_stmt|;
 name|c

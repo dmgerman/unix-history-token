@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.2 (Berkeley) %G%"
+literal|"@(#)misc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,8 +135,7 @@ argument_list|()
 expr_stmt|;
 name|putchar
 argument_list|(
-literal|'
-literal|'
+literal|'\07'
 argument_list|)
 expr_stmt|;
 name|refresh
@@ -275,8 +274,7 @@ break|break;
 default|default:
 name|putchar
 argument_list|(
-literal|'
-literal|'
+literal|'\07'
 argument_list|)
 expr_stmt|;
 name|addch
@@ -373,8 +371,7 @@ name|write
 argument_list|(
 literal|0
 argument_list|,
-literal|"
-literal|"
+literal|"\07"
 argument_list|,
 literal|1
 argument_list|)
@@ -819,8 +816,7 @@ argument_list|()
 expr_stmt|;
 name|putchar
 argument_list|(
-literal|'
-literal|'
+literal|'\07'
 argument_list|)
 expr_stmt|;
 break|break;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)destruct.c	5.2 (Berkeley) %G%"
+literal|"@(#)destruct.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,9 +77,7 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"\n
-literal|--- WORKING ---
-literal|\n"
+literal|"\n\07 --- WORKING ---\07\n"
 argument_list|)
 expr_stmt|;
 name|sleep
