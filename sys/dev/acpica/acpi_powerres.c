@@ -1200,6 +1200,18 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
+comment|/* It's never ok to switch a non-existent consumer. */
+if|if
+condition|(
+name|consumer
+operator|==
+name|NULL
+condition|)
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_FOUND
+argument_list|)
+expr_stmt|;
 comment|/* Find the consumer */
 if|if
 condition|(
