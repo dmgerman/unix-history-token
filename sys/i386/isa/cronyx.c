@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * Low-level subroutines for Cronyx-Sigma adapter.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.2, Mon Nov 28 16:12:18 MSK 1994  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -22,6 +16,12 @@ argument_list|(
 name|__MSDOS__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -83,6 +83,18 @@ parameter_list|)
 value|(((unsigned long)(a)>>12& 0xffff0) +\ 			((unsigned)(a)& 0xffff))
 end_define
 
+begin_include
+include|#
+directive|include
+file|"cronyx.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cxreg.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -129,18 +141,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/include/pio.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/include/cpufunc.h>
+file|<machine/pio.h>
 end_include
 
 begin_endif
@@ -156,13 +157,8 @@ end_else
 begin_include
 include|#
 directive|include
-file|<i386/include/inline.h>
+file|<machine/inline.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -172,14 +168,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"cronyx.h"
+file|<machine/cronyx.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cxreg.h"
+file|<i386/isa/cxreg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

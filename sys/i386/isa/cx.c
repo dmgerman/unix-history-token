@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<systm.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kernel.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -118,7 +118,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/include/pio.h>
+file|<machine/pio.h>
 end_include
 
 begin_define
@@ -139,12 +139,6 @@ end_else
 begin_comment
 comment|/* BSD 4.4 Lite */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/include/cpufunc.h>
-end_include
 
 begin_include
 include|#
@@ -184,7 +178,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/inline.h>
+file|<machine/inline.h>
 end_include
 
 begin_define
@@ -291,7 +285,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/cronyx.h>
+file|<machine/cronyx.h>
 end_include
 
 begin_include
