@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.52 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.53 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.52 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.53 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,16 +1395,7 @@ modifier|*
 name|gethostbyaddr
 parameter_list|()
 function_decl|;
-comment|/* allow room for null& trailing dot on correct match */
-name|hbsize
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|ConfigLevel
-operator|>=
-literal|2
-condition|)
+comment|/* allow room for null */
 name|hbsize
 operator|--
 expr_stmt|;
@@ -1431,54 +1422,9 @@ argument_list|,
 name|hbsize
 argument_list|)
 condition|)
-block|{
-comment|/* found a match -- add the trailing dot */
-if|if
-condition|(
-name|ConfigLevel
-operator|>=
-literal|2
-condition|)
-block|{
-name|int
-name|i
-init|=
-name|strlen
-argument_list|(
-name|hbuf
-argument_list|)
-operator|-
-literal|1
-decl_stmt|;
-if|if
-condition|(
-name|hbuf
-index|[
-name|i
-index|]
-operator|!=
-literal|'.'
-condition|)
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-operator|&
-name|hbuf
-index|[
-operator|++
-name|i
-index|]
-argument_list|,
-literal|"."
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 name|hbuf
 return|;
-block|}
 else|else
 return|return
 name|NULL
@@ -1582,22 +1528,6 @@ argument_list|,
 name|hp
 operator|->
 name|h_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ConfigLevel
-operator|>=
-literal|2
-condition|)
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|hbuf
-argument_list|,
-literal|"."
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.42 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.41		%G%"
+literal|"@(#)sendmail.h	5.42		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1939,6 +1939,11 @@ modifier|*
 name|map_db
 decl_stmt|;
 comment|/* the open database ptr */
+name|char
+modifier|*
+name|map_app
+decl_stmt|;
+comment|/* to append to successful matches */
 block|}
 end_block
 
@@ -1970,6 +1975,17 @@ end_define
 
 begin_comment
 comment|/* include null byte in key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_OPTIONAL
+value|00004
+end_define
+
+begin_comment
+comment|/* don't complain if map not found */
 end_comment
 
 begin_escape
