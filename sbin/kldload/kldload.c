@@ -77,7 +77,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldload [-v] filename\n"
+literal|"usage: kldload [-v] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
