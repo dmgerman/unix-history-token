@@ -1330,7 +1330,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|250
+literal|100
 argument_list|)
 expr_stmt|;
 name|csa_writeio
@@ -1511,7 +1511,7 @@ block|{
 comment|/* 		 * First, lets wait a short while to let things settle out a bit, 		 * and to prevent retrying the read too quickly. 		 */
 name|DELAY
 argument_list|(
-literal|250
+literal|125
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Read the AC97 status register to see if we've seen a CODEC READY 		 * signal from the AC97 codec. 		 */
@@ -1599,7 +1599,7 @@ else|#
 directive|else
 name|DELAY
 argument_list|(
-literal|2500
+literal|1000
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1850,7 +1850,7 @@ control|)
 block|{
 name|DELAY
 argument_list|(
-literal|250
+literal|100
 argument_list|)
 expr_stmt|;
 name|serbst
