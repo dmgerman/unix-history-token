@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.43 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1800,7 +1800,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: syslogd [-d] [-f conffile] [-m markinterval] [-p path]\n"
+literal|"usage: syslogd [-f conffile] [-m markinterval] [-p logpath]\n"
 argument_list|)
 expr_stmt|;
 name|exit
