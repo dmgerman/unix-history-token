@@ -444,6 +444,16 @@ name|gl
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|gl
+operator|.
+name|gl_matchc
+operator|=
+name|MAXGLOBARGS
+expr_stmt|;
+name|flags
+operator||=
+name|GLOB_MAXPATH
+expr_stmt|;
 if|if
 condition|(
 name|glob
