@@ -3451,6 +3451,9 @@ block|}
 block|}
 else|else
 block|{
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|pte
 operator|=
 operator|*
@@ -3499,6 +3502,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 name|vm_page_unlock_queues
