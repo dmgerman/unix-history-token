@@ -626,12 +626,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMA_ZFLAG_BUCKETCACHE
+name|UMA_ZFLAG_CACHEONLY
 value|0x0040
 end_define
 
 begin_comment
-comment|/* Only allocate buckets from cache */
+comment|/* Don't go to VM to allocate internal objs */
 end_comment
 
 begin_define
