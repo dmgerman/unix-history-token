@@ -52,6 +52,12 @@ file|"common.h"
 end_include
 
 begin_decl_stmt
+name|auth_t
+name|fetchAuthMethod
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|fetchLastErrCode
 decl_stmt|;
