@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -187,7 +193,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.54 2000/08/05 18:30:26 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.55 2000/08/05 19:00:12 christos Exp $"
 argument_list|)
 end_macro
 
