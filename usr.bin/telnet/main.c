@@ -167,13 +167,13 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|"[-8] [-E] [-K] [-L] [-S tos] [-X atype] [-a] [-c] [-d] [-e char]"
+literal|"[-8] [-E] [-K] [-L] [-N] [-S tos] [-X atype] [-a] [-c] [-d]"
 argument_list|,
-literal|"\n\t[-k realm] [-l user] [-f/-F] [-n tracefile] "
+literal|"\n\t[-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
-literal|"[-8] [-E] [-L] [-S tos] [-a] [-c] [-d] [-e char] [-l user]"
+literal|"[-8] [-E] [-L] [-N] [-S tos] [-a] [-c] [-d] [-e char] [-l user]"
 argument_list|,
 literal|"\n\t[-n tracefile] "
 argument_list|,
