@@ -2911,6 +2911,9 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pi
 operator|=
 name|p
@@ -2919,7 +2922,7 @@ name|pindex
 expr_stmt|;
 while|while
 condition|(
-name|vm_page_sleep_busy
+name|vm_page_sleep_if_busy
 argument_list|(
 name|p
 argument_list|,
@@ -2949,10 +2952,10 @@ literal|0
 operator|)
 return|;
 block|}
-block|}
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+block|}
 name|maxf
 operator|=
 literal|0
@@ -4391,10 +4394,16 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|/* page automatically made dirty by rename and cache handled */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 if|if
