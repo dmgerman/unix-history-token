@@ -3890,6 +3890,27 @@ name|type
 operator|=
 name|OBJT_VNODE
 expr_stmt|;
+comment|/* 			 * if it is a regular file without any references 			 * we do not need to sync it. 			 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VREG
+operator|&&
+name|vat
+operator|.
+name|va_nlink
+operator|==
+literal|0
+condition|)
+block|{
+name|flags
+operator||=
+name|MAP_NOSYNC
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
