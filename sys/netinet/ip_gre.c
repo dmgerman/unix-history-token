@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -711,11 +705,6 @@ name|len
 operator|-=
 name|hlen
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -771,9 +760,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/*NBPF> 0*/
 name|m
 operator|->
 name|m_pkthdr
@@ -1196,11 +1182,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -1256,9 +1237,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/*NBPFILTER> 0*/
 name|m
 operator|->
 name|m_pkthdr

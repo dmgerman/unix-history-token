@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -181,24 +175,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -788,9 +769,6 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
 name|bpfattach
 argument_list|(
 operator|&
@@ -806,8 +784,6 @@ name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -875,16 +851,11 @@ argument_list|,
 name|sc_list
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
 name|bpfdetach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|if_detach
 argument_list|(
 name|ifp
@@ -1069,9 +1040,6 @@ name|osrc
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
 if|if
 condition|(
 name|ifp
@@ -1123,8 +1091,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_flags
