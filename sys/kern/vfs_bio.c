@@ -10663,7 +10663,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" iosize: %ld, lblkno: %lld, flags: 0x%lx, npages: %d\n"
+literal|" iosize: %ld, lblkno: %jd, flags: 0x%lx, npages: %d\n"
 argument_list|,
 name|bp
 operator|->
@@ -10694,7 +10694,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" VDEV, lblkno: %lld, flags: 0x%lx, npages: %d\n"
+literal|" VDEV, lblkno: %jd, flags: 0x%lx, npages: %d\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -12450,7 +12450,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_hold_free_pages: blkno: %lld, lblkno: %lld\n"
+literal|"vm_hold_free_pages: blkno: %jd, lblkno: %jd\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -12588,7 +12588,7 @@ expr_stmt|;
 name|db_printf
 argument_list|(
 literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, b_resid = %ld\n"
-literal|"b_dev = (%d,%d), b_data = %p, b_blkno = %lld, b_pblkno = %lld\n"
+literal|"b_dev = (%d,%d), b_data = %p, b_blkno = %jd, b_pblkno = %jd\n"
 argument_list|,
 name|bp
 operator|->

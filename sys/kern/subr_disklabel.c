@@ -1569,7 +1569,7 @@ name|DEV_BSIZE
 condition|)
 name|printf
 argument_list|(
-literal|"%lld"
+literal|"%jd"
 argument_list|,
 operator|(
 name|intmax_t
@@ -1592,7 +1592,7 @@ name|blkdone
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%lld of "
+literal|"%jd of "
 argument_list|,
 operator|(
 name|intmax_t
@@ -1666,7 +1666,7 @@ expr_stmt|;
 comment|/* 		 * XXX should add slice offset and not print the slice, 		 * but we don't know the slice pointer. 		 * XXX should print bp->b_pblkno so that this will work 		 * independent of slices, labels and bad sector remapping, 		 * but some drivers don't set bp->b_pblkno. 		 */
 name|printf
 argument_list|(
-literal|" (%s bn %lld; cn %lld"
+literal|" (%s bn %jd; cn %jd"
 argument_list|,
 name|sname
 argument_list|,
