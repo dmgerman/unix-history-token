@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	3.4	%H%	*/
+comment|/*	param.h	3.5	%H%	*/
 end_comment
 
 begin_comment
@@ -294,181 +294,22 @@ begin_comment
 comment|/*  * signals  * dont change  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NSIG
-value|17
-end_define
+end_ifndef
 
-begin_comment
-comment|/*  * No more than 16 signals (1-16) because they are  * stored in bits in a word.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|SIGHUP
-value|1
-end_define
-
-begin_comment
-comment|/* hangup */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGINT
-value|2
-end_define
-
-begin_comment
-comment|/* interrupt (rubout) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGQUIT
-value|3
-end_define
-
-begin_comment
-comment|/* quit (FS) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGINS
-value|4
-end_define
-
-begin_comment
-comment|/* illegal instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGTRC
-value|5
-end_define
-
-begin_comment
-comment|/* trace or breakpoint */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGIOT
-value|6
-end_define
-
-begin_comment
-comment|/* iot */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGEMT
-value|7
-end_define
-
-begin_comment
-comment|/* emt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGFPT
-value|8
-end_define
-
-begin_comment
-comment|/* floating exception */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGKIL
-value|9
-end_define
-
-begin_comment
-comment|/* kill, uncatchable termination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGBUS
-value|10
-end_define
-
-begin_comment
-comment|/* bus error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGSEG
-value|11
-end_define
-
-begin_comment
-comment|/* segmentation violation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGSYS
-value|12
-end_define
-
-begin_comment
-comment|/* bad system call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGPIPE
-value|13
-end_define
-
-begin_comment
-comment|/* end of pipe */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGCLK
-value|14
-end_define
-
-begin_comment
-comment|/* alarm clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGTRM
-value|15
-end_define
-
-begin_comment
-comment|/* catchable termination */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Return values from tsleep().  */
