@@ -9953,6 +9953,8 @@ operator|->
 name|irq_res
 argument_list|,
 name|INTR_TYPE_AV
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|cbb_intr
 argument_list|,
