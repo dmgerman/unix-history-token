@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.9 1999/05/06 03:23:24 archie Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.10 1999/05/12 17:28:31 archie Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1105,6 +1105,12 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|requestPort
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|sump
 init|=
 literal|0
@@ -1539,7 +1545,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|port
+name|requestPort
 operator|=
 name|atoi
 argument_list|(
@@ -1548,7 +1554,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|port
+name|requestPort
 operator|<=
 literal|0
 condition|)
@@ -1709,6 +1715,22 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Set requested port, if any, else default for this protocol */
+name|port
+operator|=
+operator|(
+name|requestPort
+operator|!=
+operator|-
+literal|1
+operator|)
+condition|?
+name|requestPort
+else|:
+name|proto
+operator|->
+name|port
+expr_stmt|;
 comment|/* Check min vs. max TTL */
 if|if
 condition|(
