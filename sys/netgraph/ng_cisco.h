@@ -54,6 +54,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NG_CISCO_HOOK_INET6
+value|"inet6"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_CISCO_HOOK_APPLETALK
 value|"atalk"
 end_define
