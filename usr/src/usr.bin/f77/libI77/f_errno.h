@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errno[] = "@(#)f_errno.h	1.2";  *  * f77 I/O error definitions  */
+comment|/* char id_f_errno[] = "@(#)f_errno.h	1.3";  *  * f77 I/O error definitions  */
 end_comment
 
 begin_include
@@ -13,6 +13,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_nerr
 decl_stmt|;
 end_decl_stmt
 
@@ -279,6 +286,13 @@ end_define
 begin_comment
 comment|/* negative repeat count */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|F_MAXERR
+value|(f_nerr - F_ER)
+end_define
 
 end_unit
 
