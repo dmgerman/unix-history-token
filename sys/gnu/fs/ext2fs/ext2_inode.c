@@ -1886,6 +1886,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|b_offset
+operator|=
+name|dbtob
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
 name|vp
