@@ -1908,12 +1908,6 @@ name|td
 argument_list|)
 operator|&&
 operator|!
-name|TD_ON_RUNQ
-argument_list|(
-name|td
-argument_list|)
-operator|&&
-operator|!
 name|TD_IS_RUNNING
 argument_list|(
 name|td
