@@ -5935,15 +5935,6 @@ expr_stmt|;
 block|}
 name|kick
 label|:
-if|if
-condition|(
-name|firewire_debug
-condition|)
-name|printf
-argument_list|(
-literal|"kick\n"
-argument_list|)
-expr_stmt|;
 comment|/* kick asy q */
 if|if
 condition|(
