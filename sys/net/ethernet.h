@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Fundamental constants relating to ethernet.  *  * $Id$  *  */
+comment|/*  * Fundamental constants relating to ethernet.  *  * $Id: ethernet.h,v 1.8 1997/02/22 09:40:58 peter Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -183,6 +183,17 @@ end_define
 
 begin_comment
 comment|/* reverse Addr. resolution protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_VLAN
+value|0x8100
+end_define
+
+begin_comment
+comment|/* IEEE 802.1Q VLAN tagging */
 end_comment
 
 begin_define
