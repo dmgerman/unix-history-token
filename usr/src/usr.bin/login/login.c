@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.11 (Berkeley) %G%"
+literal|"@(#)login.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -872,6 +872,18 @@ argument_list|,
 operator|&
 name|ttyb
 argument_list|)
+expr_stmt|;
+name|ttyb
+operator|.
+name|sg_erase
+operator|=
+name|CERASE
+expr_stmt|;
+name|ttyb
+operator|.
+name|sg_kill
+operator|=
+name|CKILL
 expr_stmt|;
 name|ioctl
 argument_list|(
