@@ -396,7 +396,7 @@ name|size
 argument_list|,
 name|freebsd
 argument_list|,
-literal|0x494
+literal|0xc494
 argument_list|,
 name|CHUNK_FORCE_ALL
 argument_list|,
@@ -446,7 +446,7 @@ name|size
 argument_list|,
 name|freebsd
 argument_list|,
-literal|0x494
+literal|0xc494
 argument_list|,
 literal|0
 argument_list|,
