@@ -229,6 +229,10 @@ name|zbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -242,6 +246,7 @@ name|struct
 name|uio
 modifier|*
 name|uio
+name|__unused
 parameter_list|,
 name|int
 name|flags
@@ -289,6 +294,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -296,15 +305,18 @@ name|null_ioctl
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
 name|data
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|struct
 name|thread
