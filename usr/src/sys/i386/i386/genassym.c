@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)genassym.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)genassym.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -787,6 +787,16 @@ operator|&
 name|pcb
 operator|->
 name|pcb_savefpu
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_SAVEEMC %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_saveemc
 argument_list|)
 expr_stmt|;
 name|printf
