@@ -1,7 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This is just like the default gvarargs.h    except for differences described below.  */
+comment|/* The ! __SH3E_VARG case is similar to the default gvarargs.h .  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__SH3E__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SH4_SINGLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SH4__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SH4_SINGLE_ONLY__
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__HITACHI__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__SH3E_VARG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define __gnuc_va_list.  */
@@ -22,7 +65,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__SH3E__
+name|__SH3E_VARG
 end_ifdef
 
 begin_typedef
@@ -34,7 +77,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|double
+name|float
 name|__va_freg
 typedef|;
 end_typedef
@@ -135,7 +178,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__SH3E__
+name|__SH3E_VARG
 end_ifdef
 
 begin_define
@@ -148,7 +191,7 @@ parameter_list|,
 name|LASTARG
 parameter_list|)
 define|\
-value|__extension__ \   ({ \      AP.__va_next_fp = (__va_freg *) __builtin_saveregs (); \      AP.__va_next_fp_limit = (AP.__va_next_fp + \ 			      (__builtin_args_info (1)< 8 ? 8 - __builtin_args_info (1) : 0)); \      AP.__va_next_o = (__va_greg *) AP.__va_next_fp_limit; \      AP.__va_next_o_limit = (AP.__va_next_o + \ 			     (__builtin_args_info (0)< 4 ? 4 - __builtin_args_info (0) : 0)); \      AP.__va_next_stack = (__va_greg *) __builtin_next_arg (LASTARG); \   })
+value|__extension__ \   ({ \      (AP).__va_next_fp = (__va_freg *) __builtin_saveregs (); \      (AP).__va_next_fp_limit = ((AP).__va_next_fp + \ 			      (__builtin_args_info (1)< 8 ? 8 - __builtin_args_info (1) : 0)); \      (AP).__va_next_o = (__va_greg *) (AP).__va_next_fp_limit; \      (AP).__va_next_o_limit = ((AP).__va_next_o + \ 			     (__builtin_args_info (0)< 4 ? 4 - __builtin_args_info (0) : 0)); \      (AP).__va_next_stack = (__va_greg *) __builtin_next_arg (LASTARG); \   })
 end_define
 
 begin_else
@@ -170,7 +213,7 @@ parameter_list|,
 name|LASTARG
 parameter_list|)
 define|\
-value|(AP = ((__gnuc_va_list) __builtin_next_arg (LASTARG)))
+value|((AP) = ((__gnuc_va_list) __builtin_next_arg (LASTARG)))
 end_define
 
 begin_endif
@@ -208,7 +251,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__SH3E__
+name|__SH3E_VARG
 end_ifdef
 
 begin_define
@@ -219,7 +262,7 @@ parameter_list|(
 name|AP
 parameter_list|)
 define|\
-value|__extension__ \   ({ \      AP.__va_next_fp = (__va_freg *) __builtin_saveregs (); \      AP.__va_next_fp_limit = (AP.__va_next_fp + \ 			      (__builtin_args_info (1)< 8 ? 8 - __builtin_args_info (1) : 0)); \      AP.__va_next_o = (__va_greg *) AP.__va_next_fp_limit; \      AP.__va_next_o_limit = (AP.__va_next_o + \ 			     (__builtin_args_info (0)< 4 ? 4 - __builtin_args_info (0) : 0)); \      AP.__va_next_stack = (__va_greg *) __builtin_next_arg (__builtin_va_alist) \        - (__builtin_args_info (0)>= 4 || __builtin_args_info (1)>= 8 ? 1 : 0); \   })
+value|__extension__ \   ({ \      (AP).__va_next_fp = (__va_freg *) __builtin_saveregs (); \      (AP).__va_next_fp_limit = ((AP).__va_next_fp + \ 			      (__builtin_args_info (1)< 8 ? 8 - __builtin_args_info (1) : 0)); \      (AP).__va_next_o = (__va_greg *) (AP).__va_next_fp_limit; \      (AP).__va_next_o_limit = ((AP).__va_next_o + \ 			     (__builtin_args_info (0)< 4 ? 4 - __builtin_args_info (0) : 0)); \      (AP).__va_next_stack \        = ((__va_greg *) __builtin_next_arg (__builtin_va_alist) \ 	  - (__builtin_args_info (0)>= 4 || __builtin_args_info (1)>= 8 \ 	     ? 1 : 0)); \   })
 end_define
 
 begin_else
@@ -238,7 +281,7 @@ name|va_start
 parameter_list|(
 name|AP
 parameter_list|)
-value|AP=(char *)&__builtin_va_alist
+value|((AP) = (char *)&__builtin_va_alist)
 end_define
 
 begin_endif
@@ -396,6 +439,39 @@ begin_comment
 comment|/* When this is a smaller-than-int integer, using      auto-increment in the promoted (SImode) is fastest;      however, there is no way to express that is C.  Therefore,      we use an asm.      We want the MEM_IN_STRUCT_P bit set in the emitted RTL, therefore we      use unions even when it would otherwise be unnecessary.  */
 end_comment
 
+begin_comment
+comment|/* gcc has an extension that allows to use a casted lvalue as an lvalue,    But it doesn't work in C++ with -pedantic - even in the presence of    __extension__ .  We work around this problem by using a reference type.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__VA_REF
+value|&
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__VA_REF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -405,13 +481,13 @@ name|AP
 parameter_list|,
 name|TYPE
 parameter_list|)
-value|__extension__ 				\ __extension__								\ ({(sizeof (TYPE) == 1							\    ? ({union {TYPE t; char c;} __t;					\        __asm(""								\ 	   : "=r" (__t.c)						\ 	   : "0" ((((union { int i, j; } *) (AP))++)->i));		\        __t.t;})								\    : sizeof (TYPE) == 2							\    ? ({union {TYPE t; short s;} __t;					\        __asm(""								\ 	   : "=r" (__t.s)						\ 	   : "0" ((((union { int i, j; } *) (AP))++)->i));		\        __t.t;})								\    : sizeof (TYPE)>= 4 || __LITTLE_ENDIAN_P				\    ? (((union { TYPE t; int i;} *) (AP))++)->t				\    : ((union {TYPE t;TYPE u;}*) ((char *)++(int *)(AP) - sizeof (TYPE)))->t);})
+value|__extension__ 				\ ({(sizeof (TYPE) == 1							\    ? ({union {TYPE t; char c;} __t;					\        __asm(""								\ 	     : "=r" (__t.c)						\ 	     : "0" ((((union { int i, j; } *__VA_REF) (AP))++)->i));	\        __t.t;})								\    : sizeof (TYPE) == 2							\    ? ({union {TYPE t; short s;} __t;					\        __asm(""								\ 	     : "=r" (__t.s)						\ 	     : "0" ((((union { int i, j; } *__VA_REF) (AP))++)->i));	\        __t.t;})								\    : sizeof (TYPE)>= 4 || __LITTLE_ENDIAN_P				\    ? (((union { TYPE t; int i;} *__VA_REF) (AP))++)->t			\    : ((union {TYPE t;TYPE u;}*) ((char *)++(int *__VA_REF)(AP) - sizeof (TYPE)))->t);})
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__SH3E__
+name|__SH3E_VARG
 end_ifdef
 
 begin_define
@@ -430,6 +506,64 @@ end_define
 begin_define
 define|#
 directive|define
+name|__TARGET_SH4_P
+value|0
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__SH4__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SH4_SINGLE__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|__PASS_AS_FLOAT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__PASS_AS_FLOAT
+parameter_list|(
+name|TYPE_CLASS
+parameter_list|,
+name|SIZE
+parameter_list|)
+define|\
+value|(TYPE_CLASS == __real_type_class&& SIZE<= 8 \    || TYPE_CLASS == __complex_type_class&& SIZE<= 16)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|__TARGET_SH4_P
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__TARGET_SH4_P
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|va_arg
 parameter_list|(
 name|pvar
@@ -437,7 +571,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|__extension__							\ ({int __type = __builtin_classify_type (* (TYPE *) 0);		\   void * __result_p;						\   if (__PASS_AS_FLOAT (__type, sizeof(TYPE)))			\     {								\       if (pvar.__va_next_fp< pvar.__va_next_fp_limit)		\ 	{							\ 	  __result_p =&pvar.__va_next_fp;			\ 	}							\       else							\ 	__result_p =&pvar.__va_next_stack;			\     }								\   else								\     {								\       if (pvar.__va_next_o + ((sizeof (TYPE) + 3) / 4)		\<= pvar.__va_next_o_limit) 				\ 	__result_p =&pvar.__va_next_o;				\       else							\ 	{							\ 	  if (sizeof (TYPE)> 4)				\ 	    pvar.__va_next_o = pvar.__va_next_o_limit;		\ 								\ 	  __result_p =&pvar.__va_next_stack;			\ 	}							\     } 								\   __va_arg_sh1(*(void **)__result_p, TYPE);})
+value|__extension__							\ ({int __type = __builtin_classify_type (* (TYPE *) 0);		\   void * __result_p;						\   if (__PASS_AS_FLOAT (__type, sizeof(TYPE)))			\     {								\       if ((pvar).__va_next_fp< (pvar).__va_next_fp_limit)	\ 	{							\ 	  if (((__type == __real_type_class&& sizeof (TYPE)> 4)\ 	       || sizeof (TYPE)> 8)				\&& (((int) (pvar).__va_next_fp ^ (int) (pvar).__va_next_fp_limit)\& 4))						\ 	    (pvar).__va_next_fp++;				\ 	  __result_p =&(pvar).__va_next_fp;			\ 	}							\       else							\ 	__result_p =&(pvar).__va_next_stack;			\     }								\   else								\     {								\       if ((pvar).__va_next_o + ((sizeof (TYPE) + 3) / 4)	\<= (pvar).__va_next_o_limit) 				\ 	__result_p =&(pvar).__va_next_o;			\       else							\ 	{							\ 	  if (sizeof (TYPE)> 4)				\ 	   if (! __TARGET_SH4_P)				\ 	    (pvar).__va_next_o = (pvar).__va_next_o_limit;	\ 								\ 	  __result_p =&(pvar).__va_next_stack;			\ 	}							\     } 								\   __va_arg_sh1(*(void **)__result_p, TYPE);})
 end_define
 
 begin_else
@@ -483,7 +617,7 @@ name|dest
 parameter_list|,
 name|src
 parameter_list|)
-value|(dest) = (src)
+value|((dest) = (src))
 end_define
 
 begin_endif

@@ -68,10 +68,12 @@ typedef|typedef
 struct|struct
 name|__va_list_tag
 block|{
+name|unsigned
 name|char
 name|gpr
 decl_stmt|;
 comment|/* index into the array of 8 GPRs stored in the 				   register save area gpr=0 corresponds to r3, 				   gpr=1 to r4, etc. */
+name|unsigned
 name|char
 name|fpr
 decl_stmt|;
@@ -215,10 +217,12 @@ name|__VA_FP_REGSAVE
 parameter_list|(
 name|AP
 parameter_list|,
+name|OFS
+parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|((TYPE *) (void *) (&(((__va_regsave_t *)				\ 			 (AP)->reg_save_area)->__fp_save[(int)(AP)->fpr])))
+value|((TYPE *) (void *) (&(((__va_regsave_t *)				\ 			 (AP)->reg_save_area)->__fp_save[OFS])))
 end_define
 
 begin_define
@@ -228,50 +232,17 @@ name|__VA_GP_REGSAVE
 parameter_list|(
 name|AP
 parameter_list|,
+name|OFS
+parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|((TYPE *) (void *) (&(((__va_regsave_t *)				\ 			 (AP)->reg_save_area)->__gp_save[(int)(AP)->gpr])))
+value|((TYPE *) (void *) (&(((__va_regsave_t *)				\ 			 (AP)->reg_save_area)->__gp_save[OFS])))
 end_define
 
 begin_comment
-comment|/* Common code for va_start for both varargs and stdarg.  This depends    on the format of rs6000_args in rs6000.h.  The fields used are:     #0	WORDS			# words used for GP regs/stack values    #1	FREGNO			next available FP register    #2	NARGS_PROTOTYPE		# args left in the current prototype    #3	ORIG_NARGS		original value of NARGS_PROTOTYPE    #4	VARARGS_OFFSET		offset from frame pointer of varargs area */
+comment|/* Common code for va_start for both varargs and stdarg.  We allow all    the work to be done by __builtin_saveregs.  It returns a pointer to    a va_list that was constructed on the stack; we must simply copy it    to the user's variable.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__va_words
-value|__builtin_args_info (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_fregno
-value|__builtin_args_info (1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_nargs
-value|__builtin_args_info (2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_orig_nargs
-value|__builtin_args_info (3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_varargs_offset
-value|__builtin_args_info (4)
-end_define
 
 begin_define
 define|#
@@ -283,7 +254,7 @@ parameter_list|,
 name|FAKE
 parameter_list|)
 define|\
-value|__extension__ ({							\    register int __words = __va_words - FAKE;				\ 									\    (AP)->gpr = (__words< 8) ? __words : 8;				\    (AP)->fpr = __va_fregno - 33;					\    (AP)->reg_save_area = (((char *) __builtin_frame_address (0))	\ 			  + __va_varargs_offset);			\    __va_overflow(AP) = ((char *)__builtin_saveregs ()			\ 			+ (((__words>= 8) ? __words - 8 : 0)		\ 			   * sizeof (long)));				\    (void)0;								\ })
+value|__builtin_memcpy ((AP), __builtin_saveregs (), sizeof(__gnuc_va_list))
 end_define
 
 begin_ifdef
@@ -394,17 +365,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|__va_longlong_p
-parameter_list|(
-name|TYPE
-parameter_list|)
-define|\
-value|((__builtin_classify_type(*(TYPE *)0) == 1)&& (sizeof(TYPE) == 8))
-end_define
-
-begin_define
-define|#
-directive|define
 name|__va_aggregate_p
 parameter_list|(
 name|TYPE
@@ -422,6 +382,50 @@ parameter_list|)
 value|((sizeof(TYPE) + sizeof (long) - 1) / sizeof (long))
 end_define
 
+begin_comment
+comment|/* This symbol isn't defined.  It is used to flag type promotion violations    at link time.  We can only do this when optimizing.  Use __builtin_trap    instead of abort so that we don't require a prototype for abort.     __builtin_trap stuff is not available on the gcc-2.95 branch, so we just    avoid calling it for now.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OPTIMIZE__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|__va_arg_type_violation
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__va_arg_type_violation
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -432,7 +436,17 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|__extension__ (*({							\   register TYPE *__ptr;							\ 									\   if (__va_float_p (TYPE)&& (AP)->fpr< 8)				\     {									\       __ptr = __VA_FP_REGSAVE (AP, TYPE);				\       (AP)->fpr++;							\     }									\ 									\   else if (__va_aggregate_p (TYPE)&& (AP)->gpr< 8)			\     {									\       __ptr = * __VA_GP_REGSAVE (AP, TYPE *);				\       (AP)->gpr++;							\     }									\ 									\   else if (!__va_float_p (TYPE)&& !__va_aggregate_p (TYPE)		\&& (AP)->gpr + __va_size(TYPE)<= 8				\&& (!__va_longlong_p(TYPE)					\ 	       || (AP)->gpr + __va_size(TYPE)<= 8))			\     {									\       if (__va_longlong_p(TYPE)&& ((AP)->gpr& 1) != 0)		\ 	(AP)->gpr++;							\ 									\       __ptr = __VA_GP_REGSAVE (AP, TYPE);				\       (AP)->gpr += __va_size (TYPE);					\     }									\ 									\   else if (!__va_float_p (TYPE)&& !__va_aggregate_p (TYPE)		\&& (AP)->gpr< 8)						\     {									\       (AP)->gpr = 8;							\       __ptr = (TYPE *) (void *) (__va_overflow(AP));			\       __va_overflow(AP) += __va_size (TYPE) * sizeof (long);		\     }									\ 									\   else if (__va_aggregate_p (TYPE))					\     {									\       __ptr = * (TYPE **) (void *) (__va_overflow(AP));			\       __va_overflow(AP) += sizeof (TYPE *);				\     }									\   else									\     {									\       __ptr = (TYPE *) (void *) (__va_overflow(AP));			\       __va_overflow(AP) += __va_size (TYPE) * sizeof (long);		\     }									\ 									\   __ptr;								\ }))
+value|__extension__ (*({							   \   register TYPE *__ptr;							   \ 									   \   if (__va_float_p (TYPE)&& sizeof (TYPE)< 16)			   \     {									   \       unsigned char __fpr = (AP)->fpr;					   \       if (__fpr< 8)							   \ 	{								   \ 	  __ptr = __VA_FP_REGSAVE (AP, __fpr, TYPE);			   \ 	  (AP)->fpr = __fpr + 1;					   \ 	}								   \       else if (sizeof (TYPE) == 8)					   \ 	{								   \ 	  unsigned long __addr = (unsigned long) (__va_overflow (AP));	   \ 	  __ptr = (TYPE *)((__addr + 7)& -8);				   \ 	  __va_overflow (AP) = (char *)(__ptr + 1);			   \ 	}								   \       else								   \ 	{								   \
+comment|/* float is promoted to double.  */
+value|\ 	  __va_arg_type_violation ();					   \ 	}								   \     }									   \ 									   \
+comment|/* Aggregates and long doubles are passed by reference.  */
+value|\   else if (__va_aggregate_p (TYPE) || __va_float_p (TYPE))		   \     {									   \       unsigned char __gpr = (AP)->gpr;					   \       if (__gpr< 8)							   \ 	{								   \ 	  __ptr = * __VA_GP_REGSAVE (AP, __gpr, TYPE *);		   \ 	  (AP)->gpr = __gpr + 1;					   \ 	}								   \       else								   \ 	{								   \ 	  TYPE **__pptr = (TYPE **) (__va_overflow (AP));		   \ 	  __ptr = * __pptr;						   \ 	  __va_overflow (AP) = (char *) (__pptr + 1);			   \ 	}								   \     }									   \ 									   \
+comment|/* Only integrals remaining.  */
+value|\   else									   \     {									   \
+comment|/* longlong is aligned.  */
+value|\       if (sizeof (TYPE) == 8)						   \ 	{								   \ 	  unsigned char __gpr = (AP)->gpr;				   \ 	  if (__gpr< 7)						   \ 	    {								   \ 	      __gpr += __gpr& 1;					   \ 	      __ptr = __VA_GP_REGSAVE (AP, __gpr, TYPE);		   \ 	      (AP)->gpr = __gpr + 2;					   \ 	    }								   \ 	  else								   \ 	    {								   \ 	      unsigned long __addr = (unsigned long) (__va_overflow (AP)); \ 	      __ptr = (TYPE *)((__addr + 7)& -8);			   \ 	      (AP)->gpr = 8;						   \ 	      __va_overflow (AP) = (char *)(__ptr + 1);			   \ 	    }								   \ 	}								   \       else if (sizeof (TYPE) == 4)					   \ 	{								   \ 	  unsigned char __gpr = (AP)->gpr;				   \ 	  if (__gpr< 8)						   \ 	    {								   \ 	      __ptr = __VA_GP_REGSAVE (AP, __gpr, TYPE);		   \ 	      (AP)->gpr = __gpr + 1;					   \ 	    }								   \ 	  else								   \ 	    {								   \ 	      __ptr = (TYPE *) __va_overflow (AP);			   \ 	      __va_overflow (AP) = (char *)(__ptr + 1);			   \ 	    }								   \ 	}								   \       else								   \ 	{								   \
+comment|/* Everything else was promoted to int.  */
+value|\ 	  __va_arg_type_violation ();					   \ 	}								   \     }									   \   __ptr;								   \ }))
 end_define
 
 begin_define
