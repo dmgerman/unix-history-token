@@ -113,7 +113,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_decl_stmt
-name|fp_rnd
+name|fp_rnd_t
 name|float_rounding_mode
 init|=
 name|float_round_nearest_even
