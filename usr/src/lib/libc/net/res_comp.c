@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	5.2 (Berkeley) %G%"
+literal|"@(#)res_comp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nameser.h>
+file|<arpa/nameser.h>
 end_include
 
 begin_comment
