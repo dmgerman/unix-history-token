@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.16 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2794,7 +2794,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|ih
 operator|)
 return|;
 block|}
@@ -2825,7 +2825,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|ih
 operator|)
 return|;
 block|}
@@ -2856,7 +2856,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|ih
 operator|)
 return|;
 block|}
@@ -2887,7 +2887,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|ih
 operator|)
 return|;
 block|}
@@ -2918,7 +2918,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|ih
 operator|)
 return|;
 block|}
@@ -2953,7 +2953,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|rh
 operator|)
 return|;
 block|}
@@ -2984,7 +2984,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|rh
 operator|)
 return|;
 block|}
@@ -3015,7 +3015,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|rh
 operator|)
 return|;
 block|}
@@ -3046,7 +3046,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|rh
 operator|)
 return|;
 block|}
@@ -3077,7 +3077,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|ib
+name|rh
 operator|)
 return|;
 block|}
