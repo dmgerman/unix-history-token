@@ -102,17 +102,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|nocount
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|char
 modifier|*
 name|toheader
