@@ -884,7 +884,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|bus_size_t
+name|u_int
 name|ahd_sglist_size
 parameter_list|(
 name|struct
@@ -897,7 +897,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|bus_size_t
+name|u_int
 name|ahd_sglist_allocsize
 parameter_list|(
 name|struct
@@ -18077,7 +18077,7 @@ end_comment
 
 begin_function
 specifier|static
-name|bus_size_t
+name|u_int
 name|ahd_sglist_size
 parameter_list|(
 name|struct
@@ -18135,7 +18135,7 @@ end_comment
 
 begin_function
 specifier|static
-name|bus_size_t
+name|u_int
 name|ahd_sglist_allocsize
 parameter_list|(
 name|struct
@@ -18557,19 +18557,25 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: scb size = 0x%x, hscb size - 0x%x\n"
+literal|"%s: scb size = 0x%x, hscb size = 0x%x\n"
 argument_list|,
 name|ahd_name
 argument_list|(
 name|ahd
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|scb
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
