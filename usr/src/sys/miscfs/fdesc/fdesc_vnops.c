@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.15 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.16 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -3104,7 +3104,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3119,6 +3119,17 @@ operator|->
 name|a_vp
 decl_stmt|;
 comment|/* 	 * Clear out the v_type field to avoid 	 * nasty things happening in vgone(). 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_type
