@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.1 (Berkeley) %G%"
+literal|"@(#)df.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,6 +341,27 @@ name|fs
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fs
+operator|.
+name|fs_type
+argument_list|,
+literal|"rw"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|.
+name|fs_type
+argument_list|,
+literal|"ro"
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|root

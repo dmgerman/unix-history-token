@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)umount.c	4.1 (Berkeley) %G%"
+literal|"@(#)umount.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ file|<fstab.h>
 end_include
 
 begin_comment
-comment|/*  *	umount name  *  *	umount -a  *		This tries to unmount all of the block special file names  *		as given in /etc/fstab.  */
+comment|/*  * umount  */
 end_comment
 
 begin_define
@@ -224,6 +224,27 @@ literal|"/"
 argument_list|)
 operator|==
 literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fs
+operator|.
+name|fs_type
+argument_list|,
+literal|"rw"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|fs
+operator|.
+name|fs_type
+argument_list|,
+literal|"ro"
+argument_list|)
 condition|)
 continue|continue;
 name|fprintf
