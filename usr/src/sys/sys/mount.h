@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1401,6 +1401,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|vfs_getnewfsid
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* create a unique fsid */
+end_comment
+
+begin_decl_stmt
 name|int
 name|vfs_lock
 name|__P
@@ -1437,22 +1455,42 @@ comment|/* is a vfs mounted on vp */
 end_comment
 
 begin_decl_stmt
-name|void
-name|vfs_getnewfsid
+name|int
+name|vfs_mountroot
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|mount
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* create a unique fsid */
+comment|/* find and mount root filesystem */
 end_comment
+
+begin_decl_stmt
+name|int
+name|vfs_rootmountalloc
+comment|/* alloc root mount structure */
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+expr|struct
+name|mount
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
