@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.64 (Berkeley) %G%"
+literal|"@(#)login.c	5.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,12 +84,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
 end_include
 
 begin_include
