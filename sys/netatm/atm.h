@@ -1183,9 +1183,11 @@ define|#
 directive|define
 name|T_ATM_ABR
 value|0x03
-comment|/* Available Bit Rate		  */
-value|*/
 end_define
+
+begin_comment
+comment|/* Available Bit Rate		  */
+end_comment
 
 begin_define
 define|#
