@@ -35,6 +35,7 @@ name|char
 modifier|*
 name|msg
 decl_stmt|;
+specifier|static
 name|String
 name|PORT
 decl_stmt|;
