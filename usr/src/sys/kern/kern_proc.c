@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_proc.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_proc.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -339,6 +339,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Locate a process by number  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|proc
@@ -359,14 +363,7 @@ name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-operator|&
-name|proc
-index|[
+init|=
 name|pidhash
 index|[
 name|PIDHASH
@@ -374,25 +371,17 @@ argument_list|(
 name|pid
 argument_list|)
 index|]
-index|]
+decl_stmt|;
+for|for
+control|(
 init|;
 name|p
-operator|!=
-operator|&
-name|proc
-index|[
-literal|0
-index|]
 condition|;
 name|p
 operator|=
-operator|&
-name|proc
-index|[
 name|p
 operator|->
-name|p_idhash
-index|]
+name|p_hash
 control|)
 if|if
 condition|(
