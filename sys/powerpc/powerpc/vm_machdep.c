@@ -473,6 +473,23 @@ index|[
 name|USER_SR
 index|]
 expr_stmt|;
+comment|/* Setup to release sched_lock in fork_exit(). */
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_saved_msr
+operator|=
+name|PSL_KERNSET
+expr_stmt|;
 comment|/*  	 * Now cpu_switch() can schedule the new process. 	 */
 block|}
 end_function
@@ -1037,6 +1054,23 @@ name|pm_sr
 index|[
 name|USER_SR
 index|]
+expr_stmt|;
+comment|/* Setup to release sched_lock in fork_exit(). */
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_saved_msr
+operator|=
+name|PSL_KERNSET
 expr_stmt|;
 block|}
 end_function

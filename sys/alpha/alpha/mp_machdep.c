@@ -497,6 +497,31 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Initialize curthread. */
+name|KASSERT
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|idlethread
+argument_list|)
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no idle thread"
+operator|)
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curthread
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|idlethread
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Point interrupt/exception vectors to our own. 	 */
 name|alpha_pal_wrent
 argument_list|(
@@ -706,6 +731,32 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
+comment|/* ok, now grab sched_lock and enter the scheduler */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Correct spinlock nesting.  The idle thread context that we are 	 * borrowing was created so that it would start out with a single 	 * spin lock (sched_lock) held in fork_trampoline().  Since we've 	 * explicitly acquired locks in this function, the nesting count 	 * is now 2 rather than 1.  Since we are nested, calling 	 * spinlock_exit() will simply adjust the counts without allowing 	 * spin lock using code to interrupt us. 	 */
+name|spinlock_exit
+argument_list|()
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"invalid count"
+operator|)
+argument_list|)
+expr_stmt|;
 name|binuptime
 argument_list|(
 name|PCPU_PTR
@@ -719,13 +770,6 @@ argument_list|(
 name|switchticks
 argument_list|,
 name|ticks
-argument_list|)
-expr_stmt|;
-comment|/* ok, now grab sched_lock and enter the scheduler */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 name|cpu_throw

@@ -134,12 +134,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<machine/critical.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -2006,19 +2000,6 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_critnest
-operator|==
-literal|0
-condition|)
-name|cpu_critical_enter
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_critnest
@@ -2163,11 +2144,6 @@ operator|->
 name|td_critnest
 operator|=
 literal|0
-expr_stmt|;
-name|cpu_critical_exit
-argument_list|(
-name|td
-argument_list|)
 expr_stmt|;
 block|}
 else|else

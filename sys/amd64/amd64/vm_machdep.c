@@ -559,6 +559,25 @@ name|PSL_I
 expr_stmt|;
 comment|/* ints disabled */
 comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase:	cloned above 	 */
+comment|/* Setup to release sched_lock in fork_exit(). */
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_saved_flags
+operator|=
+name|PSL_KERNEL
+operator||
+name|PSL_I
+expr_stmt|;
 comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_rsp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_function
@@ -940,6 +959,25 @@ name|PSL_KERNEL
 expr_stmt|;
 comment|/* ints disabled */
 comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_rflags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
+comment|/* Setup to release sched_lock in fork_exit(). */
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_saved_flags
+operator|=
+name|PSL_KERNEL
+operator||
+name|PSL_I
+expr_stmt|;
 block|}
 end_function
 

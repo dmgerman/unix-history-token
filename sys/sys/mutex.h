@@ -726,7 +726,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	critical_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == (uintptr_t)_tid)			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\ } while (0)
+value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	spinlock_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == (uintptr_t)_tid)			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\ } while (0)
 end_define
 
 begin_else
@@ -753,7 +753,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	critical_enter();						\ 	if ((mp)->mtx_lock == (uintptr_t)_tid)				\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = (uintptr_t)_tid;			\ 	}								\ } while (0)
+value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	spinlock_enter();						\ 	if ((mp)->mtx_lock == (uintptr_t)_tid)				\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = (uintptr_t)_tid;			\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -804,7 +804,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * For spinlocks, we can handle everything inline, as it's pretty simple and  * a function call would be too expensive (at least on some architectures).  * Since spin locks are not _too_ common, inlining this code is not too big   * a deal.  *  * Since we always perform a critical_enter() when attempting to acquire a  * spin lock, we need to always perform a matching critical_exit() when  * releasing a spin lock.  This includes the recursion cases.  */
+comment|/*  * For spinlocks, we can handle everything inline, as it's pretty simple and  * a function call would be too expensive (at least on some architectures).  * Since spin locks are not _too_ common, inlining this code is not too big   * a deal.  *  * Since we always perform a spinlock_enter() when attempting to acquire a  * spin lock, we need to always perform a matching spinlock_exit() when  * releasing a spin lock.  This includes the recursion cases.  */
 end_comment
 
 begin_ifndef
@@ -826,7 +826,7 @@ name|_rel_spin_lock
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		_release_lock_quick((mp));				\ 	critical_exit();						\ } while (0)
+value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		_release_lock_quick((mp));				\ 	spinlock_exit();						\ } while (0)
 end_define
 
 begin_else
@@ -845,7 +845,7 @@ name|_rel_spin_lock
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	critical_exit();						\ } while (0)
+value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	spinlock_exit();						\ } while (0)
 end_define
 
 begin_endif

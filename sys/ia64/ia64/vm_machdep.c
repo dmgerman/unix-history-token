@@ -515,6 +515,23 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* Setup to release sched_lock in fork_exit(). */
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_saved_intr
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1252,6 +1269,23 @@ name|fork_return
 argument_list|,
 name|td2
 argument_list|)
+expr_stmt|;
+comment|/* Setup to release sched_lock in fork_exit(). */
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_spinlock_count
+operator|=
+literal|1
+expr_stmt|;
+name|td2
+operator|->
+name|td_md
+operator|.
+name|md_saved_intr
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function

@@ -1287,20 +1287,13 @@ literal|"cpu_mp_unleash: idlethread"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
 name|pc
 operator|->
 name|pc_curthread
-operator|==
+operator|=
 name|pc
 operator|->
 name|pc_idlethread
-argument_list|,
-operator|(
-literal|"cpu_mp_unleash: curthread"
-operator|)
-argument_list|)
 expr_stmt|;
 name|pc
 operator|->
@@ -1494,6 +1487,17 @@ expr_stmt|;
 name|smp_cpus
 operator|++
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"cpu_mp_bootstrap: curthread"
+operator|)
+argument_list|)
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|other_cpus
@@ -1546,6 +1550,16 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
+comment|/* ok, now grab sched_lock and enter the scheduler */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
+expr_stmt|;
 name|binuptime
 argument_list|(
 name|PCPU_PTR
@@ -1559,13 +1573,6 @@ argument_list|(
 name|switchticks
 argument_list|,
 name|ticks
-argument_list|)
-expr_stmt|;
-comment|/* ok, now grab sched_lock and enter the scheduler */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 name|cpu_throw

@@ -2837,7 +2837,7 @@ argument_list|)
 condition|)
 break|break;
 comment|/* Give interrupts a chance while we spin. */
-name|critical_exit
+name|spinlock_exit
 argument_list|()
 expr_stmt|;
 while|while
@@ -2927,7 +2927,7 @@ name|cpu_spinwait
 argument_list|()
 expr_stmt|;
 block|}
-name|critical_enter
+name|spinlock_enter
 argument_list|()
 expr_stmt|;
 block|}

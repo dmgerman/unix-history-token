@@ -682,6 +682,24 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|spinlock_enter
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|spinlock_exit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|witness_init
 parameter_list|(
 name|struct

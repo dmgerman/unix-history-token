@@ -120,9 +120,12 @@ name|md_kernnest
 decl_stmt|;
 comment|/* nesting level in the kernel */
 name|register_t
-name|md_savecrit
+name|md_saved_ipl
 decl_stmt|;
-comment|/* save PSL for critical section */
+comment|/* save IPL for critical section */
+name|u_int
+name|md_spinlock_count
+decl_stmt|;
 block|}
 struct|;
 end_struct

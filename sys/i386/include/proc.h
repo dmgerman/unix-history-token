@@ -53,9 +53,14 @@ begin_struct
 struct|struct
 name|mdthread
 block|{
-name|register_t
-name|md_savecrit
+name|int
+name|md_spinlock_count
 decl_stmt|;
+comment|/* (k) */
+name|register_t
+name|md_saved_flags
+decl_stmt|;
+comment|/* (k) */
 block|}
 struct|;
 end_struct
