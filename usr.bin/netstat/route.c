@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.30 1998/04/22 06:54:31 phk Exp $"
+literal|"$Id: route.c,v 1.31 1998/06/09 04:13:03 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2551,7 +2551,9 @@ operator|&
 name|addr
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2586,7 +2588,9 @@ operator|&
 name|mask
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2624,9 +2628,13 @@ name|p_sockaddr
 argument_list|(
 operator|&
 name|addr
+operator|.
+name|u_sa
 argument_list|,
 operator|&
 name|mask
+operator|.
+name|u_sa
 argument_list|,
 name|rt
 operator|->
