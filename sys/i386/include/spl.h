@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: spl.h,v 1.15 1996/07/01 20:16:10 bde Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: spl.h,v 1.15.2.1 1998/03/06 23:44:48 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -36,12 +36,6 @@ name|SWI_TTY
 value|(NHWI + 0)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DPTOPT
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -49,33 +43,26 @@ name|SWI_NET
 value|(NHWI + 1)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
-name|SWI_DPT
-value|(NHWI + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SWI_NET
+name|SWI_CAMNET
 value|(NHWI + 2)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SWI_CAMBIO
+value|(NHWI + 3)
+end_define
 
-begin_comment
-comment|/* DPTOPT */
-end_comment
+begin_define
+define|#
+directive|define
+name|SWI_VM
+value|(NHWI + 4)
+end_define
 
 begin_define
 define|#
@@ -102,33 +89,32 @@ name|SWI_TTY_PENDING
 value|(1<< SWI_TTY)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPTOPT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SWI_DPT_PENDING
-value|(1<< SWI_DPT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DPTOPT */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SWI_NET_PENDING
 value|(1<< SWI_NET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMNET_PENDING
+value|(1<< SWI_CAMNET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMBIO_PENDING
+value|(1<< SWI_CAMBIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_VM_PENDING
+value|(1<< SWI_VM)
 end_define
 
 begin_define
@@ -156,33 +142,32 @@ name|SWI_TTY_MASK
 value|(SWI_TTY_PENDING | SWI_CLOCK_MASK | SWI_NET_MASK)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPTOPT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SWI_DPT_MASK
-value|(SWI_DPT_PENDING | SWI_CLOCK_MASK)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DPTOPT */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SWI_NET_MASK
 value|(SWI_NET_PENDING | SWI_CLOCK_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMNET_MASK
+value|(SWI_CAMNET_PENDING | SWI_CLOCK_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CAMBIO_MASK
+value|(SWI_CAMBIO_PENDING | SWI_CLOCK_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_VM_MASK
+value|(SWI_VM_PENDING | SWI_CLOCK_MASK)
 end_define
 
 begin_define
@@ -227,30 +212,15 @@ begin_comment
 comment|/* group of interrupts masked with splbio() */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPTOPT
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|dpt_imask
+name|cam_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* group of interrupts masked with spldpt() */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DPTOPT */
+comment|/* group of interrupts masked with splcam() */
 end_comment
 
 begin_decl_stmt
@@ -357,35 +327,36 @@ parameter_list|()
 value|setbits(&ipending, SWI_NET_PENDING)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPTOPT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|setsoftdpt
-parameter_list|()
-value|setbits(&ipending, SWI_DPT_PENDING)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DPTOPT */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|setsofttty
 parameter_list|()
 value|setbits(&ipending, SWI_TTY_PENDING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|setsoftcamnet
+parameter_list|()
+value|setbits(&ipending, SWI_CAMNET_PENDING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|setsoftcambio
+parameter_list|()
+value|setbits(&ipending, SWI_CAMBIO_PENDING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|setsoftvm
+parameter_list|()
+value|setbits(&ipending, SWI_VM_PENDING)
 end_define
 
 begin_define
@@ -404,28 +375,29 @@ parameter_list|()
 value|setbits(&idelayed, SWI_NET_PENDING)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPTOPT
-end_ifdef
+begin_define
+define|#
+directive|define
+name|schedsoftcamnet
+parameter_list|()
+value|setbits(&idelayed, SWI_CAMNET_PENDING)
+end_define
 
 begin_define
 define|#
 directive|define
-name|schedsofdpt
+name|schedsoftcambio
 parameter_list|()
-value|setbits(&idelayed, SWI_DPT_PENDING)
+value|setbits(&idelayed, SWI_CAMBIO_PENDING)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DPTOPT */
-end_comment
+begin_define
+define|#
+directive|define
+name|schedsoftvm
+parameter_list|()
+value|setbits(&idelayed, SWI_VM_PENDING)
+end_define
 
 begin_define
 define|#
@@ -511,29 +483,41 @@ argument|cpl |= SWI_NET_MASK
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DPTOPT
-end_ifdef
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splcam
+argument_list|,
+argument|cpl |= cam_imask
+argument_list|)
+end_macro
 
 begin_macro
 name|GENSPL
 argument_list|(
-argument|spldpt
+argument|splsoftcam
 argument_list|,
-argument|cpl |= SWI_DPT_MASK | bio_imask
+argument|cpl |= SWI_CAMBIO_MASK | SWI_CAMNET_MASK
 argument_list|)
 end_macro
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcambio
+argument_list|,
+argument|cpl |= SWI_CAMBIO_MASK
+argument_list|)
+end_macro
 
-begin_comment
-comment|/* DPTOPT */
-end_comment
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftcamnet
+argument_list|,
+argument|cpl |= SWI_CAMNET_MASK
+argument_list|)
+end_macro
 
 begin_macro
 name|GENSPL
@@ -577,6 +561,15 @@ argument_list|(
 argument|splvm
 argument_list|,
 argument|cpl |= net_imask | bio_imask
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splsoftvm
+argument_list|,
+argument|cpl |= SWI_VM_MASK
 argument_list|)
 end_macro
 
