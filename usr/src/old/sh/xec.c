@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xec.c	4.3 %G%"
+literal|"@(#)xec.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,10 +816,11 @@ name|int
 name|c
 decl_stmt|,
 name|i
-name|i
-init|=
-literal|0
 decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
