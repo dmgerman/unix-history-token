@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.44	82/05/04	*/
+comment|/*	dh.c	4.45	82/07/13	*/
 end_comment
 
 begin_include
@@ -980,6 +980,16 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
+if|if
+condition|(
+name|ndh11
+operator|==
+literal|0
+condition|)
+name|ndh11
+operator|=
+literal|1
+expr_stmt|;
 name|dhrint
 argument_list|(
 literal|0
@@ -1011,6 +1021,15 @@ name|DELAY
 argument_list|(
 literal|1000
 argument_list|)
+expr_stmt|;
+name|dhaddr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|&=
+operator|~
+name|DH_RI
 expr_stmt|;
 name|dhaddr
 operator|->
