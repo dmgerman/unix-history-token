@@ -4798,9 +4798,9 @@ name|p_ruid
 operator|!=
 name|p2
 operator|->
-name|p_ucred
+name|p_cred
 operator|->
-name|cr_uid
+name|p_svuid
 operator|&&
 name|p1
 operator|->
@@ -4810,9 +4810,9 @@ name|cr_uid
 operator|!=
 name|p2
 operator|->
-name|p_ucred
+name|p_cred
 operator|->
-name|cr_uid
+name|p_svuid
 condition|)
 block|{
 comment|/* Not permitted, try privilege. */
@@ -4914,30 +4914,6 @@ operator|->
 name|p_cred
 operator|->
 name|p_svuid
-operator|&&
-name|p1
-operator|->
-name|p_cred
-operator|->
-name|p_ruid
-operator|!=
-name|p2
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|&&
-name|p1
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|!=
-name|p2
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
 condition|)
 block|{
 comment|/* Not permitted, try privilege. */
