@@ -1516,6 +1516,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|bio
+modifier|*
+name|g_alloc_bio
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|g_read_data
