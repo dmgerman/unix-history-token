@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkfs.c,v 1.24 1998/07/15 06:28:04 charnier Exp $"
+literal|"$Id: mkfs.c,v 1.25 1998/08/12 06:07:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3242,7 +3242,7 @@ name|fs_cpc
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|int16_t
 argument_list|)
 expr_stmt|;
 name|rotblsize
@@ -4927,7 +4927,7 @@ name|fs_cpg
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 name|acg
@@ -4948,7 +4948,7 @@ name|fs_nrpos
 operator|*
 sizeof|sizeof
 argument_list|(
-name|short
+name|u_int16_t
 argument_list|)
 expr_stmt|;
 name|acg
@@ -5036,7 +5036,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|acg
@@ -5051,7 +5051,7 @@ name|cg_clustersumoff
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5073,7 +5073,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|acg
