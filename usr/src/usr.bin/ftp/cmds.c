@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.7 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -64,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stat.h>
 end_include
 
 begin_include
