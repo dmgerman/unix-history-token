@@ -4293,25 +4293,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Some devices reject this command, so ignore a STALL. */
-operator|*
-name|Some
-name|device
-name|just
-name|time
-name|out
-name|on
-name|this
-name|command
-operator|,
-name|so
-name|ignore
-operator|*
-name|that
-name|too
-operator|.
-modifier|*
-expr|/
+comment|/* 		 * Some devices reject this command, so ignore a STALL. 		 * Some device just time out on this command, so ignore 		 * that too. 		 */
 if|if
 condition|(
 name|err
