@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.17 (Berkeley) %G%"
+literal|"@(#)ls.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -904,6 +904,13 @@ block|{
 specifier|register
 name|LS
 modifier|*
+name|dstatp
+decl_stmt|,
+modifier|*
+name|rstatp
+decl_stmt|;
+name|LS
+modifier|*
 name|dstats
 decl_stmt|,
 modifier|*
@@ -951,6 +958,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+comment|/* 	 * walk through the operands, building separate arrays of LS 	 * structures for directory and non-directory files. 	 */
 name|dstats
 operator|=
 name|rstats
@@ -1044,6 +1052,8 @@ condition|(
 operator|!
 name|dstats
 condition|)
+name|dstatp
+operator|=
 name|dstats
 operator|=
 operator|(
@@ -1065,24 +1075,21 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|dstats
-index|[
-name|dircnt
-index|]
-operator|.
+name|dstatp
+operator|->
 name|name
 operator|=
 operator|*
 name|argv
 expr_stmt|;
-name|dstats
-index|[
-name|dircnt
-index|]
-operator|.
+name|dstatp
+operator|->
 name|lstat
 operator|=
 name|sb
+expr_stmt|;
+operator|++
+name|dstatp
 expr_stmt|;
 operator|++
 name|dircnt
@@ -1095,6 +1102,8 @@ condition|(
 operator|!
 name|rstats
 condition|)
+name|rstatp
+operator|=
 name|rstats
 operator|=
 operator|(
@@ -1116,35 +1125,34 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|rstats
-index|[
-name|regcnt
-index|]
-operator|.
+name|rstatp
+operator|->
 name|name
 operator|=
 operator|*
 name|argv
 expr_stmt|;
-name|rstats
-index|[
-name|regcnt
-index|]
-operator|.
+name|rstatp
+operator|->
 name|lstat
 operator|=
 name|sb
+expr_stmt|;
+operator|++
+name|rstatp
 expr_stmt|;
 operator|++
 name|regcnt
 expr_stmt|;
 block|}
 block|}
+comment|/* display regular files */
 if|if
 condition|(
 name|regcnt
 condition|)
 block|{
+comment|/* 		 * for -f flag -- switch above treats all -f operands as 		 * regular files; this code uses buildstats() to read 		 * them as directories. 		 */
 if|if
 condition|(
 name|f_specialdir
@@ -1154,14 +1162,11 @@ for|for
 control|(
 name|cnt
 operator|=
-literal|0
+name|regcnt
 init|;
 name|cnt
-operator|<
-name|regcnt
+operator|--
 condition|;
-operator|++
-name|cnt
 control|)
 block|{
 if|if
@@ -1221,19 +1226,8 @@ argument_list|,
 name|regcnt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dircnt
-condition|)
-operator|(
-name|void
-operator|)
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
 block|}
+comment|/* display directories */
 if|if
 condition|(
 name|dircnt
@@ -1319,7 +1313,7 @@ name|ls_dir
 argument_list|(
 name|dstats
 argument_list|,
-name|cnt
+name|regcnt
 argument_list|,
 name|regcnt
 operator|||
@@ -1366,35 +1360,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|whybother
-operator|(
-name|void
-operator|)
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|rstats
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|dstats
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -1637,6 +1602,7 @@ name|char
 modifier|*
 name|names
 decl_stmt|;
+comment|/* 	 * this doesn't really belong here, but it's the only place that 	 * everybody goes through; the `tag' variable is so that we don't 	 * print the header for directories unless we're going to display 	 * more directories, or we've already displayed files or directories. 	 * The `newline' variable keeps us from inserting a newline before 	 * we've displayed anything at all. 	 */
 if|if
 condition|(
 name|newline
@@ -1936,6 +1902,7 @@ argument_list|)
 condition|;
 control|)
 block|{
+comment|/* this does -A and -a */
 name|p
 operator|=
 name|entry
