@@ -90,33 +90,33 @@ comment|/* sizeof(mcontext_t) */
 define|#
 directive|define
 name|_MC_FPFMT_NODEV
-value|0
+value|0x10000
 comment|/* device not present or configured */
 define|#
 directive|define
 name|_MC_FPFMT_387
-value|1
+value|0x10001
 define|#
 directive|define
 name|_MC_FPFMT_XMM
-value|2
+value|0x10002
 name|int
 name|mc_fpformat
 decl_stmt|;
 define|#
 directive|define
 name|_MC_FPOWNED_NONE
-value|0
+value|0x20000
 comment|/* FP state not used */
 define|#
 directive|define
 name|_MC_FPOWNED_FPU
-value|1
+value|0x20001
 comment|/* FP state came from FPU */
 define|#
 directive|define
 name|_MC_FPOWNED_PCB
-value|2
+value|0x20002
 comment|/* FP state came from PCB */
 name|int
 name|mc_ownedfp
