@@ -105,6 +105,9 @@ name|int
 name|acpi_suspend_sx
 decl_stmt|;
 name|int
+name|acpi_s4bios
+decl_stmt|;
+name|int
 name|acpi_verbose
 decl_stmt|;
 name|bus_dma_tag_t

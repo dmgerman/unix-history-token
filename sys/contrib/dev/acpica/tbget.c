@@ -667,7 +667,15 @@ operator|->
 name|XDsdt
 argument_list|)
 argument_list|,
+operator|(
+operator|(
+name|AcpiGbl_DSDT
+operator|)
+condition|?
+name|AcpiGbl_DSDT
+else|:
 name|TablePtr
+operator|)
 argument_list|,
 operator|&
 name|TableInfo
