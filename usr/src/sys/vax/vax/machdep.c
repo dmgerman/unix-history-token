@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3798,6 +3798,12 @@ argument_list|(
 literal|"syncing disks... "
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Release inodes held by texts before update. 		 */
+name|xumount
+argument_list|(
+name|NODEV
+argument_list|)
+expr_stmt|;
 name|update
 argument_list|()
 expr_stmt|;
@@ -3893,6 +3899,10 @@ name|printf
 argument_list|(
 literal|"done\n"
 argument_list|)
+expr_stmt|;
+comment|/* 		 * If we've been adjusting the clock, the todr 		 * will be out of synch; adjust it now. 		 */
+name|resettodr
+argument_list|()
 expr_stmt|;
 block|}
 name|splx
@@ -5527,54 +5537,37 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_macro
+begin_expr_stmt
 name|microtime
 argument_list|(
-argument|tvp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|timeval
-modifier|*
 name|tvp
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|timeval
+operator|*
+name|tvp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 name|int
 name|s
 init|=
-name|spl7
+name|splhigh
 argument_list|()
 decl_stmt|;
+operator|*
 name|tvp
-operator|->
-name|tv_sec
 operator|=
 name|time
-operator|.
-name|tv_sec
 expr_stmt|;
 name|tvp
 operator|->
 name|tv_usec
-operator|=
-operator|(
-name|lbolt
-operator|+
-literal|1
-operator|)
-operator|*
-literal|16667
+operator|+=
+name|tick
 operator|+
 name|mfpr
 argument_list|(
@@ -5609,11 +5602,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|physstrat
@@ -5671,7 +5659,7 @@ condition|)
 return|return;
 name|s
 operator|=
-name|spl6
+name|splbio
 argument_list|()
 expr_stmt|;
 while|while
