@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.18	83/04/30	*/
+comment|/*	conf.c	4.19	83/07/06	*/
 end_comment
 
 begin_include
@@ -411,6 +411,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|upstrategy
@@ -423,6 +437,11 @@ name|upioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -450,6 +469,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX730
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|idcstrategy
@@ -463,19 +491,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
-end_if
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -489,11 +508,6 @@ name|rlioctl
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -622,6 +636,17 @@ block|}
 block|,
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX750
+argument_list|)
 block|{
 literal|"up"
 block|,
@@ -634,6 +659,8 @@ block|,
 name|upioctl
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"hk"
 block|,
@@ -678,17 +705,6 @@ block|}
 block|,
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|VAX780
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VAX750
-argument_list|)
 block|{
 literal|"rl"
 block|,
@@ -701,8 +717,6 @@ block|,
 name|rlioctl
 block|}
 block|,
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|BOOT
