@@ -548,11 +548,13 @@ name|cp
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ap
