@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.34 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2256,9 +2256,10 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|int
+name|uid_t
 name|euid
-decl_stmt|,
+decl_stmt|;
+name|gid_t
 name|egid
 decl_stmt|;
 name|int

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.41 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3062,6 +3062,18 @@ comment|/* rebuild alias database as needed */
 name|AutoRebuild
 operator|=
 name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+comment|/* error message header/header file */
+name|ErrMsgFile
+operator|=
+name|newstr
 argument_list|(
 name|val
 argument_list|)
