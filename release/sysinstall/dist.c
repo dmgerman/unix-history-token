@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.14 1997/01/19 09:59:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.15 1997/01/22 00:28:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1952,6 +1952,15 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|got_intr
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* timeout handler */
 end_comment
@@ -1959,29 +1968,48 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|media_timeout
+name|handle_intr
 parameter_list|(
 name|int
 name|sig
 parameter_list|)
 block|{
-if|if
-condition|(
-name|sig
-operator|!=
-name|SIGINT
-condition|)
-name|msgDebug
-argument_list|(
-literal|"A media timeout occurred.\n"
-argument_list|)
-expr_stmt|;
-else|else
 name|msgDebug
 argument_list|(
 literal|"User generated interrupt.\n"
 argument_list|)
 expr_stmt|;
+name|got_intr
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|check_for_interrupt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|got_intr
+condition|)
+block|{
+name|got_intr
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
+return|;
 block|}
 end_function
 
@@ -2006,7 +2034,7 @@ name|status
 decl_stmt|,
 name|total
 decl_stmt|,
-name|resid
+name|intr
 decl_stmt|;
 name|int
 name|cpid
@@ -2095,7 +2123,7 @@ name|new
 operator|.
 name|sa_handler
 operator|=
-name|media_timeout
+name|handle_intr
 expr_stmt|;
 name|new
 operator|.
@@ -2293,14 +2321,6 @@ argument_list|)
 expr_stmt|;
 name|getinfo
 label|:
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|mediaDevice
@@ -2314,9 +2334,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|resid
+name|intr
 operator|=
-name|alarm_clear
+name|check_for_interrupt
 argument_list|()
 expr_stmt|;
 if|if
@@ -2353,14 +2373,6 @@ operator|*
 name|MAX_ATTRIBS
 argument_list|)
 expr_stmt|;
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 name|status
 operator|=
 name|attr_parse
@@ -2370,15 +2382,14 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|resid
+name|intr
 operator|=
-name|alarm_clear
+name|check_for_interrupt
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|resid
+name|intr
 operator|||
 name|DITEM_STATUS
 argument_list|(
@@ -2394,11 +2405,12 @@ literal|"Please verify that your media is valid and try again."
 argument_list|,
 name|dist
 argument_list|,
-name|resid
+operator|!
+name|intr
 condition|?
 literal|"I/O error"
 else|:
-literal|"Timeout or user interrupt"
+literal|"User interrupt"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2451,8 +2463,7 @@ operator|*
 operator|)
 name|IO_ERROR
 operator|||
-operator|!
-name|resid
+name|intr
 condition|)
 block|{
 comment|/* Hard error, can't continue */
@@ -2462,11 +2473,12 @@ literal|"Unable to open %s: %s.\nReinitializing media."
 argument_list|,
 name|buf
 argument_list|,
-name|resid
+operator|!
+name|intr
 condition|?
 literal|"I/O error."
 else|:
-literal|"Timeout or user interrupt."
+literal|"User interrupt."
 argument_list|)
 expr_stmt|;
 name|mediaDevice
@@ -2520,14 +2532,6 @@ expr_stmt|;
 comment|/* 	     * Passing TRUE as 3rd parm to get routine makes this a "probing" get, for which errors 	     * are not considered too significant. 	     */
 name|getsingle
 label|:
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|mediaDevice
@@ -2541,9 +2545,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|resid
+name|intr
 operator|=
-name|alarm_clear
+name|check_for_interrupt
 argument_list|()
 expr_stmt|;
 if|if
@@ -2607,20 +2611,18 @@ operator|*
 operator|)
 name|IO_ERROR
 operator|||
-operator|!
-name|resid
+name|intr
 condition|)
 block|{
 comment|/* Hard error, can't continue */
 if|if
 condition|(
-operator|!
-name|resid
+name|intr
 condition|)
-comment|/* result of a timeout */
+comment|/* result of an interrupt */
 name|msgConfirm
 argument_list|(
-literal|"Unable to open %s: Timeout or user interrupt"
+literal|"Unable to open %s: User interrupt"
 argument_list|,
 name|buf
 argument_list|)
@@ -2814,14 +2816,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|mediaDevice
@@ -2835,9 +2829,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|resid
+name|intr
 operator|=
-name|alarm_clear
+name|check_for_interrupt
 argument_list|()
 expr_stmt|;
 if|if
@@ -2850,8 +2844,7 @@ operator|*
 operator|)
 literal|0
 operator|||
-operator|!
-name|resid
+name|intr
 condition|)
 block|{
 if|if
@@ -2879,11 +2872,12 @@ literal|"%s: Reinitializing media."
 argument_list|,
 name|buf
 argument_list|,
-name|resid
+operator|!
+name|intr
 condition|?
 literal|"I/O error"
 else|:
-literal|"Timeout or user interrupt"
+literal|"User interrupt"
 argument_list|)
 expr_stmt|;
 name|mediaDevice
@@ -2974,14 +2968,6 @@ block|{
 name|int
 name|seconds
 decl_stmt|;
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 name|n
 operator|=
 name|fread
@@ -2997,14 +2983,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|alarm_clear
+name|check_for_interrupt
 argument_list|()
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Media read error: Timeout or user abort."
+literal|"Media read error:  User interrupt."
 argument_list|)
 expr_stmt|;
 name|fclose

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.62.2.8 1997/01/15 04:50:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.62.2.9 1997/01/19 09:59:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -74,6 +74,67 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|Boolean
+name|got_intr
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout handler */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|handle_intr
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"User generated interrupt.\n"
+argument_list|)
+expr_stmt|;
+name|got_intr
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|check_for_interrupt
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|got_intr
+condition|)
+block|{
+name|got_intr
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -2340,73 +2401,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|media_timeout
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-block|{
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Return the timeout interval */
-end_comment
-
-begin_function
-name|int
-name|mediaTimeout
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|t
-decl_stmt|;
-name|cp
-operator|=
-name|getenv
-argument_list|(
-name|VAR_MEDIA_TIMEOUT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp
-operator|||
-operator|!
-operator|(
-name|t
-operator|=
-name|atoi
-argument_list|(
-name|cp
-argument_list|)
-operator|)
-condition|)
-name|t
-operator|=
-name|MEDIA_TIMEOUT
-expr_stmt|;
-return|return
-name|t
-return|;
-block|}
-end_function
-
-begin_function
 name|Boolean
 name|mediaExtractDist
 parameter_list|(
@@ -2858,12 +2852,12 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Make ^C fake a sudden timeout */
+comment|/* Make ^C abort the current transfer rather than the whole show */
 name|new
 operator|.
 name|sa_handler
 operator|=
-name|media_timeout
+name|handle_intr
 expr_stmt|;
 name|new
 operator|.
@@ -2888,14 +2882,6 @@ operator|&
 name|old
 argument_list|)
 expr_stmt|;
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2918,14 +2904,13 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|alarm_clear
+name|check_for_interrupt
 argument_list|()
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Failure to read from media - timeout or user abort.\n"
+literal|"Failure to read from media:  User interrupt."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2949,7 +2934,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Write error on transfer to cpio process, try of %d bytes\n"
+literal|"Write error on transfer to cpio process, try of %d bytes."
 argument_list|,
 name|i
 argument_list|)
@@ -3062,18 +3047,7 @@ literal|1024.0
 argument_list|)
 expr_stmt|;
 block|}
-name|alarm_set
-argument_list|(
-name|mediaTimeout
-argument_list|()
-argument_list|,
-name|media_timeout
-argument_list|)
-expr_stmt|;
 block|}
-name|alarm_clear
-argument_list|()
-expr_stmt|;
 name|sigaction
 argument_list|(
 name|SIGINT

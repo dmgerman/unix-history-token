@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.16 1997/01/19 09:59:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.17 1997/01/20 16:15:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1027,6 +1027,20 @@ argument_list|(
 literal|"Generating /etc/fstab file\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"# Device\t\tMountpoint\tFStype\tOptions\t\tDump?\tfsck pass#\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fstab
+argument_list|,
+literal|"#\t\t\t\t\t\t\t\t\t(0=no) (0=no fsck)\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1044,7 +1058,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t%s\t\t%s\t%s %d %d\n"
+literal|"/dev/%s\t\t%s\t%s\t%s\t\t%d\t%d\n"
 argument_list|,
 name|name_of
 argument_list|(
@@ -1104,7 +1118,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"proc\t\t\t\t/proc\t\tprocfs\trw 0 0\n"
+literal|"proc\t\t/proc\tprocfs\t\trw\t0\t0\n"
 argument_list|)
 expr_stmt|;
 comment|/* Now look for the CDROMs */
@@ -1149,7 +1163,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t/cdrom\t\tcd9660\tro,noauto 0 0\n"
+literal|"/dev/%s\t\t/cdrom\tcd9660\t\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[
@@ -1211,7 +1225,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t\t%s\t\tcd9660\tro,noauto 0 0\n"
+literal|"/dev/%s\t\t%s\tcd9660\t\tro,noauto\t0\t0\n"
 argument_list|,
 name|devs
 index|[
@@ -1928,11 +1942,55 @@ modifier|*
 name|self
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|config
+decl_stmt|,
+modifier|*
+name|execfile
+decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuXF86Config
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|config
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_XF86_CONFIG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|config
+condition|)
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+name|execfile
+operator|=
+name|string_concat
+argument_list|(
+literal|"/usr/X11R6/bin/"
+argument_list|,
+name|config
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|file_executable
 argument_list|(
-literal|"/usr/X11R6/bin/XF86Setup"
+name|execfile
 argument_list|)
 condition|)
 block|{
@@ -1971,7 +2029,7 @@ argument_list|)
 expr_stmt|;
 name|systemExecute
 argument_list|(
-literal|"/usr/X11R6/bin/XF86Setup"
+name|execfile
 argument_list|)
 expr_stmt|;
 return|return
@@ -1982,6 +2040,9 @@ return|;
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"XFree86 does not appear to be installed!  Please install\n"
