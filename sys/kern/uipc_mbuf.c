@@ -3506,11 +3506,13 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|m0
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+operator|)
 return|;
 name|len
 operator|=
