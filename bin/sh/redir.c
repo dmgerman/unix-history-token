@@ -209,6 +209,7 @@ comment|/*  * We keep track of whether or not fd0 has been redirected.  This is 
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|int
 name|fd0_redirected
 init|=

@@ -335,6 +335,7 @@ comment|/* buffer for top level input file */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|parsefile
 modifier|*

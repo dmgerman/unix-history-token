@@ -110,6 +110,7 @@ value|39
 end_define
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|alias
 modifier|*

@@ -312,6 +312,7 @@ name|ATTY
 end_if
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|var
 name|vterm
@@ -324,19 +325,21 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|var
 name|voptind
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|STATIC
 specifier|const
-name|struct
+expr|struct
 name|varinit
 name|varinit
 index|[]
-init|=
+operator|=
 block|{
 if|#
 directive|if
@@ -506,10 +509,11 @@ block|,
 name|NULL
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|var
 modifier|*

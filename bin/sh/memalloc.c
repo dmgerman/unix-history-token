@@ -256,6 +256,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|stack_block
 name|stackbase
@@ -263,6 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|stack_block
 modifier|*
@@ -274,6 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|STATIC
 name|struct
 name|stackmark
 modifier|*

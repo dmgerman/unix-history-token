@@ -232,6 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|STATIC
 name|char
 modifier|*
 name|curdir
@@ -245,6 +246,7 @@ comment|/* current working directory */
 end_comment
 
 begin_decl_stmt
+name|STATIC
 name|char
 modifier|*
 name|prevdir

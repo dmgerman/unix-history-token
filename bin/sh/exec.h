@@ -207,20 +207,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|getcmdentry
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|cmdentry
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|addcmdentry
 parameter_list|(
 name|char
