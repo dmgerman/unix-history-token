@@ -1221,6 +1221,9 @@ literal|":\n"
 argument_list|)
 operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|YP
 if|if
 condition|(
 name|_ypfound
@@ -1231,6 +1234,8 @@ literal|1
 operator|)
 return|;
 else|else
+endif|#
+directive|endif
 continue|continue;
 ifdef|#
 directive|ifdef
