@@ -11,28 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	1.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sccsid
-init|=
-literal|"@(#)stab.c	1.9 (Berkeley) 8/11/83"
+literal|"@(#)stab.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
