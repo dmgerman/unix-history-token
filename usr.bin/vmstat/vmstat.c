@@ -4606,6 +4606,11 @@ operator|)
 operator|/
 literal|1024
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|totreq
 argument_list|)
 expr_stmt|;
