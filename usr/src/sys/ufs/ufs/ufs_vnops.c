@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"fcntl.h"
+file|"fifo.h"
 end_include
 
 begin_include
@@ -118,602 +118,6 @@ file|"fs.h"
 end_include
 
 begin_comment
-comment|/*  * Global vfs data structures for ufs  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ufs_lookup
-argument_list|()
-decl_stmt|,
-name|ufs_create
-argument_list|()
-decl_stmt|,
-name|ufs_mknod
-argument_list|()
-decl_stmt|,
-name|ufs_open
-argument_list|()
-decl_stmt|,
-name|ufs_close
-argument_list|()
-decl_stmt|,
-name|ufs_access
-argument_list|()
-decl_stmt|,
-name|ufs_getattr
-argument_list|()
-decl_stmt|,
-name|ufs_setattr
-argument_list|()
-decl_stmt|,
-name|ufs_read
-argument_list|()
-decl_stmt|,
-name|ufs_write
-argument_list|()
-decl_stmt|,
-name|ufs_ioctl
-argument_list|()
-decl_stmt|,
-name|ufs_select
-argument_list|()
-decl_stmt|,
-name|ufs_mmap
-argument_list|()
-decl_stmt|,
-name|ufs_fsync
-argument_list|()
-decl_stmt|,
-name|ufs_seek
-argument_list|()
-decl_stmt|,
-name|ufs_remove
-argument_list|()
-decl_stmt|,
-name|ufs_link
-argument_list|()
-decl_stmt|,
-name|ufs_rename
-argument_list|()
-decl_stmt|,
-name|ufs_mkdir
-argument_list|()
-decl_stmt|,
-name|ufs_rmdir
-argument_list|()
-decl_stmt|,
-name|ufs_symlink
-argument_list|()
-decl_stmt|,
-name|ufs_readdir
-argument_list|()
-decl_stmt|,
-name|ufs_readlink
-argument_list|()
-decl_stmt|,
-name|ufs_abortop
-argument_list|()
-decl_stmt|,
-name|ufs_inactive
-argument_list|()
-decl_stmt|,
-name|ufs_reclaim
-argument_list|()
-decl_stmt|,
-name|ufs_lock
-argument_list|()
-decl_stmt|,
-name|ufs_unlock
-argument_list|()
-decl_stmt|,
-name|ufs_bmap
-argument_list|()
-decl_stmt|,
-name|ufs_strategy
-argument_list|()
-decl_stmt|,
-name|ufs_print
-argument_list|()
-decl_stmt|,
-name|ufs_islocked
-argument_list|()
-decl_stmt|,
-name|ufs_advlock
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|ufs_vnodeops
-init|=
-block|{
-name|ufs_lookup
-block|,
-comment|/* lookup */
-name|ufs_create
-block|,
-comment|/* create */
-name|ufs_mknod
-block|,
-comment|/* mknod */
-name|ufs_open
-block|,
-comment|/* open */
-name|ufs_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufs_read
-block|,
-comment|/* read */
-name|ufs_write
-block|,
-comment|/* write */
-name|ufs_ioctl
-block|,
-comment|/* ioctl */
-name|ufs_select
-block|,
-comment|/* select */
-name|ufs_mmap
-block|,
-comment|/* mmap */
-name|ufs_fsync
-block|,
-comment|/* fsync */
-name|ufs_seek
-block|,
-comment|/* seek */
-name|ufs_remove
-block|,
-comment|/* remove */
-name|ufs_link
-block|,
-comment|/* link */
-name|ufs_rename
-block|,
-comment|/* rename */
-name|ufs_mkdir
-block|,
-comment|/* mkdir */
-name|ufs_rmdir
-block|,
-comment|/* rmdir */
-name|ufs_symlink
-block|,
-comment|/* symlink */
-name|ufs_readdir
-block|,
-comment|/* readdir */
-name|ufs_readlink
-block|,
-comment|/* readlink */
-name|ufs_abortop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|ufs_bmap
-block|,
-comment|/* bmap */
-name|ufs_strategy
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|ufs_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|spec_lookup
-argument_list|()
-decl_stmt|,
-name|spec_open
-argument_list|()
-decl_stmt|,
-name|ufsspec_read
-argument_list|()
-decl_stmt|,
-name|ufsspec_write
-argument_list|()
-decl_stmt|,
-name|spec_strategy
-argument_list|()
-decl_stmt|,
-name|spec_bmap
-argument_list|()
-decl_stmt|,
-name|spec_ioctl
-argument_list|()
-decl_stmt|,
-name|spec_select
-argument_list|()
-decl_stmt|,
-name|ufsspec_close
-argument_list|()
-decl_stmt|,
-name|spec_advlock
-argument_list|()
-decl_stmt|,
-name|spec_badop
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|spec_inodeops
-init|=
-block|{
-name|spec_lookup
-block|,
-comment|/* lookup */
-name|spec_badop
-block|,
-comment|/* create */
-name|spec_badop
-block|,
-comment|/* mknod */
-name|spec_open
-block|,
-comment|/* open */
-name|ufsspec_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufsspec_read
-block|,
-comment|/* read */
-name|ufsspec_write
-block|,
-comment|/* write */
-name|spec_ioctl
-block|,
-comment|/* ioctl */
-name|spec_select
-block|,
-comment|/* select */
-name|spec_badop
-block|,
-comment|/* mmap */
-name|nullop
-block|,
-comment|/* fsync */
-name|spec_badop
-block|,
-comment|/* seek */
-name|spec_badop
-block|,
-comment|/* remove */
-name|spec_badop
-block|,
-comment|/* link */
-name|spec_badop
-block|,
-comment|/* rename */
-name|spec_badop
-block|,
-comment|/* mkdir */
-name|spec_badop
-block|,
-comment|/* rmdir */
-name|spec_badop
-block|,
-comment|/* symlink */
-name|spec_badop
-block|,
-comment|/* readdir */
-name|spec_badop
-block|,
-comment|/* readlink */
-name|spec_badop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|spec_bmap
-block|,
-comment|/* bmap */
-name|spec_strategy
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|spec_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FIFO
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|fifo_lookup
-argument_list|()
-decl_stmt|,
-name|fifo_open
-argument_list|()
-decl_stmt|,
-name|ufsfifo_read
-argument_list|()
-decl_stmt|,
-name|ufsfifo_write
-argument_list|()
-decl_stmt|,
-name|fifo_bmap
-argument_list|()
-decl_stmt|,
-name|fifo_ioctl
-argument_list|()
-decl_stmt|,
-name|fifo_select
-argument_list|()
-decl_stmt|,
-name|ufsfifo_close
-argument_list|()
-decl_stmt|,
-name|fifo_print
-argument_list|()
-decl_stmt|,
-name|fifo_advlock
-argument_list|()
-decl_stmt|,
-name|fifo_badop
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|vnodeops
-name|fifo_inodeops
-init|=
-block|{
-name|fifo_lookup
-block|,
-comment|/* lookup */
-name|fifo_badop
-block|,
-comment|/* create */
-name|fifo_badop
-block|,
-comment|/* mknod */
-name|fifo_open
-block|,
-comment|/* open */
-name|ufsfifo_close
-block|,
-comment|/* close */
-name|ufs_access
-block|,
-comment|/* access */
-name|ufs_getattr
-block|,
-comment|/* getattr */
-name|ufs_setattr
-block|,
-comment|/* setattr */
-name|ufsfifo_read
-block|,
-comment|/* read */
-name|ufsfifo_write
-block|,
-comment|/* write */
-name|fifo_ioctl
-block|,
-comment|/* ioctl */
-name|fifo_select
-block|,
-comment|/* select */
-name|fifo_badop
-block|,
-comment|/* mmap */
-name|nullop
-block|,
-comment|/* fsync */
-name|fifo_badop
-block|,
-comment|/* seek */
-name|fifo_badop
-block|,
-comment|/* remove */
-name|fifo_badop
-block|,
-comment|/* link */
-name|fifo_badop
-block|,
-comment|/* rename */
-name|fifo_badop
-block|,
-comment|/* mkdir */
-name|fifo_badop
-block|,
-comment|/* rmdir */
-name|fifo_badop
-block|,
-comment|/* symlink */
-name|fifo_badop
-block|,
-comment|/* readdir */
-name|fifo_badop
-block|,
-comment|/* readlink */
-name|fifo_badop
-block|,
-comment|/* abortop */
-name|ufs_inactive
-block|,
-comment|/* inactive */
-name|ufs_reclaim
-block|,
-comment|/* reclaim */
-name|ufs_lock
-block|,
-comment|/* lock */
-name|ufs_unlock
-block|,
-comment|/* unlock */
-name|fifo_bmap
-block|,
-comment|/* bmap */
-name|fifo_badop
-block|,
-comment|/* strategy */
-name|ufs_print
-block|,
-comment|/* print */
-name|ufs_islocked
-block|,
-comment|/* islocked */
-name|fifo_advlock
-block|,
-comment|/* advlock */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FIFO */
-end_comment
-
-begin_decl_stmt
-name|enum
-name|vtype
-name|iftovt_tab
-index|[
-literal|16
-index|]
-init|=
-block|{
-name|VNON
-block|,
-name|VFIFO
-block|,
-name|VCHR
-block|,
-name|VNON
-block|,
-name|VDIR
-block|,
-name|VNON
-block|,
-name|VBLK
-block|,
-name|VNON
-block|,
-name|VREG
-block|,
-name|VNON
-block|,
-name|VLNK
-block|,
-name|VNON
-block|,
-name|VSOCK
-block|,
-name|VNON
-block|,
-name|VNON
-block|,
-name|VBAD
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vttoif_tab
-index|[
-literal|9
-index|]
-init|=
-block|{
-literal|0
-block|,
-name|IFREG
-block|,
-name|IFDIR
-block|,
-name|IFBLK
-block|,
-name|IFCHR
-block|,
-name|IFLNK
-block|,
-name|IFSOCK
-block|,
-name|IFIFO
-block|,
-name|IFMT
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Create a regular file  */
 end_comment
 
@@ -723,6 +127,8 @@ argument_list|(
 argument|ndp
 argument_list|,
 argument|vap
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -739,6 +145,14 @@ name|struct
 name|vattr
 modifier|*
 name|vap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -813,6 +227,8 @@ argument_list|,
 argument|vap
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -837,6 +253,14 @@ name|struct
 name|vattr
 modifier|*
 name|vap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -961,6 +385,8 @@ argument_list|,
 argument|mode
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -983,6 +409,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,6 +446,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1034,6 +470,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1098,6 +542,8 @@ argument_list|,
 argument|mode
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1121,6 +567,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1330,6 +784,8 @@ argument_list|,
 argument|vap
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1355,6 +811,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1632,6 +1096,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -1659,16 +1125,16 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|inode
@@ -3099,6 +2565,9 @@ name|on
 decl_stmt|,
 name|type
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -3139,6 +2608,8 @@ argument_list|(
 literal|"ufs_read type"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|uio
@@ -3502,9 +2973,10 @@ name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|uio
+operator|->
+name|uio_procp
 decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|inode
@@ -3551,6 +3023,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -3564,6 +3039,8 @@ argument_list|(
 literal|"ufs_write mode"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|vp
@@ -4074,6 +3551,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4111,6 +3590,14 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 return|return
@@ -4135,6 +3622,8 @@ argument_list|,
 argument|fflags
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4162,14 +3651,22 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+comment|/* 	 * We should really check to see if I/O is possible. 	 */
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-comment|/* XXX */
 block|}
 end_block
 
@@ -4189,6 +3686,8 @@ argument_list|,
 argument|fflags
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4211,6 +3710,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4242,6 +3749,8 @@ argument_list|,
 argument|cred
 argument_list|,
 argument|waitfor
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4270,6 +3779,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|waitfor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4394,6 +3911,8 @@ begin_macro
 name|ufs_remove
 argument_list|(
 argument|ndp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4402,6 +3921,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4505,6 +4032,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -4520,6 +4049,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4664,6 +4201,8 @@ argument_list|(
 name|fndp
 argument_list|,
 name|tndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -4676,16 +4215,16 @@ name|tndp
 expr_stmt|;
 end_expr_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|inode
@@ -4980,6 +4519,8 @@ argument_list|,
 name|tndp
 operator|->
 name|ni_cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5685,6 +5226,13 @@ name|int
 operator|*
 operator|)
 literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5780,6 +5328,13 @@ name|ni_cred
 argument_list|,
 operator|(
 name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
 operator|*
 operator|)
 literal|0
@@ -5958,6 +5513,8 @@ argument_list|(
 argument|ndp
 argument_list|,
 argument|vap
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -5974,6 +5531,14 @@ name|struct
 name|vattr
 modifier|*
 name|vap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -6320,6 +5885,13 @@ name|int
 operator|*
 operator|)
 literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6457,6 +6029,8 @@ begin_expr_stmt
 name|ufs_rmdir
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -6465,6 +6039,14 @@ operator|*
 name|ndp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -6669,6 +6251,8 @@ argument_list|,
 argument|vap
 argument_list|,
 argument|target
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -6692,6 +6276,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|target
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -6763,6 +6355,13 @@ name|ni_cred
 argument_list|,
 operator|(
 name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
 operator|*
 operator|)
 literal|0
@@ -7965,6 +7564,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -7987,6 +7588,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -8040,6 +7649,8 @@ argument_list|,
 name|fflag
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -8218,6 +7829,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -8240,6 +7853,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -8293,6 +7914,8 @@ argument_list|,
 name|fflag
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -9047,6 +8670,425 @@ block|}
 comment|/* NOTREACHED */
 block|}
 end_block
+
+begin_comment
+comment|/*  * Global vfs data structures for ufs  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|ufs_vnodeops
+init|=
+block|{
+name|ufs_lookup
+block|,
+comment|/* lookup */
+name|ufs_create
+block|,
+comment|/* create */
+name|ufs_mknod
+block|,
+comment|/* mknod */
+name|ufs_open
+block|,
+comment|/* open */
+name|ufs_close
+block|,
+comment|/* close */
+name|ufs_access
+block|,
+comment|/* access */
+name|ufs_getattr
+block|,
+comment|/* getattr */
+name|ufs_setattr
+block|,
+comment|/* setattr */
+name|ufs_read
+block|,
+comment|/* read */
+name|ufs_write
+block|,
+comment|/* write */
+name|ufs_ioctl
+block|,
+comment|/* ioctl */
+name|ufs_select
+block|,
+comment|/* select */
+name|ufs_mmap
+block|,
+comment|/* mmap */
+name|ufs_fsync
+block|,
+comment|/* fsync */
+name|ufs_seek
+block|,
+comment|/* seek */
+name|ufs_remove
+block|,
+comment|/* remove */
+name|ufs_link
+block|,
+comment|/* link */
+name|ufs_rename
+block|,
+comment|/* rename */
+name|ufs_mkdir
+block|,
+comment|/* mkdir */
+name|ufs_rmdir
+block|,
+comment|/* rmdir */
+name|ufs_symlink
+block|,
+comment|/* symlink */
+name|ufs_readdir
+block|,
+comment|/* readdir */
+name|ufs_readlink
+block|,
+comment|/* readlink */
+name|ufs_abortop
+block|,
+comment|/* abortop */
+name|ufs_inactive
+block|,
+comment|/* inactive */
+name|ufs_reclaim
+block|,
+comment|/* reclaim */
+name|ufs_lock
+block|,
+comment|/* lock */
+name|ufs_unlock
+block|,
+comment|/* unlock */
+name|ufs_bmap
+block|,
+comment|/* bmap */
+name|ufs_strategy
+block|,
+comment|/* strategy */
+name|ufs_print
+block|,
+comment|/* print */
+name|ufs_islocked
+block|,
+comment|/* islocked */
+name|ufs_advlock
+block|,
+comment|/* advlock */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|spec_inodeops
+init|=
+block|{
+name|spec_lookup
+block|,
+comment|/* lookup */
+name|spec_create
+block|,
+comment|/* create */
+name|spec_mknod
+block|,
+comment|/* mknod */
+name|spec_open
+block|,
+comment|/* open */
+name|ufsspec_close
+block|,
+comment|/* close */
+name|ufs_access
+block|,
+comment|/* access */
+name|ufs_getattr
+block|,
+comment|/* getattr */
+name|ufs_setattr
+block|,
+comment|/* setattr */
+name|ufsspec_read
+block|,
+comment|/* read */
+name|ufsspec_write
+block|,
+comment|/* write */
+name|spec_ioctl
+block|,
+comment|/* ioctl */
+name|spec_select
+block|,
+comment|/* select */
+name|spec_mmap
+block|,
+comment|/* mmap */
+name|spec_fsync
+block|,
+comment|/* fsync */
+name|spec_seek
+block|,
+comment|/* seek */
+name|spec_remove
+block|,
+comment|/* remove */
+name|spec_link
+block|,
+comment|/* link */
+name|spec_rename
+block|,
+comment|/* rename */
+name|spec_mkdir
+block|,
+comment|/* mkdir */
+name|spec_rmdir
+block|,
+comment|/* rmdir */
+name|spec_symlink
+block|,
+comment|/* symlink */
+name|spec_readdir
+block|,
+comment|/* readdir */
+name|spec_readlink
+block|,
+comment|/* readlink */
+name|spec_abortop
+block|,
+comment|/* abortop */
+name|ufs_inactive
+block|,
+comment|/* inactive */
+name|ufs_reclaim
+block|,
+comment|/* reclaim */
+name|ufs_lock
+block|,
+comment|/* lock */
+name|ufs_unlock
+block|,
+comment|/* unlock */
+name|spec_bmap
+block|,
+comment|/* bmap */
+name|spec_strategy
+block|,
+comment|/* strategy */
+name|ufs_print
+block|,
+comment|/* print */
+name|ufs_islocked
+block|,
+comment|/* islocked */
+name|spec_advlock
+block|,
+comment|/* advlock */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|fifo_inodeops
+init|=
+block|{
+name|fifo_lookup
+block|,
+comment|/* lookup */
+name|fifo_create
+block|,
+comment|/* create */
+name|fifo_mknod
+block|,
+comment|/* mknod */
+name|fifo_open
+block|,
+comment|/* open */
+name|ufsfifo_close
+block|,
+comment|/* close */
+name|ufs_access
+block|,
+comment|/* access */
+name|ufs_getattr
+block|,
+comment|/* getattr */
+name|ufs_setattr
+block|,
+comment|/* setattr */
+name|ufsfifo_read
+block|,
+comment|/* read */
+name|ufsfifo_write
+block|,
+comment|/* write */
+name|fifo_ioctl
+block|,
+comment|/* ioctl */
+name|fifo_select
+block|,
+comment|/* select */
+name|fifo_mmap
+block|,
+comment|/* mmap */
+name|fifo_fsync
+block|,
+comment|/* fsync */
+name|fifo_seek
+block|,
+comment|/* seek */
+name|fifo_remove
+block|,
+comment|/* remove */
+name|fifo_link
+block|,
+comment|/* link */
+name|fifo_rename
+block|,
+comment|/* rename */
+name|fifo_mkdir
+block|,
+comment|/* mkdir */
+name|fifo_rmdir
+block|,
+comment|/* rmdir */
+name|fifo_symlink
+block|,
+comment|/* symlink */
+name|fifo_readdir
+block|,
+comment|/* readdir */
+name|fifo_readlink
+block|,
+comment|/* readlink */
+name|fifo_abortop
+block|,
+comment|/* abortop */
+name|ufs_inactive
+block|,
+comment|/* inactive */
+name|ufs_reclaim
+block|,
+comment|/* reclaim */
+name|ufs_lock
+block|,
+comment|/* lock */
+name|ufs_unlock
+block|,
+comment|/* unlock */
+name|fifo_bmap
+block|,
+comment|/* bmap */
+name|fifo_strategy
+block|,
+comment|/* strategy */
+name|ufs_print
+block|,
+comment|/* print */
+name|ufs_islocked
+block|,
+comment|/* islocked */
+name|fifo_advlock
+block|,
+comment|/* advlock */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FIFO */
+end_comment
+
+begin_decl_stmt
+name|enum
+name|vtype
+name|iftovt_tab
+index|[
+literal|16
+index|]
+init|=
+block|{
+name|VNON
+block|,
+name|VFIFO
+block|,
+name|VCHR
+block|,
+name|VNON
+block|,
+name|VDIR
+block|,
+name|VNON
+block|,
+name|VBLK
+block|,
+name|VNON
+block|,
+name|VREG
+block|,
+name|VNON
+block|,
+name|VLNK
+block|,
+name|VNON
+block|,
+name|VSOCK
+block|,
+name|VNON
+block|,
+name|VNON
+block|,
+name|VBAD
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vttoif_tab
+index|[
+literal|9
+index|]
+init|=
+block|{
+literal|0
+block|,
+name|IFREG
+block|,
+name|IFDIR
+block|,
+name|IFBLK
+block|,
+name|IFCHR
+block|,
+name|IFLNK
+block|,
+name|IFSOCK
+block|,
+name|IFIFO
+block|,
+name|IFMT
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
