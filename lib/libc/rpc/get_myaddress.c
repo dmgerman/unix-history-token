@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_myaddress.c,v 1.6 1996/12/30 14:26:28 peter Exp $"
+literal|"$Id: get_myaddress.c,v 1.7 1997/01/09 14:55:15 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +316,8 @@ operator|(
 name|loopback
 operator|==
 literal|1
-operator|&&
+operator|||
+operator|!
 operator|(
 name|ifreq
 operator|.
