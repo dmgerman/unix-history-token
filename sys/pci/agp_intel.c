@@ -320,6 +320,15 @@ operator|(
 literal|"Intel 82875P host to AGP bridge"
 operator|)
 return|;
+case|case
+literal|0x25608086
+case|:
+comment|/* i845G */
+return|return
+operator|(
+literal|"Intel 82845G host to AGP bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
@@ -841,6 +850,10 @@ case|case
 literal|0x25788086
 case|:
 comment|/* i875P */
+case|case
+literal|0x25608086
+case|:
+comment|/* i845G */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1058,6 +1071,10 @@ case|case
 literal|0x1a308086
 case|:
 comment|/* i845 */
+case|case
+literal|0x25608086
+case|:
+comment|/* i845G */
 case|case
 literal|0x33408086
 case|:
