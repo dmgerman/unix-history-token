@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1094,7 +1094,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * TBD: We want to cross reference the namespace here, in order to       * generate External() statements.  The problem is that the parse      * tree is in run-time (interpreter) format, not compiler format,       * so we cannot directly use the function below:      *      *    Status = LkCrossReferenceNamespace ();      *      * We need to either convert the parse tree or create a new      * cross ref function that can handle interpreter parse trees      */
+comment|/*      * TBD: We want to cross reference the namespace here, in order to      * generate External() statements.  The problem is that the parse      * tree is in run-time (interpreter) format, not compiler format,      * so we cannot directly use the function below:      *      *    Status = LkCrossReferenceNamespace ();      *      * We need to either convert the parse tree or create a new      * cross ref function that can handle interpreter parse trees      */
 comment|/* Optional displays */
 if|if
 condition|(
@@ -1481,8 +1481,6 @@ argument_list|,
 name|Aml
 argument_list|,
 name|AmlLength
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -2448,8 +2446,6 @@ argument_list|,
 name|AmlStart
 argument_list|,
 name|AmlLength
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,

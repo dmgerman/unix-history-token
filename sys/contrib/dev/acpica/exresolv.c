@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 123 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 124 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -352,23 +352,12 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Now we can delete the original Reference Object and              * replace it with the resolve value              */
-name|AcpiUtRemoveReference
-argument_list|(
-name|StackDesc
-argument_list|)
-expr_stmt|;
-operator|*
-name|StackPtr
-operator|=
-name|ObjDesc
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[Arg/Local %d] ValueObj is %p\n"
+literal|"[Arg/Local %X] ValueObj is %p\n"
 operator|,
 name|StackDesc
 operator|->
@@ -379,6 +368,17 @@ operator|,
 name|ObjDesc
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/*              * Now we can delete the original Reference Object and              * replace it with the resolved value              */
+name|AcpiUtRemoveReference
+argument_list|(
+name|StackDesc
+argument_list|)
+expr_stmt|;
+operator|*
+name|StackPtr
+operator|=
+name|ObjDesc
 expr_stmt|;
 break|break;
 case|case

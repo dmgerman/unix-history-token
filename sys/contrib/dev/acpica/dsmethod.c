@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -329,8 +329,6 @@ name|AmlLength
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -550,13 +548,16 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|MethodNode
 decl_stmt|;
+name|ACPI_WALK_STATE
+modifier|*
+name|NextWalkState
+decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_WALK_STATE
-modifier|*
-name|NextWalkState
+name|ACPI_PARAMETER_INFO
+name|Info
 decl_stmt|;
 name|UINT32
 name|i
@@ -748,8 +749,6 @@ name|AmlLength
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -828,6 +827,24 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|Info
+operator|.
+name|Parameters
+operator|=
+operator|&
+name|ThisWalkState
+operator|->
+name|Operands
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|Info
+operator|.
+name|ParameterType
+operator|=
+name|ACPI_PARAM_ARGS
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiDsInitAmlWalk
@@ -851,14 +868,7 @@ operator|.
 name|AmlLength
 argument_list|,
 operator|&
-name|ThisWalkState
-operator|->
-name|Operands
-index|[
-literal|0
-index|]
-argument_list|,
-name|NULL
+name|Info
 argument_list|,
 literal|3
 argument_list|)
@@ -971,8 +981,12 @@ label|:
 if|if
 condition|(
 name|NextWalkState
+operator|&&
+operator|(
+name|NextWalkState
 operator|->
 name|MethodDesc
+operator|)
 condition|)
 block|{
 comment|/* Decrement the thread count on the method parse tree */

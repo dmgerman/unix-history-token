@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -302,8 +302,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_WAKE_ONLY_GPE
+value|(ACPI_STATUS) (0x001E | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x001D
+value|0x001E
 end_define
 
 begin_comment
@@ -840,6 +847,8 @@ block|,
 literal|"AE_ABORT_METHOD"
 block|,
 literal|"AE_SAME_HANDLER"
+block|,
+literal|"AE_WAKE_ONLY_GPE"
 block|}
 decl_stmt|;
 end_decl_stmt

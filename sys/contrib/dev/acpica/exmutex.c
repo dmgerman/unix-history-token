@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 21 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExUnlinkMutex  *  * PARAMETERS:  *ObjDesc            - The mutex to be unlinked  *  * RETURN:      Status  *  * DESCRIPTION: Remove a mutex from the "AcquiredMutex" list  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExUnlinkMutex  *  * PARAMETERS:  ObjDesc             - The mutex to be unlinked  *  * RETURN:      Status  *  * DESCRIPTION: Remove a mutex from the "AcquiredMutex" list  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -70,6 +70,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* Doubly linked list */
 if|if
 condition|(
 name|ObjDesc
@@ -143,7 +144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExLinkMutex  *  * PARAMETERS:  *ObjDesc            - The mutex to be linked  *              *ListHead           - head of the "AcquiredMutex" list  *  * RETURN:      Status  *  * DESCRIPTION: Add a mutex to the "AcquiredMutex" list for this walk  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExLinkMutex  *  * PARAMETERS:  ObjDesc             - The mutex to be linked  *              ListHead            - head of the "AcquiredMutex" list  *  * RETURN:      Status  *  * DESCRIPTION: Add a mutex to the "AcquiredMutex" list for this walk  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -212,7 +213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireMutex  *  * PARAMETERS:  *TimeDesc           - The 'time to delay' object descriptor  *              *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Acquire an AML mutex  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireMutex  *  * PARAMETERS:  TimeDesc            - The 'time to delay' object descriptor  *              ObjDesc             - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Acquire an AML mutex  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -323,7 +324,7 @@ name|AE_AML_MUTEX_ORDER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Support for multiple acquires by the owning thread      */
+comment|/* Support for multiple acquires by the owning thread */
 if|if
 condition|(
 name|ObjDesc
@@ -403,7 +404,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Have the mutex, update mutex and walk info */
+comment|/* Have the mutex: update mutex and walk info and save the SyncLevel */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -421,6 +422,18 @@ operator|.
 name|AcquisitionDepth
 operator|=
 literal|1
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OriginalSyncLevel
+operator|=
+name|WalkState
+operator|->
+name|Thread
+operator|->
+name|CurrentSyncLevel
 expr_stmt|;
 name|WalkState
 operator|->
@@ -453,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseMutex  *  * PARAMETERS:  *ObjDesc            - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Release a previously acquired Mutex.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseMutex  *  * PARAMETERS:  ObjDesc             - The object descriptor for this op  *  * RETURN:      Status  *  * DESCRIPTION: Release a previously acquired Mutex.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -553,7 +566,7 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * The Mutex is owned, but this thread must be the owner.      * Special case for Global Lock, any thread can release      */
+comment|/*      * The Mutex is owned, but this thread must be the owner.      * Special case for Global Lock, any thread can release      */
 if|if
 condition|(
 operator|(
@@ -657,7 +670,7 @@ name|AE_AML_MUTEX_ORDER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Match multiple Acquires with multiple Releases      */
+comment|/* Match multiple Acquires with multiple Releases */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -697,7 +710,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-comment|/* Update the mutex and walk state */
+comment|/* Update the mutex and walk state, restore SyncLevel before acquire */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -716,7 +729,7 @@ name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|SyncLevel
+name|OriginalSyncLevel
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -727,7 +740,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseAllMutexes  *  * PARAMETERS:  *MutexList            - Head of the mutex list  *  * RETURN:      Status  *  * DESCRIPTION: Release all mutexes in the list  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseAllMutexes  *  * PARAMETERS:  MutexList             - Head of the mutex list  *  * RETURN:      Status  *  * DESCRIPTION: Release all mutexes in the list  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -757,7 +770,7 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * Traverse the list of owned mutexes, releasing each one.      */
+comment|/* Traverse the list of owned mutexes, releasing each one */
 while|while
 condition|(
 name|Next
@@ -825,6 +838,17 @@ operator|.
 name|OwnerThread
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* Update Thread SyncLevel (Last mutex is the important one) */
+name|Thread
+operator|->
+name|CurrentSyncLevel
+operator|=
+name|This
+operator|->
+name|Mutex
+operator|.
+name|OriginalSyncLevel
 expr_stmt|;
 block|}
 block|}

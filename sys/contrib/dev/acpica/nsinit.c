@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -297,7 +297,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Walk namespace for all objects of type Device or Processor */
+comment|/* Walk namespace for all objects */
 name|Status
 operator|=
 name|AcpiNsWalkNamespace
@@ -730,16 +730,6 @@ modifier|*
 name|ReturnValue
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-decl_stmt|;
-name|UINT32
-name|Flags
-decl_stmt|;
 name|ACPI_DEVICE_WALK_INFO
 modifier|*
 name|Info
@@ -750,11 +740,34 @@ operator|*
 operator|)
 name|Context
 decl_stmt|;
+name|ACPI_PARAMETER_INFO
+name|Pinfo
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsInitOneDevice"
 argument_list|)
 expr_stmt|;
+name|Pinfo
+operator|.
+name|Parameters
+operator|=
+name|NULL
+expr_stmt|;
+name|Pinfo
+operator|.
+name|ParameterType
+operator|=
+name|ACPI_PARAM_ARGS
+expr_stmt|;
+name|Pinfo
+operator|.
 name|Node
 operator|=
 name|AcpiNsMapHandleToNode
@@ -765,6 +778,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|Pinfo
+operator|.
 name|Node
 condition|)
 block|{
@@ -774,10 +789,12 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * We will run _STA/_INI on Devices and Processors only      */
+comment|/*      * We will run _STA/_INI on Devices, Processors and ThermalZones only      */
 if|if
 condition|(
 operator|(
+name|Pinfo
+operator|.
 name|Node
 operator|->
 name|Type
@@ -786,11 +803,23 @@ name|ACPI_TYPE_DEVICE
 operator|)
 operator|&&
 operator|(
+name|Pinfo
+operator|.
 name|Node
 operator|->
 name|Type
 operator|!=
 name|ACPI_TYPE_PROCESSOR
+operator|)
+operator|&&
+operator|(
+name|Pinfo
+operator|.
+name|Node
+operator|->
+name|Type
+operator|!=
+name|ACPI_TYPE_THERMAL
 operator|)
 condition|)
 block|{
@@ -840,6 +869,8 @@ name|AcpiUtDisplayInitPathname
 argument_list|(
 name|ACPI_TYPE_METHOD
 argument_list|,
+name|Pinfo
+operator|.
 name|Node
 argument_list|,
 literal|"_STA"
@@ -850,6 +881,8 @@ name|Status
 operator|=
 name|AcpiUtExecute_STA
 argument_list|(
+name|Pinfo
+operator|.
 name|Node
 argument_list|,
 operator|&
@@ -866,6 +899,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|Pinfo
+operator|.
 name|Node
 operator|->
 name|Type
@@ -880,7 +915,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* _STA is not required for Processor objects */
+comment|/* _STA is not required for Processor or ThermalZone objects */
 block|}
 else|else
 block|{
@@ -914,7 +949,9 @@ name|AcpiUtDisplayInitPathname
 argument_list|(
 name|ACPI_TYPE_METHOD
 argument_list|,
-name|ObjHandle
+name|Pinfo
+operator|.
+name|Node
 argument_list|,
 literal|"_INI"
 argument_list|)
@@ -924,13 +961,10 @@ name|Status
 operator|=
 name|AcpiNsEvaluateRelative
 argument_list|(
-name|ObjHandle
-argument_list|,
 literal|"_INI"
 argument_list|,
-name|NULL
-argument_list|,
-name|NULL
+operator|&
+name|Pinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -959,7 +993,9 @@ name|ScopeName
 init|=
 name|AcpiNsGetExternalPathname
 argument_list|(
-name|ObjHandle
+name|Pinfo
+operator|.
+name|Node
 argument_list|)
 decl_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -1010,7 +1046,9 @@ name|Status
 operator|=
 name|AcpiGbl_InitHandler
 argument_list|(
-name|ObjHandle
+name|Pinfo
+operator|.
+name|Node
 argument_list|,
 name|ACPI_INIT_DEVICE_INI
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdispat.h - dispatcher (parser to interpreter interface)  *       $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1131,15 +1131,9 @@ parameter_list|,
 name|UINT32
 name|AmlLength
 parameter_list|,
-name|ACPI_OPERAND_OBJECT
+name|ACPI_PARAMETER_INFO
 modifier|*
-modifier|*
-name|Params
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnObjDesc
+name|Info
 parameter_list|,
 name|UINT32
 name|PassNumber

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 75 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -412,12 +412,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"No notify handler for [%4.4s] node %p\n"
+literal|"No notify handler for Notify(%4.4s, %X) node %p\n"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
 name|Node
 argument_list|)
+operator|,
+name|NotifyValue
 operator|,
 name|Node
 operator|)
@@ -1144,6 +1146,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Deallocate all handler objects installed within GPE info structs */
+name|Status
+operator|=
+name|AcpiEvWalkGpeList
+argument_list|(
+name|AcpiEvDeleteGpeHandlers
+argument_list|)
+expr_stmt|;
 comment|/* Return to original mode if necessary */
 if|if
 condition|(

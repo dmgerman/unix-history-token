@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 29 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 30 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -389,10 +389,10 @@ name|Pointer
 expr_stmt|;
 name|BufferEnd
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_RESOURCE
-operator|*
-operator|)
+argument_list|,
 operator|(
 operator|(
 name|UINT8
@@ -406,6 +406,7 @@ name|Buffer
 operator|.
 name|Length
 operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Walk the resource list */
 for|for

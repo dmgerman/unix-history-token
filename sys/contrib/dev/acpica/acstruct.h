@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -86,6 +86,9 @@ name|DataType
 decl_stmt|;
 comment|/* To differentiate various internal objs MUST BE FIRST!*/
 block|\
+name|UINT8
+name|WalkType
+decl_stmt|;
 name|ACPI_OWNER_ID
 name|OwnerId
 decl_stmt|;
@@ -94,6 +97,10 @@ name|BOOLEAN
 name|LastPredicate
 decl_stmt|;
 comment|/* Result of last predicate */
+name|UINT8
+name|Reserved
+decl_stmt|;
+comment|/* For alignment */
 name|UINT8
 name|CurrentResult
 decl_stmt|;
@@ -108,9 +115,6 @@ decl_stmt|;
 comment|/* Stack pointer for Operands[] array */
 name|UINT8
 name|ReturnUsed
-decl_stmt|;
-name|UINT8
-name|WalkType
 decl_stmt|;
 name|UINT16
 name|Opcode
@@ -175,6 +179,12 @@ modifier|*
 name|DeferredNode
 decl_stmt|;
 comment|/* Used when executing deferred opcodes */
+name|struct
+name|acpi_gpe_event_info
+modifier|*
+name|GpeEventInfo
+decl_stmt|;
+comment|/* Info for GPE (_Lxx/_Exx methods only */
 name|struct
 name|acpi_namespace_node
 name|LocalVariables
@@ -506,6 +516,57 @@ block|}
 name|ACPI_AML_OPERANDS
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Internal method parameter list */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_parameter_info
+block|{
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|Parameters
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ReturnObject
+decl_stmt|;
+name|UINT8
+name|ParameterType
+decl_stmt|;
+name|UINT8
+name|ReturnObjectType
+decl_stmt|;
+block|}
+name|ACPI_PARAMETER_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Types for ParameterType above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARAM_ARGS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARAM_GPE
+value|1
+end_define
 
 begin_endif
 endif|#

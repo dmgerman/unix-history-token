@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -345,6 +345,17 @@ parameter_list|(
 name|char
 modifier|*
 name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDbSleep
+parameter_list|(
+name|char
+modifier|*
+name|ObjectArg
 parameter_list|)
 function_decl|;
 end_function_decl

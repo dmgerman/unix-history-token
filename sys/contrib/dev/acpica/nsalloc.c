@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 85 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 87 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -530,7 +530,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|ACPI_ALPHABETIC_NAMESPACE
-comment|/*          * Walk the list whilst searching for the the correct          * alphabetic placement.          */
+comment|/*          * Walk the list whilst searching for the correct          * alphabetic placement.          */
 name|PreviousChildNode
 operator|=
 name|NULL

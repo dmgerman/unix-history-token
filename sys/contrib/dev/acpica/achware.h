@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -188,29 +188,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwEnableGpe
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiHwEnableGpeForWakeup
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiHwDisableGpe
+name|AcpiHwWriteGpeEnableReg
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
@@ -230,17 +208,6 @@ parameter_list|,
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiHwDisableGpeForWakeup
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -288,7 +255,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwPrepareGpesForSleep
+name|AcpiHwDisableAllGpes
 parameter_list|(
 name|void
 parameter_list|)
@@ -297,9 +264,48 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwRestoreGpesOnWake
+name|AcpiHwEnableAllRuntimeGpes
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiHwEnableAllWakeupGpes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiHwEnableRuntimeGpeBlock
+parameter_list|(
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+name|GpeXruptInfo
+parameter_list|,
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiHwEnableWakeupGpeBlock
+parameter_list|(
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+name|GpeXruptInfo
+parameter_list|,
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed Event handling and dispatch  *              $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed Event handling and dispatch  *              $Revision: 113 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -34,12 +34,12 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize global data structures for events.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitializeEvents  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize global data structures for events.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEvInitialize
+name|AcpiEvInitializeEvents
 parameter_list|(
 name|void
 parameter_list|)
@@ -49,7 +49,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvInitialize"
+literal|"EvInitializeEvents"
 argument_list|)
 expr_stmt|;
 comment|/* Make sure we have ACPI tables */
@@ -146,12 +146,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvHandlerInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install interrupt handlers for the SCI and Global Lock  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInstallXruptHandlers  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install interrupt handlers for the SCI and Global Lock  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEvHandlerInitialize
+name|AcpiEvInstallXruptHandlers
 parameter_list|(
 name|void
 parameter_list|)
@@ -161,7 +161,7 @@ name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvHandlerInitialize"
+literal|"EvInstallXruptHandlers"
 argument_list|)
 expr_stmt|;
 comment|/* Install the SCI handler */

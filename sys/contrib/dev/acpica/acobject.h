@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 124 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 125 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -362,21 +362,25 @@ struct|struct
 name|acpi_object_mutex
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|UINT16
+name|UINT8
 name|SyncLevel
 decl_stmt|;
+comment|/* 0-15, specified in Mutex() call */
 name|UINT16
 name|AcquisitionDepth
 decl_stmt|;
+comment|/* Allow multiple Acquires, same thread */
 name|struct
 name|acpi_thread_state
 modifier|*
 name|OwnerThread
 decl_stmt|;
+comment|/* Current owner of the mutex */
 name|void
 modifier|*
 name|Semaphore
 decl_stmt|;
+comment|/* Actual OS synchronization object */
 name|union
 name|acpi_operand_object
 modifier|*
@@ -393,7 +397,11 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-comment|/* containing object */
+comment|/* Containing namespace node */
+name|UINT8
+name|OriginalSyncLevel
+decl_stmt|;
+comment|/* Owner's original sync level (0-15) */
 block|}
 name|ACPI_OBJECT_MUTEX
 typedef|;
@@ -418,7 +426,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-comment|/* containing object */
+comment|/* Containing namespace node */
 name|union
 name|acpi_operand_object
 modifier|*

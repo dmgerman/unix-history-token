@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 98 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 100 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -128,6 +128,8 @@ block|,
 name|CMD_RESULTS
 block|,
 name|CMD_SET
+block|,
+name|CMD_SLEEP
 block|,
 name|CMD_STATS
 block|,
@@ -419,6 +421,12 @@ block|{
 literal|"SET"
 block|,
 literal|3
+block|}
+block|,
+block|{
+literal|"SLEEP"
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -1476,6 +1484,8 @@ break|break;
 case|case
 name|CMD_FIND
 case|:
+name|Status
+operator|=
 name|AcpiDbFindNameInNamespace
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -1836,6 +1846,8 @@ break|break;
 case|case
 name|CMD_METHODS
 case|:
+name|Status
+operator|=
 name|AcpiDbDisplayObjects
 argument_list|(
 literal|"METHOD"
@@ -1903,6 +1915,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiDbDisplayObjects
 argument_list|(
 name|AcpiGbl_DbArgs
@@ -2012,8 +2026,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CMD_SLEEP
+case|:
+name|Status
+operator|=
+name|AcpiDbSleep
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CMD_STATS
 case|:
+name|Status
+operator|=
 name|AcpiDbDisplayStatistics
 argument_list|(
 name|AcpiGbl_DbArgs

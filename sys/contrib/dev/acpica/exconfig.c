@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"actables.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdispat.h"
 end_include
 
 begin_define
@@ -717,9 +723,8 @@ name|TablePtr
 init|=
 name|NULL
 decl_stmt|;
-name|UINT8
-modifier|*
-name|TableDataPtr
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
 decl_stmt|;
 name|ACPI_TABLE_HEADER
 name|TableHeader
@@ -760,7 +765,53 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Get the table header */
+comment|/*          * If the Region Address and Length have not been previously evaluated,          * evaluate them now and save the results.          */
+if|if
+condition|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_DATA_VALID
+operator|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiDsGetRegionArguments
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Get the base physical address of the region */
+name|Address
+operator|=
+name|ObjDesc
+operator|->
+name|Region
+operator|.
+name|Address
+expr_stmt|;
+comment|/* Get the table length from the table header */
 name|TableHeader
 operator|.
 name|Length
@@ -775,10 +826,7 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
+literal|8
 condition|;
 name|i
 operator|++
@@ -796,6 +844,8 @@ operator|(
 name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|i
+operator|+
+name|Address
 argument_list|,
 literal|8
 argument_list|,
@@ -826,6 +876,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Sanity check the table length */
+if|if
+condition|(
+name|TableHeader
+operator|.
+name|Length
+operator|<
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_HEADER
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Allocate a buffer for the entire table */
 name|TablePtr
 operator|=
@@ -848,35 +917,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Copy the header to the buffer */
-name|ACPI_MEMCPY
-argument_list|(
-name|TablePtr
-argument_list|,
-operator|&
-name|TableHeader
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|TableDataPtr
-operator|=
-name|ACPI_PTR_ADD
-argument_list|(
-name|UINT8
-argument_list|,
-name|TablePtr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Get the table from the op region */
+comment|/* Get the entire table from the op region */
 for|for
 control|(
 name|i
@@ -905,6 +946,8 @@ operator|(
 name|ACPI_PHYSICAL_ADDRESS
 operator|)
 name|i
+operator|+
+name|Address
 argument_list|,
 literal|8
 argument_list|,
@@ -913,7 +956,7 @@ operator|(
 name|UINT8
 operator|*
 operator|)
-name|TableDataPtr
+name|TablePtr
 operator|+
 name|i
 operator|)
@@ -996,6 +1039,25 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+comment|/* Sanity check the table length */
+if|if
+condition|(
+name|TablePtr
+operator|->
+name|Length
+operator|<
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_HEADER
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|return_ACPI_STATUS

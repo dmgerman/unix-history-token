@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 152 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 154 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Keep local copies of these FADT-based registers.  NOTE: These globals  * are first in this file for alignment reasons on 64-bit systems.  */
+comment|/*  * Keep local copies of these FADT-based registers.  NOTE: These globals  * are first in this file for alignment reasons on 64-bit systems.  */
 end_comment
 
 begin_decl_stmt
@@ -467,6 +467,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_EventsInitialized
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_SystemAwakeAndRunning
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 12 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 14 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -295,18 +295,8 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status2
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|InternalParams
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|InternalReturnObj
-init|=
-name|NULL
+name|ACPI_PARAMETER_INFO
+name|Info
 decl_stmt|;
 name|ACPI_SIZE
 name|BufferSpaceNeeded
@@ -319,6 +309,30 @@ argument_list|(
 literal|"AcpiEvaluateObject"
 argument_list|)
 expr_stmt|;
+name|Info
+operator|.
+name|Node
+operator|=
+name|Handle
+expr_stmt|;
+name|Info
+operator|.
+name|Parameters
+operator|=
+name|NULL
+expr_stmt|;
+name|Info
+operator|.
+name|ReturnObject
+operator|=
+name|NULL
+expr_stmt|;
+name|Info
+operator|.
+name|ParameterType
+operator|=
+name|ACPI_PARAM_ARGS
+expr_stmt|;
 comment|/*      * If there are parameters to be passed to the object      * (which must be a control method), the external objects      * must be converted to internal objects      */
 if|if
 condition|(
@@ -330,7 +344,9 @@ name|Count
 condition|)
 block|{
 comment|/*          * Allocate a new parameter block for the internal objects          * Add 1 to count to allow for null terminated internal list          */
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 operator|=
 name|ACPI_MEM_CALLOCATE
 argument_list|(
@@ -355,7 +371,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -394,7 +412,9 @@ name|i
 index|]
 argument_list|,
 operator|&
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 index|[
 name|i
 index|]
@@ -410,7 +430,9 @@ condition|)
 block|{
 name|AcpiUtDeleteInternalObjectList
 argument_list|(
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -420,7 +442,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 index|[
 name|ExternalParams
 operator|->
@@ -455,10 +479,8 @@ name|AcpiNsEvaluateByName
 argument_list|(
 name|Pathname
 argument_list|,
-name|InternalParams
-argument_list|,
 operator|&
-name|InternalReturnObj
+name|Info
 argument_list|)
 expr_stmt|;
 block|}
@@ -517,12 +539,8 @@ name|Status
 operator|=
 name|AcpiNsEvaluateByHandle
 argument_list|(
-name|Handle
-argument_list|,
-name|InternalParams
-argument_list|,
 operator|&
-name|InternalReturnObj
+name|Info
 argument_list|)
 expr_stmt|;
 block|}
@@ -533,14 +551,10 @@ name|Status
 operator|=
 name|AcpiNsEvaluateRelative
 argument_list|(
-name|Handle
-argument_list|,
 name|Pathname
 argument_list|,
-name|InternalParams
-argument_list|,
 operator|&
-name|InternalReturnObj
+name|Info
 argument_list|)
 expr_stmt|;
 block|}
@@ -554,7 +568,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 condition|)
 block|{
 name|ReturnBuffer
@@ -570,7 +586,9 @@ if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 operator|==
 name|ACPI_DESC_TYPE_NAMED
@@ -581,7 +599,9 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 operator|=
 name|NULL
 expr_stmt|;
@@ -606,7 +626,9 @@ name|Status
 operator|=
 name|AcpiUtGetObjectSize
 argument_list|(
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 argument_list|,
 operator|&
 name|BufferSpaceNeeded
@@ -666,7 +688,9 @@ name|Status
 operator|=
 name|AcpiUtCopyIobjectToEobject
 argument_list|(
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 argument_list|,
 name|ReturnBuffer
 argument_list|)
@@ -678,10 +702,12 @@ block|}
 block|}
 if|if
 condition|(
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 condition|)
 block|{
-comment|/*           * Delete the internal return object.  NOTE: Interpreter          * must be locked to avoid race condition.          */
+comment|/*          * Delete the internal return object.  NOTE: Interpreter          * must be locked to avoid race condition.          */
 name|Status2
 operator|=
 name|AcpiExEnterInterpreter
@@ -698,7 +724,9 @@ block|{
 comment|/*              * Delete the internal return object. (Or at least              * decrement the reference count by one)              */
 name|AcpiUtRemoveReference
 argument_list|(
-name|InternalReturnObj
+name|Info
+operator|.
+name|ReturnObject
 argument_list|)
 expr_stmt|;
 name|AcpiExExitInterpreter
@@ -709,13 +737,17 @@ block|}
 comment|/*      * Free the input parameter list (if we created one),      */
 if|if
 condition|(
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 condition|)
 block|{
 comment|/* Free the allocated parameter block */
 name|AcpiUtDeleteInternalObjectList
 argument_list|(
-name|InternalParams
+name|Info
+operator|.
+name|Parameters
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 105 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -267,7 +267,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Enable ACPI mode      */
+comment|/* Enable ACPI mode */
 if|if
 condition|(
 operator|!
@@ -321,7 +321,47 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Initialize ACPI Event handling      *      * NOTE: We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */
+comment|/*      * Install the default OpRegion handlers.  These are installed unless      * other handlers have already been installed via the      * InstallAddressSpaceHandler interface.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_ADDRESS_SPACE_INIT
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"[Init] Installing default address space handlers\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiEvInstallRegionHandlers
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/*      * Initialize ACPI Event handling (Fixed and General Purpose)      *      * NOTE: We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */
 if|if
 condition|(
 operator|!
@@ -343,7 +383,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiEvInitialize
+name|AcpiEvInitializeEvents
 argument_list|()
 expr_stmt|;
 if|if
@@ -361,7 +401,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Install the SCI handler, Global Lock handler, and GPE handlers */
+comment|/* Install the SCI handler and Global Lock handler */
 if|if
 condition|(
 operator|!
@@ -377,13 +417,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[Init] Installing SCI/GL/GPE handlers\n"
+literal|"[Init] Installing SCI/GL handlers\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiEvHandlerInitialize
+name|AcpiEvInstallXruptHandlers
 argument_list|()
 expr_stmt|;
 if|if
@@ -431,7 +471,7 @@ argument_list|(
 literal|"AcpiInitializeObjects"
 argument_list|)
 expr_stmt|;
-comment|/*      * Install the default OpRegion handlers.  These are installed unless      * other handlers have already been installed via the      * InstallAddressSpaceHandler interface.      *      * NOTE: This will cause _REG methods to be run.  Any objects accessed      * by the _REG methods will be automatically initialized, even if they      * contain executable AML (see call to AcpiNsInitializeObjects below).      */
+comment|/*      * Run all _REG methods      *      * NOTE: Any objects accessed      * by the _REG methods will be automatically initialized, even if they      * contain executable AML (see call to AcpiNsInitializeObjects below).      */
 if|if
 condition|(
 operator|!
@@ -447,13 +487,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[Init] Installing default address space handlers\n"
+literal|"[Init] Executing _REG OpRegion methods\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiEvInitAddressSpaces
+name|AcpiEvInitializeOpRegions
 argument_list|()
 expr_stmt|;
 if|if
@@ -487,7 +527,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[Init] Initializing ACPI Objects\n"
+literal|"[Init] Completing Initialization of ACPI Objects\n"
 operator|)
 argument_list|)
 expr_stmt|;
