@@ -903,6 +903,19 @@ argument_list|,
 name|rtsold_set_dump_file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fflag
+condition|)
+name|daemon
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* act as a daemon */
 comment|/* 	 * Open a socket for sending RS and receiving RA. 	 * This should be done before calling ifinit(), since the function 	 * uses the socket. 	 */
 if|if
 condition|(
@@ -916,11 +929,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errx
+name|warnmsg
 argument_list|(
-literal|1
+name|LOG_ERR
+argument_list|,
+name|__func__
 argument_list|,
 literal|"failed to open a socket"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -941,11 +961,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errx
+name|warnmsg
 argument_list|(
-literal|1
+name|LOG_ERR
+argument_list|,
+name|__func__
 argument_list|,
 literal|"failed to open a socket"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1029,11 +1056,18 @@ name|ifinit
 argument_list|()
 condition|)
 block|{
-name|errx
+name|warnmsg
 argument_list|(
-literal|1
+name|LOG_ERR
+argument_list|,
+name|__func__
 argument_list|,
 literal|"failed to initilizatoin interfaces"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1053,14 +1087,21 @@ name|argv
 argument_list|)
 condition|)
 block|{
-name|errx
+name|warnmsg
 argument_list|(
-literal|1
+name|LOG_ERR
+argument_list|,
+name|__func__
 argument_list|,
 literal|"failed to initialize %s"
 argument_list|,
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1076,28 +1117,22 @@ name|probe_init
 argument_list|()
 condition|)
 block|{
-name|errx
+name|warnmsg
 argument_list|(
-literal|1
+name|LOG_ERR
+argument_list|,
+name|__func__
 argument_list|,
 literal|"failed to setup for probing routers"
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-if|if
-condition|(
-operator|!
-name|fflag
-condition|)
-name|daemon
+name|exit
 argument_list|(
-literal|0
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* act as a daemon */
+comment|/*NOTREACHED*/
+block|}
 comment|/* dump the current pid */
 if|if
 condition|(
