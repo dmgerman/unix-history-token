@@ -1459,9 +1459,17 @@ operator|&
 name|MenuXF86SelectServer
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
 block|{
 literal|" XFree86, PC98 Server"
 block|,
@@ -5346,6 +5354,9 @@ name|VAR_XF86_CONFIG
 literal|"=xf86config"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
 block|{
 literal|"4 XF98Setup"
 block|,
@@ -5361,6 +5372,8 @@ name|VAR_XF86_CONFIG
 literal|"=XF98Setup"
 block|}
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|{
@@ -5884,9 +5897,17 @@ block|,
 name|DIST_XF86_SET
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
 block|{
 literal|" 9set"
 block|,
@@ -6570,9 +6591,17 @@ block|,
 name|DIST_XF86_SERVER_W32
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
 block|{
 literal|" PC98"
 block|,
@@ -6632,11 +6661,19 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|DMenu
