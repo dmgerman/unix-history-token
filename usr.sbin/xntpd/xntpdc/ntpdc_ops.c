@@ -14213,7 +14213,10 @@ argument_list|,
 literal|"pll offset:           %ld us\n"
 argument_list|,
 operator|(
-name|u_long
+name|long
+operator|)
+operator|(
+name|int32_t
 operator|)
 name|ntohl
 argument_list|(
