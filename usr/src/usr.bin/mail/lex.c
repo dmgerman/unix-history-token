@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.9 %G%"
+literal|"@(#)lex.c	1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2097,6 +2097,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgCount
+operator|>
+literal|0
+condition|)
 name|headers
 argument_list|(
 name|vec
