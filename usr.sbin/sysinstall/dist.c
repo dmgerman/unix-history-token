@@ -1969,6 +1969,23 @@ name|AlarmWentOff
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|sig
+operator|!=
+name|SIGINT
+condition|)
+name|msgDebug
+argument_list|(
+literal|"A media timeout occurred.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|msgDebug
+argument_list|(
+literal|"User generated interrupt.\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2325,7 +2342,8 @@ argument_list|)
 expr_stmt|;
 name|alarm_set
 argument_list|(
-name|MEDIA_TIMEOUT
+name|mediaTimeout
+argument_list|()
 argument_list|,
 name|media_timeout
 argument_list|)
@@ -2824,7 +2842,8 @@ name|seconds
 decl_stmt|;
 name|alarm_set
 argument_list|(
-name|MEDIA_TIMEOUT
+name|mediaTimeout
+argument_list|()
 argument_list|,
 name|media_timeout
 argument_list|)

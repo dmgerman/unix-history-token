@@ -4331,6 +4331,16 @@ argument_list|,
 literal|"/usr/tmp"
 argument_list|)
 expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_MEDIA_TIMEOUT
+argument_list|,
+name|itoa
+argument_list|(
+name|MEDIA_TIMEOUT
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getpid

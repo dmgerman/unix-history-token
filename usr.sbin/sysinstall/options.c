@@ -222,6 +222,13 @@ name|INSTROOT_PROMPT
 value|"Please specify a root directory if installing somewhere other than /"
 end_define
 
+begin_define
+define|#
+directive|define
+name|TIMEOUT_PROMPT
+value|"Please specify the number of seconds to wait for slow media:"
+end_define
+
 begin_decl_stmt
 specifier|static
 name|Option
@@ -409,6 +416,20 @@ block|,
 name|VAR_MEDIA_TYPE
 block|,
 name|mediaCheck
+block|}
+block|,
+block|{
+literal|"Media Timeout"
+block|,
+literal|"Timeout value in seconds for slow media."
+block|,
+name|OPT_IS_VAR
+block|,
+name|TIMEOUT_PROMPT
+block|,
+name|VAR_MEDIA_TIMEOUT
+block|,
+name|varCheck
 block|}
 block|,
 block|{

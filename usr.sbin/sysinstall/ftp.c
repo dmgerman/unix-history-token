@@ -159,6 +159,8 @@ block|}
 comment|/* If we can't initialize the network, bag it! */
 if|if
 condition|(
+name|netdev
+operator|&&
 operator|!
 name|netdev
 operator|->
@@ -214,6 +216,10 @@ argument_list|(
 literal|"Unable to get proper FTP path.  FTP media not initialized."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|netdev
+condition|)
 name|netdev
 operator|->
 name|shutdown
@@ -254,6 +260,10 @@ argument_list|(
 literal|"Missing FTP host or directory specification.  FTP media not initialized,"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|netdev
+condition|)
 name|netdev
 operator|->
 name|shutdown
@@ -572,6 +582,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|netdev
+condition|)
 name|netdev
 operator|->
 name|shutdown
@@ -865,7 +879,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* netdev->shutdown(netdev); */
+comment|/* if (netdev) netdev->shutdown(netdev); */
 name|ftpInitted
 operator|=
 name|FALSE

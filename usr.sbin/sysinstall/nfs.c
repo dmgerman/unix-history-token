@@ -75,6 +75,8 @@ name|TRUE
 return|;
 if|if
 condition|(
+name|netDevice
+operator|&&
 operator|!
 name|netDevice
 operator|->
@@ -373,7 +375,7 @@ argument_list|(
 literal|"Unmount of NFS partition successful\n"
 argument_list|)
 expr_stmt|;
-comment|/* netdev->shutdown(netdev); */
+comment|/* if (netdev) netdev->shutdown(netdev); */
 name|NFSMounted
 operator|=
 name|FALSE
