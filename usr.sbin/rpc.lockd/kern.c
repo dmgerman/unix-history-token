@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -152,19 +158,6 @@ define|#
 directive|define
 name|DAEMON_USERNAME
 value|"daemon"
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfslockdans
-parameter_list|(
-name|_v
-parameter_list|,
-name|_ansp
-parameter_list|)
-define|\
-value|((_ansp)->la_vers = _v, \ 	nfsclnt(NFSCLNT_LOCKDANS, _ansp))
 end_define
 
 begin_comment
@@ -279,6 +272,50 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|devfd
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|nfslockdans
+parameter_list|(
+name|int
+name|vers
+parameter_list|,
+name|struct
+name|lockd_ans
+modifier|*
+name|ansp
+parameter_list|)
+block|{
+name|ansp
+operator|->
+name|la_vers
+operator|=
+name|vers
+expr_stmt|;
+return|return
+operator|(
+name|write
+argument_list|(
+name|devfd
+argument_list|,
+name|ansp
+argument_list|,
+sizeof|sizeof
+expr|*
+name|ansp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * will break because fifo needs to be repopened when EOF'd  */
 end_comment
@@ -379,14 +416,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|_PATH_LCKFIFO
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 operator|-
@@ -414,8 +443,6 @@ name|fd_set
 name|rdset
 decl_stmt|;
 name|int
-name|fd
-decl_stmt|,
 name|nr
 decl_stmt|,
 name|ret
@@ -434,56 +461,36 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-comment|/* Recreate the NLM fifo. */
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|_PATH_LCKFIFO
-argument_list|)
-expr_stmt|;
-name|old_umask
+comment|/* Open the dev . */
+name|devfd
 operator|=
-name|umask
+name|open
 argument_list|(
-name|S_IXGRP
-operator||
-name|S_IXOTH
+argument|_PATH_DEV _PATH_NFSLCKDEV
+argument_list|,
+argument|O_RDWR | O_NONBLOCK
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mkfifo
-argument_list|(
-name|_PATH_LCKFIFO
-argument_list|,
-name|S_IWUSR
-operator||
-name|S_IRUSR
-argument_list|)
+name|devfd
+operator|<
+literal|0
 condition|)
 block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"mkfifo: %s: %m"
+literal|"open: %s: %m"
 argument_list|,
-name|_PATH_LCKFIFO
+name|_PATH_NFSLCKDEV
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+goto|goto
+name|err
+goto|;
 block|}
-name|umask
-argument_list|(
-name|old_umask
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Create a separate process, the client code is really a separate 	 * daemon that shares a lot of code. 	 */
 switch|switch
 condition|(
@@ -569,39 +576,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Open the fifo for reading. */
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|_PATH_LCKFIFO
-argument_list|,
-name|O_RDONLY
-operator||
-name|O_NONBLOCK
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"open: %s: %m"
-argument_list|,
-name|_PATH_LCKFIFO
-argument_list|)
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
 name|pw
 operator|=
 name|getpwnam
@@ -650,41 +624,6 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* Wait for contact... fifo's return EAGAIN when read with  		 * no data 		 */
-comment|/* Set up the select. */
-name|FD_ZERO
-argument_list|(
-operator|&
-name|rdset
-argument_list|)
-expr_stmt|;
-name|FD_SET
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|rdset
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|select
-argument_list|(
-name|fd
-operator|+
-literal|1
-argument_list|,
-operator|&
-name|rdset
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Read the fixed length message. */
 if|if
 condition|(
@@ -693,7 +632,7 @@ name|nr
 operator|=
 name|read
 argument_list|(
-name|fd
+name|devfd
 argument_list|,
 operator|&
 name|msg
@@ -897,7 +836,7 @@ name|LOG_ERR
 argument_list|,
 literal|"read: %s: %m"
 argument_list|,
-name|_PATH_LCKFIFO
+name|_PATH_NFSLCKDEV
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -919,7 +858,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: discard %d bytes"
 argument_list|,
-name|_PATH_LCKFIFO
+name|_PATH_NFSLCKDEV
 argument_list|,
 name|nr
 argument_list|)
@@ -935,14 +874,6 @@ operator|)
 name|lockd_seteuid
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|_PATH_LCKFIFO
 argument_list|)
 expr_stmt|;
 name|_exit
