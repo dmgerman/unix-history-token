@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -524,6 +524,10 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
+operator|&&
+name|ErrorMode
+operator|!=
+name|EM_QUIET
 condition|)
 name|savemail
 argument_list|(
@@ -617,6 +621,10 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|QUEUE
 name|queueup
 argument_list|(
 name|e
@@ -626,6 +634,18 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|QUEUE
+name|syserr
+argument_list|(
+literal|"dropenvelope: queueup"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
+block|}
 comment|/* now unlock the job */
 name|closexscript
 argument_list|(
@@ -819,6 +839,9 @@ literal|'x'
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QUEUE
 comment|/* last but not least, remove the lock */
 name|xunlink
 argument_list|(
@@ -830,6 +853,9 @@ literal|'l'
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
 block|}
 end_block
 
@@ -1449,6 +1475,9 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+ifdef|#
+directive|ifdef
+name|QUEUE
 if|if
 condition|(
 name|access
@@ -1553,6 +1582,27 @@ argument_list|(
 name|lf
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|QUEUE
+if|if
+condition|(
+name|close
+argument_list|(
+name|creat
+argument_list|(
+name|qf
+argument_list|,
+name|FileMode
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+continue|continue;
+endif|#
+directive|endif
+endif|QUEUE
 block|}
 if|if
 condition|(

@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.55
+literal|3.56
 operator|%
 name|G
 operator|%
@@ -2402,6 +2402,22 @@ name|SM_DELIVER
 expr_stmt|;
 break|break;
 case|case
+name|SM_QUEUE
+case|:
+comment|/* queue only */
+ifndef|#
+directive|ifndef
+name|QUEUE
+name|syserr
+argument_list|(
+literal|"need QUEUE to set -odqueue"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
+comment|/* fall through..... */
+case|case
 name|SM_DELIVER
 case|:
 comment|/* do everything */
@@ -2409,10 +2425,6 @@ case|case
 name|SM_FORK
 case|:
 comment|/* fork after verification */
-case|case
-name|SM_QUEUE
-case|:
-comment|/* queue only */
 name|SendMode
 operator|=
 operator|*
@@ -2461,19 +2473,6 @@ case|case
 name|EM_QUIET
 case|:
 comment|/* be silent about it */
-operator|(
-name|void
-operator|)
-name|freopen
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-literal|"w"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-comment|/* fall through... */
 case|case
 name|EM_MAIL
 case|:
