@@ -3513,7 +3513,7 @@ name|dp
 operator|->
 name|d_type
 operator|=
-name|DT_REG
+name|DT_DIR
 expr_stmt|;
 name|p
 operator|=
