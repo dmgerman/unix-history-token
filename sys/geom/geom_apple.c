@@ -759,12 +759,8 @@ name|npart
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+do|do
 block|{
-comment|/* a trick to allow us to use break */
 if|if
 condition|(
 name|gp
@@ -1162,6 +1158,11 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;

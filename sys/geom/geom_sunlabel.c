@@ -794,7 +794,6 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-comment|/* a trick to allow us to use break */
 if|if
 condition|(
 name|gp

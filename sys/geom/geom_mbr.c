@@ -1592,12 +1592,8 @@ name|dumpconf
 operator|=
 name|g_mbr_dumpconf
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+do|do
 block|{
-comment|/* a trick to allow us to use break */
 if|if
 condition|(
 name|gp
@@ -1707,6 +1703,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
@@ -2190,12 +2191,8 @@ name|slice
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+do|do
 block|{
-comment|/* a trick to allow us to use break */
 name|error
 operator|=
 name|g_getattr
@@ -2564,6 +2561,11 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
