@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.32 (Berkeley) %G%"
+literal|"@(#)conf.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4095,6 +4095,269 @@ endif|#
 directive|endif
 return|return
 name|TRUE
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  TRANSIENTERROR -- tell if an error code indicates a transient failure ** **	This looks at an errno value and tells if this is likely to **	go away if retried later. ** **	Parameters: **		err -- the errno code to classify. ** **	Returns: **		TRUE if this is probably transient. **		FALSE otherwise. */
+end_comment
+
+begin_function
+name|bool
+name|transienterror
+parameter_list|(
+name|err
+parameter_list|)
+name|int
+name|err
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|err
+condition|)
+block|{
+case|case
+name|EIO
+case|:
+comment|/* I/O error */
+case|case
+name|ENXIO
+case|:
+comment|/* Device not configured */
+case|case
+name|EAGAIN
+case|:
+comment|/* Resource temporarily unavailable */
+case|case
+name|ENOMEM
+case|:
+comment|/* Cannot allocate memory */
+case|case
+name|ENODEV
+case|:
+comment|/* Operation not supported by device */
+case|case
+name|ENFILE
+case|:
+comment|/* Too many open files in system */
+case|case
+name|EMFILE
+case|:
+comment|/* Too many open files */
+case|case
+name|ENOSPC
+case|:
+comment|/* No space left on device */
+ifdef|#
+directive|ifdef
+name|ETIMEDOUT
+case|case
+name|ETIMEDOUT
+case|:
+comment|/* Connection timed out */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ESTALE
+case|case
+name|ESTALE
+case|:
+comment|/* Stale NFS file handle */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENETDOWN
+case|case
+name|ENETDOWN
+case|:
+comment|/* Network is down */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENETUNREACH
+case|case
+name|ENETUNREACH
+case|:
+comment|/* Network is unreachable */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENETRESET
+case|case
+name|ENETRESET
+case|:
+comment|/* Network dropped connection on reset */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ECONNABORTED
+case|case
+name|ECONNABORTED
+case|:
+comment|/* Software caused connection abort */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ECONNRESET
+case|case
+name|ECONNRESET
+case|:
+comment|/* Connection reset by peer */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENOBUFS
+case|case
+name|ENOBUFS
+case|:
+comment|/* No buffer space available */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ESHUTDOWN
+case|case
+name|ESHUTDOWN
+case|:
+comment|/* Can't send after socket shutdown */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ECONNREFUSED
+case|case
+name|ECONNREFUSED
+case|:
+comment|/* Connection refused */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EHOSTDOWN
+case|case
+name|EHOSTDOWN
+case|:
+comment|/* Host is down */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EHOSTUNREACH
+case|case
+name|EHOSTUNREACH
+case|:
+comment|/* No route to host */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EDQUOT
+case|case
+name|EDQUOT
+case|:
+comment|/* Disc quota exceeded */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EPROCLIM
+case|case
+name|EPROCLIM
+case|:
+comment|/* Too many processes */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EUSERS
+case|case
+name|EUSERS
+case|:
+comment|/* Too many users */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EDEADLK
+case|case
+name|EDEADLK
+case|:
+comment|/* Resource deadlock avoided */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EISCONN
+case|case
+name|EISCONN
+case|:
+comment|/* Socket already connected */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EINPROGRESS
+case|case
+name|EINPROGRESS
+case|:
+comment|/* Operation now in progress */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EALREADY
+case|case
+name|EALREADY
+case|:
+comment|/* Operation already in progress */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EADDRINUSE
+case|case
+name|EADDRINUSE
+case|:
+comment|/* Address already in use */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EADDRNOTAVAIL
+case|case
+name|EADDRNOTAVAIL
+case|:
+comment|/* Can't assign requested address */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ENOSR
+case|case
+name|ENOSR
+case|:
+comment|/* Out of streams resources */
+endif|#
+directive|endif
+return|return
+name|TRUE
+return|;
+block|}
+comment|/* nope, must be permanent */
+return|return
+name|FALSE
 return|;
 block|}
 end_function

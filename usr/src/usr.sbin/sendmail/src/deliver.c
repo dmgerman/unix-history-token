@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.39 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3719,42 +3719,18 @@ argument_list|(
 name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
+name|transienterror
+argument_list|(
 name|saveerrno
+argument_list|)
 condition|)
-block|{
-case|case
-name|EIO
-case|:
-case|case
-name|EAGAIN
-case|:
-case|case
-name|ENOMEM
-case|:
-ifdef|#
-directive|ifdef
-name|EPROCLIM
-case|case
-name|EPROCLIM
-case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ETIMEDOUT
-case|case
-name|ETIMEDOUT
-case|:
-endif|#
-directive|endif
 name|_exit
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
-block|}
 name|_exit
 argument_list|(
 name|EX_UNAVAILABLE

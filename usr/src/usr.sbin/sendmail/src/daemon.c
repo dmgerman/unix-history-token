@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.14 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.15 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.14 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.15 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,67 +1115,24 @@ block|}
 comment|/* failure, decide if temporary or not */
 name|failure
 label|:
-switch|switch
+if|if
+condition|(
+name|transienterror
+argument_list|(
+name|sav_errno
+argument_list|)
+condition|)
+return|return
+name|EX_TEMPFAIL
+return|;
+elseif|else
+if|if
 condition|(
 name|sav_errno
+operator|==
+name|EPERM
 condition|)
 block|{
-case|case
-name|EISCONN
-case|:
-case|case
-name|ETIMEDOUT
-case|:
-case|case
-name|EINPROGRESS
-case|:
-case|case
-name|EALREADY
-case|:
-case|case
-name|EADDRINUSE
-case|:
-case|case
-name|EHOSTDOWN
-case|:
-case|case
-name|ENETDOWN
-case|:
-case|case
-name|ENETRESET
-case|:
-case|case
-name|ENOBUFS
-case|:
-case|case
-name|ECONNREFUSED
-case|:
-case|case
-name|ECONNRESET
-case|:
-case|case
-name|EHOSTUNREACH
-case|:
-case|case
-name|ENETUNREACH
-case|:
-ifdef|#
-directive|ifdef
-name|ENOSR
-case|case
-name|ENOSR
-case|:
-endif|#
-directive|endif
-comment|/* there are others, I'm sure..... */
-return|return
-operator|(
-name|EX_TEMPFAIL
-operator|)
-return|;
-case|case
-name|EPERM
-case|:
 comment|/* why is this happening? */
 name|syserr
 argument_list|(
@@ -1197,7 +1154,8 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-default|default:
+block|}
+else|else
 block|{
 specifier|extern
 name|char
@@ -1220,7 +1178,6 @@ operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
-block|}
 block|}
 block|}
 comment|/* connection ok, put it into canonical form */

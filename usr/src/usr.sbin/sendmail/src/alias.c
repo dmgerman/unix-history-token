@@ -93,7 +93,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.21 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.22 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -108,7 +108,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.21 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.22 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.21 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.22 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +149,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.21 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.22 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3668,11 +3668,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|extern
-name|bool
-name|transienterror
-parameter_list|()
-function_decl|;
 name|ep
 operator|=
 name|strchr
