@@ -637,12 +637,14 @@ continue|continue;
 case|case
 literal|'c'
 case|:
-comment|/* NOTE: c_fmt is intentionally ignored */
+comment|/* NOTE: c_fmt is hardcoded in timelocal.c */
 name|pt
 operator|=
 name|_fmt
 argument_list|(
-literal|"%a %Ef %T %Y"
+name|tptr
+operator|->
+name|c_fmt
 argument_list|,
 name|t
 argument_list|,

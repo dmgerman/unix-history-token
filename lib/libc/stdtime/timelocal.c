@@ -246,8 +246,8 @@ block|,
 comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, using locale's date format," anything goes. 	** Using just numbers (as here) makes Quakers happier; 	** it's also compatible with SVR4. 	*/
 literal|"%m/%d/%y"
 block|,
-comment|/* 	** c_fmt (ctime-compatible) 	** Not used, just compatibility placeholder. 	*/
-name|NULL
+comment|/* 	** c_fmt (ctime-compatible) 	*/
+literal|"%a %Ef %T %Y"
 block|,
 comment|/* am */
 literal|"AM"
@@ -889,6 +889,15 @@ name|p
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+comment|/* XXX: always overwrite for ctime format parsing compatibility */
+name|_time_localebuf
+operator|.
+name|c_fmt
+operator|=
+name|_C_time_locale
+operator|.
+name|c_fmt
 expr_stmt|;
 if|if
 condition|(
