@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.22 1996/03/24 18:57:34 joerg Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.23 1996/04/07 03:52:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -580,7 +580,7 @@ literal|"/etc/fstab"
 argument_list|)
 condition|)
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 else|else
 block|{
@@ -620,7 +620,7 @@ literal|"No disks found!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Record all the chunks */
@@ -816,7 +816,7 @@ literal|"will be required."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Go for the burn */
@@ -1050,7 +1050,7 @@ literal|"Wrote out /etc/fstab file\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -1546,9 +1546,9 @@ argument_list|,
 literal|"Enter time-out period in seconds for screen saver"
 argument_list|)
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -1570,9 +1570,9 @@ argument_list|,
 literal|"Enter the name of an NTP server"
 argument_list|)
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -1600,7 +1600,7 @@ literal|"/usr/X11R6/bin/xf86config"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 else|else
@@ -1612,7 +1612,7 @@ literal|"The XFree86 distribution before attempting to configure it."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -1949,9 +1949,9 @@ literal|"Specify the flags for routed; -q is the default, -s is\n"
 literal|"a good choice for gateway machines."
 argument_list|)
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -1990,7 +1990,7 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -2003,7 +2003,7 @@ name|mediaDevice
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -2051,7 +2051,7 @@ literal|"distribution or the master distribution on ftp.freebsd.org."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|msgNotify
@@ -2098,7 +2098,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|mediaDevice
@@ -2189,7 +2189,7 @@ if|if
 condition|(
 name|ret
 operator|==
-name|RET_DONE
+name|DITEM_LEAVE_MENU
 condition|)
 break|break;
 elseif|else
@@ -2197,7 +2197,7 @@ if|if
 condition|(
 name|ret
 operator|!=
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|index_extract
@@ -2270,7 +2270,7 @@ name|mediaDevice
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -2365,7 +2365,7 @@ operator|*
 name|cp
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -2388,7 +2388,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 else|else
@@ -2430,7 +2430,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 else|else
@@ -2466,7 +2466,7 @@ argument_list|,
 name|cp
 argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|dialog_clear
@@ -2496,10 +2496,10 @@ block|}
 block|}
 else|else
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function

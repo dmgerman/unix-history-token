@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: anonFTP.c,v 1.9 1996/03/23 07:21:28 jkh Exp $  *  * Copyright (c) 1995  *	Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Coranth Gryphon  *	for the FreeBSD Project.  * 4. The name of Coranth Gryphon or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY CORANTH GRYPHON ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CORANTH GRYPHON OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: anonFTP.c,v 1.10 1996/04/07 03:52:16 jkh Exp $  *  * Copyright (c) 1995  *	Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY CORANTH GRYPHON ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CORANTH GRYPHON OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -825,7 +825,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 operator|)
 return|;
 comment|/* succeeds if already exists */
@@ -875,7 +875,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RET_FAIL
+name|DITEM_FAILURE
 operator|)
 return|;
 block|}
@@ -907,7 +907,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 operator|)
 return|;
 block|}
@@ -1002,7 +1002,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|RET_FAIL
+name|DITEM_FAILURE
 operator|)
 return|;
 block|}
@@ -1639,10 +1639,10 @@ condition|(
 name|cancel
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -1662,7 +1662,7 @@ decl_stmt|;
 comment|/* Be optimistic */
 name|i
 operator|=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 expr_stmt|;
 name|dialog_clear
 argument_list|()
@@ -1676,7 +1676,7 @@ if|if
 condition|(
 name|i
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|dialog_clear
@@ -1688,7 +1688,7 @@ literal|"Configuration of Anonymous FTP cancelled per user request."
 argument_list|)
 expr_stmt|;
 return|return
-name|i
+name|DITEM_SUCCESS
 return|;
 block|}
 comment|/*** Use defaults for any invalid values ***/
@@ -1956,7 +1956,7 @@ condition|(
 name|createFtpUser
 argument_list|()
 operator|==
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|msgNotify
@@ -2031,7 +2031,7 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 block|}
 name|dialog_clear
@@ -2052,6 +2052,15 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
+name|w
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2089,9 +2098,26 @@ argument_list|,
 name|MOTD_FILE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|systemExecute
 argument_list|(
 name|cmd
+argument_list|)
+condition|)
+name|i
+operator|=
+name|DITEM_SUCCESS
+expr_stmt|;
+else|else
+name|i
+operator|=
+name|DITEM_FAILURE
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 block|}
@@ -2113,7 +2139,7 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 block|}
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.81 1996/03/24 18:57:36 joerg Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.82 1996/04/07 03:52:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -675,7 +675,7 @@ condition|(
 name|alreadyDone
 condition|)
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 if|if
 condition|(
@@ -695,7 +695,7 @@ literal|"You need to assign disk labels before you can proceed with\nthe install
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* If it's labelled, assume it's also partitioned */
@@ -730,7 +730,7 @@ literal|"We can take no responsibility for lost disk contents!"
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -739,7 +739,7 @@ argument_list|(
 name|NULL
 argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|dialog_clear
@@ -751,7 +751,7 @@ literal|"Couldn't make filesystems properly.  Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -771,7 +771,7 @@ literal|"Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -794,7 +794,7 @@ literal|"Unable to chroot to /mnt - this is bad!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|chdir
@@ -821,14 +821,29 @@ operator|=
 name|TRUE
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
 
 begin_function
 name|int
-name|installFixit
+name|installFixitCDROM
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|installFixitFloppy
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -923,7 +938,7 @@ literal|"Unable to mount the fixit floppy - do you want to try again?"
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|dialog_clear
@@ -975,7 +990,7 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|dialog_clear
@@ -1000,7 +1015,7 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|dialog_clear
@@ -1201,7 +1216,7 @@ literal|"Please remove the fixit floppy now."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -1229,10 +1244,10 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1241,10 +1256,10 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1262,7 +1277,7 @@ name|MenuDistributions
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -1284,7 +1299,7 @@ operator|!
 name|mediaDevice
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -1294,13 +1309,13 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 return|return
-name|RET_DONE
+name|DITEM_LEAVE_MENU
 return|;
 block|}
 end_function
@@ -1345,10 +1360,10 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|dialog_clear
 argument_list|()
@@ -1370,10 +1385,10 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|dialog_clear
 argument_list|()
@@ -1401,7 +1416,7 @@ name|MenuDistributions
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1442,7 +1457,7 @@ operator|!
 name|mediaDevice
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -1452,13 +1467,13 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 return|return
-name|RET_DONE
+name|DITEM_LEAVE_MENU
 return|;
 block|}
 end_function
@@ -1494,7 +1509,7 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|str
 operator|=
@@ -1505,7 +1520,7 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|RET_DONE
+name|DITEM_LEAVE_MENU
 expr_stmt|;
 if|if
 condition|(
@@ -1517,20 +1532,20 @@ condition|(
 name|installInitial
 argument_list|()
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
 name|configFstab
 argument_list|()
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1549,7 +1564,7 @@ literal|"this problem and try again."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -1560,11 +1575,11 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 name|i
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 if|if
 condition|(
@@ -1573,17 +1588,17 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 name|i
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 if|if
 condition|(
 name|i
 operator|!=
-name|RET_FAIL
+name|DITEM_FAILURE
 operator|&&
 operator|!
 name|strcmp
@@ -1921,7 +1936,7 @@ name|Dists
 operator|||
 name|i
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|dialog_clear
@@ -1967,7 +1982,7 @@ name|Dists
 operator|||
 name|i
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|dialog_clear
@@ -2006,7 +2021,7 @@ name|SYSTEM_STATE
 argument_list|,
 name|i
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|?
 literal|"error-install"
 else|:
@@ -2070,7 +2085,7 @@ literal|"Unable to link /kernel into place!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2087,7 +2102,7 @@ literal|"boot from the hard disk, I'm afraid!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2119,7 +2134,7 @@ literal|"MAKEDEV returned non-zero status"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|msgNotify
@@ -2270,7 +2285,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2343,7 +2358,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -2443,7 +2458,7 @@ name|usrdev
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|root
 operator|=
@@ -2511,7 +2526,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -2587,7 +2602,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -2668,7 +2683,7 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2761,7 +2776,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Now buzz through the rest of the partitions and mount them too */
@@ -2834,7 +2849,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -3167,7 +3182,7 @@ literal|"Couldn't clone the /dev files!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|command_sort
@@ -3177,7 +3192,7 @@ name|command_execute
 argument_list|()
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -3299,7 +3314,7 @@ literal|"init"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function

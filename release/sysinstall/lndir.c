@@ -750,7 +750,7 @@ literal|"Unable to get back to ..\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|curdir
@@ -902,7 +902,7 @@ name|to
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -926,7 +926,7 @@ name|to
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -947,7 +947,7 @@ name|to
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* from directory */
@@ -972,7 +972,7 @@ name|from
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -996,7 +996,7 @@ name|from
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 return|return

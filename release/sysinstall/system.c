@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.48 1996/03/18 15:28:08 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.49 1996/03/21 09:30:17 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -474,10 +474,8 @@ argument_list|)
 expr_stmt|;
 name|w
 operator|=
-name|dupwin
-argument_list|(
-name|newscr
-argument_list|)
+name|savescr
+argument_list|()
 expr_stmt|;
 name|dialog_mesgbox
 argument_list|(
@@ -492,17 +490,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|touchwin
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|wrefresh
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|delwin
+name|restorescr
 argument_list|(
 name|w
 argument_list|)
@@ -525,10 +513,8 @@ argument_list|)
 expr_stmt|;
 name|w
 operator|=
-name|dupwin
-argument_list|(
-name|newscr
-argument_list|)
+name|savescr
+argument_list|()
 expr_stmt|;
 name|dialog_textbox
 argument_list|(
@@ -541,17 +527,7 @@ argument_list|,
 name|COLS
 argument_list|)
 expr_stmt|;
-name|touchwin
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|wrefresh
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-name|delwin
+name|restorescr
 argument_list|(
 name|w
 argument_list|)

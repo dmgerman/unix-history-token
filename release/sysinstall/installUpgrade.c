@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.18 1995/11/17 14:17:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.19 1996/04/07 03:52:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -979,7 +979,7 @@ literal|"floppy."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|variable_set2
@@ -1003,7 +1003,7 @@ literal|"risk it all and proceed with this upgrade?"
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1033,7 +1033,7 @@ name|MenuDistributions
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* No bin selected?  Not much of an upgrade.. */
@@ -1113,7 +1113,7 @@ operator|!
 name|mediaDevice
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|dialog_clear
@@ -1138,7 +1138,7 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|dialog_clear
@@ -1151,7 +1151,7 @@ literal|"aborted."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Don't write out MBR info */
@@ -1169,7 +1169,7 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|dialog_clear
@@ -1187,7 +1187,7 @@ name|DISK_PARTITIONED
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -1207,7 +1207,7 @@ literal|"Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -1217,7 +1217,7 @@ argument_list|(
 literal|"/mnt"
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|dialog_clear
@@ -1235,7 +1235,7 @@ name|DISK_PARTITIONED
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|chdir
@@ -1399,7 +1399,7 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 if|if
@@ -1460,7 +1460,7 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|dialog_clear

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.29 1996/03/18 15:28:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.30 1996/03/21 09:30:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -71,7 +71,7 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 return|return
 name|package_extract
@@ -158,7 +158,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 if|if
@@ -181,13 +181,13 @@ literal|"Unable to initialize media type for package extract."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Be initially optimistic */
 name|ret
 operator|=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 expr_stmt|;
 comment|/* Make a couple of paranoid locations for temp files to live if user specified none */
 if|if
@@ -407,6 +407,17 @@ operator|>
 literal|0
 condition|)
 block|{
+name|char
+name|line
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|int
+name|x
+decl_stmt|,
+name|len
+decl_stmt|;
 name|write
 argument_list|(
 name|pfd
@@ -423,17 +434,58 @@ name|tot
 operator|+=
 name|i
 expr_stmt|;
-name|mvprintw
+name|sprintf
 argument_list|(
-literal|0
-argument_list|,
-literal|0
+name|line
 argument_list|,
 literal|"%d bytes read from package %s"
 argument_list|,
 name|tot
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|x
+operator|=
+name|len
+init|;
+name|x
+operator|<
+literal|79
+condition|;
+name|x
+operator|++
+control|)
+name|line
+index|[
+name|x
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|line
+index|[
+literal|79
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|clrtoeol
@@ -551,7 +603,7 @@ expr_stmt|;
 block|}
 name|ret
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 block|}
 return|return

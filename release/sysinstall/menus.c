@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.48 1996/04/03 06:55:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.49 1996/04/07 03:52:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -114,11 +114,16 @@ block|,
 block|{
 literal|"Fixit"
 block|,
-literal|"Mount fixit floppy and go into repair mode"
+literal|"Go into repair mode with CDROM or floppy"
 block|,
 name|NULL
 block|,
-name|installFixit
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuFixit
 block|}
 block|,
 block|{
@@ -152,6 +157,50 @@ block|,
 literal|"Exit this menu (and the installation)"
 block|,
 name|NULL
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuFixit
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+block|,
+literal|"Please choose a fixit option"
+block|,
+literal|"There are two ways of going into \"fixit\" mode - you may either elect\n\ to use the 2nd FreeBSD CDROM, in which case there will be full access\n\ access to the complete set of FreeBSD commands and utilities, or you\n\ can use the more limited fixit floppy if you don't have a CDROM or are\n\ somehow faced with a situation where a CDROM is impractical.  The fixit\n\ floppy has only a minimal subset of commands which we deemed most useful\n\ for fixing a system in trouble."
+block|,
+literal|"Press F1 for more detailed repair instructions"
+block|,
+literal|"fixit"
+block|,
+block|{
+block|{
+literal|"CDROM"
+block|,
+literal|"Use the 2nd \"live\" CDROM from the distribution"
+block|,
+name|NULL
+block|,
+name|installFixitCDROM
+block|}
+block|,
+block|{
+literal|"Floppy"
+block|,
+literal|"Use a floppy generated from the fixit image"
+block|,
+name|NULL
+block|,
+name|installFixitFloppy
 block|}
 block|,
 block|{
@@ -287,6 +336,8 @@ name|MenuMouse
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select your mouse type from the following menu"
 block|,
@@ -395,6 +446,8 @@ name|MenuMediaCDROM
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a CDROM type"
 block|,
@@ -419,6 +472,8 @@ name|MenuMediaFloppy
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a Floppy drive"
 block|,
@@ -443,6 +498,8 @@ name|MenuMediaDOS
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a DOS partition"
 block|,
@@ -467,6 +524,8 @@ name|MenuMediaFTP
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select a FreeBSD FTP distribution site"
 block|,
@@ -1316,6 +1375,8 @@ name|MenuMediaTape
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a tape drive type"
 block|,
@@ -1340,6 +1401,8 @@ name|MenuNetworkDevice
 init|=
 block|{
 name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
@@ -1367,7 +1430,7 @@ name|DMenu
 name|MenuMedia
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_RADIO_TYPE
 block|,
 literal|"Choose Installation Media"
 block|,
@@ -1479,7 +1542,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Distributions"
 block|,
-literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose\n\ the list of distributions yourself, simply select \"Custom\"."
+literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose the\n\ list of distributions yourself, simply select \"Custom\".  You can also\n\ add distribution sets together by picking more than one, fine-tuning the\n\ final results with the Custom item.  When you are finished, select Cancel"
 block|,
 literal|"Press F1 for more information on these options."
 block|,
@@ -1683,7 +1746,7 @@ name|DIST_BIN
 block|}
 block|,
 block|{
-literal|"commercial"
+literal|"commerce"
 block|,
 literal|"Commercial and shareware demos [10MB]"
 block|,
@@ -1943,9 +2006,9 @@ name|distSetXF86
 block|}
 block|,
 block|{
-literal|"Experimental"
+literal|"xperimnt"
 block|,
-literal|"Work in progress!"
+literal|"Experimental work in progress!"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -2509,7 +2572,55 @@ operator|~
 name|DIST_XF86
 expr_stmt|;
 return|return
-literal|0
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkx11Basic
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+name|XF86Dists
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkx11Servers
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+name|XF86ServerDists
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkx11Fonts
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+name|XF86FontDists
 return|;
 block|}
 end_function
@@ -2519,7 +2630,7 @@ name|DMenu
 name|MenuXF86Select
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_CHECKLIST_TYPE
 block|,
 literal|"XFree86 3.1.2-S Distribution"
 block|,
@@ -2535,7 +2646,7 @@ literal|"Basic"
 block|,
 literal|"Basic component menu (required)"
 block|,
-name|NULL
+name|checkx11Basic
 block|,
 name|dmenuSubmenu
 block|,
@@ -2550,7 +2661,7 @@ literal|"Server"
 block|,
 literal|"X server menu"
 block|,
-name|NULL
+name|checkx11Servers
 block|,
 name|dmenuSubmenu
 block|,
@@ -2565,7 +2676,7 @@ literal|"Fonts"
 block|,
 literal|"Font set menu"
 block|,
-name|NULL
+name|checkx11Fonts
 block|,
 name|dmenuSubmenu
 block|,
@@ -2573,16 +2684,6 @@ name|NULL
 block|,
 operator|&
 name|MenuXF86SelectFonts
-block|}
-block|,
-block|{
-literal|"Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuCancel
 block|}
 block|,
 block|{
@@ -3397,7 +3498,7 @@ name|DMENU_CHECKLIST_TYPE
 block|,
 literal|"Select Drive(s)"
 block|,
-literal|"Please select the drive, or drives, on which you wish to perform\n\ this operation.  If you are attempting to install a boot partition\n\ on a drive other than the first one or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later.  To select a drive, use the arrow keys to move to it\n\ and press [SPACE]."
+literal|"Please select the drive, or drives, on which you wish to perform\n\ this operation.  If you are attempting to install a boot partition\n\ on a drive other than the first one or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later.  To select a drive, use the arrow keys to move to it\n\ and press [SPACE].  When you're finished, select Cancel to go on to\n\ the next step."
 block|,
 literal|"Press F1 for important information regarding disk geometry!"
 block|,
@@ -3652,11 +3753,11 @@ block|,
 operator|&
 name|BootMgr
 block|,
-literal|'['
+literal|'('
 block|,
 literal|'*'
 block|,
-literal|']'
+literal|')'
 block|,
 literal|1
 block|}
@@ -3675,11 +3776,11 @@ block|,
 operator|&
 name|BootMgr
 block|,
-literal|'['
+literal|'('
 block|,
 literal|'*'
 block|,
-literal|']'
+literal|')'
 block|,
 literal|2
 block|}

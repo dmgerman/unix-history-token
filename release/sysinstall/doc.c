@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.10 1995/11/06 12:49:23 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: dmenu.c,v 1.15 1996/04/07 03:52:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.   *  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ literal|"This option may only be used after the system is installed, sorry!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Make sure we have media available */
@@ -64,7 +64,7 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 comment|/* First, make sure we have whatever browser we've chosen is here */
 if|if
@@ -74,7 +74,7 @@ argument_list|(
 name|browser
 argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
 name|dialog_clear
@@ -90,7 +90,7 @@ name|browser
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -144,7 +144,7 @@ name|browser
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Run browser on the appropriate doc */
@@ -157,11 +157,11 @@ name|MenuHTMLDoc
 argument_list|)
 condition|)
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 else|else
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -234,7 +234,7 @@ name|browser
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -371,7 +371,7 @@ name|tmp
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 else|else
@@ -383,7 +383,7 @@ literal|"Have you loaded the bin distribution?  Is your network connected?"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
