@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -679,26 +679,6 @@ decl_stmt|,
 comment|/* values: */
 define|#
 directive|define
-name|TPF_CONN_DATA_OUT
-value|TPFLAG_CONN_DATA_OUT
-define|#
-directive|define
-name|TPF_CONN_DATA_IN
-value|TPFLAG_CONN_DATA_IN
-define|#
-directive|define
-name|TPF_DISC_DATA_IN
-value|TPFLAG_DISC_DATA_IN
-define|#
-directive|define
-name|TPF_DISC_DATA_OUT
-value|TPFLAG_DISC_DATA_OUT
-define|#
-directive|define
-name|TPF_XPD_PRESENT
-value|TPFLAG_XPD_PRESENT
-define|#
-directive|define
 name|TPF_NLQOS_PDN
 value|TPFLAG_NLQOS_PDN
 define|#
@@ -707,20 +687,22 @@ name|TPF_PEER_ON_SAMENET
 value|TPFLAG_PEER_ON_SAMENET
 define|#
 directive|define
+name|TPF_GENERAL_ADDR
+value|TPFLAG_GENERAL_ADDR
+define|#
+directive|define
 name|PEER_IS_LOCAL
 parameter_list|(
 name|t
 parameter_list|)
-define|\
-value|(((t)->tp_flags& TPF_PEER_ON_SAME_NET)==TPF_PEER_ON_SAME_NET)
+value|(((t)->tp_flags& TPF_PEER_ON_SAME_NET) != 0)
 define|#
 directive|define
 name|USES_PDN
 parameter_list|(
 name|t
 parameter_list|)
-define|\
-value|(((t)->tp_flags& TPF_NLQOS_PDN)==TPF_NLQOS_PDN)
+value|(((t)->tp_flags& TPF_NLQOS_PDN) != 0)
 name|tp_unused
 range|:
 literal|16
