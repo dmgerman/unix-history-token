@@ -230,7 +230,7 @@ define|#
 directive|define
 name|tcp_random18
 parameter_list|()
-value|((random()>> 14)& 0x3ffff)
+value|(arc4random()& 0x3ffff)
 end_define
 
 begin_endif
