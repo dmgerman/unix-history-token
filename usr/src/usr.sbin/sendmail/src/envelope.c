@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.2
+literal|3.3
 operator|%
 name|G
 operator|%
@@ -482,7 +482,7 @@ name|ADDRESS
 modifier|*
 name|rlist
 decl_stmt|;
-name|sendto
+name|sendtolist
 argument_list|(
 name|CurEnv
 operator|->

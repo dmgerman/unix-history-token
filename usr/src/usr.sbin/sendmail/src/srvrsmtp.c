@@ -27,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -55,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%

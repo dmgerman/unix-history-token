@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.51
+literal|3.52
 operator|%
 name|G
 operator|%
@@ -632,7 +632,7 @@ name|q
 operator|=
 name|NULL
 expr_stmt|;
-name|sendto
+name|sendtolist
 argument_list|(
 name|buf
 argument_list|,

@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%

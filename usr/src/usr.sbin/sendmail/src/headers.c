@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -581,7 +581,7 @@ operator|->
 name|h_flags
 argument_list|)
 condition|)
-name|sendto
+name|sendtolist
 argument_list|(
 name|h
 operator|->
@@ -1182,7 +1182,7 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|sendto
+name|sendtolist
 argument_list|(
 name|p
 argument_list|,

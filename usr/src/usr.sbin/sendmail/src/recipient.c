@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.48
+literal|3.49
 operator|%
 name|G
 operator|%
@@ -36,7 +36,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  SENDTO -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
+comment|/* **  SENDTOLIST -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
 end_comment
 
 begin_define

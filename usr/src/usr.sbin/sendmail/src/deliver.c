@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.136
+literal|3.137
 operator|%
 name|G
 operator|%
@@ -4419,7 +4419,7 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* owner list exists -- add it to the error queue */
-name|sendto
+name|sendtolist
 argument_list|(
 name|obuf
 argument_list|,
@@ -4457,7 +4457,7 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|sendto
+name|sendtolist
 argument_list|(
 name|e
 operator|->
