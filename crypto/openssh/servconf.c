@@ -3056,6 +3056,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|options
+operator|->
+name|num_deny_users
+operator|>=
+name|MAX_DENY_USERS
+condition|)
 name|fatal
 argument_list|(
 literal|"%.200s line %d: too many deny users.\n"
