@@ -2296,6 +2296,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x06491095
+case|:
+case|case
+literal|0x06481095
+case|:
+case|case
 literal|0x06461095
 case|:
 comment|/* CMD 646 enable interrupts, set DMA read mode */
