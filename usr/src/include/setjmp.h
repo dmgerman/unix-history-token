@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	setjmp.h	4.2	89/10/16	*/
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)setjmp.h	4.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -124,10 +124,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -154,10 +150,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !__STDC__ */
-end_comment
 
 begin_endif
 endif|#
