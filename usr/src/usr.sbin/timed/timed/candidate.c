@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)candidate.c	2.2 (Berkeley) %G%"
+literal|"@(#)candidate.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,10 +421,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TSP_DATE
+name|TSP_SETDATE
 case|:
 case|case
-name|TSP_DATEREQ
+name|TSP_SETDATEREQ
 case|:
 break|break;
 default|default:
