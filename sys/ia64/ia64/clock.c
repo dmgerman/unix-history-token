@@ -212,18 +212,21 @@ comment|/* wall	CMOS clock assumed if != 0 */
 end_comment
 
 begin_decl_stmt
+name|u_int64_t
+name|itm_reload
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reload ticks for clock */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|beeping
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int64_t
-name|itc_frequency
 decl_stmt|;
 end_decl_stmt
 
@@ -549,11 +552,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ia64_set_itm
-argument_list|(
-name|ia64_get_itc
-argument_list|()
-operator|+
+name|itm_reload
+operator|=
 operator|(
 name|itc_frequency
 operator|+
@@ -563,6 +563,13 @@ literal|2
 operator|)
 operator|/
 name|hz
+expr_stmt|;
+name|ia64_set_itm
+argument_list|(
+name|ia64_get_itc
+argument_list|()
+operator|+
+name|itm_reload
 argument_list|)
 expr_stmt|;
 name|ia64_set_itv

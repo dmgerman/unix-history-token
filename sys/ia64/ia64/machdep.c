@@ -3296,6 +3296,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|ia64_set_tpr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
