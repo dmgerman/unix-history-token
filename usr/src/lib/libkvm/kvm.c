@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	5.23 (Berkeley) %G%"
+literal|"@(#)kvm.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1495,6 +1495,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kd
+operator|->
+name|db
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * read version out of database 	 */
 name|rec
 operator|.
