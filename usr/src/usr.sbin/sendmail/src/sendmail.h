@@ -421,12 +421,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-name|EchoBack
+name|BerkNet
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* echo the message on error */
+comment|/* called from BerkNet */
 end_comment
 
 begin_decl_stmt
