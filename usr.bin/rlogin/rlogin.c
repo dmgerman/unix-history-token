@@ -688,7 +688,7 @@ block|}
 define|#
 directive|define
 name|OPTIONS
-value|"468DEKLde:i:l:"
+value|"468DELde:i:l:"
 while|while
 condition|(
 operator|(
@@ -3545,7 +3545,7 @@ name|stderr
 argument_list|,
 literal|"usage: rlogin [-46%s]%s[-e char] [-i localname] [-l username] host\n"
 argument_list|,
-literal|"8DEKLd"
+literal|"8DELd"
 argument_list|,
 literal|" "
 argument_list|)
