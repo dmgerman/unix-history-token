@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	5.2 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,7 +434,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"minfree\t%d%%\tmaxbpg\t%d\n"
+literal|"minfree\t%d%%\tmaxbpg\t%d\toptim\t%s\n"
 argument_list|,
 name|afs
 operator|.
@@ -443,6 +443,16 @@ argument_list|,
 name|afs
 operator|.
 name|fs_maxbpg
+argument_list|,
+name|afs
+operator|.
+name|fs_optim
+operator|==
+name|FS_OPTSPACE
+condition|?
+literal|"space"
+else|:
+literal|"time"
 argument_list|)
 expr_stmt|;
 name|printf
