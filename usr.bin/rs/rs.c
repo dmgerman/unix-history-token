@@ -1755,6 +1755,7 @@ if|if
 condition|(
 name|putlength
 condition|)
+block|{
 comment|/* print length, recycle storage */
 name|printf
 argument_list|(
@@ -1765,6 +1766,11 @@ argument_list|,
 name|irows
 argument_list|)
 expr_stmt|;
+name|curline
+operator|=
+name|ibuf
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
