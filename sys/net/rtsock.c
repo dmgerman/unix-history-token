@@ -479,9 +479,10 @@ argument_list|,
 name|M_PCB
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|rp
@@ -491,15 +492,6 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
-name|bzero
-argument_list|(
-name|rp
-argument_list|,
-sizeof|sizeof
-expr|*
-name|rp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The splnet() is necessary to block protocols from sending 	 * error notifications (like RTM_REDIRECT or RTM_LOSING) while 	 * this PCB is extant but incompletely initialized. 	 * Probably we should try to do more of this work beforehand and 	 * eliminate the spl. 	 */
 name|s
 operator|=
