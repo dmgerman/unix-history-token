@@ -481,6 +481,15 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|Pt
+operator|->
+name|shift
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|Pt
 operator|->
 name|shift
@@ -489,6 +498,7 @@ literal|0
 index|]
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 if|if
