@@ -9,12 +9,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -22,24 +16,13 @@ file|<sys/systm.h>
 end_include
 
 begin_comment
-comment|/* for printf() in EXCEPTION() */
+comment|/* for printf() in EXCEPTION() and 				 * to bring in<machine/cpufunc.h 				 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
 end_include
 
 begin_include
