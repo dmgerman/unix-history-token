@@ -110,7 +110,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static int pread (struct proc *procp, unsigned int addr, unsigned int *retval) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
+unit|static int pread(struct proc *procp, unsigned int addr, unsigned int *retval) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
 comment|/* offset into page */
 end_comment
 
@@ -125,12 +125,12 @@ comment|/* Map page into kernel space */
 end_comment
 
 begin_comment
-unit|map =&procp->p_vmspace->vm_map;  	page_offset = addr - trunc_page(addr); 	pageno = trunc_page(addr);  	tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_READ,&out_entry,&object,&pindex,&out_prot,&wired);  	if (rv != KERN_SUCCESS) 		return (EINVAL);  	vm_map_lookup_done (tmap, out_entry);
+unit|map =&procp->p_vmspace->vm_map;  	page_offset = addr - trunc_page(addr); 	pageno = trunc_page(addr);  	tmap = map; 	rv = vm_map_lookup(&tmap, pageno, VM_PROT_READ,&out_entry,&object,&pindex,&out_prot,&wired);  	if (rv != KERN_SUCCESS) 		return (EINVAL);  	vm_map_lookup_done(tmap, out_entry);
 comment|/* Find space in kernel_map for the page we're interested in */
 end_comment
 
 begin_comment
-unit|rv = vm_map_find (kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, VM_PROT_ALL, VM_PROT_ALL, 0);  	if (!rv) { 		vm_object_reference (object);  		rv = vm_map_pageable (kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			*retval = 0; 			bcopy ((caddr_t)kva + page_offset, 			       retval, sizeof *retval); 		} 		vm_map_remove (kernel_map, kva, kva + PAGE_SIZE); 	}  	return (rv); }  static int pwrite (struct proc *procp, unsigned int addr, unsigned int datum) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
+unit|rv = vm_map_find(kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, VM_PROT_ALL, VM_PROT_ALL, 0);  	if (!rv) { 		vm_object_reference(object);  		rv = vm_map_pageable(kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			*retval = 0; 			bcopy((caddr_t)kva + page_offset, 			       retval, sizeof *retval); 		} 		vm_map_remove(kernel_map, kva, kva + PAGE_SIZE); 	}  	return (rv); }  static int pwrite(struct proc *procp, unsigned int addr, unsigned int datum) { 	int		rv; 	vm_map_t	map, tmap; 	vm_object_t	object; 	vm_offset_t	kva = 0; 	int		page_offset;
 comment|/* offset into page */
 end_comment
 
@@ -150,7 +150,7 @@ comment|/* 	 * Check the permissions for the area we're interested in. 	 */
 end_comment
 
 begin_comment
-unit|if (vm_map_check_protection (map, pageno, pageno + PAGE_SIZE, 		VM_PROT_WRITE) == FALSE) {
+unit|if (vm_map_check_protection(map, pageno, pageno + PAGE_SIZE, 	    VM_PROT_WRITE) == FALSE) {
 comment|/* 		 * If the page was not writable, we make it so. 		 * XXX It is possible a page may *not* be read/executable, 		 * if a process changes that! 		 */
 end_comment
 
@@ -160,7 +160,7 @@ comment|/* The page isn't writable, so let's try making it so... */
 end_comment
 
 begin_comment
-unit|if ((rv = vm_map_protect (map, pageno, pageno + PAGE_SIZE, 			VM_PROT_ALL, 0)) != KERN_SUCCESS) 		  return (EFAULT);
+unit|if ((rv = vm_map_protect(map, pageno, pageno + PAGE_SIZE, 		    VM_PROT_ALL, 0)) != KERN_SUCCESS) 			return (EFAULT);
 comment|/* I guess... */
 end_comment
 
@@ -170,12 +170,12 @@ comment|/* 	 * Now we need to get the page.  out_entry, out_prot, wired, and 	 *
 end_comment
 
 begin_comment
-unit|tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_WRITE,&out_entry,&object,&pindex,&out_prot,&wired); 	if (rv != KERN_SUCCESS) { 		return (EINVAL); 	}
+unit|tmap = map; 	rv = vm_map_lookup(&tmap, pageno, VM_PROT_WRITE,&out_entry,&object,&pindex,&out_prot,&wired); 	if (rv != KERN_SUCCESS) { 		return (EINVAL); 	}
 comment|/* 	 * Okay, we've got the page.  Let's release tmap. 	 */
 end_comment
 
 begin_comment
-unit|vm_map_lookup_done (tmap, out_entry);
+unit|vm_map_lookup_done(tmap, out_entry);
 comment|/* 	 * Fault the page in... 	 */
 end_comment
 
@@ -185,7 +185,7 @@ comment|/* Find space in kernel_map for the page we're interested in */
 end_comment
 
 begin_endif
-unit|rv = vm_map_find (kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, 		VM_PROT_ALL, VM_PROT_ALL, 0); 	if (!rv) { 		vm_object_reference (object);  		rv = vm_map_pageable (kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 		  bcopy (&datum, (caddr_t)kva + page_offset, sizeof datum); 		} 		vm_map_remove (kernel_map, kva, kva + PAGE_SIZE); 	}  	if (fix_prot) 		vm_map_protect (map, pageno, pageno + PAGE_SIZE, 			VM_PROT_READ|VM_PROT_EXECUTE, 0); 	return (rv); }
+unit|rv = vm_map_find(kernel_map, object, IDX_TO_OFF(pindex),&kva, PAGE_SIZE, 0, 	    VM_PROT_ALL, VM_PROT_ALL, 0); 	if (!rv) { 		vm_object_reference(object);  		rv = vm_map_pageable(kernel_map, kva, kva + PAGE_SIZE, 0); 		if (!rv) { 			bcopy(&datum, (caddr_t)kva + page_offset, sizeof datum); 		} 		vm_map_remove(kernel_map, kva, kva + PAGE_SIZE); 	}  	if (fix_prot) 		vm_map_protect(map, pageno, pageno + PAGE_SIZE, 		    VM_PROT_READ|VM_PROT_EXECUTE, 0); 	return (rv); }
 endif|#
 directive|endif
 end_endif
