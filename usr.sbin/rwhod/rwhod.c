@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwhod.c,v 1.9 1999/01/11 05:27:37 steve Exp $"
+literal|"$Id: rwhod.c,v 1.10 1999/06/16 21:05:21 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1655,7 +1655,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rwhod [-i] [-m [ttl]]\n"
+literal|"usage: rwhod [-i] [-p] [-l] [-m [ttl]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
