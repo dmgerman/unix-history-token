@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.16 %G%"
+literal|"@(#)pc.c 3.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -790,7 +790,7 @@ literal|'0'
 case|:
 name|pc0
 operator|=
-literal|"/usr/src/cmd/pc0/a.out"
+literal|"/usr/src/ucb/pc0/a.out"
 expr_stmt|;
 if|if
 condition|(
@@ -817,7 +817,7 @@ literal|'1'
 case|:
 name|pc1
 operator|=
-literal|"/usr/src/cmd/pcc/pc1"
+literal|"/usr/src/lib/pcc/fort"
 expr_stmt|;
 if|if
 condition|(
@@ -844,7 +844,7 @@ literal|'2'
 case|:
 name|pc2
 operator|=
-literal|"/usr/src/cmd/pascal/pc2"
+literal|"/usr/src/ucb/pascal/pc2"
 expr_stmt|;
 if|if
 condition|(
@@ -871,7 +871,7 @@ literal|'3'
 case|:
 name|pc3
 operator|=
-literal|"/usr/src/cmd/pascal/pc3"
+literal|"/usr/src/ucb/pascal/pc3"
 expr_stmt|;
 if|if
 condition|(
@@ -902,7 +902,7 @@ literal|1
 expr_stmt|;
 name|lpc
 operator|=
-literal|"/usr/src/lib/libpc/libpc"
+literal|"/usr/src/usr.lib/libpc/libpc"
 expr_stmt|;
 if|if
 condition|(
