@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.8	81/03/09	*/
+comment|/*	trap.c	4.9	81/04/15	*/
 end_comment
 
 begin_include
@@ -301,13 +301,6 @@ operator|~
 name|SOWEUPC
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|runrun
-operator|==
-literal|0
-condition|)
-return|return;
 goto|goto
 name|out
 goto|;
@@ -401,9 +394,6 @@ name|u_error
 operator|=
 name|i
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|type
@@ -414,11 +404,6 @@ return|return;
 goto|goto
 name|out
 goto|;
-else|#
-directive|else
-return|return;
-endif|#
-directive|endif
 case|case
 name|BPTFLT
 operator|+
