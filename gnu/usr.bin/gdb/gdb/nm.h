@@ -472,6 +472,33 @@ name|DEFAULT_PROMPT
 value|kernel_debugging?"(kgdb) ":"(gdb) "
 end_define
 
+begin_comment
+comment|/* misuse START_PROGRESS to test whether we're running as kgdb */
+end_comment
+
+begin_comment
+comment|/* START_PROGRESS is called at the top of main */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|START_PROGRESS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|START_PROGRESS
+parameter_list|(
+name|STR
+parameter_list|,
+name|N
+parameter_list|)
+define|\
+value|if (!strcmp(STR, "kgdb")) \      kernel_debugging = 1;
+end_define
+
 begin_endif
 endif|#
 directive|endif
