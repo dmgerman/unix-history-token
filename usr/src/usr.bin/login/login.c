@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.2 (Berkeley) %G%"
+literal|"@(#)login.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,22 +418,7 @@ argument_list|)
 block|,
 name|CTRL
 argument_list|(
-name|v
-argument_list|)
-block|,
-name|CTRL
-argument_list|(
-name|h
-argument_list|)
-block|,
-name|CTRL
-argument_list|(
-name|u
-argument_list|)
-block|,
-name|CTRL
-argument_list|(
-argument|c
+argument|v
 argument_list|)
 block|}
 decl_stmt|;
