@@ -2953,18 +2953,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|malloc_abort
-operator|&&
-operator|!
-name|result
-condition|)
-name|wrterror
-argument_list|(
-literal|"allocation failed.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|malloc_zero
 operator|&&
 name|result
@@ -4430,6 +4418,9 @@ argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
