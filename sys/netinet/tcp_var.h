@@ -100,23 +100,14 @@ name|tcp_reass_qsize
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VM_UMA_H
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
-name|uma_zone_t
+name|struct
+name|uma_zone
+modifier|*
 name|tcp_reass_zone
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
