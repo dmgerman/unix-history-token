@@ -746,6 +746,12 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* make sure find output is interspersed correctly with subprocesses */
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|pid
