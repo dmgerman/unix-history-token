@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.9	%G%	*/
+comment|/*	tty.c	3.10	%G%	*/
 end_comment
 
 begin_comment
@@ -518,6 +518,14 @@ name|t_state
 operator||=
 name|ISOPEN
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_line
+operator|!=
+name|OKILDISC
+condition|)
 name|tp
 operator|->
 name|t_line
@@ -729,6 +737,14 @@ name|t_state
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_line
+operator|!=
+name|OKILDISC
+condition|)
 name|tp
 operator|->
 name|t_line
