@@ -146,7 +146,7 @@ begin_decl_stmt
 name|int
 name|udpcksum
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -979,6 +979,11 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|udpcksum
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|ui
 operator|->
@@ -1006,6 +1011,14 @@ name|ui_sum
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+block|}
+else|else
+name|ui
+operator|->
+name|ui_sum
+operator|=
+literal|0
 expr_stmt|;
 operator|(
 operator|(
