@@ -822,7 +822,13 @@ condition|)
 return|return
 name|IEEE80211_CHAN_ANY
 return|;
-else|else
+elseif|else
+if|if
+condition|(
+name|c
+operator|!=
+name|NULL
+condition|)
 block|{
 name|if_printf
 argument_list|(
@@ -840,6 +846,23 @@ argument_list|,
 name|c
 operator|->
 name|ic_flags
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* XXX */
+block|}
+else|else
+block|{
+name|if_printf
+argument_list|(
+operator|&
+name|ic
+operator|->
+name|ic_if
+argument_list|,
+literal|"invalid channel (NULL)\n"
 argument_list|)
 expr_stmt|;
 return|return
