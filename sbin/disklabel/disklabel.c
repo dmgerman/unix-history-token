@@ -51,17 +51,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -70,6 +59,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -619,6 +622,24 @@ name|bootarea
 index|[
 name|BBSIZE
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|blank
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|unknown
+index|[]
+init|=
+literal|"unknown"
 decl_stmt|;
 end_decl_stmt
 
@@ -2264,6 +2285,9 @@ operator|->
 name|d_bbsize
 argument_list|)
 operator|!=
+operator|(
+name|int
+operator|)
 name|lp
 operator|->
 name|d_bbsize
@@ -3104,6 +3128,10 @@ name|found
 operator|&&
 name|i
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 name|DOSPARTOFF
 operator|+
 name|NDOSPART
@@ -3112,6 +3140,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|dos_partition
+argument_list|)
 argument_list|)
 condition|;
 name|i
@@ -4597,10 +4626,11 @@ decl_stmt|,
 name|xpid
 decl_stmt|;
 name|int
-name|stat
+name|locstat
 decl_stmt|,
 name|omask
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ed
@@ -4757,7 +4787,7 @@ operator|=
 name|wait
 argument_list|(
 operator|&
-name|stat
+name|locstat
 argument_list|)
 operator|)
 operator|>=
@@ -4778,7 +4808,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|!
-name|stat
+name|locstat
 operator|)
 return|;
 block|}
@@ -5095,7 +5125,7 @@ name|NULL
 condition|)
 name|tp
 operator|=
-literal|"unknown"
+name|unknown
 expr_stmt|;
 name|cpp
 operator|=
@@ -5411,7 +5441,7 @@ name|NULL
 condition|)
 name|tp
 operator|=
-literal|""
+name|blank
 expr_stmt|;
 if|if
 condition|(
@@ -8019,10 +8049,10 @@ block|{
 specifier|static
 name|struct
 name|disklabel
-name|lab
+name|loclab
 decl_stmt|;
 name|char
-name|namebuf
+name|lnamebuf
 index|[
 name|BBSIZE
 index|]
@@ -8056,7 +8086,7 @@ name|void
 operator|)
 name|snprintf
 argument_list|(
-name|namebuf
+name|lnamebuf
 argument_list|,
 name|BBSIZE
 argument_list|,
@@ -8074,7 +8104,7 @@ name|f
 operator|=
 name|open
 argument_list|(
-name|namebuf
+name|lnamebuf
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -8088,7 +8118,7 @@ name|warn
 argument_list|(
 literal|"cannot open %s"
 argument_list|,
-name|namebuf
+name|lnamebuf
 argument_list|)
 expr_stmt|;
 return|return
@@ -8107,7 +8137,7 @@ argument_list|,
 name|DIOCGDVIRGIN
 argument_list|,
 operator|&
-name|lab
+name|loclab
 argument_list|)
 operator|==
 literal|0
@@ -8124,7 +8154,7 @@ argument_list|,
 name|DIOCGDINFO
 argument_list|,
 operator|&
-name|lab
+name|loclab
 argument_list|)
 operator|==
 literal|0
@@ -8142,7 +8172,7 @@ name|void
 operator|)
 name|snprintf
 argument_list|(
-name|namebuf
+name|lnamebuf
 argument_list|,
 name|BBSIZE
 argument_list|,
@@ -8164,7 +8194,7 @@ name|f
 operator|=
 name|open
 argument_list|(
-name|namebuf
+name|lnamebuf
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -8178,7 +8208,7 @@ name|warn
 argument_list|(
 literal|"cannot open %s"
 argument_list|,
-name|namebuf
+name|lnamebuf
 argument_list|)
 expr_stmt|;
 return|return
@@ -8196,7 +8226,7 @@ argument_list|,
 name|DIOCGDINFO
 argument_list|,
 operator|&
-name|lab
+name|loclab
 argument_list|)
 operator|==
 literal|0
@@ -8213,7 +8243,7 @@ name|warn
 argument_list|(
 literal|"No virgin disklabel found %s"
 argument_list|,
-name|namebuf
+name|lnamebuf
 argument_list|)
 expr_stmt|;
 return|return
@@ -8231,7 +8261,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|lab
+name|loclab
 operator|)
 return|;
 block|}
