@@ -771,8 +771,6 @@ modifier|*
 name|eh
 decl_stmt|;
 name|int
-name|off
-decl_stmt|,
 name|loop_copy
 init|=
 literal|0
@@ -1030,18 +1028,6 @@ literal|0
 operator|)
 return|;
 comment|/* if not yet resolved */
-name|off
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|-
-name|m
-operator|->
-name|m_len
-expr_stmt|;
 name|type
 operator|=
 name|htons
@@ -1089,18 +1075,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|off
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|-
-name|m
-operator|->
-name|m_len
-expr_stmt|;
 name|type
 operator|=
 name|htons
