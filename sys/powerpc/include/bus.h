@@ -89,14 +89,14 @@ name|__BUS_SPACE_HAS_STREAM_METHODS
 end_define
 
 begin_comment
-comment|/*  * Values for the ppc bus space tag, not to be used directly by MI code.  */
+comment|/*  * Values for the ppc bus space tag, not to be used directly by MI code.  * Low byte contains the shift value  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PPC_BUS_SPACE_MEM
-value|1
+value|0x100
 end_define
 
 begin_comment
@@ -106,16 +106,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__BA
-parameter_list|(
-name|t
-parameter_list|,
-name|h
-parameter_list|,
-name|o
-parameter_list|)
-value|((void *)((h) + (o)))
+name|PPC_BUS_MEM_MASK
+value|0x0ff
 end_define
+
+begin_comment
+comment|/*  * Flags for bus_resource_alloc(MEM|IOPORT). XXX this is very bad: it's  * assumed that this won't conflict with resource flags :-(  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_BUS_SPARSE4
+value|0x800000
+end_define
+
+begin_comment
+comment|/* shift offset left 4 bits */
+end_comment
 
 begin_comment
 comment|/*  * Bus address and size types  */
@@ -179,7 +187,15 @@ operator|)
 operator|(
 name|handle
 operator|+
+operator|(
 name|offset
+operator|<<
+operator|(
+name|tag
+operator|&
+name|PPC_BUS_MEM_MASK
+operator|)
+operator|)
 operator|)
 operator|)
 return|;
