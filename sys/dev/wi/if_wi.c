@@ -3012,9 +3012,8 @@ name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
-name|WI_EVENT_ACK
+name|WI_INT_EN
 argument_list|,
-operator|~
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3022,8 +3021,9 @@ name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
-name|WI_INT_EN
+name|WI_EVENT_ACK
 argument_list|,
+operator|~
 literal|0
 argument_list|)
 expr_stmt|;
