@@ -21,18 +21,6 @@ directive|include
 file|"opt_inet.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|NOLTR
-operator|+
-name|NPCI
-operator|)
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/*#define TRlldInlineIO*/
 end_comment
@@ -8393,15 +8381,6 @@ end_endif
 
 begin_comment
 comment|/* TRlldInlineIO */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NOLTR */
 end_comment
 
 end_unit
