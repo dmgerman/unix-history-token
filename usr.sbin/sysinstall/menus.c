@@ -9170,7 +9170,7 @@ name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
-literal|"keymap=pl_PL.ISO_8859-2"
+literal|"keymap=pl_PL.ISO8859-2"
 block|}
 block|,
 block|{
