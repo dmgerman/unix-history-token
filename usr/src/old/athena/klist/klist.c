@@ -643,9 +643,15 @@ name|c
 operator|.
 name|issue_date
 operator|+=
+operator|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 operator|.
 name|lifetime
+operator|)
 operator|*
 literal|5
 operator|*
