@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smrsh.c,v 8.58 2002/05/25 02:41:31 ca Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.58.2.2 2002/09/24 21:40:05 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1042,7 +1042,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s not available for sendmail programs (filename too long)\n"
+literal|"%s: \"%s\" not available for sendmail programs (filename too long)\n"
 argument_list|,
 name|prg
 argument_list|,
@@ -1067,7 +1067,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"uid %d: attempt to use %s (filename too long)"
+literal|"uid %d: attempt to use \"%s\" (filename too long)"
 argument_list|,
 operator|(
 name|int
@@ -1130,7 +1130,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s not available for sendmail programs (stat failed)\n"
+literal|"%s: \"%s\" not available for sendmail programs (stat failed)\n"
 argument_list|,
 name|prg
 argument_list|,
@@ -1155,7 +1155,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"uid %d: attempt to use %s (stat failed)"
+literal|"uid %d: attempt to use \"%s\" (stat failed)"
 argument_list|,
 operator|(
 name|int
@@ -1210,7 +1210,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s not available for sendmail programs (not a file)\n"
+literal|"%s: \"%s\" not available for sendmail programs (not a file)\n"
 argument_list|,
 name|prg
 argument_list|,
@@ -1235,7 +1235,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"uid %d: attempt to use %s (not a file)"
+literal|"uid %d: attempt to use \"%s\" (not a file)"
 argument_list|,
 operator|(
 name|int
@@ -1277,7 +1277,7 @@ name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"%s: %s not available for sendmail programs\n"
+literal|"%s: \"%s\" not available for sendmail programs\n"
 argument_list|,
 name|prg
 argument_list|,
@@ -1302,7 +1302,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"uid %d: attempt to use %s"
+literal|"uid %d: attempt to use \"%s\""
 argument_list|,
 operator|(
 name|int
