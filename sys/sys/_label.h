@@ -22,7 +22,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAC_MAX_POLICIES
+name|MAC_MAX_SLOTS
 value|4
 end_define
 
@@ -56,7 +56,7 @@ decl_stmt|;
 block|}
 name|l_perpolicy
 index|[
-name|MAC_MAX_POLICIES
+name|MAC_MAX_SLOTS
 index|]
 union|;
 block|}

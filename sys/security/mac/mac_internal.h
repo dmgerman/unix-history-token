@@ -266,7 +266,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|MAC_MAX_POLICIES
+name|MAC_MAX_SLOTS
 operator|>
 literal|32
 end_if
@@ -274,7 +274,7 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"MAC_MAX_POLICIES too large"
+literal|"MAC_MAX_SLOTS too large"
 end_error
 
 begin_endif
@@ -286,9 +286,9 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|int
-name|mac_max_policies
+name|mac_max_slots
 init|=
-name|MAC_MAX_POLICIES
+name|MAC_MAX_SLOTS
 decl_stmt|;
 end_decl_stmt
 
@@ -296,12 +296,12 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|int
-name|mac_policy_offsets_free
+name|mac_slot_offsets_free
 init|=
 operator|(
 literal|1
 operator|<<
-name|MAC_MAX_POLICIES
+name|MAC_MAX_SLOTS
 operator|)
 operator|-
 literal|1
@@ -315,12 +315,12 @@ name|_security_mac
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|max_policies
+name|max_slots
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|mac_max_policies
+name|mac_max_slots
 argument_list|,
 literal|0
 argument_list|,
@@ -2111,7 +2111,7 @@ name|slot
 operator|=
 name|ffs
 argument_list|(
-name|mac_policy_offsets_free
+name|mac_slot_offsets_free
 argument_list|)
 expr_stmt|;
 if|if
@@ -2132,7 +2132,7 @@ block|}
 name|slot
 operator|--
 expr_stmt|;
-name|mac_policy_offsets_free
+name|mac_slot_offsets_free
 operator|&=
 operator|~
 operator|(
