@@ -11196,11 +11196,24 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+comment|/* Device drivers may or may not hold giant, hold it here. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|bufdone
 argument_list|(
 name|bp
 operator|->
 name|bio_caller2
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
