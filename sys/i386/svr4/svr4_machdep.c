@@ -526,6 +526,9 @@ operator|->
 name|p_emuldata
 expr_stmt|;
 comment|/* 	 * Set the general purpose registers 	 */
+ifdef|#
+directive|ifdef
+name|VM86
 if|if
 condition|(
 name|tf
@@ -583,6 +586,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 if|#
 directive|if
@@ -934,6 +939,9 @@ operator|.
 name|md_regs
 expr_stmt|;
 comment|/* 	 * Restore register context. 	 */
+ifdef|#
+directive|ifdef
+name|VM86
 if|if
 condition|(
 name|r
@@ -992,6 +1000,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 comment|/* 		 * Check for security violations.  If we're returning to 		 * protected mode, the CPU will validate the segment registers 		 * automatically and generate a trap on violations.  We handle 		 * the trap, rather than doing all of the checking here. 		 */
 if|if
