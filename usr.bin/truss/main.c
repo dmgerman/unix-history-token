@@ -220,6 +220,19 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|__amd64__
+block|{
+literal|"FreeBSD ELF64"
+block|,
+name|amd64_syscall_entry
+block|,
+name|amd64_syscall_exit
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__i386__
 block|{
 literal|"FreeBSD a.out"
