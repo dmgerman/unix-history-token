@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -631,7 +631,7 @@ name|mi
 operator|->
 name|mi_unit
 operator|==
-literal|0
+name|unit
 operator|&&
 name|mi
 operator|->
@@ -649,13 +649,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"root on %s0\n"
+literal|"root on %s%d\n"
 argument_list|,
 name|mi
 operator|->
 name|mi_driver
 operator|->
 name|md_dname
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -694,7 +696,7 @@ name|ui
 operator|->
 name|ui_unit
 operator|==
-literal|0
+name|unit
 operator|&&
 name|ui
 operator|->
@@ -712,13 +714,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"root on %s0\n"
+literal|"root on %s%d\n"
 argument_list|,
 name|ui
 operator|->
 name|ui_driver
 operator|->
 name|ud_dname
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 goto|goto
