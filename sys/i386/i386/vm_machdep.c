@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.14 1994/03/23 09:15:06 davidg Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.15 1994/03/24 23:12:35 davidg Exp $  */
 end_comment
 
 begin_include
@@ -461,12 +461,21 @@ name|startfree
 decl_stmt|;
 name|vm_offset_t
 name|kva
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|s
 init|=
 name|splbio
 argument_list|()
+decl_stmt|;
+name|int
+name|size
+init|=
+name|count
+operator|*
+name|NBPG
 decl_stmt|;
 name|startfree
 operator|=
@@ -506,6 +515,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* 			 * if we have a kva of the right size, no sense 			 * in freeing/reallocating... 			 * might affect fragmentation short term, but 			 * as long as the amount of bounce_map is 			 * significantly more than the maximum transfer 			 * size, I don't think that it is a problem. 			 */
 name|pmap_remove
 argument_list|(
 name|kernel_pmap
@@ -532,6 +542,33 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|kva
+operator|&&
+name|kvaf
+index|[
+name|i
+index|]
+operator|.
+name|size
+operator|==
+name|size
+condition|)
+block|{
+name|kva
+operator|=
+name|kvaf
+index|[
+name|i
+index|]
+operator|.
+name|addr
+expr_stmt|;
+block|}
+else|else
+block|{
 name|kmem_free_wakeup
 argument_list|(
 name|bounce_map
@@ -551,6 +588,7 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -583,6 +621,9 @@ block|}
 if|if
 condition|(
 operator|!
+name|kva
+operator|&&
+operator|!
 operator|(
 name|kva
 operator|=
@@ -590,9 +631,7 @@ name|kmem_alloc_pageable
 argument_list|(
 name|bounce_map
 argument_list|,
-name|count
-operator|*
-name|NBPG
+name|size
 argument_list|)
 operator|)
 condition|)
@@ -964,10 +1003,8 @@ argument_list|(
 literal|1
 argument_list|)
 decl_stmt|;
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|kva
 operator|+
 operator|(
@@ -977,10 +1014,6 @@ name|i
 operator|)
 argument_list|,
 name|bpa
-argument_list|,
-name|VM_PROT_DEFAULT
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* 			 * if we are writing, the copy the data into the page 			 */
@@ -1021,10 +1054,8 @@ block|}
 else|else
 block|{
 comment|/* 			 * use original page 			 */
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|kernel_pmap
-argument_list|,
 name|kva
 operator|+
 operator|(
@@ -1034,10 +1065,6 @@ name|i
 operator|)
 argument_list|,
 name|pa
-argument_list|,
-name|VM_PROT_DEFAULT
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1046,6 +1073,9 @@ operator|+=
 name|NBPG
 expr_stmt|;
 block|}
+name|pmap_update
+argument_list|()
+expr_stmt|;
 comment|/*  * flag the buffer as being bounced  */
 name|bp
 operator|->
@@ -2087,25 +2117,14 @@ argument_list|(
 literal|"vmapbuf: null page frame"
 argument_list|)
 expr_stmt|;
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|vm_map_pmap
-argument_list|(
-name|phys_map
-argument_list|)
-argument_list|,
 name|kva
 argument_list|,
 name|trunc_page
 argument_list|(
 name|pa
 argument_list|)
-argument_list|,
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|addr
@@ -2117,6 +2136,9 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|pmap_update
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
