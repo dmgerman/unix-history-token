@@ -48,14 +48,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|mtx_legal2block
-parameter_list|()
-value|(read_eflags()& PSL_I)
-end_define
-
-begin_define
-define|#
-directive|define
 name|mtx_intr_enable
 parameter_list|(
 name|mutex

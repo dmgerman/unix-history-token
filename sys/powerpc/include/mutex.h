@@ -30,15 +30,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|mtx_legal2block
-parameter_list|()
-define|\
-value|((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK) == ALPHA_PSL_IPL_0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|mtx_intr_enable
 parameter_list|(
 name|mutex

@@ -1581,6 +1581,13 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We start off holding one spinlock after fork: sched_lock. 	 */
+name|p2
+operator|->
+name|p_spinlocks
+operator|=
+literal|1
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p2

@@ -36,14 +36,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|mtx_legal2block
-parameter_list|()
-value|(ia64_get_psr()& IA64_PSR_I)
-end_define
-
-begin_define
-define|#
-directive|define
 name|mtx_intr_enable
 parameter_list|(
 name|mutex

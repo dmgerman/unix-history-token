@@ -574,6 +574,10 @@ name|mtx
 name|p_mtx
 decl_stmt|;
 comment|/* (k) Lock for this struct. */
+name|u_int
+name|p_spinlocks
+decl_stmt|;
+comment|/* (k) Count of held spin locks. */
 name|char
 name|p_lock
 decl_stmt|;
