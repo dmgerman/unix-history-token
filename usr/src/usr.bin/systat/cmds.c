@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,13 @@ name|char
 modifier|*
 name|arg
 decl_stmt|;
+specifier|extern
+function_decl|(
+modifier|*
+name|sigtstpdfl
+function_decl|)
+parameter_list|()
+function_decl|;
 name|omask
 operator|=
 name|sigblock
@@ -817,7 +824,7 @@ name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
-name|SIG_DFL
+name|sigtstpdfl
 argument_list|)
 expr_stmt|;
 name|oldmask
@@ -858,11 +865,6 @@ argument_list|(
 name|CMDLINE
 argument_list|,
 name|col
-argument_list|)
-expr_stmt|;
-name|wrefresh
-argument_list|(
-name|curscr
 argument_list|)
 expr_stmt|;
 name|alarm

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,6 +151,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|suspend
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|sigtstpdfl
+function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -673,6 +683,8 @@ argument_list|,
 name|display
 argument_list|)
 expr_stmt|;
+name|sigtstpdfl
+operator|=
 name|signal
 argument_list|(
 name|SIGTSTP
