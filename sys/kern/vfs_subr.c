@@ -3626,6 +3626,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* 	 * By default, don't allow shared locks unless filesystems 	 * opt-in. 	 */
 name|lockinit
 argument_list|(
 name|vp
@@ -3638,7 +3639,7 @@ name|tag
 argument_list|,
 name|VLKTIMEOUT
 argument_list|,
-literal|0
+name|LK_NOSHARE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize bufobj. 	 */
