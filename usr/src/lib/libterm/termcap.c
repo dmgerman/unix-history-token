@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termcap.c	5.3 (Berkeley) %G%"
+literal|"@(#)termcap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,17 +68,16 @@ begin_comment
 comment|/* max number of names in path */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEF_PATH
-value|".termcap /etc/termcap"
-end_define
-
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -246,9 +245,6 @@ name|p
 operator|=
 name|pathbuf
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|V6
 name|cp
 operator|=
 name|getenv
@@ -328,7 +324,7 @@ name|strncpy
 argument_list|(
 name|p
 argument_list|,
-name|DEF_PATH
+name|_PATH_DEF
 argument_list|,
 name|PBUFSIZ
 operator|-
@@ -353,19 +349,6 @@ name|PBUFSIZ
 argument_list|)
 expr_stmt|;
 comment|/* still can be tokenized */
-else|#
-directive|else
-name|strncpy
-argument_list|(
-name|pathbuf
-argument_list|,
-literal|"/etc/termcap"
-argument_list|,
-name|PBUFSIZ
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|fname
 operator|++
