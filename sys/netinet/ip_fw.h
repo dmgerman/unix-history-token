@@ -94,7 +94,7 @@ comment|/* Rule number */
 name|u_int
 name|fw_flg
 decl_stmt|;
-comment|/* Flags word */
+comment|/* Operational Flags word */
 define|#
 directive|define
 name|IP_FW_MAX_PORTS
@@ -127,12 +127,38 @@ comment|/* ICMP types bitmap */
 block|}
 name|fw_uar
 union|;
+name|u_int
+name|fw_ipflg
+decl_stmt|;
+comment|/* IP flags word */
 name|u_char
 name|fw_ipopt
 decl_stmt|,
 name|fw_ipnopt
 decl_stmt|;
 comment|/* IP options set/unset */
+name|u_short
+name|fw_iplen
+decl_stmt|,
+name|fw_ipid
+decl_stmt|;
+comment|/* IP length, identification */
+name|u_char
+name|fw_iptos
+decl_stmt|,
+name|fw_ipntos
+decl_stmt|;
+comment|/* IP type of service set/unset */
+name|u_char
+name|fw_ipttl
+decl_stmt|;
+comment|/* IP time to live */
+name|u_int
+name|fw_ipver
+range|:
+literal|4
+decl_stmt|;
+comment|/* IP version */
 name|u_char
 name|fw_tcpopt
 decl_stmt|,
@@ -145,6 +171,16 @@ decl_stmt|,
 name|fw_tcpnf
 decl_stmt|;
 comment|/* TCP flags set/unset */
+name|u_int32_t
+name|fw_tcpseq
+decl_stmt|,
+name|fw_tcpack
+decl_stmt|;
+comment|/* TCP sequence and acknowledgement */
+name|u_short
+name|fw_tcpwin
+decl_stmt|;
+comment|/* TCP window size */
 name|long
 name|timestamp
 decl_stmt|;
@@ -791,6 +827,164 @@ end_define
 
 begin_comment
 comment|/* All possible flag bits mask		*/
+end_comment
+
+begin_comment
+comment|/*   * Flags for the 'fw_ipflg' field, for comparing values of ip and its protocols.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_TCPOPT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* tcp options			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_TCPFLG
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* tcp flags			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_TCPSEQ
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* tcp sequence number		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_TCPACK
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* tcp acknowledgement number	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_TCPWIN
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* tcp window size		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_TCPMSK
+value|0x0000001f
+end_define
+
+begin_comment
+comment|/* mask of all tcp values	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPOPT
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* ip options			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPLEN
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* ip length			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPID
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* ip identification		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPTOS
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* ip type of service		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPTTL
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* ip time to live		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPVER
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* ip version			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_IPMSK
+value|0x00003f00
+end_define
+
+begin_comment
+comment|/* mask of all ip values	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IF_MSK
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* All possible bits mask	*/
 end_comment
 
 begin_comment
