@@ -3493,6 +3493,8 @@ name|maxlen
 decl_stmt|;
 name|caddr_t
 name|mac
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -3917,10 +3919,6 @@ condition|(
 name|tlladdr
 condition|)
 block|{
-name|mac
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 		 * sdl0 != NULL indicates proxy NA.  If we do proxy, use 		 * lladdr in sdl0.  If we are not proxying (sending NA for 		 * my address) use lladdr configured for the interface. 		 */
 if|if
 condition|(
