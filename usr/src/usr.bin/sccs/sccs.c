@@ -62,7 +62,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.27 %G%"
+literal|"@(#)sccs.c	1.28 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2275,11 +2275,41 @@ name|FILE
 modifier|*
 name|pfp
 decl_stmt|;
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|SccsDir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|SccsPath
+argument_list|)
+expr_stmt|;
 name|dirfd
 operator|=
 name|fopen
 argument_list|(
-name|SccsPath
+name|buf
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2295,7 +2325,7 @@ name|usrerr
 argument_list|(
 literal|"cannot open %s"
 argument_list|,
-name|SccsPath
+name|buf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2347,6 +2377,29 @@ condition|)
 continue|continue;
 comment|/* got an s. file -- see if the p. file exists */
 name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|SccsDir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
 argument_list|(
 name|buf
 argument_list|,
