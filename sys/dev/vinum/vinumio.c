@@ -3208,9 +3208,17 @@ name|char
 name|part
 decl_stmt|;
 comment|/* UNIX partition */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|int
 name|slice
 decl_stmt|;
@@ -3319,9 +3327,17 @@ operator|-
 name|partname
 expr_stmt|;
 comment|/* remaining length in partition name */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 comment|/* first try the partition table */
 for|for
 control|(
