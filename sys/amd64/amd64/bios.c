@@ -2366,10 +2366,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* ACPI already active */
-if|if
-condition|(
-name|devclass_get_softc
+comment|/* Check to see if ACPI is already active. */
+name|dev
+operator|=
+name|devclass_get_device
 argument_list|(
 name|devclass_find
 argument_list|(
@@ -2378,8 +2378,17 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
 operator|!=
 name|NULL
+operator|&&
+name|device_is_attached
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 return|return;
 comment|/* get count of PnP devices */
