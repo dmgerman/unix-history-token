@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberos/krb.h>
+file|<krb.h>
 end_include
 
 begin_include
@@ -38,15 +38,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"register_proto.h"
+file|"pathnames.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|KFILE
-value|"update.key%s"
-end_define
+begin_include
+include|#
+directive|include
+file|"register_proto.h"
+end_include
 
 begin_function
 name|main
@@ -191,12 +190,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"One copy of the each key should be put in /kerberos on the\n"
+literal|"One copy of the each key should be put in %s on the\n"
+argument_list|,
+name|SERVER_KEYDIR
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Kerberos machine (mode 600, owner root).\n"
+literal|"Kerberos server machine (mode 600, owner root).\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -206,7 +207,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"client as /.update.keyXXX.XXX.XXX.XXX (same modes as above).\n"
+literal|"client as %sXXX.XXX.XXX.XXX (same modes as above),\n"
+argument_list|,
+name|CLIENT_KEYFILE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"where the X's refer to digits of the host's inet address.\n"
 argument_list|)
 expr_stmt|;
 name|fflush

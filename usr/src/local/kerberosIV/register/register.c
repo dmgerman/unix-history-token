@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)register.c	1.5 (Berkeley) %G%"
+literal|"@(#)register.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberos/krb.h>
+file|<krb.h>
 end_include
 
 begin_include
@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"register_proto.h"
 end_include
 
@@ -112,20 +118,6 @@ define|#
 directive|define
 name|PROTO
 value|"tcp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|KFILE
-value|"/.update.key%s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|KPASSWD
-value|"/usr/athena/kpasswd"
 end_define
 
 begin_decl_stmt
@@ -1154,11 +1146,15 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|namebuf
 argument_list|,
-name|KFILE
+literal|"%s%s"
+name|CLIENT_KEYFILE
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1315,7 +1311,7 @@ name|printf
 argument_list|(
 literal|"the %s program from now on to change your Kerberos password.\n\n"
 argument_list|,
-name|KPASSWD
+name|_PATH_KPASSWD
 argument_list|)
 expr_stmt|;
 block|}
@@ -1332,7 +1328,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nServer no longer listeninga\n"
+literal|"\nServer no longer listening\n"
 argument_list|)
 expr_stmt|;
 name|fflush

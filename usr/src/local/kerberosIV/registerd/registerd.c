@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)registerd.c	1.4 (Berkeley) %G%"
+literal|"@(#)registerd.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,13 +85,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberos/krb.h>
+file|<krb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kerberos/krb_db.h>
+file|<krb_db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_include
@@ -99,13 +105,6 @@ include|#
 directive|include
 file|"register_proto.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|SKEYFILE
-value|"/kerberos/update.key%s"
-end_define
 
 begin_define
 define|#
@@ -334,7 +333,10 @@ name|sprintf
 argument_list|(
 name|keyfile
 argument_list|,
-name|SKEYFILE
+literal|"%s%s%s"
+name|SERVER_KEYDIR
+argument_list|,
+name|CLIENT_KEYFILE
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1015,6 +1017,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 1st entry */
+comment|/* and write it to the database */
 if|if
 condition|(
 name|kerb_put_principal
