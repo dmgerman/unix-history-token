@@ -2427,6 +2427,21 @@ block|,
 block|{
 literal|" IPv6 Ready"
 block|,
+literal|"ftp2.jp.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.jp.freebsd.org"
+block|}
+block|,
+block|{
+literal|" IPv6 Ready #2"
+block|,
 literal|"ftp7.jp.freebsd.org"
 block|,
 name|NULL
