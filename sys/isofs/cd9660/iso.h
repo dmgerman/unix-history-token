@@ -1937,6 +1937,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|cd9660_uninit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vfsconf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

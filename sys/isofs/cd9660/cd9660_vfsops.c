@@ -356,7 +356,7 @@ name|cd9660_vptofh
 block|,
 name|cd9660_init
 block|,
-name|vfs_stduninit
+name|cd9660_uninit
 block|,
 name|vfs_stdextattrctl
 block|, }
