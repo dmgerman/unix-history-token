@@ -5576,6 +5576,14 @@ operator|(
 literal|"VIA 82C586 PCI-ISA bridge"
 operator|)
 return|;
+case|case
+literal|0x06861106
+case|:
+return|return
+operator|(
+literal|"VIA 82C686 PCI-ISA bridge"
+operator|)
+return|;
 comment|/* AcerLabs -- vendor 0x10b9 */
 comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
 comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
