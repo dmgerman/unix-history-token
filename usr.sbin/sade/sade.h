@@ -222,7 +222,7 @@ begin_define
 define|#
 directive|define
 name|DEV_NAME_MAX
-value|64
+value|128
 end_define
 
 begin_comment
