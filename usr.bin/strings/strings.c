@@ -282,7 +282,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-0123456789anof"
+literal|"-0123456789an:of"
 argument_list|)
 operator|)
 operator|!=
