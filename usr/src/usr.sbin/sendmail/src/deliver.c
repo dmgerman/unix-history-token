@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.52 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4583,14 +4583,13 @@ ifdef|#
 directive|ifdef
 name|DAEMON
 specifier|extern
-name|struct
-name|sockaddr_in
+name|SOCKADDR
 name|CurHostAddr
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|inet_ntoa
+name|anynet_ntoa
 parameter_list|()
 function_decl|;
 endif|#
@@ -4637,11 +4636,10 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-name|inet_ntoa
+name|anynet_ntoa
 argument_list|(
+operator|&
 name|CurHostAddr
-operator|.
-name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;

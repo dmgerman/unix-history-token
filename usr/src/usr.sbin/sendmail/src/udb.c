@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.13 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.14 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.13 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.14 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2070,6 +2070,16 @@ name|h
 operator|->
 name|h_addrtype
 expr_stmt|;
+name|up
+operator|->
+name|udb_addr
+operator|.
+name|sin_len
+operator|=
+name|h
+operator|->
+name|h_length
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|h
@@ -2289,13 +2299,12 @@ name|printf
 argument_list|(
 literal|"REMOTE: addr %s, timeo %d\n"
 argument_list|,
-name|inet_ntoa
+name|anynet_ntoa
 argument_list|(
+operator|&
 name|up
 operator|->
 name|udb_addr
-operator|.
-name|sin_addr
 argument_list|)
 argument_list|,
 name|up

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.27 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.28 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.27 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.28 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,11 +937,10 @@ name|strcat
 argument_list|(
 name|hostbuf
 argument_list|,
-name|inet_ntoa
+name|anynet_ntoa
 argument_list|(
+operator|&
 name|RealHostAddr
-operator|.
-name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2174,11 +2173,10 @@ name|cmdname
 argument_list|,
 name|RealHostName
 argument_list|,
-name|inet_ntoa
+name|anynet_ntoa
 argument_list|(
+operator|&
 name|RealHostAddr
-operator|.
-name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;

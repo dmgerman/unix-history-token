@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.23 (Berkeley) %G%"
+literal|"@(#)headers.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1728,7 +1728,7 @@ block|{
 specifier|extern
 name|char
 modifier|*
-name|inet_ntoa
+name|anynet_ntoa
 parameter_list|()
 function_decl|;
 name|name
@@ -1746,11 +1746,10 @@ literal|"%.80s (%s)"
 argument_list|,
 name|RealHostName
 argument_list|,
-name|inet_ntoa
+name|anynet_ntoa
 argument_list|(
+operator|&
 name|RealHostAddr
-operator|.
-name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
