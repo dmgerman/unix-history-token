@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.7 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.8 %G%"; */
 end_comment
 
 begin_include
@@ -177,6 +177,17 @@ end_define
 
 begin_comment
 comment|/* bootstrap via a pipe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDX
+value|3
+end_define
+
+begin_comment
+comment|/* invoked by the debugger "pdx" */
 end_comment
 
 begin_define
