@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mlx/mlx_compat.h>
 end_include
 
 begin_include
