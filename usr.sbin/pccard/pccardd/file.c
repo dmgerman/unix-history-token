@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.16 1998/04/25 18:10:10 hosokawa Exp $"
+literal|"$Id: file.c,v 1.17 1999/06/17 21:07:58 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1480,6 +1480,7 @@ operator|)
 operator|>=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1593,6 +1594,7 @@ operator|(
 name|mem
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
