@@ -96,30 +96,43 @@ name|cdevsw
 name|vinum_cdevsw
 init|=
 block|{
+comment|/* open */
 name|vinumopen
 block|,
+comment|/* close */
 name|vinumclose
 block|,
+comment|/* read */
 name|physread
 block|,
+comment|/* write */
 name|physwrite
 block|,
+comment|/* ioctl */
 name|vinumioctl
 block|,
+comment|/* poll */
 name|seltrue
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|vinumstrategy
 block|,
+comment|/* name */
 literal|"vinum"
 block|,
+comment|/* maj */
 name|VINUM_CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_DISK
 block|}
 decl_stmt|;
