@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.13.4.2 1995/10/09 11:16:31 jkh Exp $"
+literal|"$Id: pen.c,v 1.13.4.3 1995/10/14 19:11:46 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,7 +283,7 @@ name|sb
 argument_list|)
 operator|==
 name|SUCCESS
-operator||
+operator|||
 name|mkdir
 argument_list|(
 literal|"/usr/tmp"
