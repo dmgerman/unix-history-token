@@ -88,24 +88,6 @@ name|bios_sect
 operator|=
 name|sect
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
-name|Bios_Limit_Chunk
-argument_list|(
-name|disk
-operator|->
-name|chunks
-argument_list|,
-literal|1024
-operator|*
-name|hd
-operator|*
-name|sect
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
