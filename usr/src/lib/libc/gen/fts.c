@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.9 (Berkeley) %G%"
+literal|"@(#)fts.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,15 @@ name|p
 operator|->
 name|fts_name
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|options
+operator|&
+name|FTS_NOSTAT
+operator|)
+condition|)
 name|p
 operator|->
 name|fts_info
