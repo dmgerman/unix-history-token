@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_debug_nullfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -172,7 +166,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_init\n"
@@ -604,7 +598,7 @@ block|{
 comment|/* 		 * null_node_find has taken another reference 		 * to the alias vnode. 		 */
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"null_node_create: exists"
@@ -624,7 +618,7 @@ decl_stmt|;
 comment|/* 		 * Get new vnode. 		 */
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"null_node_create: create new alias vnode\n"
@@ -697,7 +691,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"null_node_create: alias"
@@ -730,7 +724,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DIAGNOSTIC
 end_ifdef
 
 begin_include

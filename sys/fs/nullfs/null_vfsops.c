@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_debug_nullfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -435,7 +429,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_mount(mp = %p)\n"
@@ -633,7 +627,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_mount: multi null mount?\n"
@@ -866,7 +860,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_mount: lower %s, alias at %s\n"
@@ -983,7 +977,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_unmount(mp = %p)\n"
@@ -1049,7 +1043,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"alias root of lower"
@@ -1130,7 +1124,7 @@ name|vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_root(mp = %p, vp = %p->%p)\n"
@@ -1195,7 +1189,7 @@ block|{
 comment|/* 		 * XXX 		 * Should we check type of node? 		 */
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_root: multi null mount?\n"
@@ -1330,7 +1324,7 @@ name|mstat
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_statfs(mp = %p, vp = %p->%p)\n"

@@ -148,7 +148,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NULLFS_DIAGNOSTIC
+name|DIAGNOSTIC
 end_ifdef
 
 begin_decl_stmt
