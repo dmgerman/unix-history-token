@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exec.c	4.3	83/06/12	*/
+comment|/*	kern_exec.c	4.4	83/06/14	*/
 end_comment
 
 begin_include
@@ -2572,13 +2572,6 @@ argument_list|(
 name|u
 operator|.
 name|u_ofile
-index|[
-name|i
-index|]
-argument_list|,
-name|u
-operator|.
-name|u_pofile
 index|[
 name|i
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	4.3	83/06/02	*/
+comment|/*	kern_exit.c	4.4	83/06/14	*/
 end_comment
 
 begin_include
@@ -398,8 +398,6 @@ expr_stmt|;
 name|closef
 argument_list|(
 name|f
-argument_list|,
-name|po
 argument_list|)
 expr_stmt|;
 block|}
