@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.36 (Berkeley) %G%"
+literal|"@(#)trees.c	4.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2316,7 +2316,7 @@ endif|#
 directive|endif
 argument|return(p);  	}  int fpe_count = -
 literal|1
-argument|; jmp_buf gotfpe;  fpe() { 	if (fpe_count<
+argument|; jmp_buf gotfpe;  void fpe() { 	if (fpe_count<
 literal|0
 argument|) 		cerror(
 literal|"floating point exception"
