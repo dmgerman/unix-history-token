@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.7 1998/12/28 19:22:27 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.8 1999/01/10 02:51:48 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A+ */
+comment|/* release_01_29_99 */
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Vector for MD code to provide specific services.  */
+comment|/*  * Vector for bus specific code to provide specific services.  */
 end_comment
 
 begin_struct_decl
@@ -354,7 +354,7 @@ value|((in == out)? (qlen - 1) : ((in> out)? \ 		((qlen - 1) - (in - out)) : (ou
 end_define
 
 begin_comment
-comment|/*  * SCSI (as opposed to FC-PH) Specific Host Adapter Parameters  */
+comment|/*  * SCSI Specific Host Adapter Parameters  */
 end_comment
 
 begin_typedef
@@ -381,6 +381,10 @@ decl_stmt|,
 name|isp_fifo_threshold
 range|:
 literal|3
+decl_stmt|,
+name|isp_ultramode
+range|:
+literal|1
 decl_stmt|,
 name|isp_diffmode
 range|:
@@ -422,11 +426,19 @@ decl_stmt|;
 struct|struct
 block|{
 name|u_int
+name|dev_enable
+range|:
+literal|1
+decl_stmt|,
+name|dev_announced
+range|:
+literal|1
+decl_stmt|,
 name|dev_update
 range|:
 literal|1
 decl_stmt|,
-name|dev_enable
+name|dev_refresh
 range|:
 literal|1
 decl_stmt|,
@@ -949,7 +961,6 @@ name|isp_seqno
 decl_stmt|;
 comment|/* rolling sequence # */
 comment|/* 	 * Sheer laziness, but it gets us around the problem 	 * where we don't have a clean way of remembering 	 * which transaction is bound to which ISP queue entry. 	 * 	 * There are other more clever ways to do this, but, 	 * jeez, so I blow a couple of KB per host adapter... 	 * and it *is* faster. 	 */
-specifier|volatile
 name|ISP_SCSI_XFER_T
 modifier|*
 name|isp_xflist
@@ -1179,7 +1190,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/*  * Macros to read, write ISP registers through MD code  */
+comment|/*  * Macros to read, write ISP registers through bus specific code.  */
 end_comment
 
 begin_define
@@ -1411,7 +1422,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal Control Point  *  * For: 	Aborting a running command	- arg is an ISP_SCSI_XFER_T *  *		Resetting a Device		- arg is target to reset  *		Resetting a BUS			- arg is ignored  *		Updating parameters		- arg is ignored  *  * Second argument is an index into xflist array.  * Assumes all locks must be held already.  */
+comment|/*  * Platform Dependent to External to Internal Control Function  *  * For: 	Aborting a running command	- arg is an ISP_SCSI_XFER_T *  *		Resetting a Device		- arg is target to reset  *		Resetting a BUS			- arg is ignored  *		Updating parameters		- arg is ignored  *  * First argument is this instance's softc pointer.  * Second argument is an index into xflist array.  * Assumes all locks must be held already.  */
 end_comment
 
 begin_typedef
@@ -1441,6 +1452,39 @@ name|ispsoftc
 operator|*
 operator|,
 name|ispctl_t
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * For: 	Announcing Target Paramter Changes (arg is target)  *  * Assumes all locks are held.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ISPASYNC_NEW_TGT_PARAMS
+block|}
+name|ispasync_t
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|isp_async
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ispsoftc
+operator|*
+operator|,
+name|ispasync_t
 operator|,
 name|void
 operator|*

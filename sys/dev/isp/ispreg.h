@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: ispreg.h,v 1.4 1998/12/28 19:22:27 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A */
+comment|/* release_01_29_99 */
 end_comment
 
 begin_comment
@@ -3513,6 +3513,13 @@ end_define
 begin_comment
 comment|/* RW*: Ext Mem Boundary */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DUAL_BANK
+value|8
+end_define
 
 begin_define
 define|#

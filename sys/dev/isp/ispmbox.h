@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: ispmbox.h,v 1.4 1998/12/28 19:22:26 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A */
+comment|/* release_01_29_99 */
 end_comment
 
 begin_comment
@@ -444,6 +444,34 @@ define|#
 directive|define
 name|MBOX_EXEC_BIOS_IOCB
 value|0x0042
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_FW_FEATURES
+value|0x004a
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_GET_FW_FEATURES
+value|0x004b
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_FEATURE_LVD_NOTIFY
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_FEATURE_FAST_POST
+value|0x1
 end_define
 
 begin_comment
