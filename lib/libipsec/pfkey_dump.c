@@ -2293,13 +2293,13 @@ decl_stmt|;
 name|char
 name|prefbuf
 index|[
-literal|20
+literal|128
 index|]
 decl_stmt|;
 name|char
 name|portbuf
 index|[
-literal|20
+literal|128
 index|]
 decl_stmt|;
 name|int
