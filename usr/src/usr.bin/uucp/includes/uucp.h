@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.4	85/01/22	*/
+comment|/*	uucp.h	5.5	85/01/28	*/
 end_comment
 
 begin_include
@@ -60,8 +60,14 @@ begin_comment
 comment|/*  * Define the various kinds of connections to include.  * The complete list is in the condevs array in condevs.c  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DN11
+end_define
+
 begin_comment
-comment|/*#define DN11		/* standard dialer */
+comment|/* standard dialer */
 end_comment
 
 begin_comment
@@ -72,28 +78,64 @@ begin_comment
 comment|/*#define PNET		/* Purdue network */
 end_comment
 
-begin_comment
-comment|/*#define DF02		/* Dec's DF02/DF03 */
-end_comment
+begin_define
+define|#
+directive|define
+name|DF02
+end_define
 
 begin_comment
-comment|/*#define HAYES		/* Hayes' Smartmodem */
+comment|/* Dec's DF02/DF03 */
 end_comment
 
-begin_comment
-comment|/*#define VENTEL	/* ventel dialer */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAYES
+end_define
 
 begin_comment
-comment|/*#define VADIC		/* Racal-Vadic 345x */
+comment|/* Hayes' Smartmodem */
 end_comment
 
-begin_comment
-comment|/*#define VA212		/* Racal-Vadic 212 */
-end_comment
+begin_define
+define|#
+directive|define
+name|VENTEL
+end_define
 
 begin_comment
-comment|/*#define VA811S	/* Racal-Vadic 811S dialer, 831 adaptor */
+comment|/* ventel dialer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VADIC
+end_define
+
+begin_comment
+comment|/* Racal-Vadic 345x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA212
+end_define
+
+begin_comment
+comment|/* Racal-Vadic 212 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA811S
+end_define
+
+begin_comment
+comment|/* Racal-Vadic 811S dialer, 831 adaptor */
 end_comment
 
 begin_define
@@ -106,12 +148,24 @@ begin_comment
 comment|/* Racal-Vadic 820 dialer, 831 adaptor */
 end_comment
 
-begin_comment
-comment|/*#define RVMACS	/* Racal-Vadic MACS  820 dialer, 831 adaptor */
-end_comment
+begin_define
+define|#
+directive|define
+name|RVMACS
+end_define
 
 begin_comment
-comment|/*#define VMACS		/* Racal-Vadic MACS  811 dialer, 831 adaptor */
+comment|/* Racal-Vadic MACS  820 dialer, 831 adaptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMACS
+end_define
+
+begin_comment
+comment|/* Racal-Vadic MACS  811 dialer, 831 adaptor */
 end_comment
 
 begin_comment
@@ -142,8 +196,14 @@ begin_comment
 comment|/*#define MICOM		/* micom mux port */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOVATION
+end_define
+
 begin_comment
-comment|/*#define NOVATION	/* Novation modem */
+comment|/* Novation modem */
 end_comment
 
 begin_if
