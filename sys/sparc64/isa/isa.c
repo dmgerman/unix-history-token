@@ -1226,23 +1226,11 @@ argument_list|,
 name|limit
 argument_list|)
 condition|)
-block|{
-name|panic
-argument_list|(
-literal|"isa_alloc_resource: resource list entry "
-literal|"out of bus range (0x%lx - 0x%lx not in "
-literal|"0x%lx - 0x%lx)"
-argument_list|,
-name|start
-argument_list|,
-name|end
-argument_list|,
-name|base
-argument_list|,
-name|limit
-argument_list|)
-expr_stmt|;
-block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 break|break;
 case|case
 name|SYS_RES_IRQ
