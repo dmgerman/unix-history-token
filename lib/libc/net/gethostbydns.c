@@ -361,13 +361,6 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|_dns_ttl_
 decl_stmt|;

@@ -125,12 +125,12 @@ name|_PATH_SERVICES
 value|"/etc/services"
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
+begin_define
+define|#
+directive|define
 name|h_errno
-decl_stmt|;
-end_decl_stmt
+value|(*__h_error())
+end_define
 
 begin_comment
 comment|/*  * Structures returned by network data base library.  All addresses are  * supplied in host order, and returned in network order (suitable for  * use in system calls).  */
@@ -303,7 +303,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Error return codes from gethostbyname() and gethostbyaddr()  * (left in extern int h_errno).  */
+comment|/*  * Error return codes from gethostbyname() and gethostbyaddr()  * (left in h_errno).  */
 end_comment
 
 begin_define
@@ -1216,6 +1216,16 @@ end_comment
 begin_comment
 comment|/* DO NOT USE THESE, THEY ARE SUBJECT TO CHANGE AND ARE NOT PORTABLE!!! */
 end_comment
+
+begin_function_decl
+name|int
+modifier|*
+name|__h_error
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

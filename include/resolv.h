@@ -760,25 +760,48 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_expr_stmt
+name|__BEGIN_DECLS
 specifier|extern
-name|struct
+expr|struct
 name|__res_state
-name|_res
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|___res
+argument_list|(
+name|void
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_comment
-comment|/* for INET6 */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|__res_state_ext
+modifier|*
+name|___res_ext
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|__END_DECLS
+define|#
+directive|define
+name|_res
+value|(*___res())
+define|#
+directive|define
 name|_res_ext
-decl_stmt|;
-end_decl_stmt
+value|(*___res_ext())
+comment|/* for INET6 */
+specifier|extern
+expr|struct
+name|__res_state_ext
+name|_res_ext
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern

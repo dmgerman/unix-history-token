@@ -1624,7 +1624,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * XXX: Our res_*() is not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call res_*().  */
+comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
 end_comment
 
 begin_decl_stmt
@@ -6398,6 +6398,9 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6413,14 +6416,22 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|EAI_SERVICE
 return|;
+block|}
 name|port
 operator|=
 name|sp
 operator|->
 name|s_port
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -6984,9 +6995,6 @@ name|result
 operator|=
 name|NULL
 expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 comment|/* 	 * if the servname does not match socktype/protocol, ignore it. 	 */
 if|if
 condition|(
@@ -6999,14 +7007,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 switch|switch
 condition|(
 name|_nsdispatch
@@ -7091,9 +7094,6 @@ comment|/* canonname should be filled already */
 block|}
 break|break;
 block|}
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
 operator|*
 name|res
 operator|=
@@ -7104,9 +7104,6 @@ literal|0
 return|;
 name|free
 label|:
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|result
@@ -9741,6 +9738,9 @@ operator|=
 operator|&
 name|sentinel
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|_sethtent
 argument_list|()
 expr_stmt|;
@@ -9782,6 +9782,9 @@ name|ai_next
 expr_stmt|;
 block|}
 name|_endhtent
+argument_list|()
+expr_stmt|;
+name|THREAD_UNLOCK
 argument_list|()
 expr_stmt|;
 operator|*
@@ -10289,6 +10292,9 @@ operator|=
 operator|&
 name|sentinel
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -10305,9 +10311,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|NS_UNAVAIL
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -10492,6 +10503,9 @@ name|ai_next
 expr_stmt|;
 block|}
 block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sentinel
@@ -10552,13 +10566,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Formulate a normal query, send, and await answer.  * Returned answer is placed in supplied buffer "answer".  * Perform preliminary check of answer, returning success only  * if no error is indicated and the answer count is nonzero.  * Return the size of the response on success, -1 on error.  * Error number is left in h_errno.  *  * Caller must parse answer and determine whether it answers the question.  */

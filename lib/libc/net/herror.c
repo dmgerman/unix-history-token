@@ -124,6 +124,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|h_nerr
 init|=
@@ -137,12 +138,6 @@ index|[
 literal|0
 index|]
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|h_errno
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +319,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|h_errno
+end_undef
+
+begin_decl_stmt
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

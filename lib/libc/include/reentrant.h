@@ -49,6 +49,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|once_t
+value|pthread_once_t
+end_define
+
+begin_define
+define|#
+directive|define
 name|thread_key_t
 value|pthread_key_t
 end_define
@@ -65,6 +72,13 @@ define|#
 directive|define
 name|RWLOCK_INITIALIZER
 value|PTHREAD_RWLOCK_INITIALIZER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONCE_INITIALIZER
+value|PTHREAD_ONCE_INIT
 end_define
 
 begin_define
@@ -243,6 +257,18 @@ parameter_list|,
 name|o
 parameter_list|)
 value|_pthread_sigmask(f, n, o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|thr_once
+parameter_list|(
+name|o
+parameter_list|,
+name|i
+parameter_list|)
+value|_pthread_once(o, i)
 end_define
 
 begin_define

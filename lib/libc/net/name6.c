@@ -800,7 +800,7 @@ comment|/* ICMPNL */
 end_comment
 
 begin_comment
-comment|/*  * XXX: Our res_*() is not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call res_*().  */
+comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
 end_comment
 
 begin_include
@@ -1185,9 +1185,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 name|rval
 operator|=
 name|_nsdispatch
@@ -1209,9 +1206,6 @@ name|af
 argument_list|,
 name|errp
 argument_list|)
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1940,9 +1934,6 @@ return|return
 name|NULL
 return|;
 block|}
-name|THREAD_LOCK
-argument_list|()
-expr_stmt|;
 name|rval
 operator|=
 name|_nsdispatch
@@ -1966,9 +1957,6 @@ name|af
 argument_list|,
 name|errp
 argument_list|)
-expr_stmt|;
-name|THREAD_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -6045,6 +6033,9 @@ operator|==
 name|AF_INET
 condition|)
 block|{
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|hp
 operator|=
 name|_gethostbynisname
@@ -6068,6 +6059,9 @@ name|hp
 argument_list|,
 name|errp
 argument_list|)
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 operator|*
@@ -6170,6 +6164,9 @@ operator|==
 name|AF_INET
 condition|)
 block|{
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|hp
 operator|=
 name|_gethostbynisaddr
@@ -6195,6 +6192,9 @@ name|hp
 argument_list|,
 name|errp
 argument_list|)
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 operator|*
@@ -9831,15 +9831,14 @@ modifier|*
 name|name
 decl_stmt|;
 specifier|static
-name|int
-name|pid
-decl_stmt|;
-specifier|static
 name|struct
 name|_icmp_host_cache
 modifier|*
 name|hc_head
 decl_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|hc
@@ -9873,23 +9872,18 @@ argument_list|,
 name|addr
 argument_list|)
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|hc
 operator|->
 name|hc_name
 return|;
+comment|/* XXX: never freed */
 block|}
-if|if
-condition|(
-name|pid
-operator|==
-literal|0
-condition|)
-name|pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
+block|}
 name|ICMP6_FILTER_SETBLOCKALL
 argument_list|(
 operator|&
@@ -9957,7 +9951,8 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|pid
+name|getpid
+argument_list|()
 expr_stmt|;
 name|fq
 operator|->
@@ -10551,6 +10546,9 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|hc
 operator|->
 name|hc_next
@@ -10560,6 +10558,9 @@ expr_stmt|;
 name|hc_head
 operator|=
 name|hc
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|hc

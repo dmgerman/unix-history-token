@@ -138,13 +138,6 @@ name|MAXADDRS
 value|35
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef

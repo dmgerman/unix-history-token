@@ -187,76 +187,53 @@ directive|include
 file|"res_config.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
+begin_include
+include|#
+directive|include
+file|"res_send_private.h"
+end_include
+
+begin_define
+define|#
+directive|define
 name|s
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+value|___res_send_private()->s
+end_define
 
-begin_comment
-comment|/* socket used for communications */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
+begin_define
+define|#
+directive|define
 name|connected
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+value|___res_send_private()->connected
+end_define
 
-begin_comment
-comment|/* is the socket connected */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
+begin_define
+define|#
+directive|define
 name|vc
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+value|___res_send_private()->vc
+end_define
 
-begin_comment
-comment|/* is the socket a virtual circuit? */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
+begin_define
+define|#
+directive|define
 name|af
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+value|___res_send_private()->af
+end_define
 
-begin_comment
-comment|/* address family of socket */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|res_send_qhook
+begin_define
+define|#
+directive|define
 name|Qhook
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
+value|___res_send_private()->Qhook
+end_define
 
-begin_decl_stmt
-specifier|static
-name|res_send_rhook
+begin_define
+define|#
+directive|define
 name|Rhook
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
+value|___res_send_private()->Rhook
+end_define
 
 begin_define
 define|#
@@ -374,26 +351,6 @@ parameter_list|)
 value|if (cond) {\ 			fprintf args;\ 			__fp_nquery(query, size, stdout);\ 		} else {}
 end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-name|abuf
-index|[
-name|NI_MAXHOST
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|pbuf
-index|[
-name|NI_MAXSERV
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -474,6 +431,18 @@ operator|&
 name|RES_DEBUG
 condition|)
 block|{
+name|char
+name|abuf
+index|[
+name|NI_MAXHOST
+index|]
+decl_stmt|;
+name|char
+name|pbuf
+index|[
+name|NI_MAXSERV
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|getnameinfo
@@ -1664,6 +1633,12 @@ name|ns
 operator|++
 control|)
 block|{
+name|char
+name|abuf
+index|[
+name|NI_MAXHOST
+index|]
+decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
