@@ -117,6 +117,19 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+comment|/* No pnp support */
+if|if
+condition|(
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|sc
 operator|=
 name|device_get_softc
@@ -169,9 +182,18 @@ name|sc
 operator|->
 name|sc_mem_res
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"cannot allocate memory resource\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|paddr
 operator|=
 operator|(
@@ -236,16 +258,12 @@ operator|)
 literal|0x100000
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"si%d: iomem (%p) out of range\n"
+name|dev
 argument_list|,
-name|unit
+literal|"maddr (%p) out of range\n"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|paddr
 argument_list|)
 expr_stmt|;
@@ -267,21 +285,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DPRINT
+name|device_printf
 argument_list|(
-operator|(
-literal|0
-operator|,
-name|DBG_AUTOBOOT
-operator||
-name|DBG_FAIL
-operator|,
-literal|"si%d: iomem (%x) not on 32k boundary\n"
-operator|,
-name|unit
-operator|,
+name|dev
+argument_list|,
+literal|"maddr (%p) not on 32k boundary\n"
+argument_list|,
 name|paddr
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -302,21 +312,13 @@ operator|!=
 literal|0x17
 condition|)
 block|{
-name|DPRINT
+name|device_printf
 argument_list|(
-operator|(
-literal|0
-operator|,
-name|DBG_AUTOBOOT
-operator||
-name|DBG_FAIL
-operator|,
-literal|"si%d: 0x17 check fail at phys 0x%x\n"
-operator|,
-name|unit
-operator|,
+name|dev
+argument_list|,
+literal|"0x17 check fail at phys %p\n"
+argument_list|,
 name|paddr
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -685,29 +687,21 @@ operator|)
 literal|0x17
 condition|)
 block|{
-name|DPRINT
+name|device_printf
 argument_list|(
-operator|(
-literal|0
-operator|,
-name|DBG_AUTOBOOT
-operator||
-name|DBG_FAIL
-operator|,
-literal|"si%d: 0x17 check fail at phys 0x%x = 0x%x\n"
-operator|,
-name|unit
-operator|,
+name|dev
+argument_list|,
+literal|"0x17 check fail at phys %p = 0x%x\n"
+argument_list|,
 name|paddr
 operator|+
 literal|0x77f8
-operator|,
+argument_list|,
 operator|*
 operator|(
 name|maddr
 operator|+
 literal|0x77f8
-operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -820,29 +814,21 @@ literal|0xff
 argument_list|)
 condition|)
 block|{
-name|DPRINT
+name|device_printf
 argument_list|(
-operator|(
-literal|0
-operator|,
-name|DBG_AUTOBOOT
-operator||
-name|DBG_FAIL
-operator|,
-literal|"si%d: match fail at phys 0x%x, was %x should be %x\n"
-operator|,
-name|unit
-operator|,
+name|dev
+argument_list|,
+literal|"memtest fail at phys %p, was %x should be %x\n"
+argument_list|,
 name|paddr
 operator|+
 name|i
-operator|,
+argument_list|,
 name|was
-operator|,
+argument_list|,
 name|i
 operator|&
 literal|0xff
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -909,25 +895,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DPRINT
+name|device_printf
 argument_list|(
-operator|(
-literal|0
-operator|,
-name|DBG_AUTOBOOT
-operator||
-name|DBG_FAIL
-operator|,
-literal|"si%d: clear fail at phys 0x%x, was %x\n"
-operator|,
-name|unit
-operator|,
+name|dev
+argument_list|,
+literal|"clear fail at phys %p, was %x\n"
+argument_list|,
 name|paddr
 operator|+
 name|i
-operator|,
+argument_list|,
 name|was
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -963,26 +941,16 @@ literal|15
 case|:
 break|break;
 default|default:
-name|bad_irq
-label|:
-name|DPRINT
+name|device_printf
 argument_list|(
-operator|(
-literal|0
-operator|,
-name|DBG_AUTOBOOT
-operator||
-name|DBG_FAIL
-operator|,
-literal|"si%d: bad IRQ value - %d\n"
-operator|,
-name|unit
-operator|,
+name|dev
+argument_list|,
+literal|"bad IRQ value - %d (11, 12, 15 allowed)\n"
+argument_list|,
 name|isa_get_irq
 argument_list|(
 name|dev
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1018,8 +986,20 @@ literal|15
 case|:
 break|break;
 default|default:
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"bad IRQ value - %d (11, 12, 15 allowed)\n"
+argument_list|,
+name|isa_get_irq
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
-name|bad_irq
+name|fail
 goto|;
 block|}
 name|sc
@@ -1057,8 +1037,20 @@ literal|15
 case|:
 break|break;
 default|default:
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"bad IRQ value - %d (9, 10, 11, 12, 15 allowed)\n"
+argument_list|,
+name|isa_get_irq
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
-name|bad_irq
+name|fail
 goto|;
 block|}
 name|sc
@@ -1073,11 +1065,11 @@ name|SIMCA
 case|:
 comment|/* MCA */
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"si%d: card type %d not supported\n"
+name|dev
 argument_list|,
-name|unit
+literal|"card type %d not supported\n"
 argument_list|,
 name|type
 argument_list|)
