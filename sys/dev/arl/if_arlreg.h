@@ -1091,26 +1091,6 @@ define|\
 value|do { \ 		int i; \ 		for (i = cnt; i&& ar->resetFlag; i--) { \ 			DELAY(delay); \ 		} \ 	} while (0);
 end_define
 
-begin_define
-define|#
-directive|define
-name|GET_ARL_PARAM
-parameter_list|(
-name|name
-parameter_list|)
-value|(arcfg.name = ar->name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_ARL_PARAM
-parameter_list|(
-name|name
-parameter_list|)
-value|(ar->name = arcfg.name)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
