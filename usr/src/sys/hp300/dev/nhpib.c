@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nhpib.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nhpib.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1756,6 +1756,10 @@ specifier|register
 name|int
 name|unit
 decl_stmt|;
+specifier|extern
+name|int
+name|cold
+decl_stmt|;
 name|unit
 operator|=
 operator|(
@@ -1784,6 +1788,8 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|again
+label|:
 if|if
 condition|(
 name|nhpibppoll
@@ -1820,6 +1826,15 @@ name|hpib_mim
 operator|=
 name|MIS_BO
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|cold
+condition|)
+comment|/* timeouts not working yet */
+goto|goto
+name|again
+goto|;
 else|else
 name|timeout
 argument_list|(
