@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.35	81/04/02	*/
+comment|/*	hp.c	4.36	81/04/29	*/
 end_comment
 
 begin_decl_stmt
@@ -1899,7 +1899,7 @@ operator|->
 name|mi_tab
 operator|.
 name|b_errcnt
-operator|>
+operator|>=
 literal|16
 condition|)
 block|{
