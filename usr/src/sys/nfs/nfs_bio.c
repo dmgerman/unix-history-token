@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"proc.h"
 end_include
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"mount.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"resourcevar.h"
 end_include
 
 begin_include
@@ -871,6 +877,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|int
 name|biosize
@@ -1023,9 +1037,7 @@ name|uio
 argument_list|,
 name|cred
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1084,9 +1096,9 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
-name|u
-operator|.
-name|u_rlimit
+name|p
+operator|->
+name|p_rlimit
 index|[
 name|RLIMIT_FSIZE
 index|]
@@ -1096,9 +1108,7 @@ condition|)
 block|{
 name|psignal
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|,
 name|SIGXFSZ
 argument_list|)
@@ -1315,9 +1325,7 @@ name|bp
 operator|->
 name|b_proc
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 if|if
 condition|(
