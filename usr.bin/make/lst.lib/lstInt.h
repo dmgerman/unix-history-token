@@ -59,7 +59,8 @@ range|:
 literal|8
 decl_stmt|;
 comment|/* Node status flags */
-name|ClientData
+name|void
+modifier|*
 name|datum
 decl_stmt|;
 comment|/* datum associated with this element */

@@ -871,9 +871,11 @@ name|JobCondPassSig
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -899,9 +901,11 @@ name|JobCmpPid
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -914,9 +918,11 @@ name|JobPrintCommand
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -929,9 +935,11 @@ name|JobSaveCommand
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1191,11 +1199,13 @@ name|jobp
 parameter_list|,
 name|signop
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|jobp
 decl_stmt|;
 comment|/* Job to biff */
-name|ClientData
+name|void
+modifier|*
 name|signop
 decl_stmt|;
 comment|/* Signal to send it */
@@ -1369,7 +1379,8 @@ argument_list|,
 name|JobCondPassSig
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|signo
@@ -1563,7 +1574,8 @@ argument_list|,
 name|JobCondPassSig
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|signo
@@ -1624,11 +1636,13 @@ name|job
 parameter_list|,
 name|pid
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|job
 decl_stmt|;
 comment|/* job to examine */
-name|ClientData
+name|void
+modifier|*
 name|pid
 decl_stmt|;
 comment|/* process id desired */
@@ -1673,11 +1687,13 @@ name|job
 parameter_list|,
 name|rmtID
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|job
 decl_stmt|;
 comment|/* job to examine */
-name|ClientData
+name|void
+modifier|*
 name|rmtID
 decl_stmt|;
 comment|/* remote id desired */
@@ -1722,11 +1738,13 @@ name|cmdp
 parameter_list|,
 name|jobp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|cmdp
 decl_stmt|;
 comment|/* command string to print */
-name|ClientData
+name|void
+modifier|*
 name|jobp
 decl_stmt|;
 comment|/* job for which to print it */
@@ -1846,7 +1864,8 @@ operator|->
 name|commands
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cmd
 argument_list|)
@@ -1885,7 +1904,8 @@ operator|->
 name|commands
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cmd
 argument_list|)
@@ -1912,7 +1932,8 @@ argument_list|(
 name|cmdNode
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cmdStart
 argument_list|)
@@ -2289,17 +2310,20 @@ name|cmd
 parameter_list|,
 name|gn
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|cmd
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|gn
 decl_stmt|;
 block|{
 name|cmd
 operator|=
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|Var_Subst
 argument_list|(
@@ -3022,7 +3046,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -3188,7 +3213,8 @@ argument_list|(
 name|jobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -3481,7 +3507,8 @@ argument_list|,
 name|JobSaveCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 operator|->
@@ -3506,9 +3533,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|job
 argument_list|)
 expr_stmt|;
@@ -3528,9 +3552,6 @@ literal|1
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|job
 argument_list|)
 expr_stmt|;
@@ -4800,7 +4821,8 @@ argument_list|(
 name|jobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -5316,7 +5338,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -5395,7 +5418,8 @@ argument_list|(
 name|jobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -5610,7 +5634,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -6045,7 +6070,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -6474,7 +6500,8 @@ operator|||
 name|JobPrintCommand
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|Lst_Datum
 argument_list|(
@@ -6482,7 +6509,8 @@ name|ln
 argument_list|)
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -6539,7 +6567,8 @@ argument_list|,
 name|JobPrintCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -6606,7 +6635,8 @@ argument_list|,
 name|JobPrintCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -6726,7 +6756,8 @@ argument_list|,
 name|JobSaveCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 operator|->
@@ -6752,9 +6783,6 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|job
 argument_list|)
 expr_stmt|;
@@ -6768,9 +6796,6 @@ else|else
 block|{
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|job
 argument_list|)
 expr_stmt|;
@@ -7153,7 +7178,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|job
 argument_list|)
@@ -8199,7 +8225,8 @@ argument_list|(
 name|jobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|pid
@@ -8238,7 +8265,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|pid
@@ -9400,9 +9428,6 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|Address
-operator|)
 operator|&
 name|newShell
 argument_list|,
@@ -10973,7 +10998,8 @@ argument_list|(
 name|jobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|hostID
 argument_list|,
@@ -10994,7 +11020,8 @@ argument_list|(
 name|stoppedJobs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|hostID
 argument_list|,

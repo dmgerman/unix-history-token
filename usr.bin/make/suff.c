@@ -323,9 +323,11 @@ name|SuffSuffIsSuffixP
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -338,9 +340,11 @@ name|SuffSuffHasNameP
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -353,9 +357,11 @@ name|SuffSuffIsPrefix
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -368,9 +374,11 @@ name|SuffGNHasNameP
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -383,7 +391,8 @@ name|SuffFree
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -450,9 +459,11 @@ name|SuffRebuildGraph
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -465,9 +476,11 @@ name|SuffAddSrc
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -542,9 +555,11 @@ name|SuffExpandChildren
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -628,9 +643,11 @@ name|SuffPrintName
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -643,9 +660,11 @@ name|SuffPrintSuff
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -658,9 +677,11 @@ name|SuffPrintTrans
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -834,10 +855,12 @@ name|s
 parameter_list|,
 name|str
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|s
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|str
 decl_stmt|;
 block|{
@@ -876,11 +899,13 @@ name|s
 parameter_list|,
 name|sname
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|s
 decl_stmt|;
 comment|/* Suffix to check */
-name|ClientData
+name|void
+modifier|*
 name|sname
 decl_stmt|;
 comment|/* Desired name */
@@ -923,11 +948,13 @@ name|s
 parameter_list|,
 name|str
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|s
 decl_stmt|;
 comment|/* suffix to compare */
-name|ClientData
+name|void
+modifier|*
 name|str
 decl_stmt|;
 comment|/* string to examine */
@@ -976,11 +1003,13 @@ name|gn
 parameter_list|,
 name|name
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gn
 decl_stmt|;
 comment|/* current node we're looking at */
-name|ClientData
+name|void
+modifier|*
 name|name
 decl_stmt|;
 comment|/* name we're looking for */
@@ -1025,7 +1054,8 @@ name|SuffFree
 parameter_list|(
 name|sp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|sp
 decl_stmt|;
 block|{
@@ -1097,9 +1127,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|s
 operator|->
 name|name
@@ -1107,9 +1134,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -1145,7 +1169,8 @@ argument_list|(
 name|l
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -1317,7 +1342,8 @@ argument_list|(
 name|l
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -1337,7 +1363,8 @@ operator|->
 name|ref
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|l
 argument_list|)
@@ -1387,7 +1414,8 @@ argument_list|,
 name|ln
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -1407,7 +1435,8 @@ operator|->
 name|ref
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|l
 argument_list|)
@@ -1562,7 +1591,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|str
 argument_list|,
@@ -1584,7 +1614,8 @@ name|srcLn
 argument_list|)
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|str
 argument_list|,
@@ -1675,7 +1706,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|str2
 argument_list|,
@@ -1799,7 +1831,8 @@ argument_list|(
 name|transforms
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|line
 argument_list|,
@@ -1829,7 +1862,8 @@ argument_list|(
 name|transforms
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1967,11 +2001,13 @@ name|gnp
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* Node for transformation */
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 comment|/* Node for transformation */
@@ -2129,11 +2165,13 @@ name|transformp
 parameter_list|,
 name|sp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|transformp
 decl_stmt|;
 comment|/* Transformation to test */
-name|ClientData
+name|void
+modifier|*
 name|sp
 decl_stmt|;
 comment|/* Suffix to rebuild */
@@ -2201,7 +2239,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cp
 argument_list|,
@@ -2297,7 +2336,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|transform
 operator|->
@@ -2397,7 +2437,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|str
 argument_list|,
@@ -2508,7 +2549,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -2521,7 +2563,8 @@ argument_list|,
 name|SuffRebuildGraph
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -2559,7 +2602,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|sname
 argument_list|,
@@ -2873,7 +2917,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|sname
 argument_list|,
@@ -2938,7 +2983,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|sname
 argument_list|,
@@ -2990,11 +3036,13 @@ name|sp
 parameter_list|,
 name|lsp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|sp
 decl_stmt|;
 comment|/* suffix for which to create a Src structure */
-name|ClientData
+name|void
+modifier|*
 name|lsp
 decl_stmt|;
 comment|/* list and parent for the new Src */
@@ -3134,7 +3182,8 @@ operator|->
 name|l
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s2
 argument_list|)
@@ -3158,7 +3207,8 @@ operator|->
 name|cp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s2
 argument_list|)
@@ -3185,7 +3235,8 @@ argument_list|,
 name|PrintAddr
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -3282,7 +3333,8 @@ operator|->
 name|l
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s2
 argument_list|)
@@ -3306,7 +3358,8 @@ operator|->
 name|cp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s2
 argument_list|)
@@ -3333,7 +3386,8 @@ argument_list|,
 name|PrintAddr
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -3402,7 +3456,8 @@ argument_list|,
 name|SuffAddSrc
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|ls
@@ -3473,7 +3528,8 @@ argument_list|,
 name|PrintAddr
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -3521,9 +3577,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|s
 operator|->
 name|file
@@ -3538,9 +3591,6 @@ name|parent
 condition|)
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|s
 operator|->
 name|pref
@@ -3563,7 +3613,8 @@ operator|->
 name|cp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -3631,9 +3682,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|s
 argument_list|)
 expr_stmt|;
@@ -3677,7 +3725,8 @@ argument_list|,
 name|PrintAddr
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -3892,7 +3941,8 @@ argument_list|(
 name|slst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -4088,7 +4138,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|cp
@@ -4127,7 +4178,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|targ
 operator|->
@@ -4234,7 +4286,8 @@ operator|->
 name|cp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|ret
 argument_list|)
@@ -4246,7 +4299,8 @@ argument_list|(
 name|slst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|ret
 argument_list|)
@@ -4310,11 +4364,13 @@ name|cgnp
 parameter_list|,
 name|pgnp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|cgnp
 decl_stmt|;
 comment|/* Child to examine */
-name|ClientData
+name|void
+modifier|*
 name|pgnp
 decl_stmt|;
 comment|/* Parent node being processed */
@@ -4367,7 +4423,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cgn
 argument_list|)
@@ -4559,7 +4616,8 @@ argument_list|(
 name|members
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -4696,7 +4754,8 @@ argument_list|(
 name|members
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -4756,7 +4815,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -4776,7 +4836,8 @@ argument_list|,
 name|prevLN
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -4798,7 +4859,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|pgn
 argument_list|)
@@ -4838,7 +4900,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cgn
 argument_list|)
@@ -4912,7 +4975,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cp
 argument_list|,
@@ -5065,7 +5129,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -5085,7 +5150,8 @@ argument_list|,
 name|prevLN
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -5107,7 +5173,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|pgn
 argument_list|)
@@ -5137,7 +5204,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cgn
 argument_list|)
@@ -5240,7 +5308,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|sGn
 argument_list|)
@@ -5259,7 +5328,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|sGn
 argument_list|)
@@ -5274,7 +5344,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|tGn
 argument_list|)
@@ -5343,7 +5414,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -5362,7 +5434,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -5377,7 +5450,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|tGn
 argument_list|)
@@ -5414,7 +5488,8 @@ argument_list|(
 name|transforms
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|tname
 argument_list|,
@@ -5524,7 +5599,8 @@ argument_list|,
 name|SuffExpandChildren
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|tGn
 argument_list|)
@@ -5541,7 +5617,8 @@ operator|->
 name|iParents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|tGn
 argument_list|)
@@ -5687,7 +5764,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|mem
 argument_list|)
@@ -5705,7 +5783,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|mem
 argument_list|)
@@ -5720,7 +5799,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -6260,7 +6340,8 @@ argument_list|(
 name|targs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|targ
 argument_list|)
@@ -6448,7 +6529,8 @@ argument_list|(
 name|targs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|targ
 argument_list|)
@@ -6582,7 +6664,8 @@ argument_list|,
 name|SuffExpandChildren
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -7008,7 +7091,8 @@ argument_list|(
 name|slst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|bottom
 argument_list|)
@@ -7021,7 +7105,8 @@ argument_list|(
 name|slst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|bottom
 argument_list|)
@@ -7292,7 +7377,8 @@ argument_list|(
 name|slst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|bottom
 argument_list|)
@@ -7304,7 +7390,8 @@ argument_list|(
 name|slst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|bottom
 argument_list|)
@@ -7475,7 +7562,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|LIBSUFF
 argument_list|,
@@ -7608,7 +7696,8 @@ argument_list|(
 name|sufflist
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -7881,10 +7970,12 @@ name|s
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|s
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -7924,10 +8015,12 @@ name|sp
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|sp
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -8068,7 +8161,8 @@ argument_list|,
 name|SuffPrintName
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8094,7 +8188,8 @@ argument_list|,
 name|SuffPrintName
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8146,10 +8241,12 @@ name|tp
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|tp
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -8195,7 +8292,8 @@ argument_list|,
 name|Targ_PrintCmd
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8236,7 +8334,8 @@ argument_list|,
 name|SuffPrintSuff
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8253,7 +8352,8 @@ argument_list|,
 name|SuffPrintTrans
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)

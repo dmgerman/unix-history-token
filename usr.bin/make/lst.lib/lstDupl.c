@@ -43,33 +43,45 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a ClientData is  *	given, the individual client elements will be duplicated as well.  *  * Results:  *	The new Lst structure or NULL if failure.  *  * Side Effects:  *	A new list is created.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a void * is  *	given, the individual client elements will be duplicated as well.  *  * Results:  *	The new Lst structure or NULL if failure.  *  * Side Effects:  *	A new list is created.  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|Lst
 name|Lst_Duplicate
-parameter_list|(
+argument_list|(
 name|l
-parameter_list|,
+argument_list|,
 name|copyProc
-parameter_list|)
+argument_list|)
 name|Lst
 name|l
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* the list to duplicate */
-comment|/* A function to duplicate each ClientData */
-function_decl|ClientData
-parameter_list|(
-function_decl|*copyProc
-end_function_decl
+end_comment
+
+begin_comment
+comment|/* A function to duplicate each void * */
+end_comment
+
+begin_macro
+name|void
+end_macro
 
 begin_expr_stmt
-unit|)
+operator|*
+operator|(
+operator|*
+name|copyProc
+operator|)
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;

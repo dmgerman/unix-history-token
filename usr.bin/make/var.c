@@ -340,9 +340,11 @@ name|VarCmp
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -395,7 +397,8 @@ name|VarDelete
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -415,7 +418,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -435,7 +439,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -455,7 +460,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -475,7 +481,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -495,7 +502,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -521,7 +529,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -546,7 +555,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -586,7 +596,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -606,7 +617,8 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -682,10 +694,12 @@ name|Boolean
 argument_list|,
 name|Buffer
 argument_list|,
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -698,9 +712,11 @@ name|VarPrintVar
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -719,11 +735,13 @@ name|v
 parameter_list|,
 name|name
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|v
 decl_stmt|;
 comment|/* VAR structure to compare */
-name|ClientData
+name|void
+modifier|*
 name|name
 decl_stmt|;
 comment|/* name to look for */
@@ -953,7 +971,8 @@ argument_list|(
 name|envFirstVars
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -963,9 +982,11 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|,
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|)
 name|strcmp
@@ -996,7 +1017,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -1033,7 +1055,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -1077,7 +1100,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -1218,7 +1242,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -1422,7 +1447,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|v
 argument_list|)
@@ -1435,7 +1461,8 @@ argument_list|(
 name|allVars
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|v
 argument_list|)
@@ -1476,7 +1503,8 @@ name|VarDelete
 parameter_list|(
 name|vp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|vp
 decl_stmt|;
 block|{
@@ -1508,9 +1536,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|v
 argument_list|)
 expr_stmt|;
@@ -1570,7 +1595,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -1628,7 +1654,8 @@ expr_stmt|;
 name|VarDelete
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|v
 argument_list|)
@@ -1951,7 +1978,8 @@ operator|->
 name|context
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|v
 argument_list|)
@@ -2173,9 +2201,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|v
 argument_list|)
 expr_stmt|;
@@ -2234,7 +2259,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -2389,7 +2415,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -2526,7 +2553,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -2648,7 +2676,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -2781,7 +2810,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|pattern
 decl_stmt|;
 comment|/* Pattern the word must match */
@@ -2881,7 +2911,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|patp
 decl_stmt|;
 comment|/* Pattern the word must match */
@@ -3014,7 +3045,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer in which to store it */
-name|ClientData
+name|void
+modifier|*
 name|pattern
 decl_stmt|;
 comment|/* Pattern the word must match */
@@ -3109,7 +3141,8 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer for result */
-name|ClientData
+name|void
+modifier|*
 name|patternp
 decl_stmt|;
 comment|/* Pattern for substitution */
@@ -3865,7 +3898,8 @@ decl_stmt|;
 name|Buffer
 name|buf
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|patternp
 decl_stmt|;
 block|{
@@ -4524,14 +4558,16 @@ name|Boolean
 operator|,
 name|Buffer
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|ClientData
+name|void
+modifier|*
 name|datum
 decl_stmt|;
 end_decl_stmt
@@ -5952,7 +5988,8 @@ argument_list|,
 name|VarHead
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -5969,7 +6006,8 @@ argument_list|,
 name|VarTail
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -6932,7 +6970,8 @@ argument_list|,
 name|VarMatch
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|pattern
 argument_list|)
@@ -6949,7 +6988,8 @@ argument_list|,
 name|VarNoMatch
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|pattern
 argument_list|)
@@ -7658,7 +7698,8 @@ argument_list|,
 name|VarSubstitute
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|pattern
@@ -8028,7 +8069,8 @@ argument_list|,
 name|VarRESubstitute
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|pattern
@@ -8128,7 +8170,8 @@ argument_list|,
 name|VarTail
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8176,7 +8219,8 @@ argument_list|,
 name|VarHead
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8224,7 +8268,8 @@ argument_list|,
 name|VarSuffix
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8272,7 +8317,8 @@ argument_list|,
 name|VarRoot
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -8564,7 +8610,8 @@ argument_list|,
 name|VarSYSVMatch
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|pattern
@@ -8835,9 +8882,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|v
 argument_list|)
 expr_stmt|;
@@ -8881,9 +8925,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|v
 argument_list|)
 expr_stmt|;
@@ -9474,9 +9515,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -9549,7 +9587,8 @@ argument_list|,
 name|VarTail
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -9584,7 +9623,8 @@ argument_list|,
 name|VarHead
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -9654,10 +9694,12 @@ name|vp
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|vp
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -9733,7 +9775,8 @@ argument_list|,
 name|VarPrintVar
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)

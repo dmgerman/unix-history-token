@@ -78,14 +78,14 @@ begin_define
 define|#
 directive|define
 name|NOFREE
-value|((void (*) __P((ClientData))) 0)
+value|((void (*) __P((void *))) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NOCOPY
-value|((ClientData (*) __P((ClientData))) 0)
+value|((void * (*) __P((void *))) 0)
 end_define
 
 begin_define
@@ -142,12 +142,14 @@ argument_list|(
 operator|(
 name|Lst
 operator|,
-name|ClientData
-argument_list|(
+name|void
 operator|*
-argument_list|)
+call|(
+modifier|*
+call|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|)
 argument_list|)
@@ -171,7 +173,8 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|)
 argument_list|)
@@ -212,7 +215,8 @@ name|Lst
 operator|,
 name|LstNode
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -232,7 +236,8 @@ name|Lst
 operator|,
 name|LstNode
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -250,7 +255,8 @@ argument_list|(
 operator|(
 name|Lst
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -268,7 +274,8 @@ argument_list|(
 operator|(
 name|Lst
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -304,7 +311,8 @@ argument_list|(
 operator|(
 name|LstNode
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -387,7 +395,8 @@ comment|/* Get datum from LstNode */
 end_comment
 
 begin_decl_stmt
-name|ClientData
+name|void
+modifier|*
 name|Lst_Datum
 name|__P
 argument_list|(
@@ -414,16 +423,19 @@ argument_list|(
 operator|(
 name|Lst
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|,
 name|int
 argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|,
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|)
 argument_list|)
@@ -444,7 +456,8 @@ name|Lst
 operator|,
 name|LstNode
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|,
 name|int
 argument_list|(
@@ -452,9 +465,11 @@ operator|*
 name|cProc
 argument_list|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|,
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|)
 argument_list|)
@@ -473,7 +488,8 @@ argument_list|(
 operator|(
 name|Lst
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -496,12 +512,15 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|,
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -526,12 +545,15 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|ClientData
+name|void
+operator|*
 argument_list|,
-name|ClientData
+name|void
+operator|*
 argument_list|)
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -621,7 +643,8 @@ argument_list|(
 operator|(
 name|Lst
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -632,7 +655,8 @@ comment|/* Remove an element from head of queue */
 end_comment
 
 begin_decl_stmt
-name|ClientData
+name|void
+modifier|*
 name|Lst_DeQueue
 name|__P
 argument_list|(

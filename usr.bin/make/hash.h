@@ -34,7 +34,8 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* Used to link together all the     					 * entries associated with the same 					 * bucket. */
-name|ClientData
+name|void
+modifier|*
 name|clientData
 decl_stmt|;
 comment|/* Arbitrary piece of data associated     					 * with key. */
@@ -116,7 +117,7 @@ comment|/*  * Macros.  */
 end_comment
 
 begin_comment
-comment|/*  * ClientData Hash_GetValue(h)  *     Hash_Entry *h;  */
+comment|/*  * void * Hash_GetValue(h)  *     Hash_Entry *h;  */
 end_comment
 
 begin_define
@@ -142,7 +143,7 @@ name|h
 parameter_list|,
 name|val
 parameter_list|)
-value|((h)->clientData = (ClientData) (val))
+value|((h)->clientData = (void *) (val))
 end_define
 
 begin_comment

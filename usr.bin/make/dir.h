@@ -216,19 +216,22 @@ name|Dir_Destroy
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ClientData
+name|void
+modifier|*
 name|Dir_CopyDir
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

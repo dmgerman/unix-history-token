@@ -89,9 +89,11 @@ name|MakeAddChild
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -104,9 +106,11 @@ name|MakeAddAllSrc
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -119,9 +123,11 @@ name|MakeTimeStamp
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -134,9 +140,11 @@ name|MakeHandleUse
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -162,9 +170,11 @@ name|MakePrintStatus
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -230,11 +240,13 @@ name|pgn
 parameter_list|,
 name|cgn
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|pgn
 decl_stmt|;
 comment|/* the current parent */
-name|ClientData
+name|void
+modifier|*
 name|cgn
 decl_stmt|;
 comment|/* the child we've just examined */
@@ -663,7 +675,8 @@ argument_list|,
 name|MakeTimeStamp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -693,11 +706,13 @@ name|gnp
 parameter_list|,
 name|lp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* the node to add */
-name|ClientData
+name|void
+modifier|*
 name|lp
 decl_stmt|;
 comment|/* the list to which to add it */
@@ -745,7 +760,8 @@ argument_list|(
 name|l
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -991,11 +1007,13 @@ name|pgn
 parameter_list|,
 name|cgn
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|pgn
 decl_stmt|;
 comment|/* the current parent */
-name|ClientData
+name|void
+modifier|*
 name|cgn
 decl_stmt|;
 comment|/* the child we've just examined */
@@ -1307,7 +1325,8 @@ argument_list|(
 name|toBeMade
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|pgn
 argument_list|)
@@ -1403,7 +1422,8 @@ argument_list|(
 name|toBeMade
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|succ
 argument_list|)
@@ -1419,7 +1439,8 @@ argument_list|(
 name|toBeMade
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|succ
 argument_list|)
@@ -1543,11 +1564,13 @@ name|cgnp
 parameter_list|,
 name|pgnp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|cgnp
 decl_stmt|;
 comment|/* The child to add */
-name|ClientData
+name|void
+modifier|*
 name|pgnp
 decl_stmt|;
 comment|/* The parent to whose ALLSRC variable it should be */
@@ -1759,7 +1782,8 @@ argument_list|,
 name|MakeAddAllSrc
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2117,11 +2141,13 @@ name|gnp
 parameter_list|,
 name|cyclep
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* Node to examine */
-name|ClientData
+name|void
+modifier|*
 name|cyclep
 decl_stmt|;
 comment|/* True if gn->unmade being non-zero implies 			     * a cycle in the graph, not an error in an 			     * inferior */
@@ -2219,7 +2245,8 @@ argument_list|,
 name|MakePrintStatus
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|t
@@ -2257,7 +2284,8 @@ argument_list|,
 name|MakePrintStatus
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|t
@@ -2387,7 +2415,8 @@ argument_list|,
 name|MakeHandleUse
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2415,7 +2444,8 @@ argument_list|,
 name|MakeAddChild
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|examine
 argument_list|)
@@ -2431,7 +2461,8 @@ argument_list|(
 name|toBeMade
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2522,7 +2553,8 @@ argument_list|,
 name|MakePrintStatus
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|errors

@@ -157,9 +157,11 @@ name|DirFindName
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -230,9 +232,11 @@ name|DirPrintWord
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -245,9 +249,11 @@ name|DirPrintDir
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -331,7 +337,8 @@ expr_stmt|;
 name|Dir_Destroy
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|dot
 argument_list|)
@@ -382,11 +389,13 @@ name|p
 parameter_list|,
 name|dname
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|p
 decl_stmt|;
 comment|/* Current name */
-name|ClientData
+name|void
+modifier|*
 name|dname
 decl_stmt|;
 comment|/* Desired name */
@@ -1152,10 +1161,12 @@ name|word
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|word
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -1545,7 +1556,8 @@ argument_list|,
 name|DirPrintWord
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -3026,7 +3038,8 @@ argument_list|(
 name|openDirectories
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|name
 argument_list|,
@@ -3058,7 +3071,8 @@ argument_list|(
 name|path
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3080,7 +3094,8 @@ argument_list|(
 name|path
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3275,7 +3290,8 @@ argument_list|(
 name|openDirectories
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3288,7 +3304,8 @@ argument_list|(
 name|path
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3317,12 +3334,14 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|ClientData
+name|void
+modifier|*
 name|Dir_CopyDir
 parameter_list|(
 name|p
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|p
 decl_stmt|;
 block|{
@@ -3341,7 +3360,8 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 operator|)
@@ -3484,7 +3504,8 @@ name|Dir_Destroy
 parameter_list|(
 name|pp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|pp
 decl_stmt|;
 comment|/* The directory descriptor to nuke */
@@ -3524,7 +3545,8 @@ argument_list|(
 name|openDirectories
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3549,9 +3571,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|p
 operator|->
 name|name
@@ -3559,9 +3578,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -3611,7 +3627,8 @@ expr_stmt|;
 name|Dir_Destroy
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3687,7 +3704,8 @@ argument_list|(
 name|path1
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3709,7 +3727,8 @@ argument_list|(
 name|path1
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -3853,10 +3872,12 @@ name|p
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|p
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -3904,7 +3925,8 @@ argument_list|,
 name|DirPrintDir
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)

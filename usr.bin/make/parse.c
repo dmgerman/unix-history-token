@@ -751,9 +751,11 @@ name|ParseLinkSrc
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -766,9 +768,11 @@ name|ParseDoOp
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -781,9 +785,11 @@ name|ParseAddDep
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -814,9 +820,11 @@ name|ParseFindMain
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -829,9 +837,11 @@ name|ParseAddDir
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -844,9 +854,11 @@ name|ParseClearPath
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -873,9 +885,11 @@ name|ParseAddCmd
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -914,7 +928,8 @@ name|ParseHasCommands
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1337,11 +1352,13 @@ name|pgnp
 parameter_list|,
 name|cgnp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|pgnp
 decl_stmt|;
 comment|/* The parent node */
-name|ClientData
+name|void
+modifier|*
 name|cgnp
 decl_stmt|;
 comment|/* The child node */
@@ -1375,7 +1392,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cgn
 argument_list|)
@@ -1393,7 +1411,8 @@ operator|->
 name|children
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cgn
 argument_list|)
@@ -1415,7 +1434,8 @@ operator|->
 name|parents
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|pgn
 argument_list|)
@@ -1449,11 +1469,13 @@ name|gnp
 parameter_list|,
 name|opp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* The node to which the operator is to be 				 * applied */
-name|ClientData
+name|void
+modifier|*
 name|opp
 decl_stmt|;
 comment|/* The operator to apply */
@@ -1578,7 +1600,8 @@ argument_list|,
 name|ParseLinkSrc
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cohort
 argument_list|)
@@ -1601,7 +1624,8 @@ operator|->
 name|cohorts
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cohort
 argument_list|)
@@ -1614,7 +1638,8 @@ argument_list|(
 name|targets
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1624,7 +1649,8 @@ argument_list|(
 name|ln
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cohort
 argument_list|)
@@ -1662,10 +1688,12 @@ name|pp
 parameter_list|,
 name|sp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|pp
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|sp
 decl_stmt|;
 block|{
@@ -1711,7 +1739,8 @@ operator|->
 name|successors
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|s
 argument_list|)
@@ -1726,7 +1755,8 @@ operator|->
 name|preds
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|p
 argument_list|)
@@ -1833,7 +1863,8 @@ argument_list|,
 name|ParseDoOp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|op
@@ -1877,7 +1908,8 @@ argument_list|(
 name|create
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|estrdup
 argument_list|(
@@ -1926,7 +1958,8 @@ operator|->
 name|successors
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1941,7 +1974,8 @@ operator|->
 name|preds
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|predecessor
 argument_list|)
@@ -1985,7 +2019,8 @@ argument_list|,
 name|ParseLinkSrc
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2068,7 +2103,8 @@ argument_list|,
 name|ParseLinkSrc
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cohort
 argument_list|)
@@ -2092,7 +2128,8 @@ argument_list|(
 name|allsrc
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2109,7 +2146,8 @@ argument_list|,
 name|ParseAddDep
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2131,11 +2169,13 @@ name|gnp
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* Node to examine */
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -2217,10 +2257,12 @@ name|path
 parameter_list|,
 name|name
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|path
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|name
 decl_stmt|;
 block|{
@@ -2259,10 +2301,12 @@ name|path
 parameter_list|,
 name|dummy
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|path
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|dummy
 decl_stmt|;
 block|{
@@ -2649,7 +2693,8 @@ argument_list|(
 name|paths
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|dirSearchPath
 argument_list|)
@@ -2705,7 +2750,8 @@ argument_list|(
 name|targets
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2739,7 +2785,8 @@ argument_list|(
 name|targets
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2867,7 +2914,8 @@ argument_list|(
 name|paths
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|path
 argument_list|)
@@ -2937,7 +2985,8 @@ argument_list|(
 name|curTargs
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|line
 argument_list|)
@@ -3002,7 +3051,8 @@ argument_list|(
 name|targets
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -3281,7 +3331,8 @@ argument_list|,
 name|ParseDoOp
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|op
@@ -3362,7 +3413,8 @@ argument_list|,
 name|ParseClearPath
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|NULL
 argument_list|)
@@ -3560,7 +3612,8 @@ argument_list|,
 name|ParseAddDir
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|line
 argument_list|)
@@ -3859,7 +3912,8 @@ argument_list|,
 name|ParseFindMain
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|)
@@ -4561,11 +4615,13 @@ name|gnp
 parameter_list|,
 name|cmd
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* the node to which the command is to be added */
-name|ClientData
+name|void
+modifier|*
 name|cmd
 decl_stmt|;
 comment|/* the command to add */
@@ -4623,7 +4679,8 @@ name|ParseHasCommands
 parameter_list|(
 name|gnp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* Node to examine */
@@ -5241,7 +5298,8 @@ argument_list|(
 name|includes
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|oldFile
 argument_list|)
@@ -5386,7 +5444,8 @@ argument_list|(
 name|includes
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|oldFile
 argument_list|)
@@ -5791,7 +5850,8 @@ argument_list|(
 name|includes
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|oldFile
 argument_list|)
@@ -5903,9 +5963,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|fname
 argument_list|)
 expr_stmt|;
@@ -5942,9 +5999,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|curPTR
 operator|->
 name|str
@@ -5952,9 +6006,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|curPTR
 argument_list|)
 expr_stmt|;
@@ -5973,9 +6024,6 @@ name|p
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|ifile
 argument_list|)
 expr_stmt|;
@@ -6875,9 +6923,6 @@ name|COND_PARSE
 case|:
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|line
 argument_list|)
 expr_stmt|;
@@ -7012,7 +7057,8 @@ argument_list|,
 name|Suff_EndTransform
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|NULL
 argument_list|)
@@ -7346,7 +7392,8 @@ argument_list|(
 name|targCmds
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|line
 argument_list|)
@@ -7751,7 +7798,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 operator|)
@@ -7846,7 +7894,8 @@ argument_list|(
 name|listmain
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|mainNode
 argument_list|)
@@ -7872,7 +7921,8 @@ argument_list|(
 name|listmain
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|mainNode
 argument_list|)

@@ -236,9 +236,6 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|l2
 argument_list|)
 expr_stmt|;

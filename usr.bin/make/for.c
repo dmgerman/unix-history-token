@@ -151,9 +151,11 @@ name|ForExec
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -504,7 +506,7 @@ directive|define
 name|ADDWORD
 parameter_list|()
 define|\
-value|Buf_AddBytes(buf, ptr - wrd, (Byte *) wrd), \ 	Buf_AddByte(buf, (Byte) '\0'), \ 	Lst_AtFront(forLst, (ClientData) Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
+value|Buf_AddBytes(buf, ptr - wrd, (Byte *) wrd), \ 	Buf_AddByte(buf, (Byte) '\0'), \ 	Lst_AtFront(forLst, (void *) Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
 for|for
 control|(
 name|ptr
@@ -629,9 +631,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|sub
 argument_list|)
 expr_stmt|;
@@ -863,10 +862,12 @@ name|namep
 parameter_list|,
 name|argp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|namep
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|argp
 decl_stmt|;
 block|{
@@ -1039,7 +1040,8 @@ argument_list|,
 name|ForExec
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 operator|&
 name|arg
@@ -1047,9 +1049,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|arg
 operator|.
 name|var
@@ -1069,7 +1068,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 operator|)

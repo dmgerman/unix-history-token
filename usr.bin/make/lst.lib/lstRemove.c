@@ -250,9 +250,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|ln
 argument_list|)
 expr_stmt|;

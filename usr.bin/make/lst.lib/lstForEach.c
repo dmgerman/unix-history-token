@@ -74,9 +74,11 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
@@ -84,7 +86,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|ClientData
+name|void
+modifier|*
 name|d
 decl_stmt|;
 end_decl_stmt

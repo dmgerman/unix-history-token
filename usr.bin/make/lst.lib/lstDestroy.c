@@ -68,7 +68,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
@@ -129,9 +130,6 @@ else|else
 block|{
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|l
 argument_list|)
 expr_stmt|;
@@ -177,9 +175,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|ln
 argument_list|)
 expr_stmt|;
@@ -212,9 +207,6 @@ name|nextPtr
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|ln
 argument_list|)
 expr_stmt|;
@@ -222,9 +214,6 @@ block|}
 block|}
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|l
 argument_list|)
 expr_stmt|;

@@ -147,9 +147,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|argv
 argument_list|)
 expr_stmt|;

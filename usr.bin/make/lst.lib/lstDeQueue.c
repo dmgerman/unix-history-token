@@ -47,7 +47,8 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|ClientData
+name|void
+modifier|*
 name|Lst_DeQueue
 parameter_list|(
 name|l
@@ -56,7 +57,8 @@ name|Lst
 name|l
 decl_stmt|;
 block|{
-name|ClientData
+name|void
+modifier|*
 name|rd
 decl_stmt|;
 specifier|register
@@ -83,7 +85,8 @@ block|{
 return|return
 operator|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|NULL
 operator|)
@@ -113,7 +116,8 @@ block|{
 return|return
 operator|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|NULL
 operator|)

@@ -74,10 +74,6 @@ begin_comment
 comment|/* FALSE */
 end_comment
 
-begin_comment
-comment|/*  * Functions that must return a status can return a ReturnStatus to  * indicate success or type of failure.  */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|int
@@ -85,73 +81,19 @@ name|ReturnStatus
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * The following statuses overlap with the first 2 generic statuses  * defined in status.h:  *  * SUCCESS			There was no error.  * FAILURE			There was a general error.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SUCCESS
-value|0x00000000
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|FAILURE
-value|0x00000001
+value|1
 end_define
-
-begin_comment
-comment|/*  * A nil pointer must be something that will cause an exception if  * referenced.  There are two nils: the kernels nil and the nil used  * by user processes.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NULL */
-end_comment
-
-begin_comment
-comment|/*  * An address is just a pointer in C.  It is defined as a character pointer  * so that address arithmetic will work properly, a byte at a time.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|Address
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * ClientData is an uninterpreted word.  It is defined as an int so that  * kdbx will not interpret client data as a string.  Unlike an "Address",  * client data will generally not be used in arithmetic.  * But we don't have kdbx anymore so we define it as void (christos)  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|ClientData
-typedef|;
-end_typedef
 
 begin_endif
 endif|#

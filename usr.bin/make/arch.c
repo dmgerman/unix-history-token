@@ -160,9 +160,11 @@ name|ArchFindArchive
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -175,7 +177,8 @@ name|ArchFree
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -290,7 +293,8 @@ name|ArchFree
 parameter_list|(
 name|ap
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|ap
 decl_stmt|;
 block|{
@@ -341,9 +345,6 @@ argument_list|)
 control|)
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|Hash_GetValue
 argument_list|(
 name|entry
@@ -374,9 +375,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|a
 argument_list|)
 expr_stmt|;
@@ -892,7 +890,8 @@ argument_list|(
 name|nodeLst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1094,7 +1093,8 @@ argument_list|(
 name|nodeLst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1195,7 +1195,8 @@ argument_list|(
 name|nodeLst
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1278,11 +1279,13 @@ name|ar
 parameter_list|,
 name|archName
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|ar
 decl_stmt|;
 comment|/* Current list element */
-name|ClientData
+name|void
+modifier|*
 name|archName
 decl_stmt|;
 comment|/* Name we want */
@@ -1438,7 +1441,8 @@ argument_list|(
 name|archives
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|archive
 argument_list|,
@@ -2096,7 +2100,8 @@ argument_list|(
 name|he
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|emalloc
 argument_list|(
@@ -2110,17 +2115,11 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|Hash_GetValue
 argument_list|(
 name|he
 argument_list|)
 argument_list|,
-operator|(
-name|Address
-operator|)
 operator|&
 name|arh
 argument_list|,
@@ -2162,7 +2161,8 @@ argument_list|(
 name|archives
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|ar
 argument_list|)
@@ -2233,9 +2233,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|Address
-operator|)
 name|ar
 argument_list|)
 expr_stmt|;

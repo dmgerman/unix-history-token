@@ -64,7 +64,8 @@ name|LstNode
 name|ln
 decl_stmt|;
 comment|/* node before which to insert d */
-name|ClientData
+name|void
+modifier|*
 name|d
 decl_stmt|;
 comment|/* datum to be inserted */

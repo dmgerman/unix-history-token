@@ -47,7 +47,8 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
-name|ClientData
+name|void
+modifier|*
 name|Lst_Datum
 parameter_list|(
 name|ln
@@ -81,7 +82,8 @@ block|{
 return|return
 operator|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|NULL
 operator|)

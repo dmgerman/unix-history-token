@@ -58,7 +58,8 @@ name|Lst
 name|l
 decl_stmt|;
 comment|/* List to which to add the datum */
-name|ClientData
+name|void
+modifier|*
 name|d
 decl_stmt|;
 comment|/* Datum to add */

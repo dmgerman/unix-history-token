@@ -57,7 +57,8 @@ parameter_list|)
 name|Lst
 name|l
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|d
 decl_stmt|;
 block|{

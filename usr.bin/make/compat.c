@@ -154,9 +154,11 @@ name|CompatRunCommand
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -169,9 +171,11 @@ name|CompatMake
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -328,7 +332,8 @@ argument_list|,
 name|CompatRunCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -472,11 +477,13 @@ name|cmdp
 parameter_list|,
 name|gnp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|cmdp
 decl_stmt|;
 comment|/* Command to execute */
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* Node from which the command came */
@@ -602,7 +609,8 @@ operator|->
 name|commands
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cmd
 argument_list|)
@@ -659,7 +667,8 @@ argument_list|(
 name|cmdNode
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cmdStart
 argument_list|)
@@ -691,7 +700,8 @@ operator|->
 name|commands
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|cmdStart
 argument_list|)
@@ -1370,11 +1380,13 @@ name|gnp
 parameter_list|,
 name|pgnp
 parameter_list|)
-name|ClientData
+name|void
+modifier|*
 name|gnp
 decl_stmt|;
 comment|/* The node to make */
-name|ClientData
+name|void
+modifier|*
 name|pgnp
 decl_stmt|;
 comment|/* Parent to abort if necessary */
@@ -1453,7 +1465,8 @@ argument_list|,
 name|CompatMake
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -1674,7 +1687,8 @@ argument_list|,
 name|CompatRunCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2241,7 +2255,8 @@ argument_list|,
 name|CompatRunCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)
@@ -2361,7 +2376,8 @@ argument_list|,
 name|CompatRunCommand
 argument_list|,
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|)
 name|gn
 argument_list|)

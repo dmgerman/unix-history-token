@@ -64,7 +64,8 @@ name|LstNode
 name|ln
 decl_stmt|;
 comment|/* node after which to append the datum */
-name|ClientData
+name|void
+modifier|*
 name|d
 decl_stmt|;
 comment|/* said datum */

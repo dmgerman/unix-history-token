@@ -59,7 +59,8 @@ parameter_list|)
 name|Lst
 name|l
 decl_stmt|;
-name|ClientData
+name|void
+modifier|*
 name|d
 decl_stmt|;
 function_decl|int
@@ -72,9 +73,11 @@ unit|)
 name|__P
 argument_list|(
 operator|(
-name|ClientData
+name|void
+operator|*
 operator|,
-name|ClientData
+name|void
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
