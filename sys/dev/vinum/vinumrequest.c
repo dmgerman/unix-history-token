@@ -4712,7 +4712,7 @@ modifier|*
 name|vol
 parameter_list|)
 block|{
-name|int
+name|int64_t
 name|maxsize
 init|=
 name|vol
