@@ -1337,6 +1337,10 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|td
@@ -1349,10 +1353,6 @@ operator|(
 literal|"critical_exit:  critnest< 0"
 operator|)
 argument_list|)
-expr_stmt|;
-name|td
-operator|=
-name|curthread
 expr_stmt|;
 if|if
 condition|(
