@@ -1643,6 +1643,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1869,6 +1873,10 @@ condition|(
 operator|!
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1878,6 +1886,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
