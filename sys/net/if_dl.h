@@ -34,7 +34,7 @@ comment|/* Total length of sockaddr */
 name|u_char
 name|sdl_family
 decl_stmt|;
-comment|/* AF_DLI */
+comment|/* AF_LINK */
 name|u_short
 name|sdl_index
 decl_stmt|;
