@@ -1103,9 +1103,11 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_state
+name|so_snd
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTSENDMORE
+name|SBS_CANTSENDMORE
 condition|)
 name|snderr
 argument_list|(
@@ -1591,7 +1593,7 @@ name|splnet
 argument_list|()
 expr_stmt|;
 comment|/* XXX */
-comment|/* 			 * XXX all the SS_CANTSENDMORE checks previously 			 * done could be out of date.  We could have recieved 			 * a reset packet in an interrupt or maybe we slept 			 * while doing page faults in uiomove() etc. We could 			 * probably recheck again inside the splnet() protection 			 * here, but there are probably other places that this 			 * also happens.  We must rethink this. 			 */
+comment|/* 			 * XXX all the SBS_CANTSENDMORE checks previously 			 * done could be out of date.  We could have recieved 			 * a reset packet in an interrupt or maybe we slept 			 * while doing page faults in uiomove() etc. We could 			 * probably recheck again inside the splnet() protection 			 * here, but there are probably other places that this 			 * also happens.  We must rethink this. 			 */
 name|error
 operator|=
 call|(
@@ -2174,9 +2176,11 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 condition|)
 block|{
 if|if
@@ -2745,10 +2749,12 @@ argument_list|)
 expr_stmt|;
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&=
 operator|~
-name|SS_RCVATMARK
+name|SBS_RCVATMARK
 expr_stmt|;
 name|len
 operator|=
@@ -3082,9 +3088,11 @@ condition|)
 block|{
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator||=
-name|SS_RCVATMARK
+name|SBS_RCVATMARK
 expr_stmt|;
 break|break;
 block|}
@@ -3146,9 +3154,11 @@ name|so_error
 operator|||
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 condition|)
 break|break;
 comment|/* 			 * The window might have closed to zero, make 			 * sure we send an ack now that we've drained 			 * the buffer or we might end up blocking until 			 * the idle takes over (5 seconds). 			 */
@@ -3420,9 +3430,11 @@ operator|&&
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 operator|)
 operator|==
 literal|0
