@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)from.c	5.1 (Berkeley) %G%"
+literal|"@(#)from.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,11 +317,22 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't open /usr/spool/mail/%s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|fgets
