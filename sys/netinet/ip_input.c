@@ -225,6 +225,12 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/ip_dummynet.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -271,23 +277,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_dummynet.h>
 end_include
 
 begin_endif
@@ -878,13 +867,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ip_fw_ctl_t
-modifier|*
-name|ip_fw_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|fw_enable
 init|=
@@ -892,23 +874,16 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
+begin_comment
+comment|/* Dummynet hooks */
+end_comment
 
 begin_decl_stmt
-name|ip_dn_ctl_t
+name|ip_dn_io_t
 modifier|*
-name|ip_dn_ctl_ptr
+name|ip_dn_io_ptr
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|int
@@ -1463,7 +1438,7 @@ comment|/* packet divert/tee info */
 endif|#
 directive|endif
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
 name|rule
 init|=
@@ -1489,17 +1464,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 comment|/*          * dummynet packet are prepended a vestigial mbuf with          * m_type = MT_DUMMYNET and m_data pointing to the matching          * rule.          */
 if|if
 condition|(
@@ -1514,7 +1478,7 @@ name|rule
 operator|=
 operator|(
 expr|struct
-name|ip_fw_chain
+name|ip_fw
 operator|*
 operator|)
 operator|(
@@ -1560,8 +1524,6 @@ name|rule
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -2027,21 +1989,8 @@ goto|;
 endif|#
 directive|endif
 comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Pipe: pass pkt through dummynet. 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 name|iphack
 label|:
-endif|#
-directive|endif
 comment|/* 	 * Check if we want to allow this packet to be processed. 	 * Consider it to be bad if not. 	 */
 if|if
 condition|(
@@ -2100,7 +2049,7 @@ if|if
 condition|(
 name|fw_enable
 operator|&&
-name|ip_fw_chk_ptr
+name|IPFW_LOADED
 condition|)
 block|{
 ifdef|#
@@ -2120,10 +2069,7 @@ comment|/* IPFIREWALL_FORWARD */
 comment|/* 		 * See the comment in ip_output for the return values 		 * produced by the firewall. 		 */
 name|i
 operator|=
-call|(
-modifier|*
 name|ip_fw_chk_ptr
-call|)
 argument_list|(
 operator|&
 name|ip
@@ -2196,11 +2142,10 @@ comment|/* common case */
 goto|goto
 name|pass
 goto|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 if|if
 condition|(
+name|DUMMYNET_LOADED
+operator|&&
 operator|(
 name|i
 operator|&
@@ -2211,7 +2156,7 @@ literal|0
 condition|)
 block|{
 comment|/* Send packet to the appropriate pipe */
-name|dummynet_io
+name|ip_dn_io_ptr
 argument_list|(
 name|i
 operator|&
@@ -2234,8 +2179,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPDIVERT

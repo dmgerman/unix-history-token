@@ -23,7 +23,7 @@ value|x
 end_define
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 011031: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
 
 begin_include
@@ -153,18 +153,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BRIDGE
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|<netinet/if_ether.h>
 end_include
 
@@ -177,11 +165,6 @@ include|#
 directive|include
 file|<net/bridge.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * We keep a private variable for the simulation time, but we could  * probably use an existing one ("softticks" in sys/kern/kern_timer.c)  */
@@ -294,6 +277,18 @@ end_comment
 begin_comment
 comment|/*  * Three heaps contain queues and pipes that the scheduler handles:  *  * ready_heap contains all dn_flow_queue related to fixed-rate pipes.  *  * wfq_ready_heap contains the pipes associated with WF2Q flows  *  * extract_heap contains pipes associated with delay lines.  *  */
 end_comment
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DUMMYNET
+argument_list|,
+literal|"dummynet"
+argument_list|,
+literal|"dummynet heap"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -415,6 +410,14 @@ end_decl_stmt
 begin_comment
 comment|/* list of all flow_sets */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|dn_timeout
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -749,6 +752,59 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|int
+name|dummynet_io
+parameter_list|(
+name|int
+name|pipe
+parameter_list|,
+name|int
+name|dir
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|route
+modifier|*
+name|ro
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+name|dst
+parameter_list|,
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|dn_rule_delete
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|if_tx_rdy
 parameter_list|(
@@ -761,13 +817,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * ip_fw_chain is used when deleting a pipe, because ipfw rules can  * hold references to the pipe.  */
+comment|/*  * ip_fw_chain_head is used when deleting a pipe, because ipfw rules can  * hold references to the pipe.  */
 end_comment
 
 begin_extern
 extern|extern LIST_HEAD (ip_fw_head
 operator|,
-extern|ip_fw_chain
+extern|ip_fw
 end_extern
 
 begin_expr_stmt
@@ -950,7 +1006,7 @@ operator|*
 name|p
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_DONTWAIT
 argument_list|)
@@ -1008,7 +1064,7 @@ name|h
 operator|->
 name|p
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -1637,7 +1693,7 @@ name|h
 operator|->
 name|p
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1764,12 +1820,30 @@ name|pkt
 argument_list|)
 expr_stmt|;
 break|break ;
-ifdef|#
-directive|ifdef
-name|BRIDGE
 case|case
 name|DN_TO_BDG_FWD
 case|:
+if|if
+condition|(
+operator|!
+name|BDG_LOADED
+condition|)
+block|{
+comment|/* somebody unloaded the bridge module. Drop pkt */
+name|printf
+argument_list|(
+literal|"-- dropping bridged packet trapped in pipe--\n"
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|pkt
+operator|->
+name|dn_m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|struct
 name|mbuf
@@ -1823,7 +1897,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	     * same as ether_input, make eh be a pointer into the mbuf 	     */
+comment|/* 		 * same as ether_input, make eh be a pointer into the mbuf 		 */
 name|eh
 operator|=
 name|mtod
@@ -1846,10 +1920,10 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* 	     * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 	     * on return it will supply the pointer to the actual packet 	     * (originally pkt->dn_m, but could be something else now) if 	     * it has not consumed it. 	     */
+comment|/* 		 * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 		 * on return it will supply the pointer to the actual packet 		 * (originally pkt->dn_m, but could be something else now) if 		 * it has not consumed it. 		 */
 name|m
 operator|=
-name|bdg_forward
+name|bdg_forward_ptr
 argument_list|(
 name|m
 argument_list|,
@@ -1871,8 +1945,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break ;
-endif|#
-directive|endif
 default|default:
 name|printf
 argument_list|(
@@ -1892,11 +1964,11 @@ argument_list|)
 expr_stmt|;
 break|break ;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|pkt
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -3248,6 +3320,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|dn_timeout
+operator|=
 name|timeout
 argument_list|(
 name|dummynet
@@ -3568,7 +3642,7 @@ name|free
 argument_list|(
 name|old_q
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -3664,9 +3738,11 @@ operator|*
 name|q
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4060,7 +4136,7 @@ name|free
 argument_list|(
 name|old_q
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 continue|continue ;
@@ -4548,7 +4624,7 @@ name|locate_flowset
 argument_list|(
 argument|int pipe_nr
 argument_list|,
-argument|struct ip_fw_chain *rule
+argument|struct ip_fw *rule
 argument_list|)
 block|{     struct
 name|dn_flow_set
@@ -4560,8 +4636,6 @@ block|;
 if|if
 condition|(
 operator|(
-name|rule
-operator|->
 name|rule
 operator|->
 name|fw_flg
@@ -4647,8 +4721,6 @@ name|NULL
 condition|)
 name|rule
 operator|->
-name|rule
-operator|->
 name|pipe_ptr
 operator|=
 name|fs
@@ -4687,7 +4759,7 @@ argument|struct route *ro
 argument_list|,
 argument|struct sockaddr_in *dst
 argument_list|,
-argument|struct ip_fw_chain *rule
+argument|struct ip_fw *rule
 argument_list|,
 argument|int flags
 argument_list|)
@@ -4743,8 +4815,6 @@ condition|(
 operator|(
 name|fs
 operator|=
-name|rule
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -4949,6 +5019,7 @@ condition|)
 goto|goto
 name|dropit
 goto|;
+comment|/* XXX expensive, see if we can remove it*/
 name|pkt
 operator|=
 operator|(
@@ -4964,9 +5035,11 @@ operator|*
 name|pkt
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4980,18 +5053,6 @@ name|dropit
 goto|;
 comment|/* cannot allocate packet header	*/
 comment|/* ok, i can handle the pkt now... */
-name|bzero
-argument_list|(
-name|pkt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pkt
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX expensive, see if we can remove it*/
 comment|/* build and enqueue packet + parameters */
 name|pkt
 operator|->
@@ -5003,7 +5064,7 @@ name|MT_DUMMYNET
 expr_stmt|;
 operator|(
 expr|struct
-name|ip_fw_chain
+name|ip_fw
 operator|*
 operator|)
 name|pkt
@@ -5168,8 +5229,6 @@ comment|/*      * If we reach this point the flow was previously idle, so we nee
 if|if
 condition|(
 operator|(
-name|rule
-operator|->
 name|rule
 operator|->
 name|fw_flg
@@ -5519,7 +5578,7 @@ name|DN_FREE_PKT
 parameter_list|(
 name|pkt
 parameter_list|)
-value|{		\ 	struct dn_pkt *n = pkt ;		\ 	rt_unref ( n->ro.ro_rt ) ;		\ 	m_freem(n->dn_m);			\ 	pkt = DN_NEXT(n) ;			\ 	free(n, M_IPFW) ;	}
+value|{		\ 	struct dn_pkt *n = pkt ;		\ 	rt_unref ( n->ro.ro_rt ) ;		\ 	m_freem(n->dn_m);			\ 	pkt = DN_NEXT(n) ;			\ 	free(n, M_DUMMYNET) ;	}
 end_define
 
 begin_comment
@@ -5616,7 +5675,7 @@ name|free
 argument_list|(
 name|q
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -5654,7 +5713,7 @@ name|fs
 operator|->
 name|w_q_lookup
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 if|if
@@ -5669,7 +5728,7 @@ name|fs
 operator|->
 name|rq
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 comment|/* if this fs is not part of a pipe, free it */
@@ -5694,7 +5753,7 @@ name|free
 argument_list|(
 name|fs
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -5801,9 +5860,9 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
-name|chain
+name|rule
 decl_stmt|;
 name|struct
 name|dn_flow_set
@@ -5824,14 +5883,12 @@ expr_stmt|;
 comment|/* remove all references to pipes ...*/
 name|LIST_FOREACH
 argument_list|(
-argument|chain
+argument|rule
 argument_list|,
 argument|&ip_fw_chain_head
 argument_list|,
 argument|next
 argument_list|)
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -5932,7 +5989,7 @@ name|free
 argument_list|(
 name|curr_p
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -5942,7 +5999,7 @@ end_function
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
 name|ip_fw_default_rule
 decl_stmt|;
@@ -6327,15 +6384,23 @@ name|x
 operator|->
 name|w_q_lookup
 condition|)
+block|{
 name|free
 argument_list|(
 name|x
 operator|->
 name|w_q_lookup
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
+name|x
+operator|->
+name|w_q_lookup
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|red_lookup_depth
@@ -6352,7 +6417,7 @@ name|free
 argument_list|(
 name|x
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
@@ -6384,7 +6449,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_DONTWAIT
 argument_list|)
@@ -6407,7 +6472,7 @@ name|free
 argument_list|(
 name|x
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
@@ -6623,9 +6688,11 @@ name|dn_flow_queue
 operator|*
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6646,28 +6713,6 @@ return|return
 name|ENOSPC
 return|;
 block|}
-name|bzero
-argument_list|(
-name|x
-operator|->
-name|rq
-argument_list|,
-operator|(
-literal|1
-operator|+
-name|x
-operator|->
-name|rq_size
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_flow_queue
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|->
 name|rq_elements
@@ -6837,7 +6882,7 @@ operator|->
 name|fs
 operator|)
 decl_stmt|;
-comment|/* 	 * The config program passes parameters as follows:      * bw = bits/second (0 means no limits),      * delay = ms, must be translated into ticks.      * qsize = slots/bytes 	 */
+comment|/*      * The config program passes parameters as follows:      * bw = bits/second (0 means no limits),      * delay = ms, must be translated into ticks.      * qsize = slots/bytes      */
 name|p
 operator|->
 name|delay
@@ -6966,9 +7011,11 @@ expr|struct
 name|dn_pipe
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6987,17 +7034,6 @@ return|return
 name|ENOSPC
 return|;
 block|}
-name|bzero
-argument_list|(
-name|x
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_pipe
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|->
 name|pipe_nr
@@ -7144,7 +7180,7 @@ name|free
 argument_list|(
 name|x
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
@@ -7270,9 +7306,11 @@ expr|struct
 name|dn_flow_set
 argument_list|)
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|,
 name|M_DONTWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -7291,17 +7329,6 @@ return|return
 name|ENOSPC
 return|;
 block|}
-name|bzero
-argument_list|(
-name|x
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_flow_set
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|x
 operator|->
 name|fs_nr
@@ -7418,7 +7445,7 @@ name|free
 argument_list|(
 name|x
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
@@ -7807,9 +7834,9 @@ name|int
 name|s
 decl_stmt|;
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
-name|chain
+name|rule
 decl_stmt|;
 if|if
 condition|(
@@ -7954,7 +7981,7 @@ expr_stmt|;
 comment|/* remove references to this pipe from the ip_fw rules. */
 name|LIST_FOREACH
 argument_list|(
-argument|chain
+argument|rule
 argument_list|,
 argument|&ip_fw_chain_head
 argument_list|,
@@ -7962,8 +7989,6 @@ argument|next
 argument_list|)
 if|if
 condition|(
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -7975,8 +8000,6 @@ operator|->
 name|fs
 operator|)
 condition|)
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -8079,7 +8102,7 @@ name|free
 argument_list|(
 name|b
 argument_list|,
-name|M_IPFW
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 block|}
@@ -8179,7 +8202,7 @@ expr_stmt|;
 comment|/* remove references to this flow_set from the ip_fw rules. */
 name|LIST_FOREACH
 argument_list|(
-argument|chain
+argument|rule
 argument_list|,
 argument|&ip_fw_chain_head
 argument_list|,
@@ -8187,16 +8210,12 @@ argument|next
 argument_list|)
 if|if
 condition|(
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
 operator|==
 name|b
 condition|)
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -8856,7 +8875,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|buf
 argument_list|,
@@ -9046,7 +9065,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (010124)\n"
+literal|"DUMMYNET initialized (011031)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
@@ -9109,6 +9128,28 @@ name|ip_dn_ctl_ptr
 operator|=
 name|ip_dn_ctl
 expr_stmt|;
+name|ip_dn_io_ptr
+operator|=
+name|dummynet_io
+expr_stmt|;
+name|ip_dn_ruledel_ptr
+operator|=
+name|dn_rule_delete
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|dn_timeout
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|callout_handle
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dn_timeout
+operator|=
 name|timeout
 argument_list|(
 name|dummynet
@@ -9120,14 +9161,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|ip_dn_ctl_t
-modifier|*
-name|old_dn_ctl_ptr
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -9161,10 +9194,25 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|old_dn_ctl_ptr
-operator|=
-name|ip_dn_ctl_ptr
+if|if
+condition|(
+name|DUMMYNET_LOADED
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"DUMMYNET already loaded\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EEXIST
+return|;
+block|}
 name|ip_dn_init
 argument_list|()
 expr_stmt|;
@@ -9177,23 +9225,59 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+name|printf
+argument_list|(
+literal|"dummynet statically compiled, cannot unload\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+else|#
+directive|else
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+name|untimeout
+argument_list|(
+name|dummynet
+argument_list|,
+name|NULL
+argument_list|,
+name|dn_timeout
+argument_list|)
+expr_stmt|;
+name|dummynet_flush
+argument_list|()
+expr_stmt|;
 name|ip_dn_ctl_ptr
 operator|=
-name|old_dn_ctl_ptr
+name|NULL
+expr_stmt|;
+name|ip_dn_io_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ip_dn_ruledel_ptr
+operator|=
+name|NULL
 expr_stmt|;
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|dummynet_flush
-argument_list|()
-expr_stmt|;
+endif|#
+directive|endif
 break|break ;
 default|default:
 break|break ;
@@ -9229,6 +9313,32 @@ argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|dummynet
+argument_list|,
+name|ipfw
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|dummynet
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -173,6 +173,20 @@ define|\
 value|(src == NULL || BDG_CLUSTER(ifp) == BDG_CLUSTER(src) )
 end_define
 
+begin_comment
+comment|/*  * BDG_ACTIVE(ifp) does all checks to see if bridging is loaded,  * activated and used on a given interface.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BDG_ACTIVE
+parameter_list|(
+name|ifp
+parameter_list|)
+value|(do_bridge&& BDG_LOADED&& BDG_USED(ifp))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -242,53 +256,6 @@ parameter_list|)
 value|(	\ 	ntohs( ((short *)addr)[1] ^ ((short *)addr)[2] )& (HASH_SIZE -1))
 end_define
 
-begin_function_decl
-name|struct
-name|ifnet
-modifier|*
-name|bridge_in
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|ether_header
-modifier|*
-name|eh
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* bdg_forward frees the mbuf if necessary, returning null */
-end_comment
-
-begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|bdg_forward
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m0
-parameter_list|,
-name|struct
-name|ether_header
-modifier|*
-name|eh
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|dst
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -322,11 +289,9 @@ else|#
 directive|else
 end_else
 
-begin_warning
-warning|#
-directive|warning
-warning|... must complete these for the alpha etc.
-end_warning
+begin_comment
+comment|/* for machines that do not support unaligned access */
+end_comment
 
 begin_define
 define|#
@@ -338,6 +303,16 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(!bcmp(a, b, ETHER_ADDR_LEN) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ETHER_BROADCAST
+parameter_list|(
+name|a
+parameter_list|)
+value|(!bcmp(a, "\377\377\377\377\377\377", 6))
 end_define
 
 begin_endif
@@ -485,162 +460,93 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * Find the right pkt destination:  *	BDG_BCAST	is a broadcast  *	BDG_MCAST	is a multicast  *	BDG_LOCAL	is for a local address  *	BDG_DROP	must be dropped  *	other		ifp of the dest. interface (incl.self)  *  * We assume this is only called for interfaces for which bridging  * is enabled, i.e. BDG_USED(ifp) is true.  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
+begin_typedef
+typedef|typedef
+name|struct
 name|ifnet
-operator|*
-name|bridge_dst_lookup
-argument_list|(
-argument|struct ether_header *eh
-argument_list|)
-block|{     struct
+modifier|*
+name|bridge_in_t
+parameter_list|(
+name|struct
 name|ifnet
-operator|*
-name|dst
-block|;
-name|int
-name|index
-block|;
-name|bdg_addr
-operator|*
-name|p
-block|;
-if|if
-condition|(
-name|IS_ETHER_BROADCAST
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
-condition|)
-return|return
-name|BDG_BCAST
-return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|eh
-operator|->
-name|ether_dhost
-index|[
-literal|0
-index|]
-operator|&
-literal|1
-condition|)
-return|return
-name|BDG_MCAST
-return|;
-end_if
+modifier|*
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_comment
-comment|/*      * Lookup local addresses in case one matches.      */
+comment|/* bdg_forward frees the mbuf if necessary, returning null */
 end_comment
 
-begin_for
-for|for
-control|(
-name|index
-operator|=
-name|bdg_ports
-operator|,
-name|p
-operator|=
-name|bdg_addresses
-init|;
-name|index
-condition|;
-name|index
-operator|--
-operator|,
-name|p
-operator|++
-control|)
-if|if
-condition|(
-name|BDG_MATCH
-argument_list|(
-name|p
-operator|->
-name|etheraddr
-argument_list|,
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
-condition|)
-return|return
-name|BDG_LOCAL
-return|;
-end_for
+begin_typedef
+typedef|typedef
+name|struct
+name|mbuf
+modifier|*
+name|bdg_forward_t
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+specifier|const
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
 
-begin_comment
-comment|/*      * Look for a possible destination in table      */
-end_comment
+begin_typedef
+typedef|typedef
+name|void
+name|bdgtakeifaces_t
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
 
-begin_expr_stmt
-name|index
-operator|=
-name|HASH_FN
-argument_list|(
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|extern
+name|bridge_in_t
+modifier|*
+name|bridge_in_ptr
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|dst
-operator|=
-name|bdg_table
-index|[
-name|index
-index|]
-operator|.
-name|name
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|extern
+name|bdg_forward_t
+modifier|*
+name|bdg_forward_ptr
+decl_stmt|;
+end_decl_stmt
 
-begin_if
-if|if
-condition|(
-name|dst
-operator|&&
-name|BDG_MATCH
-argument_list|(
-name|bdg_table
-index|[
-name|index
-index|]
-operator|.
-name|etheraddr
-argument_list|,
-name|eh
-operator|->
-name|ether_dhost
-argument_list|)
-condition|)
-return|return
-name|dst
-return|;
-else|else
-return|return
-name|BDG_UNKNOWN
-return|;
-end_if
+begin_decl_stmt
+specifier|extern
+name|bdgtakeifaces_t
+modifier|*
+name|bdgtakeifaces_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|BDG_LOADED
+value|(bdgtakeifaces_ptr != NULL)
+end_define
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

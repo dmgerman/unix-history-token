@@ -255,22 +255,11 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -621,7 +610,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
 name|rule
 init|=
@@ -647,17 +636,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|DUMMYNET
-argument_list|)
 comment|/*            * dummynet packet are prepended a vestigial mbuf with          * m_type = MT_DUMMYNET and m_data pointing to the matching          * rule.          */
 if|if
 condition|(
@@ -673,7 +651,7 @@ name|rule
 operator|=
 operator|(
 expr|struct
-name|ip_fw_chain
+name|ip_fw
 operator|*
 operator|)
 operator|(
@@ -827,8 +805,6 @@ name|rule
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -2377,7 +2353,7 @@ if|if
 condition|(
 name|fw_enable
 operator|&&
-name|ip_fw_chk_ptr
+name|IPFW_LOADED
 condition|)
 block|{
 name|struct
@@ -2389,10 +2365,7 @@ name|dst
 decl_stmt|;
 name|off
 operator|=
-call|(
-modifier|*
 name|ip_fw_chk_ptr
-call|)
 argument_list|(
 operator|&
 name|ip
@@ -2470,11 +2443,10 @@ comment|/* common case */
 goto|goto
 name|pass
 goto|;
-ifdef|#
-directive|ifdef
-name|DUMMYNET
 if|if
 condition|(
+name|DUMMYNET_LOADED
+operator|&&
 operator|(
 name|off
 operator|&
@@ -2487,7 +2459,7 @@ block|{
 comment|/*                      * pass the pkt to dummynet. Need to include                      * pipe number, m, ifp, ro, dst because these are                      * not recomputed in the next pass.                      * All other parameters have been already used and                      * so they are not needed anymore.                       * XXX note: if the ifp or ro entry are deleted                      * while a pkt is in dummynet, we are in trouble!                      */
 name|error
 operator|=
-name|dummynet_io
+name|ip_dn_io_ptr
 argument_list|(
 name|off
 operator|&
@@ -2512,8 +2484,6 @@ goto|goto
 name|done
 goto|;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPDIVERT
