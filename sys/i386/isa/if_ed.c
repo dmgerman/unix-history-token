@@ -9706,9 +9706,7 @@ literal|0
 condition|)
 name|ed_init
 argument_list|(
-name|ifp
-operator|->
-name|if_softc
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
