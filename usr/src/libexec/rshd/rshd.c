@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.32 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,7 +586,7 @@ decl_stmt|,
 modifier|*
 name|errorhost
 decl_stmt|;
-name|short
+name|u_short
 name|port
 decl_stmt|;
 name|int
@@ -1249,9 +1249,6 @@ name|sin_port
 operator|=
 name|htons
 argument_list|(
-operator|(
-name|u_short
-operator|)
 name|port
 argument_list|)
 expr_stmt|;
