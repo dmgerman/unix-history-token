@@ -133,6 +133,15 @@ decl_stmt|;
 name|udev_t
 name|si_udev
 decl_stmt|;
+name|int
+name|si_refcount
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|cdev
+argument_list|)
+name|si_list
+expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|cdev
@@ -853,7 +862,7 @@ value|0xffff
 end_define
 
 begin_comment
-comment|/*  * Flags for d_flags.  */
+comment|/*  * Flags for d_flags which the drivers can set.  */
 end_comment
 
 begin_define
@@ -865,17 +874,6 @@ end_define
 
 begin_comment
 comment|/* memory type disk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|D_NAGGED
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* nagged about missing make_dev() */
 end_comment
 
 begin_define
@@ -939,6 +937,32 @@ directive|define
 name|D_VERSION
 value|D_VERSION_00
 end_define
+
+begin_comment
+comment|/*  * Flags used for internal housekeeping  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_INIT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* cdevsw initialized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_ALLOCMAJ
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* major# is allocated */
+end_comment
 
 begin_comment
 comment|/*  * Character device switch table  */
@@ -1005,6 +1029,23 @@ decl_stmt|;
 name|d_kqfilter_t
 modifier|*
 name|d_kqfilter
+decl_stmt|;
+comment|/* These fields should not be messed with by drivers */
+name|LIST_ENTRY
+argument_list|(
+argument|cdevsw
+argument_list|)
+name|d_list
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|cdev
+argument_list|)
+name|d_devs
+expr_stmt|;
+name|int
+name|d_refcount
 decl_stmt|;
 block|}
 struct|;
@@ -1299,6 +1340,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cdevsw_ref
+parameter_list|(
+name|struct
+name|cdevsw
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cdevsw_rel
+parameter_list|(
+name|struct
+name|cdevsw
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -1340,22 +1403,32 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dev_strategy
+name|dev_ref
 parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
+name|dev_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|freedev
+name|dev_rel
 parameter_list|(
 name|dev_t
-name|_dev
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dev_strategy
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
