@@ -317,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|KMEM_ZMAX
-value|8192
+value|65536
 end_define
 
 begin_define
@@ -437,6 +437,22 @@ block|{
 literal|8192
 block|,
 literal|"8192"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|32768
+block|,
+literal|"32768"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|65536
+block|,
+literal|"65536"
 block|,
 name|NULL
 block|}
