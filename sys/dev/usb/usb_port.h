@@ -225,6 +225,13 @@ define|\
 value|((dev)->softc = config_found_sm(parent, args, print, sub))
 end_define
 
+begin_define
+define|#
+directive|define
+name|logprintf
+value|printf
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -513,6 +520,23 @@ define|#
 directive|define
 name|SIMPLEQ_ENTRY
 value|STAILQ_ENTRY
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|logprintf
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|log(LOG_DEBUG, args);
 end_define
 
 begin_endif
