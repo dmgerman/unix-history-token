@@ -3543,6 +3543,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
 name|pid
 operator|==
 operator|-
@@ -3555,6 +3556,17 @@ operator|&&
 name|breakwaitcmd
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|WIFSTOPPED
+argument_list|(
+name|status
+argument_list|)
+operator|&&
+operator|!
+name|iflag
+operator|)
 condition|)
 do|;
 name|in_dowait
