@@ -48,10 +48,17 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"primes.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|ubig
 name|prime
 index|[]
@@ -13151,9 +13158,10 @@ comment|/* pr_limit - largest prime in the prime table */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|long
+specifier|const
+name|ubig
 modifier|*
+specifier|const
 name|pr_limit
 init|=
 operator|&

@@ -45,7 +45,20 @@ begin_comment
 comment|/*  * pattern - the Eratosthenes sieve on odd numbers for 3,5,7,11 and 13  *  * By: Landon Curt Noll                             chongo@toad.com  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * To avoid excessive sieves for small factors, we use the table below to  * setup our sieve blocks.  Each element represents a odd number starting  * with 1.  All non-zero elements are factors of 3, 5, 7, 11 and 13.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"primes.h"
+end_include
+
 begin_decl_stmt
+specifier|const
 name|char
 name|pattern
 index|[]
@@ -30085,7 +30098,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|const
+name|size_t
 name|pattern_size
 init|=
 operator|(
