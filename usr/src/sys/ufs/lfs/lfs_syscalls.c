@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -318,6 +318,12 @@ name|seg_flags
 operator|=
 name|SEGM_CKP
 expr_stmt|;
+name|sp
+operator|->
+name|vp
+operator|=
+name|NULL
+expr_stmt|;
 name|cnt
 operator|=
 name|uap
@@ -442,8 +448,6 @@ block|{
 name|lfs_updatemeta
 argument_list|(
 name|sp
-argument_list|,
-name|vp
 argument_list|)
 expr_stmt|;
 name|lfs_writeinode
@@ -542,12 +546,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|lastino
+operator|=
+name|LFS_UNUSED_INUM
+expr_stmt|;
 name|v_daddr
 operator|==
 name|LFS_UNUSED_DADDR
 expr_stmt|;
 continue|continue;
 block|}
+name|sp
+operator|->
+name|vp
+operator|=
+name|vp
+expr_stmt|;
 name|ip
 operator|=
 name|VTOI
@@ -698,6 +712,8 @@ goto|goto
 name|err2
 goto|;
 block|}
+while|while
+condition|(
 name|lfs_gatherblock
 argument_list|(
 name|sp
@@ -706,13 +722,19 @@ name|bp
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+condition|)
+empty_stmt|;
 block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|vp
+condition|)
+block|{
 name|lfs_updatemeta
 argument_list|(
 name|sp
-argument_list|,
-name|vp
 argument_list|)
 expr_stmt|;
 name|lfs_writeinode
@@ -729,6 +751,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
