@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_callmsg.c,v 1.3 1995/10/22 14:51:33 phk Exp $"
+literal|"$Id: rpc_callmsg.c,v 1.4 1996/06/08 22:54:55 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,22 +69,6 @@ directive|include
 file|<rpc/rpc.h>
 end_include
 
-begin_function_decl
-name|bool_t
-name|xdr_opaque_auth
-parameter_list|(
-name|XDR
-modifier|*
-name|xdrs
-parameter_list|,
-name|struct
-name|opaque_auth
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * XDR a call message  */
 end_comment
@@ -110,7 +94,7 @@ name|cmsg
 decl_stmt|;
 block|{
 specifier|register
-name|long
+name|int32_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -339,16 +323,16 @@ operator|->
 name|oa_length
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|oa
-operator|->
-name|oa_base
-argument_list|,
 operator|(
 name|caddr_t
 operator|)
 name|buf
+argument_list|,
+name|oa
+operator|->
+name|oa_base
 argument_list|,
 name|oa
 operator|->
@@ -366,7 +350,7 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|long
+name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -404,12 +388,8 @@ operator|->
 name|oa_length
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|oa
-operator|->
-name|oa_base
-argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -417,10 +397,14 @@ name|buf
 argument_list|,
 name|oa
 operator|->
+name|oa_base
+argument_list|,
+name|oa
+operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
-comment|/* no real need.... 				buf += RNDUP(oa->oa_length) / sizeof (long); 				*/
+comment|/* no real need.... 				buf += RNDUP(oa->oa_length) / sizeof (int32_t); 				*/
 block|}
 return|return
 operator|(
@@ -676,8 +660,12 @@ block|}
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|oa
+operator|->
+name|oa_base
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -685,14 +673,10 @@ name|buf
 argument_list|,
 name|oa
 operator|->
-name|oa_base
-argument_list|,
-name|oa
-operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
-comment|/* no real need.... 					buf += RNDUP(oa->oa_length) / 						sizeof (long); 					*/
+comment|/* no real need.... 					buf += RNDUP(oa->oa_length) / 						sizeof (int32_t); 					*/
 block|}
 block|}
 name|oa
@@ -873,8 +857,12 @@ block|}
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|oa
+operator|->
+name|oa_base
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -882,14 +870,10 @@ name|buf
 argument_list|,
 name|oa
 operator|->
-name|oa_base
-argument_list|,
-name|oa
-operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
-comment|/* no real need... 					buf += RNDUP(oa->oa_length) / 						sizeof (long); 					*/
+comment|/* no real need... 					buf += RNDUP(oa->oa_length) / 						sizeof (int32_t); 					*/
 block|}
 block|}
 return|return
@@ -901,7 +885,7 @@ block|}
 block|}
 if|if
 condition|(
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -937,7 +921,7 @@ operator|==
 name|CALL
 operator|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -961,7 +945,7 @@ operator|==
 name|RPC_MSG_VERSION
 operator|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -975,7 +959,7 @@ name|cb_prog
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
@@ -989,7 +973,7 @@ name|cb_vers
 operator|)
 argument_list|)
 operator|&&
-name|xdr_u_long
+name|xdr_u_int32_t
 argument_list|(
 name|xdrs
 argument_list|,
