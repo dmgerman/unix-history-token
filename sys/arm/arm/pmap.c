@@ -10261,6 +10261,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|pm
@@ -10268,6 +10274,12 @@ argument_list|,
 name|sva
 argument_list|,
 name|eva
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10282,6 +10294,12 @@ block|{
 comment|/* 		 * If this is a read->write transition, just ignore it and let 		 * uvm_fault() take care of it later. 		 */
 return|return;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * OK, at this point, we know we're doing write-protect operation. 	 * If the pmap is active, write-back the range. 	 */
 name|pmap_dcache_wb_range
 argument_list|(
@@ -10567,6 +10585,12 @@ name|pm
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

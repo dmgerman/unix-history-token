@@ -5393,12 +5393,6 @@ operator|!=
 name|old_prot
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|MASK
@@ -5433,12 +5427,6 @@ expr_stmt|;
 undef|#
 directive|undef
 name|MASK
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 name|vm_map_simplify_entry
 argument_list|(
