@@ -19552,7 +19552,7 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|gbincore
+name|incore
 argument_list|(
 name|vp
 argument_list|,
