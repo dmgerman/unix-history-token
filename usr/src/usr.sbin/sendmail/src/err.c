@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -766,7 +766,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|en
+name|eno
 decl_stmt|;
 end_decl_stmt
 
@@ -945,7 +945,7 @@ expr_stmt|;
 comment|/* output the error code, if any */
 if|if
 condition|(
-name|errno
+name|eno
 operator|!=
 literal|0
 condition|)
@@ -967,7 +967,7 @@ literal|": %s"
 argument_list|,
 name|errstring
 argument_list|(
-name|errno
+name|eno
 argument_list|)
 argument_list|)
 expr_stmt|;
