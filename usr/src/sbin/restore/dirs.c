@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.14	(Berkeley)	83/07/08"
+literal|"@(#)dirs.c	3.15	(Berkeley)	83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -2313,22 +2313,45 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ep
+name|command
 operator|==
-name|NIL
+literal|'i'
+operator|||
+name|command
+operator|==
+literal|'x'
 condition|)
 block|{
 if|if
 condition|(
-name|command
-operator|!=
-literal|'r'
-operator|&&
-name|command
-operator|!=
-literal|'R'
+name|ep
+operator|==
+name|NIL
 condition|)
 continue|continue;
+if|if
+condition|(
+name|node
+operator|.
+name|ino
+operator|==
+name|ROOTINO
+operator|&&
+name|reply
+argument_list|(
+literal|"set owner/mode for '.'"
+argument_list|)
+operator|==
+name|FAIL
+condition|)
+continue|continue;
+block|}
+if|if
+condition|(
+name|ep
+operator|==
+name|NIL
+condition|)
 name|panic
 argument_list|(
 literal|"cannot find directory inode %d\n"
@@ -2338,7 +2361,6 @@ operator|.
 name|ino
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 operator|=
 name|myname
