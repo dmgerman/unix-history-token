@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.10 1993/11/22 19:04:40 jkh Exp $  */
+comment|/*  *	$Id: ld.c,v 1.11 1993/11/30 20:47:25 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -7869,6 +7869,9 @@ name|nsyms
 operator|+=
 name|set_symbol_count
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"global symbols %d (defined %d, undefined %d), locals: %d, \ debug symbols: %d, set_symbols %d, aliases %d --> nsyms %d\n"
@@ -7890,9 +7893,6 @@ argument_list|,
 name|nsyms
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 endif|#
 directive|endif
 name|outheader
