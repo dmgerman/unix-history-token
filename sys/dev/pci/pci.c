@@ -6151,7 +6151,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"pci_set_resource: PCI resources can not be deleted\n"
+literal|"pci_delete_resource: PCI resources can not be deleted\n"
 argument_list|)
 expr_stmt|;
 block|}
