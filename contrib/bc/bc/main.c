@@ -4,7 +4,7 @@ comment|/* main.c: The main program for bc.  */
 end_comment
 
 begin_comment
-comment|/*  This file is part of GNU bc.     Copyright (C) 1991, 1992, 1993, 1994, 1997 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062         *************************************************************************/
+comment|/*  This file is part of GNU bc.     Copyright (C) 1991, 1992, 1993, 1994, 1997, 1998 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062  $FreeBSD$         *************************************************************************/
 end_comment
 
 begin_include
@@ -476,6 +476,26 @@ name|file_names
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_SETVBUF
+comment|/* attempt to simplify interaction with applications such as emacs */
+operator|(
+name|void
+operator|)
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Environment arguments. */
 name|env_value
 operator|=
@@ -679,15 +699,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|READLINE
+if|if
+condition|(
+name|interactive
+condition|)
+block|{
 comment|/* Readline support.  Set both application name and input file. */
 name|rl_readline_name
 operator|=
 literal|"bc"
 expr_stmt|;
-if|if
-condition|(
-name|interactive
-condition|)
 name|rl_instream
 operator|=
 name|stdin
@@ -695,6 +716,7 @@ expr_stmt|;
 name|using_history
 argument_list|()
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* Do the parse. */
