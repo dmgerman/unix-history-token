@@ -324,6 +324,15 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
@@ -332,7 +341,17 @@ end_if
 begin_define
 define|#
 directive|define
-name|LE
+name|htole32
+parameter_list|(
+name|x
+parameter_list|)
+value|(bswap32(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|le32toh
 parameter_list|(
 name|x
 parameter_list|)
@@ -347,12 +366,27 @@ end_else
 begin_define
 define|#
 directive|define
-name|LE
+name|htole32
 parameter_list|(
 name|x
 parameter_list|)
 value|(x)
 end_define
+
+begin_define
+define|#
+directive|define
+name|le32toh
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1848,7 +1882,7 @@ name|qh
 operator|.
 name|qh_hlink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
@@ -1860,7 +1894,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
@@ -1906,7 +1940,7 @@ name|qh
 operator|.
 name|qh_hlink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|bsqh
 operator|->
@@ -1921,7 +1955,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
@@ -1994,7 +2028,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|sqh
 operator|->
@@ -2009,7 +2043,7 @@ name|td
 operator|.
 name|td_status
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_IOS
 argument_list|)
@@ -2021,7 +2055,7 @@ name|td
 operator|.
 name|td_token
 operator|=
-name|LE
+name|htole32
 argument_list|(
 literal|0
 argument_list|)
@@ -2032,7 +2066,7 @@ name|td
 operator|.
 name|td_buffer
 operator|=
-name|LE
+name|htole32
 argument_list|(
 literal|0
 argument_list|)
@@ -2049,7 +2083,7 @@ name|qh
 operator|.
 name|qh_hlink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|csqh
 operator|->
@@ -2070,7 +2104,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
@@ -2140,7 +2174,7 @@ index|[
 name|j
 index|]
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|std
 operator|->
@@ -3263,7 +3297,7 @@ operator|,
 operator|(
 name|long
 operator|)
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3275,7 +3309,7 @@ operator|,
 operator|(
 name|long
 operator|)
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3287,7 +3321,7 @@ operator|,
 operator|(
 name|long
 operator|)
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3299,7 +3333,7 @@ operator|,
 operator|(
 name|long
 operator|)
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3322,7 +3356,7 @@ operator|,
 operator|(
 name|int
 operator|)
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3336,7 +3370,7 @@ operator|,
 operator|(
 name|int
 operator|)
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3350,7 +3384,7 @@ literal|"STALLED\30ACTIVE\31IOC\32ISO\33LS\36SPD"
 operator|,
 name|UHCI_TD_GET_ERRCNT
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3362,7 +3396,7 @@ argument_list|)
 operator|,
 name|UHCI_TD_GET_ACTLEN
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3374,7 +3408,7 @@ argument_list|)
 operator|,
 name|UHCI_TD_GET_PID
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3386,7 +3420,7 @@ argument_list|)
 operator|,
 name|UHCI_TD_GET_DEVADDR
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3398,7 +3432,7 @@ argument_list|)
 operator|,
 name|UHCI_TD_GET_ENDPT
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3410,7 +3444,7 @@ argument_list|)
 operator|,
 name|UHCI_TD_GET_DT
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3422,7 +3456,7 @@ argument_list|)
 operator|,
 name|UHCI_TD_GET_MAXLEN
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|p
 operator|->
@@ -3463,7 +3497,7 @@ name|sqh
 operator|->
 name|physaddr
 operator|,
-name|LE
+name|le32toh
 argument_list|(
 name|sqh
 operator|->
@@ -3472,7 +3506,7 @@ operator|.
 name|qh_hlink
 argument_list|)
 operator|,
-name|LE
+name|le32toh
 argument_list|(
 name|sqh
 operator|->
@@ -3523,11 +3557,14 @@ name|NULL
 operator|&&
 operator|!
 operator|(
+name|le32toh
+argument_list|(
 name|sqh
 operator|->
 name|qh
 operator|.
 name|qh_hlink
+argument_list|)
 operator|&
 name|UHCI_PTR_T
 operator|)
@@ -3557,11 +3594,14 @@ name|NULL
 operator|&&
 operator|!
 operator|(
+name|le32toh
+argument_list|(
 name|sqh
 operator|->
 name|qh
 operator|.
 name|qh_elink
+argument_list|)
 operator|&
 name|UHCI_PTR_T
 operator|)
@@ -3624,19 +3664,25 @@ expr_stmt|;
 comment|/* Check whether the link pointer in this TD marks 		 * the link pointer as end of queue. This avoids 		 * printing the free list in case the queue/TD has 		 * already been moved there (seatbelt). 		 */
 if|if
 condition|(
+name|le32toh
+argument_list|(
 name|td
 operator|->
 name|td
 operator|.
 name|td_link
+argument_list|)
 operator|&
 name|UHCI_PTR_T
 operator|||
+name|le32toh
+argument_list|(
 name|td
 operator|->
 name|td
 operator|.
 name|td_link
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -4144,7 +4190,7 @@ name|qh
 operator|.
 name|qh_hlink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|sqh
 operator|->
@@ -4229,7 +4275,7 @@ name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
-name|LE
+name|le32toh
 argument_list|(
 name|pqh
 operator|->
@@ -4362,7 +4408,7 @@ name|qh
 operator|.
 name|qh_hlink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|sqh
 operator|->
@@ -4447,7 +4493,7 @@ name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
-name|LE
+name|le32toh
 argument_list|(
 name|pqh
 operator|->
@@ -4987,7 +5033,7 @@ directive|endif
 comment|/*  	 * If the last TD is still active we need to check whether there 	 * is a an error somewhere in the middle, or whether there was a 	 * short packet (SPD and not ACTIVE). 	 */
 if|if
 condition|(
-name|LE
+name|le32toh
 argument_list|(
 name|lstd
 operator|->
@@ -5033,7 +5079,7 @@ control|)
 block|{
 name|status
 operator|=
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -5076,7 +5122,7 @@ argument_list|)
 operator|<
 name|UHCI_TD_GET_MAXLEN
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -5368,7 +5414,7 @@ literal|0
 expr_stmt|;
 name|status
 operator|=
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -5481,7 +5527,7 @@ control|)
 block|{
 name|nstatus
 operator|=
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -5505,7 +5551,7 @@ if|if
 condition|(
 name|UHCI_TD_GET_PID
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -5538,7 +5584,7 @@ name|nexttoggle
 operator|=
 name|UHCI_TD_GET_DT
 argument_list|(
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -6361,16 +6407,16 @@ name|TD_IS_FREE
 value|0x12345678
 if|if
 condition|(
+name|le32toh
+argument_list|(
 name|std
 operator|->
 name|td
 operator|.
 name|td_token
-operator|==
-name|LE
-argument_list|(
-name|TD_IS_FREE
 argument_list|)
+operator|==
+name|TD_IS_FREE
 condition|)
 block|{
 name|printf
@@ -6388,7 +6434,7 @@ name|td
 operator|.
 name|td_token
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|TD_IS_FREE
 argument_list|)
@@ -7044,7 +7090,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|lastlink
 argument_list|)
@@ -7056,7 +7102,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|lastlink
 operator||
@@ -7079,7 +7125,7 @@ name|td
 operator|.
 name|td_status
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|status
 argument_list|)
@@ -7132,7 +7178,7 @@ name|td
 operator|.
 name|td_token
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|rd
 condition|?
@@ -7165,7 +7211,7 @@ name|td
 operator|.
 name|td_buffer
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|DMAADDR
 argument_list|(
@@ -7507,7 +7553,7 @@ name|td
 operator|.
 name|td_status
 operator||=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_IOC
 argument_list|)
@@ -7611,7 +7657,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|data
 operator|->
@@ -7859,7 +7905,7 @@ name|td
 operator|.
 name|td_status
 operator|&=
-name|LE
+name|htole32
 argument_list|(
 operator|~
 operator|(
@@ -8412,7 +8458,7 @@ name|td
 operator|.
 name|td_status
 operator||=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_IOC
 argument_list|)
@@ -8588,7 +8634,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|data
 operator|->
@@ -9259,7 +9305,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|stat
 operator|->
@@ -9323,7 +9369,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|next
 operator|->
@@ -9338,7 +9384,7 @@ name|td
 operator|.
 name|td_status
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
@@ -9356,7 +9402,7 @@ name|td
 operator|.
 name|td_token
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_SETUP
 argument_list|(
@@ -9376,7 +9422,7 @@ name|td
 operator|.
 name|td_buffer
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|DMAADDR
 argument_list|(
@@ -9407,7 +9453,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
@@ -9418,7 +9464,7 @@ name|td
 operator|.
 name|td_status
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
@@ -9438,7 +9484,7 @@ name|td
 operator|.
 name|td_token
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|isread
 condition|?
@@ -9471,7 +9517,7 @@ name|td
 operator|.
 name|td_buffer
 operator|=
-name|LE
+name|htole32
 argument_list|(
 literal|0
 argument_list|)
@@ -9575,7 +9621,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|setup
 operator|->
@@ -9685,7 +9731,7 @@ control|)
 block|{
 name|link
 operator|=
-name|LE
+name|le32toh
 argument_list|(
 name|std
 operator|->
@@ -10100,8 +10146,6 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|LE
-argument_list|(
 name|UHCI_TD_ZERO_ACTLEN
 argument_list|(
 name|UHCI_TD_SET_ERRCNT
@@ -10112,7 +10156,6 @@ operator||
 name|UHCI_TD_ACTIVE
 operator||
 name|UHCI_TD_IOS
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|nframes
@@ -10175,7 +10218,7 @@ name|td
 operator|.
 name|td_buffer
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|buf
 argument_list|)
@@ -10190,10 +10233,7 @@ literal|1
 condition|)
 name|status
 operator||=
-name|LE
-argument_list|(
 name|UHCI_TD_IOC
-argument_list|)
 expr_stmt|;
 name|std
 operator|->
@@ -10201,7 +10241,10 @@ name|td
 operator|.
 name|td_status
 operator|=
+name|htole32
+argument_list|(
 name|status
+argument_list|)
 expr_stmt|;
 name|std
 operator|->
@@ -10209,7 +10252,7 @@ name|td
 operator|.
 name|td_token
 operator|&=
-name|LE
+name|htole32
 argument_list|(
 operator|~
 name|UHCI_TD_MAXLEN_MASK
@@ -10221,7 +10264,7 @@ name|td
 operator|.
 name|td_token
 operator||=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_SET_MAXLEN
 argument_list|(
@@ -10587,7 +10630,7 @@ name|td
 operator|.
 name|td_status
 operator|&=
-name|LE
+name|htole32
 argument_list|(
 operator|~
 operator|(
@@ -10755,7 +10798,7 @@ name|td
 operator|.
 name|td_status
 operator|&=
-name|LE
+name|htole32
 argument_list|(
 operator|~
 name|UHCI_TD_ACTIVE
@@ -11024,8 +11067,6 @@ argument_list|)
 expr_stmt|;
 name|token
 operator|=
-name|LE
-argument_list|(
 name|rd
 condition|?
 name|UHCI_TD_IN
@@ -11048,7 +11089,6 @@ argument_list|,
 name|addr
 argument_list|,
 literal|0
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the TDs and mark as inactive; */
@@ -11088,7 +11128,7 @@ name|td
 operator|.
 name|td_status
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_IOS
 argument_list|)
@@ -11100,7 +11140,10 @@ name|td
 operator|.
 name|td_token
 operator|=
+name|htole32
+argument_list|(
 name|token
+argument_list|)
 expr_stmt|;
 name|iso
 operator|->
@@ -11186,7 +11229,7 @@ name|td
 operator|.
 name|td_link
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|std
 operator|->
@@ -11293,7 +11336,7 @@ name|td
 operator|.
 name|td_status
 operator|&=
-name|LE
+name|htole32
 argument_list|(
 operator|~
 name|UHCI_TD_IOC
@@ -11419,7 +11462,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
@@ -11488,7 +11531,7 @@ name|td
 operator|.
 name|td_status
 operator||=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_TD_IOC
 argument_list|)
@@ -11626,7 +11669,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|data
 operator|->
@@ -11955,7 +11998,7 @@ name|qh
 operator|.
 name|qh_hlink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|sqh
 operator|->
@@ -12061,7 +12104,7 @@ name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
-name|LE
+name|le32toh
 argument_list|(
 name|pqh
 operator|->
@@ -12407,7 +12450,7 @@ name|qh
 operator|.
 name|qh_elink
 operator|=
-name|LE
+name|htole32
 argument_list|(
 name|UHCI_PTR_T
 argument_list|)
