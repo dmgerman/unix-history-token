@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	1.12	83/05/18	*/
+comment|/*	config.h	1.13	83/06/16	*/
 end_comment
 
 begin_comment
@@ -34,8 +34,12 @@ modifier|*
 name|f_fn
 decl_stmt|;
 comment|/* the name */
-name|short
+name|u_char
 name|f_type
+decl_stmt|;
+comment|/* see below */
+name|u_char
+name|f_flags
 decl_stmt|;
 comment|/* see below */
 name|short
@@ -103,6 +107,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Types.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -143,6 +151,17 @@ define|#
 directive|define
 name|SWAPSPEC
 value|6
+end_define
+
+begin_comment
+comment|/*  * Attributes (flags).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONFIGDEP
+value|1
 end_define
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.27	83/05/18	*/
+comment|/*	mkmakefile.c	1.28	83/06/16	*/
 end_comment
 
 begin_comment
@@ -239,6 +239,18 @@ expr_stmt|;
 name|fp
 operator|->
 name|f_next
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|f_flags
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|f_type
 operator|=
 literal|0
 expr_stmt|;
@@ -954,11 +966,12 @@ index|]
 decl_stmt|;
 name|int
 name|nreqs
-decl_stmt|;
-name|int
+decl_stmt|,
 name|first
 init|=
 literal|1
+decl_stmt|,
+name|configdep
 decl_stmt|;
 name|ftab
 operator|=
@@ -1005,7 +1018,7 @@ expr_stmt|;
 block|}
 name|next
 label|:
-comment|/* filename	[ standard | optional dev* ] [ device-driver ] */
+comment|/* 	 * filename	[ standard | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1214,6 +1227,10 @@ name|devorprof
 operator|=
 literal|""
 expr_stmt|;
+name|configdep
+operator|=
+literal|0
+expr_stmt|;
 name|needs
 operator|=
 literal|0
@@ -1274,6 +1291,23 @@ condition|)
 goto|goto
 name|doneopt
 goto|;
+if|if
+condition|(
+name|eq
+argument_list|(
+name|wd
+argument_list|,
+literal|"config-dependent"
+argument_list|)
+condition|)
+block|{
+name|configdep
+operator|++
+expr_stmt|;
+goto|goto
+name|nextopt
+goto|;
+block|}
 name|devorprof
 operator|=
 name|wd
@@ -1439,10 +1473,25 @@ expr_stmt|;
 if|if
 condition|(
 name|wd
-operator|!=
-literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|eq
+argument_list|(
+name|wd
+argument_list|,
+literal|"config-dependent"
+argument_list|)
+condition|)
+block|{
+name|configdep
+operator|++
+expr_stmt|;
+goto|goto
+name|checkdev
+goto|;
+block|}
 name|devorprof
 operator|=
 name|wd
@@ -1461,8 +1510,6 @@ label|:
 if|if
 condition|(
 name|wd
-operator|!=
-literal|0
 condition|)
 block|{
 name|printf
@@ -1526,7 +1573,7 @@ name|tp
 operator|->
 name|f_type
 operator|=
-name|DEVICE
+name|DRIVER
 expr_stmt|;
 elseif|else
 if|if
@@ -1550,6 +1597,22 @@ operator|->
 name|f_type
 operator|=
 name|NORMAL
+expr_stmt|;
+name|tp
+operator|->
+name|f_flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|configdep
+condition|)
+name|tp
+operator|->
+name|f_flags
+operator||=
+name|CONFIGDEP
 expr_stmt|;
 name|tp
 operator|->
@@ -2026,6 +2089,10 @@ name|file_list
 modifier|*
 name|ftp
 decl_stmt|;
+name|char
+modifier|*
+name|extras
+decl_stmt|;
 for|for
 control|(
 name|ftp
@@ -2124,6 +2191,23 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|ftp
+operator|->
+name|f_flags
+operator|&
+name|CONFIGDEP
+condition|)
+name|extras
+operator|=
+literal|"${PARAM} "
+expr_stmt|;
+else|else
+name|extras
+operator|=
+literal|""
+expr_stmt|;
 switch|switch
 condition|(
 name|ftp
@@ -2146,7 +2230,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S ${COPTS} ../%sc\n"
+literal|"\t${CC} -I. -c -S ${COPTS} %s../%sc\n"
+argument_list|,
+name|extras
 argument_list|,
 name|np
 argument_list|)
@@ -2188,7 +2274,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -O ${COPTS} ../%sc\n\n"
+literal|"\t${CC} -I. -c -O ${COPTS} %s../%sc\n\n"
+argument_list|,
+name|extras
 argument_list|,
 name|np
 argument_list|)
@@ -2197,7 +2285,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|DEVICE
+name|DRIVER
 case|:
 switch|switch
 condition|(
@@ -2211,7 +2299,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S ${COPTS} ../%sc\n"
+literal|"\t${CC} -I. -c -S ${COPTS} %s../%sc\n"
+argument_list|,
+name|extras
 argument_list|,
 name|np
 argument_list|)
@@ -2253,7 +2343,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -O ${COPTS} ../%sc\n\n"
+literal|"\t${CC} -I. -c -O ${COPTS} %s../%sc\n\n"
+argument_list|,
+name|extras
 argument_list|,
 name|np
 argument_list|)
@@ -2300,9 +2392,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S %s ../%sc\n"
+literal|"\t${CC} -I. -c -S %s %s../%sc\n"
 argument_list|,
 name|COPTS
+argument_list|,
+name|extras
 argument_list|,
 name|np
 argument_list|)
@@ -2353,7 +2447,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Don't know rules for %s"
+literal|"Don't know rules for %s\n"
 argument_list|,
 name|np
 argument_list|)
