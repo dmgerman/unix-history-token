@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.13 (Berkeley) %G%"
+literal|"@(#)mount.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,7 +357,10 @@ name|mntbuf
 decl_stmt|;
 name|FILE
 modifier|*
-name|pidfile
+name|mountdfp
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|long
 name|mntsize
@@ -368,8 +371,6 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|i
-decl_stmt|,
-name|ret
 decl_stmt|,
 name|rval
 decl_stmt|,
@@ -542,15 +543,15 @@ name|type
 parameter_list|)
 define|\
 value|(strcmp(type, FSTAB_RO)&&					\ 	    strcmp(type, FSTAB_RW)&& strcmp(type, FSTAB_RQ))
+name|rval
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|all
 condition|)
 block|{
-name|rval
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -595,8 +596,8 @@ operator|->
 name|fs_vfstype
 argument_list|)
 expr_stmt|;
-name|rval
-operator||=
+if|if
+condition|(
 name|mountfs
 argument_list|(
 name|fs
@@ -617,6 +618,10 @@ name|fs
 operator|->
 name|fs_mntops
 argument_list|)
+condition|)
+name|rval
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|exit
@@ -736,9 +741,12 @@ name|vfslist
 operator|!=
 name|NULL
 condition|)
+block|{
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 if|if
 condition|(
 name|argc
@@ -900,7 +908,7 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
-name|ret
+name|rval
 operator|=
 name|mountfs
 argument_list|(
@@ -960,7 +968,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown special file or file system %s."
+literal|"%s: unknown special file or file system."
 argument_list|,
 operator|*
 name|argv
@@ -994,7 +1002,7 @@ operator|->
 name|fs_vfstype
 argument_list|)
 expr_stmt|;
-name|ret
+name|rval
 operator|=
 name|mountfs
 argument_list|(
@@ -1029,10 +1037,7 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 else|else
 block|{
@@ -1075,7 +1080,7 @@ operator|=
 literal|"nfs"
 expr_stmt|;
 block|}
-name|ret
+name|rval
 operator|=
 name|mountfs
 argument_list|(
@@ -1099,27 +1104,20 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the mount succeeded, and we're running as root, 	 * then tell mountd the good news. 	 */
+comment|/* 	 * If the mount succeeded, and root did the mount, then tell 	 * mountd the good news.  Pid checks are probably unnecessary, 	 * but don't hurt. 	 */
 if|if
 condition|(
-operator|(
-name|ret
+name|rval
 operator|==
 literal|0
-operator|)
 operator|&&
-operator|(
 name|getuid
 argument_list|()
 operator|==
 literal|0
-operator|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
-name|pidfile
+name|mountdfp
 operator|=
 name|fopen
 argument_list|(
@@ -1132,37 +1130,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pid_t
-name|pid
-init|=
-literal|0
-decl_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|fscanf
 argument_list|(
-name|pidfile
+name|mountdfp
 argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
 name|pid
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|pidfile
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|1
+operator|&&
 name|pid
 operator|>
 literal|0
+operator|&&
+name|pid
+operator|!=
+operator|-
+literal|1
 operator|&&
 name|kill
 argument_list|(
@@ -1178,11 +1167,18 @@ argument_list|,
 literal|"signal mountd"
 argument_list|)
 expr_stmt|;
-block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|mountdfp
+argument_list|)
+expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|ret
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
