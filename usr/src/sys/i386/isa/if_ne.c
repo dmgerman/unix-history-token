@@ -14,7 +14,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * NE2000 Ethernet driver  * Copyright (C) 1990 W. Jolitz  * @(#)if_ne.c	1.2 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
+comment|/*  * NE2000 Ethernet driver  * Copyright (C) 1990 W. Jolitz  * @(#)if_ne.c	1.3 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
 end_comment
 
 begin_include
@@ -1707,7 +1707,7 @@ name|nec
 operator|+
 name|ds0_bnry
 argument_list|,
-name|RBUFEND
+name|RBUF
 operator|/
 name|DS_PGSIZE
 argument_list|)
@@ -2013,7 +2013,7 @@ comment|/*}*/
 comment|/* 	 * Init transmit length registers, and set transmit start flag. 	 */
 ifdef|#
 directive|ifdef
-name|NEDEBUG
+name|NEDEBUGx
 if|if
 condition|(
 name|len
@@ -2112,7 +2112,7 @@ name|succ
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n)+1> RBUFEND/DS_PGSIZE) ? RBUF/DS_PGSIZE : (n)+1)
+value|(((n)+1>= RBUFEND/DS_PGSIZE) ? RBUF/DS_PGSIZE : (n)+1)
 end_define
 
 begin_define
@@ -2122,7 +2122,7 @@ name|pred
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n)-1< RBUF/DS_PGSIZE) ? RBUFEND/DS_PGSIZE : (n)-1)
+value|(((n)-1< RBUF/DS_PGSIZE) ? RBUFEND/DS_PGSIZE-1 : (n)-1)
 end_define
 
 begin_comment
@@ -2166,9 +2166,6 @@ decl_stmt|;
 specifier|static
 name|cnt
 expr_stmt|;
-name|redstack
-argument_list|()
-expr_stmt|;
 comment|/* save cmd, clear interrupt */
 name|cmd
 operator|=
@@ -2192,7 +2189,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NEDEBUG
+name|NEDEBUGx
 name|dprintf
 argument_list|(
 name|DEXPAND
@@ -2231,7 +2228,8 @@ condition|(
 name|isr
 operator|&
 operator|(
-comment|/*DSIS_RXE|*/
+name|DSIS_RXE
+operator||
 name|DSIS_TXE
 operator||
 name|DSIS_ROVRN
@@ -2251,6 +2249,9 @@ name|isr
 comment|/*, DSIS_BITS*/
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* receiver ovverun? */
 if|if
 condition|(
@@ -2341,7 +2342,7 @@ comment|/* have we wrapped */
 if|if
 condition|(
 name|lastfree
-operator|>
+operator|>=
 name|RBUFEND
 operator|/
 name|DS_PGSIZE
@@ -2562,17 +2563,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEDEBUG
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 comment|/* receiver error */
 if|if
 condition|(
@@ -2638,6 +2631,8 @@ operator|(
 name|DSIS_RX
 operator||
 name|DSIS_RXE
+operator||
+name|DSIS_ROVRN
 operator|)
 condition|)
 block|{
@@ -2714,7 +2709,7 @@ comment|/* have we wrapped */
 if|if
 condition|(
 name|lastfree
-operator|>
+operator|>=
 name|RBUFEND
 operator|/
 name|DS_PGSIZE
@@ -2725,15 +2720,45 @@ name|RBUF
 operator|/
 name|DS_PGSIZE
 expr_stmt|;
-comment|/* something in the buffer? */
 if|if
 condition|(
 name|pend
-operator|!=
-name|succ
-argument_list|(
+operator|<
 name|lastfree
-argument_list|)
+operator|&&
+name|ns
+operator|->
+name|ns_cur
+operator|<
+name|pend
+condition|)
+name|lastfree
+operator|=
+name|ns
+operator|->
+name|ns_cur
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ns
+operator|->
+name|ns_cur
+operator|>
+name|lastfree
+condition|)
+name|lastfree
+operator|=
+name|ns
+operator|->
+name|ns_cur
+expr_stmt|;
+comment|/* something in the buffer? */
+while|while
+condition|(
+name|pend
+operator|!=
+name|lastfree
 condition|)
 block|{
 name|u_char
@@ -2746,9 +2771,7 @@ name|ns
 operator|->
 name|ns_ph
 argument_list|,
-name|ns
-operator|->
-name|ns_cur
+name|lastfree
 operator|*
 name|DS_PGSIZE
 argument_list|,
@@ -2764,9 +2787,7 @@ name|ns
 operator|->
 name|ns_ba
 operator|=
-name|ns
-operator|->
-name|ns_cur
+name|lastfree
 operator|*
 name|DS_PGSIZE
 operator|+
@@ -2777,6 +2798,7 @@ operator|->
 name|ns_ph
 argument_list|)
 expr_stmt|;
+comment|/* paranoia */
 if|if
 condition|(
 name|ns
@@ -2917,10 +2939,7 @@ name|pend
 expr_stmt|;
 name|lastfree
 operator|=
-name|pred
-argument_list|(
 name|nxt
-argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -2928,7 +2947,23 @@ name|nec
 operator|+
 name|ds0_bnry
 argument_list|,
-name|lastfree
+name|pred
+argument_list|(
+name|nxt
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds_cmd
+argument_list|,
+name|DSCM_START
+operator||
+name|DSCM_NODMA
+operator||
+name|DSCM_PG1
 argument_list|)
 expr_stmt|;
 name|pend
@@ -2940,14 +2975,41 @@ operator|+
 name|ds1_curr
 argument_list|)
 expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds_cmd
+argument_list|,
+name|DSCM_START
+operator||
+name|DSCM_NODMA
+operator||
+name|DSCM_PG0
+argument_list|)
+expr_stmt|;
 block|}
-else|else
+comment|/*else ns->ns_cur = pend;*/
+ifdef|#
+directive|ifdef
+name|NEDEBUG
+name|dprintf
+argument_list|(
+name|DEXPAND
+argument_list|,
+literal|"cur %x pnd %x lfR %x "
+argument_list|,
 name|ns
 operator|->
 name|ns_cur
-operator|=
+argument_list|,
 name|pend
+argument_list|,
+name|lastfree
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|nec
@@ -3017,7 +3079,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|NEDEBUG
+name|NEDEBUGx
 name|dprintf
 argument_list|(
 name|DEXPAND
@@ -3052,6 +3114,80 @@ argument_list|(
 name|nec
 operator|+
 name|ds0_tbcr0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* receiver ovverun? */
+if|if
+condition|(
+name|isr
+operator|&
+name|DSIS_ROVRN
+condition|)
+block|{
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds0_rbcr0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds0_rbcr1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds0_tcr
+argument_list|,
+name|DSTC_LB0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds0_rcr
+argument_list|,
+name|DSRC_MON
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds_cmd
+argument_list|,
+name|DSCM_START
+operator||
+name|DSCM_NODMA
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds0_rcr
+argument_list|,
+name|DSRC_AB
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|nec
+operator|+
+name|ds0_tcr
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
