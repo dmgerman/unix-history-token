@@ -1588,9 +1588,9 @@ operator|(
 operator|(
 name|mp
 operator|->
-name|mnt_stat
-operator|.
-name|f_owner
+name|mnt_cred
+operator|->
+name|cr_uid
 operator|!=
 name|td
 operator|->

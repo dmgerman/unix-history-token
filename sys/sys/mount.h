@@ -475,6 +475,12 @@ name|statfs
 name|mnt_stat
 decl_stmt|;
 comment|/* cache of filesystem stats */
+name|struct
+name|ucred
+modifier|*
+name|mnt_cred
+decl_stmt|;
+comment|/* credentials of mounter */
 name|qaddr_t
 name|mnt_data
 decl_stmt|;
