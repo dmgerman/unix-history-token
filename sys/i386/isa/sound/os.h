@@ -524,6 +524,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|unsigned
 name|long
 name|get_time
 parameter_list|(

@@ -477,8 +477,14 @@ name|loopc
 init|=
 literal|5000000
 decl_stmt|;
+name|unsigned
+name|long
+name|tt
+decl_stmt|;
+name|tt
+operator|=
 name|t
-operator|+=
+operator|+
 name|GET_TIME
 argument_list|()
 expr_stmt|;
@@ -505,7 +511,7 @@ operator|&&
 name|GET_TIME
 argument_list|()
 operator|<
-name|t
+name|tt
 condition|)
 do|;
 name|printk
