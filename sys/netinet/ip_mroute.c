@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id$  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.19 1995/06/26 16:15:49 wollman Exp $  */
 end_comment
 
 begin_include
@@ -9964,17 +9964,15 @@ name|rsvp_input
 parameter_list|(
 name|m
 parameter_list|,
-name|ifp
+name|iphlen
 parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
+name|int
+name|iphlen
 decl_stmt|;
 block|{
 name|int
@@ -10001,12 +9999,20 @@ name|sockaddr_in
 name|rsvp_src
 init|=
 block|{
+sizeof|sizeof
+name|rsvp_src
+block|,
 name|AF_INET
 block|}
 decl_stmt|;
 specifier|register
 name|int
 name|s
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 decl_stmt|;
 if|if
 condition|(
@@ -10070,6 +10076,35 @@ name|printf
 argument_list|(
 literal|"rsvp_input: check vifs\n"
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+operator|!
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"rsvp_input no hdr"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ifp
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 expr_stmt|;
 comment|/* Find which vif the packet arrived on. */
 for|for
