@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.45 1998/02/09 06:10:17 eivind Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.46 1998/04/17 22:36:58 des Exp $  */
 end_comment
 
 begin_include
@@ -6784,12 +6784,9 @@ specifier|register
 name|int
 name|plen
 init|=
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_len
-argument_list|)
 decl_stmt|;
 comment|/*  * Macro to send packet on vif.  Since RSVP packets don't get counted on  * input, they shouldn't get counted on output, so statistics keeping is  * seperate.  */
 define|#
