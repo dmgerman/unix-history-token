@@ -87,7 +87,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|acpi_init
 parameter_list|(
 name|void
