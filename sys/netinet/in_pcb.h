@@ -355,6 +355,11 @@ define|#
 directive|define
 name|INP_IPV6
 value|0x2
+define|#
+directive|define
+name|INP_ONESBCAST
+value|0x10
+comment|/* send all-ones broadcast */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;
