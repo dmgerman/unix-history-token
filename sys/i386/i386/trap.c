@@ -3593,7 +3593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	syscall -	MP aware system call request C handler  *  *	A system call is essentially treated as a trap except that the  *	MP lock is not held on entry or return.  We are responsible for  *	obtaining the MP lock if necessary and for handling ASTs  *	(e.g. a task switch) prior to return.  *  *	In general, only simple access and manipulation of curproc and  *	the current stack is allowed without having to hold MP lock.  */
+comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
 end_comment
 
 begin_function
@@ -3943,7 +3943,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Try to run the syscall without the MP lock if the syscall 	 * is MP safe. 	 */
+comment|/* 	 * Try to run the syscall without Giant if the syscall 	 * is MP safe. 	 */
 if|if
 condition|(
 operator|(
@@ -3967,7 +3967,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|KTRACE
-comment|/* 	 * We have to obtain the MP lock no matter what if  	 * we are ktracing 	 */
+comment|/* 	 * We have to obtain Giant no matter what if  	 * we are ktracing 	 */
 if|if
 condition|(
 name|KTRPOINT
@@ -4038,7 +4038,6 @@ argument_list|,
 name|narg
 argument_list|)
 expr_stmt|;
-comment|/* MP aware */
 name|error
 operator|=
 call|(
@@ -4053,7 +4052,6 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-comment|/* 	 * MP SAFE (we may or may not have the MP lock at this point) 	 */
 switch|switch
 condition|(
 name|error
@@ -4164,7 +4162,7 @@ name|PSL_C
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Traced syscall.  trapsignal() is not MP aware. 	 */
+comment|/* 	 * Traced syscall. 	 */
 if|if
 condition|(
 operator|(
