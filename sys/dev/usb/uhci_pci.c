@@ -998,14 +998,13 @@ name|device_printf
 argument_list|(
 name|self
 argument_list|,
-literal|"init failed\n"
+literal|"USB init failed\n"
 argument_list|)
 expr_stmt|;
 name|err
 operator|=
 name|EIO
 expr_stmt|;
-comment|/* XXX arbitrary value */
 goto|goto
 name|bad4
 goto|;
@@ -1015,7 +1014,7 @@ literal|0
 return|;
 name|bad4
 label|:
-comment|/* disable interrupts that might have been switched on 	 * in uhci_init 	 */
+comment|/* disable interrupts that might have been switched on 	 * in uhci_init. 	 */
 name|bus_space_write_2
 argument_list|(
 name|sc
@@ -1073,32 +1072,24 @@ argument_list|)
 expr_stmt|;
 name|bad2
 label|:
-name|rid
-operator|=
-literal|0
-expr_stmt|;
 name|bus_delete_resource
 argument_list|(
 name|self
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-name|rid
+literal|0
 argument_list|)
 expr_stmt|;
 name|bad1
 label|:
-name|rid
-operator|=
-name|PCI_UHCI_BASE_REG
-expr_stmt|;
 name|bus_delete_resource
 argument_list|(
 name|self
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|rid
+name|PCI_UHCI_BASE_REG
 argument_list|)
 expr_stmt|;
 return|return
