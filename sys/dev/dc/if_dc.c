@@ -10224,6 +10224,8 @@ operator|->
 name|dc_ldata
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|sc
@@ -10303,19 +10305,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|sc
-operator|->
-name|dc_ldata
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dc_list_data
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate a busdma tag and DMA safe memory for the multicast 	 * setup frame. 	 */
 name|error
 operator|=
