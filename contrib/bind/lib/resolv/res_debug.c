@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 8.45 2001/12/19 12:05:56 marka Exp $"
+literal|"$Id: res_debug.c,v 8.46 2002/05/21 01:57:45 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3483,13 +3483,12 @@ specifier|static
 name|u_int8_t
 name|precsize_aton
 parameter_list|(
-name|strptr
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|strptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -3506,6 +3505,7 @@ name|retval
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -3696,20 +3696,18 @@ specifier|static
 name|u_int32_t
 name|latlon2ul
 parameter_list|(
-name|latlonstrptr
-parameter_list|,
-name|which
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|latlonstrptr
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|which
-decl_stmt|;
+parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp

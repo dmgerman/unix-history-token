@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_nw.c,v 1.22 2002/02/27 03:50:10 marka Exp $"
+literal|"$Id: dns_nw.c,v 1.23 2002/06/26 07:42:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1710,8 +1710,6 @@ name|type
 decl_stmt|,
 name|class
 decl_stmt|,
-name|buflen
-decl_stmt|,
 name|ancount
 decl_stmt|,
 name|qdcount
@@ -1721,6 +1719,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|,
 modifier|*
 modifier|*
@@ -1895,12 +1896,18 @@ name|pvt
 operator|->
 name|buf
 expr_stmt|;
-name|buflen
+name|ep
 operator|=
-sizeof|sizeof
 name|pvt
 operator|->
 name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|pvt
+operator|->
+name|buf
+argument_list|)
 expr_stmt|;
 name|pvt
 operator|->
@@ -1974,7 +1981,11 @@ if|if
 condition|(
 name|n
 operator|>
-name|buflen
+operator|(
+name|ep
+operator|-
+name|bp
+operator|)
 condition|)
 block|{
 name|RES_SET_H_ERRNO
@@ -2007,10 +2018,6 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|+=
-name|n
-expr_stmt|;
-name|buflen
-operator|-=
 name|n
 expr_stmt|;
 block|}
@@ -2050,7 +2057,11 @@ if|if
 condition|(
 name|INADDRSZ
 operator|>
-name|buflen
+operator|(
+name|ep
+operator|-
+name|bp
+operator|)
 condition|)
 block|{
 name|RES_SET_H_ERRNO
@@ -2098,10 +2109,6 @@ name|bp
 operator|+=
 name|INADDRSZ
 expr_stmt|;
-name|buflen
-operator|-=
-name|INADDRSZ
-expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -2145,7 +2152,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 decl_stmt|;
 name|cp
@@ -2250,7 +2259,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2358,10 +2369,6 @@ name|bp
 operator|+=
 name|nn
 expr_stmt|;
-name|buflen
-operator|-=
-name|nn
-expr_stmt|;
 name|haveanswer
 operator|++
 expr_stmt|;
@@ -2414,7 +2421,11 @@ condition|)
 break|break;
 if|if
 condition|(
-name|buflen
+operator|(
+name|ep
+operator|-
+name|bp
+operator|)
 operator|<
 name|INADDRSZ
 condition|)
@@ -2465,10 +2476,6 @@ name|bp
 operator|++
 operator|=
 name|b1
-expr_stmt|;
-name|buflen
-operator|-=
-name|INADDRSZ
 expr_stmt|;
 name|pvt
 operator|->

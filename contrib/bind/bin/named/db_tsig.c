@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_tsig.c,v 8.7 2001/06/18 14:42:59 marka Exp $"
+literal|"$Id: db_tsig.c,v 8.8 2002/05/21 02:34:32 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,8 +291,6 @@ block|{
 name|server_info
 name|si
 init|=
-name|si
-operator|=
 name|find_server
 argument_list|(
 name|addr

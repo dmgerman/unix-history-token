@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium. 
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.45 2002/04/12 06:27:48 marka Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.48 2002/05/31 06:05:29 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -436,10 +436,21 @@ name|int
 name|retry
 decl_stmt|;
 comment|/* number of times to retransmit */
+ifdef|#
+directive|ifdef
+name|sun
+name|u_int
+name|options
+decl_stmt|;
+comment|/* option flags - see below. */
+else|#
+directive|else
 name|u_long
 name|options
 decl_stmt|;
 comment|/* option flags - see below. */
+endif|#
+directive|endif
 name|int
 name|nscount
 decl_stmt|;
@@ -478,10 +489,21 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* default domain (deprecated) */
+ifdef|#
+directive|ifdef
+name|sun
+name|u_int
+name|pfcode
+decl_stmt|;
+comment|/* RES_PRF_ flags - see below. */
+else|#
+directive|else
 name|u_long
 name|pfcode
 decl_stmt|;
 comment|/* RES_PRF_ flags - see below. */
+endif|#
+directive|endif
 name|unsigned
 name|ndots
 range|:
@@ -535,6 +557,10 @@ name|u_int
 name|_flags
 decl_stmt|;
 comment|/* PRIVATE: see below */
+name|u_int
+name|_pad
+decl_stmt|;
+comment|/* make _u 64 bit aligned */
 union|union
 block|{
 comment|/* On an 32-bit arch this means 512b total. */
@@ -543,7 +569,7 @@ name|pad
 index|[
 literal|72
 operator|-
-literal|3
+literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1000,6 +1026,17 @@ end_define
 
 begin_comment
 comment|/* use EDNS0 if configured */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_NO_NIBBLE2
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* disable alternate nibble lookup */
 end_comment
 
 begin_define
@@ -3066,6 +3103,20 @@ specifier|const
 name|char
 modifier|*
 name|res_get_nibblesuffix
+name|__P
+argument_list|(
+operator|(
+name|res_state
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|res_get_nibblesuffix2
 name|__P
 argument_list|(
 operator|(

@@ -106,6 +106,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -181,12 +187,42 @@ name|GROUP_R_BAD
 value|NULL
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|500030
+end_if
+
+begin_define
+define|#
+directive|define
+name|GETGROUPLIST_ARGS
+value|const char *name, gid_t basegid, gid_t *groups, \ 			  int *ngroups
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|GETGROUPLIST_ARGS
 value|const char *name, int basegid, int *groups, \ 			  int *ngroups
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

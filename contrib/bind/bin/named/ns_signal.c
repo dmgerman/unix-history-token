@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_signal.c,v 8.14 2001/06/18 14:43:25 marka Exp $"
+literal|"$Id: ns_signal.c,v 8.15 2002/05/18 01:39:15 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,11 +131,22 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__hpux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

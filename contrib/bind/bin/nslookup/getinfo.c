@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.23 2002/04/29 01:11:52 marka Exp $"
+literal|"$Id: getinfo.c,v 8.27 2002/05/22 04:06:57 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,51 +309,34 @@ specifier|static
 name|int
 name|GetAnswer
 parameter_list|(
-name|nsAddrPtr
-parameter_list|,
-name|queryType
-parameter_list|,
-name|msg
-parameter_list|,
-name|msglen
-parameter_list|,
-name|iquery
-parameter_list|,
-name|hostPtr
-parameter_list|,
-name|isServer
-parameter_list|,
-name|merge
-parameter_list|)
 name|union
 name|res_sockaddr_union
 modifier|*
 name|nsAddrPtr
-decl_stmt|;
+parameter_list|,
+name|int
+name|queryType
+parameter_list|,
 name|char
 modifier|*
 name|msg
-decl_stmt|;
-name|int
-name|queryType
-decl_stmt|;
+parameter_list|,
 name|int
 name|msglen
-decl_stmt|;
+parameter_list|,
 name|Boolean
 name|iquery
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|HostInfo
 modifier|*
 name|hostPtr
-decl_stmt|;
+parameter_list|,
 name|Boolean
 name|isServer
-decl_stmt|;
+parameter_list|,
 name|Boolean
 name|merge
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|HEADER
@@ -783,6 +766,11 @@ name|queryType
 operator|!=
 name|T_A
 operator|&&
+name|queryType
+operator|!=
+name|T_AAAA
+operator|&&
+comment|/* A6? */
 operator|!
 operator|(
 name|iquery
@@ -1232,7 +1220,7 @@ operator|+=
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|u_long
 operator|)
 name|bp
 operator|)
@@ -1367,6 +1355,10 @@ operator|(
 name|queryType
 operator|==
 name|T_A
+operator|||
+name|queryType
+operator|==
+name|T_AAAA
 operator|||
 name|queryType
 operator|==
@@ -2449,6 +2441,10 @@ condition|(
 name|queryType
 operator|!=
 name|T_A
+operator|&&
+name|queryType
+operator|!=
+name|T_AAAA
 condition|)
 block|{
 comment|/* 	 * If we don't need to save the record, just print it. 	 */

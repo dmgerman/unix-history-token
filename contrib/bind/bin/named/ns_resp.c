@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.176 2002/04/17 07:10:10 marka Exp $"
+literal|"$Id: ns_resp.c,v 8.178 2002/06/27 03:09:19 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,11 +1283,6 @@ name|databuf
 modifier|*
 name|dp
 decl_stmt|;
-name|int
-name|forcecmsg
-init|=
-literal|0
-decl_stmt|;
 name|char
 modifier|*
 name|tname
@@ -1339,6 +1334,9 @@ decl_stmt|;
 name|DST_KEY
 modifier|*
 name|key
+decl_stmt|;
+name|int
+name|expect_cname
 decl_stmt|;
 name|nameserIncr
 argument_list|(
@@ -4373,6 +4371,10 @@ name|flushset
 operator|=
 name|NULL
 expr_stmt|;
+name|expect_cname
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4529,6 +4531,61 @@ name|ancount
 condition|)
 block|{
 comment|/* Answer section. */
+comment|/* 			 * Check for attempts to overflow the buffer in 			 * getnameanswer. 			 */
+if|if
+condition|(
+name|type
+operator|==
+name|ns_t_cname
+operator|&&
+operator|!
+name|expect_cname
+condition|)
+block|{
+name|ns_warning
+argument_list|(
+name|ns_log_security
+argument_list|,
+literal|"late CNAME in answer section for %s %s from %s"
+argument_list|,
+operator|*
+name|qname
+condition|?
+name|qname
+else|:
+literal|"."
+argument_list|,
+name|p_type
+argument_list|(
+name|qtype
+argument_list|)
+argument_list|,
+name|sin_ntoa
+argument_list|(
+name|from
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|!=
+name|ns_t_cname
+operator|&&
+name|type
+operator|!=
+name|ns_t_dname
+operator|&&
+name|type
+operator|!=
+name|ns_t_sig
+condition|)
+name|expect_cname
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|externalcname
@@ -5607,6 +5664,8 @@ operator|!
 name|qp
 operator|->
 name|q_cmsglen
+operator|&&
+name|validanswer
 condition|)
 block|{
 name|ns_debug
@@ -5626,10 +5685,6 @@ goto|goto
 name|return_msg
 goto|;
 block|}
-name|forcecmsg
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* 	 * All messages in here need further processing.  i.e. they 	 * are either CNAMEs or we got referred again. 	 */
 name|count

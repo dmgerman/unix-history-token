@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_update.c,v 8.103 2002/01/03 00:25:02 marka Exp $"
+literal|"$Id: ns_update.c,v 8.104 2002/05/18 01:02:59 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -14959,7 +14959,7 @@ name|olddp
 operator|=
 name|memget
 argument_list|(
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|dp
 operator|->
@@ -14980,7 +14980,7 @@ name|olddp
 argument_list|,
 name|dp
 argument_list|,
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|dp
 operator|->
@@ -15054,7 +15054,7 @@ name|memput
 argument_list|(
 name|olddp
 argument_list|,
-name|DATASIZE
+name|BIND_DATASIZE
 argument_list|(
 name|dp
 operator|->

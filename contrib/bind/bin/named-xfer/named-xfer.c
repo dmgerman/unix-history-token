@@ -95,7 +95,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: named-xfer.c,v 8.120 2002/01/29 06:54:52 marka Exp $"
+literal|"$Id: named-xfer.c,v 8.121 2002/06/26 03:27:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3334,6 +3334,9 @@ name|XFER_FAIL
 expr_stmt|;
 comment|/* fall through */
 case|case
+name|XFER_REFUSED
+case|:
+case|case
 name|XFER_TIMEOUT
 case|:
 case|case
@@ -5179,6 +5182,11 @@ decl_stmt|;
 name|struct
 name|in_addr
 name|z_axfr_src
+decl_stmt|;
+name|int
+name|refused
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -8084,6 +8092,10 @@ operator|->
 name|z_origin
 argument_list|)
 expr_stmt|;
+name|refused
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -9454,6 +9466,10 @@ operator|->
 name|z_origin
 argument_list|)
 expr_stmt|;
+name|refused
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -9638,6 +9654,15 @@ condition|)
 return|return
 operator|(
 name|XFER_TIMEOUT
+operator|)
+return|;
+if|if
+condition|(
+name|refused
+condition|)
+return|return
+operator|(
+name|XFER_REFUSED
 operator|)
 return|;
 return|return

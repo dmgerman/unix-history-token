@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_maint.c,v 8.135 2002/04/25 05:27:10 marka Exp $"
+literal|"$Id: ns_maint.c,v 8.136 2002/06/26 03:27:20 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8686,6 +8686,54 @@ argument_list|(
 name|ns_log_default
 argument_list|,
 literal|"zoneref: Masters for slave zone \"%s\" unreachable"
+argument_list|,
+name|zp
+operator|->
+name|z_origin
+argument_list|)
+expr_stmt|;
+block|}
+name|ns_retrytime
+argument_list|(
+name|zp
+argument_list|,
+name|tt
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+name|sched_zone_maint
+argument_list|(
+name|zp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|XFER_REFUSED
+case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|zp
+operator|->
+name|z_flags
+operator|&
+name|Z_SYSLOGGED
+operator|)
+condition|)
+block|{
+name|zp
+operator|->
+name|z_flags
+operator||=
+name|Z_SYSLOGGED
+expr_stmt|;
+name|ns_error
+argument_list|(
+name|ns_log_xfer_in
+argument_list|,
+literal|"zoneref: Masters for slave zone \"%s\" REFUSED transfer"
 argument_list|,
 name|zp
 operator|->
