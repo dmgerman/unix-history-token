@@ -5148,6 +5148,10 @@ condition|(
 name|fast_read_option
 operator|&&
 name|namelist_freed
+operator|&&
+name|child_pid
+operator|>
+literal|0
 condition|)
 name|kill
 argument_list|(
