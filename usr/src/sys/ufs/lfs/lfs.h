@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -187,67 +187,67 @@ name|SEGMENT
 modifier|*
 name|nextp
 decl_stmt|;
-comment|/* Links segments together */
+comment|/* links segments together */
 name|BUF
 modifier|*
 modifier|*
 name|bpp
 decl_stmt|;
-comment|/* Pointer to buffer array */
+comment|/* pointer to buffer array */
 name|BUF
 modifier|*
 modifier|*
 name|cbpp
 decl_stmt|;
-comment|/* Pointer to next available bp */
+comment|/* pointer to next available bp */
 name|BUF
 modifier|*
 name|ibp
 decl_stmt|;
-comment|/* Buffer pointer to inode page */
+comment|/* buffer pointer to inode page */
 name|BUF
 modifier|*
 name|sbp
 decl_stmt|;
-comment|/* Segment summary buffer pointer */
+comment|/* segment summary buffer pointer */
 name|void
 modifier|*
 name|segsum
 decl_stmt|;
-comment|/* Segment Summary info */
+comment|/* segment Summary info */
 name|u_long
 name|sum_bytes_left
 decl_stmt|;
-comment|/* Bytes left in summary */
+comment|/* bytes left in summary */
 name|u_long
 name|seg_bytes_left
 decl_stmt|;
-comment|/* Bytes left in segment */
+comment|/* bytes left in segment */
 name|daddr_t
 name|saddr
 decl_stmt|;
-comment|/* Current disk address */
+comment|/* current disk address */
 name|daddr_t
 name|sum_addr
 decl_stmt|;
-comment|/* Address of current summary */
+comment|/* address of current summary */
 name|u_long
 name|ninodes
 decl_stmt|;
-comment|/* Number of inodes in this segment */
+comment|/* number of inodes in this segment */
 name|u_long
 name|sum_num
 decl_stmt|;
-comment|/* Number of current summary block */
+comment|/* number of current summary block */
 name|u_long
 name|seg_number
 decl_stmt|;
-comment|/* Number of this segment */
+comment|/* number of this segment */
 name|FINFO
 modifier|*
 name|fip
 decl_stmt|;
-comment|/* Current fileinfo pointer */
+comment|/* current fileinfo pointer */
 block|}
 struct|;
 end_struct
@@ -332,11 +332,11 @@ comment|/* inode file inode number */
 name|daddr_t
 name|lfs_lastseg
 decl_stmt|;
-comment|/* last segment written */
+comment|/* address of last segment written */
 name|daddr_t
 name|lfs_nextseg
 decl_stmt|;
-comment|/* next segment to write */
+comment|/* address of next segment to write */
 name|u_long
 name|lfs_tstamp
 decl_stmt|;
@@ -442,7 +442,7 @@ comment|/* list of segments being written */
 name|u_long
 name|lfs_iocount
 decl_stmt|;
-comment|/* Number of ios pending */
+comment|/* number of ios pending */
 name|u_char
 name|lfs_fmod
 decl_stmt|;
@@ -512,7 +512,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Out of band inode number. */
+comment|/* out of band inode number */
 end_comment
 
 begin_define
@@ -523,11 +523,11 @@ value|1
 end_define
 
 begin_comment
-comment|/* Inode number of the ifile. */
+comment|/* inode number of the ifile */
 end_comment
 
 begin_comment
-comment|/* First free inode number. */
+comment|/* first free inode number */
 end_comment
 
 begin_define
@@ -650,7 +650,7 @@ value|(((fs)->lfs_nseg * sizeof(SEGUSE) + \ 	    ((fs)->lfs_bsize - 1))>> (fs)->
 end_define
 
 begin_comment
-comment|/*  * All summary blocks are the same size, so we can always read a summary  * block easily from a segment  */
+comment|/*  * All summary blocks are the same size, so we can always read a summary  * block easily from a segment.  */
 end_comment
 
 begin_define
