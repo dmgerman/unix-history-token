@@ -756,9 +756,6 @@ condition|(
 name|tf
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|rewind
 argument_list|(
 name|tf

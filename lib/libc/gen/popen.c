@@ -205,9 +205,6 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|cur
@@ -254,9 +251,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|free
 argument_list|(
 name|cur
