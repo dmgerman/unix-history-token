@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.13 %G%"
+literal|"@(#)newfs.c	4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 

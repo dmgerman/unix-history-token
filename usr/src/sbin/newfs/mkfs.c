@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.15 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * make file system for cylinder-group style file systems  *  * usage: mkfs special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]  */
+comment|/*  * make file system for cylinder-group style file systems  *  * usage: mkfs -N special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]  */
 end_comment
 
 begin_comment
@@ -308,6 +308,12 @@ name|fso
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|Nflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|daddr_t
 name|alloc
@@ -359,6 +365,66 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+switch|switch
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'N'
+case|:
+name|Nflag
+operator|++
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"%s: unknown flag\n"
+argument_list|,
+operator|&
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|argc
+operator|=
+literal|1
+expr_stmt|;
+comment|/* force usage message */
+break|break;
+block|}
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+block|}
 name|time
 argument_list|(
 operator|&
@@ -374,7 +440,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: mkfs special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]\n"
+literal|"usage: mkfs -N special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -400,6 +466,12 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Nflag
+condition|)
+block|{
 name|fso
 operator|=
 name|creat
@@ -428,6 +500,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|fsi
 operator|=
@@ -2962,6 +3035,15 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now construct the initial file system, 	 * then write out the super-block. 	 */
 name|fsinit
 argument_list|()
@@ -3472,10 +3554,8 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-name|lseek
+name|wtfs
 argument_list|(
-name|fso
-argument_list|,
 name|fsbtodb
 argument_list|(
 operator|&
@@ -3489,59 +3569,22 @@ argument_list|,
 name|cylno
 argument_list|)
 argument_list|)
-operator|*
-name|DEV_BSIZE
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
+name|sblock
+operator|.
+name|fs_ipg
+operator|*
+sizeof|sizeof
 argument_list|(
-name|fso
+expr|struct
+name|dinode
+argument_list|)
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 name|zino
-argument_list|,
-name|sblock
-operator|.
-name|fs_ipg
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dinode
-argument_list|)
-argument_list|)
-operator|!=
-name|sblock
-operator|.
-name|fs_ipg
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dinode
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"write error %D\n"
-argument_list|,
-name|numfrags
-argument_list|(
-operator|&
-name|sblock
-argument_list|,
-name|tell
-argument_list|(
-name|fso
-argument_list|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -5438,6 +5481,11 @@ block|{
 name|int
 name|n
 decl_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+return|return;
 if|if
 condition|(
 name|lseek
