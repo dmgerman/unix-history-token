@@ -6095,7 +6095,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find an inode header.  * Complain if had to skip, and complain is set.  */
+comment|/*  * Find an inode header.  * Complain if had to skip.  */
 end_comment
 
 begin_function
