@@ -682,7 +682,7 @@ begin_define
 define|#
 directive|define
 name|IO_NPXSIZE
-value|16
+value|8
 end_define
 
 begin_comment
