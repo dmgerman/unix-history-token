@@ -471,20 +471,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|acpi_pr_IdleHandler
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|arg
-parameter_list|,
+argument_list|,
 name|int
 name|count
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__unused
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -941,29 +942,21 @@ modifier|*
 name|lapic
 parameter_list|)
 block|{
-name|ACPI_BUFFER
-name|buf
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* broken by new ACPICA code that doesn't support the APIC table */
+block|ACPI_BUFFER		buf;     ACPI_STATUS		status;     APIC_HEADER		*hdr;     APIC_TABLE		*tbl;     PROCESSOR_APIC	*pap;     int			len, cpuno;
+else|#
+directive|else
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|APIC_HEADER
-modifier|*
-name|hdr
-decl_stmt|;
-name|APIC_TABLE
-modifier|*
-name|tbl
-decl_stmt|;
-name|PROCESSOR_APIC
-modifier|*
-name|pap
-decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|cpuno
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * Assume that we're not going to suceed in finding/parsing the APIC table.      * In this case, CPU 0 is valid, and any other CPU is invalid.      */
 name|lapic
 operator|->
