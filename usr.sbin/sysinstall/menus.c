@@ -2813,24 +2813,6 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|" Periodic SNAPs at ftp.freebsd.org"
-block|,
-literal|"ftp.freebsd.org"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_FTP_PATH
-name|_AS
-argument_list|(
-literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/"
-argument_list|)
-block|}
-block|,
-block|{
 literal|"Argentina"
 block|,
 literal|"ftp.ar.freebsd.org"
