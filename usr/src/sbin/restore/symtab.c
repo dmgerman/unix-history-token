@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	5.5 (Berkeley) %G%"
+literal|"@(#)symtab.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,12 +42,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/dir.h>
 end_include
 
 begin_comment
@@ -1625,7 +1619,7 @@ name|strtblhdr
 index|[
 name|allocsize
 argument_list|(
-name|MAXNAMLEN
+name|NAME_MAX
 argument_list|)
 operator|/
 name|STRTBLINCR
