@@ -349,12 +349,12 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|person
+name|lpr_username
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* user name */
+comment|/* person sending the print job(s) */
 end_comment
 
 begin_decl_stmt
@@ -1330,18 +1330,20 @@ argument_list|,
 literal|"only privileged users may use the `-U' flag"
 argument_list|)
 expr_stmt|;
-name|person
+name|lpr_username
 operator|=
 name|Uflag
 expr_stmt|;
+comment|/* -U person doing 'lpr' */
 block|}
 else|else
 block|{
-name|person
+name|lpr_username
 operator|=
 name|getlogin
 argument_list|()
 expr_stmt|;
+comment|/* person doing 'lpr' */
 if|if
 condition|(
 name|userid
@@ -1350,7 +1352,7 @@ name|pp
 operator|->
 name|daemon_user
 operator|||
-name|person
+name|lpr_username
 operator|==
 literal|0
 condition|)
@@ -1375,7 +1377,7 @@ argument_list|,
 literal|"Who are you?"
 argument_list|)
 expr_stmt|;
-name|person
+name|lpr_username
 operator|=
 name|pw
 operator|->
@@ -1446,7 +1448,7 @@ condition|(
 operator|(
 name|strcmp
 argument_list|(
-name|person
+name|lpr_username
 argument_list|,
 operator|*
 name|gptr
@@ -1572,7 +1574,7 @@ name|card
 argument_list|(
 literal|'P'
 argument_list|,
-name|person
+name|lpr_username
 argument_list|)
 expr_stmt|;
 name|card
@@ -1649,7 +1651,7 @@ name|card
 argument_list|(
 literal|'L'
 argument_list|,
-name|person
+name|lpr_username
 argument_list|)
 expr_stmt|;
 block|}
@@ -1692,7 +1694,7 @@ name|card
 argument_list|(
 literal|'M'
 argument_list|,
-name|person
+name|lpr_username
 argument_list|)
 expr_stmt|;
 if|if
