@@ -10,20 +10,47 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
-specifier|static
 name|char
-name|sccsid
+name|copyright
 index|[]
 init|=
-literal|"@(#)cat.c	5.2 (Berkeley) %G%"
+literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)cat.c	5.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Concatenate files.  */
@@ -77,12 +104,12 @@ name|col
 decl_stmt|,
 name|lno
 decl_stmt|,
-specifier|inline
-namespace|,
+name|inaline
+decl_stmt|,
 name|ibsize
-operator|,
+decl_stmt|,
 name|obsize
-namespace|;
+decl_stmt|;
 end_decl_stmt
 
 begin_function
@@ -618,7 +645,7 @@ condition|)
 block|{
 if|if
 condition|(
-specifier|inline
+name|inaline
 operator|==
 literal|0
 condition|)
@@ -645,7 +672,7 @@ name|bflg
 operator|==
 literal|0
 operator|&&
-specifier|inline
+name|inaline
 operator|==
 literal|0
 condition|)
@@ -671,7 +698,7 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-specifier|inline
+name|inaline
 operator|=
 literal|0
 expr_stmt|;
@@ -683,7 +710,7 @@ if|if
 condition|(
 name|nflg
 operator|&&
-specifier|inline
+name|inaline
 operator|==
 literal|0
 condition|)
@@ -695,7 +722,7 @@ name|lno
 operator|++
 argument_list|)
 expr_stmt|;
-specifier|inline
+name|inaline
 operator|=
 literal|1
 expr_stmt|;

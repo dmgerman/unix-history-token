@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	4.4 %G%"
+literal|"@(#)format.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,6 +412,7 @@ name|L_REAL
 name|fw
 decl_stmt|;
 struct|struct
+name|bad_programming
 block|{
 name|L_INT
 name|sa
@@ -528,8 +529,18 @@ name|IF
 name|c
 operator|==
 literal|'F'
+comment|/* 		 * This used to be the following, but real C compilers won't 		 * let you use a double as a struct! 		 * 		 *	THEN fw.sb=get(inkdot(4),itype); 		 *	fw.sc=get(inkdot(6),itype); 		 */
 name|THEN
+argument_list|(
+operator|*
+operator|(
+expr|struct
+name|bad_programming
+operator|*
+operator|)
+operator|&
 name|fw
+argument_list|)
 operator|.
 name|sb
 operator|=
@@ -543,7 +554,16 @@ argument_list|,
 name|itype
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+operator|(
+expr|struct
+name|bad_programming
+operator|*
+operator|)
+operator|&
 name|fw
+operator|)
 operator|.
 name|sc
 operator|=
@@ -1004,7 +1024,17 @@ name|fw
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * This used to be the following, but real compilers 			 * won't let you use a double as a struct! 			 * 			 *	fw.sa = wx; 			 */
+operator|(
+operator|*
+operator|(
+expr|struct
+name|bad_programming
+operator|*
+operator|)
+operator|&
 name|fw
+operator|)
 operator|.
 name|sa
 operator|=
@@ -1042,7 +1072,16 @@ break|break;
 case|case
 literal|'F'
 case|:
+operator|(
+operator|*
+operator|(
+expr|struct
+name|bad_programming
+operator|*
+operator|)
+operator|&
 name|fw
+operator|)
 operator|.
 name|sa
 operator|=
