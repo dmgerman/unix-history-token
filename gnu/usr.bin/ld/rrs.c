@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rrs.c,v 1.10 1993/12/11 11:58:28 jkh Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rrs.c,v 1.11 1994/02/13 20:41:40 jkh Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -49,6 +37,30 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -85,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
 end_include
 
 begin_include
@@ -691,7 +697,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|error
+name|warnx
 argument_list|(
 literal|"%s: relocation for internal symbol expected at %#x"
 argument_list|,
@@ -773,7 +779,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
+name|warnx
 argument_list|(
 literal|"%s: relocation must refer to global symbol at %#x"
 argument_list|,
@@ -920,8 +926,10 @@ name|claimed_rrs_relocs
 operator|>
 name|reserved_rrs_relocs
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: RRS relocs exceed allocation %d"
 argument_list|,
 name|reserved_rrs_relocs
@@ -986,7 +994,7 @@ name|text_start
 operator|+
 name|text_size
 condition|)
-name|error
+name|warnx
 argument_list|(
 literal|"%s: RRS text relocation at %#x for \"%s\""
 argument_list|,
@@ -1053,7 +1061,7 @@ name|sp
 operator|->
 name|defined
 condition|)
-name|error
+name|warnx
 argument_list|(
 literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
@@ -1181,7 +1189,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"claim_rrs_jmpslot: %s: %s(%d) -> offset %x (textreloc %#x)\n"
+literal|"claim_rrs_jmpslot: %s: %s(%d) -> offset %x\n"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -1199,8 +1207,6 @@ argument_list|,
 name|sp
 operator|->
 name|jmpslot_offset
-argument_list|,
-name|text_relocation
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1214,8 +1220,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: %s: claim_rrs_jmpslot: %s: jmpslot_offset == -1\n"
 argument_list|,
 name|get_file_name
@@ -1248,7 +1256,7 @@ name|sp
 operator|->
 name|defined
 condition|)
-name|error
+name|warnx
 argument_list|(
 literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
@@ -1544,8 +1552,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: %s: claim_rrs_gotslot: %s: gotslot_offset == -1\n"
 argument_list|,
 name|get_file_name
@@ -1637,7 +1647,7 @@ name|RRS_PARTIAL
 condition|)
 block|{
 comment|/* 		 * SYMBOLIC: all symbols must be known. 		 * RRS_PARTIAL: we don't link against shared objects, 		 * so again all symbols must be known. 		 */
-name|error
+name|warnx
 argument_list|(
 literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
@@ -1689,7 +1699,7 @@ name|sp
 operator|->
 name|defined
 condition|)
-name|error
+name|warnx
 argument_list|(
 literal|"Cannot reduce symbol \"%s\" in %s"
 argument_list|,
@@ -1864,8 +1874,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: %s: claim_rrs_internal_gotslot at %#x: slot_offset == -1\n"
 argument_list|,
 name|get_file_name
@@ -2023,8 +2035,10 @@ operator|&
 name|GS_CPYRELOCRESERVED
 operator|)
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: %s: claim_cpy_reloc: %s: no reservation\n"
 argument_list|,
 name|get_file_name
@@ -2352,9 +2366,6 @@ modifier|*
 modifier|*
 name|shpp
 decl_stmt|;
-name|int
-name|symbolsize
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
@@ -2408,8 +2419,10 @@ name|number_of_shobjs
 operator|<
 literal|0
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: number_of_shobjs< 0"
 argument_list|)
 expr_stmt|;
@@ -2543,8 +2556,10 @@ operator|&
 name|GS_REFERENCED
 operator|)
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"No reference to __DYNAMIC"
 argument_list|)
 expr_stmt|;
@@ -3372,9 +3387,11 @@ argument_list|)
 operator|!=
 name|pos
 condition|)
-name|fatal
+name|err
 argument_list|(
-literal|"write_rrs_data: cant position in output file"
+literal|1
+argument_list|,
+literal|"write_rrs_data: lseek"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3391,8 +3408,10 @@ name|number_of_gotslots
 operator|<=
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"write_rrs_data: # gotslots<= 1"
 argument_list|)
 expr_stmt|;
@@ -3423,8 +3442,10 @@ name|number_of_jmpslots
 operator|<=
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"write_rrs_data: # jmpslots<= 1"
 argument_list|)
 expr_stmt|;
@@ -3632,9 +3653,11 @@ argument_list|)
 operator|!=
 name|pos
 condition|)
-name|fatal
+name|err
 argument_list|(
-literal|"write_rrs_text: cant position in output file"
+literal|1
+argument_list|,
+literal|"write_rrs_text: lseek"
 argument_list|)
 expr_stmt|;
 comment|/* Write relocation records */
@@ -3843,8 +3866,10 @@ name|number_of_rrs_symbols
 operator|*
 name|rrs_symbol_size
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: rrs symbols exceed allocation %d "
 argument_list|,
 name|number_of_rrs_symbols
@@ -4089,8 +4114,10 @@ name|aux
 operator|!=
 name|AUX_FUNC
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: non-function jmpslot"
 argument_list|,
 name|sp
@@ -4126,8 +4153,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: %s defined in mysterious way"
 argument_list|,
 name|sp
@@ -4278,8 +4307,10 @@ argument_list|)
 operator|!=
 name|rrs_strtab_size
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: inconsistent RRS string table length: %d, expected %d"
 argument_list|,
 name|offset
@@ -4407,8 +4438,10 @@ name|i
 operator|>=
 name|number_of_shobjs
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: # of link objects exceeds %d"
 argument_list|,
 name|number_of_shobjs
@@ -4541,8 +4574,10 @@ name|i
 operator|<
 name|number_of_shobjs
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: # of link objects less then expected %d"
 argument_list|,
 name|number_of_shobjs
@@ -4663,8 +4698,10 @@ name|reserved_rrs_relocs
 operator|>
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"internal error: RRS relocs in static program: %d"
 argument_list|,
 name|reserved_rrs_relocs
@@ -4694,24 +4731,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|claimed_rrs_relocs
-operator|!=
-name|reserved_rrs_relocs
-condition|)
-block|{
-comment|/* 		fatal("internal error: reserved relocs(%d) != claimed(%d)", 			reserved_rrs_relocs, claimed_rrs_relocs); */
-name|printf
-argument_list|(
-literal|"FIX:internal error: reserved relocs(%d) != claimed(%d)\n"
-argument_list|,
-name|reserved_rrs_relocs
-argument_list|,
-name|claimed_rrs_relocs
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* Must fix this check: misses out when linking PIC code but no 	   shared object involved: reserved relocs are never claimed! 	*/
+block|if (claimed_rrs_relocs != reserved_rrs_relocs) { 		errx(1, "internal error: reserved relocs(%d) != claimed(%d)", 			reserved_rrs_relocs, claimed_rrs_relocs); 		printf("FIX:internal error: reserved relocs(%d) != claimed(%d)\n", 			reserved_rrs_relocs, claimed_rrs_relocs); 	}
+endif|#
+directive|endif
 comment|/* Write the RRS segments. */
 name|write_rrs_text
 argument_list|()
