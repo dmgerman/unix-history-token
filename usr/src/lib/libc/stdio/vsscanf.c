@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vsscanf.c	5.1 (Berkeley) %G%"
+literal|"@(#)vsscanf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|_VA_LIST_
+name|_BSD_VA_LIST_
 name|ap
 decl_stmt|;
 end_decl_stmt
