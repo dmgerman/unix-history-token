@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.131 1999/08/09 10:34:40 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.132 1999/08/13 10:29:16 phk Exp $  */
 end_comment
 
 begin_comment
@@ -157,12 +157,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pnp.h"
 end_include
 
@@ -177,12 +171,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/pnp.h>
 end_include
 
@@ -191,70 +179,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"eisa.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NEISA
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<i386/eisa/eisaconf.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<pci/pcivar.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"isa.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-end_if
-
 begin_decl_stmt
 name|device_t
 name|isa_bus_device
@@ -262,11 +186,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -848,9 +767,7 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/* Allow all routines to decide for themselves if they want intrs */
-comment|/* 	 * XXX Since this cannot be achieved on all architectures, we should 	 * XXX go back to disabling all interrupts until configuration is 	 * XXX completed and switch any devices that rely on the current 	 * XXX behavior to no longer rely on interrupts or to register an 	 * XXX interrupt_driven_config_hook for the task. 	 */
-comment|/* 	 * XXX The above is wrong, because we're implicitly at splhigh(), 	 * XXX and should stay there, so enabling interrupts in the CPU 	 * XXX and the ICU at most gives pending interrupts which just get 	 * XXX in the way. 	 */
+comment|/* 	 * Activate the ICU's.  Note that we are explicitly at splhigh() 	 * at present as we have no way to disable stray PCI level triggered 	 * interrupts until the devices have had a driver attached.  This 	 * is particularly a problem when the interrupts are shared.  For 	 * example, if IRQ 10 is shared between a disk and network device 	 * and the disk device generates an interrupt, if we "activate" 	 * IRQ 10 when the network driver is set up, then we will get 	 * recursive interrupt 10's as nothing will know how to turn off 	 * the disk device's interrupt. 	 * 	 * Having the ICU's active means we can probe interrupt routing to 	 * see if a device causes the corresponding pending bit to be set. 	 * 	 * This is all rather inconvenient. 	 */
 ifdef|#
 directive|ifdef
 name|APIC_IO
@@ -873,16 +790,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-name|pnp_configure
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* nexus0 is the top of the i386 device tree */
 name|device_add_child
 argument_list|(
@@ -901,9 +808,16 @@ argument_list|()
 expr_stmt|;
 if|#
 directive|if
-name|NISA
+name|NPNP
 operator|>
 literal|0
+comment|/* Activate PNP. If no drivers are found, let ISA probe them.. */
+name|pnp_configure
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Explicitly probe and attach ISA last.  The isa bus saves 	 * it's device node at attach time for us here. 	 */
 if|if
 condition|(
 name|isa_bus_device
@@ -913,8 +827,6 @@ argument_list|(
 name|isa_bus_device
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is slightly misplaced. 	 */
 name|spl0
 argument_list|()
