@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$Id$ */
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: ruserpass.c,v 1.13 1997/04/01 14:20:34 mrg Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1985, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -9,15 +17,32 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)ruserpass.c	8.4 (Berkeley) 4/27/95";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	8.3 (Berkeley) 4/2/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -248,15 +273,17 @@ name|apass
 parameter_list|,
 name|aacct
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|host
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 modifier|*
 name|aname
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|apass
 decl_stmt|,
@@ -321,6 +348,24 @@ name|hdir
 operator|=
 literal|"."
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|hdir
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|".netrc"
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -329,15 +374,34 @@ argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 argument_list|,
 literal|"%s/.netrc"
 argument_list|,
 name|hdir
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"%s/.netrc: %s"
+argument_list|,
+name|hdir
+argument_list|,
+name|strerror
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|cfile
 operator|=
 name|fopen
@@ -883,16 +947,18 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+condition|)
+if|if
+condition|(
+name|c
+operator|!=
+literal|' '
 operator|&&
 name|c
-operator|==
-literal|' '
-operator|||
-name|c
-operator|==
+operator|!=
 literal|'\t'
 condition|)
-empty_stmt|;
+break|break;
 if|if
 condition|(
 name|c
@@ -904,9 +970,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Missing macdef name argument.\n"
+literal|"Missing macdef name argument."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -920,9 +986,9 @@ operator|==
 literal|16
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Limit of 16 macros have already been defined\n"
+literal|"Limit of 16 macros have already been defined."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -989,9 +1055,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Macro definition missing null line terminator.\n"
+literal|"Macro definition missing null line terminator."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1036,9 +1102,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Macro definition missing null line terminator.\n"
+literal|"Macro definition missing null line terminator."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1115,9 +1181,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"Macro definition missing null line terminator.\n"
+literal|"Macro definition missing null line terminator."
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1182,9 +1248,9 @@ operator|+
 literal|4096
 condition|)
 block|{
-name|printf
+name|puts
 argument_list|(
-literal|"4K macro buffer exceeded\n"
+literal|"4K macro buffer exceeded."
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ftp_var.h	8.3 (Berkeley) 4/2/94  */
+comment|/*	$Id$ */
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: ftp_var.h,v 1.16 1997/04/14 09:09:23 lukem Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ftp_var.h	8.4 (Berkeley) 10/9/94  */
 end_comment
 
 begin_comment
@@ -22,8 +30,93 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stringlist.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<histedit.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SMALL */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|HASHBYTES
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|FTPBUFLEN
+value|MAXPATHLEN + 200
+end_define
+
+begin_define
+define|#
+directive|define
+name|STALLTIME
+value|5
+end_define
+
+begin_comment
+comment|/* # of seconds of no xfer before "stalling" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTP_PORT
+value|21
+end_define
+
+begin_comment
+comment|/* default if getservbyname("ftp/tcp") fails */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HTTP_PORT
+value|80
+end_define
+
+begin_comment
+comment|/* default if getservbyname("http/tcp") fails */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAGER
+value|"less"
+end_define
+
+begin_comment
+comment|/* default pager if $PAGER isn't set */
+end_comment
 
 begin_comment
 comment|/*  * Options and other state info.  */
@@ -47,6 +140,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* print # for each buffer transferred */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mark
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of bytes between hashes */
 end_comment
 
 begin_decl_stmt
@@ -76,7 +179,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* connected to server */
+comment|/* 1 = connected to server, -1 = logged in */
 end_comment
 
 begin_decl_stmt
@@ -97,6 +200,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* interactively prompt on m* cmds */
+end_comment
+
+begin_decl_stmt
+name|int
+name|confirmrest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* confirm rest of current m* cmd */
 end_comment
 
 begin_decl_stmt
@@ -207,6 +320,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* use mapin mapout templates on file names */
+end_comment
+
+begin_decl_stmt
+name|int
+name|preserve
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* preserve modification time on files */
+end_comment
+
+begin_decl_stmt
+name|int
+name|progress
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* display transfer progress bar */
 end_comment
 
 begin_decl_stmt
@@ -451,6 +584,145 @@ comment|/* local byte size in binary */
 end_comment
 
 begin_decl_stmt
+name|int
+name|anonftp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* automatic anonymous login */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dirchange
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* remote directory changed by cd command */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ttywidth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* width of tty */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
+begin_decl_stmt
+name|int
+name|editing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* command line editing enabled */
+end_comment
+
+begin_decl_stmt
+name|EditLine
+modifier|*
+name|el
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* editline(3) status structure */
+end_comment
+
+begin_decl_stmt
+name|History
+modifier|*
+name|hist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* editline(3) history structure */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cursor_pos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cursor position we're looking for */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cursor_argc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of cursor in margv */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cursor_argo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* offset of cursor in margv[cursor_argc] */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SMALL */
+end_comment
+
+begin_decl_stmt
+name|off_t
+name|bytes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current # of bytes read */
+end_comment
+
+begin_decl_stmt
+name|off_t
+name|filesize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of file being transferred */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|direction
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* direction transfer is occurring */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|hostname
@@ -482,15 +754,23 @@ comment|/* proxy is unix, can use binary for ascii */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|servent
-modifier|*
-name|sp
+name|int
+name|ftpport
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* service spec for tcp/ftp */
+comment|/* port number to use for ftp connections */
+end_comment
+
+begin_decl_stmt
+name|int
+name|httpport
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* port number to use for http connections */
 end_comment
 
 begin_decl_stmt
@@ -507,7 +787,7 @@ begin_decl_stmt
 name|char
 name|line
 index|[
-literal|200
+name|FTPBUFLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -531,7 +811,7 @@ begin_decl_stmt
 name|char
 name|argbuf
 index|[
-literal|200
+name|FTPBUFLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -552,6 +832,17 @@ comment|/* current storage point in arg buffer */
 end_comment
 
 begin_decl_stmt
+name|StringList
+modifier|*
+name|marg_sl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stringlist containing margv */
+end_comment
+
+begin_decl_stmt
 name|int
 name|margc
 decl_stmt|;
@@ -561,15 +852,12 @@ begin_comment
 comment|/* count of arguments on input line */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
 name|margv
-index|[
-literal|20
-index|]
-decl_stmt|;
-end_decl_stmt
+value|(marg_sl->sl_str)
+end_define
 
 begin_comment
 comment|/* args parsed from input line */
@@ -635,6 +923,17 @@ name|char
 name|c_proxy
 decl_stmt|;
 comment|/* proxy server may execute */
+ifndef|#
+directive|ifndef
+name|SMALL
+name|char
+modifier|*
+name|c_complete
+decl_stmt|;
+comment|/* context sensitive completion list */
+endif|#
+directive|endif
+comment|/* !SMALL */
 name|void
 argument_list|(
 argument|*c_handler
