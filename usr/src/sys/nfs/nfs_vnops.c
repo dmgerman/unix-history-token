@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -282,6 +282,9 @@ argument_list|()
 decl_stmt|,
 name|nfs_reclaim
 argument_list|()
+decl_stmt|,
+name|nfs_print
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -293,64 +296,98 @@ init|=
 block|{
 name|nfs_lookup
 block|,
+comment|/* lookup */
 name|nfs_create
 block|,
+comment|/* create */
 name|nfs_mknod
 block|,
+comment|/* mknod */
 name|nfs_open
 block|,
+comment|/* open */
 name|nfs_close
 block|,
+comment|/* close */
 name|nfs_access
 block|,
+comment|/* access */
 name|nfs_getattr
 block|,
+comment|/* getattr */
 name|nfs_setattr
 block|,
+comment|/* setattr */
 name|nfs_read
 block|,
+comment|/* read */
 name|nfs_write
 block|,
+comment|/* write */
 name|vfs_noop
 block|,
+comment|/* ioctl */
 name|vfs_noop
 block|,
+comment|/* select */
 name|vfs_noop
 block|,
+comment|/* mmap */
 name|nfs_fsync
 block|,
+comment|/* fsync */
 name|vfs_nullop
 block|,
+comment|/* seek */
 name|nfs_remove
 block|,
+comment|/* remove */
 name|nfs_link
 block|,
+comment|/* link */
 name|nfs_rename
 block|,
+comment|/* rename */
 name|nfs_mkdir
 block|,
+comment|/* mkdir */
 name|nfs_rmdir
 block|,
+comment|/* rmdir */
 name|nfs_symlink
 block|,
+comment|/* symlink */
 name|nfs_readdir
 block|,
+comment|/* readdir */
 name|nfs_readlink
 block|,
+comment|/* readlink */
 name|nfs_abortop
 block|,
+comment|/* abortop */
 name|nfs_inactive
 block|,
+comment|/* inactive */
 name|nfs_reclaim
 block|,
+comment|/* reclaim */
 name|nfs_lock
 block|,
+comment|/* lock */
 name|nfs_unlock
 block|,
+comment|/* unlock */
 name|nfs_bmap
 block|,
+comment|/* bmap */
 name|nfs_strategy
-block|, }
+block|,
+comment|/* strategy */
+name|nfs_print
+block|,
+comment|/* print */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -373,6 +410,9 @@ name|spec_write
 argument_list|()
 decl_stmt|,
 name|spec_strategy
+argument_list|()
+decl_stmt|,
+name|spec_bmap
 argument_list|()
 decl_stmt|,
 name|spec_ioctl
@@ -482,12 +522,15 @@ comment|/* lock */
 name|nfs_unlock
 block|,
 comment|/* unlock */
-name|spec_badop
+name|spec_bmap
 block|,
 comment|/* bmap */
 name|spec_strategy
 block|,
 comment|/* strategy */
+name|nfs_print
+block|,
+comment|/* print */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7133,7 +7176,7 @@ name|uio_offset
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|b_lblkno
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
@@ -7177,7 +7220,7 @@ operator|=
 operator|(
 name|bp
 operator|->
-name|b_blkno
+name|b_lblkno
 operator|*
 name|DEV_BSIZE
 operator|)
@@ -7854,6 +7897,70 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Print out the contents of an nfsnode.  */
+end_comment
+
+begin_macro
+name|nfs_print
+argument_list|(
+argument|vp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|nfsnode
+modifier|*
+name|np
+init|=
+name|VTONFS
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"tag VT_NFS, fileid %d fsid 0x%x%s\n"
+argument_list|,
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_fileid
+argument_list|,
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_fsid
+argument_list|,
+operator|(
+name|np
+operator|->
+name|n_flag
+operator|&
+name|NLOCKED
+operator|)
+condition|?
+literal|" (LOCKED)"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
