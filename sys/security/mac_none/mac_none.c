@@ -4418,7 +4418,7 @@ literal|"TrustedBSD MAC/None"
 argument_list|,
 name|MPC_LOADTIME_FLAG_UNLOADOK
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
