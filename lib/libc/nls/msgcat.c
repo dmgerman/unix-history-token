@@ -1171,7 +1171,7 @@ define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{ 						\ 	fprintf(stderr, "%s: currupt file.", _errowner);	\ 		free(cat);					\ 		NLRETERR(EINVAL);				\ 	}
+value|{ 						\ 	fprintf(stderr, "%s: corrupt file.", _errowner);	\ 		free(cat);					\ 		NLRETERR(EINVAL);				\ 	}
 end_define
 
 begin_define
