@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ul.c	5.6 (Berkeley) %G%"
+literal|"@(#)ul.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,25 @@ name|int
 name|iflag
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|outchar
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|PRINT
+parameter_list|(
+name|s
+parameter_list|)
+value|if (s == NULL)
+comment|/* void */
+value|; else tputs(s, 1, outchar)
+end_define
 
 begin_function
 name|main
@@ -1087,13 +1106,11 @@ if|if
 condition|(
 name|upln
 condition|)
-block|{
-name|puts
+name|PRINT
 argument_list|(
 name|CURS_RIGHT
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|outc
 argument_list|(
@@ -1626,12 +1643,12 @@ expr_stmt|;
 name|fwd
 argument_list|()
 expr_stmt|;
-name|puts
+name|PRINT
 argument_list|(
 name|CURS_UP
 argument_list|)
 expr_stmt|;
-name|puts
+name|PRINT
 argument_list|(
 name|CURS_UP
 argument_list|)
@@ -1932,7 +1949,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
@@ -1949,45 +1966,14 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|puts
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
 begin_decl_stmt
-name|char
-modifier|*
-name|str
+specifier|static
+name|int
+name|curmode
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|str
-condition|)
-name|tputs
-argument_list|(
-name|str
-argument_list|,
-literal|1
-argument_list|,
-name|outchar
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-specifier|static
-name|curmode
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
 
 begin_macro
 name|outc
@@ -1997,7 +1983,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 decl_stmt|;
 end_decl_stmt
@@ -2020,12 +2006,12 @@ name|UNDERL
 operator|)
 condition|)
 block|{
-name|puts
+name|PRINT
 argument_list|(
 name|CURS_LEFT
 argument_list|)
 expr_stmt|;
-name|puts
+name|PRINT
 argument_list|(
 name|UNDER_CHAR
 argument_list|)
@@ -2090,7 +2076,7 @@ break|break;
 case|case
 name|UNDERL
 case|:
-name|puts
+name|PRINT
 argument_list|(
 name|EXIT_UNDERLINE
 argument_list|)
@@ -2098,7 +2084,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* This includes standout */
-name|puts
+name|PRINT
 argument_list|(
 name|EXIT_ATTRIBUTES
 argument_list|)
@@ -2109,7 +2095,7 @@ break|break;
 case|case
 name|ALTSET
 case|:
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_REVERSE
 argument_list|)
@@ -2119,12 +2105,12 @@ case|case
 name|SUPERSC
 case|:
 comment|/* 			 * This only works on a few terminals. 			 * It should be fixed. 			 */
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_UNDERLINE
 argument_list|)
 expr_stmt|;
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_DIM
 argument_list|)
@@ -2133,7 +2119,7 @@ break|break;
 case|case
 name|SUBSC
 case|:
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_DIM
 argument_list|)
@@ -2142,7 +2128,7 @@ break|break;
 case|case
 name|UNDERL
 case|:
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_UNDERLINE
 argument_list|)
@@ -2151,7 +2137,7 @@ break|break;
 case|case
 name|BOLD
 case|:
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_BOLD
 argument_list|)
@@ -2159,7 +2145,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* 			 * We should have some provision here for multiple modes 			 * on at once.  This will have to come later. 			 */
-name|puts
+name|PRINT
 argument_list|(
 name|ENTER_STANDOUT
 argument_list|)
