@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.10 1995/06/11 19:31:31 rgrimes Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.10.2.1 1995/07/22 04:25:01 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -160,14 +160,19 @@ value|0x80
 comment|/* Initiate Wide Negotiation */
 define|#
 directive|define
-name|SCB_NEEDSDTR
+name|SCB_DISCENB
 value|0x40
-comment|/* Initiate Sync Negotiation */
+comment|/* Disconnection Enable */
 define|#
 directive|define
 name|SCB_TE
 value|0x20
 comment|/* Tag enable */
+define|#
+directive|define
+name|SCB_NEEDSDTR
+value|0x10
+comment|/* Initiate Sync Negotiation */
 define|#
 directive|define
 name|SCB_NEEDDMA
@@ -180,19 +185,19 @@ value|0x04
 define|#
 directive|define
 name|SCB_TAG_TYPE
-value|0x3
+value|0x03
 define|#
 directive|define
 name|SIMPLE_QUEUE
-value|0x0
+value|0x00
 define|#
 directive|define
 name|HEAD_QUEUE
-value|0x1
+value|0x01
 define|#
 directive|define
 name|OR_QUEUE
-value|0x2
+value|0x02
 comment|/*2*/
 name|u_char
 name|target_channel_lun
@@ -249,11 +254,6 @@ comment|/*19*/
 name|u_char
 name|residual_SG_segment_count
 decl_stmt|;
-define|#
-directive|define
-name|SCB_DOWN_SIZE
-value|26
-comment|/* amount to actually download */
 comment|/*23*/
 name|physaddr
 name|data
@@ -271,6 +271,11 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|SCB_DOWN_SIZE
+value|26
+comment|/* amount to actually download */
 define|#
 directive|define
 name|SCB_UP_SIZE
