@@ -2796,6 +2796,22 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x01101407
+block|,
+literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x01111407
+block|,
+literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 name|NULL
@@ -3178,6 +3194,13 @@ block|}
 block|,
 comment|/* BDP0356 - Best Data 56x2 */
 block|{
+literal|0x56159008
+block|,
+name|NULL
+block|}
+block|,
+comment|/* BDP1556 - B.D. Smart One 56SPS,Voice Modem*/
+block|{
 literal|0x36339008
 block|,
 name|NULL
@@ -3387,6 +3410,13 @@ name|NULL
 block|}
 block|,
 comment|/* ROK0010 - Rockwell ? */
+block|{
+literal|0x1200b23d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* RSS0012 - OMRON ME5614ISA */
 block|{
 literal|0x5002734a
 block|,
