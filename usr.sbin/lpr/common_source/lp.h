@@ -44,6 +44,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|long
+name|CT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TCP connection timeout */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|DF

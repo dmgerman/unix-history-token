@@ -149,6 +149,16 @@ comment|/* name of cifplot filter (per job) */
 end_comment
 
 begin_decl_stmt
+name|long
+name|CT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TCP connection timeout */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|DF
