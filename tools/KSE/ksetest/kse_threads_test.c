@@ -282,6 +282,12 @@ name|aa
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRACE_UTS
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -290,6 +296,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -471,6 +482,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Functions implemented in assembly */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -486,6 +501,24 @@ name|kse_thr_mailbox
 modifier|*
 modifier|*
 name|curthreadp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|thread_to_uts
+parameter_list|(
+name|struct
+name|kse_thr_mailbox
+modifier|*
+name|tm
+parameter_list|,
+name|struct
+name|kse_mailbox
+modifier|*
+name|km
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -879,9 +912,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|size_t len;
+endif|#
+directive|endif
 comment|/* 	 * Create initial thread. 	 */
 name|tm
 operator|=
@@ -1683,12 +1719,17 @@ modifier|*
 name|km
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|TRACE_KSE
 specifier|static
 name|struct
 name|uts_data
 modifier|*
 name|prev_data
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|kse_thr_mailbox
 modifier|*
@@ -1703,8 +1744,6 @@ modifier|*
 name|data
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|,
 name|i
 decl_stmt|;
 name|UPSTR
