@@ -632,6 +632,27 @@ parameter_list|)
 value|MAXISPREQUEST(x)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RESULT_QUEUE_LEN
+parameter_list|(
+name|x
+parameter_list|)
+value|MAXISPREQUEST(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -642,6 +663,11 @@ parameter_list|)
 define|\
 value|(((MAXISPREQUEST(x)>> 2)< 64)? 64 : MAXISPREQUEST(x)>> 2)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
