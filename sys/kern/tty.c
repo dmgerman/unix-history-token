@@ -5886,7 +5886,7 @@ name|TIOCSCTTY
 case|:
 comment|/* become controlling tty */
 comment|/* Session ctty vnode pointer set in vnode layer. */
-name|PGRPSESS_XLOCK
+name|PGRPSESS_SLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -5922,7 +5922,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|PGRPSESS_XUNLOCK
+name|PGRPSESS_SUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -5985,7 +5985,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
+name|PGRPSESS_SUNLOCK
 argument_list|()
 expr_stmt|;
 break|break;

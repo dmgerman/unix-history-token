@@ -621,9 +621,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|PGRPSESS_XLOCK
-argument_list|()
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -706,9 +703,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
-argument_list|()
-expr_stmt|;
 block|}
 name|pca
 operator|.
@@ -761,8 +755,10 @@ condition|(
 name|shld
 condition|)
 block|{
-name|PGRPSESS_XLOCK
-argument_list|()
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|SESS_LOCK
 argument_list|(
@@ -785,8 +781,10 @@ operator|->
 name|p_session
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
-argument_list|()
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 name|msgbuftrigger
