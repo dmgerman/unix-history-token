@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.10 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1456,7 +1456,10 @@ argument_list|)
 expr_stmt|;
 name|etime
 operator|/=
-literal|60.
+operator|(
+name|float
+operator|)
+name|hz
 expr_stmt|;
 for|for
 control|(
