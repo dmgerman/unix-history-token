@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime internal declarations    Copyright (C) 1993, 1995 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime internal declarations    Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -80,6 +80,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"objc/thr.h"
+end_include
+
+begin_comment
+comment|/* thread and mutex support */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"objc/hash.h"
 end_include
 
@@ -90,7 +100,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"objc/list.h"
+file|"objc/objc-list.h"
 end_include
 
 begin_comment
@@ -115,7 +125,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|__objc_init_selector_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -127,7 +139,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|__objc_init_class_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -139,7 +153,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|__objc_init_dispatch_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -165,7 +181,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|__objc_resolve_class_links
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -203,6 +221,48 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|int
+name|__objc_init_thread_system
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* thread.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|__objc_fini_thread_system
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* thread.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|__objc_print_dtable_stats
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* sendmsg.c */
+end_comment
+
+begin_function_decl
+specifier|extern
 name|void
 name|class_add_method_list
 parameter_list|(
@@ -213,39 +273,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Registering instance methods as class methods for root classes */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
-name|objc_error
+name|__objc_register_instance_methods_to_class
 parameter_list|(
-name|id
-name|object
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-name|va_list
+name|Class
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|_objc_error
-function_decl|)
+name|Method_t
+name|search_for_method_in_list
 parameter_list|(
-name|id
+name|MethodList_t
+name|list
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|va_list
+name|SEL
+name|op
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -269,6 +320,28 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|__objc_selector_max_index
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Mutex locking __objc_selector_max_index and its arrays. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|objc_mutex_t
+name|__objc_runtime_mutex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of threads which are alive. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__objc_runtime_threads_alive
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +418,9 @@ parameter_list|,
 name|struct
 name|objc_selector
 modifier|*
+parameter_list|,
+name|BOOL
+name|is_const
 parameter_list|)
 function_decl|;
 end_function_decl

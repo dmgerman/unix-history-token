@@ -67,7 +67,9 @@ name|RID_AUTO
 block|,
 name|RID_MUTABLE
 block|,
-comment|/* This is where grokdeclarator ends its search when setting the specbits. */
+name|RID_COMPLEX
+block|,
+comment|/* This is where grokdeclarator ends its search when setting the      specbits.  */
 name|RID_PUBLIC
 block|,
 name|RID_PRIVATE
@@ -80,7 +82,9 @@ name|RID_TEMPLATE
 block|,
 name|RID_SIGNATURE
 block|,
-comment|/* Before adding enough to get up to 64, the RIDBIT_* macros      will have to be changed a little. */
+name|RID_NULL
+block|,
+comment|/* Before adding enough to get up to 64, the RIDBIT_* macros      will have to be changed a little.  */
 name|RID_MAX
 block|}
 enum|;
@@ -104,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|RID_LAST_MODIFIER
-value|RID_MUTABLE
+value|RID_COMPLEX
 end_define
 
 begin_comment
@@ -112,7 +116,7 @@ comment|/* The type that can represent all values of RIDBIT.  */
 end_comment
 
 begin_comment
-comment|/* We assume that we can stick in at least 32 bits into this. */
+comment|/* We assume that we can stick in at least 32 bits into this.  */
 end_comment
 
 begin_typedef
@@ -132,7 +136,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Be careful, all these modify N twice. */
+comment|/* Be careful, all these modify N twice.  */
 end_comment
 
 begin_define
@@ -292,38 +296,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|tree
-name|make_pointer_declarator
-argument_list|()
-decl_stmt|,
-name|make_reference_declarator
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|reinit_parse_for_function
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|reinit_parse_for_method
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|yylex
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

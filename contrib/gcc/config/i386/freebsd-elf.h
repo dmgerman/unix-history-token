@@ -1,40 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1994, 1995 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from Linux version by John Polstra.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/* A lie, I guess, but the general idea behind FreeBSD/ELF is that we are    supposed to be outputting something that will assemble under SVr4.    This gets us pretty close.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/i386.h>
-end_include
-
-begin_comment
-comment|/* Base i386 target machine definitions */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/att.h>
-end_include
-
-begin_comment
-comment|/* Use the i386 AT&T assembler syntax */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<linux.h>
-end_include
-
-begin_comment
-comment|/* some common stuff */
+comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -54,6 +20,10 @@ begin_comment
 comment|/* The svr4 ABI for the i386 says that records and unions are returned    in memory.  */
 end_comment
 
+begin_comment
+comment|/* On FreeBSD, we do not. */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -64,8 +34,18 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
-value|1
+value|0
 end_define
+
+begin_comment
+comment|/* This gets defined in tm.h->linux.h->svr4.h, and keeps us from using    libraries compiled with the native cc, so undef it. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_DOLLAR_IN_LABEL
+end_undef
 
 begin_comment
 comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
@@ -84,6 +64,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -100,6 +82,7 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
+value|(flag_pic)
 end_define
 
 begin_comment
@@ -212,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__ELF__ -D__FreeBSD__=2 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Di386 -Dunix -D__ELF__ -D__FreeBSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
 begin_undef
@@ -221,37 +204,12 @@ directive|undef
 name|CPP_SPEC
 end_undef
 
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|==
-literal|2
-end_if
-
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE}"
+value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{m486:-D__i486__} %{posix:-D_POSIX_SOURCE}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -316,11 +274,35 @@ begin_comment
 comment|/* Get perform_* macros to build libgcc.a.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"i386/perform.h"
-end_include
+begin_comment
+comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_MAX_SKIP_P2ALIGN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_MAX_SKIP_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|,
+name|MAX_SKIP
+parameter_list|)
+define|\
+value|if ((LOG)!=0) \     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

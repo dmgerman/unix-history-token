@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CPP main program, using CPP Library.    Copyright (C) 1995 Free Software Foundation, Inc.    Written by Per Bothner, 1994-95.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* CPP main program, using CPP Library.    Copyright (C) 1995, 1997 Free Software Foundation, Inc.    Written by Per Bothner, 1994-95.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"cpplib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_ifndef
 ifndef|#
@@ -27,14 +15,28 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"system.h"
+end_include
 
-begin_comment
-comment|/* not EMACS */
-end_comment
+begin_include
+include|#
+directive|include
+file|"gansidecl.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_function_decl
 specifier|extern
@@ -44,6 +46,21 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not EMACS */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"cpplib.h"
+end_include
 
 begin_decl_stmt
 name|char
@@ -64,9 +81,41 @@ name|options
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|abort
+end_ifdef
+
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
 end_comment
+
+begin_function
+name|void
+name|fatal
+parameter_list|(
+name|s
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|fputs
+argument_list|(
+name|s
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|FATAL_EXIT_CODE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -80,6 +129,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -106,14 +160,11 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|i
-decl_stmt|;
-name|int
 name|argi
 init|=
 literal|1
 decl_stmt|;
-comment|/* Next argument to handle. */
+comment|/* Next argument to handle.  */
 name|struct
 name|cpp_options
 modifier|*
@@ -161,7 +212,7 @@ name|progname
 operator|=
 name|p
 expr_stmt|;
-name|init_parse_file
+name|cpp_reader_init
 argument_list|(
 operator|&
 name|parse_in
@@ -173,7 +224,7 @@ name|data
 operator|=
 name|opts
 expr_stmt|;
-name|init_parse_options
+name|cpp_options_init
 argument_list|(
 name|opts
 argument_list|)
@@ -199,9 +250,19 @@ condition|(
 name|argi
 operator|<
 name|argc
-condition|)
-name|fatal
+operator|&&
+operator|!
+name|CPP_FATAL_ERRORS
 argument_list|(
+operator|&
+name|parse_in
+argument_list|)
+condition|)
+name|cpp_fatal
+argument_list|(
+operator|&
+name|parse_in
+argument_list|,
 literal|"Invalid option `%s'"
 argument_list|,
 name|argv
@@ -210,15 +271,29 @@ name|argi
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CPP_FATAL_ERRORS
+argument_list|(
+operator|&
+name|parse_in
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+name|FATAL_EXIT_CODE
+argument_list|)
+expr_stmt|;
 name|parse_in
 operator|.
 name|show_column
 operator|=
 literal|1
 expr_stmt|;
-name|i
-operator|=
-name|push_parse_file
+if|if
+condition|(
+operator|!
+name|cpp_start_read
 argument_list|(
 operator|&
 name|parse_in
@@ -227,16 +302,12 @@ name|opts
 operator|->
 name|in_fname
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|SUCCESS_EXIT_CODE
 condition|)
-return|return
-name|i
-return|;
+name|exit
+argument_list|(
+name|FATAL_EXIT_CODE
+argument_list|)
+expr_stmt|;
 comment|/* Now that we know the input file is valid, open the output.  */
 if|if
 condition|(
@@ -322,13 +393,13 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+name|CPP_SET_WRITTEN
+argument_list|(
+operator|&
 name|parse_in
-operator|.
-name|limit
-operator|=
-name|parse_in
-operator|.
-name|token_buffer
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|kind
 operator|=

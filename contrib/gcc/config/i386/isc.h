@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix:-D_POSIX_SOURCE} %{Xp:-D_POSIX_SOURCE}"
+value|"%(cpp_cpu) %{posix:-D_POSIX_SOURCE} %{Xp:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -120,7 +120,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|(TREE_CODE (FUNTYPE) == IDENTIFIER_NODE ? 0			\    : (TARGET_RTD						\&& (TYPE_ARG_TYPES (FUNTYPE) == 0				\ 	  || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))	\ 	      == void_type_node))) ? (SIZE)			\    : 0)
+value|((FUNDECL)&& TREE_CODE (FUNDECL) == IDENTIFIER_NODE ? 0	\    : (TARGET_RTD						\&& (TYPE_ARG_TYPES (FUNTYPE) == 0				\ 	  || (TREE_VALUE (tree_last (TYPE_ARG_TYPES (FUNTYPE)))	\ 	      == void_type_node))) ? (SIZE)			\    : 0)
 end_define
 
 begin_comment
@@ -195,6 +195,17 @@ name|FILE
 parameter_list|)
 define|\
 value|do {                                           \    char c;                                       \    int max = 0;                                  \    char *string = dump_base_name;                \                                                  \     fputs ("\t.file\t\"", FILE);				 \                                                  \     while ((c = *string++) != 0&& max++< 14) { \        if (c == '\"' || c == '\\')               \          putc ('\\', FILE);                      \        putc (c, FILE);                           \     }                                            \     fputs ("\"\n", FILE);                        \   } while (0)
+end_define
+
+begin_comment
+comment|/* Work around assembler forward label references generated in exception    handling code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|0
 end_define
 
 end_unit

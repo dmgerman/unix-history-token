@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Everything you wanted to know about your machine and C compiler,    but didn't know who to ask. */
+comment|/* Everything you wanted to know about your machine and C compiler,    but didn't know who to ask.  */
 end_comment
 
 begin_ifndef
@@ -22,7 +22,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Author: Steven Pemberton, CWI, Amsterdam; steven@cwi.nl    Bugfixes and upgrades gratefully received.     Copyright (c) 1988, 1989, 1990 Steven Pemberton, CWI, Amsterdam.    All rights reserved.     Changes by Richard Stallman:    Undef CHAR_BIT, etc., if defined in stdio.h, Richard Stallman, Aug 90.    In EPROP, avoid a<= old if bad is set, Richard Stallman, May 91.    Use gstddef.h, not stddef.h, Richard Stallman, Nov 91.    Don't declare malloc, instead cast the value, Richard Stallman, Nov 91.    Include sys/types.h before signal.h, Apr 92.    Support NO_LONG_DOUBLE_IO in f_define and f_rep; new fn fake_f_rep, Apr 92.    Enclose -f output in #ifndef _FLOAT_H___, Richard Stallman, May 92.     Change by Jim Wilson:    Add #undef before every #define, Dec 92.    Use stddef.h not gstddef.h, Mar 94.     Changes by Paul Eggert, installed Feb 93:    (fake_f_rep): Clear all of u, initially.  Make the ints in u unsigned.    (f_define): Use ordinary constants for long double    if it's same width as double.  Make __convert_long_double_i unsigned.    Richard Stallman, May 93:    In F_check, check NO_LONG_DOUBLE_IO.     Changes by Stephen Moshier, installed Sep 93:    (FPROP): Recognize 80387 or 68881 XFmode format.      COMPILING    With luck and a following wind, just the following will work: 	cc enquire.c -o enquire    You may get some messages about unreachable code, which you can ignore.     If your compiler doesn't support:		add flag: 	signed char (eg pcc)			-DNO_SC 	unsigned char				-DNO_UC 	unsigned short and long			-DNO_UI 	void					-DNO_VOID 	signal(), or setjmp/longjmp()		-DNO_SIG 	%Lf in printf				-DNO_LONG_DOUBLE_IO     Try to compile first with no flags, and see if you get any errors -    you might be surprised. (Most non-ANSI compilers need -DNO_SC, though.)    Some compilers need a -f flag for floating point.     Don't use any optimisation flags: the program may not work if you do.    Though "while (a+1.0-a-1.0 == 0.0)" may look like "while(1)" to an    optimiser, to a floating-point unit there's a world of difference.     Some compilers offer various flags for different floating point    modes; it's worth trying all possible combinations of these.     Add -DID=\"name\" if you want the machine/flags identified in the output.     FAULTY COMPILERS    Because of bugs and/or inadequacies, some compilers need the following    defines:     If your C preprocessor doesn't have the predefined __FILE__ macro, and    you don't want to call this file enquire.c but, say, tell.c, add the    flag -DFILENAME=\"tell.c\" .     Some compilers won't accept the line "#include FILENAME".    Add flag -DNO_FILE. In that case, this file *must* be called enquire.c.     Some compilers can't cope with "#ifdef __FILE__". Use -DFILENAME=    or -DNO_FILE as above.     Some naughty compilers define __STDC__, but don't really support it.    Some define it as 0, in which case we treat it as undefined.    But if your compiler defines it, and isn't really ANSI C,    add flag -DNO_STDC. (To those compiler writers: for shame).     Some naughty compilers define __STDC__, but don't have the stddef.h    include file. Add flag -DNO_STDDEF.     Summary of naughty-compiler flags:    If your compiler doesn't support:		 add flag: 	__FILE__ (and you changed the filename)	-DFILENAME=\"name.c\" 	#ifdef __FILE__				-DNO_FILE or -DFILENAME=... 	#include FILENAME			-DNO_FILE 	__STDC__ (properly)			-DNO_STDC 	stddef.h				-DNO_STDDEF     Some systems crash when you try to malloc all store. To save users of    such defective systems too much grief, they may compile with -DNO_MEM,    which ignores that bit of the code.     While it is not our policy to support defective compilers, pity has been    taken on people with compilers that can't produce object files bigger than    32k (especially since it was an easy addition). Compile the program    into separate parts like this:        cc -DSEP -DPASS0 -o p0.o<other flags> enquire.c        cc -DSEP -DPASS1 -o p1.o<other flags> enquire.c        cc -DSEP -DPASS2 -o p2.o<other flags> enquire.c        cc -DSEP -DPASS3 -o p3.o<other flags> enquire.c        cc -o enquire p0.o p1.o p2.o p3.o     SYSTEM DEPENDENCIES    You may possibly need to add some calls to signal() for other sorts of    exception on your machine than SIGFPE, and SIGOVER. See lines beginning    #ifdef SIGxxx in main() (and communicate the differences to me!).     OUTPUT    Run without argument to get the information as English text. If run    with argument -l (e.g. enquire -l), output is a series of #define's for    the ANSI standard limits.h include file, excluding MB_MAX_CHAR. If run    with argument -f, output is a series of #define's for the ANSI standard    float.h include file (according to ANSI C Draft of Dec 7, 1988).    Flag -v gives verbose output: output includes the English text above    as C comments. The program exit(0)'s if everything went ok, otherwise    it exits with a positive number, telling how many problems there were.     VERIFYING THE COMPILER    If, having produced the float.h and limits.h header files, you want to    verify that the compiler reads them back correctly (there are a lot of    boundary cases, of course, like minimum and maximum numbers), you can    recompile enquire.c with -DVERIFY set (plus the other flags that you used    when compiling the version that produced the header files). This then    recompiles the program so that it #includes "limits.h" and "float.h",    and checks that the constants it finds there are the same as the    constants it produces. Run the resulting program with enquire -fl.    Very few compilers have passed without error.    NB: You *must* recompile with the same compiler and flags, otherwise    you may get odd results.     You can also use this option if your compiler already has both files,    and you want to confirm that this program produces the right results.     TROUBLESHOOTING.    This program is now quite trustworthy, and suspicious and wrong output    may well be caused by bugs in the compiler, not in the program (however    of course, this is not guaranteed, and no responsibility can be    accepted, etc.)     The program only works if overflows are ignored by the C system or    are catchable with signal().     If the program fails to run to completion (often with the error message    "Unexpected signal at point x"), this often turns out to be a bug in the    C compiler's run-time system. Check what was about to be printed, and    try to narrow the problem down.     Another possible problem is that you have compiled the program to produce    loss-of-precision arithmetic traps. The program cannot cope with these,    and you should re-compile without them. (They should never be the default).     Make sure you compiled with optimisation turned off.     Output preceded by *** WARNING: identifies behaviour of the C system    deemed incorrect by the program. Likely problems are that printf or    scanf don't cope properly with certain boundary numbers: this program    goes to a lot of trouble to calculate its values, and these values    are mostly boundary numbers. Experience has shown that often printf    cannot cope with these values, and so in an attempt to increase    confidence in the output, for each float and double that is printed,    the printed value is checked by using sscanf to read it back.        Care is taken that numbers are printed with enough digits to uniquely    identify them, and therefore that they can be read back identically.    If the number read back is different, then there is probably a bug in    printf or sscanf, and the program prints the warning message.    If the two numbers in the warning look identical, then printf is more    than likely rounding the last digit(s) incorrectly. To put you at ease    that the two really are different, the bit patterns of the two numbers    are also printed. The difference is very likely in the last bit.        Many scanf's read the minimum double back as 0.0, and similarly cause    overflow when reading the maximum double. This program quite ruthlessly    declares all these behaviours faulty. The point is that if you get    one of these warnings, the output may be wrong, so you should check    the result carefully if you intend to use the results. Of course, printf    and sscanf may both be wrong, and cancel each other out, so you should    check the output carefully anyway.     The warning that "a cast didn't work" refers to cases like this:        float f;       #define C 1.234567890123456789       f= C;       if (f != (float) C) printf ("Wrong!");     A faulty compiler will widen f to double and ignore the cast to float,    and because there is more accuracy in a double than a float, fail to    recognise that they are the same. In the actual case in point, f and C    are passed as parameters to a function that discovers they are not equal,    so it's just possible that the error was in the parameter passing,    not in the cast (see function Validate()).    For ANSI C, which has float constants, the error message is "constant has    wrong precision".     REPORTING PROBLEMS    If the program doesn't work for you for any reason that can't be    narrowed down to a problem in the C compiler, or it has to be changed in    order to get it to compile, or it produces suspicious output (like a very    low maximum float, for instance), please mail the problem and an example    of the incorrect output to steven@cwi.nl or ..!hp4nl!cwi.nl!steven, so that    improvements can be worked into future versions; cwi.nl is the European    backbone, and is connected to uunet and other fine hosts.     The program tries to catch and diagnose bugs in the compiler/run-time    system. I would be especially pleased to have reports of failures so    that I can improve this service.     I apologise unreservedly for the contorted use of the preprocessor...     THE SMALL PRINT    You may copy and distribute verbatim copies of this source file.     You may modify this source file, and copy and distribute such    modified versions, provided that you leave the copyright notice    at the top of the file and also cause the modified file to carry    prominent notices stating that you changed the files and the date    of any change; and cause the whole of any work that you distribute    or publish, that in whole or in part contains or is a derivative of    this program or any part thereof, to be licensed at no charge to    all third parties on terms identical to those here.     If you do have a fix to any problem, please send it to me, so that    other people can have the benefits.     While every effort has been taken to make this program as reliable as    possible, no responsibility can be taken for the correctness of the    output, nor suitability for any particular use.     This program is an offshoot of a project funded by public funds.    If you use this program for research or commercial use (i.e. more    than just for the fun of knowing about your compiler) mailing a short    note of acknowledgement may help keep enquire.c supported.     ACKNOWLEDGEMENTS    Many people have given time and ideas to making this program what it is.    To all of them thanks, and apologies for not mentioning them by name.     HISTORY    Originally started as a program to generate configuration constants    for a large piece of software we were writing, which later took on    a life of its own...    1.0 Length 6658!; end 1984?        Unix only. Only printed a dozen maximum int/double values.    2.0 Length 10535; Spring 1985        Prints values as #defines (about 20 of them)        More extensive floating point, using Cody and Waite        Handles signals better        Programs around optimisations        Handles Cybers    3.0 Length 12648; Aug 1987; prints about 42 values        Added PASS stuff, so treats float as well as double    4.0 Length 33891; Feb 1989; prints around 85 values        First GNU version (for gcc, where they call it hard-params.c)        Generates float.h and limits.h files        Handles long double        Generates warnings for dubious output    4.1 Length 47738; April 1989        Added VERIFY and TEST    4.2 Length 63442; Feb 1990        Added SEP        Fixed eps/epsneg        Added check for pseudo-unsigned chars        Added description for each #define output        Added check for absence of defines during verify        Added prototypes        Added NO_STDC and NO_FILE        Fixed alignments output    4.3 Length 75000; Oct 1990; around 114 lines of output        Function xmalloc defined, Richard Stallman, June 89.        Alignments computed from member offsets rather than structure sizes,           Richard Stallman, Oct 89.        Print whether char* and int* pointers have the same format;           also char * and function *.        Update to Draft C version Dec 7, 1988 	  - types of constants produced in limits.h 	    (whether to put a U after unsigned shorts and chars and 	     whether to output -1024 as (-1023-1)) 	  - values of SCHAR_MIN/MAX 	  - values of *_EPSILON (not the smallest but the effective smallest)        Added FILENAME, since standard C doesn't allow #define __FILE__        Renamed from config.c to enquire.c        Added size_t and ptrdiff_t enquiries        Added promotion enquiries        Added type checks of #defines        Added NO_STDDEF        Changed endian to allow for cases where not all bits are used        Sanity check for max integrals        Fixed definition of setjmp for -DNO_SIG        Moved #define ... 0.0L inside #ifdef STDC, in case some cpp's tokenize        Added NO_MEM */
+comment|/* Author: Steven Pemberton, CWI, Amsterdam; steven@cwi.nl    Bugfixes and upgrades gratefully received.     Copyright (c) 1988, 1989, 1990 Steven Pemberton, CWI, Amsterdam.    All rights reserved.     Changes by Richard Stallman:    Undef CHAR_BIT, etc., if defined in stdio.h, Richard Stallman, Aug 90.    In EPROP, avoid a<= old if bad is set, Richard Stallman, May 91.    Use gstddef.h, not stddef.h, Richard Stallman, Nov 91.    Don't declare malloc, instead cast the value, Richard Stallman, Nov 91.    Include sys/types.h before signal.h, Apr 92.    Support NO_LONG_DOUBLE_IO in f_define and f_rep; new fn fake_f_rep, Apr 92.    Enclose -f output in #ifndef _FLOAT_H___, Richard Stallman, May 92.     Change by Jim Wilson:    Add #undef before every #define, Dec 92.    Use stddef.h not gstddef.h, Mar 94.     Changes by Paul Eggert, installed Feb 93:    (fake_f_rep): Clear all of u, initially.  Make the ints in u unsigned.    (f_define): Use ordinary constants for long double    if it's same width as double.  Make __convert_long_double_i unsigned.    Richard Stallman, May 93:    In F_check, check NO_LONG_DOUBLE_IO.     Changes by Stephen Moshier, installed Sep 93:    (FPROP): Recognize 80387 or 68881 XFmode format.     Change by Manfred Hollstein, installed Mar 98:    (bitpattern): Change type of variable i to unsigned int.      COMPILING    With luck and a following wind, just the following will work: 	cc enquire.c -o enquire    You may get some messages about unreachable code, which you can ignore.     If your compiler doesn't support:		add flag: 	signed char (eg pcc)			-DNO_SC 	unsigned char				-DNO_UC 	unsigned short and long			-DNO_UI 	void					-DNO_VOID 	signal(), or setjmp/longjmp()		-DNO_SIG 	%Lf in printf				-DNO_LONG_DOUBLE_IO     Try to compile first with no flags, and see if you get any errors -    you might be surprised. (Most non-ANSI compilers need -DNO_SC, though.)    Some compilers need a -f flag for floating point.     Don't use any optimisation flags: the program may not work if you do.    Though "while (a+1.0-a-1.0 == 0.0)" may look like "while(1)" to an    optimiser, to a floating-point unit there's a world of difference.     Some compilers offer various flags for different floating point    modes; it's worth trying all possible combinations of these.     Add -DID=\"name\" if you want the machine/flags identified in the output.     FAULTY COMPILERS    Because of bugs and/or inadequacies, some compilers need the following    defines:     If your C preprocessor doesn't have the predefined __FILE__ macro, and    you don't want to call this file enquire.c but, say, tell.c, add the    flag -DFILENAME=\"tell.c\" .     Some compilers won't accept the line "#include FILENAME".    Add flag -DNO_FILE. In that case, this file *must* be called enquire.c.     Some compilers can't cope with "#ifdef __FILE__". Use -DFILENAME=    or -DNO_FILE as above.     Some naughty compilers define __STDC__, but don't really support it.    Some define it as 0, in which case we treat it as undefined.    But if your compiler defines it, and isn't really ANSI C,    add flag -DNO_STDC. (To those compiler writers: for shame).     Some naughty compilers define __STDC__, but don't have the stddef.h    include file. Add flag -DNO_STDDEF.     Summary of naughty-compiler flags:    If your compiler doesn't support:		 add flag: 	__FILE__ (and you changed the filename)	-DFILENAME=\"name.c\" 	#ifdef __FILE__				-DNO_FILE or -DFILENAME=... 	#include FILENAME			-DNO_FILE 	__STDC__ (properly)			-DNO_STDC 	stddef.h				-DNO_STDDEF     Some systems crash when you try to malloc all store. To save users of    such defective systems too much grief, they may compile with -DNO_MEM,    which ignores that bit of the code.     While it is not our policy to support defective compilers, pity has been    taken on people with compilers that can't produce object files bigger than    32k (especially since it was an easy addition). Compile the program    into separate parts like this:        cc -DSEP -DPASS0 -o p0.o<other flags> enquire.c        cc -DSEP -DPASS1 -o p1.o<other flags> enquire.c        cc -DSEP -DPASS2 -o p2.o<other flags> enquire.c        cc -DSEP -DPASS3 -o p3.o<other flags> enquire.c        cc -o enquire p0.o p1.o p2.o p3.o     SYSTEM DEPENDENCIES    You may possibly need to add some calls to signal() for other sorts of    exception on your machine than SIGFPE, and SIGOVER. See lines beginning    #ifdef SIGxxx in main() (and communicate the differences to me!).     OUTPUT    Run without argument to get the information as English text. If run    with argument -l (e.g. enquire -l), output is a series of #define's for    the ANSI standard limits.h include file, excluding MB_MAX_CHAR. If run    with argument -f, output is a series of #define's for the ANSI standard    float.h include file (according to ANSI C Draft of Dec 7, 1988).    Flag -v gives verbose output: output includes the English text above    as C comments. The program exit(0)'s if everything went ok, otherwise    it exits with a positive number, telling how many problems there were.     VERIFYING THE COMPILER    If, having produced the float.h and limits.h header files, you want to    verify that the compiler reads them back correctly (there are a lot of    boundary cases, of course, like minimum and maximum numbers), you can    recompile enquire.c with -DVERIFY set (plus the other flags that you used    when compiling the version that produced the header files). This then    recompiles the program so that it #includes "limits.h" and "float.h",    and checks that the constants it finds there are the same as the    constants it produces. Run the resulting program with enquire -fl.    Very few compilers have passed without error.    NB: You *must* recompile with the same compiler and flags, otherwise    you may get odd results.     You can also use this option if your compiler already has both files,    and you want to confirm that this program produces the right results.     TROUBLESHOOTING.    This program is now quite trustworthy, and suspicious and wrong output    may well be caused by bugs in the compiler, not in the program (however    of course, this is not guaranteed, and no responsibility can be    accepted, etc.)     The program only works if overflows are ignored by the C system or    are catchable with signal().     If the program fails to run to completion (often with the error message    "Unexpected signal at point x"), this often turns out to be a bug in the    C compiler's run-time system. Check what was about to be printed, and    try to narrow the problem down.     Another possible problem is that you have compiled the program to produce    loss-of-precision arithmetic traps. The program cannot cope with these,    and you should re-compile without them. (They should never be the default).     Make sure you compiled with optimisation turned off.     Output preceded by *** WARNING: identifies behaviour of the C system    deemed incorrect by the program. Likely problems are that printf or    scanf don't cope properly with certain boundary numbers: this program    goes to a lot of trouble to calculate its values, and these values    are mostly boundary numbers. Experience has shown that often printf    cannot cope with these values, and so in an attempt to increase    confidence in the output, for each float and double that is printed,    the printed value is checked by using sscanf to read it back.        Care is taken that numbers are printed with enough digits to uniquely    identify them, and therefore that they can be read back identically.    If the number read back is different, then there is probably a bug in    printf or sscanf, and the program prints the warning message.    If the two numbers in the warning look identical, then printf is more    than likely rounding the last digit(s) incorrectly. To put you at ease    that the two really are different, the bit patterns of the two numbers    are also printed. The difference is very likely in the last bit.        Many scanf's read the minimum double back as 0.0, and similarly cause    overflow when reading the maximum double. This program quite ruthlessly    declares all these behaviours faulty. The point is that if you get    one of these warnings, the output may be wrong, so you should check    the result carefully if you intend to use the results. Of course, printf    and sscanf may both be wrong, and cancel each other out, so you should    check the output carefully anyway.     The warning that "a cast didn't work" refers to cases like this:        float f;       #define C 1.234567890123456789       f= C;       if (f != (float) C) printf ("Wrong!");     A faulty compiler will widen f to double and ignore the cast to float,    and because there is more accuracy in a double than a float, fail to    recognise that they are the same. In the actual case in point, f and C    are passed as parameters to a function that discovers they are not equal,    so it's just possible that the error was in the parameter passing,    not in the cast (see function Validate()).    For ANSI C, which has float constants, the error message is "constant has    wrong precision".     REPORTING PROBLEMS    If the program doesn't work for you for any reason that can't be    narrowed down to a problem in the C compiler, or it has to be changed in    order to get it to compile, or it produces suspicious output (like a very    low maximum float, for instance), please mail the problem and an example    of the incorrect output to steven@cwi.nl or ..!hp4nl!cwi.nl!steven, so that    improvements can be worked into future versions; cwi.nl is the European    backbone, and is connected to uunet and other fine hosts.     The program tries to catch and diagnose bugs in the compiler/run-time    system. I would be especially pleased to have reports of failures so    that I can improve this service.     I apologise unreservedly for the contorted use of the preprocessor...     THE SMALL PRINT    You may copy and distribute verbatim copies of this source file.     You may modify this source file, and copy and distribute such    modified versions, provided that you leave the copyright notice    at the top of the file and also cause the modified file to carry    prominent notices stating that you changed the files and the date    of any change; and cause the whole of any work that you distribute    or publish, that in whole or in part contains or is a derivative of    this program or any part thereof, to be licensed at no charge to    all third parties on terms identical to those here.     If you do have a fix to any problem, please send it to me, so that    other people can have the benefits.     While every effort has been taken to make this program as reliable as    possible, no responsibility can be taken for the correctness of the    output, nor suitability for any particular use.     This program is an offshoot of a project funded by public funds.    If you use this program for research or commercial use (i.e. more    than just for the fun of knowing about your compiler) mailing a short    note of acknowledgement may help keep enquire.c supported.     ACKNOWLEDGEMENTS    Many people have given time and ideas to making this program what it is.    To all of them thanks, and apologies for not mentioning them by name.     HISTORY    Originally started as a program to generate configuration constants    for a large piece of software we were writing, which later took on    a life of its own...    1.0 Length 6658!; end 1984?        Unix only. Only printed a dozen maximum int/double values.    2.0 Length 10535; Spring 1985        Prints values as #defines (about 20 of them)        More extensive floating point, using Cody and Waite        Handles signals better        Programs around optimisations        Handles Cybers    3.0 Length 12648; Aug 1987; prints about 42 values        Added PASS stuff, so treats float as well as double    4.0 Length 33891; Feb 1989; prints around 85 values        First GNU version (for gcc, where they call it hard-params.c)        Generates float.h and limits.h files        Handles long double        Generates warnings for dubious output    4.1 Length 47738; April 1989        Added VERIFY and TEST    4.2 Length 63442; Feb 1990        Added SEP        Fixed eps/epsneg        Added check for pseudo-unsigned chars        Added description for each #define output        Added check for absence of defines during verify        Added prototypes        Added NO_STDC and NO_FILE        Fixed alignments output    4.3 Length 75000; Oct 1990; around 114 lines of output        Function xmalloc defined, Richard Stallman, June 89.        Alignments computed from member offsets rather than structure sizes,           Richard Stallman, Oct 89.        Print whether char* and int* pointers have the same format;           also char * and function *.        Update to Draft C version Dec 7, 1988 	  - types of constants produced in limits.h 	    (whether to put a U after unsigned shorts and chars and 	     whether to output -1024 as (-1023-1)) 	  - values of SCHAR_MIN/MAX 	  - values of *_EPSILON (not the smallest but the effective smallest)        Added FILENAME, since standard C doesn't allow #define __FILE__        Renamed from config.c to enquire.c        Added size_t and ptrdiff_t enquiries        Added promotion enquiries        Added type checks of #defines        Added NO_STDDEF        Changed endian to allow for cases where not all bits are used        Sanity check for max integrals        Fixed definition of setjmp for -DNO_SIG        Moved #define ... 0.0L inside #ifdef STDC, in case some cpp's tokenize        Added NO_MEM */
 end_comment
 
 begin_comment
@@ -110,7 +110,7 @@ comment|/* FILENAME */
 end_comment
 
 begin_comment
-comment|/* If PASS isn't defined, then this is the first pass over this file. */
+comment|/* If PASS isn't defined, then this is the first pass over this file.  */
 end_comment
 
 begin_ifndef
@@ -502,6 +502,16 @@ begin_comment
 comment|/* include files */
 end_comment
 
+begin_comment
+comment|/* Stdio.h might include limits.h, and limits.h might include float.h, and    float.h is probably the float.h put together by the gcc makefile to    cause errors.  We use our special define to assure float.h that we don't    really need it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__GCC_FLOAT_NOT_NEEDED
+end_define
+
 begin_include
 include|#
 directive|include
@@ -649,6 +659,38 @@ include|#
 directive|include
 file|"limits.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYS_FLOAT_H_WRAP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYS_FLOAT_H_WRAP
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SYS_FLOAT_H_WRAP
+operator|||
+name|defined
+name|VERIFY
+end_if
 
 begin_include
 include|#
@@ -1181,6 +1223,9 @@ name|prec
 operator|,
 name|Long_double
 name|val
+operator|,
+name|Long_double
+name|req
 operator|,
 name|char
 operator|*
@@ -2134,7 +2179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is here in case alloca.c is used, which calls this. */
+comment|/* This is here in case alloca.c is used, which calls this.  */
 end_comment
 
 begin_function
@@ -2587,6 +2632,15 @@ argument_list|(
 literal|"#define _FLOAT_H___\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SYS_FLOAT_H_WRAP
+condition|)
+name|printf
+argument_list|(
+literal|"#include_next<float.h>\n"
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -2883,7 +2937,7 @@ expr_stmt|;
 block|}
 name|Vprintf
 argument_list|(
-literal|"%sMemory mallocatable ~= %ld Kbytes%s\n"
+literal|"%sMemory allocable ~= %ld Kbytes%s\n"
 argument_list|,
 name|co
 argument_list|,
@@ -3055,6 +3109,17 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|SYS_FLOAT_H_WRAP
+operator|&&
+name|F
+operator|&&
+name|val
+operator|==
+name|req
+condition|)
+return|return;
 comment|/* Produce a #define for a signed int type */
 name|describe
 argument_list|(
@@ -3103,7 +3168,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* We may not produce a constant like -1024 if the max 		   allowable value is 1023. It has then to be output as 		   -1023-1. lim is the max allowable value. */
+comment|/* We may not produce a constant like -1024 if the max 		   allowable value is 1023. It has then to be output as 		   -1023-1. lim is the max allowable value.  */
 name|printf
 argument_list|(
 literal|"#define %s%s (%ld%s%ld%s)\n"
@@ -3141,7 +3206,9 @@ name|mark
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If VERIFY is not set, val and req are just the same value; 	   if it is set, val is the value as calculated, and req is 	   the #defined constant 	*/
+ifdef|#
+directive|ifdef
+name|VERIFY
 if|if
 condition|(
 name|val
@@ -3169,6 +3236,8 @@ name|bugs
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|Vprintf
 argument_list|(
 literal|"\n"
@@ -3260,6 +3329,9 @@ argument_list|,
 name|mark
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VERIFY
 if|if
 condition|(
 name|val
@@ -3287,6 +3359,8 @@ name|bugs
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|Vprintf
 argument_list|(
 literal|"\n"
@@ -3310,6 +3384,8 @@ parameter_list|,
 name|precision
 parameter_list|,
 name|val
+parameter_list|,
+name|req
 parameter_list|,
 name|mark
 parameter_list|)
@@ -3337,6 +3413,8 @@ end_decl_stmt
 begin_decl_stmt
 name|Long_double
 name|val
+decl_stmt|,
+name|req
 decl_stmt|;
 end_decl_stmt
 
@@ -3349,6 +3427,17 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|SYS_FLOAT_H_WRAP
+operator|&&
+name|F
+operator|&&
+name|val
+operator|==
+name|req
+condition|)
+return|return;
 comment|/* Produce a #define for a float/double/long double */
 name|describe
 argument_list|(
@@ -3899,7 +3988,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"(__extension__ ((union __convert_long_double) {0x%x, 0x%x, 0x%x, 0x%x}).__convert_long_double_d)"
+literal|"(__extension__ ((union __convert_long_double) {__convert_long_double_i: {0x%x, 0x%x, 0x%x, 0x%x}}).__convert_long_double_d)"
 argument_list|,
 name|u
 operator|.
@@ -4045,9 +4134,11 @@ comment|/* Printf the bit-pattern of p */
 name|char
 name|c
 decl_stmt|;
+name|unsigned
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|j
 decl_stmt|;
 for|for
@@ -6340,6 +6431,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|bits_per_byte
+operator|<=
+literal|16
+condition|)
+block|{
+if|if
+condition|(
 name|setjmp
 argument_list|(
 name|lab
@@ -6412,6 +6510,98 @@ name|c
 expr_stmt|;
 name|c
 operator|--
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+block|{
+comment|/* An exhaustive search here is impracticable ;-)  */
+name|c
+operator|=
+operator|(
+literal|1
+operator|<<
+operator|(
+name|bits_per_byte
+operator|-
+literal|1
+operator|)
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|char_max
+operator|=
+name|c
+expr_stmt|;
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|>
+name|char_max
+condition|)
+name|char_max
+operator|=
+operator|~
+literal|0
+expr_stmt|;
+name|c
+operator|=
+literal|0
+expr_stmt|;
+name|char_min
+operator|=
+literal|0
+expr_stmt|;
+name|c
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|<
+name|char_min
+condition|)
+block|{
+name|c
+operator|=
+operator|(
+literal|1
+operator|<<
+operator|(
+name|bits_per_byte
+operator|-
+literal|1
+operator|)
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|c
+operator|=
+operator|-
+name|c
+expr_stmt|;
+name|char_min
+operator|=
+name|c
+expr_stmt|;
+name|c
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|<
+name|char_min
+condition|)
+name|char_min
+operator|=
+name|c
 expr_stmt|;
 block|}
 block|}
@@ -7273,7 +7463,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|((long)((char *)&((struct{char c; TYPE d;}*)0)->d - (char *)0))
+value|((long)((char *)&((struct{char c; TYPE d;}*)0)->d - (char *) 0))
 name|Vprintf
 argument_list|(
 literal|"\n%sALIGNMENTS%s\n"
@@ -7421,6 +7611,7 @@ argument_list|)
 operator|&
 name|variable
 condition|)
+block|{
 name|Vprintf
 argument_list|(
 literal|"%sChar and int pointer formats seem identical%s\n"
@@ -7430,7 +7621,9 @@ argument_list|,
 name|oc
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|Vprintf
 argument_list|(
 literal|"%sChar and int pointer formats are different%s\n"
@@ -7440,6 +7633,7 @@ argument_list|,
 name|oc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 call|(
@@ -7462,6 +7656,7 @@ argument_list|)
 operator|&
 name|variable
 condition|)
+block|{
 name|Vprintf
 argument_list|(
 literal|"%sChar and function pointer formats seem identical%s\n"
@@ -7471,7 +7666,9 @@ argument_list|,
 name|oc
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|Vprintf
 argument_list|(
 literal|"%sChar and function pointer formats are different%s\n"
@@ -7481,6 +7678,7 @@ argument_list|,
 name|oc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|V
@@ -8197,12 +8395,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VERIFY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|SHRT_MAX
 end_ifdef
 
@@ -8458,15 +8650,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VERIFY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* PASS1 */
 end_comment
 
@@ -8713,12 +8896,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VERIFY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|INT_MAX
 end_ifdef
 
@@ -8931,15 +9108,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VERIFY */
-end_comment
 
 begin_endif
 endif|#
@@ -9211,12 +9379,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VERIFY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|LONG_MAX
 end_ifdef
 
@@ -9436,18 +9598,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VERIFY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* PASS3 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UNDEFINED
+value|(-2)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -9458,7 +9618,7 @@ begin_define
 define|#
 directive|define
 name|I_MAX
-value|int_max
+value|((unsigned long) UNDEFINED)
 end_define
 
 begin_endif
@@ -9476,7 +9636,7 @@ begin_define
 define|#
 directive|define
 name|I_MIN
-value|int_min
+value|((unsigned long) UNDEFINED)
 end_define
 
 begin_endif
@@ -9494,7 +9654,7 @@ begin_define
 define|#
 directive|define
 name|U_MAX
-value|u_max
+value|((unsigned long) UNDEFINED)
 end_define
 
 begin_endif
@@ -9512,7 +9672,7 @@ begin_define
 define|#
 directive|define
 name|F_RADIX
-value|f_radix
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9530,7 +9690,7 @@ begin_define
 define|#
 directive|define
 name|F_MANT_DIG
-value|f_mant_dig
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9548,7 +9708,7 @@ begin_define
 define|#
 directive|define
 name|F_DIG
-value|f_dig
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9566,7 +9726,7 @@ begin_define
 define|#
 directive|define
 name|F_ROUNDS
-value|f_rounds
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9584,7 +9744,7 @@ begin_define
 define|#
 directive|define
 name|F_EPSILON
-value|f_epsilon
+value|((Number) UNDEFINED)
 end_define
 
 begin_endif
@@ -9602,7 +9762,7 @@ begin_define
 define|#
 directive|define
 name|F_MIN_EXP
-value|f_min_exp
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9620,7 +9780,7 @@ begin_define
 define|#
 directive|define
 name|F_MIN
-value|f_min
+value|((Number) UNDEFINED)
 end_define
 
 begin_endif
@@ -9638,7 +9798,7 @@ begin_define
 define|#
 directive|define
 name|F_MIN_10_EXP
-value|f_min_10_exp
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9656,7 +9816,7 @@ begin_define
 define|#
 directive|define
 name|F_MAX_EXP
-value|f_max_exp
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -9674,7 +9834,7 @@ begin_define
 define|#
 directive|define
 name|F_MAX
-value|f_max
+value|((Number) UNDEFINED)
 end_define
 
 begin_endif
@@ -9692,7 +9852,7 @@ begin_define
 define|#
 directive|define
 name|F_MAX_10_EXP
-value|f_max_10_exp
+value|UNDEFINED
 end_define
 
 begin_endif
@@ -12189,9 +12349,19 @@ name|flt_rounds
 operator|=
 name|f_rounds
 expr_stmt|;
+comment|/* Prefer system float.h definition of F_ROUNDS, 		   since it's more likely to be right than our "1".  */
 if|if
 condition|(
 name|F
+operator|&&
+operator|(
+operator|!
+name|SYS_FLOAT_H_WRAP
+operator|||
+name|F_ROUNDS
+operator|==
+name|UNDEFINED
+operator|)
 condition|)
 name|i_define
 argument_list|(
@@ -12782,6 +12952,11 @@ name|Long_double
 operator|)
 name|f_epsilon
 argument_list|,
+operator|(
+name|Long_double
+operator|)
+name|F_EPSILON
+argument_list|,
 name|MARK
 argument_list|)
 expr_stmt|;
@@ -13358,6 +13533,11 @@ operator|(
 name|Long_double
 operator|)
 name|f_min
+argument_list|,
+operator|(
+name|Long_double
+operator|)
+name|F_MIN
 argument_list|,
 name|MARK
 argument_list|)
@@ -13976,6 +14156,11 @@ name|Long_double
 operator|)
 name|f_max
 argument_list|,
+operator|(
+name|Long_double
+operator|)
+name|F_MAX
+argument_list|,
 name|MARK
 argument_list|)
 expr_stmt|;
@@ -14163,7 +14348,7 @@ operator|+
 name|f_min_exp
 operator|>
 literal|0
-comment|/* ??? f_min_exp may be wrong. */
+comment|/* ??? f_min_exp may be wrong.  */
 operator|&&
 name|mantbits
 operator|+

@@ -195,11 +195,15 @@ directive|undef
 name|SHRT_MIN
 end_undef
 
+begin_comment
+comment|/* For the sake of 16 bit hosts, we may not use -32768 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SHRT_MIN
-value|(-32768)
+value|(-32767-1)
 end_define
 
 begin_undef
@@ -307,12 +311,54 @@ directive|ifndef
 name|__LONG_MAX__
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__sparc_v9__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LONG_MAX__
+value|9223372036854775807L
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|__LONG_MAX__
 value|2147483647L
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __alpha__ || sparc64 */
+end_comment
 
 begin_endif
 endif|#

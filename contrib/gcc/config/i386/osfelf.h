@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-DOSF -DOSF1 -Dunix -Di386 -Asystem(unix) -Asystem(xpg4) -Acpu(i386) -Amachine(i386)"
+value|"-DOSF -DOSF1 -Dunix -Asystem(xpg4)"
 end_define
 
 begin_undef
@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %{mrose: -D__ROSE__ %{!pic-none: -D__SHARED__}} \ %{!mrose: -D__ELF__ %{fpic: -D__SHARED__}} \ %{mno-underscores: -D__NO_UNDERSCORES__} \ %{!mrose: %{!munderscores: -D__NO_UNDERSCORES__}} \ %{.S:	%{!ansi:%{!traditional:%{!traditional-cpp:%{!ftraditional: -traditional}}}}} \ %{.S:	-D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C} \ %{!.S:	-D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}"
+value|"%(cpp_cpu) \ %{mrose: -D__ROSE__ %{!pic-none: -D__SHARED__}} \ %{!mrose: -D__ELF__ %{fpic: -D__SHARED__}} \ %{mno-underscores: -D__NO_UNDERSCORES__} \ %{!mrose: %{!munderscores: -D__NO_UNDERSCORES__}} \ %{.S:	%{!ansi:%{!traditional:%{!traditional-cpp:%{!ftraditional: -traditional}}}}} \ %{.S:	-D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C} \ %{!.S:	-D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}"
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Compilation switch flag definitions for GNU CC.    Copyright (C) 1987, 1988, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Compilation switch flag definitions for GNU CC.    Copyright (C) 1987, 88, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -31,6 +31,9 @@ comment|/* Write COFF for (old) SDB (using sdbout.c).  */
 name|DWARF_DEBUG
 block|,
 comment|/* Write Dwarf debug info (using dwarfout.c).  */
+name|DWARF2_DEBUG
+block|,
+comment|/* Write Dwarf v2 debug info (using dwarf2out.c).  */
 name|XCOFF_DEBUG
 comment|/* Write IBM/Xcoff debug info (using dbxout.c).  */
 block|}
@@ -99,6 +102,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|optimize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means optimize for size.  -Os.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optimize_size
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +190,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|warn_uninitialized
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Zero if unknown pragmas are ignored    One if the compiler should warn about an unknown pragma not in    a system include file.    Greater than one if the compiler should warn for all unknown    pragmas.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_unknown_pragmas
 decl_stmt|;
 end_decl_stmt
 
@@ -300,6 +325,39 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|profile_block_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if generating code to profile program flow graph arcs. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|profile_arc_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if generating info for gcov to calculate line test coverage. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_test_coverage
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero indicates that branch taken probabilities should be calculated. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_branch_probabilities
 decl_stmt|;
 end_decl_stmt
 
@@ -465,6 +523,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero forces all invariant computations in loops to be moved    outside the loop. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_move_all_movables
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero forces all general induction variables in loops to be    strength reduced. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_reduce_all_givs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero for -fcse-follow-jumps:    have cse follow jumps to do a more extensive job.  */
 end_comment
 
@@ -575,6 +655,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means to run loop optimizations twice.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_rerun_loop_opt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means to assume that a structure or an array reference at    a varying address cannot alias a scalar at a fixed address. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_structure_noalias
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means make functions that look like good inline candidates    go inline.  */
 end_comment
 
@@ -658,6 +760,64 @@ name|flag_schedule_insns_after_reload
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAIFA
+end_ifdef
+
+begin_comment
+comment|/* The following flags have effect only for scheduling before register    allocation:     flag_schedule_interblock means schedule insns accross basic blocks.    flag_schedule_speculative means allow speculative motion of non-load insns.    flag_schedule_speculative_load means allow speculative motion of some    load insns.    flag_schedule_speculative_load_dangerous allows speculative motion of more    load insns.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_schedule_interblock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_schedule_speculative
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_schedule_speculative_load
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_schedule_speculative_load_dangerous
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag_on_branch_count_reg means try to replace add-1,compare,branch tupple    by a cheaper branch, on a count register. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_branch_on_count_reg
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAIFA */
+end_comment
+
 begin_comment
 comment|/* Nonzero means put things in delayed-branch slots if supported. */
 end_comment
@@ -666,17 +826,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_delayed_branch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means to run cleanups after CALL_EXPRs. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_short_temps
 decl_stmt|;
 end_decl_stmt
 
@@ -714,7 +863,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means place uninitialized global data in the bss section.  */
+comment|/* Nonzero means generate extra code for exception handling and enable    exception handling.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_exceptions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means use the new model for exception handling. Replaces     -DNEW_EH_MODEL as a compile option. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_new_exceptions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means don't place uninitialized global data in common storage    by default.  */
 end_comment
 
 begin_decl_stmt
@@ -736,13 +907,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -fverbose-asm causes extra commentary information to be produced in    the generated assembly code (to make it more readable).  This option    is generally only of use to those who actually need to read the    generated assembly code (perhaps while debugging the compiler itself).  */
+comment|/* Nonzero means place each function into its own section on those platforms    which support arbitrary section names and unlimited numbers of sections.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_function_sections
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -fverbose-asm causes extra commentary information to be produced in    the generated assembly code (to make it more readable).  This option    is generally only of use to those who actually need to read the    generated assembly code (perhaps while debugging the compiler itself).    -fno-verbose-asm, the default, causes the extra information    to not be added and is useful when comparing two assembler files.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|flag_verbose_asm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -dA causes debug information to be produced in    the generated assembly code (to make it more readable).  This option    is generally only of use to those who actually need to read the    generated assembly code (perhaps while debugging the compiler itself).    Currently, this switch is only used by dwarfout.c; however, it is intended    to be a catchall for printing debug information in the assembler file.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_debug_asm
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +958,50 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_pack_struct
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This flag is only tested if alias checking is enabled.    0 if pointer arguments may alias each other.  True in C.    1 if pointer arguments may not alias each other but may alias    global variables.    2 if pointer arguments may not alias each other and may not    alias global variables.  True in Fortran.    The value is ignored if flag_alias_check is 0.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_argument_noalias
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we should do (language-dependent) alias analysis.    Typically, this analysis will assume that expressions of certain    types do not alias expressions of certain other types.  Only used    if alias analysis (in general) is enabled.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_strict_aliasing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Emit code to check for stack overflow; also may cause large objects    to be allocated dynamically.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_stack_check
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Do the full regmove optimization pass.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_regmove
 decl_stmt|;
 end_decl_stmt
 
@@ -816,6 +1053,68 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|current_function_has_nonlocal_goto
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if this function has a computed goto.     It is computed during find_basic_blocks or during stupid life    analysis.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_has_computed_jump
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if GCC must add code to check memory access (used by Checker).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_check_memory_usage
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if GCC must prefix function names (used with    flag_check_memory_usage).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_prefix_function_name
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if the current function is a thunk, so we should try to cut    corners where we can.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_is_thunk
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Value of the -G xx switch, and whether it was passed or not.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|g_switch_value
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|g_switch_set
 decl_stmt|;
 end_decl_stmt
 

@@ -1709,7 +1709,7 @@ specifier|const
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1726,7 +1726,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5945,6 +5945,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|gethostid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|extern
 name|long
@@ -5955,6 +5976,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|int
@@ -5963,7 +5989,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8497,8 +8523,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|long
-name|int
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11383,7 +11408,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|read
 parameter_list|(
 name|int
@@ -11411,17 +11436,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|readlink
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|void
+name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13809,6 +13834,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|socket
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 modifier|*
 name|sprayproc_clear_1
@@ -14099,6 +14138,22 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|strcasecmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|strcat
@@ -14348,6 +14403,24 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|strncasecmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16747,7 +16820,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|ssize_t
 name|write
 parameter_list|(
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -252,6 +252,16 @@ argument_list|)
 return|;
 break|break;
 case|case
+name|_C_VOID
+case|:
+return|return
+sizeof|sizeof
+argument_list|(
+name|void
+argument_list|)
+return|;
+break|break;
+case|case
 name|_C_PTR
 case|:
 case|case
@@ -432,9 +442,22 @@ name|max_size
 return|;
 block|}
 default|default:
-name|abort
-argument_list|()
+block|{
+name|objc_error
+argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
+argument_list|,
+literal|"unknown type %s\n"
+argument_list|,
+name|type
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 end_function
@@ -590,6 +613,9 @@ argument_list|)
 return|;
 break|break;
 case|case
+name|_C_PTR
+case|:
+case|case
 name|_C_ATOM
 case|:
 case|case
@@ -739,9 +765,22 @@ name|maxalign
 return|;
 block|}
 default|default:
-name|abort
-argument_list|()
+block|{
+name|objc_error
+argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
+argument_list|,
+literal|"unknown type %s\n"
+argument_list|,
+name|type
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 end_function
@@ -998,6 +1037,9 @@ case|:
 case|case
 name|_C_VOID
 case|:
+case|case
+name|_C_UNDEF
+case|:
 return|return
 operator|++
 name|type
@@ -1036,9 +1078,22 @@ operator|++
 name|type
 return|;
 else|else
-name|abort
-argument_list|()
+block|{
+name|objc_error
+argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
+argument_list|,
+literal|"bad array type %s\n"
+argument_list|,
+name|type
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 case|case
 name|_C_STRUCT_B
 case|:
@@ -1127,9 +1182,22 @@ name|type
 argument_list|)
 return|;
 default|default:
-name|abort
-argument_list|()
+block|{
+name|objc_error
+argument_list|(
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_TYPE
+argument_list|,
+literal|"unknown type %s\n"
+argument_list|,
+name|type
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 block|}
 end_function

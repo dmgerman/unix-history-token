@@ -1,81 +1,136 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994 Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_comment
-comment|/* This goes away when the math-emulator is fixed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_CPU_DEFAULT
-value|0400
-end_define
-
-begin_comment
-comment|/* TARGET_NO_FANCY_MATH_387 */
-end_comment
-
-begin_comment
-comment|/* This is tested by i386gas.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YES_UNDERSCORES
-end_define
-
-begin_comment
-comment|/* Don't assume anything about the header files. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_IMPLICIT_EXTERN_C
-end_define
-
-begin_include
-include|#
-directive|include
-file|"i386/gstabs.h"
-end_include
-
-begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"i386/perform.h"
-end_include
 
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_VERSION
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__ -D__386BSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+name|TARGET_VERSION
+value|fprintf (stderr, " (i386 FreeBSD/ELF)");
 end_define
 
 begin_comment
-comment|/* Like the default, except no -lg.  */
+comment|/* The svr4 ABI for the i386 says that records and unions are returned    in memory.  */
+end_comment
+
+begin_comment
+comment|/* On FreeBSD, we do not. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_PCC_STRUCT_RETURN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_PCC_STRUCT_RETURN
+value|0
+end_define
+
+begin_comment
+comment|/* This gets defined in tm.h->linux.h->svr4.h, and keeps us from using    libraries compiled with the native cc, so undef it. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_DOLLAR_IN_LABEL
+end_undef
+
+begin_comment
+comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ADDR_DIFF_ELT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ADDR_DIFF_ELT
+parameter_list|(
+name|FILE
+parameter_list|,
+name|BODY
+parameter_list|,
+name|VALUE
+parameter_list|,
+name|REL
+parameter_list|)
+define|\
+value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
+end_define
+
+begin_comment
+comment|/* Indicate that jump tables go in the text section.  This is    necessary when compiling PIC code.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LIB_SPEC
-value|"%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
+name|JUMP_TABLES_IN_TEXT_SECTION
+value|(flag_pic)
+end_define
+
+begin_comment
+comment|/* Copy this from the svr4 specifications... */
+end_comment
+
+begin_comment
+comment|/* Define the register numbers to be used in Dwarf debugging information.    The SVR4 reference port C compiler uses the following register numbers    in its Dwarf output code: 	0 for %eax (gnu regno = 0) 	1 for %ecx (gnu regno = 2) 	2 for %edx (gnu regno = 1) 	3 for %ebx (gnu regno = 3) 	4 for %esp (gnu regno = 7) 	5 for %ebp (gnu regno = 6) 	6 for %esi (gnu regno = 4) 	7 for %edi (gnu regno = 5)    The following three DWARF register numbers are never generated by    the SVR4 C compiler or by the GNU compilers, but SDB on x86/svr4    believes these numbers have these meanings. 	8  for %eip    (no gnu equivalent) 	9  for %eflags (no gnu equivalent) 	10 for %trapno (no gnu equivalent)    It is not at all clear how we should number the FP stack registers    for the x86 architecture.  If the version of SDB on x86/svr4 were    a bit less brain dead with respect to floating-point then we would    have a precedent to follow with respect to DWARF register numbers    for x86 FP registers, but the SDB on x86/svr4 is so completely    broken with respect to FP registers that it is hardly worth thinking    of it as something to strive for compatibility with.    The version of x86/svr4 SDB I have at the moment does (partially)    seem to believe that DWARF register number 11 is associated with    the x86 register %st(0), but that's about all.  Higher DWARF    register numbers don't seem to be associated with anything in    particular, and even for DWARF regno 11, SDB only seems to under-    stand that it should say that a variable lives in %st(0) (when    asked via an `=' command) if we said it was in DWARF regno 11,    but SDB still prints garbage when asked for the value of the    variable in question (via a `/' command).    (Also note that the labels SDB prints for various FP stack regs    when doing an `x' command are all wrong.)    Note that these problems generally don't affect the native SVR4    C compiler because it doesn't allow the use of -O with -g and    because when it is *not* optimizing, it allocates a memory    location for each floating-point variable, and the memory    location is what gets described in the DWARF AT_location    attribute for the variable in question.    Regardless of the severe mental illness of the x86/svr4 SDB, we    do something sensible here and we use the following DWARF    register numbers.  Note that these are all stack-top-relative    numbers. 	11 for %st(0) (gnu regno = 8) 	12 for %st(1) (gnu regno = 9) 	13 for %st(2) (gnu regno = 10) 	14 for %st(3) (gnu regno = 11) 	15 for %st(4) (gnu regno = 12) 	16 for %st(5) (gnu regno = 13) 	17 for %st(6) (gnu regno = 14) 	18 for %st(7) (gnu regno = 15) */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DBX_REGISTER_NUMBER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_REGISTER_NUMBER
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|((n) == 0 ? 0 \  : (n) == 1 ? 2 \  : (n) == 2 ? 1 \  : (n) == 3 ? 3 \  : (n) == 4 ? 6 \  : (n) == 5 ? 7 \  : (n) == 6 ? 5 \  : (n) == 7 ? 4 \  : ((n)>= FIRST_STACK_REG&& (n)<= LAST_STACK_REG) ? (n)+3 \  : (-1))
+end_define
+
+begin_comment
+comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FUNCTION_PROFILER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_PROFILER
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LABELNO
+parameter_list|)
+define|\
+value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%edx\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%edx\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
 end_define
 
 begin_undef
@@ -114,14 +169,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"short unsigned int"
-end_define
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|1
+value|"int"
 end_define
 
 begin_undef
@@ -134,197 +182,70 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_ATEXIT
-end_define
-
-begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|COMMENT_BEGIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"#"
+value|BITS_PER_WORD
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_APP_ON
+name|CPP_PREDEFINES
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_APP_ON
-value|"#APP\n"
+name|CPP_PREDEFINES
+value|"-Di386 -Dunix -D__ELF__ -D__FreeBSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_APP_OFF
+name|CPP_SPEC
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_APP_OFF
-value|"#NO_APP\n"
+name|CPP_SPEC
+value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
 end_define
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* The following macros are stolen from i386v4.h */
-end_comment
-
-begin_comment
-comment|/* These have to be defined to get PIC code correct */
-end_comment
-
-begin_comment
-comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
-end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_ADDR_DIFF_ELT
+name|LIB_SPEC
 end_undef
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/* We no longer link with libc_p.a or libg.a by default. If you  * want to profile or debug the C library, please add  * -lc_p or -ggdb to LDFLAGS at the link time, respectively.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_ADDR_DIFF_ELT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|VALUE
-parameter_list|,
-name|REL
-parameter_list|)
+name|LIB_SPEC
 define|\
-value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
+value|"%{!shared: %{mieee-fp:-lieee} %{p:-lgmon} %{pg:-lgmon} \      %{!ggdb:-lc} %{ggdb:-lg}}"
 end_define
 
-begin_comment
-comment|/* Indicate that jump tables go in the text section.  This is    necessary when compiling PIC code.  */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
-name|JUMP_TABLES_IN_TEXT_SECTION
-end_define
-
-begin_comment
-comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_PCC_STRUCT_RETURN
-value|0
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Profiling routines, partially copied from i386/osfrose.h.  */
-end_comment
-
-begin_comment
-comment|/* Redefine this to use %eax instead of %edx.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
+name|LIB_SPEC
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%eax\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%eax\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
-end_define
-
-begin_comment
-comment|/*  * Some imports from svr4.h in support of shared libraries.  * Currently, we need the DECLARE_OBJECT_SIZE stuff.  */
-end_comment
-
-begin_comment
-comment|/* Define the strings used for the special svr4 .type and .size directives.    These strings generally do not vary from one system running svr4 to    another, but if a given system (e.g. m88k running svr) needs to use    different pseudo-op names for these, they may be overridden in the    file which includes this one.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPE_ASM_OP
-value|".type"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZE_ASM_OP
-value|".size"
-end_define
-
-begin_comment
-comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPE_OPERAND_FMT
-value|"@%s"
-end_define
-
-begin_comment
-comment|/* Write the extra assembler code needed to declare a function's result.    Most svr4 assemblers don't require any special declaration of the    result value, but there are exceptions.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_DECLARE_RESULT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASM_DECLARE_RESULT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|RESULT
-parameter_list|)
+value|"%{!shared: \      %{mieee-fp:-lieee} %{p:-lgmon -lc_p} %{pg:-lgmon -lc_p} \        %{!p:%{!pg:%{!g*:-lc} %{g*:-lg}}}}"
 end_define
 
 begin_endif
@@ -333,196 +254,55 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* These macros generate the special .type and .size directives which    are used to set the corresponding fields of the linker symbol table    entries in an ELF object file under SVR4.  These macros also output    the starting labels for the relevant functions/objects.  */
+comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
 end_comment
 
-begin_comment
-comment|/* Write the extra assembler code needed to declare a function properly.    Some svr4 assemblers need to also have something extra said about the    function's return value.  We allow for that here.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_DECLARE_FUNCTION_NAME
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|,
-name|DECL
-parameter_list|)
-define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
-end_define
-
-begin_comment
-comment|/* Write the extra assembler code needed to declare an object properly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_DECLARE_OBJECT_NAME
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|,
-name|DECL
-parameter_list|)
-define|\
-value|do {									\     fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\         size_directive_output = 1;					\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
-end_define
-
-begin_comment
-comment|/* Output the size directive for a decl in rest_of_decl_compilation    in the case where we did not do so before the initializer.    Once we find the error_mark_node, we know that the value of    size_directive_output was set    by ASM_DECLARE_OBJECT_NAME when it was run for the same decl.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_FINISH_DECLARE_OBJECT
-parameter_list|(
-name|FILE
-parameter_list|,
-name|DECL
-parameter_list|,
-name|TOP_LEVEL
-parameter_list|,
-name|AT_END
-parameter_list|)
-define|\
-value|do {                                                                    \      char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);                  \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)	        \&& ! AT_END&& TOP_LEVEL                                       \&& DECL_INITIAL (DECL) == error_mark_node                      \&& !size_directive_output)                                     \        {                                                                \          fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);                        \ 	 assemble_name (FILE, name);                                    \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));\ 	}								\    } while (0)
-end_define
-
-begin_comment
-comment|/* This is how to declare the size of a function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_DECLARE_FUNCTION_SIZE
-parameter_list|(
-name|FILE
-parameter_list|,
-name|FNAME
-parameter_list|,
-name|DECL
-parameter_list|)
-define|\
-value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|" %| %{fpic:-k} %{fPIC:-k}"
-end_define
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
 
 begin_define
 define|#
 directive|define
 name|LINK_SPEC
-define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
+value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \ 	%{static:-static}}}"
 end_define
 
 begin_comment
-comment|/* This is defined when gcc is compiled in the BSD-directory-tree, and must  * make up for the gap to all the stuff done in the GNU-makefiles.  */
+comment|/* Get perform_* macros to build libgcc.a.  */
+end_comment
+
+begin_comment
+comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FREEBSD_NATIVE
+name|HAVE_GAS_MAX_SKIP_P2ALIGN
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|INCLUDE_DEFAULTS
-value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|MD_EXEC_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MD_EXEC_PREFIX
-value|"/usr/libexec/"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|STANDARD_STARTFILE_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STANDARD_STARTFILE_PREFIX
-value|"/usr/lib"
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is very wrong!!! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_TARGET_MACHINE
-value|"i386-unknown-freebsd_1.0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GPLUSPLUS_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOOL_INCLUDE_DIR
-value|"/usr/local/i386-unknown-freebsd_1.0/include"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GCC_INCLUDE_DIR
-value|"/usr/local/lib/gcc-lib/i386-unknown-freebsd_1.0/2.5.8/include"
+name|ASM_OUTPUT_MAX_SKIP_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|,
+name|MAX_SKIP
+parameter_list|)
+define|\
+value|if ((LOG)!=0) \     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREEBSD_NATIVE */
-end_comment
 
 end_unit
 

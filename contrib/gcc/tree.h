@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 1993, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Front-end tree definitions for GNU compiler.    Copyright (C) 1989, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -80,12 +80,20 @@ begin_comment
 comment|/* Indexed by enum tree_code, contains a character which is    `<' for a comparison expression, `1', for a unary arithmetic    expression, `2' for a binary arithmetic expression, `e' for    other types of expressions, `r' for a reference, `c' for a    constant, `d' for a decl, `t' for a type, `s' for a statement,    and `x' for anything else (TREE_LIST, IDENTIFIER, etc).  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_TREE_CODES
+value|256
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
-modifier|*
 name|tree_code_type
+index|[
+name|MAX_TREE_CODES
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +104,22 @@ name|TREE_CODE_CLASS
 parameter_list|(
 name|CODE
 parameter_list|)
-value|(*tree_code_type[(int) (CODE)])
+value|tree_code_type[(int) (CODE)]
+end_define
+
+begin_comment
+comment|/* Returns non-zero iff CLASS is the tree-code class of an    expression.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_EXPR_CODE_CLASS
+parameter_list|(
+name|CLASS
+parameter_list|)
+define|\
+value|(CLASS == '<' || CLASS == '1' || CLASS == '2' || CLASS == 'e')
 end_define
 
 begin_comment
@@ -106,8 +129,10 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-modifier|*
 name|tree_code_length
+index|[
+name|MAX_TREE_CODES
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -119,8 +144,10 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-modifier|*
 name|tree_code_name
+index|[
+name|MAX_TREE_CODES
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +222,8 @@ name|BUILT_IN_FRAME_ADDRESS
 block|,
 name|BUILT_IN_RETURN_ADDRESS
 block|,
+name|BUILT_IN_AGGREGATE_INCOMING_ADDRESS
+block|,
 name|BUILT_IN_CALLER_RETURN_ADDRESS
 block|,
 name|BUILT_IN_APPLY_ARGS
@@ -202,6 +231,35 @@ block|,
 name|BUILT_IN_APPLY
 block|,
 name|BUILT_IN_RETURN
+block|,
+name|BUILT_IN_SETJMP
+block|,
+name|BUILT_IN_LONGJMP
+block|,
+name|BUILT_IN_TRAP
+block|,
+comment|/* Various hooks for the DWARF 2 __throw routine.  */
+name|BUILT_IN_FP
+block|,
+name|BUILT_IN_SP
+block|,
+name|BUILT_IN_UNWIND_INIT
+block|,
+name|BUILT_IN_DWARF_FP_REGNUM
+block|,
+name|BUILT_IN_DWARF_REG_SIZE
+block|,
+name|BUILT_IN_FROB_RETURN_ADDR
+block|,
+name|BUILT_IN_EXTRACT_RETURN_ADDR
+block|,
+name|BUILT_IN_SET_RETURN_ADDR_REG
+block|,
+name|BUILT_IN_EH_STUB_OLD
+block|,
+name|BUILT_IN_EH_STUB
+block|,
+name|BUILT_IN_SET_EH_REGS
 block|,
 comment|/* C++ extensions */
 name|BUILT_IN_NEW
@@ -243,7 +301,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Every kind of tree node starts with this structure,    so all nodes have these fields.     See the accessor macros, defined below, for documentation of the fields.  */
+comment|/* Every kind of tree node starts with this structure,    so all nodes have these fields.     See the accessor macros, defined below, for documentation of the fields.      DO NOT change the layout of tree_common unless absolutely necessary.  Some    front-ends (namely g++) depend on the internal layout of this tructure.    See my_tree_cons in the cp subdir for such uglyness.  Ugh.  */
 end_comment
 
 begin_struct
@@ -384,10 +442,14 @@ name|lang_flag_6
 range|:
 literal|1
 decl_stmt|;
-comment|/* There is room for two more flags.  */
+comment|/* There is room for three more flags.  */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* The following table lists the uses of each of the above flags and    for which types of nodes they are defined.  Note that expressions    include decls.     addressable_flag:         TREE_ADDRESSABLE in    	   VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, LABEL_DECL, ..._TYPE 	   IDENTIFIER_NODE     static_flag:         TREE_STATIC in            VAR_DECL, FUNCTION_DECL, CONSTRUCTOR, ADDR_EXPR        TREE_NO_UNUSED_WARNING in            CONVERT_EXPR, NOP_EXPR, COMPOUND_EXPR        TREE_VIA_VIRTUAL in            TREE_LIST or TREE_VEC        TREE_CONSTANT_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_SYMBOL_REFERENCED in            IDENTIFIER_NODE     public_flag:         TREE_OVERFLOW in            INTEGER_CST, REAL_CST, COMPLEX_CST        TREE_PUBLIC in            VAR_DECL or FUNCTION_DECL        TREE_VIA_PUBLIC in            TREE_LIST or TREE_VEC     private_flag:         TREE_VIA_PRIVATE in            TREE_LIST or TREE_VEC        TREE_PRIVATE in            ??? unspecified nodes     protected_flag:         TREE_VIA_PROTECTED in            TREE_LIST        TREE_PROTECTED in            BLOCK 	   ??? unspecified nodes     side_effects_flag:         TREE_SIDE_EFFECTS in            all expressions     volatile_flag:         TREE_THIS_VOLATILE in            all expressions        TYPE_VOLATILE in            ..._TYPE     readonly_flag:         TREE_READONLY in            all expressions        ITERATOR_BOUND_P in            VAR_DECL if iterator (C)        TYPE_READONLY in            ..._TYPE     constant_flag:         TREE_CONSTANT in            all expressions     permanent_flag: TREE_PERMANENT in all nodes     unsigned_flag:         TREE_UNSIGNED in            INTEGER_TYPE, ENUMERAL_TYPE, FIELD_DECL        DECL_BUILT_IN_NONANSI in            FUNCTION_DECL        TREE_PARMLIST in            TREE_PARMLIST (C++)        SAVE_EXPR_NOPLACEHOLDER in 	   SAVE_EXPR     asm_written_flag:         TREE_ASM_WRITTEN in            VAR_DECL, FUNCTION_DECL, RECORD_TYPE, UNION_TYPE, QUAL_UNION_TYPE 	   BLOCK     used_flag:         TREE_USED in            expressions, IDENTIFIER_NODE     raises_flag:         TREE_RAISES in            expressions  							  */
+end_comment
 
 begin_comment
 comment|/* Define accessors for the fields that all tree nodes have    (though some fields are not used for all kinds of nodes).  */
@@ -417,6 +479,225 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 value|((NODE)->common.code = (int) (VALUE))
+end_define
+
+begin_comment
+comment|/* When checking is enabled, errors will be generated if a tree node    is accessed incorrectly. The macros abort with a fatal error,    except for the *1 variants, which just return 0 on failure.  The    latter variants should only be used for combination checks, which    succeed when one of the checks succeed. The CHAIN_CHECK macro helps    defining such checks.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_CHECKING
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DO_CHECK
+parameter_list|(
+name|FUNC
+parameter_list|,
+name|t
+parameter_list|,
+name|param
+parameter_list|)
+value|FUNC (t, param, __FILE__, __LINE__, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_CHECK1
+parameter_list|(
+name|FUNC
+parameter_list|,
+name|t
+parameter_list|,
+name|param
+parameter_list|)
+value|FUNC (t, param, __FILE__, __LINE__, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAIN_CHECK
+parameter_list|(
+name|t
+parameter_list|,
+name|c1
+parameter_list|,
+name|c2
+parameter_list|)
+value|(c1 (t) ? t : c2 (t))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DO_CHECK
+parameter_list|(
+name|FUNC
+parameter_list|,
+name|t
+parameter_list|,
+name|param
+parameter_list|)
+value|(t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_CHECK1
+parameter_list|(
+name|FUNC
+parameter_list|,
+name|t
+parameter_list|,
+name|param
+parameter_list|)
+value|(t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAIN_CHECK
+parameter_list|(
+name|t
+parameter_list|,
+name|c1
+parameter_list|,
+name|c2
+parameter_list|)
+value|(t)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK
+parameter_list|(
+name|t
+parameter_list|,
+name|code
+parameter_list|)
+value|DO_CHECK (tree_check, t, code)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREE_CHECK1
+parameter_list|(
+name|t
+parameter_list|,
+name|code
+parameter_list|)
+value|DO_CHECK1 (tree_check, t, code)
+end_define
+
+begin_include
+include|#
+directive|include
+file|"tree-check.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|TYPE_CHECK
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK (tree_class_check, t, 't')
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_CHECK1
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK1 (tree_class_check, t, 't')
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_CHECK
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK (tree_class_check, t, 'd')
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_CHECK1
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK1 (tree_class_check, t, 'd')
+end_define
+
+begin_define
+define|#
+directive|define
+name|CST_CHECK
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK (tree_class_check, t, 'c')
+end_define
+
+begin_define
+define|#
+directive|define
+name|CST_CHECK1
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK1 (tree_class_check, t, 'c')
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_CHECK
+parameter_list|(
+name|t
+parameter_list|)
+value|DO_CHECK (expr_check, t, 0)
+end_define
+
+begin_comment
+comment|/* Chained checks. The last check has to succeed, the others may fail. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CST_OR_CONSTRUCTOR_CHECK
+parameter_list|(
+name|t
+parameter_list|)
+define|\
+value|CHAIN_CHECK (t, CST_CHECK1, CONSTRUCTOR_CHECK)
 end_define
 
 begin_comment
@@ -535,6 +816,20 @@ name|TYPE
 parameter_list|)
 define|\
 value|(TREE_CODE (TYPE) == POINTER_TYPE || TREE_CODE (TYPE) == REFERENCE_TYPE)
+end_define
+
+begin_comment
+comment|/* Nonzero if TYPE represents a type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_P
+parameter_list|(
+name|TYPE
+parameter_list|)
+value|(TREE_CODE_CLASS (TREE_CODE (TYPE)) == 't')
 end_define
 
 begin_escape
@@ -944,7 +1239,7 @@ name|TREE_INT_CST_LOW
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->int_cst.int_cst_low)
+value|(INTEGER_CST_CHECK (NODE)->int_cst.int_cst_low)
 end_define
 
 begin_define
@@ -954,7 +1249,7 @@ name|TREE_INT_CST_HIGH
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->int_cst.int_cst_high)
+value|(INTEGER_CST_CHECK (NODE)->int_cst.int_cst_high)
 end_define
 
 begin_define
@@ -997,6 +1292,12 @@ name|tree_common
 argument_list|)
 index|]
 decl_stmt|;
+name|struct
+name|rtx_def
+modifier|*
+name|rtl
+decl_stmt|;
+comment|/* acts as link to register transfer language 			   (rtl) info */
 name|HOST_WIDE_INT
 name|int_cst_low
 decl_stmt|;
@@ -1018,7 +1319,7 @@ name|TREE_CST_RTL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->real_cst.rtl)
+value|(CST_OR_CONSTRUCTOR_CHECK (NODE)->real_cst.rtl)
 end_define
 
 begin_comment
@@ -1036,7 +1337,7 @@ name|TREE_REAL_CST
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->real_cst.real_cst)
+value|(REAL_CST_CHECK (NODE)->real_cst.real_cst)
 end_define
 
 begin_include
@@ -1083,7 +1384,7 @@ name|TREE_STRING_LENGTH
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->string.length)
+value|(STRING_CST_CHECK (NODE)->string.length)
 end_define
 
 begin_define
@@ -1093,7 +1394,7 @@ name|TREE_STRING_POINTER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->string.pointer)
+value|(STRING_CST_CHECK (NODE)->string.pointer)
 end_define
 
 begin_struct
@@ -1138,7 +1439,7 @@ name|TREE_REALPART
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->complex.real)
+value|(COMPLEX_CST_CHECK (NODE)->complex.real)
 end_define
 
 begin_define
@@ -1148,7 +1449,7 @@ name|TREE_IMAGPART
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->complex.imag)
+value|(COMPLEX_CST_CHECK (NODE)->complex.imag)
 end_define
 
 begin_struct
@@ -1199,7 +1500,7 @@ name|IDENTIFIER_LENGTH
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->identifier.length)
+value|(IDENTIFIER_NODE_CHECK (NODE)->identifier.length)
 end_define
 
 begin_define
@@ -1209,7 +1510,7 @@ name|IDENTIFIER_POINTER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->identifier.pointer)
+value|(IDENTIFIER_NODE_CHECK (NODE)->identifier.pointer)
 end_define
 
 begin_struct
@@ -1248,7 +1549,7 @@ name|TREE_PURPOSE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->list.purpose)
+value|(TREE_LIST_CHECK (NODE)->list.purpose)
 end_define
 
 begin_define
@@ -1258,7 +1559,7 @@ name|TREE_VALUE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->list.value)
+value|(TREE_LIST_CHECK (NODE)->list.value)
 end_define
 
 begin_struct
@@ -1300,7 +1601,7 @@ name|TREE_VEC_LENGTH
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->vec.length)
+value|(TREE_VEC_CHECK (NODE)->vec.length)
 end_define
 
 begin_define
@@ -1312,7 +1613,7 @@ name|NODE
 parameter_list|,
 name|I
 parameter_list|)
-value|((NODE)->vec.a[I])
+value|(TREE_VEC_CHECK (NODE)->vec.a[I])
 end_define
 
 begin_define
@@ -1322,7 +1623,7 @@ name|TREE_VEC_END
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(&((NODE)->vec.a[(NODE)->vec.length]))
+value|((void) TREE_VEC_CHECK (NODE),&((NODE)->vec.a[(NODE)->vec.length]))
 end_define
 
 begin_struct
@@ -1379,7 +1680,17 @@ name|SAVE_EXPR_RTL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(*(struct rtx_def **)&(NODE)->exp.operands[2])
+value|(*(struct rtx_def **)&EXPR_CHECK (NODE)->exp.operands[2])
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVE_EXPR_NOPLACEHOLDER
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_UNSIGNED (NODE)
 end_define
 
 begin_comment
@@ -1393,7 +1704,7 @@ name|RTL_EXPR_SEQUENCE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(*(struct rtx_def **)&(NODE)->exp.operands[0])
+value|(*(struct rtx_def **)&EXPR_CHECK (NODE)->exp.operands[0])
 end_define
 
 begin_define
@@ -1403,7 +1714,7 @@ name|RTL_EXPR_RTL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(*(struct rtx_def **)&(NODE)->exp.operands[1])
+value|(*(struct rtx_def **)&EXPR_CHECK (NODE)->exp.operands[1])
 end_define
 
 begin_comment
@@ -1417,7 +1728,7 @@ name|CALL_EXPR_RTL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(*(struct rtx_def **)&(NODE)->exp.operands[2])
+value|(*(struct rtx_def **)&EXPR_CHECK (NODE)->exp.operands[2])
 end_define
 
 begin_comment
@@ -1447,7 +1758,7 @@ name|NODE
 parameter_list|,
 name|I
 parameter_list|)
-value|((NODE)->exp.operands[I])
+value|(EXPR_CHECK (NODE)->exp.operands[I])
 end_define
 
 begin_define
@@ -1457,7 +1768,96 @@ name|TREE_COMPLEXITY
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->exp.complexity)
+value|(EXPR_CHECK (NODE)->exp.complexity)
+end_define
+
+begin_comment
+comment|/* In expression with file location information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_NODE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND((NODE), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_FILENAME
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(IDENTIFIER_POINTER ((NODE)->common.chain))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_FILENAME_NODE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.chain)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_LINENO
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(EXPR_CHECK (NODE)->exp.complexity>> 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_COLNO
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(EXPR_CHECK (NODE)->exp.complexity& 0xfff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_LINECOL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(EXPR_CHECK (NODE)->exp.complexity)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_SET_LINECOL
+parameter_list|(
+name|NODE
+parameter_list|,
+name|LINE
+parameter_list|,
+name|COL
+parameter_list|)
+define|\
+value|(EXPR_WFL_LINECOL(NODE) = ((LINE)<< 12) | ((COL)& 0xfff))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPR_WFL_EMIT_LINE_NOTE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|((NODE)->common.lang_flag_0)
 end_define
 
 begin_struct
@@ -1503,7 +1903,7 @@ name|BLOCK_VARS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.vars)
+value|(BLOCK_CHECK (NODE)->block.vars)
 end_define
 
 begin_define
@@ -1513,7 +1913,7 @@ name|BLOCK_TYPE_TAGS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.type_tags)
+value|(BLOCK_CHECK (NODE)->block.type_tags)
 end_define
 
 begin_define
@@ -1523,7 +1923,7 @@ name|BLOCK_SUBBLOCKS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.subblocks)
+value|(BLOCK_CHECK (NODE)->block.subblocks)
 end_define
 
 begin_define
@@ -1533,7 +1933,7 @@ name|BLOCK_SUPERCONTEXT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.supercontext)
+value|(BLOCK_CHECK (NODE)->block.supercontext)
 end_define
 
 begin_comment
@@ -1557,7 +1957,7 @@ name|BLOCK_ABSTRACT_ORIGIN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.abstract_origin)
+value|(BLOCK_CHECK (NODE)->block.abstract_origin)
 end_define
 
 begin_define
@@ -1567,7 +1967,7 @@ name|BLOCK_ABSTRACT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.abstract_flag)
+value|(BLOCK_CHECK (NODE)->block.abstract_flag)
 end_define
 
 begin_define
@@ -1577,7 +1977,63 @@ name|BLOCK_END_NOTE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.end_note)
+value|(BLOCK_CHECK (NODE)->block.end_note)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this block has separate live range regions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_LIVE_RANGE_FLAG
+parameter_list|(
+name|NOTE
+parameter_list|)
+value|(BLOCK_CHECK (NOTE)->block.live_range_flag)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this block has a variable declared in it    that is split into separate live ranges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_LIVE_RANGE_VAR_FLAG
+parameter_list|(
+name|NOTE
+parameter_list|)
+value|(BLOCK_CHECK (NOTE)->block.live_range_var_flag)
+end_define
+
+begin_comment
+comment|/* Index for marking the start of the block for live ranges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_LIVE_RANGE_START
+parameter_list|(
+name|NOTE
+parameter_list|)
+value|(BLOCK_CHECK (NOTE)->block.live_range_start)
+end_define
+
+begin_comment
+comment|/* Index for marking the end of the block for live ranges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLOCK_LIVE_RANGE_END
+parameter_list|(
+name|NOTE
+parameter_list|)
+value|(BLOCK_CHECK (NOTE)->block.live_range_end)
 end_define
 
 begin_comment
@@ -1591,7 +2047,7 @@ name|BLOCK_HANDLER_BLOCK
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->block.handler_block_flag)
+value|(BLOCK_CHECK (NODE)->block.handler_block_flag)
 end_define
 
 begin_struct
@@ -1615,6 +2071,16 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|abstract_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|live_range_flag
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|live_range_var_flag
 range|:
 literal|1
 decl_stmt|;
@@ -1648,6 +2114,12 @@ name|rtx_def
 modifier|*
 name|end_note
 decl_stmt|;
+name|int
+name|live_range_start
+decl_stmt|;
+name|int
+name|live_range_end
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1670,7 +2142,7 @@ name|TYPE_UID
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.uid)
+value|(TYPE_CHECK (NODE)->type.uid)
 end_define
 
 begin_define
@@ -1680,7 +2152,17 @@ name|TYPE_SIZE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.size)
+value|(TYPE_CHECK (NODE)->type.size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_SIZE_UNIT
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK (NODE)->type.size_unit)
 end_define
 
 begin_define
@@ -1690,7 +2172,7 @@ name|TYPE_MODE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.mode)
+value|(TYPE_CHECK (NODE)->type.mode)
 end_define
 
 begin_define
@@ -1700,7 +2182,7 @@ name|TYPE_VALUES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.values)
+value|(TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -1710,7 +2192,7 @@ name|TYPE_DOMAIN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.values)
+value|(TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -1720,7 +2202,7 @@ name|TYPE_FIELDS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.values)
+value|(TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -1730,7 +2212,7 @@ name|TYPE_METHODS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.maxval)
+value|(TYPE_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -1740,7 +2222,7 @@ name|TYPE_VFIELD
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.minval)
+value|(TYPE_CHECK (NODE)->type.minval)
 end_define
 
 begin_define
@@ -1750,7 +2232,7 @@ name|TYPE_ARG_TYPES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.values)
+value|(TYPE_CHECK (NODE)->type.values)
 end_define
 
 begin_define
@@ -1760,7 +2242,7 @@ name|TYPE_METHOD_BASETYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.maxval)
+value|(TYPE_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -1770,7 +2252,7 @@ name|TYPE_OFFSET_BASETYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.maxval)
+value|(TYPE_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -1780,7 +2262,7 @@ name|TYPE_POINTER_TO
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.pointer_to)
+value|(TYPE_CHECK (NODE)->type.pointer_to)
 end_define
 
 begin_define
@@ -1790,7 +2272,7 @@ name|TYPE_REFERENCE_TO
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.reference_to)
+value|(TYPE_CHECK (NODE)->type.reference_to)
 end_define
 
 begin_define
@@ -1800,7 +2282,7 @@ name|TYPE_MIN_VALUE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.minval)
+value|(TYPE_CHECK (NODE)->type.minval)
 end_define
 
 begin_define
@@ -1810,7 +2292,7 @@ name|TYPE_MAX_VALUE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.maxval)
+value|(TYPE_CHECK (NODE)->type.maxval)
 end_define
 
 begin_define
@@ -1820,7 +2302,7 @@ name|TYPE_PRECISION
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.precision)
+value|(TYPE_CHECK (NODE)->type.precision)
 end_define
 
 begin_define
@@ -1830,7 +2312,7 @@ name|TYPE_SYMTAB_ADDRESS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.symtab.address)
+value|(TYPE_CHECK (NODE)->type.symtab.address)
 end_define
 
 begin_define
@@ -1840,7 +2322,7 @@ name|TYPE_SYMTAB_POINTER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.symtab.pointer)
+value|(TYPE_CHECK (NODE)->type.symtab.pointer)
 end_define
 
 begin_define
@@ -1850,7 +2332,7 @@ name|TYPE_NAME
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.name)
+value|(TYPE_CHECK (NODE)->type.name)
 end_define
 
 begin_define
@@ -1860,7 +2342,7 @@ name|TYPE_NEXT_VARIANT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.next_variant)
+value|(TYPE_CHECK (NODE)->type.next_variant)
 end_define
 
 begin_define
@@ -1870,7 +2352,7 @@ name|TYPE_MAIN_VARIANT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.main_variant)
+value|(TYPE_CHECK (NODE)->type.main_variant)
 end_define
 
 begin_define
@@ -1880,7 +2362,7 @@ name|TYPE_BINFO
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.binfo)
+value|(TYPE_CHECK (NODE)->type.binfo)
 end_define
 
 begin_define
@@ -1890,7 +2372,7 @@ name|TYPE_NONCOPIED_PARTS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.noncopied_parts)
+value|(TYPE_CHECK (NODE)->type.noncopied_parts)
 end_define
 
 begin_define
@@ -1900,7 +2382,7 @@ name|TYPE_CONTEXT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.context)
+value|(TYPE_CHECK (NODE)->type.context)
 end_define
 
 begin_define
@@ -1910,7 +2392,7 @@ name|TYPE_OBSTACK
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.obstack)
+value|(TYPE_CHECK (NODE)->type.obstack)
 end_define
 
 begin_define
@@ -1920,7 +2402,36 @@ name|TYPE_LANG_SPECIFIC
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_specific)
+value|(TYPE_CHECK (NODE)->type.lang_specific)
+end_define
+
+begin_comment
+comment|/* The (language-specific) typed-based alias set for this type.    Objects whose TYPE_ALIAS_SETs are different cannot alias each    other.  If the TYPE_ALIAS_SET is -1, no alias set has yet been    assigned to this type.  If the TYPE_ALIAS_SET is 0, objects of this    type can alias objects of any type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_ALIAS_SET
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TYPE_CHECK (NODE)->type.alias_set)
+end_define
+
+begin_comment
+comment|/* Nonzero iff the typed-based alias set for this type has been    calculated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_ALIAS_SET_KNOWN_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TYPE_CHECK (NODE)->type.alias_set != -1)
 end_define
 
 begin_comment
@@ -1934,7 +2445,7 @@ name|TYPE_ATTRIBUTES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.attributes)
+value|(TYPE_CHECK (NODE)->type.attributes)
 end_define
 
 begin_comment
@@ -1948,7 +2459,7 @@ name|TYPE_ALIGN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.align)
+value|(TYPE_CHECK (NODE)->type.align)
 end_define
 
 begin_define
@@ -1972,7 +2483,7 @@ name|TYPE_NO_FORCE_BLK
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.no_force_blk_flag)
+value|(TYPE_CHECK (NODE)->type.no_force_blk_flag)
 end_define
 
 begin_comment
@@ -2014,7 +2525,7 @@ name|TYPE_LANG_FLAG_0
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_0)
+value|(TYPE_CHECK (NODE)->type.lang_flag_0)
 end_define
 
 begin_define
@@ -2024,7 +2535,7 @@ name|TYPE_LANG_FLAG_1
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_1)
+value|(TYPE_CHECK (NODE)->type.lang_flag_1)
 end_define
 
 begin_define
@@ -2034,7 +2545,7 @@ name|TYPE_LANG_FLAG_2
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_2)
+value|(TYPE_CHECK (NODE)->type.lang_flag_2)
 end_define
 
 begin_define
@@ -2044,7 +2555,7 @@ name|TYPE_LANG_FLAG_3
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_3)
+value|(TYPE_CHECK (NODE)->type.lang_flag_3)
 end_define
 
 begin_define
@@ -2054,7 +2565,7 @@ name|TYPE_LANG_FLAG_4
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_4)
+value|(TYPE_CHECK (NODE)->type.lang_flag_4)
 end_define
 
 begin_define
@@ -2064,7 +2575,7 @@ name|TYPE_LANG_FLAG_5
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_5)
+value|(TYPE_CHECK (NODE)->type.lang_flag_5)
 end_define
 
 begin_define
@@ -2074,7 +2585,7 @@ name|TYPE_LANG_FLAG_6
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.lang_flag_6)
+value|(TYPE_CHECK (NODE)->type.lang_flag_6)
 end_define
 
 begin_comment
@@ -2088,7 +2599,21 @@ name|TYPE_STRING_FLAG
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.string_flag)
+value|(TYPE_CHECK (NODE)->type.string_flag)
+end_define
+
+begin_comment
+comment|/* If non-NULL, this is a upper bound of the size (in bytes) of an    object of the given ARRAY_TYPE.  This allows temporaries to be allocated. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_ARRAY_MAX_SIZE
+parameter_list|(
+name|ARRAY_TYPE
+parameter_list|)
+value|TYPE_MAX_VALUE (ARRAY_TYPE)
 end_define
 
 begin_comment
@@ -2102,7 +2627,7 @@ name|TYPE_NEEDS_CONSTRUCTING
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.needs_constructing_flag)
+value|(TYPE_CHECK (NODE)->type.needs_constructing_flag)
 end_define
 
 begin_comment
@@ -2116,11 +2641,11 @@ name|TYPE_TRANSPARENT_UNION
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.transparent_union_flag)
+value|(TYPE_CHECK (NODE)->type.transparent_union_flag)
 end_define
 
 begin_comment
-comment|/* Indicated that objects of this type should be layed out in as    compact a way as possible.  */
+comment|/* Indicated that objects of this type should be laid out in as    compact a way as possible.  */
 end_comment
 
 begin_define
@@ -2130,7 +2655,7 @@ name|TYPE_PACKED
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->type.packed_flag)
+value|(TYPE_CHECK (NODE)->type.packed_flag)
 end_define
 
 begin_struct
@@ -2156,6 +2681,11 @@ name|union
 name|tree_node
 modifier|*
 name|size
+decl_stmt|;
+name|union
+name|tree_node
+modifier|*
+name|size_unit
 decl_stmt|;
 name|union
 name|tree_node
@@ -2319,6 +2849,9 @@ name|obstack
 modifier|*
 name|obstack
 decl_stmt|;
+name|int
+name|alias_set
+decl_stmt|;
 comment|/* Points to a structure whose details depend on the language in use.  */
 name|struct
 name|lang_type
@@ -2381,7 +2914,7 @@ name|BINFO_OFFSET_ZEROP
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(BINFO_OFFSET (NODE) == integer_zero_node)
+value|(integer_zerop (BINFO_OFFSET (NODE)))
 end_define
 
 begin_comment
@@ -2457,20 +2990,6 @@ value|TREE_VEC_ELT (TYPE_BINFO (NODE), 4)
 end_define
 
 begin_comment
-comment|/* For a BINFO record describing an inheritance, this yields a pointer    to the artificial FIELD_DECL node which contains the "virtual base    class pointer" for the given inheritance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BINFO_VPTR_FIELD
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_VEC_ELT ((NODE), 5)
-end_define
-
-begin_comment
 comment|/* Accessor macro to get to the Nth basetype of this basetype.  */
 end_comment
 
@@ -2496,6 +3015,44 @@ parameter_list|,
 name|N
 parameter_list|)
 value|BINFO_TYPE (TREE_VEC_ELT (BINFO_BASETYPES (TYPE_BINFO (NODE)), (N)))
+end_define
+
+begin_comment
+comment|/* For a BINFO record describing an inheritance, this yields a pointer    to the artificial FIELD_DECL node which contains the "virtual base    class pointer" for the given inheritance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINFO_VPTR_FIELD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_VEC_ELT ((NODE), 5)
+end_define
+
+begin_comment
+comment|/* The size of a base class subobject of this type.  Not all frontends    currently allocate the space for this field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BINFO_SIZE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_VEC_ELT ((NODE), 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_BINFO_SIZE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|BINFO_SIZE (TYPE_BINFO (NODE))
 end_define
 
 begin_comment
@@ -2530,7 +3087,7 @@ name|DECL_NAME
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.name)
+value|(DECL_CHECK (NODE)->decl.name)
 end_define
 
 begin_comment
@@ -2544,7 +3101,7 @@ name|DECL_ASSEMBLER_NAME
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.assembler_name)
+value|(DECL_CHECK (NODE)->decl.assembler_name)
 end_define
 
 begin_comment
@@ -2558,11 +3115,11 @@ name|DECL_SECTION_NAME
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.section_name)
+value|(DECL_CHECK (NODE)->decl.section_name)
 end_define
 
 begin_comment
-comment|/*  For FIELD_DECLs, this is the     RECORD_TYPE, UNION_TYPE, or QUAL_UNION_TYPE node that the field is     a member of.  For VAR_DECL, PARM_DECL, FUNCTION_DECL, LABEL_DECL,     and CONST_DECL nodes, this points to the FUNCTION_DECL for the     containing function, or else yields NULL_TREE if the given decl has "file scope".  */
+comment|/*  For FIELD_DECLs, this is the     RECORD_TYPE, UNION_TYPE, or QUAL_UNION_TYPE node that the field is     a member of.  For VAR_DECL, PARM_DECL, FUNCTION_DECL, LABEL_DECL,     and CONST_DECL nodes, this points to either the FUNCTION_DECL for the     containing function, the RECORD_TYPE or UNION_TYPE for the containing     type, or NULL_TREE if the given decl has "file scope".  */
 end_comment
 
 begin_define
@@ -2572,7 +3129,7 @@ name|DECL_CONTEXT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.context)
+value|(DECL_CHECK (NODE)->decl.context)
 end_define
 
 begin_define
@@ -2582,7 +3139,7 @@ name|DECL_FIELD_CONTEXT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.context)
+value|(DECL_CHECK (NODE)->decl.context)
 end_define
 
 begin_comment
@@ -2596,7 +3153,7 @@ name|DECL_MACHINE_ATTRIBUTES
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.machine_attributes)
+value|(DECL_CHECK (NODE)->decl.machine_attributes)
 end_define
 
 begin_comment
@@ -2610,7 +3167,7 @@ name|DECL_FIELD_BITPOS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.arguments)
+value|(DECL_CHECK (NODE)->decl.arguments)
 end_define
 
 begin_comment
@@ -2624,7 +3181,7 @@ name|DECL_BIT_FIELD_TYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.result)
+value|(DECL_CHECK (NODE)->decl.result)
 end_define
 
 begin_comment
@@ -2642,7 +3199,7 @@ name|DECL_ARGUMENTS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.arguments)
+value|(DECL_CHECK (NODE)->decl.arguments)
 end_define
 
 begin_comment
@@ -2656,7 +3213,21 @@ name|DECL_RESULT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.result)
+value|(DECL_CHECK (NODE)->decl.result)
+end_define
+
+begin_comment
+comment|/* For a TYPE_DECL, holds the "original" type.  (TREE_TYPE has the copy.) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ORIGINAL_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.result)
 end_define
 
 begin_comment
@@ -2670,7 +3241,7 @@ name|DECL_ARG_TYPE_AS_WRITTEN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.result)
+value|(DECL_CHECK (NODE)->decl.result)
 end_define
 
 begin_comment
@@ -2684,7 +3255,7 @@ name|DECL_INITIAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.initial)
+value|(DECL_CHECK (NODE)->decl.initial)
 end_define
 
 begin_comment
@@ -2698,7 +3269,7 @@ name|DECL_ARG_TYPE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.initial)
+value|(DECL_CHECK (NODE)->decl.initial)
 end_define
 
 begin_comment
@@ -2716,7 +3287,7 @@ name|DECL_QUALIFIER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.initial)
+value|(DECL_CHECK (NODE)->decl.initial)
 end_define
 
 begin_comment
@@ -2730,7 +3301,7 @@ name|DECL_SOURCE_FILE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.filename)
+value|(DECL_CHECK (NODE)->decl.filename)
 end_define
 
 begin_define
@@ -2740,7 +3311,7 @@ name|DECL_SOURCE_LINE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.linenum)
+value|(DECL_CHECK (NODE)->decl.linenum)
 end_define
 
 begin_comment
@@ -2754,7 +3325,7 @@ name|DECL_SIZE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.size)
+value|(DECL_CHECK (NODE)->decl.size)
 end_define
 
 begin_comment
@@ -2768,7 +3339,7 @@ name|DECL_ALIGN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.frame_size.u)
+value|(DECL_CHECK (NODE)->decl.frame_size.u)
 end_define
 
 begin_comment
@@ -2782,7 +3353,7 @@ name|DECL_MODE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.mode)
+value|(DECL_CHECK (NODE)->decl.mode)
 end_define
 
 begin_comment
@@ -2796,7 +3367,21 @@ name|DECL_RTL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.rtl)
+value|(DECL_CHECK (NODE)->decl.rtl)
+end_define
+
+begin_comment
+comment|/* Holds an INSN_LIST of all of the live ranges in which the variable    has been moved to a possibly different register.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_LIVE_RANGE_RTL
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.live_range_rtl)
 end_define
 
 begin_comment
@@ -2810,7 +3395,7 @@ name|DECL_INCOMING_RTL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.saved_insns.r)
+value|(DECL_CHECK (NODE)->decl.saved_insns.r)
 end_define
 
 begin_comment
@@ -2824,7 +3409,7 @@ name|DECL_SAVED_INSNS
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.saved_insns.r)
+value|(DECL_CHECK (NODE)->decl.saved_insns.r)
 end_define
 
 begin_comment
@@ -2838,7 +3423,7 @@ name|DECL_FRAME_SIZE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.frame_size.i)
+value|(DECL_CHECK (NODE)->decl.frame_size.i)
 end_define
 
 begin_comment
@@ -2852,7 +3437,7 @@ name|DECL_FUNCTION_CODE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.frame_size.f)
+value|(DECL_CHECK (NODE)->decl.frame_size.f)
 end_define
 
 begin_define
@@ -2864,7 +3449,7 @@ name|NODE
 parameter_list|,
 name|VAL
 parameter_list|)
-value|((NODE)->decl.frame_size.f = (VAL))
+value|(DECL_CHECK (NODE)->decl.frame_size.f = (VAL))
 end_define
 
 begin_comment
@@ -2878,7 +3463,7 @@ name|DECL_FIELD_SIZE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.saved_insns.i)
+value|(DECL_CHECK (NODE)->decl.saved_insns.i)
 end_define
 
 begin_comment
@@ -2892,7 +3477,7 @@ name|DECL_VINDEX
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.vindex)
+value|(DECL_CHECK (NODE)->decl.vindex)
 end_define
 
 begin_comment
@@ -2906,7 +3491,7 @@ name|DECL_FCONTEXT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.vindex)
+value|(DECL_CHECK (NODE)->decl.vindex)
 end_define
 
 begin_comment
@@ -2920,11 +3505,11 @@ name|DECL_UID
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.uid)
+value|(DECL_CHECK (NODE)->decl.uid)
 end_define
 
 begin_comment
-comment|/* For any sort of a ..._DECL node, this points to the original (abstract)    decl node which this decl is an instance of, or else it is NULL indicating    that this decl is not an instance of some other decl.  */
+comment|/* For any sort of a ..._DECL node, this points to the original (abstract)    decl node which this decl is an instance of, or else it is NULL indicating    that this decl is not an instance of some other decl.  For example,    in a nested declaration of an inline function, this points back to the    definition.  */
 end_comment
 
 begin_define
@@ -2934,7 +3519,7 @@ name|DECL_ABSTRACT_ORIGIN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.abstract_origin)
+value|(DECL_CHECK (NODE)->decl.abstract_origin)
 end_define
 
 begin_comment
@@ -2962,7 +3547,7 @@ name|DECL_IGNORED_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.ignored_flag)
+value|(DECL_CHECK (NODE)->decl.ignored_flag)
 end_define
 
 begin_comment
@@ -2976,7 +3561,7 @@ name|DECL_ABSTRACT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.abstract_flag)
+value|(DECL_CHECK (NODE)->decl.abstract_flag)
 end_define
 
 begin_comment
@@ -2990,7 +3575,7 @@ name|DECL_IN_SYSTEM_HEADER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.in_system_header_flag)
+value|(DECL_CHECK (NODE)->decl.in_system_header_flag)
 end_define
 
 begin_comment
@@ -3004,7 +3589,7 @@ name|DECL_COMMON
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.common_flag)
+value|(DECL_CHECK (NODE)->decl.common_flag)
 end_define
 
 begin_comment
@@ -3018,7 +3603,7 @@ name|DECL_LANG_SPECIFIC
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_specific)
+value|(DECL_CHECK (NODE)->decl.lang_specific)
 end_define
 
 begin_comment
@@ -3032,7 +3617,7 @@ name|DECL_EXTERNAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.external_flag)
+value|(DECL_CHECK (NODE)->decl.external_flag)
 end_define
 
 begin_comment
@@ -3046,11 +3631,11 @@ name|TYPE_DECL_SUPPRESS_DEBUG
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.external_flag)
+value|(DECL_CHECK (NODE)->decl.external_flag)
 end_define
 
 begin_comment
-comment|/* In VAR_DECL and PARM_DECL nodes, nonzero means declared `register'.    In LABEL_DECL nodes, nonzero means that an error message about    jumping into such a binding contour has been printed for this label.  */
+comment|/* In VAR_DECL and PARM_DECL nodes, nonzero means declared `register'.  */
 end_comment
 
 begin_define
@@ -3060,7 +3645,21 @@ name|DECL_REGISTER
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.regdecl_flag)
+value|(DECL_CHECK (NODE)->decl.regdecl_flag)
+end_define
+
+begin_comment
+comment|/* In LABEL_DECL nodes, nonzero means that an error message about    jumping into such a binding contour has been printed for this label.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ERROR_ISSUED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.regdecl_flag)
 end_define
 
 begin_comment
@@ -3074,7 +3673,21 @@ name|DECL_PACKED
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.regdecl_flag)
+value|(DECL_CHECK (NODE)->decl.regdecl_flag)
+end_define
+
+begin_comment
+comment|/* In a FUNCTION_DECL with a non-zero DECL_CONTEXT, indicates that a    static chain is not needed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NO_STATIC_CHAIN
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.regdecl_flag)
 end_define
 
 begin_comment
@@ -3088,7 +3701,7 @@ name|DECL_NONLOCAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.nonlocal_flag)
+value|(DECL_CHECK (NODE)->decl.nonlocal_flag)
 end_define
 
 begin_comment
@@ -3102,7 +3715,7 @@ name|DECL_INLINE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.inline_flag)
+value|(DECL_CHECK (NODE)->decl.inline_flag)
 end_define
 
 begin_comment
@@ -3130,7 +3743,7 @@ name|DECL_BIT_FIELD
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.bit_field_flag)
+value|(DECL_CHECK (NODE)->decl.bit_field_flag)
 end_define
 
 begin_comment
@@ -3144,7 +3757,7 @@ name|DECL_TOO_LATE
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.bit_field_flag)
+value|(DECL_CHECK (NODE)->decl.bit_field_flag)
 end_define
 
 begin_comment
@@ -3158,7 +3771,7 @@ name|DECL_BUILT_IN
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.bit_field_flag)
+value|(DECL_CHECK (NODE)->decl.bit_field_flag)
 end_define
 
 begin_comment
@@ -3172,7 +3785,7 @@ name|DECL_IN_TEXT_SECTION
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.bit_field_flag)
+value|(DECL_CHECK (NODE)->decl.bit_field_flag)
 end_define
 
 begin_comment
@@ -3186,7 +3799,7 @@ name|DECL_VIRTUAL_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.virtual_flag)
+value|(DECL_CHECK (NODE)->decl.virtual_flag)
 end_define
 
 begin_comment
@@ -3200,7 +3813,7 @@ name|DECL_DEFER_OUTPUT
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.defer_output)
+value|(DECL_CHECK (NODE)->decl.defer_output)
 end_define
 
 begin_comment
@@ -3214,7 +3827,7 @@ name|DECL_TRANSPARENT_UNION
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.transparent_union)
+value|(DECL_CHECK (NODE)->decl.transparent_union)
 end_define
 
 begin_comment
@@ -3228,7 +3841,7 @@ name|DECL_STATIC_CONSTRUCTOR
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.static_ctor_flag)
+value|(DECL_CHECK (NODE)->decl.static_ctor_flag)
 end_define
 
 begin_define
@@ -3238,7 +3851,7 @@ name|DECL_STATIC_DESTRUCTOR
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.static_dtor_flag)
+value|(DECL_CHECK (NODE)->decl.static_dtor_flag)
 end_define
 
 begin_comment
@@ -3252,7 +3865,7 @@ name|DECL_ARTIFICIAL
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.artificial_flag)
+value|(DECL_CHECK (NODE)->decl.artificial_flag)
 end_define
 
 begin_comment
@@ -3266,7 +3879,21 @@ name|DECL_WEAK
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.weak_flag)
+value|(DECL_CHECK (NODE)->decl.weak_flag)
+end_define
+
+begin_comment
+comment|/* Used in TREE_PUBLIC decls to indicate that copies of this DECL in    multiple translation units should be merged.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_ONE_ONLY
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.transparent_union)
 end_define
 
 begin_comment
@@ -3280,7 +3907,7 @@ name|DECL_LANG_FLAG_0
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_0)
+value|(DECL_CHECK (NODE)->decl.lang_flag_0)
 end_define
 
 begin_define
@@ -3290,7 +3917,7 @@ name|DECL_LANG_FLAG_1
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_1)
+value|(DECL_CHECK (NODE)->decl.lang_flag_1)
 end_define
 
 begin_define
@@ -3300,7 +3927,7 @@ name|DECL_LANG_FLAG_2
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_2)
+value|(DECL_CHECK (NODE)->decl.lang_flag_2)
 end_define
 
 begin_define
@@ -3310,7 +3937,7 @@ name|DECL_LANG_FLAG_3
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_3)
+value|(DECL_CHECK (NODE)->decl.lang_flag_3)
 end_define
 
 begin_define
@@ -3320,7 +3947,7 @@ name|DECL_LANG_FLAG_4
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_4)
+value|(DECL_CHECK (NODE)->decl.lang_flag_4)
 end_define
 
 begin_define
@@ -3330,7 +3957,7 @@ name|DECL_LANG_FLAG_5
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_5)
+value|(DECL_CHECK (NODE)->decl.lang_flag_5)
 end_define
 
 begin_define
@@ -3340,7 +3967,7 @@ name|DECL_LANG_FLAG_6
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_6)
+value|(DECL_CHECK (NODE)->decl.lang_flag_6)
 end_define
 
 begin_define
@@ -3350,7 +3977,21 @@ name|DECL_LANG_FLAG_7
 parameter_list|(
 name|NODE
 parameter_list|)
-value|((NODE)->decl.lang_flag_7)
+value|(DECL_CHECK (NODE)->decl.lang_flag_7)
+end_define
+
+begin_comment
+comment|/* Used to indicate that the pointer to this DECL cannot be treated as    an address constant.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_NON_ADDR_CONST_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_CHECK (NODE)->decl.non_addr_const_p)
 end_define
 
 begin_struct
@@ -3374,14 +4015,14 @@ decl_stmt|;
 name|int
 name|linenum
 decl_stmt|;
+name|unsigned
+name|int
+name|uid
+decl_stmt|;
 name|union
 name|tree_node
 modifier|*
 name|size
-decl_stmt|;
-name|unsigned
-name|int
-name|uid
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3522,6 +4163,28 @@ name|lang_flag_7
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|non_addr_const_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* For a FUNCTION_DECL, if inline, this is the size of frame needed.      If built-in, this is the code for which built-in function.      For other kinds of decls, this is DECL_ALIGN.  */
+union|union
+block|{
+name|int
+name|i
+decl_stmt|;
+name|unsigned
+name|int
+name|u
+decl_stmt|;
+name|enum
+name|built_in_function
+name|f
+decl_stmt|;
+block|}
+name|frame_size
+union|;
 name|union
 name|tree_node
 modifier|*
@@ -3573,24 +4236,12 @@ modifier|*
 name|rtl
 decl_stmt|;
 comment|/* acts as link to register transfer language 				   (rtl) info */
-comment|/* For a FUNCTION_DECL, if inline, this is the size of frame needed.      If built-in, this is the code for which built-in function.      For other kinds of decls, this is DECL_ALIGN.  */
-union|union
-block|{
-name|int
-name|i
+name|struct
+name|rtx_def
+modifier|*
+name|live_range_rtl
 decl_stmt|;
-name|unsigned
-name|int
-name|u
-decl_stmt|;
-name|enum
-name|built_in_function
-name|f
-decl_stmt|;
-block|}
-name|frame_size
-union|;
-comment|/* For FUNCTION_DECLs: points to insn that constitutes its definition      on the permanent obstack.  For any other kind of decl, this is the      alignment.  */
+comment|/* For FUNCTION_DECLs: points to insn that constitutes its definition      on the permanent obstack.  For FIELD_DECL, this is DECL_FIELD_SIZE.  */
 union|union
 block|{
 name|struct
@@ -3598,7 +4249,7 @@ name|rtx_def
 modifier|*
 name|r
 decl_stmt|;
-name|int
+name|HOST_WIDE_INT
 name|i
 decl_stmt|;
 block|}
@@ -3682,204 +4333,14 @@ block|}
 union|;
 end_union
 
-begin_comment
-comment|/* Add prototype support.  */
-end_comment
+begin_escape
+end_escape
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PROTO
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PROTOTYPES
-argument_list|)
-condition|?
-name|USE_PROTOTYPES
-expr|:
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VPROTO
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PVPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|VPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|ARGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|va_list
-parameter_list|,
-name|var
-parameter_list|)
-value|va_start(va_list,var)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PVPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|VPROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|(va_alist) va_dcl
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_START
-parameter_list|(
-name|va_list
-parameter_list|,
-name|var
-parameter_list|)
-value|va_start(va_list)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STDIO_PROTO
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BUFSIZ
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|STDIO_PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|PROTO(ARGS)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STDIO_PROTO
-parameter_list|(
-name|ARGS
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"gansidecl.h"
+end_include
 
 begin_define
 define|#
@@ -3887,100 +4348,6 @@ directive|define
 name|NULL_TREE
 value|(tree) NULL
 end_define
-
-begin_comment
-comment|/* Define a generic NULL if one hasn't already been defined.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GENERIC_PTR
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PROTOTYPES
-argument_list|)
-condition|?
-name|USE_PROTOTYPES
-expr|:
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|GENERIC_PTR
-value|void *
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GENERIC_PTR
-value|char *
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL_PTR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL_PTR
-value|((GENERIC_PTR)0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* The following functions accept a wide integer argument.  Rather than    having to cast on every function call, we use a macro instead, that is    defined here and in rtl.h.  */
@@ -3999,7 +4366,7 @@ name|exact_log2
 parameter_list|(
 name|N
 parameter_list|)
-value|exact_log2_wide ((HOST_WIDE_INT) (N))
+value|exact_log2_wide ((unsigned HOST_WIDE_INT) (N))
 end_define
 
 begin_define
@@ -4009,13 +4376,41 @@ name|floor_log2
 parameter_list|(
 name|N
 parameter_list|)
-value|floor_log2_wide ((HOST_WIDE_INT) (N))
+value|floor_log2_wide ((unsigned HOST_WIDE_INT) (N))
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|exact_log2_wide
+name|PROTO
+argument_list|(
+operator|(
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|floor_log2_wide
+name|PROTO
+argument_list|(
+operator|(
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -4028,7 +4423,7 @@ comment|/* At present, don't prototype xrealloc, since all of the callers don't 
 end_comment
 
 begin_else
-unit|extern char *xmalloc			PROTO((size_t)); extern char *xrealloc			PROTO((void *, size_t));
+unit|extern char *xmalloc			PROTO((size_t)); extern char *xcalloc			PROTO((size_t, size_t)); extern char *xrealloc			PROTO((void *, size_t));
 else|#
 directive|else
 end_else
@@ -4046,6 +4441,15 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
+name|xcalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
 name|xrealloc
 parameter_list|()
 function_decl|;
@@ -4055,6 +4459,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|xstrdup
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -4100,13 +4519,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|free
+name|char
+modifier|*
+name|expralloc
 name|PROTO
 argument_list|(
 operator|(
-name|void
-operator|*
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4189,6 +4608,24 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|get_identifier
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If an identifier with the name TEXT (a null-terminated string) has    previously been referred to, return that node; otherwise return    NULL_TREE.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|maybe_get_identifier
 name|PROTO
 argument_list|(
 operator|(
@@ -4321,6 +4758,8 @@ operator|(
 name|tree
 operator|,
 name|tree
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4393,6 +4832,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
+name|build_expr_list
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
 name|build_decl
 name|PROTO
 argument_list|(
@@ -4429,6 +4883,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|build_expr_wfl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Construct various nodes representing data types.  */
 end_comment
@@ -4454,6 +4928,19 @@ name|PROTO
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_sizetype
+name|PROTO
+argument_list|(
+operator|(
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4773,17 +5260,39 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_inner_array_type
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* From expmed.c.  Since rtl.h is included after tree.h, we can't    put the prototype here.  Rtl.h does declare the prototype if    tree.h had been included.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|tree
 name|make_tree
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -4822,11 +5331,82 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|merge_machine_decl_attributes
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|merge_machine_type_attributes
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Split a list of declspecs and attributes into two.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|split_specs_attrs
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|*
+operator|,
+name|tree
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Strip attributes from a list of combined specs and attrs.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|strip_attrs
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Return 1 if an attribute and its arguments are valid for a decl or type.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|valid_machine_attribute
 name|PROTO
@@ -4849,6 +5429,7 @@ comment|/* Given a tree node and a string, return non-zero if the tree node is  
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|is_attribute_p
 name|PROTO
@@ -4868,6 +5449,7 @@ comment|/* Given an attribute name and a list of attributes, return the list ele
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|tree
 name|lookup_attribute
 name|PROTO
@@ -4875,6 +5457,25 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Given two attributes lists, return a list of their union.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|merge_attributes
+name|PROTO
+argument_list|(
+operator|(
+name|tree
 operator|,
 name|tree
 operator|)
@@ -5035,7 +5636,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|HOST_WIDE_INT
 name|int_size_in_bytes
 name|PROTO
 argument_list|(
@@ -5067,16 +5668,76 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
-name|size_int
+name|ssize_binop
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|tree_code
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|size_int_wide
 name|PROTO
 argument_list|(
 operator|(
 name|unsigned
 name|HOST_WIDE_INT
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|size_int
+parameter_list|(
+name|L
+parameter_list|)
+value|size_int_2 ((L), 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bitsize_int
+parameter_list|(
+name|L
+parameter_list|,
+name|H
+parameter_list|)
+value|size_int_2 ((L), (H), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|size_int_2
+parameter_list|(
+name|L
+parameter_list|,
+name|H
+parameter_list|,
+name|T
+parameter_list|)
+define|\
+value|size_int_wide ((unsigned HOST_WIDE_INT) (L),	\ 		 (unsigned HOST_WIDE_INT) (H), (T))
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -5123,12 +5784,86 @@ begin_comment
 comment|/* Type for sizes of data-type.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BITS_PER_UNIT_LOG
+define|\
+value|((BITS_PER_UNIT> 1) + (BITS_PER_UNIT> 2) + (BITS_PER_UNIT> 4) \    + (BITS_PER_UNIT> 8) + (BITS_PER_UNIT> 16) + (BITS_PER_UNIT> 32) \    + (BITS_PER_UNIT> 64) + (BITS_PER_UNIT> 128) + (BITS_PER_UNIT> 256))
+end_define
+
+begin_struct
+struct|struct
+name|sizetype_tab
+block|{
+name|tree
+name|xsizetype
+decl_stmt|,
+name|xbitsizetype
+decl_stmt|;
+name|tree
+name|xssizetype
+decl_stmt|,
+name|xusizetype
+decl_stmt|;
+name|tree
+name|xsbitsizetype
+decl_stmt|,
+name|xubitsizetype
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
-name|tree
-name|sizetype
+name|struct
+name|sizetype_tab
+name|sizetype_tab
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|sizetype
+value|sizetype_tab.xsizetype
+end_define
+
+begin_define
+define|#
+directive|define
+name|bitsizetype
+value|sizetype_tab.xbitsizetype
+end_define
+
+begin_define
+define|#
+directive|define
+name|ssizetype
+value|sizetype_tab.xssizetype
+end_define
+
+begin_define
+define|#
+directive|define
+name|usizetype
+value|sizetype_tab.xusizetype
+end_define
+
+begin_define
+define|#
+directive|define
+name|sbitsizetype
+value|sizetype_tab.xsbitsizetype
+end_define
+
+begin_define
+define|#
+directive|define
+name|ubitsizetype
+value|sizetype_tab.xubitsizetype
+end_define
 
 begin_comment
 comment|/* If nonzero, an upper limit on alignment of structure fields, in bits. */
@@ -5247,6 +5982,23 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|decl_tree_cons
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|expr_tree_cons
 name|PROTO
 argument_list|(
 operator|(
@@ -5434,6 +6186,58 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Returns the index of the first non-tree operand for CODE, or the number    of operands if all are trees.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|first_rtl_op
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|tree_code
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unsave_expr (EXP) returns an expression equivalent to EXP but it    can be used multiple times and will evaluate EXP, in its entirety    each time.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|unsave_expr
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unsave_expr_now (EXP) resets EXP in place, so that it can be    expanded again.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|unsave_expr_now
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Return 1 if EXP contains a PLACEHOLDER_EXPR; i.e., if it represents a size    or offset that depends on a field within a record.     Note that we only allow such expressions within simple arithmetic    or a COND_EXPR.  */
 end_comment
 
@@ -5451,20 +6255,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Given a tree EXP, a FIELD_DECL F, and a replacement value R,    return a tree with all occurrences of references to F in a    PLACEHOLDER_EXPR replaced by R.   Note that we assume here that EXP    contains only arithmetic expressions.  */
+comment|/* Return 1 if EXP contains any expressions that produce cleanups for an    outer scope to deal with.  Used by fold.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|tree
-name|substitute_in_expr
+name|int
+name|has_cleanups
 name|PROTO
 argument_list|(
 operator|(
-name|tree
-operator|,
-name|tree
-operator|,
 name|tree
 operator|)
 argument_list|)
@@ -5472,13 +6272,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Given a type T, a FIELD_DECL F, and a replacement value R,    return a new type with all size expressions that contain F    updated by replacing the reference to F with R.  */
+comment|/* Given a tree EXP, a FIELD_DECL F, and a replacement value R,    return a tree with all occurrences of references to F in a    PLACEHOLDER_EXPR replaced by R.   Note that we assume here that EXP    contains only arithmetic expressions.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|tree
-name|substitute_in_type
+name|substitute_in_expr
 name|PROTO
 argument_list|(
 operator|(
@@ -5696,6 +6496,9 @@ operator|*
 operator|,
 expr|enum
 name|machine_mode
+operator|*
+operator|,
+name|int
 operator|*
 operator|,
 name|int
@@ -5995,35 +6798,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to function to compute the name to use to print a declaration.  */
+comment|/* Pointer to function to compute the name to use to print a declaration.    DECL is the declaration in question.    VERBOSITY determines what information will be printed:      0: DECL_NAME, demangled as necessary.      1: and scope information.      2: and any other information that might be interesting, such as function         parameter types in C++.  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-function_decl|(
-modifier|*
-name|decl_printable_name
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern char *(*decl_printable_name
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Pointer to function to finish handling an incomplete decl at the    end of compilation.  */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|incomplete_decl_finalize_hook
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_extern
+extern|extern void (*incomplete_decl_finalize_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_escape
 end_escape
@@ -6043,6 +6855,19 @@ operator|(
 name|int
 operator|,
 name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_file_function_name
+name|PROTO
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6084,6 +6909,34 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|get_alias_set
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern int (*lang_get_alias_set
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_escape
 end_escape
@@ -6452,12 +7305,116 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|start_cleanup_deferral
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|end_cleanup_deferral
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_block_as_eh_region
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_block_as_not_eh_region
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|is_eh_region
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|conditional_context
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|tree
 name|last_cleanup_this_contour
 name|PROTO
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|expand_dhc_cleanup
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|expand_dcc_cleanup
+name|PROTO
+argument_list|(
+operator|(
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6549,6 +7506,19 @@ name|tree
 operator|,
 name|tree
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|using_eh_for_cleanups
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -6799,8 +7769,223 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Interface of the DWARF2 unwind info support.  */
+end_comment
+
+begin_comment
+comment|/* Decide whether we want to emit frame unwind information for the current    translation unit.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dwarf2out_do_frame
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate a new label for the CFI info to refer to.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|dwarf2out_cfi_label
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point to update the canonical frame address (CFA).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_def_cfa
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Add the CFI for saving a register window.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_window_save
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Add a CFI to update the running total of the size of arguments pushed    onto the stack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_args_size
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point for saving a register to the stack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_reg_save
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point for saving the return address in the stack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_return_save
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point for saving the return address in a register.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_return_reg
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output a marker (i.e. a label) for the beginning of a function, before    the prologue.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_begin_prologue
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output a marker (i.e. a label) for the absolute end of the generated    code for a function definition.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_end_epilogue
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* The language front-end must define these functions.  */
 end_comment
+
+begin_comment
+comment|/* Function of no arguments for initializing options.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|lang_init_options
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Function of no arguments for initializing lexical scanning.  */
@@ -6929,7 +8114,10 @@ name|lang_decode_option
 name|PROTO
 argument_list|(
 operator|(
+name|int
+operator|,
 name|char
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -7219,6 +8407,2266 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|pop_obstacks
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In tree.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|really_constant_p
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|push_obstacks
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|obstack
+operator|*
+operator|,
+expr|struct
+name|obstack
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pop_momentary_nofree
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|preserve_momentary
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|saveable_allocation
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|temporary_allocation
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|resume_temporary_allocation
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_file_function_name
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_identifier_size
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|int_fits_type_p
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tree_log2
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|preserve_initializer
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|preserve_data
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|object_permanent_p
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|type_precision
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|simple_cst_equal
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|type_list_equal
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|chain_member
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|chain_member_purpose
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|chain_member_value
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|listify
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|type_hash_lookup
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|type_hash_add
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|type_hash_list
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|simple_cst_list_equal
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|debug_obstack
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rtl_in_current_obstack
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rtl_in_saveable_obstack
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_tree_codes
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_tree_statistics
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_obstack_statistics
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|obstack
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_obstack_name
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_function_end
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_function_start
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|real_onep
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|real_twop
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|start_identifier_warnings
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gcc_obstack_init
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|obstack
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_obstacks
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|obfree
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|tree_check
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+expr|enum
+name|tree_code
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|tree_class_check
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|char
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|expr_check
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In function.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setjmp_protect_args
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setjmp_protect
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_main_function
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_varargs
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_function_start
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|assign_parms
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|put_var_into_stack
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|uninitialized_vars_warning
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setjmp_args_warning
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_all_temps_used
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_temp_slots
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|combine_temp_slots
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|free_temp_slots
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pop_temp_slots
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|push_temp_slots
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|preserve_temp_slots
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|aggregate_value_p
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|reorder_blocks
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|*
+operator|,
+name|tree
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|free_temps_for_rtl_expr
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|instantiate_virtual_regs
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|max_parm_reg_num
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|push_function_context
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pop_function_context
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|push_function_context_to
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pop_function_context_from
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In print-rtl.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_rtl
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* In print-tree.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|debug_tree
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_node
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_node_brief
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|indent_to
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* In expr.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_queue
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|apply_args_register_offset
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|expand_builtin_return_addr
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|built_in_function
+operator|,
+name|int
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|do_pending_stack_adjust
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|expand_assignment
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|store_expr
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|check_max_integer_computation_mode
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In emit-rtl.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|start_sequence_for_rtl_expr
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|emit_line_note_after
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|rtx_def
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|emit_line_note
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|emit_line_note_force
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In c-typeck.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mark_addressable
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|incomplete_type_error
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In c-lang.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_lang_statistics
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In c-common.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|truthvalue_conversion
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|min_precision
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|split_specs_attrs
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|*
+operator|,
+name|tree
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In c-decl.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_lang_decl
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_lang_type
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_lang_identifier
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|global_bindings_p
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|insert_block
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In integrate.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|save_for_inline_nocopy
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|save_for_inline_copying
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_decl_abstract_flags
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|output_inline_function
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In c-lex.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_yydebug
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In stor-layout.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fixup_signed_type
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* varasm.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|make_decl_rtl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|make_decl_one_only
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|supports_one_only
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|variable_section
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In fold-const.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|div_and_round_double
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|tree_code
+operator|,
+name|int
+operator|,
+name|HOST_WIDE_INT
+operator|,
+name|HOST_WIDE_INT
+operator|,
+name|HOST_WIDE_INT
+operator|,
+name|HOST_WIDE_INT
+operator|,
+name|HOST_WIDE_INT
+operator|*
+operator|,
+name|HOST_WIDE_INT
+operator|*
+operator|,
+name|HOST_WIDE_INT
+operator|*
+operator|,
+name|HOST_WIDE_INT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In stmt.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_nop
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_computed_goto
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|label_rtx
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_asm_operands
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|any_pending_cleanups
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_stmt
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_stmt_for_function
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|remember_end_note
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|drop_through_at_end_p
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_start_target_temps
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_end_target_temps
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_elseif
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|expand_decl_cleanup
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_anon_union_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|move_cleanups_up
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_start_case_dummy
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_end_case_dummy
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|case_index_expr_type
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|HOST_WIDE_INT
+name|all_cases_count
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|check_for_full_enumeration_handling
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|declare_nonlocal_label
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|lang_print_xnode
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If KIND=='I', return a suitable global initializer (constructor) name.    If KIND=='D', return a suitable global clean-up (destructor) name.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_file_function_name
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Interface of the DWARF2 unwind info support.  */
+end_comment
+
+begin_comment
+comment|/* Decide whether we want to emit frame unwind information for the current    translation unit.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dwarf2out_do_frame
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate a new label for the CFI info to refer to.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|dwarf2out_cfi_label
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point to update the canonical frame address (CFA).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_def_cfa
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Add the CFI for saving a register window.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_window_save
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Add a CFI to update the running total of the size of arguments pushed    onto the stack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_args_size
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point for saving a register to the stack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_reg_save
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point for saving the return address in the stack.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_return_save
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Entry point for saving the return address in a register.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_return_reg
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output a marker (i.e. a label) for the beginning of a function, before    the prologue.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_begin_prologue
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output a marker (i.e. a label) for the absolute end of the generated    code for a function definition.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dwarf2out_end_epilogue
 name|PROTO
 argument_list|(
 operator|(

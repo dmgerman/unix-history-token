@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Communication between reload.c and reload1.c.    Copyright (C) 1987, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Communication between reload.c and reload1.c.    Copyright (C) 1987, 91-95, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -78,6 +78,85 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* If MEMORY_MOVE_COST isn't defined, give it a default here.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MEMORY_MOVE_COST
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SECONDARY_RELOADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MEMORY_MOVE_COST
+parameter_list|(
+name|MODE
+parameter_list|,
+name|CLASS
+parameter_list|,
+name|IN
+parameter_list|)
+define|\
+value|(4 + memory_move_secondary_cost ((MODE), (CLASS), (IN)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MEMORY_MOVE_COST
+parameter_list|(
+name|MODE
+parameter_list|,
+name|CLASS
+parameter_list|,
+name|IN
+parameter_list|)
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|memory_move_secondary_cost
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+expr|enum
+name|reg_class
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* See reload.c and reload1.c for comments on these variables.  */
 end_comment
 
@@ -91,6 +170,22 @@ directive|define
 name|MAX_RELOADS
 value|(2 * MAX_RECOG_OPERANDS * (MAX_REGS_PER_ADDRESS + 1))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|reg_class
+name|reload_address_base_reg_class
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|reg_class
+name|reload_address_index_reg_class
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -159,6 +254,16 @@ begin_decl_stmt
 specifier|extern
 name|char
 name|reload_optional
+index|[
+name|MAX_RELOADS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|reload_nongroup
 index|[
 name|MAX_RELOADS
 index|]
@@ -266,7 +371,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Encode the usage of a reload.  The following codes are supported:     RELOAD_FOR_INPUT		reload of an input operand    RELOAD_FOR_OUTPUT		likewise, for output    RELOAD_FOR_INSN		a reload that must not conflict with anything 				used in the insn, but may conflict with 				something used before or after the insn    RELOAD_FOR_INPUT_ADDRESS	reload for parts of the address of an object 				that is an input reload    RELOAD_FOR_OUTPUT_ADDRESS	likewise, for output reload    RELOAD_FOR_OPERAND_ADDRESS	reload for the address of a non-reloaded 				operand; these don't conflict with 				any other addresses.    RELOAD_FOR_OPADDR_ADDR	reload needed for RELOAD_FOR_OPERAND_ADDRESS                                 reloads; usually secondary reloads    RELOAD_OTHER			none of the above, usually multiple uses    RELOAD_FOR_OTHER_ADDRESS     reload for part of the address of an input    				that is marked RELOAD_OTHER.     This used to be "enum reload_when_needed" but some debuggers have trouble    with an enum tag and variable of the same name.  */
+comment|/* Encode the usage of a reload.  The following codes are supported:     RELOAD_FOR_INPUT		reload of an input operand    RELOAD_FOR_OUTPUT		likewise, for output    RELOAD_FOR_INSN		a reload that must not conflict with anything 				used in the insn, but may conflict with 				something used before or after the insn    RELOAD_FOR_INPUT_ADDRESS	reload for parts of the address of an object 				that is an input reload    RELOAD_FOR_INPADDR_ADDRESS	reload needed for RELOAD_FOR_INPUT_ADDRESS    RELOAD_FOR_OUTPUT_ADDRESS	like RELOAD_FOR INPUT_ADDRESS, for output    RELOAD_FOR_OUTADDR_ADDRESS	reload needed for RELOAD_FOR_OUTPUT_ADDRESS    RELOAD_FOR_OPERAND_ADDRESS	reload for the address of a non-reloaded 				operand; these don't conflict with 				any other addresses.    RELOAD_FOR_OPADDR_ADDR	reload needed for RELOAD_FOR_OPERAND_ADDRESS                                 reloads; usually secondary reloads    RELOAD_OTHER			none of the above, usually multiple uses    RELOAD_FOR_OTHER_ADDRESS     reload for part of the address of an input    				that is marked RELOAD_OTHER.     This used to be "enum reload_when_needed" but some debuggers have trouble    with an enum tag and variable of the same name.  */
 end_comment
 
 begin_enum
@@ -281,7 +386,11 @@ name|RELOAD_FOR_INSN
 block|,
 name|RELOAD_FOR_INPUT_ADDRESS
 block|,
+name|RELOAD_FOR_INPADDR_ADDRESS
+block|,
 name|RELOAD_FOR_OUTPUT_ADDRESS
+block|,
+name|RELOAD_FOR_OUTADDR_ADDRESS
 block|,
 name|RELOAD_FOR_OPERAND_ADDRESS
 block|,
@@ -501,20 +610,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return 1 if ADDR is a valid memory address for mode MODE,    and check that each pseudo reg has the proper kind of    hard reg.  */
+comment|/* Remove all replacements in reload FROM.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|strict_memory_address_p
+name|void
+name|remove_replacements
 name|PROTO
 argument_list|(
 operator|(
-expr|enum
-name|machine_mode
-operator|,
-name|rtx
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -660,6 +766,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Change any replacements being done to *X to be done to *Y */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|move_replacements
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|*
+name|x
+operator|,
+name|rtx
+operator|*
+name|y
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* If LOC was scheduled to be replaced by something, return the replacement.    Otherwise, return *LOC.  */
 end_comment
 
@@ -792,6 +921,35 @@ begin_comment
 comment|/* Functions in reload1.c:  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|reloads_conflict
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|count_occurrences
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Initialize the reload pass once per compilation.  */
 end_comment
@@ -817,7 +975,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|reload
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|rtx

@@ -128,7 +128,13 @@ name|always_computable
 range|:
 literal|1
 decl_stmt|;
-comment|/* 1 if this set occurs each iteration */
+comment|/* 1 if this value is computable every 				    iteration.  */
+name|unsigned
+name|always_executed
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1 if this set occurs each iteration.  */
 name|unsigned
 name|maybe_multiple
 range|:
@@ -153,6 +159,23 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* 1 if this giv might be dead.  In that case, 				   we won't use it to eliminate a biv, it 				   would probably lose. */
+name|unsigned
+name|auto_inc_opt
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1 if this giv had its increment output next 				   to it to try to form an auto-inc address. */
+name|unsigned
+name|unrolled
+range|:
+literal|1
+decl_stmt|;
+comment|/* 1 if new register has been allocated and 				   initialized in unrolled loop.  */
+name|unsigned
+name|shared
+range|:
+literal|1
+decl_stmt|;
 name|int
 name|lifetime
 decl_stmt|;
@@ -604,6 +627,41 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+modifier|*
+name|loop_unroll_factor
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAIFA
+end_ifdef
+
+begin_comment
+comment|/* variables for interaction between unroll.c and loop.c, for    the insertion of branch-on-count instruction. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+modifier|*
+name|loop_start_value
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAIFA */
+end_comment
 
 end_unit
 

@@ -23,6 +23,40 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|emacs
 end_ifdef
 
@@ -187,12 +221,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NULL
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Different portions of Emacs need to call different versions of    malloc.  The Emacs executable needs alloca to call xmalloc, because    ordinary malloc isn't protected from input signals.  On the other    hand, the utilities in lib-src need alloca to call malloc; some of    them are very simple, and don't have an xmalloc routine.     Non-Emacs programs expect this to call use xmalloc.     Callers below should use malloc.  */
@@ -487,7 +532,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Reclaim garbage, defined as all alloca'd storage that      was allocated from deeper in the stack than currently. */
+comment|/* Reclaim garbage, defined as all alloca'd storage that      was allocated from deeper in the stack than currently.  */
 block|{
 specifier|register
 name|header
@@ -613,6 +658,15 @@ name|size
 argument_list|)
 decl_stmt|;
 comment|/* Address of header.  */
+if|if
+condition|(
+name|new
+operator|==
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 operator|(
 operator|(
 name|header
@@ -1056,7 +1110,7 @@ name|CRAY2
 end_ifdef
 
 begin_comment
-comment|/* Determine a "stack measure" for an arbitrary ADDRESS.    I doubt that "lint" will like this much. */
+comment|/* Determine a "stack measure" for an arbitrary ADDRESS.    I doubt that "lint" will like this much.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler.    Intel 386 (OSF/1 with OSF/rose) version.    Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler.    Intel 386 (OSF/1 with OSF/rose) version.    Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|(   (CHAR) == 'D' \    || (CHAR) == 'U' \    || (CHAR) == 'o' \    || (CHAR) == 'e' \    || (CHAR) == 'T' \    || (CHAR) == 'u' \    || (CHAR) == 'I' \    || (CHAR) == 'm' \    || (CHAR) == 'L' \    || (CHAR) == 'A' \    || (CHAR) == 'h' \    || (CHAR) == 'z')
+value|(DEFAULT_SWITCH_TAKES_ARG(CHAR) \    || (CHAR) == 'h' \    || (CHAR) == 'z')
 end_define
 
 begin_define
@@ -280,7 +280,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-DOSF -DOSF1 -Dunix -Di386 -Asystem(unix) -Asystem(xpg4) -Acpu(i386) -Amachine(i386)"
+value|"-DOSF -DOSF1 -Dunix -Asystem(xpg4)"
 end_define
 
 begin_undef
@@ -293,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %{!melf: -D__ROSE__ %{!pic-none: -D__SHARED__}} \ %{melf: -D__ELF__ %{fpic: -D__SHARED__}} \ %{mno-underscores: -D__NO_UNDERSCORES__} \ %{melf: %{!munderscores: -D__NO_UNDERSCORES__}} \ %{.S:	%{!ansi:%{!traditional:%{!traditional-cpp:%{!ftraditional: -traditional}}}}} \ %{.S:	-D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C} \ %{!.S:	-D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}"
+value|"%(cpp_cpu) \ %{!melf: -D__ROSE__ %{!pic-none: -D__SHARED__}} \ %{melf: -D__ELF__ %{fpic: -D__SHARED__}} \ %{mno-underscores: -D__NO_UNDERSCORES__} \ %{melf: %{!munderscores: -D__NO_UNDERSCORES__}} \ %{.S:	%{!ansi:%{!traditional:%{!traditional-cpp:%{!ftraditional: -traditional}}}}} \ %{.S:	-D__LANGUAGE_ASSEMBLY %{!ansi:-DLANGUAGE_ASSEMBLY}} \ %{.cc:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.cxx:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.C:	-D__LANGUAGE_C_PLUS_PLUS} \ %{.m:	-D__LANGUAGE_OBJECTIVE_C} \ %{!.S:	-D__LANGUAGE_C %{!ansi:-DLANGUAGE_C}}"
 end_define
 
 begin_comment
@@ -674,6 +674,27 @@ value|fprintf (FILE, "%s%s%d:\n", (TARGET_UNDERSCORES) ? "" : ".",		\ 	   PREFIX
 end_define
 
 begin_comment
+comment|/* The prefix to add to user-visible assembler symbols. */
+end_comment
+
+begin_comment
+comment|/* target_flags is not accessible by the preprocessor */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USER_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|USER_LABEL_PREFIX
+value|"_"
+end_define
+
+begin_comment
 comment|/* This is how to output a reference to a user-level label named NAME.  */
 end_comment
 
@@ -713,6 +734,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -747,18 +770,18 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_ALIGN_CODE
+name|LABEL_ALIGN_AFTER_BARRIER
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_ALIGN_CODE
+name|LABEL_ALIGN_AFTER_BARRIER
 parameter_list|(
-name|STREAM
+name|LABEL
 parameter_list|)
 define|\
-value|fprintf (STREAM, "\t.align\t%d\n",					\ 	   (!TARGET_LARGE_ALIGN&& i386_align_jumps> 2) ? 2 : i386_align_jumps)
+value|((!TARGET_LARGE_ALIGN&& i386_align_jumps> 2) ? 2 : i386_align_jumps)
 end_define
 
 begin_comment
@@ -768,18 +791,17 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_LOOP_ALIGN
+name|LOOP_ALIGN
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_LOOP_ALIGN
+name|LOOP_ALIGN
 parameter_list|(
-name|STREAM
+name|LABEL
 parameter_list|)
-define|\
-value|fprintf (STREAM, "\t.align\t%d\n", i386_align_loops)
+value|(i386_align_loops)
 end_define
 
 begin_comment

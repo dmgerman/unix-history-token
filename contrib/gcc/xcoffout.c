@@ -1,26 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output xcoff-format symbol table information from GNU compiler.    Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output xcoff-format symbol table information from GNU compiler.    Copyright (C) 1992, 1994, 1995, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Output xcoff-format symbol table data.  The main functionality is contained    in dbxout.c.  This file implements the sdbout-like parts of the xcoff    interface.  Many functions are very similar to their counterparts in    sdbout.c.  */
 end_comment
 
-begin_comment
-comment|/* Include this first, because it may define MIN and MAX.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"system.h"
 end_include
 
 begin_include
@@ -39,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|"flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"output.h"
 end_include
 
 begin_ifdef
@@ -63,6 +71,12 @@ directive|include
 file|"xcoffout.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dbxout.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -71,9 +85,10 @@ argument_list|(
 name|USG
 argument_list|)
 operator|||
+operator|!
 name|defined
 argument_list|(
-name|NO_STAB_H
+name|HAVE_STAB_H
 argument_list|)
 end_if
 
@@ -126,6 +141,7 @@ comment|/* Line number of beginning of current function, minus one.    Negative 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xcoff_begin_function_line
 init|=
@@ -135,6 +151,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|xcoff_inlining
 init|=
@@ -158,6 +175,7 @@ comment|/* Name of the current function file.  This is the file the `.bf' is    
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|xcoff_current_function_file
@@ -291,6 +309,41 @@ define|\
 value|fprintf (FILE, "\t.eb\t%d\n", ABS_OR_RELATIVE_LINENO (LINENUM))
 end_define
 
+begin_decl_stmt
+specifier|static
+name|void
+name|assign_type_number
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|xcoffout_block
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -407,15 +460,8 @@ name|syms
 argument_list|,
 literal|"int"
 argument_list|,
-operator|(
-name|TARGET_64BIT
-condition|?
-operator|-
-literal|31
-else|:
 operator|-
 literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 name|assign_type_number
@@ -491,15 +537,8 @@ name|syms
 argument_list|,
 literal|"unsigned int"
 argument_list|,
-operator|(
-name|TARGET_64BIT
-condition|?
-operator|-
-literal|32
-else|:
 operator|-
 literal|8
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* No such type "unsigned".  */
@@ -1578,6 +1617,30 @@ argument_list|)
 expr_stmt|;
 name|dbxout_parms
 argument_list|(
+name|DECL_ARGUMENTS
+argument_list|(
+name|current_function_decl
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Emit the symbols for the outermost BLOCK's variables.  sdbout.c does this      in sdbout_begin_block, but there is no guarantee that there will be any      inner block 1, so we must do it here.  This gives a result similar to      dbxout, so it does make some sense.  */
+name|do_block
+operator|=
+literal|0
+expr_stmt|;
+name|next_block_number
+operator|=
+literal|0
+expr_stmt|;
+name|xcoffout_block
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|current_function_decl
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
 name|DECL_ARGUMENTS
 argument_list|(
 name|current_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running Linux with ELF format    Copyright (C) 1994, 1995 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running Linux-based GNU systems with ELF format.    Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -73,6 +73,19 @@ name|DEFAULT_PCC_STRUCT_RETURN
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_COMMENT_START
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_COMMENT_START
+value|"#"
+end_define
+
 begin_comment
 comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
 end_comment
@@ -90,6 +103,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -106,6 +121,7 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
+value|(flag_pic)
 end_define
 
 begin_comment
@@ -208,6 +224,10 @@ name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
+begin_comment
+comment|/* The egcs-1.1 branch is the last time we will have -Di386.  -D__i386__ is the thing to use.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -218,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -Di386 -Dlinux -Asystem(unix) -Asystem(posix) -Acpu(i386) -Amachine(i386)"
+value|"-D__ELF__ -Dunix -Di386 -D__i386__ -Dlinux -Asystem(posix)"
 end_define
 
 begin_undef
@@ -233,19 +253,11 @@ directive|ifdef
 name|USE_GNULIBC_1
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|==
-literal|2
-end_if
-
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE}"
+value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_else
@@ -257,121 +269,26 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{m486:-D__i486__} %{posix:-D_POSIX_SOURCE}"
+value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not USE_GNULIBC_1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%(cpp_cpu) %[cpp_cpu] %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not USE_GNULIBC_1 */
-end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|LIBGCC_SPEC
+name|CC1_SPEC
 end_undef
 
 begin_define
 define|#
 directive|define
-name|LIBGCC_SPEC
-value|"-lgcc"
+name|CC1_SPEC
+value|"%(cc1_cpu) %{profile:-p}"
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LIB_SPEC
-end_undef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GNULIBC_1
-end_ifdef
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* We no longer link with libc_p.a or libg.a by default. If you  * want to profile or debug the Linux C library, please add  * -lc_p or -ggdb to LDFLAGS at the link time, respectively.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: %{mieee-fp:-lieee} %{p:-lgmon} %{pg:-lgmon} \      %{!ggdb:-lc} %{ggdb:-lg}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: \      %{mieee-fp:-lieee} %{p:-lgmon -lc_p} %{pg:-lgmon -lc_p} \        %{!p:%{!pg:%{!g*:-lc} %{g*:-lg}}}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \ 	%{profile:-lc_p} %{!profile: -lc}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not USE_GNULIBC_1 */
-end_comment
 
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for Linux.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
@@ -428,10 +345,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* not USE_GNULIBC_1 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -445,10 +358,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not USE_GNULIBC_1 */
-end_comment
-
-begin_comment
 comment|/* Get perform_* macros to build libgcc.a.  */
 end_comment
 
@@ -457,6 +366,59 @@ include|#
 directive|include
 file|"i386/perform.h"
 end_include
+
+begin_comment
+comment|/* A C statement (sans semicolon) to output to the stdio stream    FILE the assembler definition of uninitialized global DECL named    NAME whose size is SIZE bytes and alignment is ALIGN bytes.    Try to use asm_output_aligned_bss to implement this macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_BSS
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
+end_define
+
+begin_comment
+comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_MAX_SKIP_P2ALIGN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_MAX_SKIP_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|,
+name|MAX_SKIP
+parameter_list|)
+define|\
+value|if ((LOG)!=0) \     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

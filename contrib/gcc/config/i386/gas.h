@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running system V with gnu tools    Copyright (C) 1988, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 using GAS.    Copyright (C) 1988, 1993, 1994, 1996 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -82,14 +82,14 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -Asystem(unix) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix:-D_POSIX_SOURCE}"
+value|"%(cpp_cpu) %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -128,19 +128,15 @@ directive|define
 name|TARGET_MEM_FUNCTIONS
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* People say gas uses the log as the arg to .align.  */
+comment|/* In the past there was confusion as to what the argument to .align was    in GAS.  For the last several years the rule has been this: for a.out    file formats that argument is LOG, and for all other file formats the    argument is 1<<LOG.     However, GAS now has .p2align and .balign pseudo-ops so to remove any    doubt or guess work, and since this file is used for both a.out and other    file formats, we use one of them.  */
 end_comment
 
-begin_comment
-comment|/* When using gas, .align N aligns to an N-byte boundary.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_BALIGN_AND_P2ALIGN
+end_ifdef
 
 begin_undef
 undef|#
@@ -158,7 +154,7 @@ parameter_list|,
 name|LOG
 parameter_list|)
 define|\
-value|if ((LOG)!=0) fprintf ((FILE), "\t.align %d\n", 1<<(LOG))
+value|if ((LOG)!=0) fprintf ((FILE), "\t.balign %d\n", 1<<(LOG))
 end_define
 
 begin_endif
@@ -167,46 +163,34 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Align labels, etc. at 4-byte boundaries.    For the 486, align to 16-byte boundary for sake of cache.  */
+comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_ALIGN_CODE
-end_undef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GAS_MAX_SKIP_P2ALIGN
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_ALIGN_CODE
+name|ASM_OUTPUT_MAX_SKIP_ALIGN
 parameter_list|(
 name|FILE
+parameter_list|,
+name|LOG
+parameter_list|,
+name|MAX_SKIP
 parameter_list|)
 define|\
-value|fprintf ((FILE), "\t.align %d,0x90\n", i386_align_jumps)
+value|if ((LOG)!=0) \        if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \        else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
 end_define
 
-begin_comment
-comment|/* Align start of loop at 4-byte boundary.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_LOOP_ALIGN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LOOP_ALIGN
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|fprintf ((FILE), "\t.align %d,0x90\n", i386_align_loops)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -235,23 +219,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|AS3_SHIFT_DOUBLE
+name|SHIFT_DOUBLE_OMITS_COUNT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|AS3_SHIFT_DOUBLE
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|AS3 (a,b,c,d)
+name|SHIFT_DOUBLE_OMITS_COUNT
+value|0
 end_define
 
 begin_comment

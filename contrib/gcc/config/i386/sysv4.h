@@ -107,7 +107,7 @@ value|do { long value;							\      REAL_VALUE_TO_TARGET_SINGLE ((VALUE), value)
 end_define
 
 begin_comment
-comment|/* This is how to output assembly code to define a `double' constant.    We always have to use a pair of .long pseudo-ops to do this because    the native SVR4 ELF assembler is buggy and it generates incorrect    values when we try to use the the .double pseudo-op instead.  */
+comment|/* This is how to output assembly code to define a `double' constant.    We always have to use a pair of .long pseudo-ops to do this because    the native SVR4 ELF assembler is buggy and it generates incorrect    values when we try to use the .double pseudo-op instead.  */
 end_comment
 
 begin_undef
@@ -236,6 +236,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -252,6 +254,30 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
+value|(flag_pic)
+end_define
+
+begin_comment
+comment|/* A C statement (sans semicolon) to output to the stdio stream    FILE the assembler definition of uninitialized global DECL named    NAME whose size is SIZE bytes and alignment is ALIGN bytes.    Try to use asm_output_aligned_bss to implement this macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_BSS
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
 end_define
 
 end_unit

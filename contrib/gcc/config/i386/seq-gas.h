@@ -39,23 +39,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|AS3_SHIFT_DOUBLE
+name|SHIFT_DOUBLE_OMITS_COUNT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|AS3_SHIFT_DOUBLE
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|AS3 (a,b,c,d)
+name|SHIFT_DOUBLE_OMITS_COUNT
+value|0
 end_define
 
 begin_comment

@@ -1,35 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 91, 92, 93, 94, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 91-97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The default branch cost is 1.  */
@@ -72,7 +44,7 @@ value|XEXP (P, 0)
 end_define
 
 begin_comment
-comment|/* If the increment has been emitted, this is the insn    that does the increment.  It is zero before the increment is emitted.  */
+comment|/* If the increment has been emitted, this is the insn    that does the increment.  It is zero before the increment is emitted.    If more than one insn is emitted, this is the first insn.  */
 end_comment
 
 begin_define
@@ -128,7 +100,7 @@ value|XEXP (P, 4)
 end_define
 
 begin_comment
-comment|/* This is the 4th arg to `expand_expr'.    EXPAND_SUM means it is ok to return a PLUS rtx or MULT rtx.    EXPAND_INITIALIZER is similar but also record any labels on forced_labels.    EXPAND_CONST_ADDRESS means it is ok to return a MEM whose address     is a constant that is not a legitimate address.  */
+comment|/* This is the 4th arg to `expand_expr'.    EXPAND_SUM means it is ok to return a PLUS rtx or MULT rtx.    EXPAND_INITIALIZER is similar but also record any labels on forced_labels.    EXPAND_CONST_ADDRESS means it is ok to return a MEM whose address     is a constant that is not a legitimate address.    EXPAND_MEMORY_USE_* are explained below.  */
 end_comment
 
 begin_enum
@@ -142,6 +114,49 @@ block|,
 name|EXPAND_CONST_ADDRESS
 block|,
 name|EXPAND_INITIALIZER
+block|,
+name|EXPAND_MEMORY_USE_WO
+block|,
+name|EXPAND_MEMORY_USE_RW
+block|,
+name|EXPAND_MEMORY_USE_BAD
+block|,
+name|EXPAND_MEMORY_USE_DONT
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Argument for chkr_* functions.    MEMORY_USE_RO: the pointer reads memory.    MEMORY_USE_WO: the pointer writes to memory.    MEMORY_USE_RW: the pointer modifies memory (ie it reads and writes). An                   example is (*ptr)++    MEMORY_USE_BAD: use this if you don't know the behavior of the pointer, or                    if you know there are no pointers.  Using an INDIRECT_REF                    with MEMORY_USE_BAD will abort.    MEMORY_USE_TW: just test for writing, without update.  Special.    MEMORY_USE_DONT: the memory is neither read nor written.  This is used by    		   '->' and '.'.  */
+end_comment
+
+begin_enum
+enum|enum
+name|memory_use_mode
+block|{
+name|MEMORY_USE_BAD
+init|=
+literal|0
+block|,
+name|MEMORY_USE_RO
+init|=
+literal|1
+block|,
+name|MEMORY_USE_WO
+init|=
+literal|2
+block|,
+name|MEMORY_USE_RW
+init|=
+literal|3
+block|,
+name|MEMORY_USE_TW
+init|=
+literal|6
+block|,
+name|MEMORY_USE_DONT
+init|=
+literal|99
 block|}
 enum|;
 end_enum
@@ -322,32 +337,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A list of all cleanups which belong to the arguments of    function calls being expanded by expand_call.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TREE_CODE
-end_ifdef
-
-begin_comment
-comment|/* Don't lose if tree.h not included.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|cleanups_this_call
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* When temporaries are created by TARGET_EXPRs, they are created at    this level of temp_slot_level, so that they can remain allocated    until no longer needed.  CLEANUP_POINT_EXPRs define the lifetime    of TARGET_EXPRs.  */
 end_comment
 
@@ -355,6 +344,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|target_temp_slot_level
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current level for normal temporaries.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|temp_slot_level
 decl_stmt|;
 end_decl_stmt
 
@@ -379,7 +379,7 @@ begin_struct
 struct|struct
 name|args_size
 block|{
-name|int
+name|HOST_WIDE_INT
 name|constant
 decl_stmt|;
 name|tree
@@ -436,7 +436,7 @@ parameter_list|(
 name|SIZE
 parameter_list|)
 define|\
-value|((SIZE).var == 0 ? GEN_INT ((SIZE).constant)	\  : expand_expr (size_binop (PLUS_EXPR, (SIZE).var,			\ 			    size_int ((SIZE).constant)),		\ 		NULL_RTX, VOIDmode, 0))
+value|((SIZE).var == 0 ? GEN_INT ((SIZE).constant)	\  : expand_expr (size_binop (PLUS_EXPR, (SIZE).var,			\ 			    size_int ((SIZE).constant)),		\ 		NULL_RTX, VOIDmode, EXPAND_MEMORY_USE_BAD))
 end_define
 
 begin_comment
@@ -527,8 +527,36 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Provide a default value for STRICT_ARGUMENT_NAMING.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STRICT_ARGUMENT_NAMING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STRICT_ARGUMENT_NAMING
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Nonzero if we do not know how to pass TYPE solely in registers.    We cannot do so in the following cases:     - if the type has variable size    - if the type is marked as addressable (it is required to be constructed      into the stack)    - if the padding and mode of the type is such that a copy into a register      would put it into the wrong part of the register.     Which padding can't be supported depends on the byte endianness.     A value in a register is implicitly padded at the most significant end.    On a big-endian machine, that is the lower end in memory.    So a value padded in memory at the upper end can't go in a register.    For a little-endian machine, the reverse is true.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUST_PASS_IN_STACK
+end_ifndef
 
 begin_define
 define|#
@@ -542,6 +570,11 @@ parameter_list|)
 define|\
 value|((TYPE) != 0						\&& (TREE_CODE (TYPE_SIZE (TYPE)) != INTEGER_CST	\        || TREE_ADDRESSABLE (TYPE)			\        || ((MODE) == BLKmode 				\&& ! ((TYPE) != 0&& TREE_CODE (TYPE_SIZE (TYPE)) == INTEGER_CST \&& 0 == (int_size_in_bytes (TYPE)	\ 			  % (PARM_BOUNDARY / BITS_PER_UNIT))) \&& (FUNCTION_ARG_PADDING (MODE, TYPE)	\ 	       == (BYTES_BIG_ENDIAN ? upward : downward)))))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Nonzero if type TYPE should be returned in memory.    Most machines can use the following default definition.  */
@@ -561,6 +594,208 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 value|(TYPE_MODE (TYPE) == BLKmode)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Supply a default definition of STACK_SAVEAREA_MODE for emit_stack_save.    Normally move_insn, so Pmode stack pointer.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_SAVEAREA_MODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_SAVEAREA_MODE
+parameter_list|(
+name|LEVEL
+parameter_list|)
+value|Pmode
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Supply a default definition of STACK_SIZE_MODE for    allocate_dynamic_stack_space.  Normally PLUS/MINUS, so word_mode.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_SIZE_MODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_SIZE_MODE
+value|word_mode
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Provide default values for the macros controlling stack checking.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_BUILTIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_BUILTIN
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The default interval is one page.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_PROBE_INTERVAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_PROBE_INTERVAL
+value|4096
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The default is to do a store into the stack.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_PROBE_LOAD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_PROBE_LOAD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* This value is arbitrary, but should be sufficient for most machines.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_PROTECT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_PROTECT
+value|(75 * UNITS_PER_WORD)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Make the maximum frame size be the largest we can and still only need    one probe per function.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_MAX_FRAME_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_MAX_FRAME_SIZE
+define|\
+value|(STACK_CHECK_PROBE_INTERVAL - UNITS_PER_WORD)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* This is arbitrary, but should be large enough everywhere.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_FIXED_FRAME_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_FIXED_FRAME_SIZE
+value|(4 * UNITS_PER_WORD)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Provide a reasonable default for the maximum size of an object to    allocate in the fixed frame.  We may need to be able to make this    controllable by the user at some point.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STACK_CHECK_MAX_VAR_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STACK_CHECK_MAX_VAR_SIZE
+value|(STACK_CHECK_MAX_FRAME_SIZE / 100)
 end_define
 
 begin_endif
@@ -665,8 +900,14 @@ end_extern
 
 begin_expr_stmt
 unit|)
+name|PROTO
+argument_list|(
 operator|(
+name|rtx
+operator|,
+operator|...
 operator|)
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1307,6 +1548,48 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
+name|throw_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|sjthrow_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|sjpopnthrow_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|terminate_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|setjmp_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|longjmp_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|eqhf2_libfunc
 decl_stmt|;
 end_decl_stmt
@@ -1766,18 +2049,61 @@ name|fixunstfti_libfunc
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* For check-memory-usage.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|chkr_check_addr_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|chkr_set_right_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|chkr_copy_bitmap_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|chkr_check_exec_libfunc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|chkr_check_str_libfunc
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
 begin_typedef
 typedef|typedef
 name|rtx
-function_decl|(
-modifier|*
-name|rtxfun
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*rtxfun
+argument_list|)
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -1816,7 +2142,7 @@ name|HAVE_conditional_move
 end_ifdef
 
 begin_comment
-comment|/* Indexed by the the machine mode, gives the insn code to make a conditional    move insn.  */
+comment|/* Indexed by the machine mode, gives the insn code to make a conditional    move insn.  */
 end_comment
 
 begin_decl_stmt
@@ -1844,6 +2170,21 @@ specifier|extern
 name|enum
 name|insn_code
 name|movstr_optab
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This array records the insn_code of insns to perform block clears.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|insn_code
+name|clrstr_optab
 index|[
 name|NUM_MACHINE_MODES
 index|]
@@ -2576,6 +2917,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Like emit_store_flag, but always succeeds.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|emit_store_flag_force
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+expr|enum
+name|rtx_code
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Functions from loop.c:  */
 end_comment
 
@@ -2594,6 +2966,30 @@ name|rtx
 operator|,
 name|rtx
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate a conditional trap instruction.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|gen_cond_trap
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|rtx_code
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2750,7 +3146,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|rtx
 name|emit_block_move
 name|PROTO
 argument_list|(
@@ -2815,6 +3211,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Load a BLKmode value into non-consecutive registers represented by a    PARALLEL.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_group_load
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Store a BLKmode value from non-consecutive registers represented by a    PARALLEL.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_group_store
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Mark REG as holding a parameter for the next CALL_INSN.  */
 end_comment
 
@@ -2857,12 +3299,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Write zeros through the storage of OBJECT.    If OBJECT has BLKmode, SIZE is its length in bytes.  */
+comment|/* Mark a PARALLEL as holding a parameter for the next CALL_INSN.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|void
+name|use_group_regs
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Write zeros through the storage of OBJECT.    If OBJECT has BLKmode, SIZE is its length in bytes and ALIGN is its    alignment.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|clear_storage
 name|PROTO
 argument_list|(
@@ -2870,6 +3332,8 @@ operator|(
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2988,6 +3452,8 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3120,6 +3586,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|expand_builtin_setjmp
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3212,23 +3697,6 @@ ifdef|#
 directive|ifdef
 name|TREE_CODE
 end_ifdef
-
-begin_comment
-comment|/* Expand all cleanups up to OLD_CLEANUPS.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|expand_cleanups_to
-name|PROTO
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Generate code to evaluate EXP and jump to LABEL if the value is zero.  */
@@ -4076,16 +4544,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Emit code to copy function value to a new temp reg and return that reg.  */
+comment|/* Probe a range of stack addresses from FIRST to FIRST+SIZE, inclusive.     FIRST is a constant and size is a Pmode RTX.  These are offsets from the    current stack pointer.  STACK_GROWS_DOWNWARD says whether to add or    subtract from the stack.  If SIZE is constant, this is done    with a fixed number of probes.  Otherwise, we must make a loop.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
+name|void
+name|probe_stack_range
+name|PROTO
+argument_list|(
+operator|(
+name|HOST_WIDE_INT
+operator|,
 name|rtx
-name|function_value
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Return an rtx that refers to the value returned by a library call    in its original home.  This becomes invalid if any more code is emitted.  */
@@ -4117,25 +4592,6 @@ name|PROTO
 argument_list|(
 operator|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|emit_block_move
-name|PROTO
-argument_list|(
-operator|(
-name|rtx
-operator|,
-name|rtx
-operator|,
-name|rtx
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4247,6 +4703,30 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
+name|expand_mult_highpart_adjust
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
 name|assemble_static_space
 name|PROTO
 argument_list|(
@@ -4261,16 +4741,134 @@ begin_comment
 comment|/* Hook called by expand_expr for language-specific tree codes.    It is up to the language front end to install a hook    if it has any such codes that expand_expr needs to know about.  */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_extern
+extern|extern rtx (*lang_expand_expr
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PROTO
+argument_list|(
+operator|(
+expr|union
+name|tree_node
+operator|*
+operator|,
 name|rtx
-function_decl|(
-modifier|*
-name|lang_expand_expr
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+expr|enum
+name|expand_modifier
+name|modifier
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_all_optabs
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_mov_optab
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|do_jump_by_parts_equality_rtx
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|do_jump_by_parts_greater_rtx
+name|PROTO
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TREE_CODE
+end_ifdef
+
+begin_comment
+comment|/* Don't lose if tree.h not included.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_seen_cases
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|unsigned
+name|char
+operator|*
+operator|,
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

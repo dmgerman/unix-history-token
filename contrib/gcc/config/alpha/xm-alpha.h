@@ -93,13 +93,18 @@ value|33
 end_define
 
 begin_comment
-comment|/* If not compiled with GNU C, use the builtin alloca.  */
+comment|/* If compiled with GNU C, use the builtin alloca.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|alloca
+end_ifndef
 
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|__GNUC__
@@ -108,7 +113,41 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
+name|USE_C_ALLOCA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|alloca
+value|__builtin_alloca
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_C_ALLOCA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPEN_VMS
 argument_list|)
 end_if
 
@@ -131,6 +170,16 @@ name|alloca
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -195,26 +244,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* OSF/1 has vprintf.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_VPRINTF
-end_define
-
-begin_comment
-comment|/* OSF/1 has putenv.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTENV
-end_define
 
 begin_comment
 comment|/* OSF/1 is POSIX.1 compliant.  */

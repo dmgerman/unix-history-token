@@ -84,18 +84,17 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_ALIGN_CODE
+name|LABEL_ALIGN_AFTER_BARRIER
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_ALIGN_CODE
+name|LABEL_ALIGN_AFTER_BARRIER
 parameter_list|(
-name|FILE
+name|LABEL
 parameter_list|)
-define|\
-value|fprintf ((FILE), "\t.align %d,0x90\n",		\ 	      1<< i386_align_jumps)
+value|(i386_align_jumps)
 end_define
 
 begin_comment
@@ -105,18 +104,17 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_LOOP_ALIGN
+name|LOOP_ALIGN
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_LOOP_ALIGN
+name|LOOP_ALIGN
 parameter_list|(
-name|FILE
+name|LABEL
 parameter_list|)
-define|\
-value|fprintf ((FILE), "\t.align %d,0x90\n", 1<< i386_align_loops);
+value|(i386_align_loops)
 end_define
 
 begin_comment
@@ -131,17 +129,6 @@ begin_define
 define|#
 directive|define
 name|CTOR_LISTS_DEFINED_EXTERNALLY
-end_define
-
-begin_comment
-comment|/* similar to default, but allows for the table defined by ld with svr3.ifile.     nptrs is always 0.  So we need to instead check that __DTOR_LIST__[1] != 0.    The old check is left in so that the same macro can be used if and when      a future version of gas does support section directives. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DO_GLOBAL_DTORS_BODY
-value|{int nptrs = *(int *)__DTOR_LIST__; int i; \   if (nptrs == -1 || (__DTOR_LIST__[0] == 0&& __DTOR_LIST__[1] != 0))  \     for (nptrs = 0; __DTOR_LIST__[nptrs + 1] != 0; nptrs++); 		\   for (i = nptrs; i>= 1; i--)						\     __DTOR_LIST__[i] (); }
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime class related functions    Copyright (C) 1993, 1995 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup and Dennis Glatting.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime class related functions    Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup and Dennis Glatting.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -37,6 +37,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* !T:MUTEX */
+end_comment
+
+begin_comment
 comment|/* This is a hook which is called by objc_get_class and     objc_lookup_class if the runtime is not able to find the class.    This may e.g. try to load in the class using dynamic loading */
 end_comment
 
@@ -58,6 +62,10 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* !T:SAFE */
+end_comment
+
+begin_comment
 comment|/* True when class links has been resolved */
 end_comment
 
@@ -68,6 +76,10 @@ init|=
 name|NO
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* !T:UNUSED */
+end_comment
 
 begin_comment
 comment|/* Initial number of buckets size of class hash table. */
@@ -91,6 +103,11 @@ condition|(
 name|__objc_class_hash
 condition|)
 return|return;
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 name|__objc_class_hash
 operator|=
 name|hash_new
@@ -106,6 +123,11 @@ operator|(
 name|compare_func_type
 operator|)
 name|compare_strings
+argument_list|)
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 block|}
@@ -126,6 +148,11 @@ block|{
 name|Class
 name|h_class
 decl_stmt|;
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 comment|/* make sure the table is there */
 name|assert
 argument_list|(
@@ -199,6 +226,11 @@ name|class
 argument_list|)
 expr_stmt|;
 block|}
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -219,6 +251,11 @@ block|{
 name|Class
 name|class
 decl_stmt|;
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 comment|/* Make sure the class hash table exists.  */
 name|assert
 argument_list|(
@@ -232,6 +269,11 @@ argument_list|(
 name|__objc_class_hash
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -278,6 +320,11 @@ block|{
 name|Class
 name|class
 decl_stmt|;
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 comment|/* Make sure the class hash table exists.  */
 name|assert
 argument_list|(
@@ -291,6 +338,11 @@ argument_list|(
 name|__objc_class_hash
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -321,18 +373,20 @@ condition|)
 return|return
 name|class
 return|;
-name|fprintf
+name|objc_error
 argument_list|(
-name|stderr
+name|nil
+argument_list|,
+name|OBJC_ERR_BAD_CLASS
 argument_list|,
 literal|"objc runtime: cannot find class %s\n"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -371,6 +425,11 @@ modifier|*
 name|enum_state
 parameter_list|)
 block|{
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 comment|/* make sure the table is there */
 name|assert
 argument_list|(
@@ -394,6 +453,11 @@ name|node_ptr
 operator|*
 operator|)
 name|enum_state
+argument_list|)
+expr_stmt|;
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -449,6 +513,11 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|object_class
+argument_list|)
+expr_stmt|;
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
 argument_list|)
 expr_stmt|;
 comment|/* Assign subclass links */
@@ -718,6 +787,11 @@ name|class_pointer
 expr_stmt|;
 block|}
 block|}
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -988,6 +1062,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* This is how to update the lookup table. Regardless of      what the keys of the hashtable is, change all values that are      superclass into impostor. */
+name|objc_mutex_lock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|node
@@ -1036,6 +1115,11 @@ expr_stmt|;
 comment|/* change hash table value */
 block|}
 block|}
+name|objc_mutex_unlock
+argument_list|(
+name|__objc_runtime_mutex
+argument_list|)
+expr_stmt|;
 comment|/* next, we update the dispatch tables... */
 name|__objc_update_dispatch_table_for_class
 argument_list|(

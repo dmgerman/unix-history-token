@@ -59,8 +59,6 @@ operator|,
 name|int
 operator|,
 name|tree
-operator|,
-name|tree
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,18 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code to initialize optabs from machine description.    Copyright (C) 1993, 94-97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"hconfig.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_include
@@ -25,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"obstack.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_decl_stmt
@@ -66,44 +88,47 @@ name|obstack_chunk_free
 value|free
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|read_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PVPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|fancy_abort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Many parts of GCC use arrays that are indexed by machine mode and    contain the insn codes for pattern in the MD file that perform a given    operation on operands of that mode.     These patterns are present in the MD file with names that contain    the mode(s) used and the name of the operation.  This program    writes a function `init_all_optabs' that initializes the optabs with    all the insn codes of the relevant patterns present in the MD file.     This array contains a list of optabs that need to be initialized.  Within    each string, the name of the pattern to be matched against is delimited    with %( and %).  In the string, %a and %b are used to match a short mode    name (the part of the mode name not including `mode' and converted to    lower-case).  When writing out the initializer, the entire string is    used.  %A and %B are replaced with the full name of the mode; %a and %b    are replaced with the short form of the name, as above.     If %N is present in the pattern, it means the two modes must be consecutive    widths in the same mode class (e.g, QImode and HImode).  %I means that    only integer modes should be considered for the next mode, and %F means    that only float modes should be considered.     For some optabs, we store the operation by RTL codes.  These are only    used for comparisons.  In that case, %c and %C are the lower-case and    upper-case forms of the comparison, respectively.  */
@@ -229,6 +254,8 @@ block|,
 literal|"reload_out_optab[(int) %A] = CODE_FOR_%(reload_out%a%)"
 block|,
 literal|"movstr_optab[(int) %A] = CODE_FOR_%(movstr%a%)"
+block|,
+literal|"clrstr_optab[(int) %A] = CODE_FOR_%(clrstr%a%)"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -242,6 +269,19 @@ name|char
 modifier|*
 modifier|*
 name|insn_name_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_insn
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +314,7 @@ name|m2
 decl_stmt|,
 name|op
 decl_stmt|;
-name|int
+name|size_t
 name|pindex
 decl_stmt|;
 name|int
@@ -292,11 +332,6 @@ name|p
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|;
-name|struct
-name|obstack
-modifier|*
-name|obstack_ptr
 decl_stmt|;
 comment|/* Don't mention instructions whose names are the null string.      They are in the machine description just to be recognized.  */
 if|if
@@ -507,7 +542,7 @@ operator|*
 name|q
 condition|)
 break|break;
-comment|/* We have to be concerned about matching "gt" and 		       missing "gtu", e.g., so verify we have reached the 		       end of thing we are to match.  We do not have this 		       problem with modes since no mode is a prefix of 		       another.  */
+comment|/* We have to be concerned about matching "gt" and 		       missing "gtu", e.g., so verify we have reached the 		       end of thing we are to match.  */
 if|if
 condition|(
 operator|*
@@ -557,21 +592,26 @@ case|:
 case|case
 literal|'b'
 case|:
+comment|/* This loop will stop at the first prefix match, so                    look through the modes in reverse order, in case                    EXTRA_CC_MODES was used and CC is a prefix of the                    CC modes (as it should be).  */
 for|for
 control|(
 name|i
 operator|=
-literal|0
-init|;
-name|i
-operator|<
+operator|(
 operator|(
 name|int
 operator|)
 name|MAX_MACHINE_MODE
+operator|)
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 for|for
@@ -644,11 +684,8 @@ block|}
 if|if
 condition|(
 name|i
-operator|==
-operator|(
-name|int
-operator|)
-name|MAX_MACHINE_MODE
+operator|<
+literal|0
 condition|)
 name|matches
 operator|=
@@ -1074,22 +1111,55 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|(
-name|s
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
+name|VPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|format
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__STDC__
 name|char
 modifier|*
-name|s
+name|format
 decl_stmt|;
-block|{
+endif|#
+directive|endif
+name|va_list
+name|ap
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|ap
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__STDC__
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -1097,15 +1167,18 @@ argument_list|,
 literal|"genopinit: "
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|s
+name|format
 argument_list|,
-name|a1
-argument_list|,
-name|a2
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1121,7 +1194,7 @@ name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
@@ -1162,13 +1235,6 @@ decl_stmt|;
 block|{
 name|rtx
 name|desc
-decl_stmt|;
-name|rtx
-name|dummy
-decl_stmt|;
-name|rtx
-modifier|*
-name|insn_ptr
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1238,6 +1304,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"#include \"config.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"system.h\"\n"
 argument_list|)
 expr_stmt|;
 name|printf

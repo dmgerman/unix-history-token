@@ -1331,7 +1331,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Control profiling  *	profiling is what mcount checks to see if  *	all the data structures are ready.  */
+comment|/* Control profiling;   	profiling is what mcount checks to see if   	all the data structures are ready.  */
 end_comment
 
 begin_macro

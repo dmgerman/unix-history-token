@@ -10,12 +10,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_STRERROR
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_VPRINTF
 end_define
 

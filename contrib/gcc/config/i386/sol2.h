@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Intel 80386 running Solaris 2    Copyright (C) 1993, 1995 Free Software Foundation, Inc.     Written by Fred Fish (fnf@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for Intel 80386 running Solaris 2    Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Fred Fish (fnf@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -17,7 +17,7 @@ begin_define
 define|#
 directive|define
 name|FORCE_INIT_SECTION_ALIGN
-value|do { asm (ALIGN_ASM_OP ## " 16"); } while (0)
+value|asm (ALIGN_ASM_OP ## " 16")
 end_define
 
 begin_define
@@ -42,7 +42,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-Di386 -Dunix -D__svr4__ -D__SVR4 -Dsun \    -Asystem(unix) -Asystem(svr4) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -D__svr4__ -D__SVR4 -Dsun -Asystem(svr4)"
 end_define
 
 begin_undef
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\    %{compat-bsd:-iwithprefixbefore ucbinclude -I/usr/ucbinclude}"
+value|"%(cpp_cpu) \    %{compat-bsd:-iwithprefixbefore ucbinclude -I/usr/ucbinclude}"
 end_define
 
 begin_undef
@@ -85,6 +85,19 @@ name|ENDFILE_SPEC
 value|"crtend.o%s %{pg:crtn.o%s}%{!pg:crtn.o%s}"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+value|"%{!shared: \ 			 %{!symbolic: \ 			  %{pg:gcrt1.o%s}%{!pg:%{p:mcrt1.o%s}%{!p:crt1.o%s}}}}\ 			%{pg:gmon.o%s} crti.o%s \ 			%{ansi:values-Xc.o%s} \ 			%{!ansi: \ 			 %{traditional:values-Xt.o%s} \ 			 %{!traditional:values-Xa.o%s}} \  			crtbegin.o%s"
+end_define
+
 begin_comment
 comment|/* This should be the same as in svr4.h, except with -R added.  */
 end_comment
@@ -100,7 +113,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{h*} %{V} %{v:%{!V:-V}} \    %{b} %{Wl,*:%*} \    %{static:-dn -Bstatic} \    %{shared:-G -dy -z text} \    %{symbolic:-Bsymbolic -G -dy -z text} \    %{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{p:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{!p:-Y P,/usr/ucblib:/usr/ccs/lib:/usr/lib}} \      -R /usr/ucblib} \    %{!compat-bsd: \      %{!YP,*:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{!p:-Y P,/usr/ccs/lib:/usr/lib}}} \    %{Qy:} %{!Qn:-Qy}"
+value|"%{h*} %{v:-V} \    %{b} %{Wl,*:%*} \    %{static:-dn -Bstatic} \    %{shared:-G -dy -z text} \    %{symbolic:-Bsymbolic -G -dy -z text} \    %{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{pg:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \      %{!pg:%{p:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{!p:-Y P,/usr/ucblib:/usr/ccs/lib:/usr/lib}}} \      -R /usr/ucblib} \    %{!compat-bsd: \      %{!YP,*:%{pg:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \      %{!pg:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{!p:-Y P,/usr/ccs/lib:/usr/lib}}}} \    %{Qy:} %{!Qn:-Qy}"
 end_define
 
 begin_comment
@@ -121,7 +134,13 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|(   (CHAR) == 'D' \    || (CHAR) == 'U' \    || (CHAR) == 'o' \    || (CHAR) == 'e' \    || (CHAR) == 'u' \    || (CHAR) == 'I' \    || (CHAR) == 'm' \    || (CHAR) == 'L' \    || (CHAR) == 'R' \    || (CHAR) == 'A' \    || (CHAR) == 'h' \    || (CHAR) == 'z')
+value|(DEFAULT_SWITCH_TAKES_ARG(CHAR) \    || (CHAR) == 'R' \    || (CHAR) == 'h' \    || (CHAR) == 'z')
+end_define
+
+begin_define
+define|#
+directive|define
+name|STDC_0_IN_SYSTEM_HEADERS
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* svr3.h  --  operating system specific defines to be used when    targeting GCC for some generic System V Release 3 system.    Copyright (C) 1991 Free Software Foundation, Inc.     Written by Ron Guilmette (rfg@netcom.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
+comment|/* Operating system specific defines to be used when targeting GCC for    generic System V Release 3 system.    Copyright (C) 1991, 1996 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     To use this file, make up a file with a name like:  	?????svr3.h     where ????? is replaced by the name of the basic hardware that you    are targeting for.  Then, in the file ?????svr3.h, put something    like:  	#include "?????.h" 	#include "svr3.h"     followed by any really system-specific defines (or overrides of    defines) which you find that you need.  For example, CPP_PREDEFINES    is defined here with only the defined -Dunix and -DSVR3.  You should    probably override that in your target-specific ?????svr3.h file    with a set of defines that includes these, but also contains an    appropriate define for the type of hardware that you are targeting. */
 end_comment
 
 begin_comment
@@ -165,12 +165,35 @@ define|\
 value|"%{pg:gcrt1.o%s}%{!pg:%{p:mcrt1.o%s}%{!p:crt1.o%s}}"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CROSS_COMPILE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LIB_SPEC
+value|"-lc crtn.o%s"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LIB_SPEC
 value|"%{p:-L/usr/lib/libp}%{pg:-L/usr/lib/libp} -lc crtn.o%s"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Special flags for the linker.  I don't know what they do.  */
@@ -329,25 +352,20 @@ value|"\t.byte"
 end_define
 
 begin_comment
-comment|/* This is how to output a reference to a user-level label named NAME.    `assemble_name' uses this.     For System V Release 3 the convention is to prepend a leading    underscore onto user-level symbol names.  */
+comment|/* The prefix to add to user-visible assembler symbols.     For System V Release 3 the convention is to prepend a leading    underscore onto user-level symbol names.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_OUTPUT_LABELREF
+name|USER_LABEL_PREFIX
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_LABELREF
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-value|fprintf (FILE, "_%s", NAME)
+name|USER_LABEL_PREFIX
+value|"_"
 end_define
 
 begin_comment
@@ -516,7 +534,7 @@ comment|/* STACK_GROWS_DOWNWARD */
 end_comment
 
 begin_comment
-comment|/* Add extra sections .init and .fini, in addition to .bss from att386.h. */
+comment|/* Add extra sections .rodata, .init and .fini.  */
 end_comment
 
 begin_undef
@@ -529,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_bss, in_init, in_fini
+value|in_const, in_init, in_fini
 end_define
 
 begin_undef
@@ -543,15 +561,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION					\   BSS_SECTION_FUNCTION						\   INIT_SECTION_FUNCTION						\   FINI_SECTION_FUNCTION
-end_define
-
-begin_define
-define|#
-directive|define
-name|BSS_SECTION_FUNCTION
-define|\
-value|void								\ bss_section ()							\ {								\   if (in_section != in_bss)					\     {								\       fprintf (asm_out_file, "\t%s\n", BSS_SECTION_ASM_OP);	\       in_section = in_bss;					\     }								\ }
+value|CONST_SECTION_FUNCTION					\   INIT_SECTION_FUNCTION						\   FINI_SECTION_FUNCTION
 end_define
 
 begin_define

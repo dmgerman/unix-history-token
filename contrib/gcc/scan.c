@@ -6,19 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"scan.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"hconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scan.h"
 end_include
 
 begin_decl_stmt
@@ -177,13 +177,14 @@ modifier|*
 name|s
 decl_stmt|;
 specifier|register
+name|int
 name|count
-operator|=
+init|=
 name|SSTRING_LENGTH
 argument_list|(
 name|src
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|MAKE_SSTRING_SPACE
 argument_list|(
 name|dst
@@ -268,7 +269,7 @@ name|base
 expr_stmt|;
 if|if
 condition|(
-name|isalpha
+name|ISALPHA
 argument_list|(
 name|c
 argument_list|)
@@ -306,7 +307,7 @@ name|EOF
 operator|||
 operator|!
 operator|(
-name|isalnum
+name|ISALNUM
 argument_list|(
 name|c
 argument_list|)
@@ -358,6 +359,9 @@ specifier|register
 name|sstring
 modifier|*
 name|s
+decl_stmt|;
+name|int
+name|init
 decl_stmt|;
 block|{
 name|int
@@ -461,7 +465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Skip horizontal white spaces (spaces, tabs, and C-style comments). */
+comment|/* Skip horizontal white spaces (spaces, tabs, and C-style comments).  */
 end_comment
 
 begin_function
@@ -853,7 +857,7 @@ name|EOF
 return|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -882,7 +886,7 @@ name|c
 operator|!=
 name|EOF
 operator|&&
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -905,7 +909,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|isalpha
+name|ISALPHA
 argument_list|(
 name|c
 argument_list|)

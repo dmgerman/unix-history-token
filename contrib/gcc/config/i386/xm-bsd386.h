@@ -9,11 +9,5 @@ directive|include
 file|"i386/xm-i386.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|HAVE_STRERROR
-end_define
-
 end_unit
 

@@ -96,7 +96,7 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|{									\   if (current_sym_code == N_STSYM || current_sym_code == N_LCSYM)	\     fprintf (asmfile, "\t.es\n");					\ }
+value|{									\   if ((CODE) == N_STSYM || (CODE) == N_LCSYM)				\     fputs ("\t.es\n", (ASMFILE));					\ }
 end_define
 
 begin_comment
@@ -187,17 +187,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The line number of the beginning of the current function.    xcoffout.c needs this so that it can output relative linenumbers.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|xcoff_begin_function_line
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Name of the current include file.  */
 end_comment
 
@@ -206,18 +195,6 @@ specifier|extern
 name|char
 modifier|*
 name|xcoff_current_include_file
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Name of the current function file.  This is the file the `.bf' is    emitted from.  In case a line is emitted from a different file,    (by including that file of course), then the line number will be    absolute.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xcoff_current_function_file
 decl_stmt|;
 end_decl_stmt
 
@@ -290,7 +267,7 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|xcoff_lastfile = input_file_name
+value|xcoff_lastfile = (FILENAME)
 end_define
 
 begin_comment
@@ -307,7 +284,7 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|{							\   if (xcoff_current_include_file)			\     {							\       fprintf (FILE, "\t.ei\t");			\       output_quoted_string (FILE, xcoff_current_include_file);	\       fprintf (FILE, "\n");				\       xcoff_current_include_file = NULL;		\     }							\ }
+value|{							\   if (xcoff_current_include_file)			\     {							\       fputs ("\t.ei\t", (FILE));			\       output_quoted_string ((FILE), xcoff_current_include_file);	\       putc ('\n', (FILE));				\       xcoff_current_include_file = NULL;		\     }							\ }
 end_define
 
 begin_comment
@@ -340,6 +317,231 @@ define|#
 directive|define
 name|DEBUG_SYMS_TEXT
 end_define
+
+begin_comment
+comment|/* Prototype functions in xcoffout.c. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stab_to_sclass
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_begin_function
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_begin_block
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_end_epilogue
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_end_function
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_end_block
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BUFSIZ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TREE_CODE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoff_output_standard_types
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_declare_function
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|tree
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BUFSIZ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TREE_CODE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RTX_CODE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BUFSIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xcoffout_source_line
+name|PROTO
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BUFSIZ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RTX_CODE */
+end_comment
 
 end_unit
 

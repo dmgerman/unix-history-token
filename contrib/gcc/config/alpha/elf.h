@@ -1,41 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
 end_comment
-
-begin_comment
-comment|/* This is used on Alpha platforms that use the ELF format. Currently only Linux uses this. */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|"alpha/linux.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_VERSION
-value|fprintf (stderr, " (Alpha Linux/ELF)");
-end_define
 
 begin_undef
 undef|#
@@ -58,7 +24,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDB_DEBUGGING_INFO
+name|DBX_DEBUGGING_INFO
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|DBX_DEBUG
 end_define
 
 begin_undef
@@ -70,14 +49,27 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|CC1_SPEC
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"\ -D__alpha -D__alpha__ -D__linux__ -D__linux -D_LONGLONG -Dlinux -Dunix \ -Asystem(linux) -Acpu(alpha) -Amachine(alpha) -D__ELF__"
+name|CC1_SPEC
+value|"%{G*}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|"%{G*} %{relax:-relax}"
 end_define
 
 begin_undef
@@ -90,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64alpha -G 8 %{O*:-O3} %{!O*:-O1}	\   %{shared:-shared}						\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}		\     %{static:-static}}"
+value|"-m elf64alpha %{G*} %{relax:-relax}		\   %{O*:-O3} %{!O*:-O1}						\   %{shared:-shared}						\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker %(elf_dynamic_linker)}}	\     %{static:-static}}"
 end_define
 
 begin_comment
@@ -111,29 +103,8 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   alpha_write_verstamp (FILE);					\   output_file_directive (FILE, main_input_filename);		\   fprintf (FILE, "\t.version\t\"01.01\"\n");			\   fprintf (FILE, "\t.set noat\n");				\ }
+value|{								\   alpha_write_verstamp (FILE);					\   output_file_directive (FILE, main_input_filename);		\   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.set noreorder\n");                         \   if (TARGET_BWX | TARGET_MAX | TARGET_CIX)			\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (alpha_cpu == PROCESSOR_EV6 ? "ev6"		\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\ }
 end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_SOURCE_LINE
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|LINE
-parameter_list|)
-define|\
-value|alpha_output_lineno (STREAM, LINE)
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|alpha_output_lineno
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -181,7 +152,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|fprintf(FILE, "\t%s \"GCC (%s) %s\"\n", IDENT_ASM_OP,		\ 	 lang_identify(), version_string)
+value|fprintf(FILE, "\t%s \"GCC (%s) %s\"\n", IDENT_ASM_OP,	\ 	 lang_identify(), version_string)
 end_define
 
 begin_else
@@ -379,13 +350,6 @@ begin_comment
 comment|/* This says how to output assembler code to declare an    uninitialized internal linkage data object.  Under SVR4,    the linker seems to want the alignment of data objects    to depend on their types.  We do exactly that here.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOCAL_ASM_OP
-value|".local"
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -406,11 +370,11 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "\t%s\t", LOCAL_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), "\n");						\   ASM_OUTPUT_ALIGNED_COMMON (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   fprintf (FILE, "\t%s\t ", TYPE_ASM_OP);				\   assemble_name (FILE, NAME);						\   putc (',', FILE);							\   fprintf (FILE, TYPE_OPERAND_FMT, "object");				\   putc ('\n', FILE);							\   if (!flag_inhibit_size_directive)					\     {									\       fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, ",%d\n", (SIZE));					\     }									\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE));					\ } while (0)
 end_define
 
 begin_comment
-comment|/* This is the pseudo-op used to generate a 64-bit word of data with a    specific value in some section.    */
+comment|/* This is the pseudo-op used to generate a 64-bit word of data with a    specific value in some section.  */
 end_comment
 
 begin_define
@@ -418,6 +382,18 @@ define|#
 directive|define
 name|INT_ASM_OP
 value|".quad"
+end_define
+
+begin_comment
+comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.      This value is really 2^63.  Since gcc figures the alignment in bits,    we could only potentially get to 2^60 on suitible hosts.  Due to other    considerations in varasm, we must restrict this to what fits in an int.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_OFILE_ALIGNMENT
+define|\
+value|(1<< (HOST_BITS_PER_INT< 64 ? HOST_BITS_PER_INT - 2 : 62))
 end_define
 
 begin_comment
@@ -474,6 +450,31 @@ value|".section\t.dtors,\"aw\""
 end_define
 
 begin_comment
+comment|/* Handle the small data sections.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSS_SECTION_ASM_OP
+value|".section\t.bss"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBSS_SECTION_ASM_OP
+value|".section\t.sbss,\"aw\""
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDATA_SECTION_ASM_OP
+value|".section\t.sdata,\"aw\""
+end_define
+
+begin_comment
 comment|/* On svr4, we *do* have support for the .init and .fini sections, and we    can put stuff in there to be executed before and after `main'.  We let    crtstuff.c and other files know this by defining the following symbols.    The definitions say how to change sections to the .init and .fini    sections.  This is the same for all known svr4 assemblers.  */
 end_comment
 
@@ -492,17 +493,6 @@ value|".section\t.fini"
 end_define
 
 begin_comment
-comment|/* Support non-common, uninitialized data in the .bss section.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSS_SECTION_ASM_OP
-value|".section\t.bss"
-end_define
-
-begin_comment
 comment|/* A default list of other sections which we might be "in" at any given    time.  For targets that use additional sections (e.g. .tdesc) you    should override this definition in the target-specific file which    includes this file.  */
 end_comment
 
@@ -516,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_ctors, in_dtors, in_bss
+value|in_const, in_ctors, in_dtors, in_sbss, in_sdata
 end_define
 
 begin_comment
@@ -534,7 +524,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION						\   CTORS_SECTION_FUNCTION						\   DTORS_SECTION_FUNCTION						\   BSS_SECTION_FUNCTION
+value|CONST_SECTION_FUNCTION						\   SECTION_FUNCTION_TEMPLATE(ctors_section, in_ctors, CTORS_SECTION_ASM_OP) \   SECTION_FUNCTION_TEMPLATE(dtors_section, in_dtors, DTORS_SECTION_ASM_OP) \   SECTION_FUNCTION_TEMPLATE(sbss_section, in_sbss, SBSS_SECTION_ASM_OP)	\   SECTION_FUNCTION_TEMPLATE(sdata_section, in_sdata, SDATA_SECTION_ASM_OP)
 end_define
 
 begin_undef
@@ -570,25 +560,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTORS_SECTION_FUNCTION
+name|SECTION_FUNCTION_TEMPLATE
+parameter_list|(
+name|FN
+parameter_list|,
+name|ENUM
+parameter_list|,
+name|OP
+parameter_list|)
 define|\
-value|void									\ ctors_section ()							\ {									\   if (in_section != in_ctors)						\     {									\       fprintf (asm_out_file, "%s\n", CTORS_SECTION_ASM_OP);		\       in_section = in_ctors;						\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DTORS_SECTION_FUNCTION
-define|\
-value|void									\ dtors_section ()							\ {									\   if (in_section != in_dtors)						\     {									\       fprintf (asm_out_file, "%s\n", DTORS_SECTION_ASM_OP);		\       in_section = in_dtors;						\     }									\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BSS_SECTION_FUNCTION
-define|\
-value|void									\ bss_section ()								\ {									\   if (in_section != in_bss)						\     {									\       fprintf (asm_out_file, "%s\n", BSS_SECTION_ASM_OP);		\       in_section = in_bss;						\     }									\ }
+value|void FN ()								\ {									\   if (in_section != ENUM)						\     {									\       fprintf (asm_out_file, "%s\n", OP);				\       in_section = ENUM;						\     }									\ }
 end_define
 
 begin_comment
@@ -605,9 +586,11 @@ parameter_list|,
 name|DECL
 parameter_list|,
 name|NAME
+parameter_list|,
+name|RELOC
 parameter_list|)
 define|\
-value|fprintf (FILE, ".section\t%s,\"%s\",@progbits\n", NAME, \ 	   (DECL)&& TREE_CODE (DECL) == FUNCTION_DECL ? "ax" : \ 	   (DECL)&& TREE_READONLY (DECL) ? "a" : "aw")
+value|fprintf (FILE, ".section\t%s,\"%s\",@progbits\n", NAME, \ 	   (DECL)&& TREE_CODE (DECL) == FUNCTION_DECL ? "ax" : \ 	   (DECL)&& DECL_READONLY_SECTION (DECL, RELOC) ? "a" : "aw")
 end_define
 
 begin_comment
@@ -658,9 +641,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((flag_pic&& RELOC)						\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\         {								\           if (DECL_COMMON (DECL)					\&& !DECL_INITIAL (DECL))					\
-comment|/* || DECL_INITIAL (DECL) == error_mark_node)) */
-value|\ 	    bss_section();						\ 	  else								\ 	    data_section ();						\ 	}								\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
+value|{									\   if (TREE_CODE (DECL) == STRING_CST)					\     {									\       if (! flag_writable_strings)					\ 	const_section ();						\       else								\ 	data_section ();						\     }									\   else if (TREE_CODE (DECL) == VAR_DECL)				\     {									\       if ((flag_pic&& RELOC)						\ 	  || !TREE_READONLY (DECL) || TREE_SIDE_EFFECTS (DECL)		\ 	  || !DECL_INITIAL (DECL)					\ 	  || (DECL_INITIAL (DECL) != error_mark_node			\&& !TREE_CONSTANT (DECL_INITIAL (DECL))))			\ 	{								\ 	  int size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  if (size>= 0&& size<= g_switch_value)			\ 	    sdata_section ();						\ 	  else								\ 	    data_section ();						\ 	}								\       else								\ 	const_section ();						\     }									\   else									\     const_section ();							\ }
 end_define
 
 begin_comment
@@ -833,7 +814,7 @@ value|"\1\1\1\1\1\1\1\1btn\1fr\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\1\ \0\0\"\0\0\0
 end_define
 
 begin_comment
-comment|/* Some svr4 assemblers have a limit on the number of characters which    can appear in the operand of a .string directive.  If your assembler    has such a limitation, you should define STRING_LIMIT to reflect that    limit.  Note that at least some svr4 assemblers have a limit on the    actual number of bytes in the double-quoted string, and that they    count each character in an escape sequence as one byte.  Thus, an    escape sequence like \377 would count as four bytes.     If your target assembler doesn't support the .string directive, you    should define this to zero. */
+comment|/* Some svr4 assemblers have a limit on the number of characters which    can appear in the operand of a .string directive.  If your assembler    has such a limitation, you should define STRING_LIMIT to reflect that    limit.  Note that at least some svr4 assemblers have a limit on the    actual number of bytes in the double-quoted string, and that they    count each character in an escape sequence as one byte.  Thus, an    escape sequence like \377 would count as four bytes.     If your target assembler doesn't support the .string directive, you    should define this to zero.  */
 end_comment
 
 begin_define
@@ -851,7 +832,7 @@ value|".string"
 end_define
 
 begin_comment
-comment|/*  * We always use gas here, so we don't worry about ECOFF assembler problems.  */
+comment|/* GAS is the only Alpha/ELF assembler.  */
 end_comment
 
 begin_undef
@@ -867,21 +848,8 @@ name|TARGET_GAS
 value|(1)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|PREFERRED_DEBUGGING_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DBX_DEBUG
-end_define
-
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for Linux.  Here we add    the Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed before    entering `main'.      Don't bother seeing crtstuff.c -- there is absolutely no hope of    getting that file to understand multiple GPs.  GNU Libc provides a    hand-coded version that is used on Linux; it could be copied here    if there is ever a need. */
 end_comment
 
 begin_undef
@@ -895,11 +863,11 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s crtbegin.o%s"
 end_define
 
 begin_comment
-comment|/* Provide a ENDFILE_SPEC appropriate for Linux.  Here we tack on    the Linux magical crtend.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main', followed by a normal    Linux "finalizer" file, `crtn.o'.  */
+comment|/* Provide a ENDFILE_SPEC appropriate for ELF.  Here we tack on the    magical crtend.o file which provides part of the support for    getting C++ file-scope static object constructed before entering    `main', followed by a normal ELF "finalizer" file, `crtn.o'.  */
 end_comment
 
 begin_undef
@@ -913,7 +881,17 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+value|"crtend.o%s crtn.o%s"
+end_define
+
+begin_comment
+comment|/* We support #pragma.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
 end_define
 
 end_unit

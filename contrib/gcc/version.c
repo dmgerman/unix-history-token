@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"2.7.2.3"
+literal|"egcs-2.91.66 19990314 (egcs-1.1.2 release)"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nextstep.h -- operating system specific defines to be used when    targeting GCC for NeXTSTEP.    Copyright (C) 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC    for NeXTSTEP.    Copyright (C) 1989, 90-93, 1996, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -24,9 +24,32 @@ define|#
 directive|define
 name|INCLUDE_DEFAULTS
 define|\
-value|{							\     { GPLUSPLUS_INCLUDE_DIR, 1, 1 },			\     { LOCAL_INCLUDE_DIR, 0, 1 },			\     { TOOL_INCLUDE_DIR, 0, 1 },				\     { GCC_INCLUDE_DIR, 0, 0 },				\
+value|{							\     { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1 },		\     { LOCAL_INCLUDE_DIR, 0, 0, 1 },			\     { TOOL_INCLUDE_DIR, "BINUTILS", 0, 1 },		\     { GCC_INCLUDE_DIR, "GCC", 0, 0 },			\
 comment|/* These are for fixincludes-fixed ansi/bsd headers	\        which wouldn't be found otherwise.		\        (The use of string catenation here is OK since	\ 	NeXT's native compiler is derived from GCC.) */
-value|\     { GCC_INCLUDE_DIR "/ansi", 0, 0 },			\     { GCC_INCLUDE_DIR "/bsd", 0, 0 },			\     { "/NextDeveloper/Headers", 0, 0 },			\     { "/NextDeveloper/Headers/ansi", 0, 0 },		\     { "/NextDeveloper/Headers/bsd", 0, 0 },		\     { "/LocalDeveloper/Headers", 0, 0 },		\     { "/LocalDeveloper/Headers/ansi", 0, 0 },		\     { "/LocalDeveloper/Headers/bsd", 0, 0 },		\     { "/NextDeveloper/2.0CompatibleHeaders", 0, 0 },	\     { STANDARD_INCLUDE_DIR, 0, 0 },			\     { "/usr/include/bsd", 0, 0 },			\     { 0, 0, 0 }						\   }
+value|\     { GCC_INCLUDE_DIR "/ansi", 0, 0, 0 },		\     { GCC_INCLUDE_DIR "/bsd", 0, 0, 0 },		\     { "/NextDeveloper/Headers", 0, 0, 0 },		\     { "/NextDeveloper/Headers/ansi", 0, 0, 0 },		\     { "/NextDeveloper/Headers/bsd", 0, 0, 0 },		\     { "/LocalDeveloper/Headers", 0, 0, 0 },		\     { "/LocalDeveloper/Headers/ansi", 0, 0, 0 },	\     { "/LocalDeveloper/Headers/bsd", 0, 0, 0 },		\     { "/NextDeveloper/2.0CompatibleHeaders", 0, 0, 0 },	\     { STANDARD_INCLUDE_DIR, 0, 0, 0 },                  \     { "/usr/include/bsd", 0, 0, 0 },			\     { 0, 0, 0, 0 }				       	\   }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CROSS_COMPILE */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INCLUDE_DEFAULTS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_DEFAULTS
+define|\
+value|{							\     { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1 },		\     { GPLUSPLUS_INCLUDE_DIR, 0, 1, 1 },			\     { LOCAL_INCLUDE_DIR, 0, 0, 1 },			\     { GCC_INCLUDE_DIR, "GCC", 0, 0 },			\     { GCC_INCLUDE_DIR "/ansi", 0, 0, 0 },		\     { GCC_INCLUDE_DIR "/bsd", 0, 0, 0 },		\     { TOOL_INCLUDE_DIR, "BINUTILS", 0, 1 },		\     { TOOL_INCLUDE_DIR "/ansi", 0, 0, 0 },		\     { TOOL_INCLUDE_DIR "/bsd", 0, 0, 0 },		\     { STANDARD_INCLUDE_DIR, 0, 0, 0 },			\     { "/usr/include/bsd", 0, 0, 0 },			\     { 0, 0, 0, 0 }					\   }
 end_define
 
 begin_endif
@@ -235,23 +258,6 @@ directive|define
 name|STARTFILE_SPEC
 define|\
 value|"%{!posix*:%{pg:-lgcrt0.o}%{!pg: \      %{p:%e-p profiling is no longer supported.  Use -pg instead.} \      %{!p:-lcrt0.o}}}\      %{posix*:%{pg:-lgposixcrt0.o}%{!pg: \      %{p:%e-p profiling is no longer supported.  Use -pg instead.} \      %{!p:-lposixcrt0.o}}}"
-end_define
-
-begin_comment
-comment|/* Why not? */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DOLLARS_IN_IDENTIFIERS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DOLLARS_IN_IDENTIFIERS
-value|2
 end_define
 
 begin_comment
@@ -489,9 +495,11 @@ define|#
 directive|define
 name|HANDLE_PRAGMA
 parameter_list|(
-name|finput
+name|FINPUT
+parameter_list|,
+name|NODE
 parameter_list|)
-value|handle_pragma (finput,&get_directive_line)
+value|handle_pragma (FINPUT, NODE)
 end_define
 
 begin_comment
@@ -526,6 +534,23 @@ value|do { if (CAT_NAME)							\ 	 sprintf (BUF, "%c[%s(%s) %s]", (IS_INST) ? '-
 end_define
 
 begin_comment
+comment|/* The prefix to add to user-visible assembler symbols. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USER_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|USER_LABEL_PREFIX
+value|"_"
+end_define
+
+begin_comment
 comment|/* Wrap new method names in quotes so the assembler doesn't gag.    Make Objective-C internal symbols local.  */
 end_comment
 
@@ -545,7 +570,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do { if (NAME[0] == '+' || NAME[0] == '-') fprintf (FILE, "\"%s\"", NAME); \        else if (!strncmp (NAME, "_OBJC_", 6)) fprintf (FILE, "L%s", NAME);   \        else if (!strncmp (NAME, ".objc_class_name_", 17))		\ 	 fprintf (FILE, "%s", NAME);					\        else fprintf (FILE, "_%s", NAME); } while (0)
+value|do { if (NAME[0] == '+' || NAME[0] == '-') fprintf (FILE, "\"%s\"", NAME); \        else if (!strncmp (NAME, "_OBJC_", 6)) fprintf (FILE, "L%s", NAME);   \        else if (!strncmp (NAME, ".objc_class_name_", 17))		\ 	 fprintf (FILE, "%s", NAME);					\        else fprintf (FILE, "%s%s", USER_LABEL_PREFIX, NAME); } while (0)
 end_define
 
 begin_undef
@@ -746,6 +771,30 @@ name|rtx
 parameter_list|)
 define|\
 value|do									\     {									\       if (GET_MODE_SIZE(mode) == 8)					\ 	literal8_section();						\       else if (GET_MODE_SIZE(mode) == 4)				\ 	literal4_section();						\       else								\ 	const_section ();						\     }									\   while (0)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ASM_COMMENT_START
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_COMMENT_START
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ASM_COMMENT_START
+value|";#"
 end_define
 
 end_unit

@@ -131,29 +131,6 @@ name|WCHAR_TYPE_SIZE
 value|32
 end_define
 
-begin_define
-define|#
-directive|define
-name|HANDLE_SYSV_PRAGMA
-end_define
-
-begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|COMMENT_BEGIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|COMMENT_BEGIN
-value|"#"
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -208,6 +185,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -224,6 +203,7 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
+value|1
 end_define
 
 begin_comment
@@ -235,6 +215,32 @@ define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
 value|0
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* i386 netbsd still uses old binutils that don't insert nops by default    when the .align directive demands to insert extra space in the text    segment.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|)
+define|\
+value|if ((LOG)!=0) fprintf ((FILE), "\t.align %d,0x90\n", (LOG))
 end_define
 
 begin_escape
@@ -265,6 +271,17 @@ name|LABELNO
 parameter_list|)
 define|\
 value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tcall mcount@PLT\n");				\     }									\   else									\     {									\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+end_define
+
+begin_comment
+comment|/* Until they use ELF or something that handles dwarf2 unwinds    and initialization stuff better.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|0
 end_define
 
 end_unit

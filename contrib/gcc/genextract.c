@@ -1,18 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to extract operands from insn as rtl.    Copyright (C) 1987, 1991, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to extract operands from insn as rtl.    Copyright (C) 1987, 91, 92, 93, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"hconfig.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"system.h"
 end_include
 
 begin_include
@@ -65,22 +93,6 @@ directive|define
 name|obstack_chunk_free
 value|free
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|rtx
-name|read_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Names for patterns.  Need to allow linking with print-rtl.  */
@@ -261,54 +273,109 @@ name|peepholes
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|gen_insn
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|walk_rtx
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|print_path
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|xmalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|xrealloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PVPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|copystr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -318,12 +385,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|fancy_abort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -486,7 +558,7 @@ name|insn_code
 operator|=
 name|insn_code_number
 expr_stmt|;
-comment|/* See if we find something that already had this extraction method. */
+comment|/* See if we find something that already had this extraction method.  */
 for|for
 control|(
 name|p
@@ -806,12 +878,6 @@ specifier|register
 name|char
 modifier|*
 name|fmt
-decl_stmt|;
-specifier|register
-name|struct
-name|code_ptr
-modifier|*
-name|link
 decl_stmt|;
 name|int
 name|depth
@@ -1264,6 +1330,8 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return;
+default|default:
+break|break;
 block|}
 name|newpath
 operator|=
@@ -1454,6 +1522,21 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Don't emit "pat", since we may try to take the address of it, 	 which isn't what is intended.  */
+name|printf
+argument_list|(
+literal|"PATTERN (insn)"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* We first write out the operations (XEXP or XVECEXP) in reverse      order, then write "insn", then the indices in forward order.  */
 for|for
 control|(
@@ -1696,22 +1779,55 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|fatal
-parameter_list|(
-name|s
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
+name|VPROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+name|format
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|__STDC__
 name|char
 modifier|*
-name|s
+name|format
 decl_stmt|;
-block|{
+endif|#
+directive|endif
+name|va_list
+name|ap
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|ap
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__STDC__
+name|format
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -1719,15 +1835,18 @@ argument_list|,
 literal|"genextract: "
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|s
+name|format
 argument_list|,
-name|a1
-argument_list|,
-name|a2
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1743,7 +1862,7 @@ name|FATAL_EXIT_CODE
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* More 'friendly' abort that prints the line and file.    config.h can #define abort fancy_abort if you like that sort of thing.  */
@@ -1965,13 +2084,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"system.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"rtl.h\"\n\n"
 argument_list|)
 expr_stmt|;
 comment|/* This variable exists only so it can be the "location"      of any missing operand whose numbers are skipped by a given pattern.  */
 name|printf
 argument_list|(
-literal|"static rtx junk;\n"
+literal|"static rtx junk ATTRIBUTE_UNUSED;\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2022,6 +2146,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  rtx pat = PATTERN (insn);\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  int i ATTRIBUTE_UNUSED;\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2200,27 +2329,12 @@ expr_stmt|;
 comment|/* The vector in the insn says how many operands it has. 	 And all it contains are operands.  In fact, the vector was 	 created just for the sake of this function.  */
 name|printf
 argument_list|(
-literal|"#if __GNUC__> 1&& !defined (bcopy)\n"
+literal|"      for (i = XVECLEN (pat, 0) - 1; i>= 0; i--)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define bcopy(FROM,TO,COUNT) __builtin_memcpy(TO,FROM,COUNT)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#endif\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"      bcopy (&XVECEXP (pat, 0, 0), ro,\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"             sizeof (rtx) * XVECLEN (pat, 0));\n"
+literal|"          ro[i] = XVECEXP (pat, 0, i);\n"
 argument_list|)
 expr_stmt|;
 name|printf

@@ -514,6 +514,13 @@ begin_comment
 comment|/* #include "sys/types.h" */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ssize_t
+value|int
+end_define
+
 begin_comment
 comment|/* The actual types used here are mostly wrong,    but it is not supposed to matter what types we use here.  */
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel X86    (386, 486, Pentium).    Copyright (C) 1988, 1992, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler for Intel X86    (386, 486, Pentium).    Copyright (C) 1988, 92, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -111,6 +111,55 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Define the specific costs for a given cpu */
+end_comment
+
+begin_struct
+struct|struct
+name|processor_costs
+block|{
+name|int
+name|add
+decl_stmt|;
+comment|/* cost of an add instruction */
+name|int
+name|lea
+decl_stmt|;
+comment|/* cost of a lea instruction */
+name|int
+name|shift_var
+decl_stmt|;
+comment|/* variable shift costs */
+name|int
+name|shift_const
+decl_stmt|;
+comment|/* constant shift costs */
+name|int
+name|mult_init
+decl_stmt|;
+comment|/* cost of starting a multiply */
+name|int
+name|mult_bit
+decl_stmt|;
+comment|/* cost of multiply per each bit set */
+name|int
+name|divide
+decl_stmt|;
+comment|/* cost of a divide/mod */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|processor_costs
+modifier|*
+name|ix86_cost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Run-time compilation parameters selecting different hardware subsets.  */
 end_comment
 
@@ -165,18 +214,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_486
+name|MASK_NOTUSED1
 value|000000000002
 end_define
 
 begin_comment
-comment|/* 80486 specific */
+comment|/* bit not currently used */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MASK_NOTUSED1
+name|MASK_NOTUSED2
 value|000000000004
 end_define
 
@@ -250,6 +299,17 @@ begin_comment
 comment|/* Disable sin, cos, sqrt */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MASK_OMIT_LEAF_FRAME_POINTER
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* omit leaf frame pointers */
+end_comment
+
 begin_comment
 comment|/* Temporary codegen switches */
 end_comment
@@ -290,12 +350,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_DEBUG_ARG
+name|MASK_NO_PSEUDO
 value|000010000000
 end_define
 
 begin_comment
+comment|/* Move op's args -> pseudos */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_DEBUG_ARG
+value|000020000000
+end_define
+
+begin_comment
 comment|/* Debug function_arg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_SCHEDULE_PROLOGUE
+value|000040000000
+end_define
+
+begin_comment
+comment|/* Emit prologue as rtl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MASK_STACK_PROBE
+value|000100000000
+end_define
+
+begin_comment
+comment|/* Enable stack probing */
 end_comment
 
 begin_comment
@@ -376,6 +469,17 @@ value|(target_flags& MASK_NO_FANCY_MATH_387)
 end_define
 
 begin_comment
+comment|/* Don't create frame pointers for leaf functions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_OMIT_LEAF_FRAME_POINTER
+value|(target_flags& MASK_OMIT_LEAF_FRAME_POINTER)
+end_define
+
+begin_comment
 comment|/* Temporary switches for tuning code generation */
 end_comment
 
@@ -395,6 +499,17 @@ define|#
 directive|define
 name|TARGET_WIDE_MULTIPLY
 value|(!TARGET_NO_WIDE_MULTIPLY)
+end_define
+
+begin_comment
+comment|/* Emit/Don't emit prologue as rtl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_SCHEDULE_PROLOGUE
+value|(target_flags& MASK_SCHEDULE_PROLOGUE)
 end_define
 
 begin_comment
@@ -434,38 +549,226 @@ begin_comment
 comment|/* Don't generate memory->memory */
 end_comment
 
-begin_comment
-comment|/* Specific hardware switches */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|TARGET_486
-value|(target_flags& MASK_486)
+name|TARGET_PSEUDO
+value|((target_flags& MASK_NO_PSEUDO) == 0)
 end_define
 
 begin_comment
-comment|/* 80486DX, 80486SX, 80486DX[24] */
+comment|/* Move op's args into pseudos */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TARGET_386
-value|(!TARGET_486)
+value|(ix86_cpu == PROCESSOR_I386)
 end_define
 
-begin_comment
-comment|/* 80386 */
-end_comment
+begin_define
+define|#
+directive|define
+name|TARGET_486
+value|(ix86_cpu == PROCESSOR_I486)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PENTIUM
+value|(ix86_cpu == PROCESSOR_PENTIUM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PENTIUMPRO
+value|(ix86_cpu == PROCESSOR_PENTIUMPRO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_LEAVE
+value|(ix86_cpu == PROCESSOR_I386)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_PUSH_MEMORY
+value|(ix86_cpu == PROCESSOR_I386)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ZERO_EXTEND_WITH_AND
+value|(ix86_cpu != PROCESSOR_I386 \&& ix86_cpu != PROCESSOR_PENTIUMPRO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_DOUBLE_WITH_ADD
+value|(ix86_cpu != PROCESSOR_I386)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_BIT_TEST
+value|(ix86_cpu == PROCESSOR_I386)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_UNROLL_STRLEN
+value|(ix86_cpu != PROCESSOR_I386)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_Q_REG
+value|(ix86_cpu == PROCESSOR_PENTIUM \ 			  || ix86_cpu == PROCESSOR_PENTIUMPRO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_ANY_REG
+value|(ix86_cpu == PROCESSOR_I486)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_CMOVE
+value|(ix86_arch == PROCESSOR_PENTIUMPRO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEEP_BRANCH_PREDICTION
+value|(ix86_cpu == PROCESSOR_PENTIUMPRO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_STACK_PROBE
+value|(target_flags& MASK_STACK_PROBE)
+end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{ { "80387",			 MASK_80387 },				\   { "no-80387",			-MASK_80387 },				\   { "hard-float",		 MASK_80387 },				\   { "soft-float",		-MASK_80387 },				\   { "no-soft-float",		 MASK_80387 },				\   { "386",			-MASK_486 },				\   { "no-386",			 MASK_486 },				\   { "486",			 MASK_486 },				\   { "no-486",			-MASK_486 },				\   { "rtd",			 MASK_RTD },				\   { "no-rtd",			-MASK_RTD },				\   { "align-double",		 MASK_ALIGN_DOUBLE },			\   { "no-align-double",		-MASK_ALIGN_DOUBLE },			\   { "svr3-shlib",		 MASK_SVR3_SHLIB },			\   { "no-svr3-shlib",		-MASK_SVR3_SHLIB },			\   { "ieee-fp",			 MASK_IEEE_FP },			\   { "no-ieee-fp",		-MASK_IEEE_FP },			\   { "fp-ret-in-387",		 MASK_FLOAT_RETURNS },			\   { "no-fp-ret-in-387",		-MASK_FLOAT_RETURNS },			\   { "no-fancy-math-387",	 MASK_NO_FANCY_MATH_387 },		\   { "fancy-math-387",		-MASK_NO_FANCY_MATH_387 },		\   { "no-wide-multiply",		 MASK_NO_WIDE_MULTIPLY },		\   { "wide-multiply",		-MASK_NO_WIDE_MULTIPLY },		\   { "debug-addr",		 MASK_DEBUG_ADDR },			\   { "no-debug-addr",		-MASK_DEBUG_ADDR },			\   { "move",			-MASK_NO_MOVE },			\   { "no-move",			 MASK_NO_MOVE },			\   { "debug-arg",		 MASK_DEBUG_ARG },			\   { "no-debug-arg",		-MASK_DEBUG_ARG },			\   SUBTARGET_SWITCHES							\   { "", TARGET_DEFAULT | TARGET_CPU_DEFAULT}}
+value|{ { "80387",			 MASK_80387 },				\   { "no-80387",			-MASK_80387 },				\   { "hard-float",		 MASK_80387 },				\   { "soft-float",		-MASK_80387 },				\   { "no-soft-float",		 MASK_80387 },				\   { "386",			 0 },					\   { "no-386",			 0 },					\   { "486",			 0 },					\   { "no-486",			 0 },					\   { "pentium",			 0 },					\   { "pentiumpro",		 0 },					\   { "rtd",			 MASK_RTD },				\   { "no-rtd",			-MASK_RTD },				\   { "align-double",		 MASK_ALIGN_DOUBLE },			\   { "no-align-double",		-MASK_ALIGN_DOUBLE },			\   { "svr3-shlib",		 MASK_SVR3_SHLIB },			\   { "no-svr3-shlib",		-MASK_SVR3_SHLIB },			\   { "ieee-fp",			 MASK_IEEE_FP },			\   { "no-ieee-fp",		-MASK_IEEE_FP },			\   { "fp-ret-in-387",		 MASK_FLOAT_RETURNS },			\   { "no-fp-ret-in-387",		-MASK_FLOAT_RETURNS },			\   { "no-fancy-math-387",	 MASK_NO_FANCY_MATH_387 },		\   { "fancy-math-387",		-MASK_NO_FANCY_MATH_387 },		\   { "omit-leaf-frame-pointer",	 MASK_OMIT_LEAF_FRAME_POINTER }, 	\   { "no-omit-leaf-frame-pointer",-MASK_OMIT_LEAF_FRAME_POINTER },       \   { "no-wide-multiply",		 MASK_NO_WIDE_MULTIPLY },		\   { "wide-multiply",		-MASK_NO_WIDE_MULTIPLY },		\   { "schedule-prologue",	 MASK_SCHEDULE_PROLOGUE },		\   { "no-schedule-prologue",	-MASK_SCHEDULE_PROLOGUE },		\   { "debug-addr",		 MASK_DEBUG_ADDR },			\   { "no-debug-addr",		-MASK_DEBUG_ADDR },			\   { "move",			-MASK_NO_MOVE },			\   { "no-move",			 MASK_NO_MOVE },			\   { "debug-arg",		 MASK_DEBUG_ARG },			\   { "no-debug-arg",		-MASK_DEBUG_ARG },			\   { "stack-arg-probe",		 MASK_STACK_PROBE },			\   { "no-stack-arg-probe",	-MASK_STACK_PROBE },			\   { "windows",			0 },					\   { "dll",			0 },					\   SUBTARGET_SWITCHES							\   { "", MASK_SCHEDULE_PROLOGUE | TARGET_DEFAULT}}
+end_define
+
+begin_comment
+comment|/* Which processor to schedule for. The cpu attribute defines a list that    mirrors this list, so changes to i386.md must be made at the same time.  */
+end_comment
+
+begin_enum
+enum|enum
+name|processor_type
+block|{
+name|PROCESSOR_I386
+block|,
+comment|/* 80386 */
+name|PROCESSOR_I486
+block|,
+comment|/* 80486DX, 80486SX, 80486DX[24] */
+name|PROCESSOR_PENTIUM
+block|,
+name|PROCESSOR_PENTIUMPRO
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_I386_STRING
+value|"i386"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_I486_STRING
+value|"i486"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_I586_STRING
+value|"i586"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_PENTIUM_STRING
+value|"pentium"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_I686_STRING
+value|"i686"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_PENTIUMPRO_STRING
+value|"pentiumpro"
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|processor_type
+name|ix86_cpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ix86_arch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Define the default processor.  This is overridden by other tm.h files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_DEFAULT
+define|\
+value|((enum processor_type) TARGET_CPU_DEFAULT == PROCESSOR_I486) \ 			 		     ? PROCESSOR_I486  \   : ((enum processor_type) TARGET_CPU_DEFAULT == PROCESSOR_PENTIUM) \ 					       ? PROCESSOR_PENTIUM  \   : ((enum processor_type) TARGET_CPU_DEFAULT == PROCESSOR_PENTIUMPRO) \ 					       ? PROCESSOR_PENTIUMPRO  \   : PROCESSOR_I386
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_DEFAULT_STRING
+define|\
+value|((enum processor_type) TARGET_CPU_DEFAULT == PROCESSOR_I486) \ 			 		     ? PROCESSOR_I486_STRING  \   : ((enum processor_type) TARGET_CPU_DEFAULT == PROCESSOR_PENTIUM) \ 					       ? PROCESSOR_PENTIUM_STRING  \   : ((enum processor_type) TARGET_CPU_DEFAULT == PROCESSOR_PENTIUMPRO) \ 					       ? PROCESSOR_PENTIUMPRO_STRING  \   : PROCESSOR_I386_STRING
 end_define
 
 begin_comment
@@ -477,7 +780,7 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{ { "reg-alloc=",&i386_reg_alloc_order },			\   { "regparm=",&i386_regparm_string },				\   { "align-loops=",&i386_align_loops_string },			\   { "align-jumps=",&i386_align_jumps_string },			\   { "align-functions=",&i386_align_funcs_string },			\   SUBTARGET_OPTIONS							\ }
+value|{ { "cpu=",&ix86_cpu_string},				\   { "arch=",&ix86_arch_string},				\   { "reg-alloc=",&i386_reg_alloc_order },			\   { "regparm=",&i386_regparm_string },				\   { "align-loops=",&i386_align_loops_string },			\   { "align-jumps=",&i386_align_jumps_string },			\   { "align-functions=",&i386_align_funcs_string },			\   { "branch-cost=",&i386_branch_cost_string },			\   SUBTARGET_OPTIONS							\ }
 end_define
 
 begin_comment
@@ -505,6 +808,230 @@ begin_define
 define|#
 directive|define
 name|SUBTARGET_OPTIONS
+end_define
+
+begin_comment
+comment|/* Define this to change the optimizations performed by default.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTIMIZATION_OPTIONS
+parameter_list|(
+name|LEVEL
+parameter_list|,
+name|SIZE
+parameter_list|)
+value|optimization_options(LEVEL,SIZE)
+end_define
+
+begin_comment
+comment|/* Specs for the compiler proper */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CC1_CPU_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CC1_CPU_SPEC
+value|"\ %{!mcpu*: \ %{m386:-mcpu=i386 -march=i386} \ %{mno-486:-mcpu=i386 -march=i386} \ %{m486:-mcpu=i486 -march=i486} \ %{mno-386:-mcpu=i486 -march=i486} \ %{mno-pentium:-mcpu=i486 -march=i486} \ %{mpentium:-mcpu=pentium} \ %{mno-pentiumpro:-mcpu=pentium} \ %{mpentiumpro:-mcpu=pentiumpro}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_define
+define|#
+directive|define
+name|CPP_486_SPEC
+value|"%{!ansi:-Di486} -D__i486 -D__i486__"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_586_SPEC
+value|"%{!ansi:-Di586 -Dpentium} \ 	-D__i586 -D__i586__ -D__pentium -D__pentium__"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_686_SPEC
+value|"%{!ansi:-Di686 -Dpentiumpro} \ 	-D__i686 -D__i686__ -D__pentiumpro -D__pentiumpro__"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CPP_CPU_DEFAULT_SPEC
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|TARGET_CPU_DEFAULT
+operator|==
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU_DEFAULT_SPEC
+value|"%(cpp_486)"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|TARGET_CPU_DEFAULT
+operator|==
+literal|2
+end_if
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU_DEFAULT_SPEC
+value|"%(cpp_586)"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|TARGET_CPU_DEFAULT
+operator|==
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU_DEFAULT_SPEC
+value|"%(cpp_686)"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU_DEFAULT_SPEC
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPP_CPU_DEFAULT_SPEC */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CPP_CPU_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CPP_CPU_SPEC
+value|"\ -Asystem(unix) -Acpu(i386) -Amachine(i386) \ %{!ansi:-Di386} -D__i386 -D__i386__ \ %{mcpu=i486:%(cpp_486)} %{m486:%(cpp_486)} \ %{mpentium:%(cpp_586)} %{mcpu=pentium:%(cpp_586)} \ %{mpentiumpro:%(cpp_686)} %{mcpu=pentiumpro:%(cpp_686)} \ %{!mcpu*:%{!m486:%{!mpentium*:%(cpp_cpu_default)}}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CC1_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CC1_SPEC
+value|"%(cc1_spec) "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* This macro defines names of additional specifications to put in the    specs that can be used in various specifications like CC1_SPEC.  Its    definition is an initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    specification name, and a string constant that used by the GNU CC driver    program.     Do not define this macro if it does not need to do anything.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUBTARGET_EXTRA_SPECS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|EXTRA_SPECS
+define|\
+value|{ "cpp_486", CPP_486_SPEC},						\   { "cpp_586", CPP_586_SPEC},						\   { "cpp_686", CPP_686_SPEC},						\   { "cpp_cpu_default",	CPP_CPU_DEFAULT_SPEC },				\   { "cpp_cpu",	CPP_CPU_SPEC },						\   { "cc1_cpu",  CC1_CPU_SPEC },						\   SUBTARGET_EXTRA_SPECS
 end_define
 
 begin_escape
@@ -678,6 +1205,40 @@ value|(TARGET_ALIGN_DOUBLE ? 64 : 32)
 end_define
 
 begin_comment
+comment|/* If defined, a C expression to compute the alignment given to a    constant that is being placed in memory.  CONSTANT is the constant    and ALIGN is the alignment that the object would ordinarily have.    The value of this macro is used instead of that alignment to align    the object.     If this macro is not defined, then ALIGN is used.     The typical use of this macro is to increase alignment for string    constants to be word aligned so that `strcpy' calls that copy    constants can be done inline.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONSTANT_ALIGNMENT
+parameter_list|(
+name|EXP
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|(TREE_CODE (EXP) == REAL_CST						\     ? ((TYPE_MODE (TREE_TYPE (EXP)) == DFmode&& (ALIGN)< 64)		\ 	? 64								\    	: (TYPE_MODE (TREE_TYPE (EXP)) == XFmode&& (ALIGN)< 128)	\ 	? 128								\ 	: (ALIGN))							\     : TREE_CODE (EXP) == STRING_CST					\     ? ((TREE_STRING_LENGTH (EXP)>= 31&& (ALIGN)< 256)		\ 	? 256								\ 	: (ALIGN))							\     : (ALIGN))
+end_define
+
+begin_comment
+comment|/* If defined, a C expression to compute the alignment for a static    variable.  TYPE is the data type, and ALIGN is the alignment that    the object would ordinarily have.  The value of this macro is used    instead of that alignment to align the object.     If this macro is not defined, then ALIGN is used.     One use of this macro is to increase alignment of medium-size    data to make it all fit in fewer cache lines.  Another is to    cause character arrays to be word-aligned so that `strcpy' calls    that copy constants to character arrays can be done inline.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATA_ALIGNMENT
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|((AGGREGATE_TYPE_P (TYPE)						\&& TYPE_SIZE (TYPE)							\&& TREE_CODE (TYPE_SIZE (TYPE)) == INTEGER_CST			\&& (TREE_INT_CST_LOW (TYPE_SIZE (TYPE))>= 256			\ 	|| TREE_INT_CST_HIGH (TYPE_SIZE (TYPE)))&& (ALIGN)< 256)	\     ? 256								\     : TREE_CODE (TYPE) == ARRAY_TYPE					\     ? ((TYPE_MODE (TREE_TYPE (TYPE)) == DFmode&& (ALIGN)< 64)	\ 	? 64								\    	: (TYPE_MODE (TREE_TYPE (TYPE)) == XFmode&& (ALIGN)< 128)	\ 	? 128								\ 	: (ALIGN))							\     : TREE_CODE (TYPE) == COMPLEX_TYPE					\     ? ((TYPE_MODE (TYPE) == DCmode&& (ALIGN)< 64)			\ 	? 64								\    	: (TYPE_MODE (TYPE) == XCmode&& (ALIGN)< 128)			\ 	? 128								\ 	: (ALIGN))							\     : ((TREE_CODE (TYPE) == RECORD_TYPE					\ 	|| TREE_CODE (TYPE) == UNION_TYPE				\ 	|| TREE_CODE (TYPE) == QUAL_UNION_TYPE)				\&& TYPE_FIELDS (TYPE))						\     ? ((DECL_MODE (TYPE_FIELDS (TYPE)) == DFmode&& (ALIGN)< 64)	\ 	? 64								\ 	: (DECL_MODE (TYPE_FIELDS (TYPE)) == XFmode&& (ALIGN)< 128)	\ 	? 128								\ 	: (ALIGN))							\     : TREE_CODE (TYPE) == REAL_TYPE					\     ? ((TYPE_MODE (TYPE) == DFmode&& (ALIGN)< 64)			\ 	? 64								\    	: (TYPE_MODE (TYPE) == XFmode&& (ALIGN)< 128)			\ 	? 128								\ 	: (ALIGN))							\     : (ALIGN))
+end_define
+
+begin_comment
 comment|/* Set this non-zero if move instructions will actually fail to work    when given unaligned data.  */
 end_comment
 
@@ -725,11 +1286,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_LOOP_ALIGN
+name|LOOP_ALIGN
 parameter_list|(
-name|FILE
+name|LABEL
 parameter_list|)
-value|ASM_OUTPUT_ALIGN (FILE, i386_align_loops)
+value|(i386_align_loops)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_ALIGN_MAX_SKIP
+value|(i386_align_loops_string ? 0 : 7)
 end_define
 
 begin_comment
@@ -739,11 +1307,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASM_OUTPUT_ALIGN_CODE
+name|LABEL_ALIGN_AFTER_BARRIER
 parameter_list|(
-name|FILE
+name|LABEL
 parameter_list|)
-value|ASM_OUTPUT_ALIGN ((FILE), i386_align_jumps)
+value|(i386_align_jumps)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LABEL_ALIGN_AFTER_BARRIER_MAX_SKIP
+value|(i386_align_jumps_string ? 0 : 7)
 end_define
 
 begin_escape
@@ -761,6 +1336,16 @@ begin_define
 define|#
 directive|define
 name|STACK_REGS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_STACK_MODE
+parameter_list|(
+name|mode
+parameter_list|)
+value|(mode==DFmode || mode==SFmode || mode==XFmode)
 end_define
 
 begin_comment
@@ -874,7 +1459,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((REGNO)< 2 ? 1						\    : (REGNO)< 4 ? 1						\    : FP_REGNO_P (REGNO)						\    ? (((int) GET_MODE_CLASS (MODE) == (int) MODE_FLOAT		\        || (int) GET_MODE_CLASS (MODE) == (int) MODE_COMPLEX_FLOAT)	\&& GET_MODE_UNIT_SIZE (MODE)<= 12)			\    : (int) (MODE) != (int) QImode)
+value|((REGNO)< 4 ? 1						\    : FP_REGNO_P (REGNO)						\    ? (((int) GET_MODE_CLASS (MODE) == (int) MODE_FLOAT		\        || (int) GET_MODE_CLASS (MODE) == (int) MODE_COMPLEX_FLOAT)	\&& GET_MODE_UNIT_SIZE (MODE)<= (LONG_DOUBLE_TYPE_SIZE == 96 ? 12 : 8))\    : (int) (MODE) != (int) QImode ? 1				\    : (reload_in_progress | reload_completed) == 1)
 end_define
 
 begin_comment
@@ -890,24 +1475,8 @@ name|MODE1
 parameter_list|,
 name|MODE2
 parameter_list|)
-value|((MODE1) == (MODE2))
-end_define
-
-begin_comment
-comment|/* A C expression returning the cost of moving data from a register of class    CLASS1 to one of CLASS2.     On the i386, copying between floating-point and fixed-point    registers is expensive.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGISTER_MOVE_COST
-parameter_list|(
-name|CLASS1
-parameter_list|,
-name|CLASS2
-parameter_list|)
 define|\
-value|(((FLOAT_CLASS_P (CLASS1)&& ! FLOAT_CLASS_P (CLASS2))		\     || (! FLOAT_CLASS_P (CLASS1)&& FLOAT_CLASS_P (CLASS2))) ? 10	\    : 2)
+value|((MODE1) == (MODE2)						\    || ((MODE1) == SImode&& (MODE2) == HImode			\        || (MODE1) == HImode&& (MODE2) == SImode))
 end_define
 
 begin_comment
@@ -981,7 +1550,7 @@ begin_define
 define|#
 directive|define
 name|FRAME_POINTER_REQUIRED
-value|0
+value|(TARGET_OMIT_LEAF_FRAME_POINTER&& !leaf_function_p ())
 end_define
 
 begin_comment
@@ -1143,23 +1712,23 @@ define|#
 directive|define
 name|REG_CLASS_CONTENTS
 define|\
-value|{      0,							\      0x1,    0x2,  0x4,	 0x8,
+value|{      {0},							\      {0x1},    {0x2},  {0x4},	 {0x8},
 comment|/* AREG, DREG, CREG, BREG */
-value|\      0x3,
+value|\      {0x3},
 comment|/* AD_REGS */
-value|\      0xf,
+value|\      {0xf},
 comment|/* Q_REGS */
-value|\     0x10,   0x20,
+value|\     {0x10},   {0x20},
 comment|/* SIREG, DIREG */
-value|\  0x07f,
+value|\  {0x7f},
 comment|/* INDEX_REGS */
-value|\  0x100ff,
+value|\  {0x100ff},
 comment|/* GENERAL_REGS */
-value|\   0x0100, 0x0200,
+value|\   {0x0100}, {0x0200},
 comment|/* FP_TOP_REG, FP_SECOND_REG */
-value|\   0xff00,
+value|\   {0xff00},
 comment|/* FLOAT_REGS */
-value|\  0x1ffff }
+value|\  {0x1ffff}}
 end_define
 
 begin_comment
@@ -1184,6 +1753,7 @@ begin_define
 define|#
 directive|define
 name|SMALL_REGISTER_CLASSES
+value|1
 end_define
 
 begin_define
@@ -1321,11 +1891,11 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'I' ? (VALUE)>= 0&& (VALUE)<= 31 :	\    (C) == 'J' ? (VALUE)>= 0&& (VALUE)<= 63 :	\    (C) == 'K' ? (VALUE) == 0xff :		\    (C) == 'L' ? (VALUE) == 0xffff :		\    (C) == 'M' ? (VALUE)>= 0&& (VALUE)<= 3 :	\    (C) == 'N' ? (VALUE)>= 0&& (VALUE)<= 255 :\    0)
+value|((C) == 'I' ? (VALUE)>= 0&& (VALUE)<= 31 :	\    (C) == 'J' ? (VALUE)>= 0&& (VALUE)<= 63 :	\    (C) == 'K' ? (VALUE) == 0xff :		\    (C) == 'L' ? (VALUE) == 0xffff :		\    (C) == 'M' ? (VALUE)>= 0&& (VALUE)<= 3 :	\    (C) == 'N' ? (VALUE)>= 0&& (VALUE)<= 255 :\    (C) == 'O' ? (VALUE)>= 0&& (VALUE)<= 32 :	\    0)
 end_define
 
 begin_comment
-comment|/* Similar, but for floating constants, and defining letters G and H.    Here VALUE is the CONST_DOUBLE rtx itself.  We allow constants even if    TARGET_387 isn't set, because the stack register converter may need to    load 0.0 into the function value register. */
+comment|/* Similar, but for floating constants, and defining letters G and H.    Here VALUE is the CONST_DOUBLE rtx itself.  We allow constants even if    TARGET_387 isn't set, because the stack register converter may need to    load 0.0 into the function value register.     We disallow these constants when -fomit-frame-pointer and compiling    PIC code since reload might need to force the constant to memory.    Forcing the constant to memory changes the elimination offsets after    the point where they must stay constant.     However, we must allow them after reload as completed as reg-stack.c    will create insns which use these constants.  */
 end_comment
 
 begin_define
@@ -1338,7 +1908,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'G' ? standard_80387_constant_p (VALUE) : 0)
+value|(((reload_completed || !flag_pic || !flag_omit_frame_pointer)&& (C) == 'G') \    ? standard_80387_constant_p (VALUE) : 0)
 end_define
 
 begin_comment
@@ -1533,7 +2103,7 @@ parameter_list|,
 name|FUNC
 parameter_list|)
 define|\
-value|gen_rtx (REG, TYPE_MODE (VALTYPE), \ 	    VALUE_REGNO (TYPE_MODE (VALTYPE)))
+value|gen_rtx_REG (TYPE_MODE (VALTYPE), \ 	    VALUE_REGNO (TYPE_MODE (VALTYPE)))
 end_define
 
 begin_comment
@@ -1548,7 +2118,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|gen_rtx (REG, MODE, VALUE_REGNO (MODE))
+value|gen_rtx_REG (MODE, VALUE_REGNO (MODE))
 end_define
 
 begin_comment
@@ -1616,6 +2186,8 @@ parameter_list|,
 name|FNTYPE
 parameter_list|,
 name|LIBNAME
+parameter_list|,
+name|INDIRECT
 parameter_list|)
 define|\
 value|(init_cumulative_args (&CUM, FNTYPE, LIBNAME))
@@ -1685,6 +2257,29 @@ value|(function_arg_partial_nregs (&CUM, MODE, TYPE, NAMED))
 end_define
 
 begin_comment
+comment|/* This macro is invoked just before the start of a function.    It is used here to output code for -fpic that will load the    return address into %ebx.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_FUNCTION_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_FUNCTION_PREFIX
+parameter_list|(
+name|FILE
+parameter_list|,
+name|FNNAME
+parameter_list|)
+define|\
+value|asm_output_function_prefix (FILE, FNNAME)
+end_define
+
+begin_comment
 comment|/* This macro generates the assembly code for function entry.    FILE is a stdio stream to output the code to.    SIZE is an int: how many units of temporary storage to allocate.    Refer to the array `regs_ever_live' to determine which registers    to save; `regs_ever_live[I]' is nonzero if register number I    is ever used in the function.  This macro is responsible for    knowing which registers should not be saved even if used.  */
 end_comment
 
@@ -1719,7 +2314,11 @@ value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, 
 end_define
 
 begin_comment
-comment|/* A C statement or compound statement to output to FILE some    assembler code to initialize basic-block profiling for the current    object module.  This code should call the subroutine    `__bb_init_func' once per object module, passing it as its sole    argument the address of a block allocated in the object module.     The name of the block is a local symbol made with this statement:  	ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 0);     Of course, since you are writing the definition of    `ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you    can take a short cut in the definition of this macro and use the    name that you know will result.     The first word of this block is a flag which will be nonzero if the    object module has already been initialized.  So test this word    first, and do not call `__bb_init_func' if the flag is nonzero.  */
+comment|/* There are three profiling modes for basic blocks available.    The modes are selected at compile time by using the options    -a or -ax of the gnu compiler.    The variable `profile_block_flag' will be set according to the    selected option.     profile_block_flag == 0, no option used:        No profiling done.     profile_block_flag == 1, -a option used.        Count frequency of execution of every basic block.     profile_block_flag == 2, -ax option used.        Generate code to allow several different profiling modes at run time.        Available modes are:              Produce a trace of all basic blocks.              Count frequency of jump instructions executed.       In every mode it is possible to start profiling upon entering       certain functions and to disable profiling of some other functions.      The result of basic-block profiling will be written to a file `bb.out'.     If the -ax option is used parameters for the profiling will be read     from file `bb.in'.  */
+end_comment
+
+begin_comment
+comment|/* The following macro shall output assembler code to FILE    to initialize basic-block profiling.     If profile_block_flag == 2  	Output code to call the subroutine `__bb_init_trace_func' 	and pass two parameters to it. The first parameter is 	the address of a block allocated in the object module. 	The second parameter is the number of the first basic block 	of the function.  	The name of the block is a local symbol made with this statement: 	 	    ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 0);  	Of course, since you are writing the definition of 	`ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you 	can take a short cut in the definition of this macro and use the 	name that you know will result.  	The number of the first basic block of the function is 	passed to the macro in BLOCK_OR_LABEL.  	If described in a virtual assembler language the code to be 	output looks like:  		parameter1<- LPBX0 		parameter2<- BLOCK_OR_LABEL 		call __bb_init_trace_func      else if profile_block_flag != 0  	Output code to call the subroutine `__bb_init_func' 	and pass one single parameter to it, which is the same 	as the first parameter to `__bb_init_trace_func'.  	The first word of this parameter is a flag which will be nonzero if 	the object module has already been initialized.  So test this word 	first, and do not call `__bb_init_func' if the flag is nonzero. 	Note: When profile_block_flag == 2 the test need not be done 	but `__bb_init_trace_func' *must* be called.  	BLOCK_OR_LABEL may be used to generate a label number as a 	branch destination in case `__bb_init_func' will not be called.  	If described in a virtual assembler language the code to be 	output looks like:  		cmp (LPBX0),0 		jne local_label 		parameter1<- LPBX0 		call __bb_init_func local_label:  */
 end_comment
 
 begin_undef
@@ -1733,18 +2332,18 @@ define|#
 directive|define
 name|FUNCTION_BLOCK_PROFILER
 parameter_list|(
-name|STREAM
+name|FILE
 parameter_list|,
-name|LABELNO
+name|BLOCK_OR_LABEL
 parameter_list|)
 define|\
-value|do									\   {									\     static int num_func = 0;						\     rtx xops[8];							\     char block_table[80], false_label[80];				\ 									\     ASM_GENERATE_INTERNAL_LABEL (block_table, "LPBX", 0);		\     ASM_GENERATE_INTERNAL_LABEL (false_label, "LPBZ", num_func);	\ 									\     xops[0] = const0_rtx;						\     xops[1] = gen_rtx (SYMBOL_REF, VOIDmode, block_table);		\     xops[2] = gen_rtx (MEM, Pmode, gen_rtx (SYMBOL_REF, VOIDmode, false_label)); \     xops[3] = gen_rtx (MEM, Pmode, gen_rtx (SYMBOL_REF, VOIDmode, "__bb_init_func")); \     xops[4] = gen_rtx (MEM, Pmode, xops[1]);				\     xops[5] = stack_pointer_rtx;					\     xops[6] = GEN_INT (4);						\     xops[7] = gen_rtx (REG, Pmode, 0);
+value|do									\   {									\     static int num_func = 0;						\     rtx xops[8];							\     char block_table[80], false_label[80];				\ 									\     ASM_GENERATE_INTERNAL_LABEL (block_table, "LPBX", 0);		\ 									\     xops[1] = gen_rtx_SYMBOL_REF (VOIDmode, block_table);		\     xops[5] = stack_pointer_rtx;					\     xops[7] = gen_rtx_REG (Pmode, 0);
 comment|/* eax */
-value|\ 									\     CONSTANT_POOL_ADDRESS_P (xops[1]) = TRUE;				\     CONSTANT_POOL_ADDRESS_P (xops[2]) = TRUE;				\ 									\     output_asm_insn (AS2(cmp%L4,%0,%4), xops);				\     output_asm_insn (AS1(jne,%2), xops);				\ 									\     if (!flag_pic)							\       output_asm_insn (AS1(push%L1,%1), xops);				\     else								\       {									\ 	output_asm_insn (AS2 (lea%L7,%a1,%7), xops);			\ 	output_asm_insn (AS1 (push%L7,%7), xops);			\       }									\ 									\     output_asm_insn (AS1(call,%P3), xops);				\     output_asm_insn (AS2(add%L0,%6,%5), xops);				\     ASM_OUTPUT_INTERNAL_LABEL (STREAM, "LPBZ", num_func);		\     num_func++;								\   }									\ while (0)
+value|\ 									\     CONSTANT_POOL_ADDRESS_P (xops[1]) = TRUE;				\ 									\     switch (profile_block_flag) 					\       {									\ 									\       case 2:								\ 									\         xops[2] = GEN_INT ((BLOCK_OR_LABEL));				\         xops[3] = gen_rtx_MEM (Pmode, gen_rtx_SYMBOL_REF (VOIDmode, "__bb_init_trace_func")); \         xops[6] = GEN_INT (8);						\     									\         output_asm_insn (AS1(push%L2,%2), xops);			\         if (!flag_pic)							\           output_asm_insn (AS1(push%L1,%1), xops);			\         else								\           {								\             output_asm_insn (AS2 (lea%L7,%a1,%7), xops);		\             output_asm_insn (AS1 (push%L7,%7), xops);			\           }								\     									\         output_asm_insn (AS1(call,%P3), xops);				\         output_asm_insn (AS2(add%L0,%6,%5), xops);			\ 									\         break;								\ 									\       default:								\ 									\         ASM_GENERATE_INTERNAL_LABEL (false_label, "LPBZ", num_func);	\     									\         xops[0] = const0_rtx;						\         xops[2] = gen_rtx_MEM (Pmode, gen_rtx_SYMBOL_REF (VOIDmode, false_label)); \         xops[3] = gen_rtx_MEM (Pmode, gen_rtx_SYMBOL_REF (VOIDmode, "__bb_init_func")); \         xops[4] = gen_rtx_MEM (Pmode, xops[1]);			\         xops[6] = GEN_INT (4);						\     									\         CONSTANT_POOL_ADDRESS_P (xops[2]) = TRUE;			\     									\         output_asm_insn (AS2(cmp%L4,%0,%4), xops);			\         output_asm_insn (AS1(jne,%2), xops);				\     									\         if (!flag_pic)							\           output_asm_insn (AS1(push%L1,%1), xops);			\         else								\           {								\             output_asm_insn (AS2 (lea%L7,%a1,%7), xops);		\             output_asm_insn (AS1 (push%L7,%7), xops);			\           }								\     									\         output_asm_insn (AS1(call,%P3), xops);				\         output_asm_insn (AS2(add%L0,%6,%5), xops);			\         ASM_OUTPUT_INTERNAL_LABEL (FILE, "LPBZ", num_func);		\         num_func++;							\ 									\         break;								\ 									\     }									\   }									\ while (0)
 end_define
 
 begin_comment
-comment|/* A C statement or compound statement to increment the count    associated with the basic block number BLOCKNO.  Basic blocks are    numbered separately from zero within each compilation.  The count    associated with block number BLOCKNO is at index BLOCKNO in a    vector of words; the name of this array is a local symbol made    with this statement:  	ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 2);     Of course, since you are writing the definition of    `ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you    can take a short cut in the definition of this macro and use the    name that you know will result.  */
+comment|/* The following macro shall output assembler code to FILE    to increment a counter associated with basic block number BLOCKNO.     If profile_block_flag == 2  	Output code to initialize the global structure `__bb' and 	call the function `__bb_trace_func' which will increment the 	counter.  	`__bb' consists of two words. In the first word the number 	of the basic block has to be stored. In the second word 	the address of a block allocated in the object module  	has to be stored.  	The basic block number is given by BLOCKNO.  	The address of the block is given by the label created with   	    ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 0);  	by FUNCTION_BLOCK_PROFILER.  	Of course, since you are writing the definition of 	`ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you 	can take a short cut in the definition of this macro and use the 	name that you know will result.  	If described in a virtual assembler language the code to be 	output looks like:  		move BLOCKNO -> (__bb) 		move LPBX0 -> (__bb+4) 		call __bb_trace_func  	Note that function `__bb_trace_func' must not change the 	machine state, especially the flag register. To grant 	this, you must output code to save and restore registers 	either in this macro or in the macros MACHINE_STATE_SAVE 	and MACHINE_STATE_RESTORE. The last two macros will be 	used in the function `__bb_trace_func', so you must make 	sure that the function prologue does not change any  	register prior to saving it with MACHINE_STATE_SAVE.     else if profile_block_flag != 0  	Output code to increment the counter directly. 	Basic blocks are numbered separately from zero within each 	compiled object module. The count associated with block number 	BLOCKNO is at index BLOCKNO in an array of words; the name of  	this array is a local symbol made with this statement:  	    ASM_GENERATE_INTERNAL_LABEL (BUFFER, "LPBX", 2);  	Of course, since you are writing the definition of 	`ASM_GENERATE_INTERNAL_LABEL' as well as that of this macro, you 	can take a short cut in the definition of this macro and use the 	name that you know will result.   	If described in a virtual assembler language the code to be 	output looks like:  		inc (LPBX2+4*BLOCKNO)  */
 end_comment
 
 begin_define
@@ -1752,12 +2351,55 @@ define|#
 directive|define
 name|BLOCK_PROFILER
 parameter_list|(
-name|STREAM
+name|FILE
 parameter_list|,
 name|BLOCKNO
 parameter_list|)
 define|\
-value|do									\   {									\     rtx xops[1], cnt_rtx;						\     char counts[80];							\ 									\     ASM_GENERATE_INTERNAL_LABEL (counts, "LPBX", 2);			\     cnt_rtx = gen_rtx (SYMBOL_REF, VOIDmode, counts);			\     SYMBOL_REF_FLAG (cnt_rtx) = TRUE;					\ 									\     if (BLOCKNO)							\       cnt_rtx = plus_constant (cnt_rtx, (BLOCKNO)*4);			\ 									\     if (flag_pic)							\       cnt_rtx = gen_rtx (PLUS, Pmode, pic_offset_table_rtx, cnt_rtx);	\ 									\     xops[0] = gen_rtx (MEM, SImode, cnt_rtx);				\     output_asm_insn (AS1(inc%L0,%0), xops);				\   }									\ while (0)
+value|do									\   {									\     rtx xops[8], cnt_rtx;						\     char counts[80];							\     char *block_table = counts;						\ 									\     switch (profile_block_flag) 					\       {									\ 									\       case 2:								\ 									\         ASM_GENERATE_INTERNAL_LABEL (block_table, "LPBX", 0);		\ 									\ 	xops[1] = gen_rtx_SYMBOL_REF (VOIDmode, block_table);		\         xops[2] = GEN_INT ((BLOCKNO));					\         xops[3] = gen_rtx_MEM (Pmode, gen_rtx_SYMBOL_REF (VOIDmode, "__bb_trace_func")); \         xops[4] = gen_rtx_SYMBOL_REF (VOIDmode, "__bb");		\ 	xops[5] = plus_constant (xops[4], 4);				\ 	xops[0] = gen_rtx_MEM (SImode, xops[4]);			\ 	xops[6] = gen_rtx_MEM (SImode, xops[5]);			\ 									\ 	CONSTANT_POOL_ADDRESS_P (xops[1]) = TRUE;			\ 									\ 	fprintf(FILE, "\tpushf\n");					\         output_asm_insn (AS2(mov%L0,%2,%0), xops);			\ 	if (flag_pic)							\ 	  {								\             xops[7] = gen_rtx_REG (Pmode, 0);
+comment|/* eax */
+value|\             output_asm_insn (AS1(push%L7,%7), xops);			\             output_asm_insn (AS2(lea%L7,%a1,%7), xops);			\             output_asm_insn (AS2(mov%L6,%7,%6), xops);			\             output_asm_insn (AS1(pop%L7,%7), xops);			\ 	  }								\         else								\           output_asm_insn (AS2(mov%L6,%1,%6), xops);			\         output_asm_insn (AS1(call,%P3), xops);				\ 	fprintf(FILE, "\tpopf\n");					\ 									\         break;								\ 									\       default:								\ 									\         ASM_GENERATE_INTERNAL_LABEL (counts, "LPBX", 2);		\         cnt_rtx = gen_rtx_SYMBOL_REF (VOIDmode, counts);		\         SYMBOL_REF_FLAG (cnt_rtx) = TRUE;				\ 									\         if (BLOCKNO)							\           cnt_rtx = plus_constant (cnt_rtx, (BLOCKNO)*4);		\ 									\         if (flag_pic)							\           cnt_rtx = gen_rtx_PLUS (Pmode, pic_offset_table_rtx, cnt_rtx);	\ 									\         xops[0] = gen_rtx_MEM (SImode, cnt_rtx);			\         output_asm_insn (AS1(inc%L0,%0), xops);				\ 									\         break;								\ 									\     }									\   }									\ while (0)
+end_define
+
+begin_comment
+comment|/* The following macro shall output assembler code to FILE    to indicate a return from function during basic-block profiling.     If profiling_block_flag == 2:  	Output assembler code to call function `__bb_trace_ret'.  	Note that function `__bb_trace_ret' must not change the 	machine state, especially the flag register. To grant 	this, you must output code to save and restore registers 	either in this macro or in the macros MACHINE_STATE_SAVE_RET 	and MACHINE_STATE_RESTORE_RET. The last two macros will be 	used in the function `__bb_trace_ret', so you must make 	sure that the function prologue does not change any  	register prior to saving it with MACHINE_STATE_SAVE_RET.     else if profiling_block_flag != 0:  	The macro will not be used, so it need not distinguish 	these cases. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_BLOCK_PROFILER_EXIT
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|do									\   {									\     rtx xops[1];							\ 									\     xops[0] = gen_rtx_MEM (Pmode, gen_rtx_SYMBOL_REF (VOIDmode, "__bb_trace_ret")); \ 									\     output_asm_insn (AS1(call,%P0), xops);				\ 									\   }									\ while (0)
+end_define
+
+begin_comment
+comment|/* The function `__bb_trace_func' is called in every basic block    and is not allowed to change the machine state. Saving (restoring)    the state can either be done in the BLOCK_PROFILER macro,    before calling function (rsp. after returning from function)    `__bb_trace_func', or it can be done inside the function by    defining the macros:  	MACHINE_STATE_SAVE(ID) 	MACHINE_STATE_RESTORE(ID)     In the latter case care must be taken, that the prologue code    of function `__bb_trace_func' does not already change the    state prior to saving it with MACHINE_STATE_SAVE.     The parameter `ID' is a string identifying a unique macro use.     On the i386 the initialization code at the begin of    function `__bb_trace_func' contains a `sub' instruction    therefore we handle save and restore of the flag register     in the BLOCK_PROFILER macro. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MACHINE_STATE_SAVE
+parameter_list|(
+name|ID
+parameter_list|)
+define|\
+value|asm ("	pushl %eax"); \   asm ("	pushl %ecx"); \   asm ("	pushl %edx"); \   asm ("	pushl %esi");
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACHINE_STATE_RESTORE
+parameter_list|(
+name|ID
+parameter_list|)
+define|\
+value|asm ("	popl %esi"); \   asm ("	popl %edx"); \   asm ("	popl %ecx"); \   asm ("	popl %eax");
 end_define
 
 begin_comment
@@ -1779,6 +2421,30 @@ begin_comment
 comment|/* This macro generates the assembly code for function exit,    on machines that need it.  If FUNCTION_EPILOGUE is not defined    then individual return instructions are generated for each    return statement.  Args are same as for FUNCTION_PROLOGUE.     The function epilogue should not depend on the current stack pointer!    It should use the frame pointer only.  This is mandatory because    of alloca; we also take advantage of it to omit stack adjustments    before returning.     If the last non-note insn in the function is a BARRIER, then there    is no need to emit a function prologue, because control does not fall    off the end.  This happens if the function ends in an "exit" call, or    if a `return' insn is emitted directly into the function. */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_BEGIN_EPILOGUE
+parameter_list|(
+name|FILE
+parameter_list|)
+define|\
+value|do {						\   rtx last = get_last_insn ();			\   if (last&& GET_CODE (last) == NOTE)		\     last = prev_nonnote_insn (last);		\
+comment|/*  if (! last || GET_CODE (last) != BARRIER)	\     function_epilogue (FILE, SIZE);*/
+value|\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1789,7 +2455,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|do {						\   rtx last = get_last_insn ();			\   if (last&& GET_CODE (last) == NOTE)		\     last = prev_nonnote_insn (last);		\   if (! last || GET_CODE (last) != BARRIER)	\     function_epilogue (FILE, SIZE);		\ } while (0)
+value|function_epilogue (FILE, SIZE)
 end_define
 
 begin_comment
@@ -1838,7 +2504,7 @@ parameter_list|,
 name|CXT
 parameter_list|)
 define|\
-value|{									\   emit_move_insn (gen_rtx (MEM, SImode, plus_constant (TRAMP, 1)), CXT); \   emit_move_insn (gen_rtx (MEM, SImode, plus_constant (TRAMP, 6)), FNADDR); \ }
+value|{									\   emit_move_insn (gen_rtx_MEM (SImode, plus_constant (TRAMP, 1)), CXT); \   emit_move_insn (gen_rtx_MEM (SImode, plus_constant (TRAMP, 6)), FNADDR); \ }
 end_define
 
 begin_escape
@@ -1891,7 +2557,7 @@ parameter_list|)
 define|\
 value|{									\   if ((FROM) == ARG_POINTER_REGNUM&& (TO) == FRAME_POINTER_REGNUM)	\     (OFFSET) = 8;
 comment|/* Skip saved PC and previous frame pointer */
-value|\   else									\     {									\       int regno;							\       int offset = 0;							\ 									\       for (regno = 0; regno< FIRST_PSEUDO_REGISTER; regno++)		\ 	if ((regs_ever_live[regno]&& ! call_used_regs[regno])		\ 	    || (current_function_uses_pic_offset_table			\&& regno == PIC_OFFSET_TABLE_REGNUM))			\ 	  offset += 4;							\ 									\       (OFFSET) = offset + get_frame_size ();				\ 									\       if ((FROM) == ARG_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM)	\ 	(OFFSET) += 4;
+value|\   else									\     {									\       int regno;							\       int offset = 0;							\ 									\       for (regno = 0; regno< FIRST_PSEUDO_REGISTER; regno++)		\ 	if ((regs_ever_live[regno]&& ! call_used_regs[regno])		\ 	    || ((current_function_uses_pic_offset_table			\ 		 || current_function_uses_const_pool)			\&& flag_pic&& regno == PIC_OFFSET_TABLE_REGNUM))	\ 	  offset += 4;							\ 									\       (OFFSET) = offset + get_frame_size ();				\ 									\       if ((FROM) == ARG_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM)	\ 	(OFFSET) += 4;
 comment|/* Skip saved PC */
 value|\     }									\ }
 end_define
@@ -2221,7 +2887,17 @@ parameter_list|,
 name|WIN
 parameter_list|)
 define|\
-value|{									\   rtx orig_x = (X);							\   (X) = legitimize_address (X, OLDX, MODE);				\   if (memory_address_p (MODE, X))					\     goto WIN;								\ }
+value|{									\   (X) = legitimize_address (X, OLDX, MODE);				\   if (memory_address_p (MODE, X))					\     goto WIN;								\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|REWRITE_ADDRESS
+parameter_list|(
+name|x
+parameter_list|)
+value|rewrite_address(x)
 end_define
 
 begin_comment
@@ -2282,7 +2958,7 @@ parameter_list|(
 name|DECL
 parameter_list|)
 define|\
-value|do									\   {									\     if (flag_pic)							\       {									\ 	rtx rtl = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'		\ 		   ? TREE_CST_RTL (DECL) : DECL_RTL (DECL));		\ 	SYMBOL_REF_FLAG (XEXP (rtl, 0))					\ 	  = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'			\ 	     || ! TREE_PUBLIC (DECL));					\       }									\   }									\ while (0)
+value|do									\   {									\     if (flag_pic)							\       {									\ 	rtx rtl = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'		\ 		   ? TREE_CST_RTL (DECL) : DECL_RTL (DECL));		\ 									\ 	if (TARGET_DEBUG_ADDR						\&& TREE_CODE_CLASS (TREE_CODE (DECL)) == 'd')		\ 	  {								\ 	    fprintf (stderr, "Encode %s, public = %d\n",		\ 		     IDENTIFIER_POINTER (DECL_NAME (DECL)),		\ 		     TREE_PUBLIC (DECL));				\ 	  }								\ 									\ 	SYMBOL_REF_FLAG (XEXP (rtl, 0))					\ 	  = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'			\ 	     || ! TREE_PUBLIC (DECL));					\       }									\   }									\ while (0)
 end_define
 
 begin_comment
@@ -2404,11 +3080,11 @@ value|Pmode
 end_define
 
 begin_comment
-comment|/* Define this if the tablejump instruction expects the table    to contain offsets from the address of the table.    Do not define this if the table should contain absolute addresses.  */
+comment|/* Define as C expression which evaluates to nonzero if the tablejump    instruction expects the table to contain offsets from the address of the    table.    Do not define this if the table should contain absolute addresses. */
 end_comment
 
 begin_comment
-comment|/* #define CASE_VECTOR_PC_RELATIVE */
+comment|/* #define CASE_VECTOR_PC_RELATIVE 1 */
 end_comment
 
 begin_comment
@@ -2456,7 +3132,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* MOVE_RATIO is the number of move instructions that is better than a    block move.  Make this large on i386, since the block move is very    inefficient with small blocks, and the hard register needs of the    block move require much reload work. */
+comment|/* The number of scalar move insns which should be generated instead    of a string move insn or a library call.  Increasing the value    will always make code faster, but eventually incurs high cost in    increased code size.     If you don't define this, a reasonable default is used.     Make this large on i386, since the block move is very inefficient with small    blocks, and the hard register needs of the block move require much reload    work. */
 end_comment
 
 begin_define
@@ -2467,30 +3143,11 @@ value|5
 end_define
 
 begin_comment
-comment|/* Define this if zero-extension is slow (more than one real instruction).  */
-end_comment
-
-begin_comment
-comment|/* #define SLOW_ZERO_EXTEND */
-end_comment
-
-begin_comment
-comment|/* Nonzero if access to memory by bytes is slow and undesirable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLOW_BYTE_ACCESS
-value|0
-end_define
-
-begin_comment
 comment|/* Define if shifts truncate the shift count    which implies one can omit a sign-extension or zero-extension    of a shift count.  */
 end_comment
 
 begin_comment
-comment|/* One i386, shifts do truncate the count.  But bit opcodes don't. */
+comment|/* On i386, shifts do truncate the count.  But bit opcodes don't. */
 end_comment
 
 begin_comment
@@ -2556,37 +3213,11 @@ name|FUNCTION_MODE
 value|QImode
 end_define
 
-begin_comment
-comment|/* Define this if addresses of constant functions    shouldn't be put through pseudo regs where they can be cse'd.    Desirable on the 386 because a CALL with a constant address is    not much slower than one with a register address.  On a 486,    it is faster to call with a constant address than indirect.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_FUNCTION_CSE
-end_define
+begin_escape
+end_escape
 
 begin_comment
-comment|/* Provide the costs of a rtl expression.  This is in the body of a    switch on CODE. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTX_COSTS
-parameter_list|(
-name|X
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case MULT:							\     return COSTS_N_INSNS (20);					\   case DIV:							\   case UDIV:							\   case MOD:							\   case UMOD:							\     return COSTS_N_INSNS (20);					\   case ASHIFTRT:						\   case LSHIFTRT:						\   case ASHIFT:							\     return (4 + rtx_cost (XEXP (X, 0), OUTER_CODE)		\ 	    + rtx_cost (XEXP (X, 1), OUTER_CODE));		\   case PLUS:							\     if (GET_CODE (XEXP (X, 0)) == MULT				\&& GET_CODE (XEXP (XEXP (X, 0), 1)) == CONST_INT	\&& (INTVAL (XEXP (XEXP (X, 0), 1)) == 2			\ 	    || INTVAL (XEXP (XEXP (X, 0), 1)) == 4		\ 	    || INTVAL (XEXP (XEXP (X, 0), 1)) == 8))		\       return (2 + rtx_cost (XEXP (XEXP (X, 0), 0), OUTER_CODE)	\ 	      + rtx_cost (XEXP (X, 1), OUTER_CODE));		\     break;
-end_define
-
-begin_comment
-comment|/* Compute the cost of computing a constant rtl expression RTX    whose rtx-code is CODE.  The body of this macro is a portion    of a switch statement.  If the code is computed here,    return it with a return statement.  Otherwise, break from the switch.  */
+comment|/* A part of a C `switch' statement that describes the relative costs    of constant RTL expressions.  It must contain `case' labels for    expression codes `const_int', `const', `symbol_ref', `label_ref'    and `const_double'.  Each case must ultimately reach a `return'    statement to return the relative cost of the use of that kind of    constant value in an expression.  The cost may depend on the    precise value of the constant, which is available for examination    in X, and the rtx code of the expression in which it is contained,    found in OUTER_CODE.       CODE is the expression code--redundant, since it can be obtained    with `GET_CODE (X)'.  */
 end_comment
 
 begin_define
@@ -2601,11 +3232,50 @@ parameter_list|,
 name|OUTER_CODE
 parameter_list|)
 define|\
-value|case CONST_INT:						\   case CONST:							\   case LABEL_REF:						\   case SYMBOL_REF:						\     return flag_pic&& SYMBOLIC_CONST (RTX) ? 2 : 0;		\   case CONST_DOUBLE:						\     {								\       int code;							\       if (GET_MODE (RTX) == VOIDmode)				\ 	return 2;						\       code = standard_80387_constant_p (RTX);			\       return code == 1 ? 0 :					\ 	     code == 2 ? 1 :					\ 			 2;					\     }
+value|case CONST_INT:						\     return (unsigned) INTVAL (RTX)< 256 ? 0 : 1;		\   case CONST:							\   case LABEL_REF:						\   case SYMBOL_REF:						\     return flag_pic&& SYMBOLIC_CONST (RTX) ? 2 : 1;		\ 								\   case CONST_DOUBLE:						\     {								\       int code;							\       if (GET_MODE (RTX) == VOIDmode)				\ 	return 2;						\ 								\       code = standard_80387_constant_p (RTX);			\       return code == 1 ? 0 :					\ 	     code == 2 ? 1 :					\ 			 2;					\     }
 end_define
 
 begin_comment
-comment|/* Compute the cost of an address.  This is meant to approximate the size    and/or execution delay of an insn using that address.  If the cost is    approximated by the RTL complexity, including CONST_COSTS above, as    is usually the case for CISC machines, this macro should not be defined.    For aggressively RISCy machines, only one insn format is allowed, so    this macro should be a constant.  The value of this macro only matters    for valid addresses.     For i386, it is better to use a complex address than let gcc copy    the address into a reg and make a new pseudo.  But not if the address    requires to two regs - that would mean more pseudos with longer    lifetimes.  */
+comment|/* Delete the definition here when TOPLEVEL_COSTS_N_INSNS gets added to cse.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPLEVEL_COSTS_N_INSNS
+parameter_list|(
+name|N
+parameter_list|)
+value|{total = COSTS_N_INSNS (N); break;}
+end_define
+
+begin_comment
+comment|/* Like `CONST_COSTS' but applies to nonconstant RTL expressions.    This can be used, for example, to indicate how costly a multiply    instruction is.  In writing this macro, you can use the construct    `COSTS_N_INSNS (N)' to specify a cost equal to N fast    instructions.  OUTER_CODE is the code of the expression in which X    is contained.     This macro is optional; do not define it if the default cost    assumptions are adequate for the target machine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTX_COSTS
+parameter_list|(
+name|X
+parameter_list|,
+name|CODE
+parameter_list|,
+name|OUTER_CODE
+parameter_list|)
+define|\
+value|case ASHIFT:								\     if (GET_CODE (XEXP (X, 1)) == CONST_INT				\&& GET_MODE (XEXP (X, 0)) == SImode)				\       {									\ 	HOST_WIDE_INT value = INTVAL (XEXP (X, 1));			\ 									\ 	if (value == 1)							\ 	  return COSTS_N_INSNS (ix86_cost->add) 			\ 				+ rtx_cost(XEXP (X, 0), OUTER_CODE);	\ 									\ 	if (value == 2 || value == 3)					\ 	  return COSTS_N_INSNS (ix86_cost->lea)				\ 				 + rtx_cost(XEXP (X, 0), OUTER_CODE);	\       }									\
+comment|/* fall through */
+value|\ 		  							\   case ROTATE:								\   case ASHIFTRT:							\   case LSHIFTRT:							\   case ROTATERT:							\     if (GET_MODE (XEXP (X, 0)) == DImode)				\       {									\ 	if (GET_CODE (XEXP (X, 1)) == CONST_INT)			\ 	  {								\ 	    if (INTVAL (XEXP (X, 1))> 32)				\ 	      return COSTS_N_INSNS(ix86_cost->shift_const + 2);		\ 	    return COSTS_N_INSNS(ix86_cost->shift_const * 2);		\ 	  }								\ 	return ((GET_CODE (XEXP (X, 1)) == AND				\ 		 ? COSTS_N_INSNS(ix86_cost->shift_var * 2)		\ 		 : COSTS_N_INSNS(ix86_cost->shift_var * 6 + 2))		\ 		+ rtx_cost(XEXP (X, 0), OUTER_CODE));			\       }									\     return COSTS_N_INSNS (GET_CODE (XEXP (X, 1)) == CONST_INT		\ 			  ? ix86_cost->shift_const			\ 			  : ix86_cost->shift_var)			\       + rtx_cost(XEXP (X, 0), OUTER_CODE);				\ 									\   case MULT:								\     if (GET_CODE (XEXP (X, 1)) == CONST_INT)				\       {									\ 	unsigned HOST_WIDE_INT value = INTVAL (XEXP (X, 1));		\ 	int nbits = 0;							\ 									\ 	if (value == 2)							\ 	  return COSTS_N_INSNS (ix86_cost->add)				\ 				 + rtx_cost(XEXP (X, 0), OUTER_CODE);	\ 	if (value == 4 || value == 8)					\ 	  return COSTS_N_INSNS (ix86_cost->lea)				\ 				 + rtx_cost(XEXP (X, 0), OUTER_CODE);	\ 									\ 	while (value != 0)						\ 	  {								\ 	    nbits++;							\ 	    value>>= 1;						\ 	  } 								\ 									\ 	if (nbits == 1)							\ 	  return COSTS_N_INSNS (ix86_cost->shift_const)			\ 	    + rtx_cost(XEXP (X, 0), OUTER_CODE);			\ 									\ 	return COSTS_N_INSNS (ix86_cost->mult_init			\ 			      + nbits * ix86_cost->mult_bit)		\ 	  + rtx_cost(XEXP (X, 0), OUTER_CODE);				\       }									\ 									\     else
+comment|/* This is arbitrary */
+value|\       TOPLEVEL_COSTS_N_INSNS (ix86_cost->mult_init			\ 			      + 7 * ix86_cost->mult_bit);		\ 									\   case DIV:								\   case UDIV:								\   case MOD:								\   case UMOD:								\     TOPLEVEL_COSTS_N_INSNS (ix86_cost->divide);				\ 									\   case PLUS:								\     if (GET_CODE (XEXP (X, 0)) == REG					\&& GET_MODE (XEXP (X, 0)) == SImode				\&& GET_CODE (XEXP (X, 1)) == PLUS)				\       return COSTS_N_INSNS (ix86_cost->lea);				\ 									\
+comment|/* fall through */
+value|\   case AND:								\   case IOR:								\   case XOR:								\   case MINUS:								\     if (GET_MODE (X) == DImode)						\       return COSTS_N_INSNS (ix86_cost->add) * 2				\ 	+ (rtx_cost (XEXP (X, 0), OUTER_CODE)				\<< (GET_MODE (XEXP (X, 0)) != DImode))			\ 	+ (rtx_cost (XEXP (X, 1), OUTER_CODE)				\<< (GET_MODE (XEXP (X, 1)) != DImode));			\   case NEG:								\   case NOT:								\     if (GET_MODE (X) == DImode)						\       TOPLEVEL_COSTS_N_INSNS (ix86_cost->add * 2)			\     TOPLEVEL_COSTS_N_INSNS (ix86_cost->add)
+end_define
+
+begin_comment
+comment|/* An expression giving the cost of an addressing mode that contains    ADDRESS.  If not defined, the cost is computed from the ADDRESS    expression and the `CONST_COSTS' values.     For most CISC machines, the default cost is a good approximation    of the true cost of the addressing mode.  However, on RISC    machines, all instructions normally have the same length and    execution time.  Hence all addresses will have equal costs.     In cases where more than one form of an address is known, the form    with the lowest cost will be used.  If multiple forms have the    same, lowest, cost, the one that is the most complex will be used.     For example, suppose an address that is equal to the sum of a    register and a constant is used twice in the same basic block.    When this macro is not defined, the address will be computed in a    register and memory references will be indirect through that    register.  On machines where the cost of the addressing mode    containing the sum is no higher than that of a simple indirect    reference, this will produce an additional instruction and    possibly require an additional register.  Proper specification of    this macro eliminates this overhead for such machines.     Similar use of this macro is made in strength reduction of loops.     ADDRESS need not be valid as an address.  In such a case, the cost    is not relevant and can be any value; invalid addresses need not be    assigned a different cost.     On machines where an address involving more than one register is as    cheap as an address computation involving only one register,    defining `ADDRESS_COST' to reflect this can cause two registers to    be live over a region of code where only one would have been if    `ADDRESS_COST' were not defined in that manner.  This effect should    be considered in the definition of this macro.  Equivalent costs    should probably only be given to addresses with different numbers    of registers on machines with lots of registers.     This macro will normally either not be defined or be defined as a    constant.     For i386, it is better to use a complex address than let gcc copy    the address into a reg and make a new pseudo.  But not if the address    requires to two regs - that would mean more pseudos with longer    lifetimes.  */
 end_comment
 
 begin_define
@@ -2617,6 +3287,146 @@ name|RTX
 parameter_list|)
 define|\
 value|((CONSTANT_P (RTX)						\     || (GET_CODE (RTX) == PLUS&& CONSTANT_P (XEXP (RTX, 1))	\&& REG_P (XEXP (RTX, 0)))) ? 0				\    : REG_P (RTX) ? 1						\    : 2)
+end_define
+
+begin_comment
+comment|/* A C expression for the cost of moving data of mode M between a    register and memory.  A value of 2 is the default; this cost is    relative to those in `REGISTER_MOVE_COST'.     If moving between registers and memory is more expensive than    between two registers, you should define this macro to express the    relative cost.     On the i386, copying between floating-point and fixed-point    registers is expensive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REGISTER_MOVE_COST
+parameter_list|(
+name|CLASS1
+parameter_list|,
+name|CLASS2
+parameter_list|)
+define|\
+value|(((FLOAT_CLASS_P (CLASS1)&& ! FLOAT_CLASS_P (CLASS2))		\     || (! FLOAT_CLASS_P (CLASS1)&& FLOAT_CLASS_P (CLASS2))) ? 10	\    : 2)
+end_define
+
+begin_comment
+comment|/* A C expression for the cost of moving data of mode M between a    register and memory.  A value of 2 is the default; this cost is    relative to those in `REGISTER_MOVE_COST'.     If moving between registers and memory is more expensive than    between two registers, you should define this macro to express the    relative cost.  */
+end_comment
+
+begin_comment
+comment|/* #define MEMORY_MOVE_COST(M,C,I) 2  */
+end_comment
+
+begin_comment
+comment|/* A C expression for the cost of a branch instruction.  A value of 1    is the default; other values are interpreted relative to that.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BRANCH_COST
+value|i386_branch_cost
+end_define
+
+begin_comment
+comment|/* Define this macro as a C expression which is nonzero if accessing    less than a word of memory (i.e. a `char' or a `short') is no    faster than accessing a word of memory, i.e., if such access    require more than one instruction or if there is no difference in    cost between byte and (aligned) word loads.     When this macro is not defined, the compiler will access a field by    finding the smallest containing object; when it is defined, a    fullword load will be used if alignment permits.  Unless bytes    accesses are faster than word accesses, using word accesses is    preferable since it may eliminate subsequent memory access if    subsequent accesses occur to other fields in the same word of the    structure, but to different bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLOW_BYTE_ACCESS
+value|0
+end_define
+
+begin_comment
+comment|/* Nonzero if access to memory by shorts is slow and undesirable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLOW_SHORT_ACCESS
+value|0
+end_define
+
+begin_comment
+comment|/* Define this macro if zero-extension (of a `char' or `short' to an    `int') can be done faster if the destination is a register that is    known to be zero.     If you define this macro, you must have instruction patterns that    recognize RTL structures like this:            (set (strict_low_part (subreg:QI (reg:SI ...) 0)) ...)     and likewise for `HImode'.  */
+end_comment
+
+begin_comment
+comment|/* #define SLOW_ZERO_EXTEND */
+end_comment
+
+begin_comment
+comment|/* Define this macro to be the value 1 if unaligned accesses have a    cost many times greater than aligned accesses, for example if they    are emulated in a trap handler.     When this macro is non-zero, the compiler will act as if    `STRICT_ALIGNMENT' were non-zero when generating code for block    moves.  This can cause significantly more instructions to be    produced.  Therefore, do not set this macro non-zero if unaligned    accesses only add a cycle or two to the time for a memory access.     If the value of this macro is always zero, it need not be defined.  */
+end_comment
+
+begin_comment
+comment|/* #define SLOW_UNALIGNED_ACCESS 0 */
+end_comment
+
+begin_comment
+comment|/* Define this macro to inhibit strength reduction of memory    addresses.  (On some machines, such strength reduction seems to do    harm rather than good.)  */
+end_comment
+
+begin_comment
+comment|/* #define DONT_REDUCE_ADDR */
+end_comment
+
+begin_comment
+comment|/* Define this macro if it is as good or better to call a constant    function address than to call an address kept in a register.     Desirable on the 386 because a CALL with a constant address is    faster than one with a register address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_FUNCTION_CSE
+end_define
+
+begin_comment
+comment|/* Define this macro if it is as good or better for a function to call    itself with an explicit address than to call an address kept in a    register.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_RECURSIVE_FUNCTION_CSE
+end_define
+
+begin_comment
+comment|/* A C statement (sans semicolon) to update the integer variable COST    based on the relationship between INSN that is dependent on    DEP_INSN through the dependence LINK.  The default is to make no    adjustment to COST.  This can be used for example to specify to    the scheduler that an output- or anti-dependence does not incur    the same cost as a data-dependence.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADJUST_COST
+parameter_list|(
+name|insn
+parameter_list|,
+name|link
+parameter_list|,
+name|dep_insn
+parameter_list|,
+name|cost
+parameter_list|)
+define|\
+value|{									\     rtx next_inst;							\     if (GET_CODE (dep_insn) == CALL_INSN)				\       (cost) = 0;							\    									\     else if (GET_CODE (dep_insn) == INSN				\&& GET_CODE (PATTERN (dep_insn)) == SET				\&& GET_CODE (SET_DEST (PATTERN (dep_insn))) == REG		\&& GET_CODE (insn) == INSN					\&& GET_CODE (PATTERN (insn)) == SET				\&& !reg_overlap_mentioned_p (SET_DEST (PATTERN (dep_insn)),	\ 				     SET_SRC (PATTERN (insn))))		\       {									\ 	(cost) = 0;							\       }									\ 									\     else if (GET_CODE (insn) == JUMP_INSN)				\       {									\         (cost) = 0;							\       }									\ 									\     if (TARGET_PENTIUM)							\       {									\         if (cost !=0&& is_fp_insn (insn)&& is_fp_insn (dep_insn)	\&& !is_fp_dest (dep_insn))					\           {								\             (cost) = 0;							\           }								\ 									\         if (agi_dependent (insn, dep_insn))				\           {								\             (cost) = 3;							\           }								\         else if (GET_CODE (insn) == INSN				\&& GET_CODE (PATTERN (insn)) == SET			\&& SET_DEST (PATTERN (insn)) == cc0_rtx		\&& (next_inst = next_nonnote_insn (insn))		\&& GET_CODE (next_inst) == JUMP_INSN)			\           {
+comment|/* compare probably paired with jump */
+value|\             (cost) = 0;							\           }								\       }									\     else								\       if (!is_fp_dest (dep_insn))					\ 	{								\ 	  if(!agi_dependent (insn, dep_insn))				\ 	    (cost) = 0;							\ 	  else if (TARGET_486)						\ 	    (cost) = 2;							\ 	}								\       else								\ 	if (is_fp_store (insn)&& is_fp_insn (dep_insn)			\&& NEXT_INSN (insn)&& NEXT_INSN (NEXT_INSN (insn))		\&& NEXT_INSN (NEXT_INSN (NEXT_INSN (insn)))			\&& (GET_CODE (NEXT_INSN (insn)) == INSN)			\&& (GET_CODE (NEXT_INSN (NEXT_INSN (insn))) == JUMP_INSN)	\&& (GET_CODE (NEXT_INSN (NEXT_INSN (NEXT_INSN (insn)))) == NOTE) \&& (NOTE_LINE_NUMBER (NEXT_INSN (NEXT_INSN (NEXT_INSN (insn)))) \ 		== NOTE_INSN_LOOP_END))					\ 	  {								\ 	    (cost) = 3;							\ 	  }								\   }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADJUST_BLOCKAGE
+parameter_list|(
+name|last_insn
+parameter_list|,
+name|insn
+parameter_list|,
+name|blockage
+parameter_list|)
+define|\
+value|{									\   if (is_fp_store (last_insn)&& is_fp_insn (insn)			\&& NEXT_INSN (last_insn)&& NEXT_INSN (NEXT_INSN (last_insn))	\&& NEXT_INSN (NEXT_INSN (NEXT_INSN (last_insn)))			\&& (GET_CODE (NEXT_INSN (last_insn)) == INSN)			\&& (GET_CODE (NEXT_INSN (NEXT_INSN (last_insn))) == JUMP_INSN)	\&& (GET_CODE (NEXT_INSN (NEXT_INSN (NEXT_INSN (last_insn)))) == NOTE) \&& (NOTE_LINE_NUMBER (NEXT_INSN (NEXT_INSN (NEXT_INSN (last_insn)))) \ 	  == NOTE_INSN_LOOP_END))					\     {									\       (blockage) = 3;							\     }									\ }
 end_define
 
 begin_escape
@@ -2696,6 +3506,17 @@ comment|/* Here we define machine-dependent flags and fields in cc_status    (se
 end_comment
 
 begin_comment
+comment|/* Set if the cc value was actually from the 80387 and    we are testing eax directly (i.e. no sahf) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CC_TEST_AX
+value|020000
+end_define
+
+begin_comment
 comment|/* Set if the cc value is actually in the 80387, so a floating point    conditional branch must be output.  */
 end_comment
 
@@ -2715,6 +3536,17 @@ define|#
 directive|define
 name|CC_Z_IN_NOT_C
 value|010000
+end_define
+
+begin_comment
+comment|/* Set if the CC value was actually from the 80387 and loaded directly    into the eflags instead of via eax/sahf.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CC_FCOMI
+value|040000
 end_define
 
 begin_comment
@@ -2792,7 +3624,7 @@ define|#
 directive|define
 name|ADDITIONAL_REGISTER_NAMES
 define|\
-value|{ "eax", 0, "edx", 1, "ecx", 2, "ebx", 3,	\   "esi", 4, "edi", 5, "ebp", 6, "esp", 7,	\   "al", 0, "dl", 1, "cl", 2, "bl", 3,		\   "ah", 0, "dh", 1, "ch", 2, "bh", 3 }
+value|{ { "eax", 0 }, { "edx", 1 }, { "ecx", 2 }, { "ebx", 3 },	\   { "esi", 4 }, { "edi", 5 }, { "ebp", 6 }, { "esp", 7 },	\   { "al", 0 }, { "dl", 1 }, { "cl", 2 }, { "bl", 3 },		\   { "ah", 0 }, { "dh", 1 }, { "ch", 2 }, { "bh", 3 } }
 end_define
 
 begin_comment
@@ -2843,6 +3675,57 @@ value|((n) == 0 ? 0 : \  (n) == 1 ? 2 : \  (n) == 2 ? 1 : \  (n) == 3 ? 3 : \  (
 end_define
 
 begin_comment
+comment|/* Before the prologue, RA is at 0(%esp).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCOMING_RETURN_ADDR_RTX
+define|\
+value|gen_rtx_MEM (VOIDmode, gen_rtx_REG (VOIDmode, STACK_POINTER_REGNUM))
+end_define
+
+begin_comment
+comment|/* After the prologue, RA is at -4(AP) in the current frame.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RETURN_ADDR_RTX
+parameter_list|(
+name|COUNT
+parameter_list|,
+name|FRAME
+parameter_list|)
+define|\
+value|((COUNT) == 0								\    ? gen_rtx_MEM (Pmode, gen_rtx_PLUS (Pmode, arg_pointer_rtx, GEN_INT(-4)))\    : gen_rtx_MEM (Pmode, gen_rtx_PLUS (Pmode, (FRAME), GEN_INT(4))))
+end_define
+
+begin_comment
+comment|/* PC is dbx register 8; let's use that column for RA. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF_FRAME_RETURN_COLUMN
+value|8
+end_define
+
+begin_comment
+comment|/* Before the prologue, the top of the frame is at 4(%esp).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCOMING_FRAME_SP_OFFSET
+value|4
+end_define
+
+begin_comment
 comment|/* This is how to output the definition of a user-level label named NAME,    such as the label on a static function or variable NAME.  */
 end_comment
 
@@ -2873,7 +3756,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do { long l[2];								\      REAL_VALUE_TO_TARGET_DOUBLE (VALUE, l);				\      if (sizeof (int) == sizeof (long))					\        fprintf (FILE, "%s 0x%x,0x%x\n", ASM_LONG, l[0], l[1]);		\      else								\        fprintf (FILE, "%s 0x%lx,0x%lx\n", ASM_LONG, l[0], l[1]);	\    } while (0)
+value|do { long l[2];								\      REAL_VALUE_TO_TARGET_DOUBLE (VALUE, l);				\      fprintf (FILE, "%s 0x%lx,0x%lx\n", ASM_LONG, l[0], l[1]);		\    } while (0)
 end_define
 
 begin_comment
@@ -2896,7 +3779,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do { long l[3];						\      REAL_VALUE_TO_TARGET_LONG_DOUBLE (VALUE, l);	\      if (sizeof (int) == sizeof (long))			\        fprintf (FILE, "%s 0x%x,0x%x,0x%x\n", ASM_LONG, l[0], l[1], l[2]); \      else						\        fprintf (FILE, "%s 0x%lx,0x%lx,0x%lx\n", ASM_LONG, l[0], l[1], l[2]); \    } while (0)
+value|do { long l[3];						\      REAL_VALUE_TO_TARGET_LONG_DOUBLE (VALUE, l);	\      fprintf (FILE, "%s 0x%lx,0x%lx,0x%lx\n", ASM_LONG, l[0], l[1], l[2]); \    } while (0)
 end_define
 
 begin_comment
@@ -2913,7 +3796,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do { long l;						\      REAL_VALUE_TO_TARGET_SINGLE (VALUE, l);		\      if (sizeof (int) == sizeof (long))			\        fprintf ((FILE), "%s 0x%x\n", ASM_LONG, l);	\      else						\        fprintf ((FILE), "%s 0x%lx\n", ASM_LONG, l);	\    } while (0)
+value|do { long l;						\      REAL_VALUE_TO_TARGET_SINGLE (VALUE, l);		\      fprintf ((FILE), "%s 0x%lx\n", ASM_LONG, l);	\    } while (0)
 end_define
 
 begin_comment
@@ -3021,7 +3904,7 @@ parameter_list|,
 name|REGNO
 parameter_list|)
 define|\
-value|fprintf (FILE, "\tpushl e%s\n", reg_names[REGNO])
+value|fprintf (FILE, "\tpushl %%e%s\n", reg_names[REGNO])
 end_define
 
 begin_comment
@@ -3038,7 +3921,7 @@ parameter_list|,
 name|REGNO
 parameter_list|)
 define|\
-value|fprintf (FILE, "\tpopl e%s\n", reg_names[REGNO])
+value|fprintf (FILE, "\tpopl %%e%s\n", reg_names[REGNO])
 end_define
 
 begin_comment
@@ -3068,6 +3951,8 @@ directive|define
 name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
+parameter_list|,
+name|BODY
 parameter_list|,
 name|VALUE
 parameter_list|,
@@ -3152,7 +4037,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Print operand X (an rtx) in assembler syntax to file FILE.    CODE is a letter or dot (`z' in `%z0') or 0 if no letter was specified.    The CODE z takes the size of operand from the following digit, and    outputs b,w,or l respectively.     On the 80386, we use several such letters:    f -- float insn (print a CONST_DOUBLE as a float rather than in hex).    L,W,B,Q,S,T -- print the opcode suffix for specified size of operand.    R -- print the prefix for register names.    z -- print the opcode suffix for the size of the current operand.    * -- print a star (in certain assembler syntax)    w -- print the operand as if it's a "word" (HImode) even if it isn't.    b -- print the operand as if it's a byte (QImode) even if it isn't.    c -- don't print special prefixes before constant operands.  */
+comment|/* Print operand X (an rtx) in assembler syntax to file FILE.    CODE is a letter or dot (`z' in `%z0') or 0 if no letter was specified.    The CODE z takes the size of operand from the following digit, and    outputs b,w,or l respectively.     On the 80386, we use several such letters:    f -- float insn (print a CONST_DOUBLE as a float rather than in hex).    L,W,B,Q,S,T -- print the opcode suffix for specified size of operand.    R -- print the prefix for register names.    z -- print the opcode suffix for the size of the current operand.    * -- print a star (in certain assembler syntax)    P -- if PIC, print an @PLT suffix.    X -- don't print any sort of PIC '@' suffix for a symbol.    J -- print jump insn for arithmetic_comparison_operator.    s -- ??? something to do with double shifts.  not actually used, afaik.    C -- print a conditional move suffix corresponding to the op code.    c -- likewise, but reverse the condition.    F,f -- likewise, but for floating-point.  */
 end_comment
 
 begin_define
@@ -3323,9 +4208,6 @@ name|ASM_OPERAND_LETTER
 value|'#'
 end_define
 
-begin_escape
-end_escape
-
 begin_define
 define|#
 directive|define
@@ -3340,7 +4222,44 @@ name|AT_SP
 parameter_list|(
 name|mode
 parameter_list|)
-value|(gen_rtx (MEM, (mode), stack_pointer_rtx))
+value|(gen_rtx_MEM ((mode), stack_pointer_rtx))
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Helper macros to expand a binary/unary operator if needed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IX86_EXPAND_BINARY_OPERATOR
+parameter_list|(
+name|OP
+parameter_list|,
+name|MODE
+parameter_list|,
+name|OPERANDS
+parameter_list|)
+define|\
+value|do {									\   if (!ix86_expand_binary_operator (OP, MODE, OPERANDS))		\     FAIL;								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IX86_EXPAND_UNARY_OPERATOR
+parameter_list|(
+name|OP
+parameter_list|,
+name|MODE
+parameter_list|,
+name|OPERANDS
+parameter_list|)
+define|\
+value|do {									\   if (!ix86_expand_unary_operator (OP, MODE, OPERANDS,))		\     FAIL;								\ } while (0)
 end_define
 
 begin_escape
@@ -3362,6 +4281,41 @@ begin_function_decl
 specifier|extern
 name|void
 name|order_regs_for_local_alloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_strlen_unroll
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|i386_sext16_if_const
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|i386_aligned_p
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|i386_cc_probably_useless_p
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3428,6 +4382,15 @@ begin_function_decl
 specifier|extern
 name|int
 name|function_arg_partial_nregs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_strlen_unroll
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3529,6 +4492,38 @@ begin_function_decl
 specifier|extern
 name|int
 name|symbolic_reference_mentioned_p
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ix86_expand_binary_operator
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ix86_binary_operator_ok
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ix86_expand_unary_operator
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ix86_unary_operator_ok
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3719,8 +4714,175 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|is_mul
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|is_div
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|last_to_set_cc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|doesnt_set_condition_code
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|sets_condition_code
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|str_immediate_operand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|is_fp_insn
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|is_fp_dest
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|is_fp_store
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|agi_dependent
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|reg_mentioned_in_mem
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_int_conditional_move
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|output_fp_conditional_move
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ix86_can_use_return_insn_p
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|struct
+name|rtx_def
+modifier|*
+name|copy_all_rtx
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rewrite_address
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Variables in i386.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ix86_cpu_string
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for -mcpu=<xxx> */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ix86_arch_string
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for -march=<xxx> */
 end_comment
 
 begin_decl_stmt
@@ -3785,6 +4947,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|i386_branch_cost_string
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* values 1-5: see jump.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|i386_regparm
 decl_stmt|;
@@ -3825,6 +4999,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* power of two alignment for functions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|i386_branch_cost
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* values 1-5: see jump.c */
 end_comment
 
 begin_decl_stmt

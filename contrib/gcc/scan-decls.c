@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* scan-decls.c - Extracts declarations from cpp output.    Copyright (C) 1993, 1995 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Per Bothner<bothner@cygnus.com>, July 1993.  */
+comment|/* scan-decls.c - Extracts declarations from cpp output.    Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Per Bothner<bothner@cygnus.com>, July 1993.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -24,7 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cpplib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"scan.h"
 end_include
 
 begin_decl_stmt
@@ -172,9 +178,9 @@ decl_stmt|,
 name|saw_inline
 decl_stmt|;
 name|int
-name|old_written
+name|start_written
 decl_stmt|;
-comment|/* If declarator_start is non-zero, it marks the start of the current      declarator.  If it is zero, we are either still parsing the      decl-specs, or prev_id_start marks the start of the declarator. */
+comment|/* If declarator_start is non-zero, it marks the start of the current      declarator.  If it is zero, we are either still parsing the      decl-specs, or prev_id_start marks the start of the declarator.  */
 name|int
 name|declarator_start
 decl_stmt|;
@@ -195,6 +201,10 @@ name|pfile
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|start_written
+operator|=
+literal|0
 expr_stmt|;
 name|token
 operator|=
@@ -303,23 +313,6 @@ init|;
 condition|;
 control|)
 block|{
-name|int
-name|start_written
-init|=
-name|CPP_WRITTEN
-argument_list|(
-name|pfile
-argument_list|)
-decl_stmt|;
-name|token
-operator|=
-name|cpp_get_token
-argument_list|(
-name|pfile
-argument_list|)
-expr_stmt|;
-name|handle_token
-label|:
 switch|switch
 condition|(
 name|token
@@ -328,7 +321,7 @@ block|{
 case|case
 name|CPP_LPAREN
 case|:
-comment|/* Looks like this is the start of a formal parameter list. */
+comment|/* Looks like this is the start of a formal parameter list.  */
 if|if
 condition|(
 name|prev_id_start
@@ -581,7 +574,7 @@ name|prev_id_start
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ... fall through ... */
+comment|/* ... fall through ...  */
 name|maybe_handle_comma
 label|:
 if|if
@@ -736,12 +729,10 @@ goto|;
 block|}
 block|}
 else|else
-goto|goto
-name|handle_token
-goto|;
+continue|continue;
 break|break;
 block|}
-comment|/* This may be the name of a variable or function. */
+comment|/* This may be the name of a variable or function.  */
 name|prev_id_start
 operator|=
 name|start_written
@@ -757,8 +748,9 @@ break|break;
 case|case
 name|CPP_EOF
 case|:
-return|return;
-comment|/* ??? FIXME */
+return|return
+literal|0
+return|;
 case|case
 name|CPP_LBRACE
 case|:
@@ -784,7 +776,7 @@ case|:
 case|case
 name|CPP_POP
 case|:
-comment|/* Skip initial white space. */
+comment|/* Skip initial white space.  */
 if|if
 condition|(
 name|start_written
@@ -805,6 +797,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|start_written
+operator|=
+name|CPP_WRITTEN
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+name|token
+operator|=
+name|cpp_get_token
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

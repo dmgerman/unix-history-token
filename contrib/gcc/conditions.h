@@ -136,6 +136,10 @@ begin_comment
 comment|/* This bit means that the current setting of the overflow flag    is bogus and conditional jumps should pretend there is no overflow.  */
 end_comment
 
+begin_comment
+comment|/* ??? Note that for most targets this macro is misnamed as it applies    to the carry flag, not the overflow flag.  */
+end_comment
+
 begin_define
 define|#
 directive|define
