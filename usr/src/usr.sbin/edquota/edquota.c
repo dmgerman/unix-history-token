@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	8.2 (Berkeley) %G%"
+literal|"@(#)edquota.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1179,7 +1179,7 @@ argument_list|(
 name|fd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|id
@@ -1461,9 +1461,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|long
-operator|)
+call|(
+name|off_t
+call|)
+argument_list|(
 name|id
 operator|*
 operator|(
@@ -1474,8 +1475,9 @@ argument_list|(
 expr|struct
 name|dqblk
 argument_list|)
+argument_list|)
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 if|if
