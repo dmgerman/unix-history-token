@@ -511,9 +511,6 @@ argument_list|(
 name|kern_pg
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|kern_pg
@@ -522,9 +519,6 @@ name|uobject
 argument_list|,
 name|upindex
 argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(

@@ -4414,9 +4414,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|m
@@ -4427,9 +4424,6 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|/* page automatically made dirty by rename and cache handled */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|m
@@ -4973,6 +4967,9 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * Page does not exist in parent, rename the 			 * page from the backing object to the main object.  			 * 			 * If the page was mapped to a process, it can remain  			 * mapped through the rename. 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|p
@@ -4981,6 +4978,9 @@ name|object
 argument_list|,
 name|new_pindex
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/* page automatically made dirty by rename */
 block|}

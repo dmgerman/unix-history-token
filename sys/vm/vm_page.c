@@ -1950,9 +1950,6 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_remove
 argument_list|(
 name|m
@@ -1988,9 +1985,6 @@ name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(

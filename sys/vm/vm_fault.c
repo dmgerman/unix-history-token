@@ -2171,9 +2171,6 @@ operator|.
 name|first_m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|fs
 operator|.
 name|first_m
@@ -2203,9 +2200,6 @@ operator|=
 name|fs
 operator|.
 name|m
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_busy
 argument_list|(
