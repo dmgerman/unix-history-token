@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwrint.c	3.4 %G%"
+literal|"@(#)wwrint.c	3.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ file|<sys/signal.h>
 end_include
 
 begin_comment
-comment|/*  * Tty input interrupt handler.  * (1) Read input into buffer (wwib*).  * (2) If the flag wwsetjmp is true, do longjmp(wwjmpbuf) for asyncronous  *     actions, and to avoid race conditions, clear wwsetjmp.  * Currently, the last is used to get out of the blocking  * select() in wwiomux().  * To avoid race conditions, we only modify wwibq in here, except  * when the buffer is empty; and everywhere else, we only change wwibp.  * It should be completely safe.  */
+comment|/*  * Tty input interrupt handler.  * (1) Read input into buffer (wwib*).  * (2) Set the interrupt flag if anything is read.  * Currently, the last is used to get out of the blocking  * select() in wwiomux().  * To avoid race conditions, we only modify wwibq in here, except  * when the buffer is empty; and everywhere else, we only change wwibp.  * It should be completely safe.  */
 end_comment
 
 begin_macro
@@ -129,6 +129,9 @@ name|wwnreadc
 operator|+=
 name|n
 expr_stmt|;
+name|wwsetintr
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -144,43 +147,6 @@ else|else
 name|wwnreade
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|wwinterrupt
-argument_list|()
-operator|&&
-name|wwsetjmp
-condition|)
-block|{
-name|wwsetjmp
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|sigblock
-argument_list|(
-literal|0
-argument_list|)
-operator|&
-operator|~
-name|sigmask
-argument_list|(
-name|SIGIO
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|longjmp
-argument_list|(
-name|wwjmpbuf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 

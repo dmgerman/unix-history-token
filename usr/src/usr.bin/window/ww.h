@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ww.h	3.39 %G%	  */
+comment|/*  * @(#)ww.h	3.40 %G%	  */
 end_comment
 
 begin_comment
@@ -1194,26 +1194,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|wwsetjmp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* want a longjmp() from wwrint() */
-end_comment
-
-begin_decl_stmt
-name|jmp_buf
-name|wwjmpbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* jmpbuf for above */
-end_comment
-
-begin_decl_stmt
-name|char
 modifier|*
 name|wwib
 decl_stmt|;
@@ -1282,12 +1262,62 @@ parameter_list|)
 value|(wwibp> wwib ? *--wwibp = (c) : -1)
 end_define
 
+begin_comment
+comment|/* things for short circuiting wwiomux() */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwintr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interrupting */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwsetjmp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* want a longjmp() from wwrint() and wwchild() */
+end_comment
+
+begin_decl_stmt
+name|jmp_buf
+name|wwjmpbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* jmpbuf for above */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|wwinterrupt
 parameter_list|()
-value|(wwibp< wwibq)
+value|wwintr
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwsetintr
+parameter_list|()
+value|(wwintr = 1, wwsetjmp ? longjmp(wwjmpbuf, 1) : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wwclrintr
+parameter_list|()
+value|(wwintr = 0)
 end_define
 
 begin_comment

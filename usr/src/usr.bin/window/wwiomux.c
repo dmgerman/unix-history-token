@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.15 %G%"
+literal|"@(#)wwiomux.c	3.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * Multiple window output handler.  * The idea is to copy window outputs to the terminal, via the  * display package.  We try to give the top most window highest  * priority.  The only return condition is when there is keyboard  * input, which is serviced asynchronously by wwrint().  * When there's nothing to do, we sleep in a select().  * This can be done better with interrupt driven io.  But that's  * not supported on ptys, yet.  * The history of this routine is interesting.  */
+comment|/*  * Multiple window output handler.  * The idea is to copy window outputs to the terminal, via the  * display package.  We try to give the top most window highest  * priority.  The only return condition is when there is keyboard  * input or when a child process dies which are serviced by signal  * catchers (wwrint() and wwchild()).  * When there's nothing to do, we sleep in a select().  * This can be done better with interrupt driven io.  But that's  * not supported on ptys, yet.  * The history of this routine is interesting.  */
 end_comment
 
 begin_macro
@@ -87,14 +87,23 @@ decl_stmt|;
 name|char
 name|noblock
 decl_stmt|;
-name|loop
-label|:
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|wwinterrupt
 argument_list|()
 condition|)
+block|{
+name|wwclrintr
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -197,14 +206,11 @@ expr_stmt|;
 name|wwflush
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
 name|setjmp
 argument_list|(
 name|wwjmpbuf
 argument_list|)
-condition|)
-return|return;
+expr_stmt|;
 name|wwsetjmp
 operator|=
 literal|1
@@ -218,6 +224,9 @@ block|{
 name|wwsetjmp
 operator|=
 literal|0
+expr_stmt|;
+name|wwclrintr
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -654,12 +663,15 @@ condition|(
 name|wwinterrupt
 argument_list|()
 condition|)
+block|{
+name|wwclrintr
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 break|break;
 block|}
-goto|goto
-name|loop
-goto|;
+block|}
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwchild.c	3.6 %G%"
+literal|"@(#)wwchild.c	3.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,11 @@ name|w
 decl_stmt|;
 name|int
 name|pid
+decl_stmt|;
+name|char
+name|collected
+init|=
+literal|0
 decl_stmt|;
 name|olderrno
 operator|=
@@ -148,6 +153,10 @@ name|ww_state
 operator|=
 name|WWS_DEAD
 expr_stmt|;
+name|collected
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -155,6 +164,14 @@ block|}
 name|errno
 operator|=
 name|olderrno
+expr_stmt|;
+comment|/* jump out of wwiomux when somebody dies */
+if|if
+condition|(
+name|collected
+condition|)
+name|wwsetintr
+argument_list|()
 expr_stmt|;
 block|}
 end_block
