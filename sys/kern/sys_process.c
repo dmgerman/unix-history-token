@@ -1085,54 +1085,24 @@ case|:
 case|case
 name|PT_DETACH
 case|:
-ifdef|#
-directive|ifdef
-name|PT_GETREGS
 case|case
 name|PT_GETREGS
 case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PT_SETREGS
 case|case
 name|PT_SETREGS
 case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PT_GETFPREGS
 case|case
 name|PT_GETFPREGS
 case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PT_SETFPREGS
 case|case
 name|PT_SETFPREGS
 case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PT_GETDBREGS
 case|case
 name|PT_GETDBREGS
 case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PT_SETDBREGS
 case|case
 name|PT_SETDBREGS
 case|:
-endif|#
-directive|endif
 comment|/* not being traced... */
 if|if
 condition|(
@@ -1881,9 +1851,6 @@ goto|goto
 name|sendsig
 goto|;
 comment|/* in PT_CONTINUE above */
-ifdef|#
-directive|ifdef
-name|PT_SETREGS
 case|case
 name|PT_SETREGS
 case|:
@@ -1941,12 +1908,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PT_SETREGS */
-ifdef|#
-directive|ifdef
-name|PT_GETREGS
 case|case
 name|PT_GETREGS
 case|:
@@ -2002,12 +1963,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PT_SETREGS */
-ifdef|#
-directive|ifdef
-name|PT_SETFPREGS
 case|case
 name|PT_SETFPREGS
 case|:
@@ -2065,12 +2020,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PT_SETFPREGS */
-ifdef|#
-directive|ifdef
-name|PT_GETFPREGS
 case|case
 name|PT_GETFPREGS
 case|:
@@ -2126,12 +2075,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PT_SETFPREGS */
-ifdef|#
-directive|ifdef
-name|PT_SETDBREGS
 case|case
 name|PT_SETDBREGS
 case|:
@@ -2189,12 +2132,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PT_SETDBREGS */
-ifdef|#
-directive|ifdef
-name|PT_GETDBREGS
 case|case
 name|PT_GETDBREGS
 case|:
@@ -2250,9 +2187,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* PT_SETDBREGS */
 default|default:
 name|KASSERT
 argument_list|(
