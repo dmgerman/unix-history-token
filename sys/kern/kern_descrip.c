@@ -6971,6 +6971,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Drop reference on struct file passed in, may call closef if the  * reference hits zero.  */
+end_comment
+
 begin_function
 name|int
 name|fdrop
@@ -7753,6 +7757,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Drop reference on struct file passed in, may call closef if the  * reference hits zero.  * Expects struct file locked, and will unlock it.  */
+end_comment
 
 begin_function
 name|int
