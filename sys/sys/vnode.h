@@ -762,17 +762,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VV_OBJBUF
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Allocate buffers in VM object */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VV_CACHEDLABEL
 value|0x0010
 end_define

@@ -2457,12 +2457,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_OBJBUF
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2497,10 +2491,9 @@ name|a_vp
 decl_stmt|;
 name|vp
 operator|->
-name|v_vflag
-operator|&=
-operator|~
-name|VV_OBJBUF
+name|v_object
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(

@@ -704,11 +704,7 @@ operator|->
 name|v_vflag
 operator|&=
 operator|~
-operator|(
 name|VV_TEXT
-operator||
-name|VV_OBJBUF
-operator|)
 expr_stmt|;
 block|}
 end_function

@@ -1306,12 +1306,6 @@ literal|"vop_stdcreatevobject: NULL object"
 operator|)
 argument_list|)
 expr_stmt|;
-name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_OBJBUF
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1761,9 +1755,9 @@ condition|(
 operator|(
 name|vp
 operator|->
-name|v_vflag
-operator|&
-name|VV_OBJBUF
+name|v_object
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|(
