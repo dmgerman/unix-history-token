@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.16 %G%"
+literal|"@(#)asparse.c 4.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2793,36 +2793,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|static
-name|char
-name|nullstr
-index|[
-literal|1
-index|]
-decl_stmt|;
-specifier|static
-name|struct
-name|strdesc
-name|strdp
-decl_stmt|;
-name|strdp
-operator|.
-name|sd_stroff
-operator|=
-name|strfilepos
-expr_stmt|;
-name|strdp
-operator|.
-name|sd_strlen
-operator|=
-literal|0
-expr_stmt|;
-name|strdp
-operator|.
-name|sd_place
-operator|=
-name|STR_BOTH
-expr_stmt|;
 name|stpt
 operator|->
 name|s_name
@@ -2833,10 +2803,11 @@ operator|*
 operator|)
 name|savestr
 argument_list|(
-name|nullstr
+literal|"\0"
 argument_list|,
-operator|&
-name|strdp
+literal|0
+argument_list|,
+name|STR_BOTH
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assyms.c 4.12 %G%"
+literal|"@(#)assyms.c 4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1974,11 +1974,6 @@ modifier|*
 modifier|*
 name|hp_ub
 decl_stmt|;
-specifier|static
-name|struct
-name|strdesc
-name|strdp
-decl_stmt|;
 name|emptyslot
 operator|=
 literal|0
@@ -2266,50 +2261,6 @@ name|len
 operator|++
 control|)
 continue|continue;
-comment|/* 		 *	save string and trailing null, both 		 *	internally, and in the string temporary file 		 */
-name|strdp
-operator|.
-name|sd_stroff
-operator|=
-name|strfilepos
-expr_stmt|;
-name|strdp
-operator|.
-name|sd_place
-operator|=
-name|STR_BOTH
-expr_stmt|;
-name|strdp
-operator|.
-name|sd_strlen
-operator|=
-name|len
-operator|+
-literal|1
-expr_stmt|;
-comment|/* length and null */
-name|fputs
-argument_list|(
-name|yytext
-argument_list|,
-name|strfile
-argument_list|)
-expr_stmt|;
-comment|/* string */
-name|putc
-argument_list|(
-literal|0
-argument_list|,
-name|strfile
-argument_list|)
-expr_stmt|;
-comment|/* null */
-name|strfilepos
-operator|+=
-name|strdp
-operator|.
-name|sd_strlen
-expr_stmt|;
 operator|(
 operator|*
 name|hp
@@ -2325,8 +2276,11 @@ name|savestr
 argument_list|(
 name|yytext
 argument_list|,
-operator|&
-name|strdp
+name|len
+operator|+
+literal|1
+argument_list|,
+name|STR_BOTH
 argument_list|)
 expr_stmt|;
 block|}
@@ -2343,7 +2297,7 @@ comment|/*end of lookup*/
 end_comment
 
 begin_comment
-comment|/*  *	save a string str, descriptor strdp, in the string pool  */
+comment|/*  *	save a string str with len in the places indicated by place  */
 end_comment
 
 begin_function
@@ -2354,16 +2308,19 @@ name|savestr
 parameter_list|(
 name|str
 parameter_list|,
-name|strdp
+name|len
+parameter_list|,
+name|place
 parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-name|struct
-name|strdesc
-modifier|*
-name|strdp
+name|int
+name|len
+decl_stmt|;
+name|int
+name|place
 decl_stmt|;
 block|{
 name|reg
@@ -2375,6 +2332,7 @@ decl_stmt|;
 name|int
 name|tlen
 decl_stmt|;
+comment|/* 	 *	Compute the total length of the record to live in core 	 */
 name|tlen
 operator|=
 sizeof|sizeof
@@ -2392,18 +2350,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strdp
-operator|->
-name|sd_place
+name|place
 operator|&
-name|STR_FILE
+name|STR_CORE
 condition|)
 name|tlen
 operator|+=
-name|strdp
-operator|->
-name|sd_strlen
+name|len
 expr_stmt|;
+comment|/* 	 *	See if there is enough space for the record, 	 *	and allocate the record. 	 */
 if|if
 condition|(
 name|tlen
@@ -2436,21 +2391,35 @@ operator|->
 name|str_nalloc
 operator|)
 expr_stmt|;
+comment|/* 	 *	Save the string information that is always present 	 */
 name|res
-index|[
-literal|0
-index|]
+operator|->
+name|sd_stroff
 operator|=
-operator|*
-name|strdp
+name|strfilepos
 expr_stmt|;
-if|if
-condition|(
-name|strdp
+name|res
+operator|->
+name|sd_strlen
+operator|=
+name|len
+expr_stmt|;
+name|res
 operator|->
 name|sd_place
+operator|=
+name|place
+expr_stmt|;
+comment|/* 	 *	Now, save the string itself.  If str is null, then 	 *	the characters have already been dumped to the file 	 */
+if|if
+condition|(
+operator|(
+name|place
 operator|&
-name|STR_FILE
+name|STR_CORE
+operator|)
+operator|&&
+name|str
 condition|)
 name|movestr
 argument_list|(
@@ -2463,11 +2432,39 @@ name|sd_string
 argument_list|,
 name|str
 argument_list|,
-name|strdp
-operator|->
-name|sd_strlen
+name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|place
+operator|&
+name|STR_FILE
+condition|)
+block|{
+if|if
+condition|(
+name|str
+condition|)
+block|{
+name|fwrite
+argument_list|(
+name|str
+argument_list|,
+literal|1
+argument_list|,
+name|len
+argument_list|,
+name|strfile
+argument_list|)
+expr_stmt|;
+block|}
+name|strfilepos
+operator|+=
+name|len
+expr_stmt|;
+block|}
+comment|/* 	 *	Adjust the in core string pool size 	 */
 name|strplhead
 operator|->
 name|str_nalloc
