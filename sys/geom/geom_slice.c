@@ -1514,6 +1514,14 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|mediasize
+operator|=
+name|gsl
+operator|->
+name|length
+expr_stmt|;
 return|return
 operator|(
 literal|0
