@@ -290,6 +290,7 @@ comment|/*  * CPU topology map datastructures for HTT.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cpu_group
 name|mp_groups
@@ -300,6 +301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cpu_top
 name|mp_top

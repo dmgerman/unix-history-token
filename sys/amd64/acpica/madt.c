@@ -1524,7 +1524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Run through the MP table enumerating I/O APICs.  */
+comment|/*  * Enumerate I/O APICs and setup interrupt sources.  */
 end_comment
 
 begin_function
@@ -1538,6 +1538,41 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* Try to initialize ACPI so that we can access the FADT. */
+name|i
+operator|=
+name|acpi_Startup
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|i
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MADT: ACPI Startup failed with %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Try disabling either ACPI or apic support.\n"
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"Using MADT but ACPI doesn't work"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* First, we run through adding I/O APIC's. */
 name|madt_walk_table
 argument_list|(
@@ -2374,6 +2409,9 @@ name|new_pin
 decl_stmt|,
 name|old_pin
 decl_stmt|;
+name|int
+name|force_lo
+decl_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -2437,6 +2475,55 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * If the SCI is remapped to a non-ISA global interrupt, 	 * force it to level trigger and active-lo polarity. 	 * If the SCI is identity mapped but has edge trigger and 	 * active-hi polarity, also force it to use level/lo.  	 */
+name|force_lo
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|intr
+operator|->
+name|Source
+operator|==
+name|AcpiGbl_FADT
+operator|->
+name|SciInt
+condition|)
+if|if
+condition|(
+name|intr
+operator|->
+name|Interrupt
+operator|>
+literal|15
+operator|||
+operator|(
+name|intr
+operator|->
+name|Interrupt
+operator|==
+name|intr
+operator|->
+name|Source
+operator|&&
+name|intr
+operator|->
+name|TriggerMode
+operator|==
+name|TRIGGER_EDGE
+operator|&&
+name|intr
+operator|->
+name|Polarity
+operator|==
+name|POLARITY_ACTIVE_HIGH
+operator|)
+condition|)
+name|force_lo
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|intr
@@ -2448,7 +2535,7 @@ operator|->
 name|Interrupt
 condition|)
 block|{
-comment|/* XXX: This assumes that the SCI uses IRQ 9. */
+comment|/* 		 * If the SCI is remapped to a non-ISA global interrupt, 		 * then override the vector we use to setup and allocate 		 * the interrupt. 		 */
 if|if
 condition|(
 name|intr
@@ -2461,7 +2548,9 @@ name|intr
 operator|->
 name|Source
 operator|==
-literal|9
+name|AcpiGbl_FADT
+operator|->
+name|SciInt
 condition|)
 name|acpi_OverrideInterruptLevel
 argument_list|(
@@ -2530,20 +2619,41 @@ name|old_pin
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|force_lo
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"MADT: Forcing active-lo polarity and level trigger for IRQ %d\n"
+argument_list|,
+name|intr
+operator|->
+name|Source
+argument_list|)
+expr_stmt|;
+name|ioapic_set_polarity
+argument_list|(
+name|new_ioapic
+argument_list|,
+name|new_pin
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|ioapic_set_triggermode
 argument_list|(
 name|new_ioapic
 argument_list|,
 name|new_pin
 argument_list|,
-name|interrupt_trigger
-argument_list|(
-name|intr
-operator|->
-name|TriggerMode
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|ioapic_set_polarity
 argument_list|(
 name|new_ioapic
@@ -2558,6 +2668,21 @@ name|Polarity
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ioapic_set_triggermode
+argument_list|(
+name|new_ioapic
+argument_list|,
+name|new_pin
+argument_list|,
+name|interrupt_trigger
+argument_list|(
+name|intr
+operator|->
+name|TriggerMode
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
