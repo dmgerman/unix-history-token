@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: adm_locl.h,v 1.17 1999/12/02 16:58:27 joda Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -220,7 +224,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include

@@ -209,7 +209,7 @@ endif|#
 directive|endif
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 comment|/* CNS compatibility ahead! */
 ifndef|#
 directive|ifndef

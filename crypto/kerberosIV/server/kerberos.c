@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -338,7 +342,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include

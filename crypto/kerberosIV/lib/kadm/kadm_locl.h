@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: kadm_locl.h,v 1.12 1999/12/02 16:58:39 joda Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -202,7 +206,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include

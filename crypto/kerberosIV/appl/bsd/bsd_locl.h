@@ -1215,7 +1215,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include
