@@ -669,6 +669,9 @@ specifier|static
 name|int
 name|ng_apply_item
 parameter_list|(
+name|node_p
+name|node
+parameter_list|,
 name|item_p
 name|item
 parameter_list|)
@@ -2798,12 +2801,39 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Remove a reference to the node, possibly the last  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
+end_ifdef
 
 begin_function
 name|void
+name|ng_ref_node
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
+name|_NG_NODE_REF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Remove a reference to the node, possibly the last.  * deadnode always acts as it it were the last.  */
+end_comment
+
+begin_function
+name|int
 name|ng_unref_node
 parameter_list|(
 name|node_p
@@ -2821,7 +2851,11 @@ operator|&
 name|ng_deadnode
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 do|do
 block|{
@@ -2830,6 +2864,8 @@ operator|=
 name|node
 operator|->
 name|nd_refs
+operator|-
+literal|1
 expr_stmt|;
 block|}
 do|while
@@ -2843,10 +2879,10 @@ operator|->
 name|nd_refs
 argument_list|,
 name|v
+operator|+
+literal|1
 argument_list|,
 name|v
-operator|-
-literal|1
 argument_list|)
 condition|)
 do|;
@@ -2854,7 +2890,7 @@ if|if
 condition|(
 name|v
 operator|==
-literal|1
+literal|0
 condition|)
 block|{
 comment|/* we were the last */
@@ -2920,6 +2956,11 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|v
+operator|)
+return|;
 block|}
 end_function
 
@@ -4557,7 +4598,7 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* one for the node */
-comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to theur nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the  	 * node locked, but we need to queue the remote one. 	 */
+comment|/* 	 * We now have a symetrical situation, where both hooks have been 	 * linked to their nodes, the newhook methods have been called 	 * And the references are all correct. The hooks are still marked 	 * as invalid, as we have not called the 'connect' methods 	 * yet. 	 * We can call the local one immediatly as we have the  	 * node locked, but we need to queue the remote one. 	 */
 if|if
 condition|(
 name|hook
@@ -7615,10 +7656,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Take over the reference frm the item. 	 * Hold it until the called function returns. 	 */
+name|NGI_GET_NODE
+argument_list|(
+name|item
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* zaps stored node */
 name|ierror
 operator|=
 name|ng_apply_item
 argument_list|(
+name|node
+argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
@@ -7635,6 +7687,23 @@ name|error
 operator|=
 name|ierror
 expr_stmt|;
+block|}
+comment|/* 	 * If the node goes away when we remove the reference,  	 * whatever we just did caused it.. hwatever we do, DO NOT 	 * access the node again! 	 */
+if|if
+condition|(
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* 	 * Now we've handled the packet we brought, (or a friend of it) let's 	 * look for any other packets that may have been queued up. We hold 	 * no locks, so if someone puts something in the queue after 	 * we check that it is empty, it is their problem 	 * to ensure it is processed. If we have the netisr thread cme in here 	 * while we still say we have stuff to do, we may get a boost 	 * in SMP systems. :-) 	 */
 for|for
@@ -7688,11 +7757,22 @@ operator|->
 name|q_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Take over the reference frm the item. 		 * Hold it until the called function returns. 		 */
+name|NGI_GET_NODE
+argument_list|(
+name|item
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* zaps stored node */
 comment|/* 		 * We have the appropriate lock, so run the item. 		 * When finished it will drop the lock accordingly 		 */
 name|ierror
 operator|=
 name|ng_apply_item
 argument_list|(
+name|node
+argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
@@ -7708,6 +7788,19 @@ name|error
 operator|=
 name|ierror
 expr_stmt|;
+block|}
+comment|/* 		 * If the node goes away when we remove the reference,  		 * whatever we just did caused it.. hwatever we do, DO NOT 		 * access the node again! 		 */
+if|if
+condition|(
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+break|break;
 block|}
 block|}
 return|return
@@ -7727,13 +7820,13 @@ specifier|static
 name|int
 name|ng_apply_item
 parameter_list|(
+name|node_p
+name|node
+parameter_list|,
 name|item_p
 name|item
 parameter_list|)
 block|{
-name|node_p
-name|node
-decl_stmt|;
 name|hook_p
 name|hook
 decl_stmt|;
@@ -7771,14 +7864,6 @@ name|hook
 argument_list|)
 expr_stmt|;
 comment|/* clears stored hook */
-name|NGI_GET_NODE
-argument_list|(
-name|item
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-comment|/* clears stored node */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -8160,11 +8245,6 @@ name|nd_input_queue
 argument_list|)
 expr_stmt|;
 block|}
-name|NG_NODE_UNREF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -12237,9 +12317,24 @@ operator|.
 name|q_mtx
 argument_list|)
 expr_stmt|;
-name|ng_apply_item
+name|NGI_GET_NODE
 argument_list|(
 name|item
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* zaps stored node */
+name|ng_apply_item
+argument_list|(
+name|node
+argument_list|,
+name|item
+argument_list|)
+expr_stmt|;
+name|NG_NODE_UNREF
+argument_list|(
+name|node
 argument_list|)
 expr_stmt|;
 block|}
@@ -13101,12 +13196,6 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* One for us */
-name|NG_NODE_REF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 comment|/* and one for the item */
 name|NGI_SET_NODE
 argument_list|(
@@ -13164,11 +13253,6 @@ literal|0
 argument_list|)
 operator|)
 return|;
-name|NG_NODE_UNREF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

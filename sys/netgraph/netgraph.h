@@ -2051,7 +2051,7 @@ comment|/*  * Public methods for nodes.  * If you can't do it with these you pro
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|ng_unref_node
 parameter_list|(
 name|node_p
@@ -2333,6 +2333,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ng_ref_node
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|__inline
 name|void
@@ -2354,7 +2364,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__inline
-name|void
+name|int
 name|_ng_node_unref
 parameter_list|(
 name|node_p
@@ -2710,7 +2720,8 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|_NG_NODE_REF
+comment|/*_NG_NODE_REF(node);*/
+name|ng_ref_node
 argument_list|(
 name|node
 argument_list|)
@@ -2721,7 +2732,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|_ng_node_unref
 parameter_list|(
 name|node_p
@@ -2744,11 +2755,14 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|_NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
