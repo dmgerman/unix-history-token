@@ -483,9 +483,8 @@ name|Elf32_Brandinfo
 name|svr4_brand
 init|=
 block|{
-name|ELFOSABI_SOLARIS
+name|ELFOSABI_SYSV
 block|,
-comment|/* XXX  Or should we use ELFOSABI_SYSV here?  */
 literal|"SVR4"
 block|,
 name|svr4_emul_path
