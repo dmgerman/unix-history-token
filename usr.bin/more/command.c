@@ -58,6 +58,14 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|off_t
+name|position
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -646,9 +654,6 @@ decl_stmt|,
 name|pos
 decl_stmt|,
 name|ch_length
-argument_list|()
-decl_stmt|,
-name|position
 argument_list|()
 decl_stmt|,
 name|forw_line
