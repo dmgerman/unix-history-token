@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -335,19 +341,6 @@ begin_function_decl
 specifier|static
 name|char
 modifier|*
-name|skip_spaces
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
 name|first_token
 parameter_list|(
 name|char
@@ -500,6 +493,7 @@ comment|/* Process the command line */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -674,6 +668,11 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1804,14 +1803,6 @@ name|p
 decl_stmt|;
 name|char
 modifier|*
-name|s
-decl_stmt|;
-name|char
-modifier|*
-name|token
-decl_stmt|;
-name|char
-modifier|*
 name|src_noext
 decl_stmt|;
 name|int
@@ -2085,23 +2076,9 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|uppercase_src
-decl_stmt|;
-name|char
-modifier|*
-name|uppercase_mname
-decl_stmt|;
-comment|/* method name */
-name|char
-modifier|*
 name|token
 decl_stmt|;
 comment|/* currently being parsed token */
-name|char
-modifier|*
-name|method
-decl_stmt|;
-comment|/* should always be 'METHOD' */
 name|char
 modifier|*
 name|mtype
@@ -3019,12 +2996,6 @@ name|max_list
 parameter_list|)
 block|{
 name|char
-name|input_buffer
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
-name|char
 modifier|*
 name|upper_case_src
 decl_stmt|;
@@ -3601,40 +3572,6 @@ block|}
 return|return
 operator|(
 name|t
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * skip_spaces  *  * inputs	- pointer to string  * output	- pointer to string without leading spaces  * side effects	- NONE  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|skip_spaces
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-while|while
-condition|(
-name|isspace
-argument_list|(
-operator|*
-name|s
-argument_list|)
-condition|)
-name|s
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|s
 operator|)
 return|;
 block|}
