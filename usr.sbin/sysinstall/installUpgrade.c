@@ -726,6 +726,16 @@ block|,
 block|{
 name|JUST_COPY
 block|,
+literal|"ssh"
+block|,
+name|TRUE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|JUST_COPY
+block|,
 literal|"syslog.conf"
 block|,
 name|TRUE
