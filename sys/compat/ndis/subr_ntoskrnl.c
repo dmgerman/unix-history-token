@@ -11216,12 +11216,6 @@ decl_stmt|;
 name|uint8_t
 name|pending
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ntoskrnl_dispatchlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|timer
@@ -11233,6 +11227,12 @@ operator|(
 name|FALSE
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ntoskrnl_dispatchlock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timer
