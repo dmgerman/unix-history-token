@@ -234,7 +234,7 @@ name|elf_freebsd_fixup
 name|__P
 argument_list|(
 operator|(
-name|long
+name|register_t
 operator|*
 operator|*
 name|stack_base
@@ -2842,7 +2842,7 @@ specifier|static
 name|int
 name|elf_freebsd_fixup
 parameter_list|(
-name|long
+name|register_t
 modifier|*
 modifier|*
 name|stack_base
@@ -2865,7 +2865,7 @@ name|imgp
 operator|->
 name|auxargs
 decl_stmt|;
-name|long
+name|register_t
 modifier|*
 name|pos
 decl_stmt|;

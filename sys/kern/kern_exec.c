@@ -221,7 +221,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
+name|register_t
 modifier|*
 name|exec_copyout_strings
 name|__P
@@ -428,7 +428,7 @@ decl_stmt|,
 modifier|*
 name|ndp
 decl_stmt|;
-name|long
+name|register_t
 modifier|*
 name|stack_base
 decl_stmt|;
@@ -2495,7 +2495,7 @@ comment|/*  * Copy strings out to the new process address space, constructing  *
 end_comment
 
 begin_function
-name|long
+name|register_t
 modifier|*
 name|exec_copyout_strings
 parameter_list|(
@@ -2524,7 +2524,7 @@ decl_stmt|,
 modifier|*
 name|destp
 decl_stmt|;
-name|long
+name|register_t
 modifier|*
 name|stack_base
 decl_stmt|;
@@ -2690,7 +2690,7 @@ comment|/* 	 * vectp also becomes our initial stack base 	 */
 name|stack_base
 operator|=
 operator|(
-name|long
+name|register_t
 operator|*
 operator|)
 name|vectp

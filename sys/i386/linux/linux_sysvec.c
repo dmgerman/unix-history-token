@@ -203,7 +203,7 @@ name|linux_fixup
 name|__P
 argument_list|(
 operator|(
-name|long
+name|register_t
 operator|*
 operator|*
 name|stack_base
@@ -224,7 +224,7 @@ name|elf_linux_fixup
 name|__P
 argument_list|(
 operator|(
-name|long
+name|register_t
 operator|*
 operator|*
 name|stack_base
@@ -773,7 +773,7 @@ specifier|static
 name|int
 name|linux_fixup
 parameter_list|(
-name|long
+name|register_t
 modifier|*
 modifier|*
 name|stack_base
@@ -784,7 +784,7 @@ modifier|*
 name|imgp
 parameter_list|)
 block|{
-name|long
+name|register_t
 modifier|*
 name|argv
 decl_stmt|,
@@ -872,7 +872,7 @@ specifier|static
 name|int
 name|elf_linux_fixup
 parameter_list|(
-name|long
+name|register_t
 modifier|*
 modifier|*
 name|stack_base
@@ -895,7 +895,7 @@ name|imgp
 operator|->
 name|auxargs
 decl_stmt|;
-name|long
+name|register_t
 modifier|*
 name|pos
 decl_stmt|;
