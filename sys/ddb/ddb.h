@@ -731,8 +731,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|dev_t
-name|gdbdev
+name|void
+modifier|*
+name|gdb_arg
 decl_stmt|;
 end_decl_stmt
 

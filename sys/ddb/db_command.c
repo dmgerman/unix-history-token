@@ -2282,10 +2282,11 @@ comment|/* Enter GDB remote protocol debugger on the next trap. */
 end_comment
 
 begin_decl_stmt
-name|dev_t
-name|gdbdev
+name|void
+modifier|*
+name|gdb_arg
 init|=
-name|NODEV
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -2332,9 +2333,9 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|gdbdev
+name|gdb_arg
 operator|==
-name|NODEV
+name|NULL
 condition|)
 block|{
 name|db_printf

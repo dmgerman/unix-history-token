@@ -14027,7 +14027,7 @@ directive|if
 name|DDB
 operator|>
 literal|0
-name|gdbdev
+name|gdb_arg
 operator|=
 name|makedev
 argument_list|(
@@ -14060,9 +14060,9 @@ literal|0
 comment|/* 	 * XXX Ugly Compatability. 	 * If no gdb port has been specified, set it to be the console 	 * as some configuration files don't specify the gdb port. 	 */
 if|if
 condition|(
-name|gdbdev
+name|gdb_arg
 operator|==
-name|NODEV
+name|NULL
 operator|&&
 operator|(
 name|boothowto
@@ -14096,7 +14096,7 @@ name|siogdbunit
 operator|=
 name|siocnunit
 expr_stmt|;
-name|gdbdev
+name|gdb_arg
 operator|=
 name|makedev
 argument_list|(
@@ -14416,7 +14416,7 @@ directive|if
 name|DDB
 operator|>
 literal|0
-name|gdbdev
+name|gdb_arg
 operator|=
 name|makedev
 argument_list|(

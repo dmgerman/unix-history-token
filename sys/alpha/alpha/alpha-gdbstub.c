@@ -227,9 +227,9 @@ comment|/* write a single character      */
 block|{
 if|if
 condition|(
-name|gdbdev
+name|gdb_arg
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
 literal|0
@@ -239,7 +239,7 @@ modifier|*
 name|gdb_putc
 call|)
 argument_list|(
-name|gdbdev
+name|gdb_arg
 argument_list|,
 name|c
 argument_list|)
@@ -261,9 +261,9 @@ comment|/* read and return a single char */
 block|{
 if|if
 condition|(
-name|gdbdev
+name|gdb_arg
 operator|==
-name|NODEV
+name|NULL
 condition|)
 return|return
 operator|-
@@ -275,7 +275,7 @@ modifier|*
 name|gdb_getc
 call|)
 argument_list|(
-name|gdbdev
+name|gdb_arg
 argument_list|)
 return|;
 block|}
@@ -2415,9 +2415,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|gdbdev
+name|gdb_arg
 operator|==
-name|NODEV
+name|NULL
 condition|)
 comment|/* somebody's removed it */
 return|return;
