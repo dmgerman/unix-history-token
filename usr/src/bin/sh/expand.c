@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	5.6 (Berkeley) %G%"
+literal|"@(#)expand.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3432,19 +3432,32 @@ name|expdir
 operator|==
 name|NULL
 condition|)
-name|expdir
-operator|=
-name|ckmalloc
-argument_list|(
+block|{
+name|int
+name|i
+init|=
 name|strlen
 argument_list|(
 name|str
 operator|->
 name|text
 argument_list|)
+decl_stmt|;
+name|expdir
+operator|=
+name|ckmalloc
+argument_list|(
+name|i
+operator|<
+literal|2048
+condition|?
+literal|2048
+else|:
+name|i
 argument_list|)
 expr_stmt|;
-comment|/* XXX - */
+comment|/* XXX */
+block|}
 name|expmeta
 argument_list|(
 name|expdir
