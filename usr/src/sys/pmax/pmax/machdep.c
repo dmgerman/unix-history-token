@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3288,28 +3288,6 @@ operator|&
 name|RB_HALT
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|void
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-init|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|(
-operator|)
-operator|)
-name|MACH_MON_RESTART
-function_decl|;
-else|#
-directive|else
 name|void
 function_decl|(
 modifier|*
@@ -3327,14 +3305,6 @@ operator|)
 operator|)
 name|MACH_MON_REINIT
 function_decl|;
-endif|#
-directive|endif
-name|trapDump
-argument_list|(
-literal|"boot"
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 call|(
 modifier|*
 name|f
