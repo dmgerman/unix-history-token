@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	idc.c	6.1	83/07/29	*/
+comment|/*	idc.c	6.2	83/12/13	*/
 end_comment
 
 begin_comment
@@ -335,6 +335,10 @@ name|io
 operator|->
 name|i_boff
 index|]
+operator|*
+name|NRB80SECT
+operator|*
+name|NRB80TRK
 expr_stmt|;
 block|}
 else|else
@@ -358,6 +362,12 @@ name|io
 operator|->
 name|i_boff
 index|]
+operator|*
+name|NRB02SECT
+operator|/
+literal|2
+operator|*
+name|NRB02TRK
 expr_stmt|;
 block|}
 if|if
@@ -587,12 +597,6 @@ name|ccleft
 operator|-=
 name|thiscc
 expr_stmt|;
-name|cn
-operator|+=
-name|io
-operator|->
-name|i_boff
-expr_stmt|;
 name|idcaddr
 operator|->
 name|idccsr
@@ -743,7 +747,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"idc error: (cyl,trk,sec)=(%d,%d,%d) csr=%b\n"
+literal|"idc%d error: (cyl,trk,sec)=(%d,%d,%d) csr=%b\n"
+argument_list|,
+name|dn
 argument_list|,
 name|cn
 argument_list|,
