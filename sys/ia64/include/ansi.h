@@ -88,6 +88,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_SEGSZ_T_
+value|__int32_t
+end_define
+
+begin_comment
+comment|/* segment size (in pages) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_BSD_SIZE_T_
 value|unsigned long
 end_define

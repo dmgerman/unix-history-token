@@ -592,50 +592,28 @@ begin_comment
 comment|/* resource limit */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* XXX should be in<machine/types.h> */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SEGSZ_T_
+end_ifdef
 
 begin_typedef
 typedef|typedef
-name|int64_t
+name|_BSD_SEGSZ_T_
 name|segsz_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* segment size */
+comment|/* segment size (in pages) */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|segsz_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* segment size */
-end_comment
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SEGSZ_T_
+end_undef
 
 begin_endif
 endif|#
