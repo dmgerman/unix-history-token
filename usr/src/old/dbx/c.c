@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c	5.3 (Berkeley) %G%"
+literal|"@(#)c.c	5.1.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2027,36 +2027,13 @@ name|i
 argument_list|)
 expr_stmt|;
 name|i
-operator|>>=
-operator|(
-name|s
-operator|->
-name|symvalue
-operator|.
-name|field
-operator|.
-name|offset
-name|mod
-name|BITSPERBYTE
-operator|)
-expr_stmt|;
+operator|=
+name|extractfield
+argument_list|(
 name|i
-operator|&=
-operator|(
-operator|(
-literal|1
-operator|<<
+argument_list|,
 name|s
-operator|->
-name|symvalue
-operator|.
-name|field
-operator|.
-name|length
-operator|)
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
