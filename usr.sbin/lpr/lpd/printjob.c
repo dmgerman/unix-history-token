@@ -3664,12 +3664,6 @@ index|]
 expr_stmt|;
 comment|/* use pipe for input */
 case|case
-literal|'o'
-case|:
-comment|/* print postscript file */
-comment|/* 		 * For now, treat this as a plain-text file, and assume 		 * the standard LPF_INPUT filter will recognize that it 		 * is postscript and know what to do with it.  These 		 * 'o'-file requests could come from MacOS 10.1 systems. 		 */
-comment|/* FALLTHROUGH */
-case|case
 literal|'f'
 case|:
 comment|/* print plain text file */
@@ -3708,6 +3702,12 @@ operator|=
 literal|4
 expr_stmt|;
 break|break;
+case|case
+literal|'o'
+case|:
+comment|/* print postscript file */
+comment|/* 		 * Treat this as a "plain file with control characters", and 		 * assume the standard LPF_INPUT filter will recognize that 		 * the data is postscript and know what to do with it.  These 		 * 'o'-file requests could come from MacOS 10.1 systems. 		 * (later versions of MacOS 10 will explicitly use 'l') 		 * A postscript file can contain binary data, which is why 'l' 		 * is somewhat more appropriate than 'f'. 		 */
+comment|/* FALLTHROUGH */
 case|case
 literal|'l'
 case|:
