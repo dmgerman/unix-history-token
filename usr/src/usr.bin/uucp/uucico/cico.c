@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.12 (Berkeley) %G%"
+literal|"@(#)cico.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,6 +495,30 @@ literal|"uucico"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_2
+end_ifdef
+
+begin_expr_stmt
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* in case we inherit blocked signals */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|BSD4_2
+end_endif
 
 begin_expr_stmt
 name|signal
