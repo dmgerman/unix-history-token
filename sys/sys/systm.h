@@ -286,6 +286,21 @@ comment|/*  * General function declarations.  */
 end_comment
 
 begin_decl_stmt
+specifier|volatile
+name|void
+name|cpu_exit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|nullop
 name|__P
