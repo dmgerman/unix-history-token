@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -204,9 +210,11 @@ name|linkit
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -265,17 +273,17 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|int
-name|ch
-decl_stmt|,
-name|exitval
-decl_stmt|;
 name|char
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|sourcedir
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|,
+name|exitval
 decl_stmt|;
 comment|/* 	 * Test for the special case where the utility is called as 	 * "link", for which the functionality provided is greatly 	 * simplified. 	 */
 if|if
@@ -637,6 +645,7 @@ name|source
 parameter_list|,
 name|isdir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|target
@@ -658,6 +667,11 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -666,12 +680,9 @@ decl_stmt|,
 name|first
 decl_stmt|;
 name|char
-modifier|*
-name|p
-decl_stmt|,
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if
