@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.17 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -305,13 +305,6 @@ end_function_decl
 begin_function_decl
 name|long
 name|atol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|off_t
-name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2296,7 +2289,7 @@ name|fi
 argument_list|,
 name|off
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -2381,7 +2374,7 @@ name|fi
 argument_list|,
 name|off
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
