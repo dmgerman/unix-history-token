@@ -977,9 +977,9 @@ specifier|extern
 name|ACPI_STATUS
 name|acpi_FindIndexedResource
 parameter_list|(
-name|ACPI_RESOURCE
+name|ACPI_BUFFER
 modifier|*
-name|resbuf
+name|buf
 parameter_list|,
 name|int
 name|index
@@ -988,6 +988,22 @@ name|ACPI_RESOURCE
 modifier|*
 modifier|*
 name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ACPI_STATUS
+name|acpi_AppendBufferResource
+parameter_list|(
+name|ACPI_BUFFER
+modifier|*
+name|buf
+parameter_list|,
+name|ACPI_RESOURCE
+modifier|*
+name|res
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1254,6 +1270,20 @@ name|set
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX until Intel fix this in their headers, based on NEXT_RESOURCE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NEXT
+parameter_list|(
+name|Res
+parameter_list|)
+value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
+end_define
 
 begin_comment
 comment|/*   * ACPI event handling  */
