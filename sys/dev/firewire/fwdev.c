@@ -963,7 +963,7 @@ index|]
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+name|PAGE_SIZE
 expr_stmt|;
 name|sc
 operator|->
@@ -1091,7 +1091,7 @@ index|]
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+literal|0
 expr_stmt|;
 name|sc
 operator|->

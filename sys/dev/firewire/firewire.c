@@ -3880,7 +3880,7 @@ name|arq
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+name|PAGE_SIZE
 expr_stmt|;
 name|fc
 operator|->
@@ -3888,7 +3888,7 @@ name|ars
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+name|PAGE_SIZE
 expr_stmt|;
 name|fc
 operator|->
@@ -3896,7 +3896,7 @@ name|atq
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+literal|0
 expr_stmt|;
 name|fc
 operator|->
@@ -3904,7 +3904,7 @@ name|ats
 operator|->
 name|psize
 operator|=
-name|FWPMAX_S400
+literal|0
 expr_stmt|;
 name|fc
 operator|->
