@@ -152,13 +152,6 @@ begin_struct
 struct|struct
 name|nfsnode
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|nfsnode
-argument_list|)
-name|n_hash
-expr_stmt|;
-comment|/* Hash chain */
 name|u_quad_t
 name|n_size
 decl_stmt|;
