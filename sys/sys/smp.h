@@ -284,6 +284,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|smp_rv_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
