@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.2	83/11/21	*/
+comment|/*	user.h	6.3	84/07/08	*/
 end_comment
 
 begin_ifdef
@@ -33,6 +33,12 @@ directive|include
 file|"../h/resource.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/namei.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -60,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
 end_include
 
 begin_endif
@@ -133,10 +145,6 @@ name|label_t
 name|u_qsave
 decl_stmt|;
 comment|/* for non-local gotos on interrupts */
-name|char
-name|u_error
-decl_stmt|;
-comment|/* return error code */
 union|union
 block|{
 comment|/* syscall return values */
@@ -168,6 +176,10 @@ decl_stmt|;
 block|}
 name|u_r
 union|;
+name|char
+name|u_error
+decl_stmt|;
+comment|/* return error code */
 name|char
 name|u_eosys
 decl_stmt|;
@@ -367,6 +379,30 @@ decl_stmt|;
 name|short
 name|u_acflag
 decl_stmt|;
+struct|struct
+name|uprof
+block|{
+comment|/* profile arguments */
+name|short
+modifier|*
+name|pr_base
+decl_stmt|;
+comment|/* buffer base */
+name|unsigned
+name|pr_size
+decl_stmt|;
+comment|/* buffer size */
+name|unsigned
+name|pr_off
+decl_stmt|;
+comment|/* pc offset */
+name|unsigned
+name|pr_scale
+decl_stmt|;
+comment|/* pc scaling */
+block|}
+name|u_prof
+struct|;
 comment|/* 1.6 - resource controls */
 name|struct
 name|rlimit
@@ -385,24 +421,35 @@ name|int
 name|u_qflags
 decl_stmt|;
 comment|/* per process quota flags */
-comment|/* BEGIN TRASH */
-name|char
-name|u_segflg
-decl_stmt|;
-comment|/* 0:user D; 1:system; 2:user I */
-name|caddr_t
-name|u_base
-decl_stmt|;
-comment|/* base address for IO */
-name|unsigned
+comment|/* namei& co. */
+struct|struct
+name|nameicache
+block|{
+comment|/* last successful directory search */
 name|int
-name|u_count
+name|nc_prevoffset
 decl_stmt|;
-comment|/* bytes remaining for IO */
-name|off_t
-name|u_offset
+comment|/* offset at which last entry found */
+name|ino_t
+name|nc_inumber
 decl_stmt|;
-comment|/* offset in file for IO */
+comment|/* inum of cached directory */
+name|dev_t
+name|nc_dev
+decl_stmt|;
+comment|/* dev of cached directory */
+name|time_t
+name|nc_time
+decl_stmt|;
+comment|/* time stamp for cache entry */
+block|}
+name|u_ncache
+struct|;
+name|struct
+name|nameidata
+name|u_nd
+decl_stmt|;
+comment|/* BEGIN TRASH */
 union|union
 block|{
 struct|struct
@@ -483,69 +530,7 @@ define|#
 directive|define
 name|ux_relflg
 value|Ux_A.Ux_relflg
-name|caddr_t
-name|u_dirp
-decl_stmt|;
-comment|/* pathname pointer */
-name|struct
-name|direct
-name|u_dent
-decl_stmt|;
-comment|/* current directory entry */
-name|struct
-name|inode
-modifier|*
-name|u_pdir
-decl_stmt|;
-comment|/* inode of parent directory of dirp */
 comment|/* END TRASH */
-struct|struct
-name|uprof
-block|{
-comment|/* profile arguments */
-name|short
-modifier|*
-name|pr_base
-decl_stmt|;
-comment|/* buffer base */
-name|unsigned
-name|pr_size
-decl_stmt|;
-comment|/* buffer size */
-name|unsigned
-name|pr_off
-decl_stmt|;
-comment|/* pc offset */
-name|unsigned
-name|pr_scale
-decl_stmt|;
-comment|/* pc scaling */
-block|}
-name|u_prof
-struct|;
-struct|struct
-name|nameicache
-block|{
-comment|/* last successful directory search */
-name|int
-name|nc_prevoffset
-decl_stmt|;
-comment|/* offset at which last entry found */
-name|ino_t
-name|nc_inumber
-decl_stmt|;
-comment|/* inum of cached directory */
-name|dev_t
-name|nc_dev
-decl_stmt|;
-comment|/* dev of cached directory */
-name|time_t
-name|nc_time
-decl_stmt|;
-comment|/* time stamp for cache entry */
-block|}
-name|u_ncache
-struct|;
 name|int
 name|u_stack
 index|[

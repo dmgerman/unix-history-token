@@ -1,46 +1,138 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.4	84/06/27	*/
+comment|/*	namei.h	6.5	84/07/08	*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NAMEI_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NAMEI_
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
-name|namidata
+name|nameidata
 block|{
-name|int
-name|ni_offset
+name|caddr_t
+name|ni_dirp
 decl_stmt|;
-name|int
-name|ni_count
-decl_stmt|;
+comment|/* pathname pointer */
 name|struct
 name|inode
 modifier|*
 name|ni_pdir
 decl_stmt|;
+comment|/* inode of parent directory of dirp */
+name|struct
+name|iovec
+name|ni_iovec
+decl_stmt|;
+name|struct
+name|uio
+name|ni_uio
+decl_stmt|;
 name|struct
 name|direct
 name|ni_dent
 decl_stmt|;
+comment|/* current directory entry */
+name|short
+name|ni_error
+decl_stmt|;
+comment|/* error return if any */
+name|short
+name|ni_nameiop
+decl_stmt|;
+comment|/* see below */
 block|}
 struct|;
 end_struct
 
-begin_enum
-enum|enum
-name|nami_op
-block|{
-name|NAMI_LOOKUP
-block|,
-name|NAMI_CREATE
-block|,
-name|NAMI_DELETE
-block|}
-enum|;
-end_enum
+begin_define
+define|#
+directive|define
+name|ni_base
+value|ni_iovec.iov_base
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_count
+value|ni_iovec.iov_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_iov
+value|ni_uio.uio_iov
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_iovcnt
+value|ni_uio.uio_iovcnt
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_offset
+value|ni_uio.uio_offset
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_segflg
+value|ni_uio.uio_segflg
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni_resid
+value|ni_uio.uio_resid
+end_define
 
 begin_comment
-comment|/* this is temporary until the namei interface changes */
+comment|/*  * namei opertions  */
 end_comment
 
 begin_define
@@ -96,6 +188,28 @@ end_define
 
 begin_comment
 comment|/* name must not be left in cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOLLOW
+value|0x40
+end_define
+
+begin_comment
+comment|/* follow symbolic links */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOFOLLOW
+value|0x0
+end_define
+
+begin_comment
+comment|/* don't follow symbolic links (pseudo) */
 end_comment
 
 begin_comment
@@ -220,6 +334,11 @@ comment|/* number of times we attempt it */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

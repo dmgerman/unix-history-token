@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uio.h	6.1	83/07/29	*/
+comment|/*	uio.h	6.2	84/07/08	*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UIO_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_UIO_
+end_define
 
 begin_struct
 struct|struct
@@ -52,6 +64,48 @@ name|UIO_WRITE
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/*  * Segment flag values (should be enum).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UIO_USERSPACE
+value|0
+end_define
+
+begin_comment
+comment|/* from user data space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UIO_SYSSPACE
+value|1
+end_define
+
+begin_comment
+comment|/* from system space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UIO_USERISPACE
+value|2
+end_define
+
+begin_comment
+comment|/* from user I space */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
