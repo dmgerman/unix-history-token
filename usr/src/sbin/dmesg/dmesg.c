@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.13 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,7 +178,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|kvm_read(kd, addr, (void *)&var, sizeof(var)) != sizeof(var)
+value|kvm_read(kd, addr,&var, sizeof(var)) != sizeof(var)
 end_define
 
 begin_function
