@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.12	82/01/17	*/
+comment|/*	socketvar.h	4.13	82/01/19	*/
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(sbspace(&(so)->so_snd)> 0 || ((so)->so_state& SS_CANTSENDMORE))
+value|((sbspace(&(so)->so_snd)> 0&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  (so)->so_proto->pr_flags&PR_CONNREQUIRED)==0) || \      ((so)->so_state& SS_CANTSENDMORE))
 end_define
 
 begin_comment
