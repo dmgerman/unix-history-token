@@ -918,12 +918,6 @@ argument_list|,
 name|p_list
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_stat
-operator|=
-name|SZOMB
-expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|p
@@ -942,6 +936,13 @@ name|NULL
 argument_list|,
 name|CURPROC
 argument_list|)
+expr_stmt|;
+comment|/* 	 * We have to wait until after releasing this lock before 	 * changing p_stat.  If we block on a mutex while waiting to 	 * release the allproc_lock, then we will be back at SRUN when 	 * we resume here and our parent will never harvest us. 	 */
+name|p
+operator|->
+name|p_stat
+operator|=
+name|SZOMB
 expr_stmt|;
 name|q
 operator|=
