@@ -1649,6 +1649,11 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+name|cpu_sched_exit
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|cpu_throw
 argument_list|()
 expr_stmt|;
