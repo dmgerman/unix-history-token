@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -369,6 +369,10 @@ name|int
 name|setupaddr
 decl_stmt|;
 comment|/* mapping info for setup pkts  */
+name|int
+name|ipl
+decl_stmt|;
+comment|/* interrupt priority		*/
 name|struct
 name|qe_ring
 modifier|*
@@ -555,19 +559,6 @@ parameter_list|)
 value|minor(x)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|mask
-init|=
-literal|0x3ffff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* address mask		*/
-end_comment
-
 begin_comment
 comment|/*  * The deqna shouldn't receive more than ETHERMTU + sizeof(struct ether_header)  * but will actually take in up to 2048 bytes. To guard against the receiver  * chaining buffers (which we aren't prepared to handle) we allocate 2kb   * size buffers.  */
 end_comment
@@ -591,12 +582,22 @@ begin_macro
 name|qeprobe
 argument_list|(
 argument|reg
+argument_list|,
+argument|ui
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|caddr_t
 name|reg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uba_device
+modifier|*
+name|ui
 decl_stmt|;
 end_decl_stmt
 
@@ -638,16 +639,7 @@ comment|/* physical rp 		*/
 specifier|register
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
-specifier|static
-name|int
-name|next
-init|=
-literal|0
-decl_stmt|;
-comment|/* softc index		*/
 specifier|register
 name|struct
 name|qe_softc
@@ -657,8 +649,9 @@ init|=
 operator|&
 name|qe_softc
 index|[
-name|next
-operator|++
+name|ui
+operator|->
+name|ui_unit
 index|]
 decl_stmt|;
 ifdef|#
@@ -683,11 +676,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Set the address mask for the particular cpu 	 */
-name|mask
-operator|=
-literal|0x3ffff
-expr_stmt|;
 comment|/* 	 * The QNA interrupts on i/o operations. To do an I/O operation  	 * we have to setup the interface by transmitting a setup  packet. 	 */
 name|addr
 operator|->
@@ -785,16 +773,15 @@ expr|struct
 name|qe_ring
 operator|*
 operator|)
-operator|(
+name|UBAI_ADDR
+argument_list|(
 operator|(
 name|int
 operator|)
 name|sc
 operator|->
 name|rringaddr
-operator|&
-name|mask
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * The QNA will loop the setup packet back to the receive ring 	 * for verification, therefore we initialize the first  	 * receive& transmit ring descriptors and link the setup packet 	 * to them. 	 */
 name|qeinitdesc
@@ -803,15 +790,14 @@ name|sc
 operator|->
 name|tring
 argument_list|,
-call|(
+operator|(
 name|caddr_t
-call|)
+operator|)
+name|UBAI_ADDR
 argument_list|(
 name|sc
 operator|->
 name|setupaddr
-operator|&
-name|mask
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -828,15 +814,14 @@ name|sc
 operator|->
 name|rring
 argument_list|,
-call|(
+operator|(
 name|caddr_t
-call|)
+operator|)
+name|UBAI_ADDR
 argument_list|(
 name|sc
 operator|->
 name|setupaddr
-operator|&
-name|mask
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -950,9 +935,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the interface and wait for the packet. 	 */
-name|j
-operator|=
-name|cvec
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
 expr_stmt|;
 name|addr
 operator|->
@@ -1050,21 +1037,15 @@ operator|->
 name|rringaddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cvec
-operator|==
-name|j
-condition|)
-return|return
-literal|0
-return|;
-comment|/* didn't interrupt	*/
+name|sc
+operator|->
+name|ipl
+operator|=
 name|br
 operator|=
-literal|0x15
+name|qbgetpri
+argument_list|()
 expr_stmt|;
-comment|/* q-bus doesn't get level */
 return|return
 operator|(
 sizeof|sizeof
@@ -1500,19 +1481,8 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * map the communications area onto the device  		 */
-name|sc
-operator|->
-name|rringaddr
+name|i
 operator|=
-operator|(
-expr|struct
-name|qe_ring
-operator|*
-operator|)
-operator|(
-operator|(
-name|int
-operator|)
 name|uballoc
 argument_list|(
 literal|0
@@ -1538,9 +1508,29 @@ operator|)
 argument_list|,
 literal|0
 argument_list|)
-operator|&
-name|mask
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+name|sc
+operator|->
+name|rringaddr
+operator|=
+operator|(
+expr|struct
+name|qe_ring
+operator|*
 operator|)
+name|UBAI_ADDR
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -1554,9 +1544,7 @@ name|NRCV
 operator|+
 literal|1
 expr_stmt|;
-name|sc
-operator|->
-name|setupaddr
+name|i
 operator|=
 name|uballoc
 argument_list|(
@@ -1578,8 +1566,24 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
-operator|&
-name|mask
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+name|sc
+operator|->
+name|setupaddr
+operator|=
+name|UBAI_ADDR
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 comment|/* 		 * init buffers and maps 		 */
 if|if
@@ -1625,6 +1629,8 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fail
+label|:
 name|printf
 argument_list|(
 literal|"qe%d: can't initialize\n"
@@ -1669,9 +1675,10 @@ index|[
 name|i
 index|]
 argument_list|,
-call|(
+operator|(
 name|caddr_t
-call|)
+operator|)
+name|UBAI_ADDR
 argument_list|(
 name|sc
 operator|->
@@ -1681,8 +1688,6 @@ name|i
 index|]
 operator|.
 name|ifrw_info
-operator|&
-name|mask
 argument_list|)
 argument_list|,
 name|MAXPACKETSIZE
@@ -2313,8 +2318,11 @@ literal|2
 operator|)
 expr_stmt|;
 name|buf_addr
-operator|&=
-name|mask
+operator|=
+name|UBAI_ADDR
+argument_list|(
+name|buf_addr
+argument_list|)
 expr_stmt|;
 name|rp
 operator|->
@@ -2487,16 +2495,16 @@ operator|->
 name|ui_addr
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|buf_addr
 decl_stmt|,
 name|csr
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
+name|splx
+argument_list|(
+name|sc
+operator|->
+name|ipl
+argument_list|)
 expr_stmt|;
 name|csr
 operator|=
@@ -2611,11 +2619,6 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -3145,6 +3148,8 @@ operator|=
 operator|(
 name|int
 operator|)
+name|UBAI_ADDR
+argument_list|(
 name|sc
 operator|->
 name|qe_ifr
@@ -3155,8 +3160,7 @@ name|rindex
 index|]
 operator|.
 name|ifrw_info
-operator|&
-name|mask
+argument_list|)
 expr_stmt|;
 name|rp
 operator|->
@@ -4637,6 +4641,8 @@ name|int
 name|off
 decl_stmt|,
 name|resid
+decl_stmt|,
+name|s
 decl_stmt|;
 name|struct
 name|ifqueue
@@ -4943,6 +4949,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|IF_QFULL
@@ -4961,13 +4972,18 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+else|else
 name|IF_ENQUEUE
 argument_list|(
 name|inq
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
