@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.8 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -760,6 +760,18 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|freopen
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|"w"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
