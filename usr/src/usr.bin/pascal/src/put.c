@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.3 %G%"
+literal|"@(#)put.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -519,7 +519,7 @@ operator|=
 operator|(
 name|subop
 operator|>>
-literal|1
+name|INDX
 operator|)
 operator|*
 literal|5
