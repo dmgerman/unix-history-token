@@ -3945,7 +3945,7 @@ operator|->
 name|ifm_media
 argument_list|)
 operator|==
-name|IFM_homePNA
+name|IFM_HPNA_1
 condition|)
 block|{
 name|dc_setcfg
@@ -4076,7 +4076,7 @@ name|ifm
 argument_list|,
 name|IFM_ETHER
 operator||
-name|IFM_homePNA
+name|IFM_HPNA_1
 argument_list|,
 literal|0
 argument_list|,
@@ -6779,7 +6779,7 @@ argument_list|(
 name|media
 argument_list|)
 operator|==
-name|IFM_homePNA
+name|IFM_HPNA_1
 condition|)
 block|{
 name|DC_SETBIT
@@ -14802,7 +14802,7 @@ operator|.
 name|ifm_media
 argument_list|)
 operator|==
-name|IFM_homePNA
+name|IFM_HPNA_1
 condition|)
 name|sc
 operator|->
@@ -14980,7 +14980,7 @@ operator|->
 name|ifm_media
 argument_list|)
 operator|==
-name|IFM_homePNA
+name|IFM_HPNA_1
 condition|)
 name|dc_setcfg
 argument_list|(
@@ -15089,7 +15089,7 @@ operator|->
 name|ifm_media
 argument_list|)
 operator|==
-name|IFM_homePNA
+name|IFM_HPNA_1
 condition|)
 block|{
 name|ifmr

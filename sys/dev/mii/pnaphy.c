@@ -507,7 +507,7 @@ name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
 argument_list|,
-name|IFM_homePNA
+name|IFM_HPNA_1
 argument_list|,
 literal|0
 argument_list|,
@@ -876,7 +876,7 @@ name|mii_media_active
 operator|=
 name|IFM_ETHER
 operator||
-name|IFM_homePNA
+name|IFM_HPNA_1
 expr_stmt|;
 comment|/* Callback if something changed. */
 name|mii_phy_update

@@ -407,12 +407,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFM_1000_FX
+name|IFM_1000_SX
 value|11
 end_define
 
 begin_comment
-comment|/* 1000BaseFX - gigabit over fiber */
+comment|/* 1000BaseSX - multi-mode fiber */
 end_comment
 
 begin_define
@@ -434,66 +434,66 @@ value|13
 end_define
 
 begin_comment
-comment|/* 10baseFL - Fiber */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFM_1000_SX
-value|14
-end_define
-
-begin_comment
-comment|/* 1000BaseSX Multi-mode Fiber */
+comment|/* 10BaseFL - Fiber */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IFM_1000_LX
-value|15
+value|14
 end_define
 
 begin_comment
-comment|/* 1000BaseLX Single-mode Fiber */
+comment|/* 1000baseLX - single-mode fiber */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IFM_1000_CX
-value|16
+value|15
 end_define
 
 begin_comment
-comment|/* 1000BaseCX 150ohm STP */
+comment|/* 1000baseCX - 150ohm STP */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IFM_1000_T
-value|17
+value|16
 end_define
 
 begin_comment
-comment|/* 1000BaseTX 4 pair cat 5 */
+comment|/* 1000baseT - 4 pair cat 5 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IFM_homePNA
-value|18
+name|IFM_HPNA_1
+value|17
 end_define
 
 begin_comment
-comment|/* HomePNA media for ethernet frames */
+comment|/* HomePNA 1.0 (1Mb/s) */
 end_comment
 
 begin_comment
 comment|/* note 31 is the max! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_MASTER
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* master mode (1000baseT) */
 end_comment
 
 begin_comment
@@ -1122,14 +1122,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_DESCRIPTIONS
-value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_1000_FX,	"1000baseFX" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ IFM_1000_SX,	"1000baseSX" },					\ 	{ IFM_1000_LX,	"1000baseLX" },					\ 	{ IFM_1000_CX,	"1000baseCX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_homePNA,	"homePNA" },					\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ IFM_1000_SX,	"1000baseSX" },					\ 	{ IFM_1000_LX,	"1000baseLX" },					\ 	{ IFM_1000_CX,	"1000baseCX" },					\ 	{ IFM_1000_T,	"1000baseTX" },					\ 	{ IFM_1000_T,	"1000baseT" },					\ 	{ IFM_HPNA_1,	"homePNA" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_ALIASES
-value|{					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_FX,	"100FX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_1000_FX,	"1000FX" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ IFM_1000_FX,	"1000SX" },					\ 	{ IFM_1000_FX,	"1000LX" },					\ 	{ IFM_1000_FX,	"1000CX" },					\ 	{ IFM_1000_FX,	"1000TX" },					\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_10_T,	"UTP" },					\ 	{ IFM_10_T,	"10UTP" },					\ 	{ IFM_10_2,	"BNC" },					\ 	{ IFM_10_2,	"10BNC" },					\ 	{ IFM_10_5,	"AUI" },					\ 	{ IFM_10_5,	"10AUI" },					\ 	{ IFM_100_TX,	"100TX" },					\ 	{ IFM_100_T4,	"100T4" },					\ 	{ IFM_100_VG,	"100VG" },					\ 	{ IFM_100_T2,	"100T2" },					\ 	{ IFM_10_STP,	"10STP" },					\ 	{ IFM_10_FL,	"10FL" },					\ 	{ IFM_1000_SX,	"1000SX" },					\ 	{ IFM_1000_LX,	"1000LX" },					\ 	{ IFM_1000_CX,	"1000CX" },					\ 	{ IFM_1000_T,	"1000TX" },					\ 	{ IFM_1000_T,	"1000T" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
