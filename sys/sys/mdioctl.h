@@ -58,6 +58,11 @@ name|md_types
 name|md_type
 decl_stmt|;
 comment|/* type of disk */
+name|char
+modifier|*
+name|md_file
+decl_stmt|;
+comment|/* pathname of file to mount */
 name|off_t
 name|md_mediasize
 decl_stmt|;
@@ -82,13 +87,6 @@ name|int
 name|md_fwsectors
 decl_stmt|;
 comment|/* firmware sectors */
-name|char
-name|md_file
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-comment|/* pathname of file to mount */
 name|int
 name|md_pad
 index|[
@@ -125,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|MDIOVERSION
-value|1
+value|0
 end_define
 
 begin_comment
