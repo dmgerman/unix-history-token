@@ -1269,8 +1269,6 @@ specifier|register
 name|caddr_t
 name|addr
 decl_stmt|,
-name|v
-decl_stmt|,
 name|kva
 decl_stmt|;
 name|vm_offset_t
@@ -1305,12 +1303,6 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|v
-operator|=
-name|bp
-operator|->
-name|b_saveaddr
-operator|,
 name|addr
 operator|=
 operator|(
@@ -1341,10 +1333,6 @@ operator|->
 name|b_bufsize
 condition|;
 name|addr
-operator|+=
-name|PAGE_SIZE
-operator|,
-name|v
 operator|+=
 name|PAGE_SIZE
 operator|,
