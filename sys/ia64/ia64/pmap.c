@@ -9620,6 +9620,7 @@ name|cpumask
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|PCPU_SET
 argument_list|(
 name|current_pmap
@@ -9627,7 +9628,7 @@ argument_list|,
 name|pm
 argument_list|)
 expr_stmt|;
-block|}
+asm|__asm __volatile("srlz.d");
 return|return
 operator|(
 name|prevpm
