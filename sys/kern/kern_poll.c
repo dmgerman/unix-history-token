@@ -1388,6 +1388,16 @@ name|poll_each_burst
 operator|=
 name|poll_burst_max
 expr_stmt|;
+if|if
+condition|(
+name|poll_burst
+operator|>
+name|poll_burst_max
+condition|)
+name|poll_burst
+operator|=
+name|poll_burst_max
+expr_stmt|;
 name|residual_burst
 operator|=
 name|poll_burst
