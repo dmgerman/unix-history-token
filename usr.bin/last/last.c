@@ -332,13 +332,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|d_first
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|time_t
 name|snaptime
 decl_stmt|;
@@ -1586,11 +1579,7 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
-name|d_first
-condition|?
-literal|"%a %e %b %R"
-else|:
-literal|"%a %b %e %R"
+literal|"%a %Ef %R"
 argument_list|,
 name|tm
 argument_list|)
