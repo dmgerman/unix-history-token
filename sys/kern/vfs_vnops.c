@@ -1025,7 +1025,17 @@ operator|)
 operator|!=
 literal|0
 condition|)
-comment|/* XXX: Should VOP_CLOSE() again here. */
+name|VOP_CLOSE
+argument_list|(
+name|vp
+argument_list|,
+name|fmode
+argument_list|,
+name|cred
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
