@@ -492,13 +492,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_INTERFACES
-value|"network_interfaces"
-end_define
-
-begin_define
-define|#
-directive|define
 name|VAR_INSTALL_CFG
 value|"installConfig"
 end_define
