@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Andrzej Bialecki<abial@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kget.c,v 1.1.2.6 1999/05/06 11:33:15 jkh Exp $  */
+comment|/*-  * Copyright (c) 1999 Andrzej Bialecki<abial@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kget.c,v 1.1.2.7 1999/05/07 10:42:29 jkh Exp $  */
 end_comment
 
 begin_include
@@ -87,6 +87,35 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* create the output file; if we end up not writing to it, we'll         unlink() it later. */
+name|fout
+operator|=
+name|fopen
+argument_list|(
+name|out
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fout
+operator|==
+name|NULL
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"kget: Unable to open %s for writing.\n"
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* We use sysctlbyname, because the oid is unknown (OID_AUTO) */
 comment|/* get the buffer size */
 name|i
@@ -115,10 +144,9 @@ argument_list|(
 literal|"kget: error buffer sizing\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|pnp
+goto|;
 block|}
 if|if
 condition|(
@@ -180,39 +208,9 @@ argument_list|(
 literal|"kget: error retrieving data\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-comment|/* now it's time to create the output file; if we end up not writing to        it, we'll unlink() it later. */
-name|fout
-operator|=
-name|fopen
-argument_list|(
-name|out
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fout
-operator|==
-name|NULL
-condition|)
-block|{
-name|msgDebug
-argument_list|(
-literal|"kget: Unable to open %s for writing.\n"
-argument_list|,
-name|out
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|pnp
+goto|;
 block|}
 name|i
 operator|=
