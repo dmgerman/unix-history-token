@@ -424,13 +424,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|Ifrontp
-init|=
-name|Ibuf
 decl_stmt|,
 modifier|*
 name|Ibackp
-init|=
-name|Ibuf
 decl_stmt|;
 end_decl_stmt
 
@@ -455,13 +451,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|tfrontp
-init|=
-name|ttyobuf
 decl_stmt|,
 modifier|*
 name|tbackp
-init|=
-name|ttyobuf
 decl_stmt|;
 end_decl_stmt
 
@@ -527,13 +519,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|nfrontp
-init|=
-name|netobuf
 decl_stmt|,
 modifier|*
 name|nbackp
-init|=
-name|netobuf
 decl_stmt|;
 end_decl_stmt
 
@@ -596,8 +584,6 @@ specifier|static
 name|char
 modifier|*
 name|neturg
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -612,18 +598,12 @@ name|subbuffer
 index|[
 literal|100
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|,
 modifier|*
 name|subpointer
 decl_stmt|,
 modifier|*
 name|subend
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -713,10 +693,6 @@ name|hisopts
 index|[
 literal|256
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -727,10 +703,6 @@ name|myopts
 index|[
 literal|256
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -858,8 +830,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|sbp
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -891,33 +861,19 @@ begin_decl_stmt
 specifier|static
 name|int
 name|connected
-init|=
-literal|0
 decl_stmt|,
 name|net
-init|=
-literal|0
 decl_stmt|,
 name|scc
-init|=
-literal|0
 decl_stmt|,
 name|tcc
-init|=
-literal|0
 decl_stmt|,
 name|showoptions
-init|=
-literal|0
 decl_stmt|,
 name|In3270
-init|=
-literal|0
 decl_stmt|,
 comment|/* Are we in 3270 mode? */
 name|ISend
-init|=
-literal|0
 decl_stmt|,
 comment|/* trying to send network data in */
 name|debug
@@ -925,12 +881,8 @@ init|=
 literal|0
 decl_stmt|,
 name|crmod
-init|=
-literal|0
 decl_stmt|,
 name|netdata
-init|=
-literal|0
 decl_stmt|,
 name|telnetport
 init|=
@@ -947,6 +899,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Not in bss, since needs to stay */
+end_comment
 
 begin_define
 define|#
@@ -971,18 +927,8 @@ init|=
 literal|0
 decl_stmt|,
 name|escape
-init|=
-name|CONTROL
-argument_list|(
-literal|']'
-argument_list|)
 decl_stmt|,
 name|echoc
-init|=
-name|CONTROL
-argument_list|(
-literal|'E'
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -990,13 +936,9 @@ begin_decl_stmt
 specifier|static
 name|int
 name|SYNCHing
-init|=
-literal|0
 decl_stmt|,
 comment|/* we are in TELNET SYNCH mode */
 name|flushout
-init|=
-literal|0
 decl_stmt|,
 comment|/* flush output */
 name|autoflush
@@ -1005,23 +947,15 @@ literal|0
 decl_stmt|,
 comment|/* flush output when interrupting? */
 name|autosynch
-init|=
-literal|0
 decl_stmt|,
 comment|/* send interrupt characters with SYNCH? */
 name|localchars
-init|=
-literal|0
 decl_stmt|,
 comment|/* we recognize interrupt/quit */
 name|donelclchars
-init|=
-literal|0
 decl_stmt|,
 comment|/* the user has set "localchars" */
 name|dontlecho
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,8 +980,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|Sent3270TerminalType
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,21 +1000,15 @@ argument_list|(
 name|unix
 argument_list|)
 name|HaveInput
-init|=
-literal|0
 decl_stmt|,
 comment|/* There is input available to scan */
 endif|#
 directive|endif
 comment|/* defined(unix) */
 name|tout
-init|=
-literal|0
 decl_stmt|,
 comment|/* Output file descriptor */
 name|tin
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1134,12 +1060,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|tin
-init|=
-literal|0
 decl_stmt|,
 name|tout
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1203,8 +1125,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|margc
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1223,6 +1143,8 @@ begin_decl_stmt
 specifier|static
 name|jmp_buf
 name|toplevel
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,8 +1239,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|flushline
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1327,8 +1247,6 @@ specifier|static
 name|char
 modifier|*
 name|hostname
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1368,10 +1286,6 @@ decl_stmt|;
 comment|/* when did we last see a data mark */
 block|}
 name|clocks
-init|=
-block|{
-literal|0
-block|}
 struct|;
 end_struct
 
@@ -1384,6 +1298,120 @@ name|x
 parameter_list|)
 value|clocks.x = clocks.system++
 end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  * Initialize variables.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|tninit
+parameter_list|()
+block|{
+specifier|extern
+name|char
+name|edata
+decl_stmt|,
+name|end
+decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|edata
+argument_list|,
+operator|&
+name|end
+operator|-
+operator|&
+name|edata
+argument_list|)
+expr_stmt|;
+name|Ifrontp
+operator|=
+name|Ibackp
+operator|=
+name|Ibuf
+expr_stmt|;
+name|tfrontp
+operator|=
+name|tbackp
+operator|=
+name|ttyobuf
+expr_stmt|;
+name|nfrontp
+operator|=
+name|nbackp
+operator|=
+name|netobuf
+expr_stmt|;
+comment|/* Don't change telnetport */
+comment|/* Don't change NetTrace */
+name|escape
+operator|=
+name|CONTROL
+argument_list|(
+literal|']'
+argument_list|)
+expr_stmt|;
+name|echoc
+operator|=
+name|CONTROL
+argument_list|(
+literal|'E'
+argument_list|)
+expr_stmt|;
+name|flushline
+operator|=
+literal|1
+expr_stmt|;
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"telnet"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+literal|0
+condition|)
+block|{
+name|ExitString
+argument_list|(
+name|stderr
+argument_list|,
+literal|"telnet: tcp/telnet: unknown service\n"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
+name|terminit
+argument_list|()
+expr_stmt|;
+name|ctlrinit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(TN3270) */
+block|}
+end_function
 
 begin_escape
 end_escape
@@ -4932,7 +4960,7 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
-comment|/* 	     * Try to send a 3270 type terminal name.  Decide which one base 	     * on the format of our screen, and (in the future) color 	     * capaiblities. 	     */
+comment|/* 	     * Try to send a 3270 type terminal name.  Decide which one based 	     * on the format of our screen, and (in the future) color 	     * capaiblities. 	     */
 if|if
 condition|(
 operator|(
@@ -5303,22 +5331,12 @@ name|In3270
 operator|=
 literal|1
 expr_stmt|;
-name|OptInit
+name|Init3270
 argument_list|()
 expr_stmt|;
-comment|/* initialize mappings */
+comment|/* Initialize 3270 functions */
 comment|/* initialize terminal key mapping */
-operator|(
-name|void
-operator|)
-name|DataFromTerminal
-argument_list|(
-name|ttyobuf
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|StartScreen
+name|InitTerminal
 argument_list|()
 expr_stmt|;
 comment|/* Start terminal going */
@@ -11563,7 +11581,33 @@ end_comment
 begin_expr_stmt
 specifier|static
 name|bye
-argument_list|()
+argument_list|(
+argument|argc
+argument_list|,
+argument|argv
+argument_list|)
+name|int
+name|argc
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Number of arguments */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* arguments */
+end_comment
+
+begin_block
 block|{
 if|if
 condition|(
@@ -11592,39 +11636,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset options */
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|hisopts
-argument_list|,
-sizeof|sizeof
-name|hisopts
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|myopts
-argument_list|,
-sizeof|sizeof
-name|myopts
-argument_list|)
-expr_stmt|;
-name|SYNCHing
-operator|=
-name|flushout
-operator|=
-literal|0
-expr_stmt|;
-name|flushline
-operator|=
-literal|1
+name|tninit
+argument_list|()
 expr_stmt|;
 if|#
 directive|if
@@ -11632,44 +11645,63 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
-comment|/* 		 * The problem is that we were called from command() which 		 * was called from DataFrom3270() which was called from 		 * DataFromTerminal() which was called from... 		 * 		 * So, just quit. 		 */
-if|if
-condition|(
-name|In3270
-condition|)
-block|{
-name|Exit
-argument_list|(
-literal|0
-argument_list|)
+name|SetIn3270
+argument_list|()
 expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_endif
+comment|/* Get out of 3270 mode */
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* defined(TN3270) */
-end_comment
-
-begin_expr_stmt
-unit|}     return
+block|}
+if|if
+condition|(
+operator|(
+name|argc
+operator|!=
+literal|2
+operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
 literal|1
+index|]
+argument_list|,
+literal|"fromquit"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|longjmp
+argument_list|(
+name|toplevel
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
-end_expr_stmt
+comment|/* NOTREACHED */
+block|}
+return|return
+literal|1
+return|;
+comment|/* Keep lint, etc., happy */
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*VARARGS*/
 end_comment
 
-begin_expr_stmt
-unit|quit
-operator|(
-operator|)
+begin_macro
+name|quit
+argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -11680,21 +11712,23 @@ name|bye
 argument_list|,
 literal|"bye"
 argument_list|,
+literal|"fromquit"
+argument_list|,
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
 name|Exit
 argument_list|(
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
 comment|/*NOTREACHED*/
 return|return
 literal|1
 return|;
 comment|/* just to keep lint happy */
 block|}
-end_expr_stmt
+end_block
 
 begin_comment
 comment|/*  * Print status about the connection.  */
@@ -13762,33 +13796,10 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|sp
-operator|=
-name|getservbyname
-argument_list|(
-literal|"telnet"
-argument_list|,
-literal|"tcp"
-argument_list|)
+name|tninit
+argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|==
-literal|0
-condition|)
-block|{
-name|ExitString
-argument_list|(
-name|stderr
-argument_list|,
-literal|"telnet: tcp/telnet: unknown service\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
+comment|/* Clear out things */
 name|NetTrace
 operator|=
 name|stdout
