@@ -217,7 +217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy module-related data into the load area, where it can be  * used as a directory for loaded modules.  *  * Module data is presented in a self-describing format.  Each datum  * is preceeded by a 32-bit identifier and a 32-bit size field.  *  * Currently, the following data are saved:  *  * MOD_NAME	(variable)		module name (string)  * MOD_TYPE	(variable)		module type (string)  * MOD_ARGS	(variable)		module parameters (string)  * MOD_ADDR	sizeof(vm_offset_t)	module load address  * MOD_SIZE	sizeof(size_t)		module size  * MOD_METADATA	(variable)		type-specific metadata  */
+comment|/*  * Copy module-related data into the load area, where it can be  * used as a directory for loaded modules.  *  * Module data is presented in a self-describing format.  Each datum  * is preceded by a 32-bit identifier and a 32-bit size field.  *  * Currently, the following data are saved:  *  * MOD_NAME	(variable)		module name (string)  * MOD_TYPE	(variable)		module type (string)  * MOD_ARGS	(variable)		module parameters (string)  * MOD_ADDR	sizeof(vm_offset_t)	module load address  * MOD_SIZE	sizeof(size_t)		module size  * MOD_METADATA	(variable)		type-specific metadata  */
 end_comment
 
 begin_define
@@ -529,6 +529,10 @@ name|bootinfo_addr
 decl_stmt|;
 name|u_int
 name|pad
+decl_stmt|;
+name|char
+modifier|*
+name|kernelname
 decl_stmt|;
 name|vm_offset_t
 name|ssym
@@ -869,6 +873,37 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* XXX OSF/1 does this, no idea why. */
+name|kernelname
+operator|=
+name|getenv
+argument_list|(
+literal|"kernelname"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kernelname
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|bi
+operator|->
+name|booted_kernel
+argument_list|,
+name|kernelname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bi
+operator|->
+name|booted_kernel
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
