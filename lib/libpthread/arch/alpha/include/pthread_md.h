@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|DTV_OFFSET
-value|offsetof(struct tcb, tcb_tp.tp_dtv)
+value|offsetof(struct tcb, tcb_tp.tp_tdv)
 end_define
 
 begin_define
