@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.4 (Berkeley) 1/12/94  * $Id: vm_mmap.c,v 1.36 1996/02/23 18:49:25 peter Exp $  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.4 (Berkeley) 1/12/94  * $Id: vm_mmap.c,v 1.37 1996/03/02 02:54:21 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -450,6 +450,8 @@ name|addr
 decl_stmt|;
 name|vm_size_t
 name|size
+decl_stmt|,
+name|pageoff
 decl_stmt|;
 name|vm_prot_t
 name|prot
@@ -533,6 +535,29 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Round page if not already disallowed by above test 	 * XXX: Is there any point in the MAP_FIXED align requirement above? 	 */
+name|size
+operator|=
+name|uap
+operator|->
+name|len
+expr_stmt|;
+name|pageoff
+operator|=
+operator|(
+name|addr
+operator|&
+name|PAGE_MASK
+operator|)
+expr_stmt|;
+name|addr
+operator|-=
+name|pageoff
+expr_stmt|;
+name|size
+operator|+=
+name|pageoff
+expr_stmt|;
 name|size
 operator|=
 operator|(
@@ -540,9 +565,7 @@ name|vm_size_t
 operator|)
 name|round_page
 argument_list|(
-name|uap
-operator|->
-name|len
+name|size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... Note 	 * that VM_*_ADDRESS are not constants due to casts (argh). 	 */
@@ -1241,15 +1264,6 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-name|map
-operator|=
-operator|&
-name|p
-operator|->
-name|p_vmspace
-operator|->
-name|vm_map
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1261,15 +1275,9 @@ name|addr
 expr_stmt|;
 name|size
 operator|=
-name|round_page
-argument_list|(
-operator|(
-name|vm_size_t
-operator|)
 name|uap
 operator|->
 name|len
-argument_list|)
 expr_stmt|;
 name|flags
 operator|=
@@ -1277,7 +1285,6 @@ name|uap
 operator|->
 name|flags
 expr_stmt|;
-comment|/* 	 * Align the address to a page boundary, 	 * and adjust the size accordingly. 	 */
 name|pageoff
 operator|=
 operator|(
@@ -1306,12 +1313,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
+name|addr
+operator|+
 name|size
 operator|<
-literal|0
+name|addr
 condition|)
 return|return
 operator|(
@@ -1341,6 +1347,15 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|map
+operator|=
+operator|&
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_map
+expr_stmt|;
 comment|/* 	 * XXX Gak!  If size is zero we are supposed to sync "all modified 	 * pages with the region containing addr".  Unfortunately, we don't 	 * really keep track of individual mmaps so we approximate by flushing 	 * the range of the map entry containing addr. This can be incorrect 	 * if the region splits or is coalesced with a neighbor. 	 */
 if|if
 condition|(
@@ -1486,7 +1501,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|}
@@ -1547,14 +1562,10 @@ name|addr
 expr_stmt|;
 name|size
 operator|=
-operator|(
-name|vm_size_t
-operator|)
 name|uap
 operator|->
 name|len
 expr_stmt|;
-comment|/* 	 * Align the address to a page boundary, 	 * and adjust the size accordingly. 	 */
 name|pageoff
 operator|=
 operator|(
@@ -1583,12 +1594,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
+name|addr
+operator|+
 name|size
 operator|<
-literal|0
+name|addr
 condition|)
 return|return
 operator|(
@@ -1757,7 +1767,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -1820,9 +1830,6 @@ name|addr
 expr_stmt|;
 name|size
 operator|=
-operator|(
-name|vm_size_t
-operator|)
 name|uap
 operator|->
 name|len
@@ -1835,7 +1842,6 @@ name|prot
 operator|&
 name|VM_PROT_ALL
 expr_stmt|;
-comment|/* 	 * Align the address to a page boundary, 	 * and adjust the size accordingly. 	 */
 name|pageoff
 operator|=
 operator|(
@@ -1864,12 +1870,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
+name|addr
+operator|+
 name|size
 operator|<
-literal|0
+name|addr
 condition|)
 return|return
 operator|(
@@ -1937,7 +1942,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -2000,9 +2005,6 @@ name|addr
 expr_stmt|;
 name|size
 operator|=
-operator|(
-name|vm_size_t
-operator|)
 name|uap
 operator|->
 name|len
@@ -2013,7 +2015,6 @@ name|uap
 operator|->
 name|inherit
 expr_stmt|;
-comment|/* 	 * Align the address to a page boundary, 	 * and adjust the size accordingly. 	 */
 name|pageoff
 operator|=
 operator|(
@@ -2042,12 +2043,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
+name|addr
+operator|+
 name|size
 operator|<
-literal|0
+name|addr
 condition|)
 return|return
 operator|(
@@ -2113,7 +2113,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -2179,7 +2179,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -2250,11 +2250,11 @@ name|end
 operator|=
 name|addr
 operator|+
-name|round_page
-argument_list|(
 operator|(
 name|vm_size_t
 operator|)
+name|round_page
+argument_list|(
 name|uap
 operator|->
 name|len
@@ -2434,14 +2434,10 @@ name|addr
 expr_stmt|;
 name|size
 operator|=
-operator|(
-name|vm_size_t
-operator|)
 name|uap
 operator|->
 name|len
 expr_stmt|;
-comment|/* 	 * Align the address to a page boundary, 	 * and adjust the size accordingly. 	 */
 name|pageoff
 operator|=
 operator|(
@@ -2473,9 +2469,6 @@ if|if
 condition|(
 name|addr
 operator|+
-operator|(
-name|int
-operator|)
 name|size
 operator|<
 name|addr
@@ -2673,14 +2666,10 @@ name|addr
 expr_stmt|;
 name|size
 operator|=
-operator|(
-name|vm_size_t
-operator|)
 name|uap
 operator|->
 name|len
 expr_stmt|;
-comment|/* 	 * Align the address to a page boundary, 	 * and adjust the size accordingly. 	 */
 name|pageoff
 operator|=
 operator|(
@@ -2712,9 +2701,6 @@ if|if
 condition|(
 name|addr
 operator|+
-operator|(
-name|int
-operator|)
 name|size
 operator|<
 name|addr
