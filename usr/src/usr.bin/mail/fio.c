@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.16 (Berkeley) %G%"
+literal|"@(#)fio.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2329,6 +2329,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\"%s\": Expansion failed.\n"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 return|return
