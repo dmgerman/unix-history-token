@@ -3121,15 +3121,28 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
+begin_undef
+undef|#
+directive|undef
+name|SPT_TYPE
+end_undef
+
 begin_define
 define|#
 directive|define
 name|SPT_TYPE
-value|SPT_PSSTRINGS
+value|SPT_REUSEARGV
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPT_PADCHAR
+value|'\0'
 end_define
 
 begin_comment
-comment|/* use PS_STRINGS->... */
+comment|/* pad process title with nulls */
 end_comment
 
 begin_endif
