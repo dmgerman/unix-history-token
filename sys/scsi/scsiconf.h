@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.58 1997/12/23 19:44:40 brian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.59 1998/04/17 22:37:09 des Exp $  */
 end_comment
 
 begin_ifndef
@@ -340,7 +340,6 @@ modifier|*
 name|xs
 parameter_list|)
 function_decl|;
-comment|/* return -1 to say 							 * err processing complete */
 comment|/*  8*/
 name|void
 function_decl|(
@@ -382,7 +381,6 @@ name|xs
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* returns -1 to say done processing complete */
 comment|/* 20*/
 name|char
 modifier|*
@@ -405,7 +403,7 @@ comment|/* 36*/
 name|int32_t
 name|link_flags
 decl_stmt|;
-comment|/* Flags OR'd into sc_link at attach time */
+comment|/* set -> sc_link at attach time */
 comment|/* 40*/
 name|errval
 function_decl|(
@@ -567,35 +565,17 @@ name|sc_link
 parameter_list|)
 function_decl|;
 comment|/* Not initialized after this */
-define|#
-directive|define
-name|SCSI_LINK
-parameter_list|(
-name|DEV
-parameter_list|,
-name|UNIT
-parameter_list|)
-value|( \ 	(struct scsi_link *)(extend_get((DEV)->links, (UNIT))) \ 	)
-define|#
-directive|define
-name|SCSI_DATA
-parameter_list|(
-name|DEV
-parameter_list|,
-name|UNIT
-parameter_list|)
-value|( \ 	(SCSI_LINK((DEV), (UNIT)) ? \ 	(SCSI_LINK((DEV), (UNIT))->sd) : \ 	(struct scsi_data *)0) \ 	)
-comment|/* 80*/
+comment|/* 84*/
 name|struct
 name|extend_array
 modifier|*
 name|links
 decl_stmt|;
-comment|/* 84*/
+comment|/* 88*/
 name|int
 name|free_unit
 decl_stmt|;
-comment|/* 88*/
+comment|/* 92*/
 name|struct
 name|scsi_device
 modifier|*
@@ -607,7 +587,37 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* SCSI_DEVICE_ENTRIES: A macro to generate all the entry points from the  * name.  */
+comment|/*  * Macros to access soem fields above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_LINK
+parameter_list|(
+name|DEV
+parameter_list|,
+name|UNIT
+parameter_list|)
+define|\
+value|((struct scsi_link *)(extend_get((DEV)->links, (UNIT))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DATA
+parameter_list|(
+name|DEV
+parameter_list|,
+name|UNIT
+parameter_list|)
+define|\
+value|((SCSI_LINK((DEV), (UNIT)) ? (SCSI_LINK((DEV), (UNIT))->sd) : NULL))
+end_define
+
+begin_comment
+comment|/*  * SCSI_DEVICE_ENTRIES: A macro to generate all the entry points from the  * name.  */
 end_comment
 
 begin_define
@@ -618,9 +628,9 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|static errval NAME##attach(struct scsi_link *sc_link); \ extern struct scsi_device NAME##_switch;
+value|static errval NAME##attach(struct scsi_link *sc_link);			    \ extern struct scsi_device NAME##_switch;
 comment|/* XXX actually static */
-value|\ void NAME##init(void) { \ 	scsi_device_register(&NAME##_switch); \ } \ static int NAME##open(dev_t dev, int flags, int fmt, struct proc *p) { \ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch); \ } \ static int NAME##ioctl(dev_t dev, int cmd, caddr_t addr, int flag, struct proc *p) { \ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch); \ } \ static int NAME##close(dev_t dev, int flag, int fmt, struct proc *p) { \ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch); \ } \ static void NAME##minphys(struct buf *bp) { \ 	scsi_minphys(bp,&NAME##_switch); \ }  \ static void NAME##strategy(struct buf *bp) { \ 	scsi_strategy(bp,&NAME##_switch); \ }
+value|\ void NAME##init(void) {							    \ 	scsi_device_register(&NAME##_switch);				    \ }									    \ static int NAME##open(dev_t dev, int flags, int fmt, struct proc *p) {	    \ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch);		    \ }									    \ static int NAME##ioctl(dev_t dev, int cmd, caddr_t addr,		    \ 			int flag, struct proc *p) {			    \ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch);	    \ }									    \ static int NAME##close(dev_t dev, int flag, int fmt, struct proc *p) {	    \ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch);		    \ }									    \ static void NAME##minphys(struct buf *bp) {				    \ 	scsi_minphys(bp,&NAME##_switch);				    \ } 									    \ static void NAME##strategy(struct buf *bp) {				    \ 	scsi_strategy(bp,&NAME##_switch);				    \ }
 end_define
 
 begin_ifdef
@@ -1011,7 +1021,7 @@ comment|/* lun of this dev */
 name|u_int8_t
 name|adapter_targ
 decl_stmt|;
-comment|/* what are we on the scsi bus */
+comment|/* what are we on the scsi bus*/
 name|u_int8_t
 name|adapter_unit
 decl_stmt|;
@@ -1039,7 +1049,7 @@ comment|/* operations in progress */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/* flags that all devices have */
+comment|/* flags all devices have */
 name|u_int16_t
 name|quirks
 decl_stmt|;
@@ -1066,16 +1076,16 @@ name|void
 modifier|*
 name|fordriver
 decl_stmt|;
-comment|/* for private use by the driver */
+comment|/* for driver's private user */
 name|void
 modifier|*
 name|devmodes
 decl_stmt|;
-comment|/* device specific mode tables */
+comment|/* dev specific mode tables */
 name|dev_t
 name|dev
 decl_stmt|;
-comment|/* Device major number (character) */
+comment|/* Device major # (character) */
 name|struct
 name|scsi_data
 modifier|*
@@ -1091,7 +1101,7 @@ name|void
 modifier|*
 name|adapter_softc
 decl_stmt|;
-comment|/* needed for call to foo_scsi_cmd */
+comment|/* to call foo_scsi_cmd */
 block|}
 struct|;
 end_struct
