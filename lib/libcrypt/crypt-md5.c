@@ -123,7 +123,7 @@ name|magic
 init|=
 literal|"$1$"
 decl_stmt|;
-comment|/* 						 * This string is magic for 						 * this algorithm.  Having 						 * it this way, we can get 						 * get better later on 						 */
+comment|/* 						 * This string is magic for 						 * this algorithm.  Having 						 * it this way, we can get 						 * better later on. 						 */
 comment|/* Refine the Salt first */
 name|sp
 operator|=
