@@ -237,7 +237,7 @@ end_define
 
 begin_struct
 struct|struct
-name|ioc_alloc_unit
+name|old_ioc_alloc_unit
 block|{
 name|path_id_t
 name|path_id
@@ -255,9 +255,48 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ioc_alloc_unit
+block|{
+name|path_id_t
+name|path_id
+decl_stmt|;
+name|target_id_t
+name|target_id
+decl_stmt|;
+name|lun_id_t
+name|lun_id
+decl_stmt|;
+name|u_int
+name|unit
+decl_stmt|;
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inquiry_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Allocate and Free a target mode instance.  For allocation, the path_id,  * target_id, and lun_id fields must be set.  On successful completion  * of the ioctl, the unit field will indicate the unit number of the  * newly created instance.  For de-allocation, all fields must match  * an instance in the inactive (i.e. closed) state.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OTARGCTLIOALLOCUNIT
+value|_IOWR('C', 7, struct old_ioc_alloc_unit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OTARGCTLIOFREEUNIT
+value|_IOW('C', 8, struct old_ioc_alloc_unit)
+end_define
 
 begin_define
 define|#
