@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdisk.c,v 1.25 1998/11/06 03:25:56 jkoshy Exp $"
+literal|"$Id: fdisk.c,v 1.26 1998/11/06 03:43:21 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +220,7 @@ init|=
 block|{
 literal|"/dev/rwd0"
 block|,
-literal|"/dev/rsd0"
+literal|"/dev/rda0"
 block|,
 literal|"/dev/rod0"
 block|,
