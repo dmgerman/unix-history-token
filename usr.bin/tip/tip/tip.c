@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tip.c,v 1.4 1997/08/22 22:14:15 imp Exp $"
+literal|"$Id: tip.c,v 1.5 1997/08/25 05:02:10 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,18 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -704,7 +716,7 @@ name|sprintf
 argument_list|(
 name|sbuf
 argument_list|,
-literal|"tip%d"
+literal|"tip%ld"
 argument_list|,
 name|BR
 argument_list|)
@@ -3261,16 +3273,20 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
 name|evenpartab
 index|[
 name|i
 index|]
 operator|^
 name|flip
+operator|)
 operator||
+operator|(
 name|set
 operator|&
 name|clr
+operator|)
 expr_stmt|;
 block|}
 end_function
