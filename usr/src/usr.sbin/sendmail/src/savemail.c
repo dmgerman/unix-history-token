@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -858,6 +858,16 @@ operator|->
 name|e_putbody
 operator|=
 name|errbody
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|queuename
+argument_list|(
+name|ee
+argument_list|,
+literal|'\0'
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
