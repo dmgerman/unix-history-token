@@ -935,9 +935,6 @@ name|sp
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|report_id
-decl_stmt|;
 name|char
 name|namebuf
 index|[
@@ -1252,7 +1249,7 @@ argument_list|(
 name|dbuf
 operator|+
 operator|(
-name|report_id
+name|reportid
 operator|!=
 literal|0
 operator|)
