@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.2	82/01/17	*/
+comment|/*	uda.c	4.3	82/03/14	*/
 end_comment
 
 begin_include
@@ -614,6 +614,30 @@ name|br
 operator|=
 name|cvec
 expr_stmt|;
+name|reg
+operator|=
+name|reg
+expr_stmt|;
+name|udread
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|udwrite
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|udreset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|udintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* SHOULD CHECK THAT IT REALLY IS A UDA */
@@ -672,6 +696,19 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* 	 * TOO HARD TO FIND OUT IF DISK IS THERE UNTIL 	 * INITIALIZED.  WE'LL FIND OUT WHEN WE FIRST 	 * TRY TO ACCESS IT. 	 */
+ifdef|#
+directive|ifdef
+name|lint
+name|ui
+operator|=
+name|ui
+expr_stmt|;
+name|reg
+operator|=
+name|reg
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
@@ -803,6 +840,15 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|flag
+operator|=
+name|flag
+expr_stmt|;
+endif|#
+directive|endif
 name|unit
 operator|=
 name|minor
@@ -883,8 +929,12 @@ operator|->
 name|ui_ctlr
 argument_list|)
 expr_stmt|;
+comment|/* wait for initialization to complete */
 name|sleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ui
 operator|->
 name|ui_mi
@@ -892,7 +942,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* wait for initialization to complete */
 if|if
 condition|(
 name|sc
@@ -1461,6 +1510,9 @@ name|um
 operator|->
 name|um_ubanum
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 literal|0
@@ -1736,7 +1788,11 @@ name|um_ctlr
 argument_list|)
 expr_stmt|;
 comment|/* SHOULD REQUEUE OUTSTANDING REQUESTS, LIKE UDRESET */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|ui
 operator|=
@@ -2389,6 +2445,9 @@ name|S_IDLE
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|um
 argument_list|)
 expr_stmt|;
@@ -2461,6 +2520,9 @@ name|S_IDLE
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|um
 argument_list|)
 expr_stmt|;
@@ -2525,6 +2587,9 @@ name|S_IDLE
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|um
 argument_list|)
 expr_stmt|;
@@ -2753,6 +2818,9 @@ name|S_IDLE
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|um
 argument_list|)
 expr_stmt|;
@@ -2848,6 +2916,9 @@ literal|0
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|um
 argument_list|)
 expr_stmt|;
@@ -3036,6 +3107,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|udstart
 argument_list|(
 name|um
@@ -3273,6 +3347,9 @@ literal|0
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|um
 argument_list|)
 expr_stmt|;
@@ -3474,6 +3551,10 @@ name|um
 operator|->
 name|um_ubanum
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|bp
 operator|->
@@ -4440,6 +4521,10 @@ name|ubarelse
 argument_list|(
 name|uban
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|bp
 operator|->

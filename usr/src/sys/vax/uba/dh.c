@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.41	82/01/14	*/
+comment|/*	dh.c	4.42	82/03/14	*/
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
 end_include
 
 begin_include
@@ -1151,7 +1157,9 @@ operator|=
 name|vec
 expr_stmt|;
 name|dmintr
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

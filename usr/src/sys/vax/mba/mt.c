@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.2	82/01/17	*/
+comment|/*	mt.c	4.3	82/03/14	*/
 end_comment
 
 begin_include
@@ -368,7 +368,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|mtread
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtwrite
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|mtioctl
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_block
 
 begin_macro
@@ -1536,6 +1563,10 @@ operator|=
 operator|(
 name|min
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|dbtofsb
 argument_list|(
 name|bp
@@ -1544,6 +1575,7 @@ name|b_blkno
 argument_list|)
 operator|-
 name|blkno
+argument_list|)
 argument_list|,
 literal|0377
 argument_list|)
@@ -1571,6 +1603,10 @@ operator|=
 operator|(
 name|min
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|blkno
 operator|-
 name|dbtofsb
@@ -1578,6 +1614,7 @@ argument_list|(
 name|bp
 operator|->
 name|b_blkno
+argument_list|)
 argument_list|)
 argument_list|,
 literal|0377
@@ -2407,7 +2444,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|-=
-name|min
+name|MIN
 argument_list|(
 literal|0377
 argument_list|,
@@ -2420,7 +2457,7 @@ name|sc
 operator|->
 name|sc_blkno
 operator|+=
-name|min
+name|MIN
 argument_list|(
 literal|0377
 argument_list|,
@@ -2979,8 +3016,6 @@ name|callcount
 expr_stmt|;
 specifier|register
 name|int
-name|n
-decl_stmt|,
 name|op
 decl_stmt|;
 name|int
@@ -3191,7 +3226,7 @@ do|do
 block|{
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|fcount
 argument_list|,
@@ -3447,6 +3482,31 @@ name|mba_cr
 operator|=
 name|MBCR_IE
 expr_stmt|;
+if|#
+directive|if
+name|lint
+name|blk
+operator|=
+name|blk
+expr_stmt|;
+name|num
+operator|=
+name|num
+expr_stmt|;
+name|start
+operator|=
+name|start
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|notyet
 name|mtaddr
 operator|=
 operator|(
@@ -3464,9 +3524,6 @@ operator|->
 name|mi_drive
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|mtaddr
 operator|->
 name|mttc

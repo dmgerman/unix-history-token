@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.2	81/11/18	*/
+comment|/*	dn.c	4.3	82/03/14	*/
 end_comment
 
 begin_include
@@ -737,7 +737,7 @@ modifier|*
 name|dp
 decl_stmt|;
 name|char
-name|buf
+name|digits
 index|[
 name|OBUFSIZ
 index|]
@@ -793,7 +793,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|buf
+name|digits
 expr_stmt|;
 name|iomove
 argument_list|(
@@ -836,6 +836,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|spl4
 argument_list|()
 expr_stmt|;
