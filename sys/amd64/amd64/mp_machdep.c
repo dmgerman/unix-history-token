@@ -7190,7 +7190,8 @@ argument_list|)
 expr_stmt|;
 comment|/** FIXME: tickle the MB redirector chip */
 return|return
-operator|???
+operator|-
+literal|1
 return|;
 else|#
 directive|else
@@ -7245,7 +7246,8 @@ argument_list|)
 expr_stmt|;
 comment|/** FIXME: tickle the MB redirector chip */
 return|return
-operator|???
+operator|-
+literal|1
 return|;
 else|#
 directive|else
