@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.11 (Berkeley) %G%"
+literal|"@(#)tty.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,7 +679,7 @@ operator|~
 name|__WSTANDOUT
 expr_stmt|;
 block|}
-name|mvcur
+name|__mvcur
 argument_list|(
 name|curscr
 operator|->
