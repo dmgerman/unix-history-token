@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)utreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)utreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -553,7 +553,7 @@ define|#
 directive|define
 name|UTCS2_BITS
 define|\
-value|"\10\20DLT\17WCE\16PE\15NED\14\NEM\13\PGE\12\MXF\11RPE\10OR\7IR\6CLR\5PAT\4\BAI"
+value|"\10\20DLT\17WCE\16PE\15NED\14NEM\13PGE\12MXF\11RPE\10OR\7IR\6CLR\5PAT\4BAI"
 end_define
 
 begin_comment
@@ -741,7 +741,7 @@ define|#
 directive|define
 name|UTDS_BITS
 define|\
-value|"\10\20ATA\17ERR\16PIP\15MOL\14WRL\13EOT\12GCR\11DPR\10DRY\ \7SSC\6PES\5SDWN\4IDB\3TM\2BOT\1SLA"
+value|"\10\20ATA\17ERR\16PIP\15MOL\14WRL\13EOT\12GCR\11DPR\10DRY\7SSC\6PES\5SDWN\4IDB\3TM\2BOT\1SLA"
 end_define
 
 begin_comment
@@ -940,7 +940,7 @@ define|#
 directive|define
 name|UTER_BITS
 define|\
-value|"\10\20COR\17UNS\16OPI\15DTE\14NEF\13CS\12FCE\11NSG\10PEF\ \7INC\6DPAR\5FMT\4RPE\3RMR\2ILR\1ILF"
+value|"\10\20COR\17UNS\16OPI\15DTE\14NEF\13CS\12FCE\11NSG\10PEF\7INC\6DPAR\5FMT\4RPE\3RMR\2ILR\1ILF"
 end_define
 
 begin_comment
