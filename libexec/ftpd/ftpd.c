@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ftpd.c,v 1.43 1997/11/21 07:38:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2427,9 +2427,14 @@ comment|/* set this here so klogin can use it... */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|ttyline
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ttyline
+argument_list|)
 argument_list|,
 literal|"ftp%d"
 argument_list|,
@@ -5659,9 +5664,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|,
@@ -6805,9 +6815,14 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|sizebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sizebuf
+argument_list|)
 argument_list|,
 literal|" (%qd bytes)"
 argument_list|,
@@ -6815,15 +6830,10 @@ name|size
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+operator|*
 name|sizebuf
-argument_list|,
-literal|""
-argument_list|)
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -10163,6 +10173,7 @@ name|cp
 operator|=
 literal|'/'
 expr_stmt|;
+comment|/* -4 is for the .nn<null> we put on the end below */
 operator|(
 name|void
 operator|)
@@ -10174,6 +10185,8 @@ sizeof|sizeof
 argument_list|(
 name|new
 argument_list|)
+operator|-
+literal|4
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -10740,9 +10753,14 @@ operator|==
 literal|2
 condition|)
 continue|continue;
-name|sprintf
+name|snprintf
 argument_list|(
 name|nbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
