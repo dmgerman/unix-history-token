@@ -107,6 +107,7 @@ name|using_locale
 parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|locale_buf
 parameter_list|,
 specifier|const
@@ -199,6 +200,7 @@ block|}
 comment|/* 	 * If the locale name is the same as our cache, use the cache. 	 */
 if|if
 condition|(
+operator|*
 name|locale_buf
 operator|!=
 name|NULL
@@ -207,6 +209,7 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
+operator|*
 name|locale_buf
 argument_list|)
 operator|==
@@ -471,15 +474,18 @@ expr_stmt|;
 comment|/* 	 * Record the successful parse in the cache. 	 */
 if|if
 condition|(
+operator|*
 name|locale_buf
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
+operator|*
 name|locale_buf
 argument_list|)
 expr_stmt|;
+operator|*
 name|locale_buf
 operator|=
 name|lbuf
@@ -488,6 +494,7 @@ for|for
 control|(
 name|p
 operator|=
+operator|*
 name|locale_buf
 operator|,
 name|i
