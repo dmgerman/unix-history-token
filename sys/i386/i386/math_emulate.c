@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.28 1998/10/16 03:54:59 peter Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.29 1998/10/18 07:40:29 peter Exp $  */
 end_comment
 
 begin_comment
@@ -479,6 +479,27 @@ literal|"?Math emulation needed in kernel?"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* completely ignore an operand-size prefix */
+if|if
+condition|(
+name|get_fs_byte
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|info
+operator|->
+name|tf_eip
+argument_list|)
+operator|==
+literal|0x66
+condition|)
+name|info
+operator|->
+name|tf_eip
+operator|++
+expr_stmt|;
 name|code
 operator|=
 name|get_fs_word
@@ -488,7 +509,9 @@ name|unsigned
 name|short
 operator|*
 operator|)
-name|oldeip
+name|info
+operator|->
+name|tf_eip
 argument_list|)
 expr_stmt|;
 name|bswapw
