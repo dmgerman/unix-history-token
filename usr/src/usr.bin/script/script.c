@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.1 (Berkeley) %G%"
+literal|"@(#)script.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|subchild
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|fname
@@ -233,9 +239,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|int
-name|f
-decl_stmt|;
 name|shell
 operator|=
 name|getenv
@@ -408,14 +411,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|f
+name|subchild
+operator|=
+name|child
 operator|=
 name|fork
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|f
+name|child
 operator|<
 literal|0
 condition|)
@@ -431,7 +436,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|f
+name|child
 condition|)
 name|dooutput
 argument_list|()
@@ -523,8 +528,21 @@ name|union
 name|wait
 name|status
 decl_stmt|;
-if|if
+specifier|register
+name|int
+name|pid
+decl_stmt|;
+specifier|register
+name|int
+name|die
+init|=
+literal|0
+decl_stmt|;
+while|while
 condition|(
+operator|(
+name|pid
+operator|=
 name|wait3
 argument_list|(
 operator|&
@@ -534,10 +552,24 @@ name|WNOHANG
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
+operator|)
+operator|>
+literal|0
+condition|)
+if|if
+condition|(
+name|pid
+operator|==
 name|child
 condition|)
-return|return;
+name|die
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|die
+condition|)
 name|done
 argument_list|()
 expr_stmt|;
@@ -890,6 +922,12 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|subchild
+condition|)
+block|{
 name|ioctl
 argument_list|(
 literal|0
@@ -911,6 +949,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
