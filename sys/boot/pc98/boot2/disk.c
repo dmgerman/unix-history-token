@@ -109,18 +109,18 @@ name|do_bad144
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-endif|DO_BAD144
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|int
 name|bsize
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|DO_BAD144
+end_endif
 
 begin_decl_stmt
 specifier|static

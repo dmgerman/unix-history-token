@@ -876,7 +876,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"text=0x%x "
+literal|"text=0x%lx "
 argument_list|,
 name|head
 operator|.
@@ -926,7 +926,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"data=0x%x "
+literal|"data=0x%lx "
 argument_list|,
 name|head
 operator|.
@@ -958,7 +958,7 @@ comment|/* (but clear it)					*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|"bss=0x%x "
+literal|"bss=0x%lx "
 argument_list|,
 name|head
 operator|.
@@ -1045,7 +1045,7 @@ comment|/* Load the symbol table				*/
 comment|/********************************************************/
 name|printf
 argument_list|(
-literal|"symbols=[+0x%x+0x%x+0x%x"
+literal|"symbols=[+0x%x+0x%x+0x%lx"
 argument_list|,
 name|pad
 argument_list|,

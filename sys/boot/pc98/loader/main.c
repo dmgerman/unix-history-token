@@ -589,6 +589,7 @@ operator|!=
 literal|2
 operator|)
 condition|)
+block|{
 comment|/* biosdev doesn't match major */
 if|if
 condition|(
@@ -624,6 +625,7 @@ argument_list|(
 name|initial_bootdev
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 if|if
