@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.25 1998/02/06 12:13:26 eivind Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.26 1998/04/15 17:46:25 bde Exp $  */
 end_comment
 
 begin_include
@@ -299,9 +299,6 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|cur_rlp
-init|=
-operator|*
-name|rlp
 decl_stmt|,
 modifier|*
 name|next_rlp
@@ -355,6 +352,11 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Traverse the list looking for an entry after the one we want 	 * to insert. 	 */
+name|cur_rlp
+operator|=
+operator|*
+name|rlp
+expr_stmt|;
 while|while
 condition|(
 name|cur_rlp
