@@ -4960,7 +4960,7 @@ name|sc
 argument_list|,
 name|BGE_BMAN_MBUFPOOL_READDMA_LOWAT
 argument_list|,
-literal|24
+literal|0x50
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -4969,7 +4969,7 @@ name|sc
 argument_list|,
 name|BGE_BMAN_MBUFPOOL_MACRX_LOWAT
 argument_list|,
-literal|24
+literal|0x20
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -4978,7 +4978,7 @@ name|sc
 argument_list|,
 name|BGE_BMAN_MBUFPOOL_HIWAT
 argument_list|,
-literal|48
+literal|0x60
 argument_list|)
 expr_stmt|;
 comment|/* Configure DMA resource watermarks */
