@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.11 1996/02/07 17:15:01 wollman Exp $"
+literal|"$Id: inetd.c,v 1.12 1996/07/17 15:00:28 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,13 @@ name|struct
 name|rpcent
 modifier|*
 name|rpc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|in_addr
+name|bind_address
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,6 +1050,15 @@ name|_PATH_INETDCONF
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|pid_file
+init|=
+name|_PATH_INETDPID
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1195,6 +1211,15 @@ argument_list|,
 name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
+name|bind_address
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|INADDR_ANY
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1206,7 +1231,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dlR:"
+literal|"dlR:a:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -1284,6 +1309,45 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+literal|'a'
+case|:
+if|if
+condition|(
+operator|!
+name|inet_aton
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|bind_address
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"-a %s: invalid IP address"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'p'
+case|:
+name|pid_file
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -1291,7 +1355,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: inetd [-dl] [-R rate] [conf-file]"
+literal|"usage: inetd [-dl] [-a address] [-R rate]"
+literal|" [-p pidfile] [conf-file]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1381,7 +1446,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_INETDPID
+name|pid_file
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1415,8 +1480,9 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-name|_PATH_INETDPID
-literal|": %m"
+literal|"%s: %m"
+argument_list|,
+name|pid_file
 argument_list|)
 expr_stmt|;
 block|}
@@ -4757,13 +4823,8 @@ operator|->
 name|se_ctrladdr
 operator|.
 name|sin_addr
-operator|.
-name|s_addr
 operator|=
-name|htonl
-argument_list|(
-name|INADDR_ANY
-argument_list|)
+name|bind_address
 expr_stmt|;
 if|if
 condition|(
