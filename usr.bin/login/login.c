@@ -1040,6 +1040,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|setproctitle
+argument_list|(
+literal|"-%s"
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cnt
@@ -2215,6 +2223,14 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Parent: wait for child to finish, then clean up 		 * session. 		 */
+name|setproctitle
+argument_list|(
+literal|"-%s [pam]"
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|wait
 argument_list|(
 name|NULL
