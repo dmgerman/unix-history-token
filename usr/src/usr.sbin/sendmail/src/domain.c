@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.22 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.23 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.22 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.23 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,45 @@ end_define
 begin_comment
 comment|/* maximum depth of CNAME recursion */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RES
+argument_list|)
+operator|&&
+operator|(
+name|__RES
+operator|>=
+literal|19940415
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|RES_UNC_T
+value|char *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RES_UNC_T
+value|u_char *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -392,7 +431,7 @@ argument_list|,
 name|T_A
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -482,7 +521,7 @@ argument_list|,
 name|T_MX
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -756,8 +795,7 @@ argument_list|,
 name|cp
 argument_list|,
 operator|(
-name|u_char
-operator|*
+name|RES_UNC_T
 operator|)
 name|bp
 argument_list|,
@@ -855,8 +893,7 @@ argument_list|,
 name|cp
 argument_list|,
 operator|(
-name|u_char
-operator|*
+name|RES_UNC_T
 operator|)
 name|bp
 argument_list|,
@@ -2350,8 +2387,7 @@ argument_list|,
 name|ap
 argument_list|,
 operator|(
-name|u_char
-operator|*
+name|RES_UNC_T
 operator|)
 name|nbuf
 argument_list|,
@@ -2520,8 +2556,7 @@ argument_list|,
 name|ap
 argument_list|,
 operator|(
-name|u_char
-operator|*
+name|RES_UNC_T
 operator|)
 name|nbuf
 argument_list|,
