@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.8 92/12/20$  *  *	@(#)vn.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vn.c 1.8 92/12/20$  *  *	@(#)vn.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -655,9 +655,7 @@ name|addr
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 name|flags
 operator|=
@@ -822,9 +820,7 @@ name|NODEV
 expr_stmt|;
 name|nbp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|=
 name|addr
 expr_stmt|;
@@ -1100,9 +1096,7 @@ name|b_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|bp
 operator|->
@@ -1221,9 +1215,7 @@ name|b_blkno
 argument_list|,
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|bp
 operator|->
