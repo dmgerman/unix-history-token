@@ -188,6 +188,32 @@ name|namecache
 struct_decl|;
 end_struct_decl
 
+begin_struct
+struct|struct
+name|vpollinfo
+block|{
+name|struct
+name|mtx
+name|vpi_lock
+decl_stmt|;
+comment|/* lock to protect below */
+name|struct
+name|selinfo
+name|vpi_selinfo
+decl_stmt|;
+comment|/* identity of poller(s) */
+name|short
+name|vpi_events
+decl_stmt|;
+comment|/* what they are looking for */
+name|short
+name|vpi_revents
+decl_stmt|;
+comment|/* what has happened */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list mutex.  * v_mntvnodes is locked by the global mntvnodes mutex.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock mutex.  * v_pollinfo is locked by the lock contained inside it.  */
 end_comment
@@ -319,7 +345,7 @@ comment|/* start block of cluster */
 name|daddr_t
 name|v_lasta
 decl_stmt|;
-comment|/* last allocation */
+comment|/* last allocation (cluster) */
 name|int
 name|v_clen
 decl_stmt|;
@@ -382,29 +408,11 @@ name|u_long
 name|v_ddid
 decl_stmt|;
 comment|/* .. capability identifier */
-struct|struct
-block|{
 name|struct
-name|mtx
-name|vpi_lock
-decl_stmt|;
-comment|/* lock to protect below */
-name|struct
-name|selinfo
-name|vpi_selinfo
-decl_stmt|;
-comment|/* identity of poller(s) */
-name|short
-name|vpi_events
-decl_stmt|;
-comment|/* what they are looking for */
-name|short
-name|vpi_revents
-decl_stmt|;
-comment|/* what has happened */
-block|}
+name|vpollinfo
+modifier|*
 name|v_pollinfo
-struct|;
+decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -475,7 +483,7 @@ parameter_list|,
 name|events
 parameter_list|)
 define|\
-value|do {							\ 		if ((vp)->v_pollinfo.vpi_events& (events))	\ 			vn_pollevent((vp), (events));		\ 	} while (0)
+value|do {							\ 		if ((vp)->v_pollinfo != NULL&& 		\ 		    (vp)->v_pollinfo->vpi_events& (events))	\ 			vn_pollevent((vp), (events));		\ 	} while (0)
 end_define
 
 begin_define
@@ -488,7 +496,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|KNOTE(&vp->v_pollinfo.vpi_selinfo.si_note, (b))
+value|do {							\ 		if ((vp)->v_pollinfo != NULL)			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b)); \ 	} while (0)
 end_define
 
 begin_comment
