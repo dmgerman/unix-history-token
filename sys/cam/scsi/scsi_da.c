@@ -1158,6 +1158,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+block|,
+block|{
+comment|/* 		 * Pentax USB Optio 230 camera 		 * PR: kern/46369 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"PENTAX"
+block|,
+literal|"DIGITAL_CAMERA"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
