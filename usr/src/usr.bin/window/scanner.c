@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scanner.c	3.1 83/11/22"
+literal|"@(#)scanner.c	3.2 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,6 +542,14 @@ break|break;
 case|case
 literal|'0'
 case|:
+name|cx
+operator|.
+name|x_val
+operator|.
+name|v_num
+operator|=
+literal|0
+expr_stmt|;
 name|state
 operator|=
 literal|10
