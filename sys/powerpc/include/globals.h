@@ -45,9 +45,9 @@ define|#
 directive|define
 name|PCPU_GET
 parameter_list|(
-name|name
+name|member
 parameter_list|)
-value|(GLOBALP->gd_##name)
+value|(GLOBALP->gd_ ## member)
 end_define
 
 begin_define
@@ -55,9 +55,9 @@ define|#
 directive|define
 name|PCPU_PTR
 parameter_list|(
-name|name
+name|member
 parameter_list|)
-value|(&GLOBALP->gd_##name)
+value|(&GLOBALP->gd_ ## member)
 end_define
 
 begin_define
@@ -65,11 +65,11 @@ define|#
 directive|define
 name|PCPU_SET
 parameter_list|(
-name|name
+name|member
 parameter_list|,
 name|value
 parameter_list|)
-value|(GLOBALP->gd_##name = (value))
+value|(GLOBALP->gd_ ## member = (value))
 end_define
 
 begin_comment
