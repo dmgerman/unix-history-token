@@ -2370,8 +2370,6 @@ operator|(
 name|f
 operator|->
 name|data
-operator|==
-name|NULL
 operator|)
 condition|?
 literal|0
@@ -3100,8 +3098,6 @@ operator|(
 name|f
 operator|->
 name|data
-operator|==
-name|NULL
 operator|)
 condition|?
 literal|0
@@ -3378,8 +3374,6 @@ operator|(
 name|f
 operator|->
 name|data
-operator|==
-name|NULL
 operator|)
 condition|?
 literal|0
