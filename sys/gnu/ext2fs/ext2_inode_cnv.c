@@ -234,7 +234,7 @@ name|di
 operator|->
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 if|#
@@ -252,7 +252,7 @@ name|di
 operator|->
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 endif|#
@@ -265,7 +265,7 @@ name|di
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 if|#
@@ -283,7 +283,7 @@ name|di
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 endif|#
@@ -296,7 +296,7 @@ name|di
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 if|#
@@ -314,7 +314,7 @@ name|di
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 endif|#
@@ -470,7 +470,7 @@ name|di
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|ei
 operator|->
@@ -480,7 +480,7 @@ name|di
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|ei
 operator|->
@@ -490,7 +490,7 @@ name|di
 operator|->
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|ei
 operator|->
@@ -684,7 +684,7 @@ name|di
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|ei
 operator|->
@@ -702,7 +702,7 @@ name|di
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|ei
 operator|->
@@ -712,7 +712,7 @@ name|di
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|ei
 operator|->
@@ -722,7 +722,7 @@ name|di
 operator|->
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|ei
 operator|->

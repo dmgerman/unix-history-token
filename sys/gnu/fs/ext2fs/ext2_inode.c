@@ -355,7 +355,7 @@ name|ip
 operator|->
 name|i_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|ap
 operator|->
@@ -376,7 +376,7 @@ name|ip
 operator|->
 name|i_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|ap
 operator|->
@@ -418,7 +418,7 @@ name|ip
 operator|->
 name|i_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|time
 operator|.
