@@ -634,8 +634,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|realstathz
-decl_stmt|,
-name|s
 decl_stmt|;
 name|realstathz
 operator|=
@@ -723,12 +721,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * prevent state changes and protect run queue 		 */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 comment|/* 		 * p_pctcpu is only for ps. 		 */
 if|#
 directive|if
@@ -942,11 +934,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2549,9 +2536,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|p
 operator|=
 operator|(
@@ -2577,11 +2561,6 @@ name|p
 operator|->
 name|p_comm
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
@@ -2628,11 +2607,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2653,14 +2627,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2705,11 +2671,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2741,14 +2702,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2904,11 +2857,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2940,14 +2888,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3099,16 +3039,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * The machine independent parts of mi_switch().  * Must be called at splstatclock() or higher.  */
+comment|/*  * The machine independent parts of mi_switch().  */
 end_comment
 
 begin_function
@@ -3393,15 +3328,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3475,24 +3401,6 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_sflag
-operator|&
-name|PS_INMEM
-condition|)
-name|setrunqueue
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
 name|p_slptime
 operator|>
 literal|1
@@ -3538,11 +3446,18 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|setrunqueue
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|maybe_resched
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -3791,9 +3706,6 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -3802,11 +3714,6 @@ literal|0
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
 expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
@@ -3850,11 +3757,6 @@ argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
