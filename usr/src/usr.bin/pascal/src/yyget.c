@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyget.c 1.3 %G%"
+literal|"@(#)yyget.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,6 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|printed
 decl_stmt|;
 end_decl_stmt
@@ -724,7 +723,6 @@ expr_stmt|;
 comment|/*  *	if (*dp == ';')  *		dp++;  *	dp = skipbl(dp);  *	if (*dp != '\n') {  *		line = yyline;  *		error("Garbage after filename in include");  *		pexit(DIED);  *	}  */
 if|if
 condition|(
-operator|(
 operator|!
 name|dotted
 argument_list|(
@@ -732,9 +730,7 @@ name|cp
 argument_list|,
 literal|'i'
 argument_list|)
-operator|)
 operator|&&
-operator|(
 operator|!
 name|dotted
 argument_list|(
@@ -742,7 +738,6 @@ name|cp
 argument_list|,
 literal|'h'
 argument_list|)
-operator|)
 condition|)
 block|{
 name|line
