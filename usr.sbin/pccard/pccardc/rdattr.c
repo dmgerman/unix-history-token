@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/card.h>
+file|<pccard/cardinfo.h>
 end_include
 
 begin_function
