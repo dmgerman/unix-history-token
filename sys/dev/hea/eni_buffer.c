@@ -104,19 +104,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|eni_test_memory
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Eni_unit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The host is going to manage (that is, allocate and free) buffers  * in the adapters RAM space. We are going to implement this as a  * linked list describing FREE and INUSE memory segments. Initially,  * the list contains one element with all memory marked free. As requests  * are made, we search the list until we find the first free element  * which can satisfy the request. If necessary, we will break the free  * element into an INUSE element, and a new FREE element. When freeing  * memory, we look at adjacent elements and if one or more are free,  * we will combine into a single larger FREE element.  */

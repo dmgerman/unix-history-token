@@ -248,18 +248,18 @@ begin_typedef
 typedef|typedef
 name|void
 name|ispfwfunc
-name|__P
-typedef|((
+parameter_list|(
 name|int
-typedef|,
+parameter_list|,
 name|int
-typedef|,
+parameter_list|,
 name|int
-typedef|,
+parameter_list|,
 name|u_int16_t
 modifier|*
 modifier|*
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_ifdef

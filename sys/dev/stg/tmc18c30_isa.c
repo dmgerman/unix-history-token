@@ -218,18 +218,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|stg_isa_unload
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

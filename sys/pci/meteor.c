@@ -167,20 +167,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|meteor_intr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*   * Allocate enough memory for:  *	768x576 RGB 16 or YUV (16 storage bits/pixel) = 884736 = 216 pages  *  * You may override this using the options "METEOR_ALLOC_PAGES=value" in your  * kernel configuration file.  */

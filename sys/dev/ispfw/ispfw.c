@@ -135,18 +135,19 @@ begin_typedef
 typedef|typedef
 name|void
 name|ispfwfunc
-name|__P
-typedef|((
+parameter_list|(
 name|int
-typedef|,
+parameter_list|,
 name|int
-typedef|,
+parameter_list|,
 name|int
-typedef|, const
+parameter_list|,
+specifier|const
 name|u_int16_t
 modifier|*
 modifier|*
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_decl_stmt
@@ -157,27 +158,24 @@ name|isp_get_firmware_p
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|isp_get_firmware
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|u_int16_t
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static

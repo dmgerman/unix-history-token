@@ -130,21 +130,18 @@ name|VX_RESOURCE_CONFIG
 value|0x0008
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|vx_match
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|eisa_id_t
 name|type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

@@ -148,24 +148,21 @@ directive|include
 file|<dev/snc/dp83932subr.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|integrate
 name|u_int16_t
 name|snc_nec16_select_bank
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|snc_softc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int32_t
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Interface exists: make available by filling in network interface  * record.  System will initialize the interface when it is ready  * to accept packets.  */

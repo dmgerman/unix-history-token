@@ -262,17 +262,15 @@ name|en_obmemsz
 decl_stmt|;
 comment|/* size of en card (bytes) */
 name|void
-argument_list|(
-argument|*en_busreset
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|en_busreset
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* bus specific reset function */
 comment|/* serv list */
 name|u_int32_t
@@ -599,46 +597,37 @@ begin_comment
 comment|/*  * exported functions  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|en_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|en_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|EN_INTR_TYPE
 name|en_intr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|en_reset
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|en_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

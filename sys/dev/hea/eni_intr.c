@@ -116,19 +116,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|eni_suni_intr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Eni_unit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * SUNI Interrupt processing  *  * Currently, we don't do anything more then clear the interrupt  * for the SUNI chip.  *  * Arguments:  *	eup		pointer to device unit structure  *  * Returns:  *	none  *  */

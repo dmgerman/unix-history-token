@@ -192,47 +192,38 @@ begin_comment
 comment|/*  * Local functions  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fore_buf_drain
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Fore_unit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fore_buf_supply_1s
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Fore_unit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fore_buf_supply_1l
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Fore_unit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Allocate Buffer Supply Queues Data Structures  *  * Here we are allocating memory for both Strategy 1 Small and Large  * structures contiguously.  *  * Arguments:  *	fup		pointer to device unit structure  *  * Returns:  *	0		allocations successful  *	else		allocation failed  */

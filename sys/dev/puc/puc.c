@@ -156,17 +156,15 @@ name|dev
 decl_stmt|;
 comment|/* filled in by bus_setup_intr() */
 name|void
-argument_list|(
-argument|*ihand
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|ihand
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
 name|ihandarg

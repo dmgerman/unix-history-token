@@ -93,57 +93,45 @@ begin_comment
 comment|/*  * prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|en_pci_probe
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|en_pci_attach
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|en_pci_detach
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|en_pci_shutdown
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * local structures  */
@@ -191,22 +179,19 @@ name|MIDWAY_ENIONLY
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|eni_get_macaddr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|en_pci_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -223,20 +208,17 @@ name|MIDWAY_ADPONLY
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|adp_get_macaddr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|en_pci_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -445,19 +427,16 @@ name|MIDWAY_ENIONLY
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|adp_busreset
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * bus specific reset function [ADP only!]  */

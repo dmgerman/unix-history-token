@@ -186,19 +186,16 @@ begin_comment
 comment|/*  * Local functions  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fore_get_prom
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Fore_unit
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Begin CP Initialization  *  * This function will poll for the successful downloading and starting of  * the CP microcode program.  After the microcode is running, we will allocate  * any needed kernel memory (must do it in non-interrupt mode), build the CP  * queue configurations and issue an Initialize command to the CP.  *  * Arguments:  *	fup		pointer to device unit structure  *  * Returns:  *	none  */
@@ -254,14 +251,11 @@ argument_list|(
 operator|(
 name|KTimeout_ret
 argument_list|(
-argument|*
+operator|*
 argument_list|)
-name|__P
 argument_list|(
-operator|(
 name|void
 operator|*
-operator|)
 argument_list|)
 operator|)
 name|fore_initialize

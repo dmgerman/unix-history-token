@@ -71,31 +71,25 @@ directive|include
 file|<dev/cm/smc90cx6var.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cm_isa_probe
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cm_isa_attach
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
