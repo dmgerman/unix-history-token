@@ -1942,9 +1942,6 @@ name|LogFacPri
 operator|++
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|usage
 argument_list|()
@@ -3557,13 +3554,14 @@ name|pri
 operator|=
 name|DEFUPRI
 expr_stmt|;
-comment|/* don't allow users to log kernel messages */
+comment|/* 	 * Don't allow users to log kernel messages. 	 * NOTE: since LOG_KERN == 0 this will also match 	 *       messages with no facility specified. 	 */
 if|if
 condition|(
-name|LOG_FAC
-argument_list|(
+operator|(
 name|pri
-argument_list|)
+operator|&
+name|LOG_FACMASK
+operator|)
 operator|==
 name|LOG_KERN
 operator|&&
