@@ -2293,15 +2293,6 @@ operator|~
 name|P_INEXEC
 expr_stmt|;
 comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * can be set before the program executes. 	 */
-name|_STOPEVENT
-argument_list|(
-name|p
-argument_list|,
-name|S_EXEC
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2611,9 +2602,21 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 		 * Stop the process here if its stop event mask has 		 * the S_EXEC bit set. 		 */
+name|STOPEVENT
+argument_list|(
+name|p
+argument_list|,
+name|S_EXEC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done2
 goto|;
+block|}
 name|exec_fail
 label|:
 comment|/* we're done here, clear P_INEXEC */
