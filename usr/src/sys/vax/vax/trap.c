@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.5	%G%	*/
+comment|/*	trap.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -237,6 +237,15 @@ operator|+
 name|USER
 case|:
 comment|/* resereved operand fault */
+name|u
+operator|.
+name|u_code
+operator|=
+name|type
+operator|&
+operator|~
+name|USER
+expr_stmt|;
 name|i
 operator|=
 name|SIGILL
