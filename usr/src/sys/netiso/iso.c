@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -167,14 +167,6 @@ begin_comment
 comment|/*  * FUNCTION:		iso_init  *  * PURPOSE:			initialize the iso address family  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	1) initializes the routing table.  *  *  * NOTES:			  */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|radix_node_head
-modifier|*
-name|iso_rnhead
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|iso_init
 argument_list|()
@@ -182,27 +174,23 @@ end_macro
 
 begin_block
 block|{
-specifier|static
-name|iso_init_done
-expr_stmt|;
 if|if
 condition|(
-name|iso_init_done
+name|rt_tables
+index|[
+name|AF_ISO
+index|]
 operator|==
 literal|0
 condition|)
 block|{
-name|iso_init_done
-operator|++
-expr_stmt|;
 name|rn_inithead
 argument_list|(
-operator|&
-name|iso_rnhead
+name|rt_tables
+operator|+
+name|AF_ISO
 argument_list|,
 literal|48
-argument_list|,
-name|AF_ISO
 argument_list|)
 expr_stmt|;
 block|}
