@@ -711,28 +711,6 @@ begin_comment
 comment|/* Completely ignore Win95 entries */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSDOSFSMNT_GEMDOSFS
-value|8
-end_define
-
-begin_comment
-comment|/* This is a gemdos-flavour */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
