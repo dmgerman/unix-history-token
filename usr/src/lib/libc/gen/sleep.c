@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	5.5 (Berkeley) %G%"
+literal|"@(#)sleep.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -69,21 +75,17 @@ name|ringring
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|unsigned
+name|int
 name|sleep
-argument_list|(
-argument|seconds
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|seconds
+parameter_list|)
 name|unsigned
 name|int
 name|seconds
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -106,6 +108,7 @@ decl_stmt|;
 name|long
 name|omask
 decl_stmt|;
+specifier|static
 name|void
 name|sleephandler
 parameter_list|()
@@ -120,7 +123,9 @@ condition|(
 operator|!
 name|seconds
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|timerclear
 argument_list|(
 operator|&
@@ -151,7 +156,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return;
+return|return
+name|seconds
+return|;
 name|itp
 operator|->
 name|it_value
@@ -341,8 +348,11 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

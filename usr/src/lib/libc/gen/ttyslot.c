@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyslot.c	5.5 (Berkeley) %G%"
+literal|"@(#)ttyslot.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,22 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
-name|ttyslot
-argument_list|()
-end_macro
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_block
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_function
+name|int
+name|ttyslot
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -77,14 +87,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
 decl_stmt|;
 name|setttyent
 argument_list|()
@@ -178,7 +180,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

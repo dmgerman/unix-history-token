@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regex.c	5.3 (Berkeley) %G%"
+literal|"@(#)regex.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,9 +34,35 @@ directive|endif
 endif|LIBC_SCCS and not lint
 end_endif
 
-begin_empty
-empty|#
-end_empty
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_function_decl
+specifier|static
+name|int
+name|advance
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|backref
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|cclass
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * routines to do regular expression matching  *  * Entry points:  *  *	re_comp(s)  *		char *s;  *	 ... returns 0 if the string s was compiled successfully,  *		     a pointer to an error message otherwise.  *	     If passed 0 or a null string returns without changing  *           the currently compiled re (see note 11 below).  *  *	re_exec(s)  *		char *s;  *	 ... returns 1 if the string s matches the last compiled regular  *		       expression,   *		     0 if the string s failed to match the last compiled  *		       regular expression, and  *		    -1 if the compiled regular expression was invalid   *		       (indicating an internal error).  *  * The strings passed to both re_comp and re_exec may have trailing or  * embedded newline characters; they are terminated by nulls.  *  * The identity of the author of these routines is lost in antiquity;  * this is essentially the same as the re code in the original V6 ed.  *  * The regular expressions recognized are described below. This description  * is essentially the same as that for ed.  *  *	A regular expression specifies a set of strings of characters.  *	A member of this set of strings is said to be matched by  *	the regular expression.  In the following specification for  *	regular expressions the word `character' means any character but NUL.  *  *	1.  Any character except a special character matches itself.  *	    Special characters are the regular expression delimiter plus  *	    \ [ . and sometimes ^ * $.  *	2.  A . matches any character.  *	3.  A \ followed by any character except a digit or ( )  *	    matches that character.  *	4.  A nonempty string s bracketed [s] (or [^s]) matches any  *	    character in (or not in) s. In s, \ has no special meaning,  *	    and ] may only appear as the first letter. A substring   *	    a-b, with a and b in ascending ASCII order, stands for  *	    the inclusive range of ASCII characters.  *	5.  A regular expression of form 1-4 followed by * matches a  *	    sequence of 0 or more matches of the regular expression.  *	6.  A regular expression, x, of form 1-8, bracketed \(x\)  *	    matches what x matches.  *	7.  A \ followed by a digit n matches a copy of the string that the  *	    bracketed regular expression beginning with the nth \( matched.  *	8.  A regular expression of form 1-8, x, followed by a regular  *	    expression of form 1-7, y matches a match for x followed by  *	    a match for y, with the x match being as long as possible  *	    while still permitting a y match.  *	9.  A regular expression of form 1-8 preceded by ^ (or followed  *	    by $), is constrained to matches that begin at the left  *	    (or end at the right) end of a line.  *	10. A regular expression of form 1-9 picks out the longest among  *	    the leftmost matches in a line.  *	11. An empty regular expression stands for a copy of the last  *	    regular expression encountered.  */
@@ -171,6 +197,7 @@ parameter_list|(
 name|sp
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|sp
@@ -764,6 +791,7 @@ parameter_list|(
 name|p1
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p1

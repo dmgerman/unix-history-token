@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pause.c	5.6 (Berkeley) %G%"
+literal|"@(#)pause.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,21 +37,28 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Backwards compatible pause.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|pause
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|long
-name|sigblock
 parameter_list|()
-function_decl|;
+block|{
+return|return
 name|sigpause
 argument_list|(
 name|sigblock
@@ -59,9 +66,9 @@ argument_list|(
 literal|0L
 argument_list|)
 argument_list|)
-expr_stmt|;
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

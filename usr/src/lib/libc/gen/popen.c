@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.14 (Berkeley) %G%"
+literal|"@(#)popen.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -96,16 +108,16 @@ name|program
 parameter_list|,
 name|type
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|program
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|type
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -121,11 +133,6 @@ name|fds
 decl_stmt|,
 name|pid
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|*
@@ -478,28 +485,19 @@ name|iop
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|pclose
-argument_list|(
-argument|iop
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|iop
+parameter_list|)
 name|FILE
 modifier|*
 name|iop
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|register
 name|int
 name|fdes
@@ -513,9 +511,6 @@ name|pstat
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|,
-name|waitpid
-argument_list|()
 decl_stmt|;
 comment|/* 	 * pclose returns -1 if stream is not associated with a 	 * `popened' command, if already `pclosed', or waitpid 	 * returns an error. 	 */
 if|if
@@ -581,6 +576,10 @@ index|[
 name|fdes
 index|]
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pstat
 argument_list|,
@@ -631,7 +630,7 @@ name|w_status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

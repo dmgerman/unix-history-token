@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)closedir.c	5.8 (Berkeley) %G%"
+literal|"@(#)closedir.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,23 +49,33 @@ directive|include
 file|<dirent.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * close a directory.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|closedir
-argument_list|(
+parameter_list|(
 name|dirp
-argument_list|)
+parameter_list|)
 specifier|register
 name|DIR
-operator|*
+modifier|*
 name|dirp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|fd
@@ -124,7 +134,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

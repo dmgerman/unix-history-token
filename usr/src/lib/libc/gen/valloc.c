@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)valloc.c	5.4 (Berkeley) %G%"
+literal|"@(#)valloc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,22 +37,26 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_function
-name|char
+name|void
 modifier|*
 name|valloc
 parameter_list|(
 name|i
 parameter_list|)
-name|int
+name|size_t
 name|i
 decl_stmt|;
 block|{
@@ -64,7 +68,7 @@ argument_list|()
 decl_stmt|,
 name|j
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|cp
 init|=
@@ -104,7 +108,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|j

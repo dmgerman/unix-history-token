@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utime.c	5.3 (Berkeley) %G%"
+literal|"@(#)utime.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,31 +49,25 @@ directive|include
 file|<utime.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|utime
-argument_list|(
-argument|path
-argument_list|,
-argument|times
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|path
+parameter_list|,
+name|times
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|struct
 name|utimbuf
 modifier|*
 name|times
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|timeval
@@ -131,7 +125,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

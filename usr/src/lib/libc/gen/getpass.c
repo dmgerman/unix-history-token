@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpass.c	5.7 (Berkeley) %G%"
+literal|"@(#)getpass.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -68,6 +74,7 @@ name|getpass
 parameter_list|(
 name|prompt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prompt

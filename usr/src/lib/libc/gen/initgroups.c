@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initgroups.c	5.6 (Berkeley) %G%"
+literal|"@(#)initgroups.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,13 +44,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -68,29 +80,22 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|int
 name|initgroups
-argument_list|(
-argument|uname
-argument_list|,
-argument|agroup
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|uname
+parameter_list|,
+name|agroup
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|uname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|agroup
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|groups
@@ -256,7 +261,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

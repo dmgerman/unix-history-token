@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.7 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -99,30 +105,23 @@ parameter_list|)
 value|(p->_name&& p->_name[0])
 end_define
 
-begin_macro
+begin_function
+name|int
 name|nlist
-argument_list|(
-argument|name
-argument_list|,
-argument|list
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|list
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|NLIST
 modifier|*
 name|list
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|NLIST
@@ -566,7 +565,7 @@ name|entries
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

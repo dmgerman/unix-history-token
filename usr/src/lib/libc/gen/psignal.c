@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)psignal.c	5.5 (Berkeley) %G%"
+literal|"@(#)psignal.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,42 +50,32 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_siglist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
+begin_function
+name|void
 name|psignal
-argument_list|(
-argument|sig
-argument_list|,
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sig
+parameter_list|,
+name|s
+parameter_list|)
 name|unsigned
 name|int
 name|sig
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -179,7 +169,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

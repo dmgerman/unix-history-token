@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getgrent.c	5.7 (Berkeley) %G%"
+literal|"@(#)getgrent.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -80,6 +86,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|_gr_file
@@ -87,6 +94,20 @@ init|=
 name|_PATH_GROUP
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|start_gr
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|grscan
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -180,6 +201,7 @@ name|getgrnam
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -245,13 +267,25 @@ begin_function
 name|struct
 name|group
 modifier|*
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|getgrgid
+parameter_list|(
+name|gid_t
+name|gid
+parameter_list|)
+else|#
+directive|else
+function|getgrgid
 parameter_list|(
 name|gid
 parameter_list|)
-name|int
+name|gid_t
 name|gid
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 name|int
 name|rval
@@ -357,10 +391,13 @@ operator|)
 return|;
 end_return
 
-begin_expr_stmt
-unit|}  setgrent
-operator|(
-operator|)
+begin_macro
+unit|}  int
+name|setgrent
+argument_list|()
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -371,22 +408,17 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_block
 
-begin_macro
+begin_function
+name|int
 name|setgroupent
-argument_list|(
-argument|stayopen
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|stayopen
+parameter_list|)
 name|int
 name|stayopen
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -409,7 +441,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -447,6 +479,7 @@ name|setgrfile
 parameter_list|(
 name|file
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file

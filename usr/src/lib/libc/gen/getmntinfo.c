@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getmntinfo.c	6.3 (Berkeley) %G%"
+literal|"@(#)getmntinfo.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_comment
@@ -80,7 +86,9 @@ decl_stmt|;
 specifier|static
 name|int
 name|mntsize
-decl_stmt|,
+decl_stmt|;
+specifier|static
+name|long
 name|bufsize
 decl_stmt|;
 if|if

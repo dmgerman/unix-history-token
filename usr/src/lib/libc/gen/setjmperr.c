@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setjmperr.c	5.7 (Berkeley) %G%"
+literal|"@(#)setjmperr.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,15 +44,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|longjmperror
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 define|#
 directive|define
@@ -76,7 +80,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

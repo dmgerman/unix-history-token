@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telldir.c	5.8 (Berkeley) %G%"
+literal|"@(#)telldir.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,18 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -147,6 +159,7 @@ name|telldir
 parameter_list|(
 name|dirp
 parameter_list|)
+specifier|const
 name|DIR
 modifier|*
 name|dirp

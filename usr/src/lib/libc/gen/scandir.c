@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	5.9 (Berkeley) %G%"
+literal|"@(#)scandir.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,18 @@ directive|include
 file|<dirent.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * The DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This requires the amount of space in struct dirent  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  */
 end_comment
@@ -80,27 +92,23 @@ define|\
 value|((sizeof (struct dirent) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
 end_define
 
-begin_macro
+begin_function_decl
+name|int
 name|scandir
-argument_list|(
-argument|dirname
-argument_list|,
-argument|namelist
-argument_list|,
-argument|select
-argument_list|,
-argument|dcomp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dirname
+parameter_list|,
+name|namelist
+parameter_list|,
+name|select
+parameter_list|,
+name|dcomp
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dirname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|dirent
 modifier|*
@@ -108,23 +116,46 @@ modifier|*
 modifier|*
 name|namelist
 decl_stmt|;
-end_decl_stmt
+function_decl|int
+parameter_list|(
+function_decl|*select
+end_function_decl
 
-begin_decl_stmt
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|dirent
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|int
 argument_list|(
-operator|*
-name|select
+argument|*dcomp
 argument_list|)
-argument_list|()
-decl_stmt|,
+end_macro
+
+begin_expr_stmt
+name|__P
 argument_list|(
+operator|(
+specifier|const
+name|void
 operator|*
-name|dcomp
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
 argument_list|)
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -142,7 +173,7 @@ modifier|*
 name|names
 decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|nitems
 decl_stmt|;
 name|struct
@@ -475,26 +506,24 @@ begin_comment
 comment|/*  * Alphabetic order comparison routine for those who want it.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|alphasort
-argument_list|(
-argument|d1
-argument_list|,
-argument|d2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|d1
+parameter_list|,
+name|d2
+parameter_list|)
+specifier|const
 name|void
 modifier|*
 name|d1
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|void
 modifier|*
 name|d2
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -529,7 +558,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

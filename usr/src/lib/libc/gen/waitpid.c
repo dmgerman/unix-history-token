@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)waitpid.c	5.3 (Berkeley) %G%"
+literal|"@(#)waitpid.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,25 +63,43 @@ end_include
 
 begin_function
 name|pid_t
+if|#
+directive|if
+name|__STDC__
 name|waitpid
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|int
+modifier|*
+name|istat
+parameter_list|,
+name|int
+name|options
+parameter_list|)
+else|#
+directive|else
+function|waitpid
 parameter_list|(
 name|pid
 parameter_list|,
-name|pstat
+name|istat
 parameter_list|,
 name|options
 parameter_list|)
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
-name|union
-name|wait
+name|int
 modifier|*
-name|pstat
+name|istat
 decl_stmt|;
 name|int
 name|options
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 return|return
 operator|(
@@ -89,7 +107,7 @@ name|wait4
 argument_list|(
 name|pid
 argument_list|,
-name|pstat
+name|istat
 argument_list|,
 name|options
 argument_list|,

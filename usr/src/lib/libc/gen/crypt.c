@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crypt.c	5.3.1.1 (Berkeley) %G%"
+literal|"@(#)crypt.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ endif|#
 directive|endif
 endif|LIBC_SCCS and not lint
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_comment
 comment|/*  * This program implements the  * Proposed Federal Information Processing  *  Data Encryption Standard.  * See Federal Register, March 17, 1975 (40FR12134)  */
@@ -785,21 +791,17 @@ begin_comment
 comment|/*  * Set up the key schedule from the key.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setkey
-argument_list|(
-argument|key
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|key
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|key
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|i
@@ -1054,7 +1056,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The 8 selection functions.  * For some reason, they give a 0-origin  * index, unlike everything else.  */
@@ -2236,23 +2238,21 @@ begin_comment
 comment|/*  * The payoff: encrypt a block.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|encrypt
-argument_list|(
-argument|block
-argument_list|,
-argument|edflag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|block
+parameter_list|,
+name|edflag
+parameter_list|)
 name|char
 modifier|*
 name|block
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|edflag
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -2667,7 +2667,7 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -2678,10 +2678,12 @@ name|pw
 parameter_list|,
 name|salt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|pw
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|salt

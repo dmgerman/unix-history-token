@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getlogin.c	5.8 (Berkeley) %G%"
+literal|"@(#)getlogin.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -59,6 +53,24 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -139,13 +151,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_function_decl
-name|uid_t
-name|geteuid
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|char

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setrgid.c	5.4 (Berkeley) %G%"
+literal|"@(#)setrgid.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,20 +37,33 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_macro
-name|setrgid
-argument_list|(
-argument|rgid
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
+begin_function
+name|int
+ifdef|#
+directive|ifdef
+name|__STDC__
+name|setrgid
+parameter_list|(
+name|gid_t
+name|rgid
+parameter_list|)
+else|#
+directive|else
+function|setrgid
+parameter_list|(
+name|rgid
+parameter_list|)
 name|int
 name|rgid
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+endif|#
+directive|endif
 block|{
 return|return
 operator|(
@@ -64,7 +77,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

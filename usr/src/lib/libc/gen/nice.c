@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nice.c	5.4 (Berkeley) %G%"
+literal|"@(#)nice.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,24 +49,25 @@ directive|include
 file|<sys/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Backwards compatible nice.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nice
-argument_list|(
-argument|incr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|incr
+parameter_list|)
 name|int
 name|incr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|prio
@@ -118,7 +119,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

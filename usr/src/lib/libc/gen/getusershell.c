@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getusershell.c	5.6 (Berkeley) %G%"
+literal|"@(#)getusershell.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -175,12 +187,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|endusershell
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -221,14 +231,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|setusershell
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|curshell
 operator|=
@@ -236,7 +244,7 @@ name|initshells
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -263,16 +271,6 @@ decl_stmt|;
 name|struct
 name|stat
 name|statb
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|calloc
-argument_list|()
 decl_stmt|;
 if|if
 condition|(

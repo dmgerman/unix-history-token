@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getttyent.c	5.8 (Berkeley) %G%"
+literal|"@(#)getttyent.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,7 @@ name|getttynam
 parameter_list|(
 name|tty
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|tty
@@ -158,6 +159,7 @@ index|[
 name|MAXLINELENGTH
 index|]
 decl_stmt|;
+specifier|static
 name|char
 modifier|*
 name|skip
@@ -741,12 +743,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|setttyent
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -790,14 +790,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|endttyent
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|rval
@@ -835,7 +833,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

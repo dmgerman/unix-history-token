@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)frexp.c	5.2 (Berkeley) %G%"
+literal|"@(#)frexp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ endif|#
 directive|endif
 endif|LIBC_SCCS and not lint
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
 
 begin_comment
 comment|/*  *	the call  *		x = frexp(arg,&exp);  *	must return a double fp quantity x which is<1.0  *	and the corresponding binary exponent "exp".  *	such that  *		arg = x*2^exp  *	if the argument is 0.0, return 0.0 mantissa and 0 exponent.  */

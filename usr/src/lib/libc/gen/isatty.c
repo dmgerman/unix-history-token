@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)isatty.c	5.5 (Berkeley) %G%"
+literal|"@(#)isatty.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,20 +43,21 @@ directive|include
 file|<termios.h>
 end_include
 
-begin_macro
-name|isatty
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
+begin_function
+name|int
+name|isatty
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|termios
@@ -77,7 +78,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

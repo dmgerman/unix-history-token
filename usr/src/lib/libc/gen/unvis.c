@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unvis.c	1.3 (Berkeley) %G%"
+literal|"@(#)unvis.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,38 +150,53 @@ begin_comment
 comment|/*  * unvis - decode characters previously encoded by vis  */
 end_comment
 
-begin_macro
+begin_function
+name|int
+if|#
+directive|if
+name|__STDC__
 name|unvis
-argument_list|(
-argument|cp
-argument_list|,
-argument|c
-argument_list|,
-argument|astate
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|u_char
+parameter_list|(
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|char
+name|c
+parameter_list|,
+name|int
+modifier|*
+name|astate
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+else|#
+directive|else
+function|unvis
+parameter_list|(
+name|cp
+parameter_list|,
+name|c
+parameter_list|,
+name|astate
+parameter_list|,
+name|flag
+parameter_list|)
+name|char
 modifier|*
 name|cp
 decl_stmt|,
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|astate
 decl_stmt|,
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+endif|#
+directive|endif
 block|{
 if|if
 condition|(
@@ -774,30 +789,31 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * strunvis - decode src into dst   *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|strunvis
-argument_list|(
+parameter_list|(
 name|dst
-argument_list|,
+parameter_list|,
 name|src
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|dst
-operator|,
-operator|*
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
 name|src
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -904,7 +920,7 @@ name|start
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timezone.c	5.9 (Berkeley) %G%"
+literal|"@(#)timezone.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,8 +58,28 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<tzfile.h>
 end_include
+
+begin_function_decl
+name|char
+modifier|*
+name|_tztab
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * timezone --  *	The arguments are the number of minutes of time you are westward  *	from Greenwich and whether DST is in effect.  It returns a string  *	giving the name of the local timezone.  Should be replaced, in the  *	application code, by a call to localtime.  */
@@ -101,23 +121,6 @@ name|beg
 decl_stmt|,
 modifier|*
 name|end
-decl_stmt|;
-name|char
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strncpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|_tztab
-argument_list|()
 decl_stmt|;
 if|if
 condition|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wait.c	5.3 (Berkeley) %G%"
+literal|"@(#)wait.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,11 @@ begin_function
 name|pid_t
 name|wait
 parameter_list|(
-name|pstat
+name|istat
 parameter_list|)
-name|union
-name|wait
+name|int
 modifier|*
-name|pstat
+name|istat
 decl_stmt|;
 block|{
 return|return
@@ -79,7 +78,7 @@ name|wait4
 argument_list|(
 name|WAIT_ANY
 argument_list|,
-name|pstat
+name|istat
 argument_list|,
 literal|0
 argument_list|,

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.3 (Berkeley) %G%"
+literal|"@(#)glob.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,17 +89,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|realloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_typedef
 typedef|typedef
@@ -107,6 +101,42 @@ name|int
 name|bool_t
 typedef|;
 end_typedef
+
+begin_expr_stmt
+specifier|static
+name|glob1
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|glob2
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|glob3
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|globextend
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|bool_t
+name|match
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -332,6 +362,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|pattern
@@ -341,14 +372,28 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flags
-decl_stmt|,
-argument_list|(
-operator|*
-name|errfunc
-argument_list|)
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|int
+argument_list|(
+argument|*errfunc
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|glob_t
@@ -373,7 +418,9 @@ name|bufend
 decl_stmt|,
 modifier|*
 name|compilebuf
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|compilepat
 decl_stmt|,

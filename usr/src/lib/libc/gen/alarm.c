@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alarm.c	5.4 (Berkeley) %G%"
+literal|"@(#)alarm.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,20 +47,23 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_macro
-name|alarm
-argument_list|(
-argument|secs
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_decl_stmt
+begin_function
+name|unsigned
+name|int
+name|alarm
+parameter_list|(
+name|secs
+parameter_list|)
+name|unsigned
 name|int
 name|secs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|itimerval
@@ -146,7 +149,7 @@ name|tv_sec
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

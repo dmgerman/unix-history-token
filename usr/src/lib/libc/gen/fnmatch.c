@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fnmatch.c	5.3 (Berkeley) %G%"
+literal|"@(#)fnmatch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,14 +212,21 @@ argument_list|,
 name|flags
 argument_list|)
 specifier|register
+specifier|const
 name|char
 operator|*
 name|pattern
-operator|,
-operator|*
-name|string
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|string
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

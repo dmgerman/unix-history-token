@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.16 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,18 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|char
@@ -94,6 +106,48 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+specifier|static
+name|dgetent
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|dnamatch
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|dgetnum
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|dgetflag
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|gettype
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|error
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|struct
 name|disklabel
@@ -102,6 +156,7 @@ name|getdiskbyname
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.14 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -82,6 +88,13 @@ name|fstab
 name|_fs_fstab
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|error
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -109,15 +122,6 @@ name|subline
 index|[
 name|MAXLINELENGTH
 index|]
-block|;
-name|char
-operator|*
-name|fgets
-argument_list|()
-block|,
-operator|*
-name|strtok
-argument_list|()
 block|;
 name|int
 name|typexx
@@ -686,7 +690,7 @@ comment|/* no way to distinguish between EOF and syntax error */
 end_comment
 
 begin_expr_stmt
-name|write
+name|error
 argument_list|(
 name|EFTYPE
 argument_list|)
@@ -747,6 +751,7 @@ parameter_list|(
 name|name
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|name
@@ -802,6 +807,7 @@ parameter_list|(
 name|name
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|name
