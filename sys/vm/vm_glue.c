@@ -757,12 +757,6 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|pmap_new_thread
-argument_list|(
-name|td2
-argument_list|)
-expr_stmt|;
-comment|/* Initial thread */
 comment|/* XXXKSE this is unsatisfactory but should be adequate */
 name|up
 operator|=
