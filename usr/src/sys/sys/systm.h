@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.22	81/11/26	*/
+comment|/*	systm.h	4.23	82/06/07	*/
 end_comment
 
 begin_comment
@@ -226,6 +226,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* block to be read ahead */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rasize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of block in rablock */
 end_comment
 
 begin_decl_stmt
