@@ -223,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_8K
-value|(1UL<<PAGE_SHIFT_8K)
+value|(1L<<PAGE_SHIFT_8K)
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_64K
-value|(1UL<<PAGE_SHIFT_64K)
+value|(1L<<PAGE_SHIFT_64K)
 end_define
 
 begin_define
@@ -265,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_512K
-value|(1UL<<PAGE_SHIFT_512K)
+value|(1L<<PAGE_SHIFT_512K)
 end_define
 
 begin_define
@@ -286,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_4M
-value|(1UL<<PAGE_SHIFT_4M)
+value|(1L<<PAGE_SHIFT_4M)
 end_define
 
 begin_define
