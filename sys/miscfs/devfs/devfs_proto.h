@@ -7,7 +7,8 @@ begin_function_decl
 name|void
 name|devfs_sinit
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|junk
 parameter_list|)
 comment|/*proto*/
