@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c 4.8 %G%"
+literal|"@(#)canfield.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6464,14 +6464,6 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
-name|endwin
-argument_list|()
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGTSTP
@@ -6514,11 +6506,6 @@ argument_list|()
 expr_stmt|;
 name|noecho
 argument_list|()
-expr_stmt|;
-name|wrefresh
-argument_list|(
-name|curscr
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -7966,14 +7953,6 @@ expr_stmt|;
 name|initscr
 argument_list|()
 expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-comment|/* avoid tstp in curses */
 name|raw
 argument_list|()
 expr_stmt|;
