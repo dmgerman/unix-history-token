@@ -4245,8 +4245,7 @@ name|m
 operator|->
 name|m_len
 condition|)
-return|return
-operator|(
+block|{
 name|bpf_tap
 argument_list|(
 name|ifp
@@ -4261,8 +4260,9 @@ argument_list|)
 argument_list|,
 name|pktlen
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
+block|}
 name|BPFIF_LOCK
 argument_list|(
 name|bp
