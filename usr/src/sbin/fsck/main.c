@@ -10,7 +10,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.25 (Berkeley) %G%"
+literal|"@(#)main.c	2.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3983,11 +3983,6 @@ block|}
 continue|continue;
 name|unknown
 label|:
-if|if
-condition|(
-operator|!
-name|SOCK
-condition|)
 name|pfatal
 argument_list|(
 literal|"UNKNOWN FILE TYPE I=%u"
@@ -3997,12 +3992,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|preen
-operator|&&
-name|SOCK
-operator|)
-operator|||
 name|reply
 argument_list|(
 literal|"CLEAR"
@@ -8862,6 +8851,9 @@ name|IFCHR
 case|:
 case|case
 name|IFLNK
+case|:
+case|case
+name|IFSOCK
 case|:
 return|return
 operator|(
