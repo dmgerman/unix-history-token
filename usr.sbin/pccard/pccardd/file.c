@@ -1262,6 +1262,7 @@ expr_stmt|;
 block|}
 name|generic_done
 label|:
+empty_stmt|;
 block|}
 comment|/* save the initial state of resource pool */
 name|bcopy
