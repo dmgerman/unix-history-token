@@ -530,7 +530,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Reminder you need the 6 english words from the skey command.\n"
+literal|"Reminder you need the 6 english words from the key command.\n"
 argument_list|)
 expr_stmt|;
 for|for
