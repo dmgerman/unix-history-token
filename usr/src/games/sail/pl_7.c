@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_7.c	2.2 83/11/08"
+literal|"@(#)pl_7.c	2.3 83/11/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,15 +202,14 @@ condition|(
 name|done_curses
 condition|)
 block|{
-name|draw_screen
-argument_list|()
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|move
+name|wmove
 argument_list|(
-name|LINES
+name|scroll_w
+argument_list|,
+name|SCROLL_Y
 operator|-
 literal|1
 argument_list|,
@@ -220,13 +219,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|clrtoeol
-argument_list|()
+name|wclrtoeol
+argument_list|(
+name|scroll_w
+argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|refresh
+name|draw_screen
 argument_list|()
 expr_stmt|;
 name|endwin
