@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.27 2002/01/29 06:09:39 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.28 2002/03/17 05:05:42 imp Exp   */
 end_comment
 
 begin_comment
@@ -461,6 +461,17 @@ end_define
 
 begin_comment
 comment|/* Samsung */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_HWN
+value|0x0261
+end_define
+
+begin_comment
+comment|/* Home Wireless Networks */
 end_comment
 
 begin_define
@@ -1762,6 +1773,31 @@ define|#
 directive|define
 name|PCMCIA_STR_FUJITSU_LA501
 value|"Fujitsu Towa LA501 Ethernet"
+end_define
+
+begin_comment
+comment|/* Home Wireless Networks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_HWN_AIRWAY80211
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_HWN_AIRWAY80211
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_HWN_AIRWAY80211
+value|"HWN Airway Wireless PCMCIA Card"
 end_define
 
 begin_comment
