@@ -112,7 +112,7 @@ specifier|static
 struct|struct
 name|_pcsid
 block|{
-name|u_int32_t
+name|uint32_t
 name|type
 decl_stmt|;
 specifier|const
@@ -211,7 +211,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|type
 init|=
 name|pci_get_devid
