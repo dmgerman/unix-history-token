@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -1862,13 +1862,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SFGETS -- "safe" fgets -- times out. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. ** **	Returns: **		NULL on error (including timeout). **		buf otherwise. ** **	Side Effects: **		none. */
+comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. ** **	Returns: **		NULL on error (including timeout). **		buf otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|bool
-name|TimeoutFlag
+name|jmp_buf
+name|CtxReadTimeout
 decl_stmt|;
 end_decl_stmt
 
@@ -1912,6 +1912,10 @@ block|)
 function|;
 end_function
 
+begin_comment
+comment|/* set the timeout */
+end_comment
+
 begin_if
 if|if
 condition|(
@@ -1919,6 +1923,28 @@ name|ReadTimeout
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|CtxReadTimeout
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"sfgets: timeout on read (mailer may be hung)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|ev
 operator|=
 name|setevent
@@ -1930,14 +1956,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
-begin_expr_stmt
-name|TimeoutFlag
-operator|=
-name|FALSE
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* try to read */
+end_comment
 
 begin_do
 do|do
@@ -1960,21 +1984,20 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-operator|!
-operator|(
 name|p
-operator|!=
+operator|==
 name|NULL
-operator|||
-name|TimeoutFlag
-operator|||
+operator|&&
 name|errno
-operator|!=
+operator|==
 name|EINTR
-operator|)
 condition|)
 do|;
 end_do
+
+begin_comment
+comment|/* clear the event if it has not sprung */
+end_comment
 
 begin_expr_stmt
 name|clrevent
@@ -1984,23 +2007,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* clean up the books and exit */
+end_comment
+
 begin_expr_stmt
 name|LineNumber
 operator|++
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|TimeoutFlag
-condition|)
-name|syserr
-argument_list|(
-literal|"sfgets: timeout on read (mailer may be hung)"
-argument_list|)
-expr_stmt|;
-end_if
 
 begin_return
 return|return
@@ -2018,9 +2033,12 @@ end_macro
 
 begin_block
 block|{
-name|TimeoutFlag
-operator|=
-name|TRUE
+name|longjmp
+argument_list|(
+name|CtxReadTimeout
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
