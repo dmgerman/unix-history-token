@@ -1548,11 +1548,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: tunefs [-A] [-a maxcontig] [-d rotdelay] [-e maxbpg] [-f avgfilesize]"
+literal|"usage: tunefs [-A] [-e maxbpg] [-f avgfilesize] [-m minfree]"
 argument_list|,
-literal|"              [-m minfree] [-p] [-n enable | disable] [-o space | time]"
+literal|"              [-n enable | disable] [-o space | time] [-p] [-s avgfpdir]"
 argument_list|,
-literal|"              [-s filesperdir] special | file system"
+literal|"              special | filesystem"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1913,15 +1913,6 @@ condition|?
 literal|"enabled"
 else|:
 literal|"disabled"
-argument_list|)
-expr_stmt|;
-name|warnx
-argument_list|(
-literal|"maximum contiguous block count: (-a)               %d"
-argument_list|,
-name|sblock
-operator|.
-name|fs_maxcontig
 argument_list|)
 expr_stmt|;
 name|warnx
