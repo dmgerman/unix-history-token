@@ -15,7 +15,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.27 1994/02/07 04:20:57 davidg Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.28 1994/02/07 15:40:38 ache Exp $  */
 end_comment
 
 begin_comment
@@ -144,27 +144,16 @@ directive|include
 file|"vm/vm.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WDCTIMEOUT
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|WDCTIMEOUT
-value|10000000
+name|TIMEOUT
+value|10000
 end_define
 
 begin_comment
-comment|/* arbitrary timeout for drive ready waits */
+comment|/* XXX? WDCC_DIAGNOSE can take> 1.1 sec */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -805,6 +794,9 @@ name|du
 parameter_list|,
 name|u_char
 name|bits_wanted
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -991,6 +983,8 @@ argument_list|(
 name|du
 argument_list|,
 literal|0
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|!=
 literal|0
@@ -2627,6 +2621,8 @@ operator||
 name|WDCS_SEEKCMPLT
 operator||
 name|WDCS_DRQ
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -2790,6 +2786,8 @@ argument_list|(
 name|du
 argument_list|,
 literal|0
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -3063,6 +3061,8 @@ operator||
 name|WDCS_SEEKCMPLT
 operator||
 name|WDCS_DRQ
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|!=
 literal|0
@@ -4523,6 +4523,8 @@ argument_list|(
 name|du
 argument_list|,
 literal|0
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -4629,6 +4631,8 @@ condition|?
 literal|0
 else|:
 name|WDCS_READY
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -4776,6 +4780,8 @@ argument_list|(
 name|du
 argument_list|,
 name|WDCS_READY
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|!=
 literal|0
@@ -4928,6 +4934,8 @@ operator||
 name|WDCS_SEEKCMPLT
 operator||
 name|WDCS_DRQ
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -4942,6 +4950,8 @@ argument_list|(
 name|du
 argument_list|,
 literal|0
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -5023,6 +5033,8 @@ argument_list|,
 name|WDCS_READY
 operator||
 name|WDCS_SEEKCMPLT
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|!=
 literal|0
@@ -6625,6 +6637,8 @@ argument_list|,
 name|WDCS_READY
 operator||
 name|WDCS_SEEKCMPLT
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|!=
 literal|0
@@ -7084,6 +7098,8 @@ operator||
 name|WDCS_SEEKCMPLT
 operator||
 name|WDCS_DRQ
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -7197,6 +7213,8 @@ argument_list|,
 name|WDCS_READY
 operator||
 name|WDCS_SEEKCMPLT
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -7460,6 +7478,8 @@ argument_list|(
 name|du
 argument_list|,
 literal|0
+argument_list|,
+name|TIMEOUT
 argument_list|)
 expr_stmt|;
 name|outb
@@ -7498,6 +7518,8 @@ argument_list|,
 name|WDCS_READY
 operator||
 name|WDCS_SEEKCMPLT
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|!=
 literal|0
@@ -7821,6 +7843,8 @@ argument_list|,
 name|WDCS_READY
 operator||
 name|WDCS_SEEKCMPLT
+argument_list|,
+name|TIMEOUT
 argument_list|)
 operator|==
 literal|0
@@ -7897,11 +7921,11 @@ name|du
 parameter_list|,
 name|u_char
 name|bits_wanted
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 block|{
-name|int
-name|retries
-decl_stmt|;
 name|int
 name|wdc
 decl_stmt|;
@@ -7912,22 +7936,15 @@ define|#
 directive|define
 name|POLLING
 value|1000
-define|#
-directive|define
-name|TIMEOUT
-value|10000
-comment|/* XXX? WDCC_DIAGNOSE can take> 1.1 sec */
 name|wdc
 operator|=
 name|du
 operator|->
 name|dk_port
 expr_stmt|;
-name|retries
-operator|=
+name|timeout
+operator|+=
 name|POLLING
-operator|+
-name|TIMEOUT
 expr_stmt|;
 do|do
 block|{
@@ -7943,7 +7960,7 @@ operator|->
 name|dk_ctrlr
 index|]
 operator|>
-name|retries
+name|timeout
 operator|||
 name|min_retries
 index|[
@@ -7961,7 +7978,7 @@ operator|->
 name|dk_ctrlr
 index|]
 operator|=
-name|retries
+name|timeout
 expr_stmt|;
 endif|#
 directive|endif
@@ -8034,7 +8051,7 @@ return|;
 block|}
 if|if
 condition|(
-name|retries
+name|timeout
 operator|<
 name|TIMEOUT
 condition|)
@@ -8048,7 +8065,7 @@ block|}
 do|while
 condition|(
 operator|--
-name|retries
+name|timeout
 operator|!=
 literal|0
 condition|)
