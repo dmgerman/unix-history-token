@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_ctl.c	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs_ctl.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_ctl.c	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs_ctl.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -66,8 +66,34 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<miscfs/procfs/procfs.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FIX_SSTEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FIX_SSTEP
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * True iff process (p) is in trace wait state  * relative to process (curp)  */
@@ -85,41 +111,6 @@ parameter_list|)
 define|\
 value|((p)->p_stat == SSTOP&& \ 	 (p)->p_pptr == (curp)&& \ 	 ((p)->p_flag& P_TRACED))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FIX_SSTEP
-parameter_list|(
-name|p
-parameter_list|)
-value|{ \ 		procfs_fix_sstep(p); \ 	} \ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FIX_SSTEP
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -674,11 +665,22 @@ comment|/* 	 * Step.  Let the target process execute a single instruction. 	 */
 case|case
 name|PROCFS_CTL_STEP
 case|:
+if|if
+condition|(
+name|error
+operator|=
 name|procfs_sstep
 argument_list|(
 name|p
+argument_list|,
+literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 break|break;
 comment|/* 	 * Run.  Let the target process continue running until a breakpoint 	 * or some other trap. 	 */
 case|case

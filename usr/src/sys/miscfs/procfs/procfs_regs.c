@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_regs.c	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs_regs.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_regs.c	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs_regs.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -224,6 +224,34 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|procfs_validregs
+parameter_list|(
+name|p
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_SYSTEM
+operator|)
+operator|==
+literal|0
 operator|)
 return|;
 block|}

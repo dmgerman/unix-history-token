@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_status.c	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs_status.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_status.c	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs_status.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -519,10 +519,6 @@ argument_list|,
 name|cr
 operator|->
 name|cr_uid
-argument_list|,
-name|cr
-operator|->
-name|cr_gid
 argument_list|)
 expr_stmt|;
 for|for
@@ -587,7 +583,7 @@ name|uio_offset
 expr_stmt|;
 name|xlen
 operator|=
-name|min
+name|imin
 argument_list|(
 name|xlen
 argument_list|,

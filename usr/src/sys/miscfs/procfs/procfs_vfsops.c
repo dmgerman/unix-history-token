@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vfsops.c	8.4 (Berkeley) %G%  *  * From:  *	$Id: procfs_vfsops.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vfsops.c	8.5 (Berkeley) %G%  *  * From:  *	$Id: procfs_vfsops.c,v 3.1 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -408,80 +408,22 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|pfsnode
-modifier|*
-name|pfs
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|procfs_allocvp
 argument_list|(
 name|mp
 argument_list|,
-operator|&
-name|vp
+name|vpp
 argument_list|,
-operator|(
-name|pid_t
-operator|)
 literal|0
 argument_list|,
 name|Proot
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-name|vp
-operator|->
-name|v_type
-operator|=
-name|VDIR
-expr_stmt|;
-name|vp
-operator|->
-name|v_flag
-operator|=
-name|VROOT
-expr_stmt|;
-name|pfs
-operator|=
-name|VTOPFS
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-operator|*
-name|vpp
-operator|=
-name|vp
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
