@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mac2defs.h	4.1	85/03/19	*/
+comment|/*	mac2defs.h	4.2	85/08/23	*/
 end_comment
 
 begin_comment
@@ -265,6 +265,79 @@ parameter_list|,
 name|b
 parameter_list|)
 value|gencall(a,b)
+end_define
+
+begin_comment
+comment|/*  * Some short routines that get called an awful lot are actually macros.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|szty
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == DOUBLE ? 2 : 1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|szty
+parameter_list|(
+name|t
+parameter_list|)
+value|(((t) == DOUBLE || (t) == FLOAT) ? 2 : 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|shltype
+parameter_list|(
+name|o
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((o) == REG || (o) == NAME || (o) == ICON || \ 	 (o) == OREG || ((o) == UNARY MUL&& shumul((p)->in.left)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ncopy
+parameter_list|(
+name|q
+parameter_list|,
+name|p
+parameter_list|)
+value|((q)->in = (p)->in)
 end_define
 
 begin_define

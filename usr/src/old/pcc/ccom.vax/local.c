@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.7 (Berkeley) %G%"
+literal|"@(#)local.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1851,7 +1851,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 else|#
 directive|else
 for|for
@@ -1866,7 +1865,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 endif|#
 directive|endif
 name|text
@@ -1878,7 +1876,6 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
-block|}
 name|text
 index|[
 name|i
@@ -1905,13 +1902,22 @@ name|text
 operator|)
 return|;
 block|}
+end_function
+
+begin_macro
 name|ctype
 argument_list|(
 argument|type
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|TWORD
 name|type
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 comment|/* map types which are not defined on the local machine */
 switch|switch
@@ -1950,8 +1956,14 @@ name|type
 operator|)
 return|;
 block|}
+end_block
+
+begin_macro
 name|noinit
 argument_list|()
+end_macro
+
+begin_block
 block|{
 comment|/* curid is a variable which is defined but 	is not initialized (and not a function ); 	This routine returns the stroage class for an uninitialized declaration */
 return|return
@@ -1960,10 +1972,16 @@ name|EXTERN
 operator|)
 return|;
 block|}
+end_block
+
+begin_macro
 name|commdec
 argument_list|(
 argument|id
 argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* make a common declaration for id, if reasonable */
 specifier|register
@@ -2030,12 +2048,18 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
 name|isitlong
 argument_list|(
 argument|cb
 argument_list|,
 argument|ce
 argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* is lastcon to be long or short */
 comment|/* cb is the first character of the representation, ce the last */
@@ -2072,14 +2096,23 @@ literal|0
 operator|)
 return|;
 block|}
+end_block
+
+begin_macro
 name|isitfloat
 argument_list|(
 argument|s
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 union|union
 name|cvt
@@ -2140,14 +2173,23 @@ name|DCON
 operator|)
 return|;
 block|}
+end_block
+
+begin_macro
 name|ecode
 argument_list|(
 argument|p
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|NODE
 modifier|*
 name|p
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 comment|/* walk the tree and write out the nodes.. */
 if|if
@@ -2166,17 +2208,29 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|ONEPASS
+end_ifndef
+
+begin_macro
 name|tlen
 argument_list|(
 argument|p
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|NODE
 modifier|*
 name|p
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 switch|switch
 condition|(
@@ -2225,7 +2279,7 @@ operator|)
 return|;
 block|}
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

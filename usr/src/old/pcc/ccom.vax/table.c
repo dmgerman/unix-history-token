@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.10 (Berkeley) %G%"
+literal|"@(#)table.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,105 +296,6 @@ operator||
 name|RESCC
 block|,
 literal|"	movzZLl	AL,A1\n	cvtld	A1,A1\n"
-block|,
-comment|/* char -> ushort, result in reg (forced to int type by reclaim()) */
-name|SCONV
-block|,
-name|INTAREG
-operator||
-name|INAREG
-block|,
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TCHAR
-block|,
-name|SANY
-block|,
-name|TUSHORT
-block|,
-name|NAREG
-operator||
-name|NASL
-block|,
-name|RESC1
-block|,
-literal|"	cvtbw	AL,A1\n	movzwl	A1,A1\n"
-block|,
-comment|/* uchar, ushort -> wider */
-name|SCONV
-block|,
-name|INTAREG
-operator||
-name|INAREG
-block|,
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TUCHAR
-operator||
-name|TUSHORT
-block|,
-name|SANY
-block|,
-name|TSHORT
-operator||
-name|TUSHORT
-operator||
-name|TINT
-operator||
-name|TUNSIGNED
-operator||
-name|TLONG
-operator||
-name|TULONG
-block|,
-name|NAREG
-operator||
-name|NASL
-block|,
-name|RESC1
-block|,
-literal|"	movzZLl	AL,A1\n"
-block|,
-comment|/* char, short -> wider */
-name|SCONV
-block|,
-name|INTAREG
-operator||
-name|INAREG
-block|,
-name|SAREG
-operator||
-name|AWD
-block|,
-name|TCHAR
-operator||
-name|TSHORT
-block|,
-name|SANY
-block|,
-name|TSHORT
-operator||
-name|TUSHORT
-operator||
-name|TINT
-operator||
-name|TUNSIGNED
-operator||
-name|TLONG
-operator||
-name|TULONG
-block|,
-name|NAREG
-operator||
-name|NASL
-block|,
-name|RESC1
-block|,
-literal|"	cvtZLl	AL,A1\n"
 block|,
 comment|/* take care of redundant conversions introduced by reclaim() */
 name|SCONV
@@ -1991,17 +1892,7 @@ name|SAREG
 operator||
 name|AWD
 block|,
-name|TINT
-operator||
-name|TUNSIGNED
-operator||
-name|TLONG
-operator||
-name|TULONG
-operator||
 name|TFLOAT
-operator||
-name|TDOUBLE
 block|,
 name|SANY
 block|,
@@ -2017,8 +1908,8 @@ name|RESCC
 block|,
 literal|"	mnegZL	TAL,A1\n"
 block|,
-else|#
-directive|else
+endif|#
+directive|endif
 name|UNARY
 name|MINUS
 block|,
@@ -2054,8 +1945,6 @@ name|RESCC
 block|,
 literal|"	mnegZL	AL,A1\n"
 block|,
-endif|#
-directive|endif
 name|COMPL
 block|,
 name|INTAREG
