@@ -5466,12 +5466,6 @@ name|cbl_first
 operator|=
 name|txp
 expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5481,6 +5475,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5493,6 +5493,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|5
+expr_stmt|;
 comment|/* 			 * Try to start more packets transmitting. 			 */
 if|if
 condition|(
