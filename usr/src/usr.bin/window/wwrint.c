@@ -40,11 +40,30 @@ directive|include
 file|"tt.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_TTY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VMIN_BUG
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Tty input interrupt handler.  * (1) Read input into buffer (wwib*).  * (2) Set the interrupt flag if anything is read.  * Currently, the last is used to get out of the blocking  * select() in wwiomux().  * To avoid race conditions, we only modify wwibq in here, except  * when the buffer is empty; and everywhere else, we only change wwibp.  * It should be completely safe.  */
@@ -73,6 +92,18 @@ expr_stmt|;
 name|wwnread
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_TTY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VMIN_BUG
+argument_list|)
+comment|/* we have set c_cc[VMIN] to 0 */
 operator|(
 name|void
 operator|)
@@ -89,6 +120,8 @@ operator|.
 name|ww_fflags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|=
 name|read
@@ -102,6 +135,17 @@ operator|-
 name|wwibq
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OLD_TTY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VMIN_BUG
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -116,6 +160,8 @@ operator|.
 name|ww_fflags
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|n
