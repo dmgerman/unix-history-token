@@ -1,12 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: bootparamd.c,v 1.1.1.1 1995/02/26 23:40:52 wpaul Exp $  */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: bootparamd.c,v 1.2 1995/05/30 03:46:27 rgrimes Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/yp_prot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/ypclnt.h>
 end_include
 
 begin_include
@@ -1101,16 +1113,6 @@ decl_stmt|;
 name|int
 name|resultlen
 decl_stmt|;
-specifier|extern
-name|int
-name|yp_get_default_domain
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|yp_match
-parameter_list|()
-function_decl|;
 specifier|static
 name|char
 modifier|*
@@ -1734,16 +1736,6 @@ decl_stmt|;
 name|int
 name|resultlen
 decl_stmt|;
-specifier|extern
-name|int
-name|yp_get_default_domain
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|yp_match
-parameter_list|()
-function_decl|;
 specifier|static
 name|char
 modifier|*
