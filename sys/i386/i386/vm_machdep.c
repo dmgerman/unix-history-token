@@ -1359,7 +1359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Pu t enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
