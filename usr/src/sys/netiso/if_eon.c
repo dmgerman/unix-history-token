@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: if_eon.c,v 1.4 88/07/19 15:53:59 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/if_eon.c,v $   *	@(#)if_eon.c	7.7 (Berkeley) %G% *  *  *	EON rfc   *  Layer between IP and CLNL  *  * TODO:  * Put together a current rfc986 address format and get the right offset  * for the nsel  */
+comment|/*  * $Header: if_eon.c,v 1.4 88/07/19 15:53:59 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/if_eon.c,v $   *	@(#)if_eon.c	7.8 (Berkeley) %G% *  *  *	EON rfc   *  Layer between IP and CLNL  *  * TODO:  * Put together a current rfc986 address format and get the right offset  * for the nsel  */
 end_comment
 
 begin_ifndef
@@ -1091,12 +1091,12 @@ name|el
 operator|->
 name|el_ei
 argument_list|,
+name|ipaddrloc
+argument_list|,
 operator|&
 name|el
 operator|->
 name|el_iproute
-argument_list|,
-name|ipaddrloc
 argument_list|,
 name|EON_NORMAL_ADDR
 argument_list|,
