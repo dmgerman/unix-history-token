@@ -241,7 +241,7 @@ index|]
 decl_stmt|,
 name|salt
 index|[
-literal|9
+literal|10
 index|]
 decl_stmt|;
 name|struct
@@ -531,6 +531,13 @@ argument_list|()
 argument_list|,
 literal|4
 argument_list|)
+expr_stmt|;
+name|salt
+index|[
+literal|9
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 else|#
 directive|else
