@@ -3663,19 +3663,6 @@ operator|==
 name|WI_TIMEOUT
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"wi_cmd: device timeout (cmd=%x, val=%x)\n"
-argument_list|,
-name|cmd
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ETIMEDOUT
