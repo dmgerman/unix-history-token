@@ -189,7 +189,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/wdreg.h>
+file|<pc98/pc98/wdreg.h>
 end_include
 
 begin_include
