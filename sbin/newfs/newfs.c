@@ -2746,10 +2746,8 @@ literal|"mfs"
 argument_list|)
 condition|)
 block|{
-name|err
+name|fatal
 argument_list|(
-literal|1
-argument_list|,
 literal|"vfsload(mfs)"
 argument_list|)
 expr_stmt|;
@@ -2766,6 +2764,16 @@ literal|"mfs"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|vfc
+condition|)
+name|fatal
+argument_list|(
+literal|"mfs filesystem not available"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mount
