@@ -2738,6 +2738,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|in_hosteq
+parameter_list|(
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|((s).s_addr == (t).s_addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|in_nullhost
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).s_addr == INADDR_ANY)
+end_define
+
+begin_define
+define|#
+directive|define
 name|satosin
 parameter_list|(
 name|sa
