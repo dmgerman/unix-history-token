@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.11 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,6 +439,9 @@ modifier|*
 name|fend
 decl_stmt|,
 modifier|*
+name|newsh
+decl_stmt|,
+modifier|*
 name|passwd
 decl_stmt|,
 modifier|*
@@ -472,6 +475,10 @@ name|aflag
 operator|=
 literal|0
 expr_stmt|;
+name|newsh
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -483,7 +490,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:"
+literal|"a:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -501,28 +508,9 @@ if|if
 condition|(
 name|uid
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|EACCES
-argument_list|)
-argument_list|)
+name|baduser
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|loadpw
 argument_list|(
 name|optarg
@@ -536,6 +524,24 @@ expr_stmt|;
 name|aflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|newsh
+operator|=
+name|optarg
+expr_stmt|;
+comment|/* protect p_field -- it thinks NULL is /bin/sh */
+if|if
+condition|(
+operator|!
+operator|*
+name|newsh
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -645,28 +651,9 @@ name|pw
 operator|->
 name|pw_uid
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|EACCES
-argument_list|)
-argument_list|)
+name|baduser
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 default|default:
 name|usage
@@ -854,6 +841,32 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|newsh
+condition|)
+block|{
+if|if
+condition|(
+name|p_shell
+argument_list|(
+name|newsh
+argument_list|,
+name|pw
+argument_list|,
+operator|(
+expr|struct
+name|entry
+operator|*
+operator|)
+name|NULL
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -2788,6 +2801,36 @@ block|}
 end_block
 
 begin_macro
+name|baduser
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|EACCES
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|usage
 argument_list|()
 end_macro
@@ -2801,7 +2844,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chpass [-a list] [user]\n"
+literal|"usage: chpass [-a list] [-s shell] [user]\n"
 argument_list|)
 expr_stmt|;
 name|exit
