@@ -1351,21 +1351,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|cpu_sched_exit
-parameter_list|(
-name|td
-parameter_list|)
-specifier|register
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-block|{ }
-end_function
-
 begin_comment
 comment|/*  * Allocate an sf_buf for the given vm_page.  On this machine, however, there  * is no sf_buf object.  Instead, an opaque pointer to the given vm_page is  * returned.  */
 end_comment

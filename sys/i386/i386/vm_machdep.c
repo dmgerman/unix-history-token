@@ -1278,21 +1278,6 @@ end_function
 
 begin_function
 name|void
-name|cpu_sched_exit
-parameter_list|(
-name|td
-parameter_list|)
-specifier|register
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-block|{ }
-end_function
-
-begin_function
-name|void
 name|cpu_thread_setup
 parameter_list|(
 name|struct
