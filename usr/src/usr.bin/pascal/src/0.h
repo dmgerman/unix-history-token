@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 2.1 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 2.2 %G%"; */
 end_comment
 
 begin_define
@@ -183,7 +183,7 @@ begin_define
 define|#
 directive|define
 name|TRINC
-value|512
+value|1024
 end_define
 
 begin_comment
@@ -301,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|MAXTREE
-value|(30 * TABLE_MULTIPLIER)
+value|(40 * TABLE_MULTIPLIER)
 end_define
 
 begin_comment
