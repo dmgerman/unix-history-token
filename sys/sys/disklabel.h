@@ -470,7 +470,11 @@ expr|struct
 name|disklabel
 argument_list|)
 operator|==
-literal|276
+literal|148
+operator|+
+name|MAXPARTITIONS
+operator|*
+literal|16
 argument_list|)
 expr_stmt|;
 end_expr_stmt
