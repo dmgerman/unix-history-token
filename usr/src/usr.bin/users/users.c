@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)users.c	5.9 (Berkeley) %G%"
+literal|"@(#)users.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,16 +259,8 @@ condition|;
 operator|++
 name|cnt
 control|)
-block|{
-while|while
+if|if
 condition|(
-name|cnt
-operator|<
-name|ncnt
-operator|-
-literal|1
-operator|&&
-operator|!
 name|strncmp
 argument_list|(
 name|names
@@ -279,16 +271,13 @@ argument_list|,
 name|names
 index|[
 name|cnt
-operator|+
+operator|-
 literal|1
 index|]
 argument_list|,
 name|UT_NAMESIZE
 argument_list|)
 condition|)
-operator|++
-name|cnt
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -304,7 +293,6 @@ name|cnt
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
