@@ -457,7 +457,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"dbopen %s"
 argument_list|,
 name|dbtmp
 argument_list|)
