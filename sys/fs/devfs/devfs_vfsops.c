@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_devfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -44,18 +50,6 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|DEVFS_INTERN
-end_define
 
 begin_include
 include|#
@@ -286,6 +280,22 @@ name|fmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|lockinit
+argument_list|(
+operator|&
+name|fmp
+operator|->
+name|dm_lock
+argument_list|,
+name|PVFS
+argument_list|,
+literal|"devfs"
+argument_list|,
+literal|0
+argument_list|,
+name|LK_NOPAUSE
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_flag
@@ -310,7 +320,7 @@ name|fmp
 operator|->
 name|dm_inode
 operator|=
-name|NDEVINO
+name|DEVFSINOMOUNT
 expr_stmt|;
 name|fmp
 operator|->
@@ -480,11 +490,6 @@ operator|->
 name|mnt_stat
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-name|devfs_populate
-argument_list|(
-name|fmp
 argument_list|)
 expr_stmt|;
 return|return
