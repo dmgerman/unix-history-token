@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* 	pcic98reg.h  	PC9801NS/A PCMCIA contorer routine conpatible to PCIC 	Noriyuki Hosobuchi 96.1.20  */
+comment|/*  * pcic98reg.h  *  * PC9801 original PCMCIA controller code for NS/A,Ne,NX/C,NR/L.  * by Noriyuki Hosobuchi<hoso@ce.mbn.or.jp>  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -63,7 +59,7 @@ value|0x4a8e
 end_define
 
 begin_comment
-comment|/* word : PC98 side IO base */
+comment|/* word : PC98 side I/O base */
 end_comment
 
 begin_define
@@ -74,13 +70,13 @@ value|0x5a8e
 end_define
 
 begin_comment
-comment|/* word : Card side IO base */
+comment|/* word : Card side I/O base */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCIC98_REG6
+name|PCIC98_REG7
 value|0x7a8e
 end_define
 
@@ -154,23 +150,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC98_IOMEMORY
+name|PCIC98_MAPIO
 value|0x80
 end_define
 
 begin_comment
-comment|/* 1:IO 0:Memory */
+comment|/* 1:I/O 0:Memory */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCIC98_MAPIO
+name|PCIC98_IOTHROUGH
 value|0x40
 end_define
 
 begin_comment
-comment|/* 0:IO map 1:??? */
+comment|/* 0:I/O map 1:I/O addr-through */
 end_comment
 
 begin_define
@@ -192,7 +188,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* IO map size 1:128byte 0:16byte */
+comment|/* I/O map size 1:128byte 0:16byte */
 end_comment
 
 begin_define
@@ -277,7 +273,7 @@ comment|/* disable interrupt */
 end_comment
 
 begin_comment
-comment|/* PCIC98_REG6 */
+comment|/* PCIC98_REG7 */
 end_comment
 
 begin_define
@@ -301,6 +297,54 @@ end_define
 begin_comment
 comment|/* Vpp 0:5V 1:12V */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pcic98_mode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in 'pccard/pcic.c' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pcic98_8bit_on
+parameter_list|()
+define|\
+value|if (pcic98_mode& PCIC98_8BIT)	\ 		outb(PCIC98_REG2, inb(PCIC98_REG2) | PCIC98_8BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pcic98_8bit_off
+parameter_list|()
+define|\
+value|if (pcic98_mode& PCIC98_8BIT)	\ 		outb(PCIC98_REG2, inb(PCIC98_REG2)& ~PCIC98_8BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pcic98_map128
+parameter_list|()
+value|(pcic98_mode& PCIC98_MAP128)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
