@@ -719,14 +719,6 @@ name|pcb
 modifier|*
 name|pcbp
 decl_stmt|;
-name|char
-name|c
-decl_stmt|,
-modifier|*
-name|cp
-init|=
-name|modif
-decl_stmt|;
 name|struct
 name|trapframe
 modifier|*
@@ -754,11 +746,6 @@ modifier|*
 name|p
 init|=
 name|NULL
-decl_stmt|;
-name|boolean_t
-name|trace_thread
-init|=
-name|FALSE
 decl_stmt|;
 name|boolean_t
 name|have_trapframe
