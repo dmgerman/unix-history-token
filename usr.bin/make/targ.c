@@ -1293,9 +1293,6 @@ specifier|register
 name|int
 name|tbit
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 define|#
 directive|define
 name|PRINTBIT
@@ -1310,25 +1307,6 @@ parameter_list|(
 name|attr
 parameter_list|)
 value|case CONCAT(OP_,attr): if (DEBUG(TARG)) printf("." #attr " "); break
-else|#
-directive|else
-define|#
-directive|define
-name|PRINTBIT
-parameter_list|(
-name|attr
-parameter_list|)
-value|case CONCAT(OP_,attr): printf(".attr "); break
-define|#
-directive|define
-name|PRINTDBIT
-parameter_list|(
-name|attr
-parameter_list|)
-value|case CONCAT(OP_,attr): if (DEBUG(TARG)) printf(".attr "); break
-endif|#
-directive|endif
-comment|/* __STDC__ */
 name|type
 operator|&=
 operator|~
