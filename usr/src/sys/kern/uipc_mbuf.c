@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.36	82/06/20	*/
+comment|/*	uipc_mbuf.c	1.37	82/10/05	*/
 end_comment
 
 begin_include
@@ -524,12 +524,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|bzero
 argument_list|(
 name|mtod
@@ -947,13 +941,6 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-block|{
-name|n
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|mtod
@@ -980,7 +967,6 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|len
@@ -1392,7 +1378,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1404,12 +1390,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|m
 operator|->
 name|m_len

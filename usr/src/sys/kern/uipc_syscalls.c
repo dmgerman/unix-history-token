@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.28	82/10/05	*/
+comment|/*	uipc_syscalls.c	4.29	82/10/05	*/
 end_comment
 
 begin_include
@@ -426,7 +426,9 @@ argument_list|(
 name|nam
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|freeopt
+goto|;
 block|}
 name|u
 operator|.
@@ -449,6 +451,8 @@ argument_list|(
 name|nam
 argument_list|)
 expr_stmt|;
+name|freeopt
+label|:
 if|if
 condition|(
 name|uap
@@ -1063,12 +1067,6 @@ name|m_get
 argument_list|(
 name|M_WAIT
 argument_list|)
-expr_stmt|;
-name|nam
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
 expr_stmt|;
 name|soaccept
 argument_list|(
@@ -1697,6 +1695,10 @@ name|to
 argument_list|,
 operator|&
 name|auio
+argument_list|,
+name|uap
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|bad
@@ -1899,6 +1901,10 @@ literal|0
 argument_list|,
 operator|&
 name|auio
+argument_list|,
+name|uap
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -2129,6 +2135,10 @@ name|from
 argument_list|,
 operator|&
 name|auio
+argument_list|,
+name|uap
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2437,6 +2447,10 @@ literal|0
 argument_list|,
 operator|&
 name|auio
+argument_list|,
+name|uap
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|u
@@ -2990,12 +3004,6 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
-name|m
-operator|->
 name|m_len
 operator|=
 name|namelen
@@ -3149,12 +3157,6 @@ name|m_get
 argument_list|(
 name|M_WAIT
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
 expr_stmt|;
 name|m
 operator|->

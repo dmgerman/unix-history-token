@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.14	82/10/03	*/
+comment|/*	uipc_pipe.c	4.15	82/10/05	*/
 end_comment
 
 begin_include
@@ -530,13 +530,14 @@ break|break;
 case|case
 name|PRU_ABORT
 case|:
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
 case|case
 name|PRU_CONTROL
+case|:
+case|case
+name|PRU_SENDOOB
+case|:
+case|case
+name|PRU_RCVOOB
 case|:
 return|return
 operator|(
