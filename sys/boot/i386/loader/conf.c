@@ -63,6 +63,9 @@ index|[]
 init|=
 block|{
 operator|&
+name|bioscd
+block|,
+operator|&
 name|biosdisk
 block|,
 if|#
@@ -102,6 +105,9 @@ name|ext2fs_fsops
 block|,
 operator|&
 name|dosfs_fsops
+block|,
+operator|&
+name|cd9660_fsops
 block|,
 ifdef|#
 directive|ifdef
