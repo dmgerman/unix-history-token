@@ -313,7 +313,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|u_int16_t
 name|get_eeprom_data
 parameter_list|(
 name|id_port
@@ -329,7 +329,8 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|u_int16_t
 name|data
 init|=
 literal|0
@@ -338,9 +339,16 @@ name|outb
 argument_list|(
 name|id_port
 argument_list|,
-literal|0x80
-operator|+
+name|EEPROM_CMD_RD
+operator||
 name|offset
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+name|BIT_DELAY_MULTIPLE
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 for|for
@@ -359,9 +367,7 @@ control|)
 block|{
 name|DELAY
 argument_list|(
-name|BIT_DELAY_MULTIPLE
-operator|*
-literal|1000
+literal|50
 argument_list|)
 expr_stmt|;
 name|data
