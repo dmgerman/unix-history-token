@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.16 (Berkeley) %G%  *	$Id: resolv.h,v 4.9.1.2 1993/05/17 09:59:01 vixie Exp $  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|_RESOLV_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_comment
 comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * inital name server(s) to query and the domain search list.  */
@@ -98,7 +104,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|state
+name|__res_state
 block|{
 name|int
 name|retrans
@@ -134,13 +140,6 @@ name|id
 decl_stmt|;
 comment|/* current packet id */
 name|char
-name|defdname
-index|[
-name|MAXDNAME
-index|]
-decl_stmt|;
-comment|/* default domain */
-name|char
 modifier|*
 name|dnsrch
 index|[
@@ -150,12 +149,23 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* components of domain to search */
+name|char
+name|defdname
+index|[
+name|MAXDNAME
+index|]
+decl_stmt|;
+comment|/* default domain */
+name|long
+name|pfcode
+decl_stmt|;
+comment|/* RES_PRF_ flags - see below. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Resolver options  */
+comment|/*  * Resolver options (keep these in synch with res_debug.c, please)  */
 end_comment
 
 begin_define
@@ -275,13 +285,115 @@ name|RES_DEFAULT
 value|(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|state
-name|_res
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Resolver "pfcode" values.  Used by dig.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_STATS
+value|0x0001
+end_define
+
+begin_comment
+comment|/*			0x0002	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_CLASS
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_CMD
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_QUES
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_ANS
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_AUTH
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_ADD
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_HEAD1
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_HEAD2
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_TTLID
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_HEADX
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_QUERY
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_REPLY
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES_PRF_INIT
+value|0x4000
+end_define
+
+begin_comment
+comment|/*			0x8000	*/
+end_comment
 
 begin_include
 include|#
@@ -294,6 +406,14 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|__res_state
+name|_res
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Private routines shared between libc/net, named, nslookup and others. */
@@ -376,6 +496,23 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|__fp_resstat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__res_state
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|__fp_query
 name|__P
 argument_list|(
@@ -411,7 +548,7 @@ name|__putlong
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|,
 name|u_char
 operator|*
@@ -455,7 +592,7 @@ name|__p_time
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -563,8 +700,7 @@ operator|,
 name|int
 operator|,
 specifier|const
-expr|struct
-name|rrec
+name|char
 operator|*
 operator|,
 name|char
