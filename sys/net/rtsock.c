@@ -600,7 +600,7 @@ operator|.
 name|any_count
 operator|++
 expr_stmt|;
-name|soisconnected_locked
+name|soisconnected
 argument_list|(
 name|so
 argument_list|)

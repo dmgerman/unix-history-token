@@ -153,7 +153,7 @@ operator|&=
 operator|~
 name|SB_UPCALL
 expr_stmt|;
-name|soisconnected_locked
+name|soisconnected
 argument_list|(
 name|so
 argument_list|)

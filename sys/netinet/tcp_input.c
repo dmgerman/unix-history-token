@@ -7172,7 +7172,7 @@ operator|&
 name|SS_CANTRCVMORE
 condition|)
 block|{
-name|soisdisconnected_locked
+name|soisdisconnected
 argument_list|(
 name|so
 argument_list|)

@@ -734,31 +734,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|sorwakeup_locked
-parameter_list|(
-name|so
-parameter_list|)
-value|do {					\ 					if (sb_notify(&(so)->so_rcv))	\ 						sowakeup((so),&(so)->so_rcv); \ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {					\ 					sorwakeup_locked(so);		\ 				} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sowwakeup_locked
-parameter_list|(
-name|so
-parameter_list|)
-value|do {					\ 					if (sb_notify(&(so)->so_snd))	\ 						sowakeup((so),&(so)->so_snd); \ 				} while (0)
+value|do {					\ 				if (sb_notify(&(so)->so_rcv))	\ 					sowakeup((so),&(so)->so_rcv); \ 			} while (0)
 end_define
 
 begin_define
@@ -768,7 +748,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {					\ 					sowwakeup_locked(so);		\ 				} while (0)
+value|do {					\ 				if (sb_notify(&(so)->so_snd))	\ 					sowakeup((so),&(so)->so_snd); \ 			} while (0)
 end_define
 
 begin_ifdef
@@ -1758,18 +1738,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|soisconnected_locked
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sofree
 parameter_list|(
 name|struct
@@ -1836,18 +1804,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|soisdisconnected
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|soisdisconnected_locked
 parameter_list|(
 name|struct
 name|socket

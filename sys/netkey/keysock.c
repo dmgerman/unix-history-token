@@ -1793,7 +1793,7 @@ operator|=
 operator|&
 name|key_dst
 expr_stmt|;
-name|soisconnected_locked
+name|soisconnected
 argument_list|(
 name|so
 argument_list|)
