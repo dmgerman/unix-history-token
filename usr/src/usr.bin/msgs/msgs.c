@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.4 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * msgs - a user bulletin board program  *  * usage:  *	msgs [fhlopq] [[-]number]	to read messages  *	msgs -s				to place messages  *	msgs -c [-days]			to clean up the bulletin board  *  * prompt commands are:  *	y	print message  *	n	flush message, go to next message  *	q	flush message, quit  *	p	print message, turn on 'pipe thru more' mode  *	P	print message, turn off 'pipe thru more' mode  *	-	reprint last message  *	s[-][<num>] [<filename>]	save message  *	m[-][<num>]	mail with message in temp mbox  *	x	exit without flushing this message  *<num>	print message number<num>  */
