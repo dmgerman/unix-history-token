@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.9 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,29 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* 	 * Initialize header fields. 	 */
+if|if
+condition|(
+operator|(
+name|buf
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|buflen
+operator|<
+sizeof|sizeof
+argument_list|(
+name|HEADER
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|bzero
 argument_list|(
 name|buf
@@ -380,10 +403,22 @@ block|{
 case|case
 name|QUERY
 case|:
+if|if
+condition|(
+operator|(
 name|buflen
 operator|-=
 name|QFIXEDSZ
-expr_stmt|;
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|(
