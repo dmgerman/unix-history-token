@@ -5843,9 +5843,7 @@ operator|&
 literal|0x20
 operator|)
 condition|)
-return|return
-literal|1
-return|;
+return|return;
 comment|/* FALLTHROUGH */
 name|out
 label|:
