@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.23 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.24 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.23 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.24 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4223,7 +4223,7 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
