@@ -396,8 +396,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|_SYS_DVDIO_H_
 end_endif
+
+begin_comment
+comment|/* _SYS_DVDIO_H_ */
+end_comment
 
 end_unit
 
