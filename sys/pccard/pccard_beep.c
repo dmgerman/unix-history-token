@@ -77,20 +77,6 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|callout_handle
-name|beeptimeout_ch
-init|=
-name|CALLOUT_HANDLE_INITIALIZER
-argument_list|(
-operator|&
-name|beeptimeout_ch
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|enum
 name|beepstate
 name|allow_beep
@@ -123,8 +109,6 @@ name|void
 operator|*
 operator|)
 name|NULL
-argument_list|,
-name|beeptimeout_ch
 argument_list|)
 expr_stmt|;
 name|allow_beep
@@ -159,8 +143,6 @@ name|allow_beep
 operator|=
 literal|0
 expr_stmt|;
-name|beeptimeout_ch
-operator|=
 name|timeout
 argument_list|(
 name|enable_beep
@@ -205,8 +187,6 @@ name|allow_beep
 operator|=
 literal|0
 expr_stmt|;
-name|beeptimeout_ch
-operator|=
 name|timeout
 argument_list|(
 name|enable_beep

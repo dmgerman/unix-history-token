@@ -185,13 +185,13 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|pccard_dev
+name|pccard_devinfo
 struct_decl|;
 end_struct_decl
 
 begin_struct
 struct|struct
-name|pccard_drv
+name|pccard_device
 block|{
 name|char
 modifier|*
@@ -201,53 +201,39 @@ comment|/* Driver name */
 name|int
 function_decl|(
 modifier|*
+name|enable
+function_decl|)
+parameter_list|(
+name|struct
+name|pccard_devinfo
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* init/enable driver */
+name|void
+function_decl|(
+modifier|*
+name|disable
+function_decl|)
+parameter_list|(
+name|struct
+name|pccard_devinfo
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* disable driver */
+name|int
+function_decl|(
+modifier|*
 name|handler
 function_decl|)
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Interrupt handler */
-name|void
-function_decl|(
-modifier|*
-name|unload
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Disable driver */
-name|void
-function_decl|(
-modifier|*
-name|suspend
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Suspend driver */
-name|int
-function_decl|(
-modifier|*
-name|init
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-comment|/* init device */
+comment|/* interrupt handler */
 name|int
 name|attr
 decl_stmt|;
@@ -259,7 +245,7 @@ name|imask
 decl_stmt|;
 comment|/* Interrupt mask ptr */
 name|struct
-name|pccard_drv
+name|pccard_device
 modifier|*
 name|next
 decl_stmt|;
@@ -268,40 +254,30 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	Device structure for cards. Each card may have one  *	or more drivers attached to it; each driver is assumed  *	to require at most one interrupt handler, one I/O block  *	and one memory block. This structure is used to link the different  *	devices together.  */
+comment|/*  *	Device structure for cards. Each card may have one  *	or more pccard drivers attached to it; each driver is assumed  *	to require at most one interrupt handler, one I/O block  *	and one memory block. This structure is used to link the different  *	devices together.  */
 end_comment
 
 begin_struct
 struct|struct
-name|pccard_dev
+name|pccard_devinfo
 block|{
 name|struct
-name|pccard_dev
+name|pccard_device
 modifier|*
-name|next
+name|drv
 decl_stmt|;
-comment|/* List of drivers */
 name|struct
 name|isa_device
 name|isahd
 decl_stmt|;
 comment|/* Device details */
-name|struct
-name|pccard_drv
-modifier|*
-name|drv
-decl_stmt|;
-name|void
-modifier|*
-name|arg
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|void *arg;
 comment|/* Device argument */
-name|struct
-name|slot
-modifier|*
-name|sp
-decl_stmt|;
-comment|/* Back pointer to slot */
+endif|#
+directive|endif
 name|int
 name|running
 decl_stmt|;
@@ -313,6 +289,18 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* For any random info */
+name|struct
+name|slot
+modifier|*
+name|slt
+decl_stmt|;
+comment|/* Back pointer to slot */
+name|struct
+name|pccard_devinfo
+modifier|*
+name|next
+decl_stmt|;
+comment|/* List of drivers */
 block|}
 struct|;
 end_struct
@@ -325,14 +313,8 @@ begin_struct
 struct|struct
 name|slot
 block|{
-name|struct
-name|slot
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Master list */
 name|int
-name|slot
+name|slotnum
 decl_stmt|;
 comment|/* Slot number */
 name|int
@@ -344,10 +326,6 @@ name|rwmem
 decl_stmt|;
 comment|/* Read/write flags */
 name|int
-name|ex_sel
-decl_stmt|;
-comment|/* PID for select */
-name|int
 name|irq
 decl_stmt|;
 comment|/* IRQ allocated (0 = none) */
@@ -356,7 +334,7 @@ name|irqref
 decl_stmt|;
 comment|/* Reference count of driver IRQs */
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 name|devices
 decl_stmt|;
@@ -425,6 +403,12 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* DEVFS*/
+name|struct
+name|slot
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Master list */
 block|}
 struct|;
 end_struct

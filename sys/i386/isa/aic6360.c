@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.24 1996/10/30 22:38:39 asami Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.24.2.1 1997/10/21 18:14:10 nate Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3830,13 +3830,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"crd.h"
+file|"card.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -3868,17 +3868,17 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|aic_card_intr
+name|aicinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Interrupt handler */
+comment|/* init device */
 end_comment
 
 begin_function_decl
@@ -3886,7 +3886,7 @@ name|void
 name|aicunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3897,54 +3897,35 @@ comment|/* Disable driver */
 end_comment
 
 begin_function_decl
-name|void
-name|aicsuspend
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Suspend driver */
-end_comment
-
-begin_function_decl
 specifier|static
 name|int
-name|aicinit
+name|aic_card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* init device */
+comment|/* Interrupt handler */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|pccard_drv
+name|pccard_device
 name|aic_info
 init|=
 block|{
 literal|"aic"
 block|,
-name|aic_card_intr
+name|aicinit
 block|,
 name|aicunload
 block|,
-name|aicsuspend
-block|,
-name|aicinit
+name|aic_card_intr
 block|,
 literal|0
 block|,
@@ -3956,36 +3937,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Called when a power down is wanted. Shuts down the  * device and configures the device as unavailable (but  * still loaded...). A resume is done by calling  * feinit with first=0. This is called when the user suspends  * the system, or the APM code suspends the system.  */
-end_comment
-
-begin_function
-name|void
-name|aicsuspend
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-parameter_list|)
-block|{
-name|printf
+begin_expr_stmt
+name|DATA_SET
 argument_list|(
-literal|"aic%d: suspending\n"
+name|pccarddrv_set
 argument_list|,
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
+name|aic_info
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
-comment|/*  * Initialize the device - called from Slot manager.  * if first is set, then initially check for  * the device's existence before initialising it.  * Once initialised, the device table may be set up.  */
+comment|/*  * Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -3993,12 +3956,9 @@ name|int
 name|aicinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
-parameter_list|,
-name|int
-name|first
+name|devi
 parameter_list|)
 block|{
 specifier|static
@@ -4011,12 +3971,7 @@ decl_stmt|;
 comment|/* validate unit number */
 if|if
 condition|(
-name|first
-condition|)
-block|{
-if|if
-condition|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -4034,7 +3989,7 @@ if|if
 condition|(
 name|already_aicinit
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -4049,7 +4004,7 @@ condition|(
 name|aicattach
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -4067,13 +4022,13 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Probe the device. If a value is returned, the 		 * device was found at the location. 		 */
+comment|/* 	 * Probe the device. If a value is returned, the 	 * device was found at the location. 	 */
 if|if
 condition|(
 name|aicprobe
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -4090,7 +4045,7 @@ condition|(
 name|aicattach
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -4102,11 +4057,9 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* 	 * XXX TODO: 	 * If it was already inited before, the device structure 	 * should be already initialised. Here we should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 name|already_aicinit
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -4132,16 +4085,16 @@ name|void
 name|aicunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|printf
 argument_list|(
 literal|"aic%d: unload\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -4151,7 +4104,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|aicstop(dp->isahd.id_unit);
+block|aicstop(devi->isahd.id_unit);
 endif|#
 directive|endif
 block|}
@@ -4167,14 +4120,14 @@ name|int
 name|aic_card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|aicintr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -4195,7 +4148,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCRD> 0 */
+comment|/* NCARD> 0 */
 end_comment
 
 begin_comment
@@ -4226,7 +4179,7 @@ name|aic
 decl_stmt|;
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 name|int
@@ -4241,10 +4194,6 @@ name|aic_reg_drv
 index|[
 name|NAIC
 index|]
-decl_stmt|;
-specifier|static
-name|int
-name|aic_already_init
 decl_stmt|;
 else|#
 directive|else
@@ -4281,7 +4230,7 @@ name|unit
 expr_stmt|;
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 if|if
@@ -4299,24 +4248,6 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If PC-Card probe required, then register with  slot manager. */
-if|if
-condition|(
-operator|!
-name|aic_already_init
-condition|)
-block|{
-name|pccard_add_driver
-argument_list|(
-operator|&
-name|aic_info
-argument_list|)
-expr_stmt|;
-name|aic_already_init
-operator|=
-literal|1
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Allocate a storage area for us 	 */
@@ -6809,7 +6740,7 @@ name|NAPM
 operator|>
 literal|0
 operator|&&
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 comment|/* SlimSCSI dies without this when it resumes from suspend */

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.33.2.3 1996/12/23 18:42:36 nate Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.33.2.4 1997/02/13 22:46:41 bde Exp $  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"crd.h"
+file|"card.h"
 end_include
 
 begin_include
@@ -34,7 +34,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 operator|||

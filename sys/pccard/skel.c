@@ -54,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/select.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/driver.h>
 end_include
 
 begin_include
@@ -77,17 +89,17 @@ end_macro
 begin_function_decl
 specifier|static
 name|int
-name|skelintr
+name|skelinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Interrupt handler */
+comment|/* init device */
 end_comment
 
 begin_function_decl
@@ -96,7 +108,7 @@ name|void
 name|skelunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -108,57 +120,54 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|skelsuspend
+name|int
+name|skelintr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Suspend driver */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|skelinit
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* init device */
+comment|/* Interrupt handler */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|pccard_drv
+name|pccard_device
 name|skel_info
 init|=
 block|{
 literal|"skel"
 block|,
-name|skelintr
+name|skelinit
 block|,
 name|skelunload
 block|,
-name|skelsuspend
+name|skelintr
 block|,
-name|skelinit
-block|, 	}
+literal|0
+block|,
+comment|/* Attributes - presently unused */
+operator|&
+name|net_imask
+comment|/* Interrupt mask for device */
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DATA_SET
+argument_list|(
+name|pccarddrv_set
+argument_list|,
+name|skel_info
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -319,72 +328,7 @@ comment|/*  *	Skeleton driver entry points for PCCARD configuration.  */
 end_comment
 
 begin_comment
-comment|/*  *	The device entry is being removed. Shut it down,  *	and turn off interrupts etc. Not called unless  *	the device was successfully installed.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|skelunload
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"skel%d: unload\n"
-argument_list|,
-name|dp
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|opened
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|dp
-operator|->
-name|unit
-operator|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Called when a power down is wanted. Shuts down the  * device and configures the device as unavailable (but  * still loaded...). A resume is done by calling  * skelinit with first=0.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|skelsuspend
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"skel%d: suspending\n"
-argument_list|,
-name|dp
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Initialize the device.  *	if first is set, then initially check for  *	the device's existence before initialising it.  *	Once initialised, the device table may be set up.  */
+comment|/*  *	Initialize the device.  */
 end_comment
 
 begin_function
@@ -393,67 +337,54 @@ name|int
 name|skelinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
-parameter_list|,
-name|int
-name|first
+name|devi
 parameter_list|)
 block|{
 if|if
 condition|(
-name|first
-operator|&&
-operator|(
 operator|(
 literal|1
 operator|<<
-name|dp
+name|devi
 operator|->
 name|unit
 operator|)
 operator|&
 name|opened
-operator|)
 condition|)
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-if|if
-condition|(
-name|first
-condition|)
 name|opened
 operator||=
 literal|1
 operator|<<
-name|dp
+name|devi
 operator|->
 name|unit
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"skel%d: init, first = %d\n"
+literal|"skel%d: init\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|unit
-argument_list|,
-name|first
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"iomem = 0x%x, iobase = 0x%x\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|memory
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|ioaddr
 argument_list|)
@@ -467,6 +398,44 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	The device entry is being removed. Shut it down,  *	and turn off interrupts etc. Not called unless  *	the device was successfully installed.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|skelunload
+parameter_list|(
+name|struct
+name|pccard_devinfo
+modifier|*
+name|devi
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"skel%d: unload\n"
+argument_list|,
+name|devi
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|opened
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|devi
+operator|->
+name|unit
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	Interrupt handler.  *	Returns true if the interrupt is for us.  */
 end_comment
 
@@ -476,9 +445,9 @@ name|int
 name|skelintr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 return|return

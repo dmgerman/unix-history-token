@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.147.2.7 1997/02/01 16:19:05 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.147.2.8 1997/05/11 12:57:38 bde Exp $  */
 end_comment
 
 begin_include
@@ -176,13 +176,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"crd.h"
+file|"card.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -1657,7 +1657,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -1669,17 +1669,17 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|card_intr
+name|sioinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Interrupt handler */
+comment|/* init device */
 end_comment
 
 begin_function_decl
@@ -1688,7 +1688,7 @@ name|void
 name|siounload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1700,54 +1700,34 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|siosuspend
+name|int
+name|card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Suspend driver */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|sioinit
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* init device */
+comment|/* Interrupt handler */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|pccard_drv
+name|pccard_device
 name|sio_info
 init|=
 block|{
 name|driver_name
 block|,
-name|card_intr
+name|sioinit
 block|,
 name|siounload
 block|,
-name|siosuspend
-block|,
-name|sioinit
+name|card_intr
 block|,
 literal|0
 block|,
@@ -1760,37 +1740,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  *	Called when a power down is requested. Shuts down the  *	device and configures the device as unavailable (but  *	still loaded...). A resume is done by calling  *	sioinit with first=0. This is called when the user suspends  *	the system, or the APM code suspends the system.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|siosuspend
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-parameter_list|)
-block|{
-name|printf
+begin_expr_stmt
+name|DATA_SET
 argument_list|(
-literal|"sio%d: suspending\n"
+name|pccarddrv_set
 argument_list|,
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
+name|sio_info
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
-comment|/*  *	Initialize the device - called from Slot manager.  *	If first is set, then check for the device's existence  *	before initializing it.  Once initialized, the device table may  *	be set up.  */
+comment|/*  *	Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -1798,23 +1759,15 @@ name|int
 name|sioinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
-parameter_list|,
-name|int
-name|first
+name|devi
 parameter_list|)
 block|{
 comment|/* validate unit number. */
 if|if
 condition|(
-name|first
-condition|)
-block|{
-if|if
-condition|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1832,7 +1785,7 @@ if|if
 condition|(
 name|com_addr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1844,13 +1797,13 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* 		 * Probe the device. If a value is returned, the 		 * device was found at the location. 		 */
+comment|/* 	 * Probe the device. If a value is returned, the 	 * device was found at the location. 	 */
 if|if
 condition|(
 name|sioprobe
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -1867,7 +1820,7 @@ condition|(
 name|sioattach
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -1879,8 +1832,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* 	 * XXX TODO: 	 * If it was initialized before, the device structure 	 * should also be initialized.  We should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 return|return
 operator|(
 literal|0
@@ -1899,9 +1850,9 @@ name|void
 name|siounload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|struct
@@ -1913,7 +1864,7 @@ name|com
 operator|=
 name|com_addr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1932,7 +1883,7 @@ name|printf
 argument_list|(
 literal|"sio%d already unloaded!\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1968,7 +1919,7 @@ name|printf
 argument_list|(
 literal|"sio%d: unload\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -2035,7 +1986,7 @@ name|printf
 argument_list|(
 literal|"sio%d: unload,gone\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -2056,9 +2007,9 @@ name|int
 name|card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|struct
@@ -2070,7 +2021,7 @@ name|com
 operator|=
 name|com_addr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -2084,7 +2035,7 @@ operator|&&
 operator|!
 name|com_addr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -2097,7 +2048,7 @@ name|siointr1
 argument_list|(
 name|com_addr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -2119,7 +2070,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCRD> 0 */
+comment|/* NCARD> 0 */
 end_comment
 
 begin_function
@@ -2213,20 +2164,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
-comment|/* 		 * If PC-Card probe required, then register driver with 		 * slot manager. 		 */
-name|pccard_add_driver
-argument_list|(
-operator|&
-name|sio_info
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|already_init
 operator|=
 name|TRUE

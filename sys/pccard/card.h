@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|PIOCSDRV
-value|_IOW('P', 6, struct drv_desc)
+value|_IOW('P', 6, struct dev_desc)
 end_define
 
 begin_comment
@@ -174,6 +174,8 @@ block|{
 name|noslot
 block|,
 name|empty
+block|,
+name|suspend
 block|,
 name|filled
 block|}
@@ -375,7 +377,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|drv_desc
+name|dev_desc
 block|{
 name|char
 name|name
@@ -486,64 +488,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  *	Beep parameters  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_PITCH0
-value|1600
-end_define
-
-begin_comment
-comment|/* inserted/removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_DURATION0
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_PITCH1
-value|1200
-end_define
-
-begin_comment
-comment|/* successed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_DURATION1
-value|40
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_PITCH2
-value|3200
-end_define
-
-begin_comment
-comment|/* failed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCCARD_BEEP_DURATION2
-value|40
-end_define
 
 begin_comment
 comment|/*  *	Other system limits  */
