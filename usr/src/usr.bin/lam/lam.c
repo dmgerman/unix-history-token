@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lam.c	4.2	(Berkeley)	%G%"
+literal|"@(#)lam.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -704,6 +704,19 @@ operator|->
 name|fp
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ip
+operator|->
+name|sepstring
+condition|)
+name|ip
+operator|->
+name|sepstring
+operator|=
+literal|""
 expr_stmt|;
 block|}
 end_block
