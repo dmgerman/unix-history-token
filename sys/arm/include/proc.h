@@ -53,6 +53,10 @@ decl_stmt|;
 name|int
 name|md_ptrace_addr
 decl_stmt|;
+name|void
+modifier|*
+name|md_tp
+decl_stmt|;
 block|}
 struct|;
 end_struct
