@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	6.2	84/08/29	*/
+comment|/*	if_imphost.c	6.3	85/02/28	*/
 end_comment
 
 begin_include
@@ -480,7 +480,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|long
 name|net
 decl_stmt|;
 end_decl_stmt
@@ -560,11 +560,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|in_netof
+argument_list|(
 name|hp
 operator|->
 name|h_addr
-operator|.
-name|s_net
+argument_list|)
 operator|==
 name|net
 condition|)
@@ -680,6 +681,12 @@ block|}
 name|hp
 operator|->
 name|h_flags
+operator|=
+literal|0
+expr_stmt|;
+name|hp
+operator|->
+name|h_rfnm
 operator|=
 literal|0
 expr_stmt|;
