@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.16 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.17 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -3084,7 +3084,8 @@ operator|*
 name|esis_config_time
 argument_list|)
 expr_stmt|;
-comment|/*  	 *	Report configuration for each interface that  	 *	- is UP 	 *	- is not loopback 	 *	- has an ISO address 	 */
+comment|/*  	 *	Report configuration for each interface that  	 *	- is UP 	 *	- has BROADCAST capability 	 *	- has an ISO address 	 */
+comment|/* Todo: a better way would be to construct the esh or ish 	 * once and copy it out for all devices, possibly calling 	 * a method in the iso_ifaddr structure to encapsulate and 	 * transmit it.  This could work to advantage for non-broadcast media 	 */
 for|for
 control|(
 name|ifp
@@ -3111,15 +3112,11 @@ name|IFF_UP
 operator|)
 operator|&&
 operator|(
-operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|==
-literal|0
+name|IFF_BROADCAST
 operator|)
 condition|)
 block|{
