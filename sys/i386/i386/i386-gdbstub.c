@@ -428,7 +428,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|spltty
 argument_list|()
 expr_stmt|;
 do|do
@@ -671,7 +671,7 @@ decl_stmt|;
 comment|/*  $<packet info>#<checksum>. */
 name|s
 operator|=
-name|splhigh
+name|spltty
 argument_list|()
 expr_stmt|;
 do|do
