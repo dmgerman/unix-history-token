@@ -271,7 +271,7 @@ operator|(
 name|t
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|dst
 operator|&
