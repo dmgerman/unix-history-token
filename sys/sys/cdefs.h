@@ -634,6 +634,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|__used
+value|__attribute__((__used__))
+end_define
+
+begin_define
+define|#
+directive|define
 name|__packed
 value|__attribute__((__packed__))
 end_define
@@ -691,6 +698,13 @@ define|#
 directive|define
 name|__unused
 value|__attribute__((__unused__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__used
+value|__attribute__((__used__))
 end_define
 
 begin_define
