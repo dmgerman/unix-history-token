@@ -222,7 +222,15 @@ operator|==
 literal|L'
 expr|\0'
 condition|)
-break|break;
+return|return
+operator|(
+name|nbytes
+operator|+
+name|nb
+operator|-
+literal|1
+operator|)
+return|;
 name|s
 operator|++
 expr_stmt|;
@@ -234,10 +242,6 @@ block|}
 return|return
 operator|(
 name|nbytes
-operator|+
-name|nb
-operator|-
-literal|1
 operator|)
 return|;
 block|}
