@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -756,7 +756,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|ufs_mountedon
+name|vfs_mountedon
 argument_list|(
 name|bvp
 argument_list|)
@@ -876,7 +876,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|ufs_mountedon
+name|vfs_mountedon
 argument_list|(
 name|vp
 argument_list|)
