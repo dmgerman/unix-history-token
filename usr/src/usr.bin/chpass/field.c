@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.3 (Berkeley) %G%"
+literal|"@(#)field.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -775,26 +775,9 @@ begin_block
 block|{
 if|if
 condition|(
-operator|!
 operator|*
 name|p
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: empty field."
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
+operator|&&
 operator|!
 operator|(
 name|ep

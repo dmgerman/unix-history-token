@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.3 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,6 +826,15 @@ name|E_NAME
 index|]
 operator|.
 name|save
+condition|?
+name|list
+index|[
+name|E_NAME
+index|]
+operator|.
+name|save
+else|:
+literal|""
 argument_list|,
 name|list
 index|[
@@ -833,6 +842,15 @@ name|E_LOCATE
 index|]
 operator|.
 name|save
+condition|?
+name|list
+index|[
+name|E_LOCATE
+index|]
+operator|.
+name|save
+else|:
+literal|""
 argument_list|,
 name|list
 index|[
@@ -840,6 +858,15 @@ name|E_BPHONE
 index|]
 operator|.
 name|save
+condition|?
+name|list
+index|[
+name|E_BPHONE
+index|]
+operator|.
+name|save
+else|:
+literal|""
 argument_list|,
 name|list
 index|[
@@ -847,6 +874,15 @@ name|E_HPHONE
 index|]
 operator|.
 name|save
+condition|?
+name|list
+index|[
+name|E_HPHONE
+index|]
+operator|.
+name|save
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* root should have a 0 uid and a reasonable shell */
