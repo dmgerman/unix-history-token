@@ -1293,7 +1293,7 @@ operator|==
 literal|0
 condition|)
 block|{
-while|while
+if|if
 condition|(
 name|fip
 operator|->
@@ -1350,6 +1350,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 			 * We must have got woken up because we had a writer. 			 * That (and not still having one) is the condition 			 * that we must wait for. 			 */
 block|}
 block|}
 if|if
@@ -1390,7 +1391,7 @@ block|}
 block|}
 else|else
 block|{
-while|while
+if|if
 condition|(
 name|fip
 operator|->
@@ -1447,6 +1448,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 				 * We must have got woken up because we had 				 * a reader.  That (and not still having one) 				 * is the condition that we must wait for. 				 */
 block|}
 block|}
 block|}
