@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.9 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.10 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.9 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.10 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +666,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_VRFYONLY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+return|return
+name|EX_OK
+return|;
 name|breakout
 operator|=
 name|TRUE
@@ -892,6 +906,20 @@ continue|continue;
 case|case
 name|UDB_FORWARD
 case|:
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_VRFYONLY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+return|return
+name|EX_OK
+return|;
 name|i
 operator|=
 name|strlen
