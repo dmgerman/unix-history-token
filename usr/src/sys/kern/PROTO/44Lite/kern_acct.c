@@ -132,6 +132,30 @@ begin_comment
 comment|/* frequency to check space for accounting */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|acctp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file to which to do accounting */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|savacctp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file to which to do accounting when space */
+end_comment
+
 begin_comment
 comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
 end_comment
