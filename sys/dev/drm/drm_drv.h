@@ -1965,23 +1965,19 @@ operator|,
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>=
+operator|<
 literal|500000
-function_decl|.d_kqfilter
-init|=
-literal|0
-else|#
-directive|else
 comment|/* bmaj */
-operator|-
-literal|1
-endif|#
-directive|endif
-init|}
-function_decl|;
+function_decl|-1
 end_function_decl
 
 begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+unit|};
 endif|#
 directive|endif
 end_endif
