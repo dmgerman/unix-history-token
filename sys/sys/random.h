@@ -71,6 +71,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Allow the sysadmin to select the broad category of  * entropy types to harvest  */
+end_comment
+
+begin_struct
+struct|struct
+name|harvest_select
+block|{
+name|int
+name|ethernet
+decl_stmt|;
+name|int
+name|point_to_point
+decl_stmt|;
+name|int
+name|interrupt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|harvest_select
+name|harvest
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

@@ -95,6 +95,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Structure holding the desired entropy sources */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|harvest_select
+name|harvest
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* hold the address of the routine which is actually called if  * the randomdev is loaded  */
 end_comment
 
